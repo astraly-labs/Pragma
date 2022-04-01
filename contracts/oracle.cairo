@@ -9,6 +9,8 @@ from contracts.signature import (
     assert_valid_entry_signature, assert_valid_publisher_registration_signature)
 from contracts.entry import Entry
 
+const DECIMALS = 10
+
 @storage_var
 func entry_storage(asset : felt) -> (entry : Entry):
 end
@@ -17,12 +19,28 @@ end
 func publisher_key_storage(publisher : felt) -> (public_key : felt):
 end
 
+@storage_var
+func decimals_storage() -> (decimals : felt):
+end
+
+@constructor
+func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    decimals_storage.write(DECIMALS)
+    return ()
+end
+
 @external
 func register_publisher{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         public_key : felt, publisher : felt, signature_r : felt, signature_s : felt):
     assert_valid_publisher_registration_signature(public_key, publisher, signature_r, signature_s)
+
+    let (publisher_key) = publisher_key_storage.read(publisher)
+
+    with_attr error_message("Publisher with this name already registered"):
+        assert publisher_key = 0
+    end
 
     publisher_key_storage.write(publisher, public_key)
     return ()
