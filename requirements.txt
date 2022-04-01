@@ -1,8 +1,15 @@
+# Testing
+
 ecdsa==0.17.*
 fastecdsa==2.2.*
 sympy==1.10.*
 cairo-lang==0.8.*
 pytest==7.0.*
 pytest-asyncio==0.18.*
+
+# Dev
 black==22.3.0
 flake8==4.0.*
+
+# Publisher
+starknet.py==0.2.*
