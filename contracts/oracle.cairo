@@ -44,8 +44,7 @@ func update_price{
 
     let (last_entry) = entry_storage.read(new_entry.asset)
 
-    with_attr error_message(
-            "Received price update transaction with older timestamp than current entry"):
+    with_attr error_message("Received stale price update (timestamp older than current entry)"):
         assert_lt(last_entry.timestamp, new_entry.timestamp)
     end
 
