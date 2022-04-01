@@ -29,6 +29,6 @@ jobs:
       - name: Post updated prices
         env:
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
-          PRIVATE_PUBLISHER_KEY: ${{ secrets.PRIVATE_PUBLISHER_KEY }}
+          PUBLISHER_PRIVATE_KEY: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
         run: |
           python publisher.py
