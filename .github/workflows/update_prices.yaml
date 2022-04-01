@@ -1,11 +1,11 @@
 name: Update Prices
 on:
   push:
-  #schedule:
-  #  - cron:  '*/15 * * * *'
+  schedule:
+    - cron:  '*/15 * * * *'
 
 jobs:
-  run_tests:
+  update_prices:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -23,13 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Set environmental variables
-        run: |
-          export $(grep -v '^#' .env | xargs)
-
       - name: Post updated prices
         env:
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
           PUBLISHER_PRIVATE_KEY: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
         run: |
+          export $(grep -v '^#' .env | xargs)
           python publisher.py
