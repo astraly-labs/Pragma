@@ -1,8 +1,6 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
-from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
-from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.math import assert_lt
 
 from contracts.signature import (
