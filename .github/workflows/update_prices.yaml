@@ -26,7 +26,10 @@ jobs:
       - name: Post updated prices
         env:
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
-          PUBLISHER_PRIVATE_KEY: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
+          COINMARKETCAP_KEY: ${{ secrets.COINMARKETCAP_KEY }}
+          COINAPI_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINAPI_PUBLISHER_PRIVATE_KEY }}
+          COINMARKETCAP_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINMARKETCAP_PUBLISHER_PRIVATE_KEY }}
+          COINGECKO_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINGECKO_PUBLISHER_PRIVATE_KEY }}
         run: |
           export $(grep -v '^#' .env | xargs)
           python publisher.py
