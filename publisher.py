@@ -48,9 +48,9 @@ MAX_FEE = 0
 async def register_publisher_if_not_registered(
     oracle_contract, publisher, publisher_private_key, publisher_public_key
 ):
-    result = await oracle_contract.functions["get_publisher_key"].call(publisher)
+    result = await oracle_contract.functions["get_publisher_public_key"].call(publisher)
 
-    if result.publisher_key == 0:
+    if result.publisher_public_key == 0:
         signature_r, signature_s = sign(publisher, publisher_private_key)
 
         result = await oracle_contract.functions["register_publisher"].invoke(
@@ -73,7 +73,7 @@ async def publish(publisher_entries):
         )
 
         signature_r, signature_s = sign(hash_entry(entry), publisher_private_key)
-        result = await oracle_contract.functions["update_price"].invoke(
+        result = await oracle_contract.functions["submit_entry"].invoke(
             entry._asdict(), signature_r, signature_s, max_fee=MAX_FEE
         )
         print(f"Updated price with transaction {result}")

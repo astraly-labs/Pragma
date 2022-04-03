@@ -1,10 +1,15 @@
 import os
 import pytest
 import pytest_asyncio
+from statistics import median
 
 from starkware.starknet.testing.starknet import Starknet
 from utils import str_to_felt, sign_entry
-from starkware.crypto.signature.signature import sign
+from starkware.crypto.signature.signature import (
+    sign,
+    private_to_stark_key,
+    get_random_private_key,
+)
 from starkware.starkware_utils.error_handling import StarkException
 
 from entry import Entry
@@ -25,8 +30,8 @@ async def contract():
 
 @pytest_asyncio.fixture
 async def publisher_signature(private_and_public_publisher_keys, publisher):
-    private_key, _ = private_and_public_publisher_keys
-    signature = sign(publisher, private_key)
+    publisher_private_key, _ = private_and_public_publisher_keys
+    signature = sign(publisher, publisher_private_key)
 
     return signature
 
@@ -35,7 +40,7 @@ async def publisher_signature(private_and_public_publisher_keys, publisher):
 async def registered_contract(
     private_and_public_publisher_keys, publisher, publisher_signature
 ):
-    _, publisher_key = private_and_public_publisher_keys
+    _, publisher_public_key = private_and_public_publisher_keys
     publisher_signature_r, publisher_signature_s = publisher_signature
     starknet = await Starknet.empty()
     contract = await starknet.deploy(
@@ -43,7 +48,7 @@ async def registered_contract(
     )
 
     await contract.register_publisher(
-        publisher_key, publisher, publisher_signature_r, publisher_signature_s
+        publisher_public_key, publisher, publisher_signature_r, publisher_signature_s
     ).invoke()
 
     return contract
@@ -58,9 +63,40 @@ async def test_deploy(contract):
 async def test_register_publisher(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
-    _, publisher_key = private_and_public_publisher_keys
-    result = await registered_contract.get_publisher_key(publisher).invoke()
-    assert result.result.publisher_key == publisher_key
+    _, publisher_public_key = private_and_public_publisher_keys
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == publisher_public_key
+    return
+
+
+@pytest.mark.asyncio
+async def test_register_second_publisher(
+    registered_contract, private_and_public_publisher_keys, publisher
+):
+    _, publisher_public_key = private_and_public_publisher_keys
+    second_publisher_private_key = get_random_private_key()
+    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+
+    second_publisher = str_to_felt("bar")
+    second_publisher_signature_r, second_publisher_signature_s = sign(
+        second_publisher, second_publisher_private_key
+    )
+
+    await registered_contract.register_publisher(
+        second_publisher_public_key,
+        second_publisher,
+        second_publisher_signature_r,
+        second_publisher_signature_s,
+    ).invoke()
+
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == publisher_public_key
+
+    result = await registered_contract.get_publisher_public_key(
+        second_publisher
+    ).invoke()
+    assert result.result.publisher_public_key == second_publisher_public_key
+
     return
 
 
@@ -71,11 +107,14 @@ async def test_re_register_fail(
     publisher_signature,
     publisher,
 ):
-    _, publisher_key = private_and_public_publisher_keys
+    _, publisher_public_key = private_and_public_publisher_keys
     publisher_signature_r, publisher_signature_s = publisher_signature
     try:
         await registered_contract.register_publisher(
-            publisher_key, publisher, publisher_signature_r, publisher_signature_s
+            publisher_public_key,
+            publisher,
+            publisher_signature_r,
+            publisher_signature_s,
         ).invoke()
 
         raise Exception(
@@ -84,8 +123,8 @@ async def test_re_register_fail(
     except StarkException:
         pass
 
-    result = await registered_contract.get_publisher_key(publisher).invoke()
-    assert result.result.publisher_key == publisher_key
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == publisher_public_key
     return
 
 
@@ -100,10 +139,10 @@ async def test_publish(
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
-    await registered_contract.update_price(entry, signature_r, signature_s).invoke()
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
     result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
 
     return
 
@@ -118,21 +157,21 @@ async def test_republish(
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
-    await registered_contract.update_price(entry, signature_r, signature_s).invoke()
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
     result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
 
     second_entry = Entry(timestamp=2, price=3, asset=asset, publisher=publisher)
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
-    await registered_contract.update_price(
+    await registered_contract.submit_entry(
         second_entry, signature_r, signature_s
     ).invoke()
 
     result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.entry == second_entry
+    assert result.result.price == second_entry.price
 
     return
 
@@ -147,17 +186,17 @@ async def test_republish_stale(
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
-    await registered_contract.update_price(entry, signature_r, signature_s).invoke()
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
     result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
 
     second_entry = Entry(timestamp=1, price=3, asset=asset, publisher=publisher)
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
     try:
-        await registered_contract.update_price(
+        await registered_contract.submit_entry(
             second_entry, signature_r, signature_s
         ).invoke()
 
@@ -168,7 +207,7 @@ async def test_republish_stale(
         pass
 
     result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
 
     return
 
@@ -184,10 +223,10 @@ async def test_publish_second_asset(
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
-    await registered_contract.update_price(entry, signature_r, signature_s).invoke()
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
     result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
 
     second_entry = Entry(
         timestamp=1, price=2, asset=str_to_felt("BTCUSD"), publisher=publisher
@@ -195,15 +234,114 @@ async def test_publish_second_asset(
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
-    await registered_contract.update_price(
+    await registered_contract.submit_entry(
         second_entry, signature_r, signature_s
     ).invoke()
 
     result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.entry == second_entry
+    assert result.result.price == second_entry.price
 
-    # Check that first asset is still stored accuratelyp
+    # Check that first asset is still stored accurately
     result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.entry == entry
+    assert result.result.price == entry.price
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_publish_second_publisher(
+    registered_contract, private_and_public_publisher_keys, publisher
+):
+    asset = str_to_felt("ETHUSD")
+    private_key, _ = private_and_public_publisher_keys
+    entry = Entry(timestamp=1, price=3, asset=asset, publisher=publisher)
+    signature_r, signature_s = sign_entry(entry, private_key)
+
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
+
+    second_publisher_private_key = get_random_private_key()
+    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+
+    second_publisher = str_to_felt("bar")
+    second_publisher_signature_r, second_publisher_signature_s = sign(
+        second_publisher, second_publisher_private_key
+    )
+
+    await registered_contract.register_publisher(
+        second_publisher_public_key,
+        second_publisher,
+        second_publisher_signature_r,
+        second_publisher_signature_s,
+    ).invoke()
+
+    second_entry = Entry(timestamp=1, price=5, asset=asset, publisher=second_publisher)
+
+    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
+
+    await registered_contract.submit_entry(
+        second_entry, signature_r, signature_s
+    ).invoke()
+
+    result = await registered_contract.get_price(asset).invoke()
+    assert result.result.price == (second_entry.price + entry.price) / 2
+
+    result = await registered_contract.get_entries_for_asset(asset).invoke()
+    assert result.result.entries == [entry, second_entry]
+
+    return
+
+
+async def submit_entry(contract, publisher, entry):
+    publisher_private_key = get_random_private_key()
+    publisher_public_key = private_to_stark_key(publisher_private_key)
+
+    publisher_signature_r, publisher_signature_s = sign(
+        publisher, publisher_private_key
+    )
+
+    await contract.register_publisher(
+        publisher_public_key,
+        publisher,
+        publisher_signature_r,
+        publisher_signature_s,
+    ).invoke()
+
+    signature_r, signature_s = sign_entry(entry, publisher_private_key)
+
+    await contract.submit_entry(entry, signature_r, signature_s).invoke()
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_median_aggregation(
+    registered_contract, private_and_public_publisher_keys, publisher
+):
+    asset = str_to_felt("ETHUSD")
+    prices = [1, 3, 10, 5, 12, 2]
+    publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
+    private_key, _ = private_and_public_publisher_keys
+    entry = Entry(timestamp=1, price=prices[0], asset=asset, publisher=publisher)
+    signature_r, signature_s = sign_entry(entry, private_key)
+
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
+
+    entries = [entry]
+
+    for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
+        additional_publisher = str_to_felt(additional_publisher_str)
+        additional_entry = Entry(
+            timestamp=1, price=price, asset=asset, publisher=additional_publisher
+        )
+        entries.append(additional_entry)
+        await submit_entry(registered_contract, additional_publisher, additional_entry)
+
+        result = await registered_contract.get_entries_for_asset(asset).invoke()
+        assert result.result.entries == entries
+
+        result = await registered_contract.get_price(asset).invoke()
+        assert result.result.price == int(median(prices[: len(entries)]))
+
+        print(f"Succeeded for {len(entries)} entries")
 
     return
