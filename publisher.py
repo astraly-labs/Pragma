@@ -1,17 +1,13 @@
-import requests
-import os
 import asyncio
+import os
 from datetime import datetime
 
-from starknet_py.contract import Contract
-from starknet_py.net import Client
-from starkware.crypto.signature.signature import (
-    private_to_stark_key,
-    sign,
-)
+import requests
+from starkware.crypto.signature.signature import private_to_stark_key
 
+from client import try_publish
 from tests.entry import Entry
-from tests.utils import str_to_felt, hash_entry
+from tests.utils import str_to_felt
 
 
 def get_entry_from_coinapi_price(price_pair, decimals):
@@ -121,48 +117,6 @@ def get_entry_from_coingecko_price(price_pair, decimals):
     )
     print(f"Submitting price {price} for {'/'.join(price_pair)}")
     return (entry, (COINGECKO_PUBLISHER_PRIVATE_KEY, COINGECKO_PUBLISHER_PUBLIC_KEY))
-
-
-STARKNET_URL = f"https://{os.environ.get('STARKNET_NETWORK')}.starknet.io"
-MAX_FEE = 0
-
-
-async def register_publisher_if_not_registered(
-    oracle_contract, publisher, publisher_private_key, publisher_public_key
-):
-    result = await oracle_contract.functions["get_publisher_public_key"].call(publisher)
-
-    if result.publisher_public_key == 0:
-        signature_r, signature_s = sign(publisher, publisher_private_key)
-
-        result = await oracle_contract.functions["register_publisher"].invoke(
-            publisher_public_key, publisher, signature_r, signature_s, max_fee=MAX_FEE
-        )
-        print(f"Registered publisher with transaction {result}")
-
-
-async def try_publish(publisher_entries):
-    oracle_contract = await Contract.from_address(
-        os.environ.get("ORACLE_ADDRESS"), Client("testnet")
-    )
-
-    for entry, (publisher_private_key, publisher_public_key) in publisher_entries:
-        try:
-            await register_publisher_if_not_registered(
-                oracle_contract,
-                entry.publisher,
-                publisher_private_key,
-                publisher_public_key,
-            )
-
-            signature_r, signature_s = sign(hash_entry(entry), publisher_private_key)
-            result = await oracle_contract.functions["submit_entry"].invoke(
-                entry._asdict(), signature_r, signature_s, max_fee=MAX_FEE
-            )
-            print(f"Updated price with transaction {result}")
-        except Exception as e:
-            print(f"Unable to update price for entry {entry}")
-            print(e)
 
 
 if __name__ == "__main__":

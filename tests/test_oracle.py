@@ -1,18 +1,14 @@
 import os
-import pytest
-import pytest_asyncio
 from statistics import median
 
-from starkware.starknet.testing.starknet import Starknet
-from utils import str_to_felt, sign_entry
-from starkware.crypto.signature.signature import (
-    sign,
-    private_to_stark_key,
-    get_random_private_key,
-)
-from starkware.starkware_utils.error_handling import StarkException
-
+import pytest
+import pytest_asyncio
 from entry import Entry
+from starkware.crypto.signature.signature import (get_random_private_key,
+                                                  private_to_stark_key, sign)
+from starkware.starknet.testing.starknet import Starknet
+from starkware.starkware_utils.error_handling import StarkException
+from utils import sign_entry, str_to_felt
 
 # The path to the contract source code.
 CONTRACT_FILE = os.path.join(os.path.dirname(__file__), "../contracts/oracle.cairo")
