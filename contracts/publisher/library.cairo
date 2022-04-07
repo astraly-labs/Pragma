@@ -83,6 +83,20 @@ func Publisher_register_publisher{
     return ()
 end
 
+func Publisher_rotate_publisher_key{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(
+        publisher : felt, old_key : felt, new_key : felt, signature_r : felt, signature_s : felt):
+    let (old_stored_publisher_key) = Publisher_public_key_storage.read(publisher)
+    with_attr error_message("Wrong public key for publisher"):
+        assert old_stored_publisher_key = old_key
+    end
+
+    verify_ecdsa_signature(new_key, old_key, signature_r, signature_s)
+    Publisher_public_key_storage.write(publisher, new_key)
+    return ()
+end
+
 #
 # Helpers
 #

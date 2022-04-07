@@ -23,6 +23,11 @@ namespace IOracle:
             old_key : felt, new_key : felt, signature_r : felt, signature_s : felt):
     end
 
+    func rotate_publisher_key(
+            publisher : felt, old_key : felt, new_key : felt, signature_r : felt,
+            signature_s : felt):
+    end
+
     func register_publisher(
             publisher_public_key : felt, publisher : felt, publisher_signature_r : felt,
             publisher_signature_s : felt, registration_signature_r : felt,

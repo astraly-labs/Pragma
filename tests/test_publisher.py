@@ -138,6 +138,68 @@ async def test_register_publisher(
 
 
 @pytest.mark.asyncio
+async def test_rotate_publisher_key(
+    registered_contract, private_and_public_publisher_keys, publisher
+):
+    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == publisher_public_key
+
+    new_publisher_private_key = get_random_private_key()
+    new_publisher_public_key = private_to_stark_key(new_publisher_private_key)
+
+    new_publisher_signature_r, new_publisher_signature_s = sign(
+        new_publisher_public_key, publisher_private_key
+    )
+
+    await registered_contract.rotate_publisher_key(
+        publisher,
+        publisher_public_key,
+        new_publisher_public_key,
+        new_publisher_signature_r,
+        new_publisher_signature_s,
+    ).invoke()
+
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == new_publisher_public_key
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_rotate_fails_for_unregistered_publisher(
+    registered_contract, private_and_public_publisher_keys, publisher
+):
+    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
+    new_publisher_private_key = get_random_private_key()
+    new_publisher_public_key = private_to_stark_key(new_publisher_private_key)
+
+    new_publisher_signature_r, new_publisher_signature_s = sign(
+        new_publisher_public_key, publisher_private_key
+    )
+
+    try:
+        await registered_contract.rotate_publisher_key(
+            publisher,
+            new_publisher_public_key,
+            new_publisher_public_key,
+            new_publisher_signature_r,
+            new_publisher_signature_s,
+        ).invoke()
+
+        raise Exception(
+            "Transaction to rotate key for unregistered publisher succeeded, but should not have."
+        )
+    except StarkException:
+        pass
+
+    result = await registered_contract.get_publisher_public_key(publisher).invoke()
+    assert result.result.publisher_public_key == publisher_public_key
+
+    return
+
+
+@pytest.mark.asyncio
 async def test_register_second_publisher(
     registered_contract,
     private_and_public_publisher_keys,
