@@ -17,3 +17,22 @@ def hash_entry(entry):
     h2 = pedersen_hash(entry.price, h1)
     h3 = pedersen_hash(entry.timestamp, h2)
     return h3
+
+
+def sign_publisher_registration(
+    publisher_public_key, publisher, registration_private_key
+):
+    publisher_hash = hash_publisher(publisher_public_key, publisher)
+    signature_r, signature_s = sign(publisher_hash, registration_private_key)
+    return signature_r, signature_s
+
+
+def hash_publisher(publisher_public_key, publisher):
+    publisher_hash = pedersen_hash(publisher_public_key, publisher)
+    return publisher_hash
+
+
+def sign_publisher(publisher, publisher_private_key):
+    signature_r, signature_s = sign(publisher, publisher_private_key)
+
+    return signature_r, signature_s

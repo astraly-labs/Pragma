@@ -1,6 +1,8 @@
 import pytest
-from starkware.crypto.signature.signature import (get_random_private_key,
-                                                  private_to_stark_key)
+from starkware.crypto.signature.signature import (
+    get_random_private_key,
+    private_to_stark_key,
+)
 from utils import str_to_felt
 
 
@@ -14,3 +16,10 @@ def private_and_public_publisher_keys():
 @pytest.fixture
 def publisher():
     return str_to_felt("foo")
+
+
+@pytest.fixture
+def private_and_public_registration_keys():
+    registration_private_key = get_random_private_key()
+    registration_public_key = private_to_stark_key(registration_private_key)
+    return registration_private_key, registration_public_key
