@@ -13,8 +13,8 @@ MAX_FEE = 0
 async def register_publisher_if_not_registered(
     oracle_contract, publisher, publisher_private_key, publisher_public_key
 ):
-    PUBLISHER_REGISTRATION_PRIVATE_KEY = os.environ.get(
-        "PUBLISHER_REGISTRATION_PRIVATE_KEY"
+    PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
+        os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
     )
     result = await oracle_contract.functions["get_publisher_public_key"].call(publisher)
 
