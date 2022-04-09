@@ -2,67 +2,98 @@ import os
 
 from starknet_py.contract import Contract
 from starknet_py.net import Client
-from starkware.crypto.signature.signature import sign
+from starkware.crypto.signature.signature import sign, private_to_stark_key
 
-from pontis.core.utils import hash_entry, sign_publisher_registration
+from pontis.core.utils import hash_entry, sign_publisher_registration, str_to_felt
+from pontis.core.entry import Entry
 
-STARKNET_URL = f"https://{os.environ.get('STARKNET_NETWORK')}.starknet.io"
 MAX_FEE = 0
 
 
-async def register_publisher_if_not_registered(
-    oracle_contract, publisher, publisher_private_key, publisher_public_key
-):
-    PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
-        os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
-    )
-    result = await oracle_contract.functions["get_publisher_public_key"].call(publisher)
+class PontisPublisherClient:
+    def __init__(
+        self,
+        oracle_address,
+        publisher_private_key,
+        publisher,
+        network=None,
+        max_fee=None,
+    ):
 
-    if result.publisher_public_key == 0:
-        signature_r, signature_s = sign(publisher, publisher_private_key)
+        self.network = "mainnet" if network is None else network
+        self.max_fee = MAX_FEE if max_fee is None else max_fee
 
+        self.oracle_address = oracle_address
+        self.oracle_contract = None
+
+        assert (
+            type(publisher_private_key) == int
+        ), "Publisher private key must be integer"
+        self.publisher_private_key = publisher_private_key
+        self.publisher_public_key = private_to_stark_key(self.publisher_private_key)
+
+        if type(publisher) == str:
+            self.publisher = str_to_felt(publisher)
+        elif type(publisher) == int:
+            self.publisher = publisher
+        else:
+            raise AssertionError(
+                "Publisher ID must be string (will be converted to felt) or integer"
+            )
+
+    def sign_publisher_registration(self, publisher_registration_private_key):
         (
             registration_signature_r,
             registration_signature_s,
         ) = sign_publisher_registration(
-            publisher_public_key, publisher, PUBLISHER_REGISTRATION_PRIVATE_KEY
+            self.publisher_public_key,
+            self.publisher,
+            publisher_registration_private_key,
         )
+        return registration_signature_r, registration_signature_s
 
-        result = await oracle_contract.functions["register_publisher"].invoke(
-            publisher_public_key,
-            publisher,
-            signature_r,
-            signature_s,
-            registration_signature_r,
-            registration_signature_s,
-            max_fee=MAX_FEE,
-        )
-        print(f"Registered publisher with transaction {result}")
-
-
-async def try_publish(publisher_entries):
-    """
-    publisher_entries is a list of publisher_entry elements.
-    publisher_entry is a tuple of (entry, (publisher_private_key, publisher_public_key))
-    """
-    oracle_contract = await Contract.from_address(
-        os.environ.get("ORACLE_ADDRESS"), Client("testnet")
-    )
-
-    for entry, (publisher_private_key, publisher_public_key) in publisher_entries:
-        try:
-            await register_publisher_if_not_registered(
-                oracle_contract,
-                entry.publisher,
-                publisher_private_key,
-                publisher_public_key,
+    async def fetch_oracle_contract(self):
+        if self.oracle_contract is None:
+            self.oracle_contract = await Contract.from_address(
+                self.oracle_address, Client(self.network)
             )
 
-            signature_r, signature_s = sign(hash_entry(entry), publisher_private_key)
-            result = await oracle_contract.functions["submit_entry"].invoke(
-                entry._asdict(), signature_r, signature_s, max_fee=MAX_FEE
+    async def register_publisher_if_not_registered(
+        self,
+        registration_signature_r,
+        registration_signature_s,
+    ):
+        await self.fetch_oracle_contract()
+
+        result = await self.oracle_contract.functions["get_publisher_public_key"].call(
+            self.publisher
+        )
+
+        if result.publisher_public_key == 0:
+            signature_r, signature_s = sign(self.publisher, self.publisher_private_key)
+
+            result = await self.oracle_contract.functions["register_publisher"].invoke(
+                self.publisher_public_key,
+                self.publisher,
+                signature_r,
+                signature_s,
+                registration_signature_r,
+                registration_signature_s,
+                max_fee=MAX_FEE,
             )
-            print(f"Updated price with transaction {result}")
-        except Exception as e:
-            print(f"Unable to update price for entry {entry}")
-            print(e)
+            print(f"Registered publisher with transaction {result}")
+
+    async def publish(self, timestamp, asset, price):
+        await self.fetch_oracle_contract()
+
+        if type(asset) == str:
+            asset = str_to_felt(asset)
+
+        entry = Entry(
+            timestamp=timestamp, asset=asset, price=price, publisher=self.publisher
+        )
+        signature_r, signature_s = sign(hash_entry(entry), self.publisher_private_key)
+        result = await self.oracle_contract.functions["submit_entry"].invoke(
+            entry._asdict(), signature_r, signature_s, max_fee=self.max_fee
+        )
+        print(f"Updated price with transaction {result}")
