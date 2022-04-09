@@ -75,7 +75,7 @@ async def test_publish(
 ):
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(
-        timestamp=1, asset=str_to_felt("ETHUSD"), price=2, publisher=publisher
+        timestamp=1, price=2, asset=str_to_felt("ETHUSD"), publisher=publisher
     )
 
     signature_r, signature_s = sign_entry(entry, private_key)
