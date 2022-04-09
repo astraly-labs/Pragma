@@ -6,7 +6,6 @@ import os
 from hashlib import sha256
 
 import requests
-from starkware.crypto.signature.signature import private_to_stark_key
 
 from pontis.publisher.client import PontisPublisherClient
 

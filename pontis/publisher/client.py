@@ -1,11 +1,9 @@
-import os
-
 from starknet_py.contract import Contract
 from starknet_py.net import Client
-from starkware.crypto.signature.signature import sign, private_to_stark_key
+from starkware.crypto.signature.signature import private_to_stark_key, sign
 
-from pontis.core.utils import hash_entry, sign_publisher_registration, str_to_felt
 from pontis.core.entry import Entry
+from pontis.core.utils import hash_entry, sign_publisher_registration, str_to_felt
 
 MAX_FEE = 0
 
