@@ -40,4 +40,4 @@ jobs:
           PUBLISHER_REGISTRATION_PRIVATE_KEY: ${{ secrets.PUBLISHER_REGISTRATION_PRIVATE_KEY }}
         run: |
           export $(grep -v '^#' .env | xargs)
-          python pontis/publisher/publisher.py
+          python publish.py
