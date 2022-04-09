@@ -4,5 +4,6 @@
 
 */__pycache__/*
 __pycache__/*
+*.egg-info
 
 .env_secrets

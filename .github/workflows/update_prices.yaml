@@ -24,6 +24,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --upgrade --upgrade-strategy eager
+          pip install -e .
 
       - name: Post updated prices
         env:
@@ -39,4 +40,4 @@ jobs:
           PUBLISHER_REGISTRATION_PRIVATE_KEY: ${{ secrets.PUBLISHER_REGISTRATION_PRIVATE_KEY }}
         run: |
           export $(grep -v '^#' .env | xargs)
-          python publisher.py
+          python pontis/publisher/publisher.py

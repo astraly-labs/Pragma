@@ -9,8 +9,8 @@ import requests
 from starkware.crypto.signature.signature import private_to_stark_key
 
 from client import try_publish
-from tests.entry import Entry
-from tests.utils import str_to_felt
+from pontis.core.entry import Entry
+from pontis.core.utils import str_to_felt
 
 
 def get_entry_from_coinapi_price(price_pair, decimals):

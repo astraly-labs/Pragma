@@ -4,7 +4,7 @@ from starknet_py.contract import Contract
 from starknet_py.net import Client
 from starkware.crypto.signature.signature import sign
 
-from tests.utils import hash_entry, sign_publisher_registration
+from pontis.core.utils import hash_entry, sign_publisher_registration
 
 STARKNET_URL = f"https://{os.environ.get('STARKNET_NETWORK')}.starknet.io"
 MAX_FEE = 0
