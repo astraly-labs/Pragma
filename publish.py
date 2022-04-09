@@ -8,7 +8,7 @@ from hashlib import sha256
 import requests
 from starkware.crypto.signature.signature import private_to_stark_key
 
-from client import PontisPublisherClient
+from pontis.publisher.client import PontisPublisherClient
 
 PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
     os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
