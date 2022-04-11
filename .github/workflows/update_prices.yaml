@@ -1,8 +1,6 @@
 name: Update Prices
 on:
-  push:
-  schedule:
-    - cron:  '*/15 * * * *'
+  push
 
 jobs:
   update_prices:
