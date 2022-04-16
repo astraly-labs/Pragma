@@ -1,9 +1,9 @@
 import pytest
+from pontis.core.utils import str_to_felt
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
 )
-from utils import str_to_felt
 
 
 @pytest.fixture

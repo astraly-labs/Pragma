@@ -106,7 +106,7 @@ func Publisher_add_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, r
     let (num_publishers) = Publisher_num_publishers_storage.read()
 
     Publisher_num_publishers_storage.write(num_publishers + 1)
-    Publisher_publishers_storage.write(num_publishers, publisher)  # 0-indexed, so write at len (not len+1)
+    Publisher_publishers_storage.write(num_publishers, publisher)  # 0-indexed, so write at old_len (not new_len=len+1)
     Publisher_public_key_storage.write(publisher, publisher_public_key)
     return ()
 end

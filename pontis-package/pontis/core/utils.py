@@ -2,7 +2,7 @@ from starkware.crypto.signature.signature import pedersen_hash, sign
 
 
 def str_to_felt(text):
-    b_text = bytes(text, "ascii")
+    b_text = bytes(text, "utf-8")
     return int.from_bytes(b_text, "big")
 
 

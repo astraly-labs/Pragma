@@ -6,18 +6,17 @@ import os
 from hashlib import sha256
 
 import requests
-from starkware.crypto.signature.signature import private_to_stark_key
+from pontis.publisher.client import PontisPublisherClient
 
-from client import try_publish
-from tests.entry import Entry
-from tests.utils import str_to_felt
+PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
+    os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
+)
+ORACLE_ADDRESS = os.environ.get("ORACLE_ADDRESS")
 
 
-def get_entry_from_coinapi_price(price_pair, decimals):
+async def publish_coinapi(price_pair, decimals):
     COINAPI_KEY = os.environ.get("COINAPI_KEY")
     PRICE_URL = f"https://rest.coinapi.io/v1/exchangerate/{'/'.join(price_pair)}"
-    COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
-    COINAPI_PUBLISHER_PUBLIC_KEY = private_to_stark_key(COINAPI_PUBLISHER_PRIVATE_KEY)
 
     headers = {"X-CoinAPI-Key": COINAPI_KEY}
 
@@ -30,25 +29,23 @@ def get_entry_from_coinapi_price(price_pair, decimals):
         ).timestamp()
     )
     price_int = int(price) * (10**decimals)
-    entry = Entry(
-        timestamp=timestamp,
-        price=price_int,
-        asset=str_to_felt("".join(price_pair)),
-        publisher=str_to_felt("coinapi"),
+
+    COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
+    publisher = "coinapi"
+    client = PontisPublisherClient(
+        ORACLE_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
     )
-    print(f"Submitting price {price} for {'/'.join(price_pair)} from Coin API")
-    return (entry, (COINAPI_PUBLISHER_PRIVATE_KEY, COINAPI_PUBLISHER_PUBLIC_KEY))
+
+    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    await client.register_publisher_if_not_registered(r, s)
+    await client.publish(timestamp, "".join(price_pair), price_int)
+
+    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coin API")
 
 
-def get_entry_from_coinmarketcap_price(price_pair, decimals):
+async def publish_coinmarketcap(price_pair, decimals):
     COINMARKETCAP_KEY = os.environ.get("COINMARKETCAP_KEY")
     PRICE_URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-    COINMARKETCAP_PUBLISHER_PRIVATE_KEY = int(
-        os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
-    )
-    COINMARKETCAP_PUBLISHER_PUBLIC_KEY = private_to_stark_key(
-        COINMARKETCAP_PUBLISHER_PRIVATE_KEY
-    )
 
     headers = {
         "X-CMC_PRO_API_KEY": COINMARKETCAP_KEY,
@@ -70,32 +67,31 @@ def get_entry_from_coinmarketcap_price(price_pair, decimals):
     )
     price_int = int(price) * (10**decimals)
 
-    entry = Entry(
-        timestamp=timestamp,
-        price=price_int,
-        asset=str_to_felt("".join(price_pair)),
-        publisher=str_to_felt("coinmarketcap"),
+    COINMARKETCAP_PUBLISHER_PRIVATE_KEY = int(
+        os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
     )
-    print(f"Submitting price {price} for {'/'.join(price_pair)} from Coinmarketcap")
-    return (
-        entry,
-        (COINMARKETCAP_PUBLISHER_PRIVATE_KEY, COINMARKETCAP_PUBLISHER_PUBLIC_KEY),
+    publisher = "coinmarketcap"
+    client = PontisPublisherClient(
+        ORACLE_ADDRESS,
+        COINMARKETCAP_PUBLISHER_PRIVATE_KEY,
+        publisher,
+        network="testnet",
     )
 
+    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    await client.register_publisher_if_not_registered(r, s)
+    await client.publish(timestamp, "".join(price_pair), price_int)
 
-def get_entry_from_coingecko_price(price_pair, decimals):
+    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinmarketcap")
+
+
+async def publish_coingecko(price_pair, decimals):
     if price_pair[0] == "ETH":
         PRICE_URL = "https://api.coingecko.com/api/v3/coins/ethereum?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
     else:
         raise Exception(
             f"Unknown price pair, do not know how to query coingecko for {price_pair[0]}"
         )
-    COINGECKO_PUBLISHER_PRIVATE_KEY = int(
-        os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")
-    )
-    COINGECKO_PUBLISHER_PUBLIC_KEY = private_to_stark_key(
-        COINGECKO_PUBLISHER_PRIVATE_KEY
-    )
 
     headers = {
         "Accepts": "application/json",
@@ -112,28 +108,28 @@ def get_entry_from_coingecko_price(price_pair, decimals):
     )
     price_int = int(price) * (10**decimals)
 
-    entry = Entry(
-        timestamp=timestamp,
-        price=price_int,
-        asset=str_to_felt("".join(price_pair)),
-        publisher=str_to_felt("coingecko"),
+    COINGECKO_PUBLISHER_PRIVATE_KEY = int(
+        os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")
     )
-    print(f"Submitting price {price} for {'/'.join(price_pair)}  from Coingecko")
-    return (entry, (COINGECKO_PUBLISHER_PRIVATE_KEY, COINGECKO_PUBLISHER_PUBLIC_KEY))
+    publisher = "coingecko"
+    client = PontisPublisherClient(
+        ORACLE_ADDRESS, COINGECKO_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
+    )
+
+    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    await client.register_publisher_if_not_registered(r, s)
+    await client.publish(timestamp, "".join(price_pair), price_int)
+
+    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coingecko")
 
 
-def get_entry_from_coinbase_price(price_pair, decimals):
+async def publish_coinbase(price_pair, decimals):
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
     COINBASE_API_KEY = os.environ.get("COINBASE_API_KEY")
     COINBASE_API_PASSPHRASE = os.environ.get("COINBASE_API_PASSPHRASE")
     URL = "https://api.exchange.coinbase.com"
     REQUEST_PATH = "/oracle"
     METHOD = "GET"
-
-    COINBASE_PUBLISHER_PRIVATE_KEY = int(
-        os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")
-    )
-    COINBASE_PUBLISHER_PUBLIC_KEY = private_to_stark_key(COINBASE_PUBLISHER_PRIVATE_KEY)
 
     request_timestamp = str(
         int(
@@ -166,36 +162,30 @@ def get_entry_from_coinbase_price(price_pair, decimals):
 
     timestamp = int(result["timestamp"])
 
-    entry = Entry(
-        timestamp=timestamp,
-        price=price_int,
-        asset=str_to_felt("".join(price_pair)),
-        publisher=str_to_felt("coinbase"),
+    COINBASE_PUBLISHER_PRIVATE_KEY = int(
+        os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")
     )
-    print(f"Submitting price {price} for {'/'.join(price_pair)} from Coinbase")
-    return (
-        entry,
-        (COINBASE_PUBLISHER_PRIVATE_KEY, COINBASE_PUBLISHER_PUBLIC_KEY),
+    publisher = "coinbase"
+    client = PontisPublisherClient(
+        ORACLE_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
     )
+
+    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    await client.register_publisher_if_not_registered(r, s)
+    await client.publish(timestamp, "".join(price_pair), price_int)
+
+    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
+
+
+async def publish_all(PRICE_PAIR, DECIMALS):
+    await publish_coinapi(PRICE_PAIR, DECIMALS)
+    await publish_coinmarketcap(PRICE_PAIR, DECIMALS)
+    await publish_coingecko(PRICE_PAIR, DECIMALS)
+    await publish_coinbase(PRICE_PAIR, DECIMALS)
 
 
 if __name__ == "__main__":
     DECIMALS = 10
     PRICE_PAIR = ["ETH", "USD"]
 
-    coinapi_publisher_entry = get_entry_from_coinapi_price(PRICE_PAIR, DECIMALS)
-    coinmarketcap_publisher_entry = get_entry_from_coinmarketcap_price(
-        PRICE_PAIR, DECIMALS
-    )
-    coingecko_publisher_entry = get_entry_from_coingecko_price(PRICE_PAIR, DECIMALS)
-    coinbase_publisher_entry = get_entry_from_coinbase_price(PRICE_PAIR, DECIMALS)
-    asyncio.run(
-        try_publish(
-            [
-                coinapi_publisher_entry,
-                coinmarketcap_publisher_entry,
-                coingecko_publisher_entry,
-                coinbase_publisher_entry,
-            ]
-        )
-    )
+    asyncio.run(publish_all(PRICE_PAIR, DECIMALS))
