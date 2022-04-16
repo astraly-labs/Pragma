@@ -27,7 +27,7 @@ jobs:
         run: |
           black . --check
           flake8 .
-          isort . --check-only
+          isort . --check-only --diff
 
       - name: Run tests suite
         run: |
