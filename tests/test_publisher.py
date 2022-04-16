@@ -2,6 +2,7 @@ import os
 
 import pytest
 import pytest_asyncio
+from pontis.core.utils import sign_publisher, sign_publisher_registration, str_to_felt
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
@@ -9,8 +10,6 @@ from starkware.crypto.signature.signature import (
 )
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-
-from pontis.core.utils import sign_publisher, sign_publisher_registration, str_to_felt
 
 # The path to the contract source code.
 CONTRACT_FILE = os.path.join(os.path.dirname(__file__), "../contracts/Oracle.cairo")

@@ -6,7 +6,6 @@ import os
 from hashlib import sha256
 
 import requests
-
 from pontis.publisher.client import PontisPublisherClient
 
 PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
