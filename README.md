@@ -48,9 +48,6 @@ starknet deploy --contract oracle_compiled.json --inputs <PUBLIC_PUBLISHER_REGIS
 
 ### Publishing a New Version
 
-To publish a new version, first increment the version in the `setup.cfg` file. 
+First, make sure to set the environmental variable `PYPI_API_TOKEN`.
 
-To publish a new version, 
-- look at using bumpversion
-- copy pypi publishing command
-- git/github tagging
+To publish a new version, just run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`.
