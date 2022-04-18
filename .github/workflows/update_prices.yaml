@@ -47,8 +47,3 @@ jobs:
             -e COINBASE_PUBLISHER_PRIVATE_KEY=${COINBASE_PUBLISHER_PRIVATE_KEY}\
             publish-all
 
-      - name: Test docker files
-        run: |
-          echo /var/lib/docker/
-          echo /var/lib/
-          echo /var/
