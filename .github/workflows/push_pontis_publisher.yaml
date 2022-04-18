@@ -1,0 +1,27 @@
+name: Push Pontis Publisher Docker Image
+on:
+  push:
+    branches:
+      - master
+      - publish-docker
+
+jobs:
+  push_pontis_publisher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build and publish image
+        env:
+          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+        run: |
+          export $(grep -v '^#' .env | xargs)
+          docker build . -t 42labs/pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+          docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
+          docker push 42labs/pontis-publisher:latest

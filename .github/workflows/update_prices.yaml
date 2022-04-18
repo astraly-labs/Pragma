@@ -17,7 +17,7 @@ jobs:
       - name: Build publisher images locally
         run: |
           export $(grep -v '^#' .env | xargs)
-          docker build . -t pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+          docker build . -t 42labs/pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
           docker build sample-publisher/all/ -t publish-all
 
       - name: Post updated prices
