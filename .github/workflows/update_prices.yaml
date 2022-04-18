@@ -11,11 +11,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker/
-          key: ${{ runner.os }}-docker-build
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
 
       - name: Build publisher images locally
         run: |
@@ -49,3 +46,9 @@ jobs:
             -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
             -e COINBASE_PUBLISHER_PRIVATE_KEY=${COINBASE_PUBLISHER_PRIVATE_KEY}\
             publish-all
+
+      - name: Test docker files
+        run: |
+          echo /var/lib/docker/
+          echo /var/lib/
+          echo /var/
