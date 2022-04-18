@@ -11,31 +11,40 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v3
+      - name: Cache Docker layers
+        uses: actions/cache@v2
         with:
-          python-version: "3.7"
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
+          path: /var/lib/docker/
+          key: ${{ runner.os }}-docker-build
 
-      - name: Install dependencies
+      - name: Build publisher images locally
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt --upgrade --upgrade-strategy eager
-          pip install -e pontis-package
+          docker build . -t pontis-publisher:latest
+          docker build sample-publisher/all/ -t publish-all
 
       - name: Post updated prices
         env:
+          PUBLISHER_REGISTRATION_PRIVATE_KEY: ${{ secrets.PUBLISHER_REGISTRATION_PRIVATE_KEY }}
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
-          COINMARKETCAP_KEY: ${{ secrets.COINMARKETCAP_KEY }}
           COINAPI_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINAPI_PUBLISHER_PRIVATE_KEY }}
+          COINMARKETCAP_KEY: ${{ secrets.COINMARKETCAP_KEY }}
           COINMARKETCAP_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINMARKETCAP_PUBLISHER_PRIVATE_KEY }}
           COINGECKO_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINGECKO_PUBLISHER_PRIVATE_KEY }}
           COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
           COINBASE_API_PASSPHRASE: ${{ secrets.COINBASE_API_PASSPHRASE }}
           COINBASE_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINBASE_PUBLISHER_PRIVATE_KEY }}
-          PUBLISHER_REGISTRATION_PRIVATE_KEY: ${{ secrets.PUBLISHER_REGISTRATION_PRIVATE_KEY }}
         run: |
           export $(grep -v '^#' .env | xargs)
-          python publish.py
+          docker run --env-file sample-publisher/all/.env \
+            -e PUBLISHER_REGISTRATION_PRIVATE_KEY=${PUBLISHER_REGISTRATION_PRIVATE_KEY}\
+            -e COINAPI_KEY=${COINAPI_KEY}\
+            -e COINAPI_PUBLISHER_PRIVATE_KEY=${COINAPI_PUBLISHER_PRIVATE_KEY}\
+            -e COINMARKETCAP_KEY=${COINMARKETCAP_KEY}\
+            -e COINMARKETCAP_PUBLISHER_PRIVATE_KEY=${COINMARKETCAP_PUBLISHER_PRIVATE_KEY}\
+            -e COINGECKO_PUBLISHER_PRIVATE_KEY=${COINGECKO_PUBLISHER_PRIVATE_KEY}\
+            -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
+            -e COINBASE_API_KEY=${COINBASE_API_KEY}\
+            -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
+            -e COINBASE_PUBLISHER_PRIVATE_KEY=${COINBASE_PUBLISHER_PRIVATE_KEY}\
+            publish-all
