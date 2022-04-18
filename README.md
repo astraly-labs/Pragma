@@ -40,6 +40,14 @@ docker build sample-publisher/coinbase/ -t coinbase
 docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-publisher/coinbase/.env coinbase
 ```
 
+### Updating the pontis-publisher Base Image
+
+Run the following commands to build a new base image for pontis-publisher locally:
+```
+export $(grep -v '^#' .env | xargs)
+docker build . -t pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+```
+
 ### Running Tests
 
 To run tests, simply run `pytest .` from the project root.

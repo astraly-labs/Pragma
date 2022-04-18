@@ -19,7 +19,8 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          docker build . -t pontis-publisher:latest
+          export $(grep -v '^#' .env | xargs)
+          docker build . -t pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
           docker build sample-publisher/all/ -t publish-all
 
       - name: Post updated prices
