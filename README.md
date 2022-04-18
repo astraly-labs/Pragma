@@ -13,11 +13,12 @@ The Oracle contract is deployed at 0x037f6eb00ae24c94e401ac729ca297727a19b8c85d5
 
 After you have cloned the repository, run the following commands to set up the repo:
 1. `pip install -r requirements.txt`
-2. `pip install -e .`
+2. `pip install -r dev-requirements.txt`
+3. `pip install -e pontis-package`
 
 ## Usage
 
-### Interacting with Deployed Contracts
+### Consuming Feeds from Deployed Contracts
 
 Make sure you set the following environment variables to be able to interact with the deployed contract:
 ```
@@ -28,6 +29,15 @@ Then you can use the Starknet CLI to invoke the contract. For instance to get th
 ```
 starknet-compile contracts/Oracle.cairo --abi oracle_abi.json --output oracle_compiled.json
 starknet call --address <ORACLE_ADDRESS> --abi oracle_abi.json --function get_price --inputs 24016925336360008
+```
+
+### Publishing Data
+
+The recommended way to publish data is to use the `pontis-publisher` Docker image which has the oracle's address baked in via the `ORACLE_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run
+
+```
+docker build sample-publisher/coinbase/ -t coinbase
+docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-publisher/coinbase/.env coinbase
 ```
 
 ### Running Tests
