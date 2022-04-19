@@ -2,6 +2,3 @@
 black==22.3.0
 flake8==4.0.*
 isort==5.10.*
-
-# AWS
-boto3==1.21.*
