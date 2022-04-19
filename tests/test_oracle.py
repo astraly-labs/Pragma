@@ -309,3 +309,132 @@ async def test_median_aggregation(
         print(f"Succeeded for {len(entries)} entries")
 
     return
+
+
+@pytest.mark.asyncio
+async def test_submit_many(
+    registered_contract,
+    private_and_public_publisher_keys,
+    private_and_public_registration_keys,
+    publisher,
+):
+    key = str_to_felt("usd/eth")
+    prices = [1, 3, 10, 5, 12, 2]
+    publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
+    private_key, _ = private_and_public_publisher_keys
+    entries = [Entry(key=key, value=prices[0], timestamp=1, publisher=publisher)]
+    signature_r, signature_s = sign_entry(entries[0], private_key)
+    signatures_r = [signature_r]
+    signatures_s = [signature_s]
+
+    registration_private_key, _ = private_and_public_registration_keys
+
+    for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
+        additional_publisher = str_to_felt(additional_publisher_str)
+
+        publisher_private_key = get_random_private_key()
+        publisher_public_key = private_to_stark_key(publisher_private_key)
+
+        publisher_signature_r, publisher_signature_s = sign(
+            additional_publisher, publisher_private_key
+        )
+
+        (
+            registration_signature_r,
+            registration_signature_s,
+        ) = sign_publisher_registration(
+            publisher_public_key, additional_publisher, registration_private_key
+        )
+
+        await registered_contract.register_publisher(
+            publisher_public_key,
+            additional_publisher,
+            publisher_signature_r,
+            publisher_signature_s,
+            registration_signature_r,
+            registration_signature_s,
+        ).invoke()
+
+        additional_entry = Entry(
+            key=key, value=price, timestamp=1, publisher=additional_publisher
+        )
+        entries.append(additional_entry)
+        signature_r, signature_s = sign_entry(additional_entry, publisher_private_key)
+        signatures_r.append(signature_r)
+        signatures_s.append(signature_s)
+
+    await registered_contract.submit_many_entries(
+        entries, signatures_r, signatures_s
+    ).invoke()
+
+    result = await registered_contract.get_entries_for_key(key).invoke()
+    assert result.result.entries == entries
+
+    result = await registered_contract.get_value(key).invoke()
+    assert result.result.value == int(median(prices[: len(entries)]))
+
+    print(f"Succeeded batch updating for {len(entries)} entries")
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_subset_publishers(
+    registered_contract,
+    private_and_public_publisher_keys,
+    private_and_public_registration_keys,
+    publisher,
+):
+    key = str_to_felt("usd/eth")
+    private_key, _ = private_and_public_publisher_keys
+    entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
+    signature_r, signature_s = sign_entry(entry, private_key)
+    await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
+
+    registration_private_key, _ = private_and_public_registration_keys
+
+    additional_publisher = str_to_felt("bar")
+
+    publisher_private_key = get_random_private_key()
+    publisher_public_key = private_to_stark_key(publisher_private_key)
+
+    publisher_signature_r, publisher_signature_s = sign(
+        additional_publisher, publisher_private_key
+    )
+
+    (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
+        publisher_public_key, additional_publisher, registration_private_key
+    )
+
+    await registered_contract.register_publisher(
+        publisher_public_key,
+        additional_publisher,
+        publisher_signature_r,
+        publisher_signature_s,
+        registration_signature_r,
+        registration_signature_s,
+    ).invoke()
+
+    result = await registered_contract.get_entries_for_key(key).invoke()
+    assert result.result.entries == [entry]
+
+    result = await registered_contract.get_value(key).invoke()
+    assert result.result.value == entry.value
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_unknown_key(registered_contract):
+    unknown_key = str_to_felt("answer")
+    result = await registered_contract.get_entries_for_key(unknown_key).invoke()
+    assert len(result.result.entries) == 0
+
+    try:
+        await registered_contract.get_value(unknown_key).invoke()
+
+        raise Exception(
+            "Transaction to submit stale price succeeded, but should not have."
+        )
+    except StarkException:
+        pass

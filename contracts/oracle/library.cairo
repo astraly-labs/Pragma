@@ -73,6 +73,33 @@ func Oracle_submit_entry{
     return ()
 end
 
+func Oracle_submit_many_entries{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(
+        new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt, signatures_r : felt*,
+        signatures_s_len : felt, signatures_s : felt*):
+    with_attr error_message(
+            "Array of entries, signatures_r and signatures_s must all have the same length."):
+        assert new_entries_len = signatures_r_len
+        assert signatures_r_len = signatures_s_len
+    end
+
+    if new_entries_len == 0:
+        return ()
+    end
+
+    Oracle_submit_entry([new_entries], [signatures_r], [signatures_s])
+    Oracle_submit_many_entries(
+        new_entries_len - 1,
+        new_entries + Entry.SIZE,
+        signatures_r_len - 1,
+        signatures_r + 1,
+        signatures_s_len - 1,
+        signatures_s + 1)
+
+    return ()
+end
+
 #
 # Helpers
 #
@@ -99,17 +126,21 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     alloc_locals
     local syscall_ptr : felt* = syscall_ptr
 
+    if publishers_idx == num_publishers:
+        let num_entries = entries_idx  # 0-indexed
+        return (num_entries, entries_ptr)
+    end
+
     let publisher = [publisher_ptr + publishers_idx]
     let (entry) = Oracle_entry_storage.read(key, publisher)
     let (is_entry_initialized) = is_not_zero(entry.timestamp)
-    if is_entry_initialized == 1:
-        assert [entries_ptr + entries_idx * Entry.SIZE] = entry
-    end
-
-    if publishers_idx + 1 == num_publishers:
-        let num_entries = entries_idx + 1  # 0-indexed
+    if is_entry_initialized == 0:
+        let (num_entries, entries_ptr) = Oracle_build_entries_array(
+            key, num_publishers, publishers_idx + 1, publisher_ptr, entries_idx, entries_ptr)
         return (num_entries, entries_ptr)
     end
+
+    assert [entries_ptr + entries_idx * Entry.SIZE] = entry
 
     let (num_entries, entries_ptr) = Oracle_build_entries_array(
         key, num_publishers, publishers_idx + 1, publisher_ptr, entries_idx + 1, entries_ptr)

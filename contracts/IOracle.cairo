@@ -36,4 +36,9 @@ namespace IOracle:
 
     func submit_entry(new_entry : Entry, signature_r : felt, signature_s : felt):
     end
+
+    func submit_many_entries(
+            new_entries_len, new_entries, signatures_r_len, signatures_r, signatures_s_len,
+            signatures_s):
+    end
 end

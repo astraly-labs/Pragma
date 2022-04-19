@@ -4,7 +4,8 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 
 from contracts.entry.library import Entry
 from contracts.oracle.library import (
-    Oracle_set_oracle_decimals, Oracle_submit_entry, Oracle_get_entries_for_key, Oracle_get_value)
+    Oracle_set_oracle_decimals, Oracle_submit_entry, Oracle_get_entries_for_key, Oracle_get_value,
+    Oracle_submit_many_entries)
 from contracts.publisher.registration_library import (
     Publisher_Registration_rotate_key, Publisher_Registration_initialize_key)
 from contracts.publisher.library import (
@@ -89,5 +90,21 @@ func submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
     Oracle_submit_entry(new_entry, signature_r, signature_s)
+    return ()
+end
+
+@external
+func submit_many_entries{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(
+        new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt, signatures_r : felt*,
+        signatures_s_len : felt, signatures_s : felt*):
+    Oracle_submit_many_entries(
+        new_entries_len,
+        new_entries,
+        signatures_r_len,
+        signatures_r,
+        signatures_s_len,
+        signatures_s)
     return ()
 end
