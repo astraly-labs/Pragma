@@ -80,9 +80,9 @@ end
 
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
-        value : felt):
-    let (value) = Oracle_get_value(key)
-    return (value)
+        value : felt, last_updated_timestamp : felt):
+    let (value, last_updated_timestamp) = Oracle_get_value(key)
+    return (value, last_updated_timestamp)
 end
 
 @external

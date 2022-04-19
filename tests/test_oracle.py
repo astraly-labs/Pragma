@@ -81,6 +81,7 @@ async def test_publish(
 
     result = await registered_contract.get_value(entry.key).invoke()
     assert result.result.value == entry.value
+    assert result.result.last_updated_timestamp == entry.timestamp
 
     return
 
@@ -230,6 +231,9 @@ async def test_publish_second_publisher(
 
     result = await registered_contract.get_value(key).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.last_updated_timestamp == max(
+        second_entry.timestamp, entry.timestamp
+    )
 
     result = await registered_contract.get_entries_for_key(key).invoke()
     assert result.result.entries == [entry, second_entry]

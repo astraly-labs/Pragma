@@ -12,7 +12,7 @@ namespace IOracle:
     func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
-    func get_price(key : felt) -> (value : felt):
+    func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
     end
 
     #

@@ -6,7 +6,8 @@ from starkware.cairo.common.math_cmp import is_not_zero
 from starkware.cairo.common.alloc import alloc
 
 from contracts.entry.library import (
-    Entry, Entry_aggregate_entries, Entry_assert_valid_entry_signature)
+    Entry, Entry_aggregate_entries, Entry_assert_valid_entry_signature,
+    Entry_aggregate_timestamps_max)
 from contracts.publisher.library import (
     Publisher_get_publisher_public_key, Publisher_get_all_publishers)
 
@@ -41,7 +42,7 @@ func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
 end
 
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (value : felt):
+        key : felt) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
     local syscall_ptr : felt* = syscall_ptr
 
@@ -50,7 +51,8 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
         key, num_publishers, publisher_ptr)
 
     let (value) = Entry_aggregate_entries(num_entries, entries_ptr)
-    return (value)
+    let (last_updated_timestamp) = Entry_aggregate_timestamps_max(num_entries, entries_ptr)
+    return (value, last_updated_timestamp)
 end
 
 #

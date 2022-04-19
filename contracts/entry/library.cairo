@@ -33,6 +33,24 @@ func Entry_aggregate_entries{range_check_ptr}(num_entries : felt, entries_ptr : 
     return (value)
 end
 
+func Entry_aggregate_timestamps_max{range_check_ptr}(num_entries : felt, entries_ptr : Entry*) -> (
+        last_updated_timestamp : felt):
+    alloc_locals
+
+    let entry_timestamp = [entries_ptr].timestamp
+    if num_entries == 1:
+        return (entry_timestamp)
+    end
+
+    let (rec_last_updated_timestamp) = Entry_aggregate_timestamps_max(
+        num_entries - 1, entries_ptr + Entry.SIZE)
+    let (is_current_entry_last) = is_le(rec_last_updated_timestamp, entry_timestamp)
+    if is_current_entry_last == 1:
+        return (entry_timestamp)
+    end
+    return (rec_last_updated_timestamp)
+end
+
 func Entry_entries_median{range_check_ptr}(num_entries : felt, entries_ptr : Entry*) -> (
         value : felt):
     let (sorted_entries_ptr) = Entry_sort_entries_by_value(num_entries, entries_ptr)
