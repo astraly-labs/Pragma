@@ -2,6 +2,6 @@
 *.egg-info
 **/dist/
 
-.env_secrets
+**/.secrets.env
 
 **.DS_Store
