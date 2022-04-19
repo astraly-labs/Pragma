@@ -4,6 +4,7 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import unsigned_div_rem
 from starkware.cairo.common.signature import verify_ecdsa_signature
+from starkware.cairo.common.bool import TRUE, FALSE
 
 #
 # Structs
@@ -45,7 +46,7 @@ func Entry_aggregate_timestamps_max{range_check_ptr}(num_entries : felt, entries
     let (rec_last_updated_timestamp) = Entry_aggregate_timestamps_max(
         num_entries - 1, entries_ptr + Entry.SIZE)
     let (is_current_entry_last) = is_le(rec_last_updated_timestamp, entry_timestamp)
-    if is_current_entry_last == 1:
+    if is_current_entry_last == TRUE:
         return (entry_timestamp)
     end
     return (rec_last_updated_timestamp)
@@ -58,7 +59,7 @@ func Entry_entries_median{range_check_ptr}(num_entries : felt, entries_ptr : Ent
     let (q, r) = unsigned_div_rem(num_entries, 2)
     let is_even = 1 - r
 
-    if is_even == 0:
+    if is_even == FALSE:
         let median_idx = num_entries - q - 1  # 0-indexed
         let median_entry = [sorted_entries_ptr + median_idx * Entry.SIZE]
         return (median_entry.value)
@@ -101,7 +102,7 @@ func Entry_bubble_sort_entries_by_value{range_check_ptr}(
     end
     let (is_ordered) = is_le(
         [entries_ptr + idx1 * Entry.SIZE].value, [entries_ptr + idx2 * Entry.SIZE].value)
-    if is_ordered == 1:
+    if is_ordered TRUE:
         assert [sorted_entries_ptr + (idx2 - 1) * Entry.SIZE] = [entries_ptr + idx1 * Entry.SIZE]
         let (recursive_sorted_ptr) = Entry_bubble_sort_entries_by_value(
             num_entries, entries_ptr, idx2, idx2 + 1, sorted_entries_ptr, sorted_this_iteration)
