@@ -102,7 +102,7 @@ func Entry_bubble_sort_entries_by_value{range_check_ptr}(
     end
     let (is_ordered) = is_le(
         [entries_ptr + idx1 * Entry.SIZE].value, [entries_ptr + idx2 * Entry.SIZE].value)
-    if is_ordered TRUE:
+    if is_ordered == TRUE:
         assert [sorted_entries_ptr + (idx2 - 1) * Entry.SIZE] = [entries_ptr + idx1 * Entry.SIZE]
         let (recursive_sorted_ptr) = Entry_bubble_sort_entries_by_value(
             num_entries, entries_ptr, idx2, idx2 + 1, sorted_entries_ptr, sorted_this_iteration)
