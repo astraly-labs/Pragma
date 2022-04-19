@@ -9,10 +9,13 @@ namespace IOracle:
     func get_publisher_public_key(publisher : felt) -> (publisher_public_key : felt):
     end
 
-    func get_entries_for_asset(asset : felt) -> (entries_len : felt, entries : Entry*):
+    func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
-    func get_price(asset : felt) -> (price : felt):
+    func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
+    end
+
+    func get_decimals(decimals : felt):
     end
 
     #
@@ -35,5 +38,10 @@ namespace IOracle:
     end
 
     func submit_entry(new_entry : Entry, signature_r : felt, signature_s : felt):
+    end
+
+    func submit_many_entries(
+            new_entries_len, new_entries, signatures_r_len, signatures_r, signatures_s_len,
+            signatures_s):
     end
 end

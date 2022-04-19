@@ -1,7 +1,14 @@
+import warnings
+
 from starkware.crypto.signature.signature import pedersen_hash, sign
 
 
 def str_to_felt(text):
+    if text.lower() != text:
+        warnings.warn(
+            "Converting string to felt that has uppercase characters. Converting to lowercase."
+        )
+        text = text.lower()
     b_text = bytes(text, "utf-8")
     return int.from_bytes(b_text, "big")
 
@@ -13,9 +20,9 @@ def sign_entry(entry, private_key):
 
 
 def hash_entry(entry):
-    h1 = pedersen_hash(entry.asset, entry.publisher)
-    h2 = pedersen_hash(entry.price, h1)
-    h3 = pedersen_hash(entry.timestamp, h2)
+    h1 = pedersen_hash(entry.key, entry.value)
+    h2 = pedersen_hash(h1, entry.timestamp)
+    h3 = pedersen_hash(h2, entry.publisher)
     return h3
 
 

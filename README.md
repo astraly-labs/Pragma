@@ -6,8 +6,7 @@ This is the repository for the Pontis Oracle on Starknet.
 
 You can read more about the Pontis Oracle [here](https://www.notion.so/Pontis-f5103d8ecc9d49a6844323819570c1b6).
 
-The Oracle contract is deployed at 0x037f6eb00ae24c94e401ac729ca297727a19b8c85d5c7fc201452e892689b9b1.
-(TODO: update with proxy contract address)
+The Oracle contract is deployed at 0x037f6eb00ae24c94e401ac729ca297727a19b8c85d5c7fc201452e892689b9b1 on testnet.
 
 ## Setup
 
@@ -44,8 +43,7 @@ docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-p
 
 Run the following commands to build a new base image for pontis-publisher locally:
 ```
-export $(grep -v '^#' .env | xargs)
-docker build . -t pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+docker build . -t pontis-publisher
 ```
 
 ### Running Tests

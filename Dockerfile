@@ -10,5 +10,5 @@ RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
 COPY pontis-package /pontis-package
 RUN pip install -e pontis-package
 
-ARG ORACLE_ADDRESS
-ENV ORACLE_ADDRESS=${ORACLE_ADDRESS}
+# sets constants as environmental variables
+RUN python -c "import pontis.core.const"

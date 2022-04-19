@@ -3,5 +3,6 @@
 **/dist/
 
 **/.secrets.env
+**.pem
 
 **.DS_Store
