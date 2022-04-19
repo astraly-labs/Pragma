@@ -73,16 +73,14 @@ async def test_publish(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
-        timestamp=1, price=2, asset=str_to_felt("ETHUSD"), publisher=publisher
-    )
+    entry = Entry(key=str_to_felt("usd/eth"), value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(entry.key).invoke()
+    assert result.result.value == entry.value
 
     return
 
@@ -92,17 +90,17 @@ async def test_republish(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    asset = str_to_felt("ETHUSD")
-    entry = Entry(timestamp=1, price=2, asset=asset, publisher=publisher)
+    key = str_to_felt("usd/eth")
+    entry = Entry(key=key, value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(entry.key).invoke()
+    assert result.result.value == entry.value
 
-    second_entry = Entry(timestamp=2, price=3, asset=asset, publisher=publisher)
+    second_entry = entry = Entry(key=key, value=3, timestamp=2, publisher=publisher)
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
@@ -110,8 +108,8 @@ async def test_republish(
         second_entry, signature_r, signature_s
     ).invoke()
 
-    result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.price == second_entry.price
+    result = await registered_contract.get_value(second_entry.key).invoke()
+    assert result.result.value == second_entry.value
 
     return
 
@@ -121,17 +119,17 @@ async def test_republish_stale(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    asset = str_to_felt("ETHUSD")
-    entry = Entry(timestamp=2, price=2, asset=asset, publisher=publisher)
+    key = str_to_felt("usd/eth")
+    entry = Entry(key=key, value=2, timestamp=2, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(entry.key).invoke()
+    assert result.result.value == entry.value
 
-    second_entry = Entry(timestamp=1, price=3, asset=asset, publisher=publisher)
+    second_entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
@@ -146,8 +144,8 @@ async def test_republish_stale(
     except StarkException:
         pass
 
-    result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(second_entry.key).invoke()
+    assert result.result.value == entry.value
 
     return
 
@@ -157,19 +155,17 @@ async def test_publish_second_asset(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
-        timestamp=1, price=2, asset=str_to_felt("ETHUSD"), publisher=publisher
-    )
+    entry = Entry(key=str_to_felt("usd/eth"), value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(entry.key).invoke()
+    assert result.result.value == entry.value
 
     second_entry = Entry(
-        timestamp=1, price=2, asset=str_to_felt("BTCUSD"), publisher=publisher
+        key=str_to_felt("usd/btc"), value=2, timestamp=1, publisher=publisher
     )
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
@@ -178,12 +174,12 @@ async def test_publish_second_asset(
         second_entry, signature_r, signature_s
     ).invoke()
 
-    result = await registered_contract.get_price(second_entry.asset).invoke()
-    assert result.result.price == second_entry.price
+    result = await registered_contract.get_value(second_entry.key).invoke()
+    assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await registered_contract.get_price(entry.asset).invoke()
-    assert result.result.price == entry.price
+    result = await registered_contract.get_value(entry.key).invoke()
+    assert result.result.value == entry.value
 
     return
 
@@ -195,9 +191,9 @@ async def test_publish_second_publisher(
     private_and_public_registration_keys,
     publisher,
 ):
-    asset = str_to_felt("ETHUSD")
+    key = str_to_felt("usd/eth")
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(timestamp=1, price=3, asset=asset, publisher=publisher)
+    entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
@@ -224,7 +220,7 @@ async def test_publish_second_publisher(
         registration_signature_s,
     ).invoke()
 
-    second_entry = Entry(timestamp=1, price=5, asset=asset, publisher=second_publisher)
+    second_entry = Entry(key=key, value=5, timestamp=1, publisher=second_publisher)
 
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
 
@@ -232,10 +228,10 @@ async def test_publish_second_publisher(
         second_entry, signature_r, signature_s
     ).invoke()
 
-    result = await registered_contract.get_price(asset).invoke()
-    assert result.result.price == (second_entry.price + entry.price) / 2
+    result = await registered_contract.get_value(key).invoke()
+    assert result.result.value == (second_entry.value + entry.value) / 2
 
-    result = await registered_contract.get_entries_for_asset(asset).invoke()
+    result = await registered_contract.get_entries_for_key(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -278,11 +274,11 @@ async def test_median_aggregation(
     private_and_public_registration_keys,
     publisher,
 ):
-    asset = str_to_felt("ETHUSD")
+    key = str_to_felt("usd/eth")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(timestamp=1, price=prices[0], asset=asset, publisher=publisher)
+    entry = Entry(key=key, value=prices[0], timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await registered_contract.submit_entry(entry, signature_r, signature_s).invoke()
@@ -294,7 +290,7 @@ async def test_median_aggregation(
     for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
         additional_publisher = str_to_felt(additional_publisher_str)
         additional_entry = Entry(
-            timestamp=1, price=price, asset=asset, publisher=additional_publisher
+            key=key, value=price, timestamp=1, publisher=additional_publisher
         )
         entries.append(additional_entry)
         await register_new_publisher_and_submit_entry(
@@ -304,11 +300,11 @@ async def test_median_aggregation(
             additional_entry,
         )
 
-        result = await registered_contract.get_entries_for_asset(asset).invoke()
+        result = await registered_contract.get_entries_for_key(key).invoke()
         assert result.result.entries == entries
 
-        result = await registered_contract.get_price(asset).invoke()
-        assert result.result.price == int(median(prices[: len(entries)]))
+        result = await registered_contract.get_value(key).invoke()
+        assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
 

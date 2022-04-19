@@ -15,7 +15,7 @@ from contracts.publisher.library import (
 #
 
 @storage_var
-func Oracle_entry_storage(asset : felt, publisher : felt) -> (entry : Entry):
+func Oracle_entry_storage(key : felt, publisher : felt) -> (entry : Entry):
 end
 
 @storage_var
@@ -32,27 +32,25 @@ end
 # Getters
 #
 
-func Oracle_get_entries_for_asset{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(asset : felt) -> (
-        entries_len : felt, entries : Entry*):
+func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (entries_len : felt, entries : Entry*):
     let (num_publishers, publisher_ptr) = Publisher_get_all_publishers()
-    let (entries_len, entries) = Oracle_get_all_entries_for_asset(
-        asset, num_publishers, publisher_ptr)
+    let (entries_len, entries) = Oracle_get_all_entries_for_key(key, num_publishers, publisher_ptr)
 
     return (entries_len, entries)
 end
 
-func Oracle_get_price{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        asset : felt) -> (price : felt):
+func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (value : felt):
     alloc_locals
     local syscall_ptr : felt* = syscall_ptr
 
     let (num_publishers, publisher_ptr) = Publisher_get_all_publishers()
-    let (num_entries, entries_ptr) = Oracle_get_all_entries_for_asset(
-        asset, num_publishers, publisher_ptr)
+    let (num_entries, entries_ptr) = Oracle_get_all_entries_for_key(
+        key, num_publishers, publisher_ptr)
 
-    let (price) = Entry_aggregate_entries(num_entries, entries_ptr)
-    return (price)
+    let (value) = Entry_aggregate_entries(num_entries, entries_ptr)
+    return (value)
 end
 
 #
@@ -65,13 +63,13 @@ func Oracle_submit_entry{
     let (publisher_public_key) = Publisher_get_publisher_public_key(new_entry.publisher)
     Entry_assert_valid_entry_signature(publisher_public_key, signature_r, signature_s, new_entry)
 
-    let (entry) = Oracle_entry_storage.read(new_entry.asset, new_entry.publisher)
+    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
-    with_attr error_message("Received stale price update (timestamp older than current entry)"):
+    with_attr error_message("Received stale update (timestamp older than current entry)"):
         assert_lt(entry.timestamp, new_entry.timestamp)
     end
 
-    Oracle_entry_storage.write(new_entry.asset, new_entry.publisher, new_entry)
+    Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
     return ()
 end
 
@@ -79,9 +77,9 @@ end
 # Helpers
 #
 
-func Oracle_get_all_entries_for_asset{
+func Oracle_get_all_entries_for_key{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        asset : felt, num_publishers : felt, publisher_ptr : felt*) -> (
+        key : felt, num_publishers : felt, publisher_ptr : felt*) -> (
         num_entries : felt, entries_ptr : Entry*):
     let (entries_ptr : Entry*) = alloc()
 
@@ -90,19 +88,19 @@ func Oracle_get_all_entries_for_asset{
     end
 
     let (num_entries, entries_ptr) = Oracle_build_entries_array(
-        asset, num_publishers, 0, publisher_ptr, 0, entries_ptr)
+        key, num_publishers, 0, publisher_ptr, 0, entries_ptr)
 
     return (num_entries, entries_ptr)
 end
 
 func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        asset : felt, num_publishers : felt, publishers_idx : felt, publisher_ptr : felt*,
+        key : felt, num_publishers : felt, publishers_idx : felt, publisher_ptr : felt*,
         entries_idx : felt, entries_ptr : Entry*) -> (num_entries : felt, entries_ptr : Entry*):
     alloc_locals
     local syscall_ptr : felt* = syscall_ptr
 
     let publisher = [publisher_ptr + publishers_idx]
-    let (entry) = Oracle_entry_storage.read(asset, publisher)
+    let (entry) = Oracle_entry_storage.read(key, publisher)
     let (is_entry_initialized) = is_not_zero(entry.timestamp)
     if is_entry_initialized == 1:
         assert [entries_ptr + entries_idx * Entry.SIZE] = entry
@@ -114,6 +112,6 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     end
 
     let (num_entries, entries_ptr) = Oracle_build_entries_array(
-        asset, num_publishers, publishers_idx + 1, publisher_ptr, entries_idx + 1, entries_ptr)
+        key, num_publishers, publishers_idx + 1, publisher_ptr, entries_idx + 1, entries_ptr)
     return (num_entries, entries_ptr)
 end

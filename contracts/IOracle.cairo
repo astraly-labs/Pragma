@@ -9,10 +9,10 @@ namespace IOracle:
     func get_publisher_public_key(publisher : felt) -> (publisher_public_key : felt):
     end
 
-    func get_entries_for_asset(asset : felt) -> (entries_len : felt, entries : Entry*):
+    func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
-    func get_price(asset : felt) -> (price : felt):
+    func get_price(key : felt) -> (value : felt):
     end
 
     #

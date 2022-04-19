@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 
 from contracts.entry.library import Entry
 from contracts.oracle.library import (
-    Oracle_set_oracle_decimals, Oracle_submit_entry, Oracle_get_entries_for_asset, Oracle_get_price)
+    Oracle_set_oracle_decimals, Oracle_submit_entry, Oracle_get_entries_for_key, Oracle_get_value)
 from contracts.publisher.registration_library import (
     Publisher_Registration_rotate_key, Publisher_Registration_initialize_key)
 from contracts.publisher.library import (
@@ -71,17 +71,17 @@ end
 #
 
 @view
-func get_entries_for_asset{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        asset : felt) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = Oracle_get_entries_for_asset(asset)
+func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (entries_len : felt, entries : Entry*):
+    let (entries_len, entries) = Oracle_get_entries_for_key(key)
     return (entries_len, entries)
 end
 
 @view
-func get_price{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(asset : felt) -> (
-        price : felt):
-    let (price) = Oracle_get_price(asset)
-    return (price)
+func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
+        value : felt):
+    let (value) = Oracle_get_value(key)
+    return (value)
 end
 
 @external
