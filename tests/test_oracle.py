@@ -20,6 +20,7 @@ from starkware.starkware_utils.error_handling import StarkException
 
 # The path to the contract source code.
 CONTRACT_FILE = os.path.join(os.path.dirname(__file__), "../contracts/Oracle.cairo")
+DECIMALS = 10
 
 
 @pytest_asyncio.fixture
@@ -65,6 +66,14 @@ async def registered_contract(
 
 @pytest.mark.asyncio
 async def test_deploy(contract):
+    return
+
+
+@pytest.mark.asyncio
+async def test_get_decimals(contract):
+    result = await contract.get_decimals().invoke()
+    assert result.result.decimals == DECIMALS
+
     return
 
 

@@ -23,7 +23,8 @@ end
 func Oracle_decimals_storage() -> (decimals : felt):
 end
 
-func Oracle_set_oracle_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+# Constructor
+func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         decimals : felt):
     Oracle_decimals_storage.write(decimals)
     return ()
@@ -32,6 +33,12 @@ end
 #
 # Getters
 #
+
+func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+        decimals : felt):
+    let (decimals) = Oracle_decimals_storage.read()
+    return (decimals)
+end
 
 func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt) -> (entries_len : felt, entries : Entry*):
