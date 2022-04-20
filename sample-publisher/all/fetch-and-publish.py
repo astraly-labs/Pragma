@@ -4,17 +4,18 @@ import datetime
 import hmac
 import os
 from hashlib import sha256
+from pontis.core.utils import construct_entry
 
 import requests
 from pontis.publisher.client import PontisPublisherClient
+from pontis.core.const import ORACLE_ADDRESS, NETWORK
 
 PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
     os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
 )
-ORACLE_ADDRESS = os.environ.get("ORACLE_ADDRESS")
 
 
-async def publish_coinapi(price_pair, decimals):
+async def fetch_coinapi(price_pair, decimals):
     COINAPI_KEY = os.environ.get("COINAPI_KEY")
     PRICE_URL = f"https://rest.coinapi.io/v1/exchangerate/{'/'.join(price_pair)}"
 
@@ -33,17 +34,23 @@ async def publish_coinapi(price_pair, decimals):
     COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
     publisher = "coinapi"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
+        ORACLE_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish("".join(price_pair), price_int, timestamp)
 
-    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coin API")
+    print(f"Fetched price {price} for {'/'.join(price_pair)} from Coin API")
+
+    return construct_entry(
+        key="".join(price_pair),
+        value=price_int,
+        timestamp=timestamp,
+        publisher=publisher,
+    )
 
 
-async def publish_coinmarketcap(price_pair, decimals):
+async def fetch_coinmarketcap(price_pair, decimals):
     COINMARKETCAP_KEY = os.environ.get("COINMARKETCAP_KEY")
     PRICE_URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
 
@@ -80,12 +87,18 @@ async def publish_coinmarketcap(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish("".join(price_pair), price_int, timestamp)
 
-    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinmarketcap")
+    print(f"Fetched price {price} for {'/'.join(price_pair)} from Coinmarketcap")
+
+    return construct_entry(
+        key="".join(price_pair),
+        value=price_int,
+        timestamp=timestamp,
+        publisher=publisher,
+    )
 
 
-async def publish_coingecko(price_pair, decimals):
+async def fetch_coingecko(price_pair, decimals):
     if price_pair[0] == "ETH":
         PRICE_URL = "https://api.coingecko.com/api/v3/coins/ethereum?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
     else:
@@ -118,12 +131,18 @@ async def publish_coingecko(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish("".join(price_pair), price_int, timestamp)
 
-    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coingecko")
+    print(f"Fetched price {price} for {'/'.join(price_pair)} from Coingecko")
+
+    return construct_entry(
+        key="".join(price_pair),
+        value=price_int,
+        timestamp=timestamp,
+        publisher=publisher,
+    )
 
 
-async def publish_coinbase(price_pair, decimals):
+async def fetch_coinbase(price_pair, decimals):
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
     COINBASE_API_KEY = os.environ.get("COINBASE_API_KEY")
     COINBASE_API_PASSPHRASE = os.environ.get("COINBASE_API_PASSPHRASE")
@@ -172,16 +191,33 @@ async def publish_coinbase(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish("".join(price_pair), price_int, timestamp)
 
-    print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
+    print(f"Fetched price {price} for {'/'.join(price_pair)} from Coinbase")
+
+    return construct_entry(
+        key="".join(price_pair),
+        value=price_int,
+        timestamp=timestamp,
+        publisher=publisher,
+    )
 
 
 async def publish_all(PRICE_PAIR, DECIMALS):
-    await publish_coinapi(PRICE_PAIR, DECIMALS)
-    await publish_coinmarketcap(PRICE_PAIR, DECIMALS)
-    await publish_coingecko(PRICE_PAIR, DECIMALS)
-    await publish_coinbase(PRICE_PAIR, DECIMALS)
+    entries = []
+    entries.append(await fetch_coinapi(PRICE_PAIR, DECIMALS))
+    entries.append(await fetch_coinmarketcap(PRICE_PAIR, DECIMALS))
+    entries.append(await fetch_coingecko(PRICE_PAIR, DECIMALS))
+    entries.append(await fetch_coinbase(PRICE_PAIR, DECIMALS))
+
+    private_keys = [
+        int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY")),
+        int(os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")),
+        int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")),
+        int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")),
+    ]
+    await PontisPublisherClient.publish_many(
+        ORACLE_ADDRESS, NETWORK, entries, private_keys
+    )
 
 
 if __name__ == "__main__":
