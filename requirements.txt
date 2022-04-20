@@ -1,4 +1,4 @@
-pontis==0.2.1
+pontis==0.2.2
 
 ecdsa==0.17.*
 fastecdsa==2.2.*
