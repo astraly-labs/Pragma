@@ -236,17 +236,38 @@ async def fetch_gemini(price_pair, decimals):
 
 async def publish_all(PRICE_PAIR, DECIMALS):
     entries = []
-    entries.append(await fetch_coinapi(PRICE_PAIR, DECIMALS))
-    entries.append(await fetch_coinmarketcap(PRICE_PAIR, DECIMALS))
-    entries.append(await fetch_coingecko(PRICE_PAIR, DECIMALS))
-    entries.append(await fetch_coinbase(PRICE_PAIR, DECIMALS))
+    private_keys = []
 
-    private_keys = [
-        int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY")),
-        int(os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")),
-        int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")),
-        int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")),
-    ]
+    try:
+        entries.append(await fetch_coinapi(PRICE_PAIR, DECIMALS))
+        private_keys.append(int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY")))
+    except Exception as e:
+        print(f"Error fetching Coinapi price: {e}")
+
+    try:
+        entries.append(await fetch_coinmarketcap(PRICE_PAIR, DECIMALS))
+        private_keys.append(int(os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")))
+    except Exception as e:
+        print(f"Error fetching Coinmarketcap price: {e}")
+
+    try:
+        entries.append(await fetch_coingecko(PRICE_PAIR, DECIMALS))
+        private_keys.append(int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")))
+    except Exception as e:
+        print(f"Error fetching Coingecko price: {e}")
+
+    try:
+        entries.append(await fetch_coinbase(PRICE_PAIR, DECIMALS))
+        private_keys.append(int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")))
+    except Exception as e:
+        print(f"Error fetching Coinbase price: {e}")
+
+    try:
+        entries.append(await fetch_gemini(PRICE_PAIR, DECIMALS))
+        private_keys.append(int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY")))
+    except Exception as e:
+        print(f"Error fetching Gemini price: {e}")
+
     await PontisPublisherClient.publish_many(
         ORACLE_ADDRESS, NETWORK, entries, private_keys
     )
