@@ -33,7 +33,7 @@ jobs:
           COINBASE_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINBASE_PUBLISHER_PRIVATE_KEY }}
           GEMINI_PUBLISHER_PRIVATE_KEY: ${{ secrets.GEMINI_PUBLISHER_PRIVATE_KEY }}
         run: |
-          docker run --env-file sample-publisher/all/.env \
+          docker run \
             -e PUBLISHER_REGISTRATION_PRIVATE_KEY=${PUBLISHER_REGISTRATION_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\
             -e COINAPI_PUBLISHER_PRIVATE_KEY=${COINAPI_PUBLISHER_PRIVATE_KEY}\

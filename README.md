@@ -36,7 +36,7 @@ The recommended way to publish data is to use the `pontis-publisher` Docker imag
 
 ```
 docker build sample-publisher/coinbase/ -t coinbase
-docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-publisher/coinbase/.env coinbase
+docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
 ```
 
 ### Updating the pontis-publisher Base Image
