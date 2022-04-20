@@ -338,6 +338,9 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         ORACLE_ADDRESS, NETWORK, entries, private_keys
     )
 
+    # Post success to Better Uptime
+    requests.get("https://betteruptime.com/api/v1/heartbeat/eLy7zigidGbx5s6jnsfQiqJQ")
+
 
 if __name__ == "__main__":
     DECIMALS = 10
