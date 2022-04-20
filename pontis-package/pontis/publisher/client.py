@@ -122,3 +122,5 @@ class PontisPublisherClient:
             signatures_s,
             max_fee=max_fee,
         )
+
+        print(f"Successfully sent {len(entries)} updated entries")

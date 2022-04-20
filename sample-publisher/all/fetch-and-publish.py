@@ -29,7 +29,7 @@ async def fetch_coinapi(price_pair, decimals):
             response.json()["time"].split(".")[0], "%Y-%m-%dT%H:%M:%S"
         ).timestamp()
     )
-    price_int = int(price) * (10**decimals)
+    price_int = int(price * (10**decimals))
 
     COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
     publisher = "coinapi"
@@ -43,7 +43,7 @@ async def fetch_coinapi(price_pair, decimals):
     print(f"Fetched price {price} for {'/'.join(price_pair)} from Coin API")
 
     return construct_entry(
-        key="".join(price_pair),
+        key="".join(price_pair).lower(),
         value=price_int,
         timestamp=timestamp,
         publisher=publisher,
@@ -72,7 +72,7 @@ async def fetch_coinmarketcap(price_pair, decimals):
             "%Y-%m-%dT%H:%M:%S",
         ).timestamp()
     )
-    price_int = int(price) * (10**decimals)
+    price_int = int(price * (10**decimals))
 
     COINMARKETCAP_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
@@ -82,7 +82,7 @@ async def fetch_coinmarketcap(price_pair, decimals):
         ORACLE_ADDRESS,
         COINMARKETCAP_PUBLISHER_PRIVATE_KEY,
         publisher,
-        network="testnet",
+        network=NETWORK,
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -91,7 +91,7 @@ async def fetch_coinmarketcap(price_pair, decimals):
     print(f"Fetched price {price} for {'/'.join(price_pair)} from Coinmarketcap")
 
     return construct_entry(
-        key="".join(price_pair),
+        key="".join(price_pair).lower(),
         value=price_int,
         timestamp=timestamp,
         publisher=publisher,
@@ -119,14 +119,14 @@ async def fetch_coingecko(price_pair, decimals):
             "%Y-%m-%dT%H:%M:%S",
         ).timestamp()
     )
-    price_int = int(price) * (10**decimals)
+    price_int = int(price * (10**decimals))
 
     COINGECKO_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")
     )
     publisher = "coingecko"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINGECKO_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
+        ORACLE_ADDRESS, COINGECKO_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -135,7 +135,7 @@ async def fetch_coingecko(price_pair, decimals):
     print(f"Fetched price {price} for {'/'.join(price_pair)} from Coingecko")
 
     return construct_entry(
-        key="".join(price_pair),
+        key="".join(price_pair).lower(),
         value=price_int,
         timestamp=timestamp,
         publisher=publisher,
@@ -177,7 +177,7 @@ async def fetch_coinbase(price_pair, decimals):
     response.raise_for_status()
     result = response.json()
     price = float(result["prices"][PRICE_PAIR[0]])
-    price_int = int(price) * (10**decimals)
+    price_int = int(price * (10**decimals))
 
     timestamp = int(result["timestamp"])
 
@@ -186,7 +186,7 @@ async def fetch_coinbase(price_pair, decimals):
     )
     publisher = "coinbase"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network="testnet"
+        ORACLE_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
