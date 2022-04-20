@@ -80,17 +80,17 @@ class PontisPublisherClient:
             )
             print(f"Registered publisher with transaction {result}")
 
-    async def publish(self, timestamp, asset, price):
+    async def publish(self, key, value, timestamp):
         await self.fetch_oracle_contract()
 
-        if type(asset) == str:
-            asset = str_to_felt(asset)
+        if type(key) == str:
+            key = str_to_felt(key)
 
         entry = Entry(
-            timestamp=timestamp, asset=asset, price=price, publisher=self.publisher
+            key=key, value=value, timestamp=timestamp, publisher=self.publisher
         )
         signature_r, signature_s = sign(hash_entry(entry), self.publisher_private_key)
         result = await self.oracle_contract.functions["submit_entry"].invoke(
             entry._asdict(), signature_r, signature_s, max_fee=self.max_fee
         )
-        print(f"Updated price with transaction {result}")
+        print(f"Updated entry with transaction {result}")

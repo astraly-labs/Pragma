@@ -38,7 +38,7 @@ async def publish_coinapi(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish(timestamp, "".join(price_pair), price_int)
+    await client.publish("".join(price_pair), price_int, timestamp)
 
     print(f"Submitted price {price} for {'/'.join(price_pair)} from Coin API")
 
@@ -80,7 +80,7 @@ async def publish_coinmarketcap(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish(timestamp, "".join(price_pair), price_int)
+    await client.publish("".join(price_pair), price_int, timestamp)
 
     print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinmarketcap")
 
@@ -118,7 +118,7 @@ async def publish_coingecko(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish(timestamp, "".join(price_pair), price_int)
+    await client.publish("".join(price_pair), price_int, timestamp)
 
     print(f"Submitted price {price} for {'/'.join(price_pair)} from Coingecko")
 
@@ -172,7 +172,7 @@ async def publish_coinbase(price_pair, decimals):
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
-    await client.publish(timestamp, "".join(price_pair), price_int)
+    await client.publish("".join(price_pair), price_int, timestamp)
 
     print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
 
