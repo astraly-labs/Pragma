@@ -93,7 +93,7 @@ async def fetch_coinmarketcap(price_pairs, decimals):
                 response.json()["data"][price_pair[0]]["quote"][price_pair[1]][
                     "last_updated"
                 ].split(".")[0],
-                "%Y-%m-%dT%H:%M:%S",
+                "%Y-%m-%dT%H:%M:%S.%f%z",
             ).timestamp()
         )
         price_int = int(price * (10**decimals))
@@ -157,7 +157,7 @@ async def fetch_coingecko(price_pairs, decimals):
         timestamp = int(
             datetime.datetime.strptime(
                 response.json()["last_updated"].split(".")[0],
-                "%Y-%m-%dT%H:%M:%S",
+                "%Y-%m-%dT%H:%M:%S.%f%z",
             ).timestamp()
         )
         price_int = int(price * (10**decimals))
@@ -334,9 +334,10 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
 
-    await PontisPublisherClient.publish_many(
+    response = await PontisPublisherClient.publish_many(
         ORACLE_ADDRESS, NETWORK, entries, private_keys
     )
+    print(f"Bulk updated with response {response}")
 
     # Post success to Better Uptime
     requests.get("https://betteruptime.com/api/v1/heartbeat/eLy7zigidGbx5s6jnsfQiqJQ")

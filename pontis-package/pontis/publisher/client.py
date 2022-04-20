@@ -116,7 +116,7 @@ class PontisPublisherClient:
 
         oracle_contract = await Contract.from_address(oracle_address, Client(network))
 
-        await oracle_contract.functions["submit_many_entries"].invoke(
+        response = await oracle_contract.functions["submit_many_entries"].invoke(
             [entry._asdict() for entry in entries],
             signatures_r,
             signatures_s,
@@ -124,3 +124,5 @@ class PontisPublisherClient:
         )
 
         print(f"Successfully sent {len(entries)} updated entries")
+
+        return response
