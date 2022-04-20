@@ -74,3 +74,5 @@ To publish a new version, just navigate into `pontis-package` and run `bumpversi
 If your changes involve changes to the base image, make sure to build and push to Dockerhub (see "Updating the pontis-publisher Base Image" section), and the existing publisher instance will automatically pull that.
 
 If your changes involve changes to the fetching and publishing code, run `scp -i LightsailDefaultKey-us-east-2.pem -r ../all/ ubuntu@<IP_ADDRESS>:` to copy over the code again, where `IP_ADDRESS` is the IP address of the Lightsail instance. The existing instance will automatically rebuild the docker image using that new code.
+
+If your changes are to the cron command, it is easiest to ssh into the instance and edit the cron command there directtly using `crontab -e`.
