@@ -3,13 +3,13 @@ import base64
 import datetime
 import hmac
 import os
-from hashlib import sha256
 import time
-from pontis.core.utils import construct_entry
+from hashlib import sha256
 
 import requests
+from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.core.utils import construct_entry
 from pontis.publisher.client import PontisPublisherClient
-from pontis.core.const import ORACLE_ADDRESS, NETWORK
 
 PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
     os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
