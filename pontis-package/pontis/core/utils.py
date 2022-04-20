@@ -1,6 +1,6 @@
 import warnings
-from pontis.core.entry import Entry
 
+from pontis.core.entry import Entry
 from starkware.crypto.signature.signature import pedersen_hash, sign
 
 
