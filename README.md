@@ -43,7 +43,8 @@ docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-p
 
 Run the following commands to build a new base image for pontis-publisher locally:
 ```
-docker build . -t pontis-publisher
+docker build . -t 42labs/pontis-publisher
+docker push 42labs/pontis-publisher:latest
 ```
 
 ### Running Tests
