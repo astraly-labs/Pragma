@@ -63,7 +63,7 @@ async def main():
             ORACLE_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
         )
 
-        await client.publish(timestamp, "".join(price_pair), price_int)
+        await client.publish("".join(price_pair), price_int, timestamp)
 
         print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
 

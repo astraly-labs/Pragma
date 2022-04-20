@@ -6,7 +6,7 @@ This is the repository for the Pontis Oracle on Starknet.
 
 You can read more about the Pontis Oracle [here](https://www.notion.so/Pontis-f5103d8ecc9d49a6844323819570c1b6).
 
-The Oracle contract is deployed at 0x037f6eb00ae24c94e401ac729ca297727a19b8c85d5c7fc201452e892689b9b1 on testnet.
+The Oracle contract is deployed at 0x0351ab9d236c3e8e42be3b2891f33635327fd4b345779a2079ff4d6356f55ae1 on testnet.
 
 ## Setup
 
@@ -24,7 +24,7 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of USD/ETH first calculate the key by converting the string to the UTF-8 encoded felt `24016925336360008` (use `str_to_felt` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_ADDRESS>` with the address of the Oracle (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `24016925336360008` (use `str_to_felt` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_ADDRESS>` with the address of the Oracle (see above):
 ```
 starknet-compile contracts/Oracle.cairo --abi oracle_abi.json --output oracle_compiled.json
 starknet call --address <ORACLE_ADDRESS> --abi oracle_abi.json --function get_price --inputs 24016925336360008
@@ -43,7 +43,8 @@ docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-p
 
 Run the following commands to build a new base image for pontis-publisher locally:
 ```
-docker build . -t pontis-publisher
+docker build . -t 42labs/pontis-publisher
+docker push 42labs/pontis-publisher:latest
 ```
 
 ### Running Tests
