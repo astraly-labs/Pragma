@@ -1,5 +1,6 @@
 import warnings
 
+from pontis.core.entry import Entry
 from starkware.crypto.signature.signature import pedersen_hash, sign
 
 
@@ -43,3 +44,18 @@ def sign_publisher(publisher, publisher_private_key):
     signature_r, signature_s = sign(publisher, publisher_private_key)
 
     return signature_r, signature_s
+
+
+def construct_entry(key, value, timestamp, publisher):
+    if type(key) == str:
+        key = str_to_felt(key)
+
+    if type(publisher) == str:
+        publisher = str_to_felt(publisher)
+
+    return Entry(
+        key=key,
+        value=value,
+        timestamp=timestamp,
+        publisher=publisher,
+    )

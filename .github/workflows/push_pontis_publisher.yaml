@@ -20,7 +20,6 @@ jobs:
         env:
           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
         run: |
-          export $(grep -v '^#' .env | xargs)
-          docker build . -t 42labs/pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+          docker build . -t 42labs/pontis-publisher
           docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
           docker push 42labs/pontis-publisher:latest

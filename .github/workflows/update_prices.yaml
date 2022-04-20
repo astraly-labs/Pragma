@@ -16,8 +16,7 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          export $(grep -v '^#' .env | xargs)
-          docker build . -t 42labs/pontis-publisher --build-arg ORACLE_ADDRESS=${ORACLE_ADDRESS}
+          docker build . -t 42labs/pontis-publisher
           docker build sample-publisher/all/ -t publish-all
 
       - name: Post updated prices
@@ -32,9 +31,9 @@ jobs:
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
           COINBASE_API_PASSPHRASE: ${{ secrets.COINBASE_API_PASSPHRASE }}
           COINBASE_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINBASE_PUBLISHER_PRIVATE_KEY }}
+          GEMINI_PUBLISHER_PRIVATE_KEY: ${{ secrets.GEMINI_PUBLISHER_PRIVATE_KEY }}
         run: |
-          export $(grep -v '^#' .env | xargs)
-          docker run --env-file sample-publisher/all/.env \
+          docker run \
             -e PUBLISHER_REGISTRATION_PRIVATE_KEY=${PUBLISHER_REGISTRATION_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\
             -e COINAPI_PUBLISHER_PRIVATE_KEY=${COINAPI_PUBLISHER_PRIVATE_KEY}\
@@ -45,5 +44,6 @@ jobs:
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
             -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
             -e COINBASE_PUBLISHER_PRIVATE_KEY=${COINBASE_PUBLISHER_PRIVATE_KEY}\
+            -e GEMINI_PUBLISHER_PRIVATE_KEY=${GEMINI_PUBLISHER_PRIVATE_KEY}\
             publish-all
 

@@ -36,7 +36,7 @@ The recommended way to publish data is to use the `pontis-publisher` Docker imag
 
 ```
 docker build sample-publisher/coinbase/ -t coinbase
-docker run --env-file sample-publisher/coinbase/.secrets.env --env-file sample-publisher/coinbase/.env coinbase
+docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
 ```
 
 ### Updating the pontis-publisher Base Image
@@ -68,3 +68,11 @@ starknet deploy --contract oracle_compiled.json --inputs <PUBLIC_PUBLISHER_REGIS
 First, make sure to set the environmental variable `PYPI_API_TOKEN`.
 
 To publish a new version, just navigate into `pontis-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`. Make sure to run `git push --tags` once you've done that.
+
+### Updating the Pontis Publisher
+
+If your changes involve changes to the base image, make sure to build and push to Dockerhub (see "Updating the pontis-publisher Base Image" section), and the existing publisher instance will automatically pull that.
+
+If your changes involve changes to the fetching and publishing code, run `scp -i LightsailDefaultKey-us-east-2.pem -r ../all/ ubuntu@<IP_ADDRESS>:` to copy over the code again, where `IP_ADDRESS` is the IP address of the Lightsail instance. The existing instance will automatically rebuild the docker image using that new code.
+
+If your changes are to the cron command, it is easiest to ssh into the instance and edit the cron command there directtly using `crontab -e`.

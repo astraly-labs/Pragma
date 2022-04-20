@@ -94,3 +94,35 @@ class PontisPublisherClient:
             entry._asdict(), signature_r, signature_s, max_fee=self.max_fee
         )
         print(f"Updated entry with transaction {result}")
+
+    @classmethod
+    async def publish_many(
+        cls, oracle_address, network, entries, publisher_private_keys, max_fee=None
+    ):
+        if len(entries) != len(publisher_private_keys):
+            raise Exception(
+                "publish_many received different length entries and publisher_private_keys lists"
+            )
+
+        if max_fee is None:
+            max_fee = MAX_FEE
+
+        signatures = [
+            sign(hash_entry(entry), private_key)
+            for entry, private_key in zip(entries, publisher_private_keys)
+        ]
+        signatures_r = [s[0] for s in signatures]
+        signatures_s = [s[1] for s in signatures]
+
+        oracle_contract = await Contract.from_address(oracle_address, Client(network))
+
+        response = await oracle_contract.functions["submit_many_entries"].invoke(
+            [entry._asdict() for entry in entries],
+            signatures_r,
+            signatures_s,
+            max_fee=max_fee,
+        )
+
+        print(f"Successfully sent {len(entries)} updated entries")
+
+        return response
