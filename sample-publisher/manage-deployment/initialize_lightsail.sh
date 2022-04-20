@@ -11,4 +11,4 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 apt-cache policy docker-ce
 sudo apt install -y docker-ce
 sudo usermod -aG docker ${USER}
-(crontab -l 2>/dev/null; echo "* * * * * docker build all/ -t all && docker run --env-file all/.secrets.env all > all/log.txt 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * docker build --pull all/ -t all && docker run --env-file all/.secrets.env all > all/log.txt 2>&1") | crontab -
