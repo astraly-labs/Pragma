@@ -38,7 +38,7 @@ async def fetch_coinapi(price_pairs, decimals):
         price = response.json()["rate"]
         timestamp = int(
             datetime.datetime.strptime(
-                response.json()["time"], "%Y-%m-%dT%H:%M:%S"
+                response.json()["time"], "%Y-%m-%dT%H:%M:%S.%f%z"
             ).timestamp()
         )
         price_int = int(price * (10**decimals))
@@ -156,7 +156,7 @@ async def fetch_coingecko(price_pairs, decimals):
         price = response.json()["market_data"]["current_price"][price_pair[1].lower()]
         timestamp = int(
             datetime.datetime.strptime(
-                response.json()["last_updated"].split(".")[0],
+                response.json()["last_updated"],
                 "%Y-%m-%dT%H:%M:%S.%f%z",
             ).timestamp()
         )
