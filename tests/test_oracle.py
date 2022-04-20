@@ -82,7 +82,7 @@ async def test_publish(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=str_to_felt("usd/eth"), value=2, timestamp=1, publisher=publisher)
+    entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -100,7 +100,7 @@ async def test_republish(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
@@ -129,7 +129,7 @@ async def test_republish_stale(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=2, timestamp=2, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
@@ -165,7 +165,7 @@ async def test_publish_second_asset(
     registered_contract, private_and_public_publisher_keys, publisher
 ):
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=str_to_felt("usd/eth"), value=2, timestamp=1, publisher=publisher)
+    entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -175,7 +175,7 @@ async def test_publish_second_asset(
     assert result.result.value == entry.value
 
     second_entry = Entry(
-        key=str_to_felt("usd/btc"), value=2, timestamp=1, publisher=publisher
+        key=str_to_felt("btc/usd"), value=2, timestamp=1, publisher=publisher
     )
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
@@ -201,7 +201,7 @@ async def test_publish_second_publisher(
     private_and_public_registration_keys,
     publisher,
 ):
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
@@ -287,7 +287,7 @@ async def test_median_aggregation(
     private_and_public_registration_keys,
     publisher,
 ):
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     private_key, _ = private_and_public_publisher_keys
@@ -331,7 +331,7 @@ async def test_submit_many(
     private_and_public_registration_keys,
     publisher,
 ):
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     private_key, _ = private_and_public_publisher_keys
@@ -398,7 +398,7 @@ async def test_subset_publishers(
     private_and_public_registration_keys,
     publisher,
 ):
-    key = str_to_felt("usd/eth")
+    key = str_to_felt("eth/usd")
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
