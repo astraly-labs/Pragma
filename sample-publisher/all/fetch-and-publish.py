@@ -4,6 +4,7 @@ import datetime
 import hmac
 import os
 from hashlib import sha256
+import time
 from pontis.core.utils import construct_entry
 
 import requests
@@ -195,7 +196,38 @@ async def fetch_coinbase(price_pair, decimals):
     print(f"Fetched price {price} for {'/'.join(price_pair)} from Coinbase")
 
     return construct_entry(
-        key="".join(price_pair),
+        key="".join(price_pair).lower(),
+        value=price_int,
+        timestamp=timestamp,
+        publisher=publisher,
+    )
+
+
+async def fetch_gemini(price_pair, decimals):
+    base_url = "https://api.gemini.com/v1"
+    response = requests.get(base_url + "/pricefeed")
+
+    timestamp = int(time.time())
+    result = [e for e in response.json() if e["pair"] == "".join(price_pair)]
+    assert (
+        len(result) == 1
+    ), f"Found two matching entries for Gemini response and price pair {price_pair}"
+    price = float(result[0]["price"])
+    price_int = int(price * (10**decimals))
+
+    GEMINI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
+    publisher = "gemini"
+    client = PontisPublisherClient(
+        ORACLE_ADDRESS, GEMINI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    )
+
+    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    await client.register_publisher_if_not_registered(r, s)
+
+    print(f"Fetched price {price} for {'/'.join(price_pair)} from Gemini")
+
+    return construct_entry(
+        key="".join(price_pair).lower(),
         value=price_int,
         timestamp=timestamp,
         publisher=publisher,
