@@ -447,7 +447,7 @@ async def test_unknown_key(registered_contract):
         await registered_contract.get_value(unknown_key).invoke()
 
         raise Exception(
-            "Transaction to submit stale price succeeded, but should not have."
+            "Transaction to get value for unknown key succeeded, but should not have."
         )
     except StarkException:
         pass

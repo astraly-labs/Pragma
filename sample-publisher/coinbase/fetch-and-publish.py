@@ -6,6 +6,7 @@ import os
 from hashlib import sha256
 
 import requests
+from pontis.core.const import NETWORK, ORACLE_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
 
 DECIMALS = 10
@@ -13,9 +14,6 @@ DECIMALS = 10
 
 async def main():
     price_pairs = [("USD", "ETH")]
-
-    ORACLE_ADDRESS = os.environ.get("ORACLE_ADDRESS")
-    NETWORK = os.environ.get("NETWORK")
 
     API_SECRET = os.environ.get("API_SECRET")
     API_KEY = os.environ.get("API_KEY")
@@ -55,7 +53,7 @@ async def main():
         response.raise_for_status()
         result = response.json()
         price = float(result["prices"][price_pair[1]])
-        price_int = int(price) * (10**DECIMALS)
+        price_int = int(price * (10**DECIMALS))
 
         timestamp = int(result["timestamp"])
 
@@ -63,7 +61,7 @@ async def main():
             ORACLE_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
         )
 
-        await client.publish("".join(price_pair), price_int, timestamp)
+        await client.publish("/".join(price_pair), price_int, timestamp)
 
         print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
 
