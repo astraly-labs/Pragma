@@ -47,7 +47,7 @@ async def fetch_coinapi(price_pairs, decimals):
 
         entries.append(
             construct_entry(
-                key="".join(price_pair).lower(),
+                key="/".join(price_pair).lower(),
                 value=price_int,
                 timestamp=timestamp,
                 publisher=publisher,
@@ -102,7 +102,7 @@ async def fetch_coinmarketcap(price_pairs, decimals):
 
         entries.append(
             construct_entry(
-                key="".join(price_pair).lower(),
+                key="/".join(price_pair).lower(),
                 value=price_int,
                 timestamp=timestamp,
                 publisher=publisher,
@@ -166,7 +166,7 @@ async def fetch_coingecko(price_pairs, decimals):
 
         entries.append(
             construct_entry(
-                key="".join(price_pair).lower(),
+                key="/".join(price_pair).lower(),
                 value=price_int,
                 timestamp=timestamp,
                 publisher=publisher,
@@ -235,7 +235,7 @@ async def fetch_coinbase(price_pairs, decimals):
 
             entries.append(
                 construct_entry(
-                    key="".join(price_pair).lower(),
+                    key="/".join(price_pair).lower(),
                     value=price_int,
                     timestamp=timestamp,
                     publisher=publisher,
@@ -279,7 +279,7 @@ async def fetch_gemini(price_pairs, decimals):
 
         entries.append(
             construct_entry(
-                key="".join(price_pair).lower(),
+                key="/".join(price_pair).lower(),
                 value=price_int,
                 timestamp=timestamp,
                 publisher=publisher,
