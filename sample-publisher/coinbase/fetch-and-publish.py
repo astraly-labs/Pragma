@@ -6,8 +6,8 @@ import os
 from hashlib import sha256
 
 import requests
-from pontis.publisher.client import PontisPublisherClient
 from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.publisher.client import PontisPublisherClient
 
 DECIMALS = 10
 
