@@ -57,6 +57,10 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     let (num_entries, entries_ptr) = Oracle_get_all_entries_for_key(
         key, num_publishers, publisher_ptr)
 
+    with_attr error_message("Unknown key, no entries found"):
+        assert_lt(0, num_entries)
+    end
+
     let (value) = Entry_aggregate_entries(num_entries, entries_ptr)
     let (last_updated_timestamp) = Entry_aggregate_timestamps_max(num_entries, entries_ptr)
     return (value, last_updated_timestamp)
