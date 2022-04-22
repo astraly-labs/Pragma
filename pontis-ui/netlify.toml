@@ -2,6 +2,6 @@
 package = "@netlify/plugin-nextjs"
 
 [build]
-base = "sns-app/"
+base = "pontis-ui/"
 publish = ".next"
 command = "yarn build"
