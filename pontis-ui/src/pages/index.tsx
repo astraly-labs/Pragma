@@ -1,39 +1,14 @@
 import React, { useState } from "react";
+import AssetKeyPicker from "../components/AssetKeyPicker";
+import CurrentPrice from "../components/CurrentPrice";
 import { StyledExternalLink } from "../components/StyledLink";
-import { AssetKeyT, useOracleGetValue } from "../hooks/oracle";
+import { AssetKeyT } from "../hooks/oracle";
 import { getOracleAddress } from "../services/address.service";
 import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../services/wallet.service";
 
-const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
-  const { oracleResponse, loading, error } = useOracleGetValue(assetKey);
-
-  return (
-    <div className="text-8xl">
-      {loading && oracleResponse === undefined ? (
-        <div className="text-xl">Loading...</div>
-      ) : oracleResponse !== undefined ? (
-        <div className="inline">{oracleResponse.value.toFixed(4)}</div>
-      ) : (
-        <div>Error: {error}</div>
-      )}
-    </div>
-  );
-};
-
-const AssetKeyPicker = ({
-  selectedAssetKey,
-  onKeyChange,
-}: {
-  selectedAssetKey: AssetKeyT;
-  onKeyChange: (newKey: AssetKeyT) => void;
-}) => {
-  return (
-    <div className="text-xl my-6">{selectedAssetKey.toLocaleUpperCase()}</div>
-  );
-};
 const IndexPage = () => {
   const [currentKey, setCurrentKey] = useState<AssetKeyT>("eth/usd");
 
@@ -42,8 +17,8 @@ const IndexPage = () => {
   };
 
   return (
-    <div className="m-auto text-center">
-      <CurrentPrice assetKey={currentKey} />
+    <div className="m-auto text-center text-xl">
+      <CurrentPrice key={currentKey} assetKey={currentKey} />
       <AssetKeyPicker
         selectedAssetKey={currentKey}
         onKeyChange={handleKeyChange}

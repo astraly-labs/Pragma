@@ -6,14 +6,17 @@ import OracleAbi from "../abi/oracle.json";
 import { Abi } from "starknet";
 import { bigNumberishArrayToDecimalStringArray } from "starknet/utils/number";
 
-export type AssetKeyT =
-  | "eth/usd"
-  | "btc/usd"
-  | "luna/usd"
-  | "sol/usd"
-  | "avax/usd"
-  | "doge/usd"
-  | "shib/usd";
+export const AssetKeys = [
+  "eth/usd",
+  "btc/usd",
+  "luna/usd",
+  "sol/usd",
+  "avax/usd",
+  "doge/usd",
+  "shib/usd",
+];
+
+export type AssetKeyT = typeof AssetKeys[number];
 
 export const useOracleContract = () => {
   const network = networkId();
@@ -39,7 +42,6 @@ const useOracleGetDecimals = (assetKey: AssetKeyT): GetDecimalsHookT => {
   });
   let decimals: number | undefined = undefined;
   if (data !== undefined) {
-    console.log("data dec", data);
     decimals = parseInt(bigNumberishArrayToDecimalStringArray(data)[0]);
   }
   return { decimals, loading, error };
@@ -65,13 +67,25 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
     method: "get_value",
     args: [arg],
   });
+
+  if (error !== undefined) {
+    console.error(
+      `Error retrieving price for ${assetKey}, encoded as ${arg}`,
+      error
+    );
+  }
+
   let oracleResponse: OracleResponseT | undefined = undefined;
   if (data !== undefined) {
-    const [value, lastUpdatedTimestamp] =
+    const [strValue, strLastUpdatedTimestamp] =
       bigNumberishArrayToDecimalStringArray(data);
+    const value = parseInt(strValue) / 10 ** decimals;
+    const lastUpdatedTimestamp = parseInt(strLastUpdatedTimestamp);
     oracleResponse = {
-      value: parseInt(value) / 10 ** decimals,
-      lastUpdatedTimestamp: parseInt(lastUpdatedTimestamp),
+      value: isNaN(value) ? undefined : value,
+      lastUpdatedTimestamp: isNaN(lastUpdatedTimestamp)
+        ? undefined
+        : lastUpdatedTimestamp,
     };
   }
   return { oracleResponse, loading, error };

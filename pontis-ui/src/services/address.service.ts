@@ -14,7 +14,7 @@ export const truncateAddress = (fullAddress: string) => {
 };
 
 const GOERLI_DEFAULT_ORACLE_CONTRACT_ADDRESS =
-  "0x0351ab9d236c3e8e42be3b2891f33635327fd4b345779a2079ff4d6356f55ae1";
+  "0x064bae34a4709661b0cc02d7e6b7851481034f65cef4c77193b44a7f2d10bcd8";
 
 export const getOracleAddress = (network: Network): string => {
   if (network == "mainnet-alpha") {
