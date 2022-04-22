@@ -9,20 +9,21 @@ const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
   const { oracleResponse, error } = useOracleGetValue(assetKey);
 
   return (
-    <div>
-      {oracleResponse?.value !== undefined ? (
+    <div className="my-4">
+      {oracleResponse?.value !== undefined || false ? (
         oracleResponse.lastUpdatedTimestamp === 0 ? (
           <div>
-            <div className="text-8xl text-transparent mt-20 sm:mt-4">
-              Hidden
+            <div className="my-16">
+              No results found for {assetKey.toLocaleUpperCase()}
             </div>
-            <div>No results found for {assetKey.toLocaleUpperCase()}</div>
           </div>
         ) : (
           <div>
-            <div className="inline text-8xl">
-              <div className="inline">{Math.floor(oracleResponse.value)}</div>
-              <div className="sm:inline text-2xl">
+            <div className="inline">
+              <div className="inline text-6xl sm:text-8xl">
+                {Math.floor(oracleResponse.value)}
+              </div>
+              <div className="sm:inline text-xl sm:text-2xl">
                 {(oracleResponse.value - Math.floor(oracleResponse.value))
                   .toFixed(DECIMALS_TO_SHOW)
                   .toString()
@@ -37,15 +38,19 @@ const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
           </div>
         )
       ) : error !== undefined ? (
-        <div>
-          <div className="text-8xl text-transparent mt-16 sm:mt">Hidden</div>
+        <div className="my-14">
           <div>Error fetching price for {assetKey.toLocaleUpperCase()}.</div>
           <div>Please check the console for details and try again later.</div>
         </div>
       ) : (
         <div>
-          <div className="text-6xl text-transparent my-2">Hidden</div>
-          <ReactLoading className="mx-auto" type="bubbles" color="#fff" />
+          <ReactLoading
+            className="mx-auto my-11 sm:my-9"
+            height="100px"
+            width="100px"
+            type="bubbles"
+            color="#fff"
+          />
         </div>
       )}
     </div>
