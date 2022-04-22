@@ -344,7 +344,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
 
 
 if __name__ == "__main__":
-    DECIMALS = 10
+    DECIMALS = 18
     PRICE_PAIRS = [
         ["ETH", "USD"],
         ["BTC", "USD"],
