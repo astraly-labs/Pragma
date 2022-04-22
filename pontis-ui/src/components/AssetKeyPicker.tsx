@@ -14,11 +14,11 @@ const AssetKeyPicker = ({
 
   const dropdown = (
     <div className="absolute inset-x-0 my-2">
-      <div className="bg-white m-auto w-36 rounded-md py-1">
+      <div className="bg-white m-auto w-40 rounded-md py-1">
         {AssetKeys.map((key, i) => (
           <div
             className={classNames(
-              "py-1 text-indigo-600 hover:text-indigo-900 hover:bg-fuchsia-100",
+              "py-2 text-indigo-600 hover:text-indigo-900 hover:bg-fuchsia-100",
               { "border-t border-top border-gray-300": i !== 0 }
             )}
             key={key}
@@ -31,13 +31,15 @@ const AssetKeyPicker = ({
     </div>
   );
 
-  const dropdownIconClassName = "text-sm align-middle mb-1";
+  const dropdownIconClassName = "align-middle mb-4";
   return (
     <div
       onClick={() => setIsExpanded(!isExpanded)}
       className="cursor-pointer my-4"
     >
-      {selectedAssetKey.toLocaleUpperCase()}{" "}
+      <div className="inline text-4xl">
+        {selectedAssetKey.toLocaleUpperCase()}{" "}
+      </div>
       {isExpanded ? (
         <UpOutlined className={dropdownIconClassName} />
       ) : (
