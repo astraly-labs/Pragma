@@ -2,7 +2,7 @@ import { useContract, useStarknetCall } from "@starknet-react/core";
 import { strToHexFelt } from "../../utils/felt";
 import { getOracleAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
-import OracleAbi from "../abi/oracle.json";
+import OracleAbi from "../abi/Oracle.json";
 import { Abi } from "starknet";
 import { bigNumberishArrayToDecimalStringArray } from "starknet/utils/number";
 
