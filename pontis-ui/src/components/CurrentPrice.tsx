@@ -5,8 +5,6 @@ import TimeSinceUpdate from "./TimeSinceUpdate";
 const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
   const { oracleResponse, error } = useOracleGetValue(assetKey);
 
-  console.log(oracleResponse);
-
   return (
     <div>
       {oracleResponse?.value !== undefined ? (
