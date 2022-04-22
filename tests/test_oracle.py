@@ -5,6 +5,7 @@ import pytest
 import pytest_asyncio
 from pontis.core.entry import Entry
 from pontis.core.utils import (
+    construct_entry,
     sign_entry,
     sign_publisher,
     sign_publisher_registration,
@@ -398,7 +399,7 @@ async def test_subset_publishers(
     private_and_public_registration_keys,
     publisher,
 ):
-    key = str_to_felt("eth/usd")
+    key = str_to_felt("luna/usd")
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
@@ -439,15 +440,88 @@ async def test_subset_publishers(
 
 @pytest.mark.asyncio
 async def test_unknown_key(registered_contract):
-    unknown_key = str_to_felt("answer")
+    unknown_key = str_to_felt("answertolife")
     result = await registered_contract.get_entries_for_key(unknown_key).invoke()
     assert len(result.result.entries) == 0
 
-    try:
-        await registered_contract.get_value(unknown_key).invoke()
+    result = await registered_contract.get_value(unknown_key).invoke()
+    assert result.result.value == 0
+    assert result.result.last_updated_timestamp == 0
 
-        raise Exception(
-            "Transaction to get value for unknown key succeeded, but should not have."
+
+@pytest.mark.asyncio
+async def test_real_data(contract, private_and_public_registration_keys):
+    registration_private_key, _ = private_and_public_registration_keys
+    entries = [
+        construct_entry("eth/usd", 29898560234403, 1650590880, "coinmarketcap"),
+        construct_entry("btc/usd", 404308601528970, 1650590880, "coinmarketcap"),
+        construct_entry("luna/usd", 922793061826, 1650590880, "coinmarketcap"),
+        construct_entry("sol/usd", 1023379113474, 1650590880, "coinmarketcap"),
+        construct_entry("avax/usd", 759878999010, 1650590880, "coinmarketcap"),
+        construct_entry("doge/usd", 1365470994, 1650590880, "coinmarketcap"),
+        construct_entry("shib/usd", 244844, 1650590880, "coinmarketcap"),
+        construct_entry("eth/usd", 29902600000000, 1650590935, "coingecko"),
+        construct_entry("btc/usd", 404070000000000, 1650590889, "coingecko"),
+        construct_entry("luna/usd", 922099999999, 1650590883, "coingecko"),
+        construct_entry("sol/usd", 1023600000000, 1650590886, "coingecko"),
+        construct_entry("avax/usd", 759800000000, 1650590853, "coingecko"),
+        construct_entry("doge/usd", 1365780000, 1650590845, "coingecko"),
+        construct_entry("shib/usd", 245100, 1650590865, "coingecko"),
+        construct_entry("eth/usd", 29924650000000, 1650590820, "coinbase"),
+        construct_entry("btc/usd", 404057899999999, 1650590820, "coinbase"),
+        construct_entry("eth/usd", 29920000000000, 1650590986, "gemini"),
+        construct_entry("btc/usd", 404047800000000, 1650590986, "gemini"),
+        construct_entry("luna/usd", 924700000000, 1650590986, "gemini"),
+        construct_entry("sol/usd", 1023610000000, 1650590986, "gemini"),
+        construct_entry("doge/usd", 1364400000, 1650590986, "gemini"),
+        construct_entry("shib/usd", 245270, 1650590986, "gemini"),
+    ]
+    publishers_str = ["coinmarketcap", "coingecko", "coinbase", "gemini"]
+    publishers = [str_to_felt(p) for p in publishers_str]
+    publisher_keys = {}
+    for publisher in publishers:
+        publisher_private_key = get_random_private_key()
+        publisher_public_key = private_to_stark_key(publisher_private_key)
+        publisher_signature_r, publisher_signature_s = sign(
+            publisher, publisher_private_key
         )
-    except StarkException:
-        pass
+
+        (
+            registration_signature_r,
+            registration_signature_s,
+        ) = sign_publisher_registration(
+            publisher_public_key, publisher, registration_private_key
+        )
+
+        await contract.register_publisher(
+            publisher_public_key,
+            publisher,
+            publisher_signature_r,
+            publisher_signature_s,
+            registration_signature_r,
+            registration_signature_s,
+        ).invoke()
+
+        publisher_keys[publisher] = publisher_private_key
+
+    signatures = [
+        sign_entry(entry, publisher_keys[entry.publisher]) for entry in entries
+    ]
+    signatures_r = [s[0] for s in signatures]
+    signatures_s = [s[1] for s in signatures]
+
+    await contract.submit_many_entries(entries, signatures_r, signatures_s).invoke()
+
+    keys = [
+        "eth/usd",
+        "btc/usd",
+        "luna/usd",
+        "sol/usd",
+        "avax/usd",
+        "doge/usd",
+        "shib/usd",
+    ]
+    for key in keys:
+        result = await contract.get_value(str_to_felt(key)).invoke()
+        assert result.result.value != 0
+        assert result.result.last_updated_timestamp != 0
