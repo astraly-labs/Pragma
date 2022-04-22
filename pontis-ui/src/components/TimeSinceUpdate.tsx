@@ -24,7 +24,7 @@ const TimeSinceUpdate = ({
   setInterval(updateCurrentTimestampSeconds, 1000);
 
   return (
-    <div>
+    <div className="px-4">
       Last updated: {minutesSinceUpdate} minutes and {secondsSinceUpdate}{" "}
       seconds ago
     </div>
