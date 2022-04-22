@@ -51,14 +51,11 @@ end
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
-    local syscall_ptr : felt* = syscall_ptr
 
-    let (num_publishers, publisher_ptr) = Publisher_get_all_publishers()
-    let (num_entries, entries_ptr) = Oracle_get_all_entries_for_key(
-        key, num_publishers, publisher_ptr)
+    let (num_entries, entries_ptr) = Oracle_get_entries_for_key(key)
 
-    with_attr error_message("Unknown key, no entries found"):
-        assert_lt(0, num_entries)
+    if num_entries == 0:
+        return (0, 0)
     end
 
     let (value) = Entry_aggregate_entries(num_entries, entries_ptr)
