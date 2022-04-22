@@ -2,6 +2,8 @@ import React from "react";
 import { AssetKeyT, useOracleGetValue } from "../hooks/oracle";
 import TimeSinceUpdate from "./TimeSinceUpdate";
 
+const DECIMALS_TO_SHOW = 10;
+
 const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
   const { oracleResponse, error } = useOracleGetValue(assetKey);
 
@@ -19,7 +21,7 @@ const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
               <div className="inline">{Math.floor(oracleResponse.value)}</div>
               <div className="sm:inline text-2xl">
                 {(oracleResponse.value - Math.floor(oracleResponse.value))
-                  .toFixed(6)
+                  .toFixed(DECIMALS_TO_SHOW)
                   .toString()
                   .slice(1)}
               </div>
