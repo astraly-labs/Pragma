@@ -14,6 +14,12 @@ def str_to_felt(text):
     return int.from_bytes(b_text, "big")
 
 
+def felt_to_str(felt):
+    num_bytes = (felt.bit_length() + 7) // 8
+    bytes = felt.to_bytes(num_bytes, "big")
+    return bytes.decode("utf-8")
+
+
 def sign_entry(entry, private_key):
     entry_hash = hash_entry(entry)
     signature_r, signature_s = sign(entry_hash, private_key)
