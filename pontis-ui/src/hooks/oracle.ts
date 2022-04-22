@@ -1,5 +1,5 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
-import { decToHex, strToFelt } from "../../utils/felt";
+import { strToHexFelt } from "../../utils/felt";
 import { getOracleAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
 import OracleAbi from "../abi/oracle.json";
@@ -61,7 +61,7 @@ export interface GetValueHookT {
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   const { contract } = useOracleContract();
   const { decimals } = useOracleGetDecimals(assetKey);
-  const arg = decToHex(strToFelt(assetKey));
+  const arg = strToHexFelt(assetKey);
   const { data, loading, error } = useStarknetCall({
     contract,
     method: "get_value",
