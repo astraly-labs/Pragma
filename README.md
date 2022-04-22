@@ -6,7 +6,7 @@ This is the repository for the Pontis Oracle on Starknet.
 
 You can read more about the Pontis Oracle [here](https://www.notion.so/Pontis-f5103d8ecc9d49a6844323819570c1b6).
 
-The Oracle contract is deployed at 0x064bae34a4709661b0cc02d7e6b7851481034f65cef4c77193b44a7f2d10bcd8 on testnet.
+The Oracle contract is deployed at 0x039d1bb4904cef28755c59f081cc88a576ecdf42240fb73dd44ddd003848ce33 on testnet.
 
 ## Setup
 

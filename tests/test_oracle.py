@@ -21,7 +21,7 @@ from starkware.starkware_utils.error_handling import StarkException
 
 # The path to the contract source code.
 CONTRACT_FILE = os.path.join(os.path.dirname(__file__), "../contracts/Oracle.cairo")
-DECIMALS = 10
+DECIMALS = 18
 
 
 @pytest_asyncio.fixture

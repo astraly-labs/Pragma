@@ -12,7 +12,7 @@ from contracts.publisher.library import (
     Publisher_register_publisher, Publisher_get_publisher_public_key,
     Publisher_rotate_publisher_key)
 
-const DECIMALS = 10
+const DECIMALS = 18
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(

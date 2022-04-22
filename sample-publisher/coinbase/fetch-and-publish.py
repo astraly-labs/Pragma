@@ -9,7 +9,7 @@ import requests
 from pontis.core.const import NETWORK, ORACLE_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
 
-DECIMALS = 10
+DECIMALS = 18
 
 
 async def main():

@@ -1,6 +1,6 @@
 import os
 
-ORACLE_ADDRESS = "0x064bae34a4709661b0cc02d7e6b7851481034f65cef4c77193b44a7f2d10bcd8"
+ORACLE_ADDRESS = "0x039d1bb4904cef28755c59f081cc88a576ecdf42240fb73dd44ddd003848ce33"
 NETWORK = "testnet"
 
 if os.environ.get("ORACLE_ADDRESS") is None:
