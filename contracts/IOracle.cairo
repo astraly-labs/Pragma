@@ -1,5 +1,7 @@
 %lang starknet
 
+from contracts.entry.library import Entry
+
 @contract_interface
 namespace IOracle:
     #
@@ -15,7 +17,7 @@ namespace IOracle:
     func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
     end
 
-    func get_decimals(decimals : felt):
+    func get_decimals() -> (decimals : felt):
     end
 
     #
