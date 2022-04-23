@@ -13,7 +13,7 @@ DECIMALS = 18
 
 
 async def main():
-    price_pairs = [("USD", "ETH")]
+    price_pairs = [("ETH", "USD")]
 
     API_SECRET = os.environ.get("API_SECRET")
     API_KEY = os.environ.get("API_KEY")
@@ -52,7 +52,7 @@ async def main():
 
         response.raise_for_status()
         result = response.json()
-        price = float(result["prices"][price_pair[1]])
+        price = float(result["prices"][price_pair[0]])
         price_int = int(price * (10**DECIMALS))
 
         timestamp = int(result["timestamp"])
@@ -61,7 +61,7 @@ async def main():
             ORACLE_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
         )
 
-        await client.publish("/".join(price_pair), price_int, timestamp)
+        await client.publish("/".join(price_pair).lower(), price_int, timestamp)
 
         print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
 
