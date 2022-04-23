@@ -144,6 +144,8 @@ async def fetch_coingecko(price_pairs, decimals):
             price_pair_id = "dogecoin"
         elif price_pair[0] == "SHIB":
             price_pair_id = "shiba-inu"
+        elif price_pair[0] == "TEMP":
+            price_pair_id = "tempus"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {price_pair[0]}"
@@ -353,6 +355,7 @@ if __name__ == "__main__":
         ["AVAX", "USD"],
         ["DOGE", "USD"],
         ["SHIB", "USD"],
+        ["TEMP", "USD"],
     ]
 
     asyncio.run(publish_all(PRICE_PAIRS, DECIMALS))
