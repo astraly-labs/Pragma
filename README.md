@@ -4,7 +4,7 @@ This is the repository for the Pontis Oracle on Starknet.
 
 ## About
 
-You can read more about the Pontis Oracle [here](https://www.notion.so/Pontis-f5103d8ecc9d49a6844323819570c1b6).
+You can read more about the Pontis Oracle [here](https://rocky-volleyball-654.notion.site/Pontis-f5103d8ecc9d49a6844323819570c1b6).
 
 The Oracle contract is deployed at 0x039d1bb4904cef28755c59f081cc88a576ecdf42240fb73dd44ddd003848ce33 on testnet.
 
@@ -24,10 +24,10 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `24016925336360008` (use `str_to_felt` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_ADDRESS>` with the address of the Oracle (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_ADDRESS>` with the address of the Oracle (see above):
 ```
 starknet-compile contracts/Oracle.cairo --abi oracle_abi.json --output oracle_compiled.json
-starknet call --address <ORACLE_ADDRESS> --abi oracle_abi.json --function get_price --inputs 24016925336360008
+starknet call --address <ORACLE_ADDRESS> --abi oracle_abi.json --function get_price --inputs 28556963469423460
 ```
 
 ### Publishing Data
