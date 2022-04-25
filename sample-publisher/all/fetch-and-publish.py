@@ -201,6 +201,11 @@ async def fetch_coinbase(price_pairs, decimals):
 
     for price_pair in price_pairs:
 
+        if price_pair[1] != "USD":
+            print(
+                f"Unable to fetch Coinbase price for non-USD denomination {price_pair[1]}"
+            )
+
         request_timestamp = str(
             int(
                 datetime.datetime.now(datetime.timezone.utc)
@@ -356,6 +361,7 @@ if __name__ == "__main__":
         ["DOGE", "USD"],
         ["SHIB", "USD"],
         ["TEMP", "USD"],
+        ["ETH", "MXN"],
     ]
 
     asyncio.run(publish_all(PRICE_PAIRS, DECIMALS))

@@ -15,6 +15,7 @@ export const AssetKeys = [
   "doge/usd",
   "shib/usd",
   "temp/usd",
+  "eth/mxn",
 ];
 
 export type AssetKeyT = typeof AssetKeys[number];
