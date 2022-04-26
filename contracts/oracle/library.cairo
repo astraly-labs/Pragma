@@ -1,7 +1,7 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
-from starkware.cairo.common.math import assert_lt
+from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.math_cmp import is_not_zero
 from starkware.cairo.common.alloc import alloc
 
@@ -76,7 +76,7 @@ func Oracle_submit_entry{
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
     with_attr error_message("Received stale update (timestamp older than current entry)"):
-        assert_lt(entry.timestamp, new_entry.timestamp)
+        assert_le(entry.timestamp, new_entry.timestamp)
     end
 
     Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
