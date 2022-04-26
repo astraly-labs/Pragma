@@ -2,8 +2,9 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.math import assert_le
-from starkware.cairo.common.math_cmp import is_not_zero
+from starkware.cairo.common.math_cmp import is_not_zero, is_lt
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.library import (
     Entry, Entry_aggregate_entries, Entry_assert_valid_entry_signature,
@@ -70,9 +71,6 @@ end
 func Oracle_submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
-    let (publisher_public_key) = Publisher_get_publisher_public_key(new_entry.publisher)
-    Entry_assert_valid_entry_signature(publisher_public_key, signature_r, signature_s, new_entry)
-
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
     with_attr error_message("Received stale update (timestamp older than current entry)"):
@@ -80,6 +78,22 @@ func Oracle_submit_entry{
     end
 
     Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
+    return ()
+end
+
+func Oracle_submit_entry_no_assert{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
+    let (publisher_public_key) = Publisher_get_publisher_public_key(new_entry.publisher)
+    Entry_assert_valid_entry_signature(publisher_public_key, signature_r, signature_s, new_entry)
+
+    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
+
+    let (is_new_entry_more_recent) = is_lt(entry.timestamp, new_entry.timestamp)
+    if is_new_entry_more_recent == TRUE:
+        Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
+    end
+
     return ()
 end
 
@@ -98,7 +112,7 @@ func Oracle_submit_many_entries{
         return ()
     end
 
-    Oracle_submit_entry([new_entries], [signatures_r], [signatures_s])
+    Oracle_submit_entry_no_assert([new_entries], [signatures_r], [signatures_s])
     Oracle_submit_many_entries(
         new_entries_len - 1,
         new_entries + Entry.SIZE,
