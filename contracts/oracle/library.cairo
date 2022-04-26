@@ -92,7 +92,7 @@ func Oracle_submit_entry_no_assert{
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
     # use is_le and -1 to get is_lt
-    let (is_new_entry_more_recent) = is_le(entry.timestamp - 1, new_entry.timestamp)
+    let (is_new_entry_more_recent) = is_le(entry.timestamp, new_entry.timestamp - 1)
     if is_new_entry_more_recent == TRUE:
         Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
         tempvar syscall_ptr = syscall_ptr
