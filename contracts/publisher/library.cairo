@@ -64,13 +64,13 @@ func Publisher_register_publisher{
     alloc_locals
     local ecdsa_ptr : SignatureBuiltin* = ecdsa_ptr
 
-    with_attr error_message("Publisher registration signature is invalid"):
-        Publisher_Registration_assert_valid_registration_signature(
-            publisher_public_key, publisher, registration_signature_r, registration_signature_s)
-    end
+    Publisher_Registration_assert_valid_registration_signature(
+        publisher_public_key, publisher, registration_signature_r, registration_signature_s)
 
-    verify_ecdsa_signature(
-        publisher, publisher_public_key, publisher_signature_r, publisher_signature_s)
+    with_attr error_message("Publisher signature on publisher ID invalid"):
+        verify_ecdsa_signature(
+            publisher, publisher_public_key, publisher_signature_r, publisher_signature_s)
+    end
 
     let (existing_publisher_public_key) = Publisher_get_publisher_public_key(publisher)
 
@@ -88,11 +88,14 @@ func Publisher_rotate_publisher_key{
         range_check_ptr}(
         publisher : felt, old_key : felt, new_key : felt, signature_r : felt, signature_s : felt):
     let (old_stored_publisher_key) = Publisher_public_key_storage.read(publisher)
-    with_attr error_message("Wrong public key for publisher"):
+    with_attr error_message("Old key does not match current public key for publisher"):
         assert old_stored_publisher_key = old_key
     end
 
-    verify_ecdsa_signature(new_key, old_key, signature_r, signature_s)
+    with_attr error_message("Publisher signature on new key invalid"):
+        verify_ecdsa_signature(new_key, old_key, signature_r, signature_s)
+    end
+
     Publisher_public_key_storage.write(publisher, new_key)
     return ()
 end
