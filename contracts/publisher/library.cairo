@@ -58,19 +58,12 @@ end
 func Publisher_register_publisher{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
-        publisher_public_key : felt, publisher : felt, publisher_signature_r : felt,
-        publisher_signature_s : felt, registration_signature_r : felt,
+        publisher_public_key : felt, publisher : felt, registration_signature_r : felt,
         registration_signature_s : felt):
     alloc_locals
-    tempvar ecdsa_ptr_t : SignatureBuiltin* = ecdsa_ptr
 
     Publisher_Registration_assert_valid_registration_signature(
         publisher_public_key, publisher, registration_signature_r, registration_signature_s)
-
-    with_attr error_message("Publisher signature on publisher ID invalid"):
-        verify_ecdsa_signature{ecdsa_ptr=ecdsa_ptr_t}(
-            publisher, publisher_public_key, publisher_signature_r, publisher_signature_s)
-    end
 
     let (existing_publisher_public_key) = Publisher_get_publisher_public_key(publisher)
 

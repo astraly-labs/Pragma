@@ -43,10 +43,7 @@ async def registered_contract(
     private_and_public_registration_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
@@ -56,8 +53,6 @@ async def registered_contract(
     await contract.register_publisher(
         publisher_public_key,
         publisher,
-        publisher_signature_r,
-        publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -155,7 +150,11 @@ async def test_republish_stale(
     except StarkException:
         pass
 
-    result = await registered_contract.get_value(second_entry.key).invoke()
+    await registered_contract.submit_many_entries(
+        [second_entry], [signature_r], [signature_s]
+    ).invoke()  # should not fail and also not update state
+
+    result = await registered_contract.get_value(key).invoke()
     assert result.result.value == entry.value
 
     return
@@ -213,10 +212,6 @@ async def test_publish_second_publisher(
     second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
     second_publisher = str_to_felt("bar")
-    second_publisher_signature_r, second_publisher_signature_s = sign(
-        second_publisher, second_publisher_private_key
-    )
-
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
         second_publisher_public_key, second_publisher, registration_private_key
@@ -225,8 +220,6 @@ async def test_publish_second_publisher(
     await registered_contract.register_publisher(
         second_publisher_public_key,
         second_publisher,
-        second_publisher_signature_r,
-        second_publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -257,10 +250,6 @@ async def register_new_publisher_and_submit_entry(
     publisher_private_key = get_random_private_key()
     publisher_public_key = private_to_stark_key(publisher_private_key)
 
-    publisher_signature_r, publisher_signature_s = sign(
-        publisher, publisher_private_key
-    )
-
     registration_signature_r, registration_signature_s = sign_publisher_registration(
         publisher_public_key, publisher, registration_private_key
     )
@@ -268,8 +257,6 @@ async def register_new_publisher_and_submit_entry(
     await contract.register_publisher(
         publisher_public_key,
         publisher,
-        publisher_signature_r,
-        publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -349,10 +336,6 @@ async def test_submit_many(
         publisher_private_key = get_random_private_key()
         publisher_public_key = private_to_stark_key(publisher_private_key)
 
-        publisher_signature_r, publisher_signature_s = sign(
-            additional_publisher, publisher_private_key
-        )
-
         (
             registration_signature_r,
             registration_signature_s,
@@ -363,8 +346,6 @@ async def test_submit_many(
         await registered_contract.register_publisher(
             publisher_public_key,
             additional_publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             registration_signature_r,
             registration_signature_s,
         ).invoke()
@@ -412,10 +393,6 @@ async def test_subset_publishers(
     publisher_private_key = get_random_private_key()
     publisher_public_key = private_to_stark_key(publisher_private_key)
 
-    publisher_signature_r, publisher_signature_s = sign(
-        additional_publisher, publisher_private_key
-    )
-
     (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
         publisher_public_key, additional_publisher, registration_private_key
     )
@@ -423,8 +400,6 @@ async def test_subset_publishers(
     await registered_contract.register_publisher(
         publisher_public_key,
         additional_publisher,
-        publisher_signature_r,
-        publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -482,9 +457,6 @@ async def test_real_data(contract, private_and_public_registration_keys):
     for publisher in publishers:
         publisher_private_key = get_random_private_key()
         publisher_public_key = private_to_stark_key(publisher_private_key)
-        publisher_signature_r, publisher_signature_s = sign(
-            publisher, publisher_private_key
-        )
 
         (
             registration_signature_r,
@@ -496,8 +468,6 @@ async def test_real_data(contract, private_and_public_registration_keys):
         await contract.register_publisher(
             publisher_public_key,
             publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             registration_signature_r,
             registration_signature_s,
         ).invoke()
