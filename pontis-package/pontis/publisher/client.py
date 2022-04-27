@@ -67,13 +67,9 @@ class PontisPublisherClient:
         )
 
         if result.publisher_public_key == 0:
-            signature_r, signature_s = sign(self.publisher, self.publisher_private_key)
-
             result = await self.oracle_contract.functions["register_publisher"].invoke(
                 self.publisher_public_key,
                 self.publisher,
-                signature_r,
-                signature_s,
                 registration_signature_r,
                 registration_signature_s,
                 max_fee=MAX_FEE,

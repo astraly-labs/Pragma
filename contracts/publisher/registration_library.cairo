@@ -24,7 +24,11 @@ func Publisher_Registration_assert_valid_registration_signature{
 
     let (local publisher_registration_key) = Publisher_Registration_key_storage.read()
     let (publisher_hash) = Publisher_Registration_hash_publisher(publisher_public_key, publisher)
-    verify_ecdsa_signature(publisher_hash, publisher_registration_key, signature_r, signature_s)
+
+    with_attr error_message("Publisher registration signature is invalid"):
+        verify_ecdsa_signature(publisher_hash, publisher_registration_key, signature_r, signature_s)
+    end
+
     return ()
 end
 

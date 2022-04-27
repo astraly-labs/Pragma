@@ -34,8 +34,7 @@ namespace IOracle:
     end
 
     func register_publisher(
-            publisher_public_key : felt, publisher : felt, publisher_signature_r : felt,
-            publisher_signature_s : felt, registration_signature_r : felt,
+            publisher_public_key : felt, publisher : felt, registration_signature_r : felt,
             registration_signature_s : felt):
     end
 
