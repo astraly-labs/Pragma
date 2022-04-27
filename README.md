@@ -71,6 +71,16 @@ First, make sure to set the environmental variable `PYPI_API_TOKEN`.
 
 To publish a new version, just navigate into `pontis-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`. Make sure to run `git push --tags` once you've done that.
 
+Finally, you need to release a new docker image with the appropriate tag. To do this, run the following commands from the root folder:
+```
+export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' .secrets.env | xargs)
+export PONTIS_PACKAGE_VERSION=$(cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o)
+docker build . -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
+docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
+docker push 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
+```
+
 ### Updating the Pontis Publisher
 
 If your changes involve changes to the base image, make sure to build and push to Dockerhub (see "Updating the pontis-publisher Base Image" section), and the existing publisher instance will automatically pull that.
