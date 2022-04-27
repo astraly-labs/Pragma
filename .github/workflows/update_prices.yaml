@@ -16,8 +16,8 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          docker build . -t 42labs/pontis-publisher
-          docker build sample-publisher/all/ -t publish-all
+          docker build . -t 42labs/pontis-publisher:latest
+          docker build sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
 
       - name: Post updated prices
         env:
