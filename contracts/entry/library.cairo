@@ -147,6 +147,9 @@ func Entry_assert_valid_entry_signature{
 
     let (local hash) = Entry_hash_entry(entry)
 
-    verify_ecdsa_signature(hash, publisher_public_key, signature_r, signature_s)
+    with_attr error_message("Publisher signature on entry invalid"):
+        verify_ecdsa_signature(hash, publisher_public_key, signature_r, signature_s)
+    end
+
     return ()
 end

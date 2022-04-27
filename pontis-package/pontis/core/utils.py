@@ -46,12 +46,6 @@ def hash_publisher(publisher_public_key, publisher):
     return publisher_hash
 
 
-def sign_publisher(publisher, publisher_private_key):
-    signature_r, signature_s = sign(publisher, publisher_private_key)
-
-    return signature_r, signature_s
-
-
 def construct_entry(key, value, timestamp, publisher):
     if type(key) == str:
         key = str_to_felt(key)

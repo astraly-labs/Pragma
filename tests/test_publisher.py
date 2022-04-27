@@ -2,7 +2,7 @@ import os
 
 import pytest
 import pytest_asyncio
-from pontis.core.utils import sign_publisher, sign_publisher_registration, str_to_felt
+from pontis.core.utils import sign_publisher_registration, str_to_felt
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
@@ -34,10 +34,7 @@ async def registered_contract(
     private_and_public_registration_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
@@ -47,8 +44,6 @@ async def registered_contract(
     await contract.register_publisher(
         publisher_public_key,
         publisher,
-        publisher_signature_r,
-        publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -68,10 +63,7 @@ async def test_register_bad_signature_fail(
     private_and_public_registration_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
@@ -82,8 +74,6 @@ async def test_register_bad_signature_fail(
         await contract.register_publisher(
             publisher_public_key,
             publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             registration_signature_r,
             registration_signature_s,
         ).invoke()
@@ -103,17 +93,12 @@ async def test_register_empty_signature_fail(
     private_and_public_publisher_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     try:
         await contract.register_publisher(
             publisher_public_key,
             publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             0,
             0,
         ).invoke()
@@ -211,9 +196,6 @@ async def test_register_second_publisher(
     second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
     second_publisher = str_to_felt("bar")
-    second_publisher_signature_r, second_publisher_signature_s = sign(
-        second_publisher, second_publisher_private_key
-    )
 
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
@@ -223,8 +205,6 @@ async def test_register_second_publisher(
     await registered_contract.register_publisher(
         second_publisher_public_key,
         second_publisher,
-        second_publisher_signature_r,
-        second_publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
@@ -247,10 +227,7 @@ async def test_re_register_fail(
     private_and_public_registration_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     registration_private_key, _ = private_and_public_registration_keys
     registration_signature_r, registration_signature_s = sign_publisher_registration(
@@ -260,8 +237,6 @@ async def test_re_register_fail(
         await registered_contract.register_publisher(
             publisher_public_key,
             publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             registration_signature_r,
             registration_signature_s,
         ).invoke()
@@ -284,10 +259,7 @@ async def test_rotate_registration_key(
     private_and_public_registration_keys,
     publisher,
 ):
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    publisher_signature_r, publisher_signature_s = sign_publisher(
-        publisher, publisher_private_key
-    )
+    _, publisher_public_key = private_and_public_publisher_keys
 
     (
         old_registration_private_key,
@@ -318,8 +290,6 @@ async def test_rotate_registration_key(
         await contract.register_publisher(
             publisher_public_key,
             publisher,
-            publisher_signature_r,
-            publisher_signature_s,
             old_registration_signature_r,
             old_registration_signature_s,
         ).invoke()
@@ -337,8 +307,6 @@ async def test_rotate_registration_key(
     await contract.register_publisher(
         publisher_public_key,
         publisher,
-        publisher_signature_r,
-        publisher_signature_s,
         registration_signature_r,
         registration_signature_s,
     ).invoke()
