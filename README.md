@@ -41,11 +41,13 @@ docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
 
 ### Updating the pontis-publisher Base Image
 
-Run the following commands to build a new base image for pontis-publisher locally:
+Run the following commands to build a new base image for pontis-publisher locally. Use the `latest` tag for testing:
 ```
 docker build . -t 42labs/pontis-publisher
 docker push 42labs/pontis-publisher:latest
 ```
+
+pontis-publisher base images are versioned together with the pontis Python package because when the pontis package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new pontis package release, the release flow will overwrite the pontis package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.
 
 ### Running Tests
 
@@ -68,6 +70,16 @@ starknet deploy --contract oracle_compiled.json --inputs <PUBLIC_PUBLISHER_REGIS
 First, make sure to set the environmental variable `PYPI_API_TOKEN`.
 
 To publish a new version, just navigate into `pontis-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`. Make sure to run `git push --tags` once you've done that.
+
+Finally, you need to release a new docker image with the appropriate tag. To do this, run the following commands from the root folder:
+```
+export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' .secrets.env | xargs)
+export PONTIS_PACKAGE_VERSION=$(cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o)
+docker build . -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
+docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
+docker push 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
+```
 
 ### Updating the Pontis Publisher
 
