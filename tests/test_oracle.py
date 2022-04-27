@@ -7,14 +7,12 @@ from pontis.core.entry import Entry
 from pontis.core.utils import (
     construct_entry,
     sign_entry,
-    sign_publisher,
     sign_publisher_registration,
     str_to_felt,
 )
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
-    sign,
 )
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException

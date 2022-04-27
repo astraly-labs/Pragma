@@ -2,7 +2,7 @@ import os
 
 import pytest
 import pytest_asyncio
-from pontis.core.utils import sign_publisher, sign_publisher_registration, str_to_felt
+from pontis.core.utils import sign_publisher_registration, str_to_felt
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
