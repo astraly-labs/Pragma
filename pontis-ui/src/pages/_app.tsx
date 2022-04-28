@@ -13,7 +13,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <div>
       <Head>
-        <title>Pontis</title>
+        <title>Pontis | The zk-Oracle</title>
         <meta name="robots" content="all" />
         <meta
           name="description"
