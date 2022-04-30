@@ -1,3 +1,5 @@
+%lang starknet
+
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math_cmp import is_le
@@ -6,16 +8,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.bool import TRUE, FALSE
 
-#
-# Structs
-#
-
-struct Entry:
-    member key : felt  # UTF-8 encoded lowercased string, e.g. "eth/usd"
-    member value : felt
-    member timestamp : felt
-    member publisher : felt
-end
+from contracts.entry.structs import Entry
 
 #
 # Helpers
