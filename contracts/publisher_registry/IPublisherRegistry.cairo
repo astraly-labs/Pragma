@@ -23,7 +23,7 @@ namespace IPublisherRegistry:
             publisher_public_key : felt, publisher : felt, signature_r : felt, signature_s : felt):
     end
 
-    func rotate_publisher_key(
+    func rotate_publisher_public_key(
             publisher : felt, new_key : felt, signature_r : felt, signature_s : felt):
     end
 end

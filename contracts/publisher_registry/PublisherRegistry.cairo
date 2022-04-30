@@ -2,7 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 
-from contracts.publisher.library import (
+from contracts.publisher_registry.library import (
     Publisher_initialize_admin_public_key, Publisher_get_publisher_public_key,
     Publisher_get_all_publishers, Publisher_rotate_admin_public_key,
     Publisher_rotate_publisher_public_key, Publisher_register_publisher)

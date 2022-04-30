@@ -16,9 +16,9 @@ const DECIMALS = 18
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        admin_public_key : felt):
+        oracle_proxy_address : felt):
     Oracle_set_decimals(DECIMALS)
-    Oracle_set_oracle_proxy_address(admin_public_key)
+    Oracle_set_oracle_proxy_address(oracle_proxy_address)
     return ()
 end
 

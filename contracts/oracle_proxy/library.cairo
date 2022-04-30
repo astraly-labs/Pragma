@@ -12,7 +12,7 @@ from contracts.entry.structs import Entry
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
 from contracts.oracle_proxy.structs import (
     OracleProxy_AdminAuth, OracleProxy_OracleImplementationStatus)
-from contracts.publisher.IPublisherRegistry import IPublisherRegistry
+from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
 # Storage

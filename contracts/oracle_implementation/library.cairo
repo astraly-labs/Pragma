@@ -7,7 +7,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address
 
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
-from contracts.publisher.IPublisherRegistry import IPublisherRegistry
+from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
 # Storage
