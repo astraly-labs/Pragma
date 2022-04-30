@@ -9,62 +9,50 @@ from starkware.cairo.common.signature import verify_ecdsa_signature
 
 from contracts.entry.library import Entry_assert_valid_entry_signature
 from contracts.entry.structs import Entry
-from contracts.oracle.IOracleImplementation import IOracleImplementation
+from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
+from contracts.oracle_proxy.structs import (
+    OracleProxy_AdminAuth, OracleProxy_OracleImplementationStatus)
 from contracts.publisher.IPublisherRegistry import IPublisherRegistry
-
-#
-# Struct
-#
-
-struct AdminAuth:
-    member public_key : felt
-    member nonce : felt
-end
-
-struct OracleImplementationStatus:
-    member was_registered : felt
-    member is_active : felt
-end
 
 #
 # Storage
 #
 
 @storage_var
-func admin_auth_storage() -> (admin_auth : AdminAuth):
+func OracleProxy_admin_auth_storage() -> (admin_auth : OracleProxy_AdminAuth):
 end
 
 @storage_var
-func publisher_registry_address_storage() -> (publisher_registry_address : felt):
+func OracleProxy_publisher_registry_address_storage() -> (publisher_registry_address : felt):
 end
 
 @storage_var
-func oracle_implementations_len_storage() -> (oracle_implementations_len : felt):
+func OracleProxy_oracle_implementations_len_storage() -> (oracle_implementations_len : felt):
 end
 
 @storage_var
-func oracle_implementation_address_storage(idx : felt) -> (oracle_address : felt):
+func OracleProxy_oracle_implementation_address_storage(idx : felt) -> (oracle_address : felt):
 end
 
 @storage_var
-func oracle_implementation_status_storage(oracle_address : felt) -> (
-        oracle_implementation_status : OracleImplementationStatus):
+func OracleProxy_oracle_implementation_status_storage(oracle_address : felt) -> (
+        oracle_implementation_status : OracleProxy_OracleImplementationStatus):
 end
 
 @storage_var
-func primary_oracle_implementation_address_storage() -> (oracle_address : felt):
+func OracleProxy_primary_oracle_implementation_address_storage() -> (oracle_address : felt):
 end
 
 #
 # Constructor
 #
 
-@constructor
-func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func OracleProxy_initialize_oracle_proxy{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         admin_public_key : felt, publisher_registry_address : felt):
-    let admin_auth = AdminAuth(public_key=admin_public_key, nonce=0)
-    admin_auth_storage.write(admin_auth)
-    publisher_registry_address_storage.write(publisher_registry_address)
+    let admin_auth = OracleProxy_AdminAuth(public_key=admin_public_key, nonce=0)
+    OracleProxy_admin_auth_storage.write(admin_auth)
+    OracleProxy_publisher_registry_address_storage.write(publisher_registry_address)
     return ()
 end
 
@@ -72,55 +60,51 @@ end
 # Getters
 #
 
-@view
-func get_admin_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+func OracleProxy_get_admin_public_key{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         admin_public_key : felt):
-    let (admin_auth) = admin_auth_storage.read()
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
     let admin_public_key = admin_auth.public_key
     return (admin_public_key)
 end
 
-@view
-func get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+func OracleProxy_get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         nonce : felt):
-    let (admin_auth) = admin_auth_storage.read()
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
     let nonce = admin_auth.nonce
     return (nonce)
 end
 
-@view
-func get_publisher_registry_address{
+func OracleProxy_get_publisher_registry_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         publisher_registry_address : felt):
-    let (publisher_registry_address) = publisher_registry_address_storage.read()
+    let (publisher_registry_address) = OracleProxy_publisher_registry_address_storage.read()
     return (publisher_registry_address)
 end
 
-@view
-func get_oracle_implementation_addresses{
+func OracleProxy_get_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         oracle_addresses_len : felt, oracle_addresses : felt*):
     alloc_locals
 
-    let (oracle_addresses_len) = oracle_implementations_len_storage.read()
+    let (oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
     let (local oracle_addresses) = alloc()
 
     if oracle_addresses_len == 0:
         return (oracle_addresses_len, oracle_addresses)
     end
 
-    let (oracle_addresses) = build_oracle_implementation_addresses(
+    let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
         oracle_addresses_len, oracle_addresses, 0, 0)
 
     return (oracle_addresses_len, oracle_addresses)
 end
 
-@view
-func get_primary_oracle_implementation_address{
+func OracleProxy_get_primary_oracle_implementation_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         primary_oracle_implementation_address : felt):
     let (
-        primary_oracle_implementation_address) = primary_oracle_implementation_address_storage.read(
+        primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     return (primary_oracle_implementation_address)
 end
@@ -129,90 +113,86 @@ end
 # Setters
 #
 
-@external
-func rotate_admin_public_key{
+func OracleProxy_rotate_admin_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_key : felt, signature_r : felt, signature_s : felt):
     alloc_locals
 
-    let (admin_auth) = admin_auth_storage.read()
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
     let (signed_hash) = hash2{hash_ptr=pedersen_ptr}(new_key, admin_auth.nonce)
     with_attr error_message("Signature on admin public key rotation and nonce is invalid"):
         verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
     end
-    let new_admin_auth = AdminAuth(public_key=new_key, nonce=admin_auth.nonce)
-    admin_auth_storage.write(new_admin_auth)
-    increment_admin_auth_nonce()
+    let new_admin_auth = OracleProxy_AdminAuth(public_key=new_key, nonce=admin_auth.nonce)
+    OracleProxy_admin_auth_storage.write(new_admin_auth)
+    OracleProxy_increment_admin_auth_nonce()
     return ()
 end
 
-@external
-func update_publisher_registry_address{
+func OracleProxy_update_publisher_registry_address{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(publisher_registry_address : felt, signature_r, signature_s):
     alloc_locals
 
-    let (admin_auth) = admin_auth_storage.read()
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
     let (signed_hash) = hash2{hash_ptr=pedersen_ptr}(publisher_registry_address, admin_auth.nonce)
     with_attr error_message("Signature on hash of publisher registry address and nonce is invalid"):
         verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
     end
 
-    publisher_registry_address_storage.write(publisher_registry_address)
-    increment_admin_auth_nonce()
+    OracleProxy_publisher_registry_address_storage.write(publisher_registry_address)
+    OracleProxy_increment_admin_auth_nonce()
     return ()
 end
 
-@external
-func add_oracle_implementation_address{
+func OracleProxy_add_oracle_implementation_address{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
     alloc_locals
 
-    let (admin_auth) = admin_auth_storage.read()
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
     let (signed_hash) = hash2{hash_ptr=pedersen_ptr}(
         oracle_implementation_address, admin_auth.nonce)
     with_attr error_message("Signature on oracle implementation address and nonce is invalid"):
         verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
     end
 
-    let (oracle_implementation_status) = oracle_implementation_status_storage.read(
+    let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
         oracle_implementation_address)
     with_attr error_message("Oracle implementation with this address already registered"):
         assert oracle_implementation_status.was_registered = FALSE
     end
 
-    let (oracle_implementations_len) = oracle_implementations_len_storage.read()
+    let (oracle_implementations_len) = OracleProxy_oracle_implementations_len_storage.read()
 
-    oracle_implementations_len_storage.write(oracle_implementations_len + 1)
-    oracle_implementation_address_storage.write(
+    OracleProxy_oracle_implementations_len_storage.write(oracle_implementations_len + 1)
+    OracleProxy_oracle_implementation_address_storage.write(
         oracle_implementations_len, oracle_implementation_address)  # 0-indexed, so write at old_len (not new_len=len+1)
-    let new_oracle_implementation_status = OracleImplementationStatus(
+    let new_oracle_implementation_status = OracleProxy_OracleImplementationStatus(
         was_registered=TRUE, is_active=TRUE)
-    oracle_implementation_status_storage.write(
+    OracleProxy_oracle_implementation_status_storage.write(
         oracle_implementation_address, new_oracle_implementation_status)
-    increment_admin_auth_nonce()
+    OracleProxy_increment_admin_auth_nonce()
     return ()
 end
 
-@external
-func update_oracle_implementation_active_status{
+func OracleProxy_update_oracle_implementation_active_status{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         oracle_implementation_address : felt, is_active : felt, signature_r : felt,
         signature_s : felt):
     alloc_locals
 
-    let (admin_auth) = admin_auth_storage.read()
-    let (oracle_implementation_status) = oracle_implementation_status_storage.read(
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
+    let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
         oracle_implementation_address)
     with_attr error_message("Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
     end
 
     let (
-        primary_oracle_implementation_address) = primary_oracle_implementation_address_storage.read(
+        primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message("Cannot update is_active for pimary oracle implementation address"):
         assert_not_equal(oracle_implementation_address, primary_oracle_implementation_address)
@@ -225,23 +205,22 @@ func update_oracle_implementation_active_status{
         verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
     end
 
-    let new_oracle_implementation_status = OracleImplementationStatus(
+    let new_oracle_implementation_status = OracleProxy_OracleImplementationStatus(
         was_registered=TRUE, is_active=is_active)
-    oracle_implementation_status_storage.write(
+    OracleProxy_oracle_implementation_status_storage.write(
         oracle_implementation_address, new_oracle_implementation_status)
-    increment_admin_auth_nonce()
+    OracleProxy_increment_admin_auth_nonce()
     return ()
 end
 
-@external
-func set_primary_oracle{
+func OracleProxy_set_primary_oracle{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         primary_oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
     alloc_locals
 
-    let (admin_auth) = admin_auth_storage.read()
-    let (oracle_implementation_status) = oracle_implementation_status_storage.read(
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
+    let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
         primary_oracle_implementation_address)
     with_attr error_message("Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
@@ -258,8 +237,9 @@ func set_primary_oracle{
         verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
     end
 
-    primary_oracle_implementation_address_storage.write(primary_oracle_implementation_address)
-    increment_admin_auth_nonce()
+    OracleProxy_primary_oracle_implementation_address_storage.write(
+        primary_oracle_implementation_address)
+    OracleProxy_increment_admin_auth_nonce()
     return ()
 end
 
@@ -267,20 +247,22 @@ end
 # Helpers
 #
 
-func increment_admin_auth_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        ):
-    let (admin_auth) = admin_auth_storage.read()
-    let new_admin_auth = AdminAuth(public_key=admin_auth.public_key, nonce=admin_auth.nonce + 1)
-    admin_auth_storage.write(new_admin_auth)
+func OracleProxy_increment_admin_auth_nonce{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
+    let new_admin_auth = OracleProxy_AdminAuth(
+        public_key=admin_auth.public_key, nonce=admin_auth.nonce + 1)
+    OracleProxy_admin_auth_storage.write(new_admin_auth)
     return ()
 end
 
-func build_oracle_implementation_addresses{
+func OracleProxy_build_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt,
         output_idx : felt) -> (oracle_addresses : felt*):
-    let (oracle_address) = oracle_implementation_address_storage.read(storage_idx)
-    let (oracle_implementation_status) = oracle_implementation_status_storage.read(oracle_address)
+    let (oracle_address) = OracleProxy_oracle_implementation_address_storage.read(storage_idx)
+    let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
+        oracle_address)
 
     if storage_idx == oracle_addresses_len:
         return (oracle_addresses)
@@ -288,12 +270,12 @@ func build_oracle_implementation_addresses{
 
     if oracle_implementation_status.is_active == TRUE:
         assert [oracle_addresses + output_idx] = oracle_address
-        let (oracle_addresses) = build_oracle_implementation_addresses(
+        let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
             oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx + 1)
         return (oracle_addresses)
     end
 
-    build_oracle_implementation_addresses(
+    OracleProxy_build_oracle_implementation_addresses(
         oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
     return (oracle_addresses)
 end
@@ -302,11 +284,10 @@ end
 # Oracle Implementation Proxy Functions
 #
 
-@view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        decimals : felt):
+func OracleProxy_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        ) -> (decimals : felt):
     let (
-        primary_oracle_implementation_address) = primary_oracle_implementation_address_storage.read(
+        primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message("Primary oracle implementation address must be set first"):
         assert_not_equal(primary_oracle_implementation_address, 0)
@@ -316,19 +297,19 @@ func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return (decimals)
 end
 
-@view
-func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (entries_len : felt, entries : Entry*):
+func OracleProxy_get_entries_for_key{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
+        entries_len : felt, entries : Entry*):
     alloc_locals
 
     let (
-        primary_oracle_implementation_address) = primary_oracle_implementation_address_storage.read(
+        primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message("Primary oracle implementation address must be set first"):
         assert_not_equal(primary_oracle_implementation_address, 0)
     end
 
-    let (publisher_registry_address) = get_publisher_registry_address()
+    let (publisher_registry_address) = OracleProxy_get_publisher_registry_address()
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
         publisher_registry_address)
 
@@ -337,47 +318,51 @@ func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     return (entries_len, entries)
 end
 
-@view
-func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
-    let (publisher_registry_address) = get_publisher_registry_address()
+func OracleProxy_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (value : felt, last_updated_timestamp : felt):
+    alloc_locals
+
+    let (publisher_registry_address) = OracleProxy_get_publisher_registry_address()
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
         publisher_registry_address)
+    let (
+        primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
+        )
     let (value, last_updated_timestamp) = IOracleImplementation.get_value(
-        publishers_len, publishers, key)
+        primary_oracle_implementation_address, publishers_len, publishers, key)
     return (value, last_updated_timestamp)
 end
 
-@external
-func submit_entry{
+func OracleProxy_submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
-    _submit_entry(new_entry, signature_r, signature_s, TRUE)
+    _OracleProxy_submit_entry(new_entry, signature_r, signature_s, TRUE)
     return ()
 end
 
-func _submit_entry{
+func _OracleProxy_submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         new_entry : Entry, signature_r : felt, signature_s : felt, should_assert : felt):
     alloc_locals
 
-    let (publisher_registry_address) = get_publisher_registry_address()
+    let (publisher_registry_address) = OracleProxy_get_publisher_registry_address()
     let (publisher_public_key) = IPublisherRegistry.get_publisher_public_key(
         publisher_registry_address, new_entry.publisher)
     Entry_assert_valid_entry_signature(new_entry, publisher_public_key, signature_r, signature_s)
-    let (oracle_addresses_len) = oracle_implementations_len_storage.read()
+    let (oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
     if oracle_addresses_len == 0:
         return ()
     end
     let (local oracle_addresses) = alloc()
-    let (oracle_addresses) = build_oracle_implementation_addresses(
+    let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
         oracle_addresses_len, oracle_addresses, 0, 0)
-    _submit_entry_for_oracle_addresses(
+    _OracleProxy_submit_entry_for_oracle_addresses(
         oracle_addresses_len, oracle_addresses, 0, new_entry, should_assert)
     return ()
 end
 
-func _submit_entry_for_oracle_addresses{
+func _OracleProxy_submit_entry_for_oracle_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, new_entry : Entry,
         should_assert : felt):
@@ -395,13 +380,12 @@ func _submit_entry_for_oracle_addresses{
     else:
         IOracleImplementation.submit_entry_no_assert(oracle_address, new_entry)
     end
-    _submit_entry_for_oracle_addresses(
+    _OracleProxy_submit_entry_for_oracle_addresses(
         oracle_addresses_len, oracle_addresses, idx + 1, new_entry, should_assert)
     return ()
 end
 
-@external
-func submit_many_entries{
+func OracleProxy_submit_many_entries{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
         new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt, signatures_r : felt*,
@@ -418,8 +402,8 @@ func submit_many_entries{
         return ()
     end
 
-    _submit_entry([new_entries], [signatures_r], [signatures_s], FALSE)
-    submit_many_entries(
+    _OracleProxy_submit_entry([new_entries], [signatures_r], [signatures_s], FALSE)
+    OracleProxy_submit_many_entries(
         new_entries_len - 1,
         new_entries + Entry.SIZE,
         signatures_r_len - 1,

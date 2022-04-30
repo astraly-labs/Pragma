@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
-from contracts.oracle.library import (
+from contracts.oracle_implementation.library import (
     Oracle_set_decimals, Oracle_set_oracle_proxy_address, Oracle_get_decimals,
     Oracle_get_entries_for_key, Oracle_get_value, Oracle_submit_entry)
 
