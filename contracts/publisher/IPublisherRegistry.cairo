@@ -1,7 +1,7 @@
 %lang starknet
 
 @contract_interface
-namespace IPublisher:
+namespace IPublisherRegistry:
     #
     # Getters
     #
