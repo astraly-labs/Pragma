@@ -18,17 +18,14 @@ namespace IPublisherRegistry:
 
     func rotate_admin_public_key(
             new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
-        return ()
     end
 
     func register_publisher(
             publisher_public_key : felt, publisher : felt, signature_r : felt, signature_s : felt):
-        return ()
     end
 
     func rotate_publisher_key(
             publisher : felt, new_key : felt, old_key : felt, signature_r : felt,
             signature_s : felt):
-        return ()
     end
 end
