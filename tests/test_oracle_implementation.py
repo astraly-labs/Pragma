@@ -3,14 +3,11 @@ from statistics import median
 import pytest
 import pytest_asyncio
 from pontis.core.entry import Entry
-from pontis.core.utils import (
-    str_to_felt,
-)
+from pontis.core.utils import str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-
-from utils import construct_path, cached_contract
+from utils import cached_contract, construct_path
 
 CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
