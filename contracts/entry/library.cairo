@@ -135,7 +135,7 @@ end
 func Entry_assert_valid_entry_signature{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(
-        publisher_public_key : felt, signature_r : felt, signature_s : felt, entry : Entry):
+        entry : Entry, publisher_public_key : felt, signature_r : felt, signature_s : felt):
     alloc_locals
 
     let (local hash) = Entry_hash_entry(entry)

@@ -1,11 +1,12 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
 from contracts.oracle.library import (
     Oracle_set_decimals, Oracle_set_oracle_proxy_address, Oracle_get_decimals,
-    Oracle_get_entries_for_key, Oracle_get_value, Oracle_submit_entry, Oracle_submit_many_entries)
+    Oracle_get_entries_for_key, Oracle_get_value, Oracle_submit_entry)
 
 const DECIMALS = 18
 
@@ -15,7 +16,7 @@ const DECIMALS = 18
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher_address : felt, admin_public_key : felt):
+        admin_public_key : felt):
     Oracle_set_decimals(DECIMALS)
     Oracle_set_oracle_proxy_address(admin_public_key)
     return ()
@@ -63,14 +64,15 @@ end
 func submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_entry : Entry):
-    Oracle_submit_entry(new_entry)
+    Oracle_submit_entry(new_entry, TRUE)
     return ()
 end
 
+# For when the caller wants to submit many and not fail if one of them fails
 @external
-func submit_many_entries{
+func submit_entry_no_assert{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entries_len : felt, new_entries : Entry*):
-    Oracle_submit_many_entries(new_entries_len, new_entries)
+        range_check_ptr}(new_entry : Entry):
+    Oracle_submit_entry(new_entry, FALSE)
     return ()
 end

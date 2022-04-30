@@ -42,8 +42,8 @@ end
 @external
 func rotate_admin_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
-    Publisher_rotate_admin_public_key(new_key, old_key, signature_r, signature_s)
+        range_check_ptr}(new_key : felt, signature_r : felt, signature_s : felt):
+    Publisher_rotate_admin_public_key(new_key, signature_r, signature_s)
     return ()
 end
 
@@ -59,8 +59,7 @@ end
 @external
 func rotate_publisher_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        publisher : felt, new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
-    Publisher_rotate_publisher_public_key(publisher, new_key, old_key, signature_r, signature_s)
+        range_check_ptr}(publisher : felt, new_key : felt, signature_r : felt, signature_s : felt):
+    Publisher_rotate_publisher_public_key(publisher, new_key, signature_r, signature_s)
     return ()
 end

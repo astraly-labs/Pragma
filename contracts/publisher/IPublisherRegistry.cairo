@@ -16,8 +16,7 @@ namespace IPublisherRegistry:
     # Setters
     #
 
-    func rotate_admin_public_key(
-            new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
+    func rotate_admin_public_key(new_key : felt, signature_r : felt, signature_s : felt):
     end
 
     func register_publisher(
@@ -25,7 +24,6 @@ namespace IPublisherRegistry:
     end
 
     func rotate_publisher_key(
-            publisher : felt, new_key : felt, old_key : felt, signature_r : felt,
-            signature_s : felt):
+            publisher : felt, new_key : felt, signature_r : felt, signature_s : felt):
     end
 end

@@ -1,15 +1,12 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
-from starkware.cairo.common.math import assert_lt
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address
 
-from contracts.entry.library import (
-    Entry, Entry_aggregate_entries, Entry_assert_valid_entry_signature,
-    Entry_aggregate_timestamps_max)
+from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 from contracts.publisher.IPublisherRegistry import IPublisherRegistry
 
 #
@@ -103,21 +100,7 @@ end
 
 func Oracle_submit_entry{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry):
-    Oracle_assert_oracle_proxy()
-    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
-
-    with_attr error_message("Received stale update (timestamp not newer than current entry)"):
-        assert_lt(entry.timestamp, new_entry.timestamp)
-    end
-
-    Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
-    return ()
-end
-
-func _Oracle_submit_entry_no_assert{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry):
+        range_check_ptr}(new_entry : Entry, should_assert : felt):
     alloc_locals
 
     Oracle_assert_oracle_proxy()
@@ -128,29 +111,16 @@ func _Oracle_submit_entry_no_assert{
     let (is_new_entry_more_recent) = is_le(entry.timestamp, new_entry.timestamp - 1)
     if is_new_entry_more_recent == TRUE:
         Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
-        tempvar syscall_ptr = syscall_ptr
-        tempvar pedersen_ptr = pedersen_ptr
-        tempvar range_check_ptr = range_check_ptr
-    else:
-        tempvar syscall_ptr = syscall_ptr
-        tempvar pedersen_ptr = pedersen_ptr
-        tempvar range_check_ptr = range_check_ptr
-    end
-
-    return ()
-end
-
-func Oracle_submit_many_entries{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entries_len : felt, new_entries : Entry*):
-    Oracle_assert_oracle_proxy()
-
-    if new_entries_len == 0:
         return ()
     end
 
-    _Oracle_submit_entry_no_assert([new_entries])
-    Oracle_submit_many_entries(new_entries_len - 1, new_entries + Entry.SIZE)
+    if should_assert == FALSE:
+        return ()
+    end
+
+    with_attr error_message("Received stale update (timestamp not newer than current entry)"):
+        assert is_new_entry_more_recent = TRUE
+    end
 
     return ()
 end

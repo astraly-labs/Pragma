@@ -29,6 +29,6 @@ namespace IOracleImplementation:
     func submit_entry(new_entry : Entry):
     end
 
-    func submit_many_entries(new_entries_len, new_entries):
+    func submit_entry_no_assert(new_entry : Entry):
     end
 end

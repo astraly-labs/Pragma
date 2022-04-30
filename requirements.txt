@@ -1,7 +1,7 @@
 ecdsa==0.17.*
 fastecdsa==2.2.*
 sympy==1.10.*
-cairo-lang==0.8.*
+cairo-lang==0.8.1
 pytest==7.0.*
 pytest-asyncio==0.18.*
 
@@ -9,4 +9,4 @@ pytest-asyncio==0.18.*
 marshmallow-dataclass==8.5.3
 
 # Publisher
-starknet.py==0.2.0a0
+starknet.py==0.2.2a0

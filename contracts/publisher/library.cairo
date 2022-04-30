@@ -63,7 +63,7 @@ func Publisher_get_all_publishers{
         return (publishers_len, publishers)
     end
 
-    Publisher_build_publishers_array(publishers_len, 0, publishers)
+    Publisher_build_publishers_array(publishers_len, publishers, 0)
 
     return (publishers_len, publishers)
 end
@@ -94,7 +94,8 @@ end
 
 func Publisher_rotate_admin_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
+        range_check_ptr}(new_key : felt, signature_r : felt, signature_s : felt):
+    let (old_key) = Publisher_admin_public_key_storage.read()
     with_attr error_message("Signature on admin public key rotation is invalid"):
         verify_ecdsa_signature(new_key, old_key, signature_r, signature_s)
     end
@@ -124,15 +125,11 @@ end
 
 func Publisher_rotate_publisher_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        publisher : felt, new_key : felt, old_key : felt, signature_r : felt, signature_s : felt):
+        range_check_ptr}(publisher : felt, new_key : felt, signature_r : felt, signature_s : felt):
     let (old_stored_publisher_key) = Publisher_public_key_storage.read(publisher)
-    with_attr error_message("Old key does not match current public key for publisher"):
-        assert old_stored_publisher_key = old_key
-    end
 
     with_attr error_message("Publisher signature on new key invalid"):
-        verify_ecdsa_signature(new_key, old_key, signature_r, signature_s)
+        verify_ecdsa_signature(new_key, old_stored_publisher_key, signature_r, signature_s)
     end
 
     Publisher_public_key_storage.write(publisher, new_key)
@@ -161,15 +158,15 @@ end
 
 func Publisher_build_publishers_array{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        num_publishers : felt, idx : felt, publisher_ptr : felt*) -> (publisher_ptr : felt*):
+        publishers_len : felt, publishers : felt*, idx : felt) -> (publishers : felt*):
     let (new_value) = Publisher_publishers_storage.read(idx)
-    assert [publisher_ptr + idx] = new_value
+    assert [publishers + idx] = new_value
 
-    if idx == num_publishers:
-        return (publisher_ptr)
+    if idx == publishers_len:
+        return (publishers)
     end
 
-    Publisher_build_publishers_array(num_publishers, idx + 1, publisher_ptr)
+    Publisher_build_publishers_array(publishers_len, publishers, idx + 1)
 
-    return (publisher_ptr)
+    return (publishers)
 end

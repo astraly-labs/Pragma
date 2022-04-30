@@ -1,0 +1,111 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "admin_public_key",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            }
+        ],
+        "name": "get_publisher_public_key",
+        "outputs": [
+            {
+                "name": "publisher_public_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_all_publishers",
+        "outputs": [
+            {
+                "name": "publishers_len",
+                "type": "felt"
+            },
+            {
+                "name": "publishers",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_key",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "rotate_admin_public_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher_public_key",
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "register_publisher",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "new_key",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "rotate_publisher_public_key",
+        "outputs": [],
+        "type": "function"
+    }
+]
