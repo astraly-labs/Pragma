@@ -318,7 +318,7 @@ end
 
 @view
 func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (entries_len : felt, entries : felt*):
+        key : felt) -> (entries_len : felt, entries : Entry*):
     alloc_locals
 
     let (
@@ -335,6 +335,16 @@ func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     let (entries_len, entries) = IOracleImplementation.get_entries_for_key(
         primary_oracle_implementation_address, publishers_len, publishers, key)
     return (entries_len, entries)
+end
+
+@view
+func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
+    let (publisher_registry_address) = get_publisher_registry_address()
+    let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
+        publisher_registry_address)
+    let (value, last_updated_timestamp) = IOracleImplementation.get_value(
+        publishers_len, publishers, key)
+    return (value, last_updated_timestamp)
 end
 
 @external

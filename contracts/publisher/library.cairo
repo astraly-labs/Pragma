@@ -126,7 +126,7 @@ end
 func Publisher_rotate_publisher_public_key{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(publisher : felt, new_key : felt, signature_r : felt, signature_s : felt):
-    let (old_stored_publisher_key) = Publisher_public_key_storage.read(publisher)
+    let (old_stored_publisher_key) = Publisher_get_publisher_public_key(publisher)
 
     with_attr error_message("Publisher signature on new key invalid"):
         verify_ecdsa_signature(new_key, old_stored_publisher_key, signature_r, signature_s)

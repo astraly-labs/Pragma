@@ -39,8 +39,7 @@ end
 # Guards
 #
 
-func Oracle_assert_oracle_proxy{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        ):
+func Oracle_only_oracle_proxy{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
     let (caller_address) = get_caller_address()
     let (oracle_proxy_address) = Oracle_proxy_address_storage.read()
     if oracle_proxy_address == 0:
@@ -93,7 +92,7 @@ end
 func Oracle_set_oracle_proxy_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_proxy_address : felt):
-    Oracle_assert_oracle_proxy()
+    Oracle_only_oracle_proxy()
     Oracle_proxy_address_storage.write(oracle_proxy_address)
     return ()
 end
@@ -103,7 +102,7 @@ func Oracle_submit_entry{
         range_check_ptr}(new_entry : Entry, should_assert : felt):
     alloc_locals
 
-    Oracle_assert_oracle_proxy()
+    Oracle_only_oracle_proxy()
 
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
