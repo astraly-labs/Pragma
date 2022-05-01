@@ -44,6 +44,12 @@ async def main():
     )
 
     for price_pair in price_pairs:
+        if price_pair[1] != "USD":
+            print(
+                f"Unable to fetch Coinbase price for non-USD denomination {price_pair[1]}"
+            )
+            continue
+
         request_timestamp = str(
             int(
                 datetime.datetime.now(datetime.timezone.utc)
@@ -70,13 +76,17 @@ async def main():
 
         response.raise_for_status()
         result = response.json()
-        price = float(result["prices"][price_pair[0]])
-        price_int = int(price * (10**DECIMALS))
-        timestamp = int(result["timestamp"])
+        if price_pair[0] in result["prices"]:
+            price = float(result["prices"][price_pair[0]])
+            price_int = int(price * (10**DECIMALS))
+            timestamp = int(result["timestamp"])
 
-        await client.publish("/".join(price_pair).lower(), price_int, timestamp)
+            await client.publish("/".join(price_pair).lower(), price_int, timestamp)
 
-        print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
+            print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
+
+        else:
+            print(f"No entry found for {'/'.join(price_pair)} from Coinbase")
 
 
 if __name__ == "__main__":

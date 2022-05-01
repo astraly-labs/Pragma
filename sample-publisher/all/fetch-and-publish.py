@@ -198,6 +198,7 @@ async def fetch_coinbase(price_pairs, decimals, admin_client):
             print(
                 f"Unable to fetch Coinbase price for non-USD denomination {price_pair[1]}"
             )
+            continue
 
         request_timestamp = str(
             int(
