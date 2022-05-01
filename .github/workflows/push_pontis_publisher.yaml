@@ -24,8 +24,6 @@ jobs:
           export $(grep -v '^#' .env | xargs)
           export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '\d.\d.\d' -o -s)
           echo "$PONTIS_PACKAGE_VERSION"
-          cat temp.txt
-          echo "CATTED"
           grep --help
           grep '0.3.1' temp.txt
           grep '0.3.1' -o temp.txt
