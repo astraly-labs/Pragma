@@ -29,7 +29,7 @@
     {
         "inputs": [
             {
-                "name": "admin_public_key",
+                "name": "oracle_proxy_address",
                 "type": "felt"
             }
         ],
