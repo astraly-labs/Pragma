@@ -6,7 +6,7 @@ import os
 from hashlib import sha256
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
 
 DECIMALS = 18
@@ -58,7 +58,7 @@ async def main():
         timestamp = int(result["timestamp"])
 
         client = PontisPublisherClient(
-            ORACLE_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+            ORACLE_PROXY_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
         )
 
         await client.publish("/".join(price_pair).lower(), price_int, timestamp)

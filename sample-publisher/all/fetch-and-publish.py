@@ -7,7 +7,7 @@ import time
 from hashlib import sha256
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
 from pontis.core.utils import construct_entry
 from pontis.publisher.client import PontisPublisherClient
 
@@ -20,7 +20,7 @@ async def fetch_coinapi(price_pairs, decimals):
     COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
     publisher = "coinapi"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+        ORACLE_PROXY_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -63,7 +63,7 @@ async def fetch_coinmarketcap(price_pairs, decimals):
     )
     publisher = "coinmarketcap"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS,
+        ORACLE_PROXY_ADDRESS,
         COINMARKETCAP_PUBLISHER_PRIVATE_KEY,
         publisher,
         network=NETWORK,
@@ -117,7 +117,10 @@ async def fetch_coingecko(price_pairs, decimals):
     )
     publisher = "coingecko"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINGECKO_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+        ORACLE_PROXY_ADDRESS,
+        COINGECKO_PUBLISHER_PRIVATE_KEY,
+        publisher,
+        network=NETWORK,
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -184,7 +187,7 @@ async def fetch_coinbase(price_pairs, decimals):
     )
     publisher = "coinbase"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+        ORACLE_PROXY_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -258,7 +261,7 @@ async def fetch_gemini(price_pairs, decimals):
     GEMINI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
     publisher = "gemini"
     client = PontisPublisherClient(
-        ORACLE_ADDRESS, GEMINI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+        ORACLE_PROXY_ADDRESS, GEMINI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
     r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
@@ -342,7 +345,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Gemini price: {e}")
 
     response = await PontisPublisherClient.publish_many(
-        ORACLE_ADDRESS, NETWORK, entries, private_keys
+        ORACLE_PROXY_ADDRESS, NETWORK, entries, private_keys
     )
     print(f"Bulk updated with response {response}")
 

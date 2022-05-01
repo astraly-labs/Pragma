@@ -37,14 +37,14 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_ADDRESS>` with the address of the Oracle (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle (see above):
 ```
-starknet call --address <ORACLE_ADDRESS> --abi contracts/abi/OracleProxy.json --function get_value --inputs 28556963469423460
+starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/abi/OracleProxy.json --function get_value --inputs 28556963469423460
 ```
 
 ### Publishing Data to a Feed in a Deployed Contract
 
-The recommended way to publish data is to use the `pontis-publisher` Docker image which has the oracle proxy's address baked in via the `ORACLE_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
+The recommended way to publish data is to use the `pontis-publisher` Docker image which has the oracle proxy's address baked in via the `ORACLE_PROXY_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
 
 ```
 docker build sample-publisher/coinbase/ -t coinbase
@@ -75,9 +75,9 @@ Finally, you must add the oracle implementation to the proxy. You can use the `a
 ```
 import os
 from pontis.admin.client import PontisAdminClient
-from pontis.core.const import ORACLE_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, NETWORK
+from pontis.core.const import ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, NETWORK
 admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
-admin_client = PontisAdminClient(ORACLE_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, admin_private_key, network=NETWORK)
+admin_client = PontisAdminClient(ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, admin_private_key, network=NETWORK)
 await admin_client.add_oracle_implementation(<ORACLE_IMPLEMENTATION_ADDRESS>)
 ```
 

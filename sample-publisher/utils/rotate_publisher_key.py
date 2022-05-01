@@ -1,6 +1,6 @@
 import asyncio
 
-from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
 from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
@@ -22,7 +22,7 @@ MAX_FEE = 0
 
 
 async def main():
-    oracle_contract = await Contract.from_address(ORACLE_ADDRESS, Client(NETWORK))
+    oracle_contract = await Contract.from_address(ORACLE_PROXY_ADDRESS, Client(NETWORK))
 
     (signature_r, signature_s) = sign(
         NEW_PUBLISHER_PUBLIC_KEY, OLD_PUBLISHER_PRIVATE_KEY
