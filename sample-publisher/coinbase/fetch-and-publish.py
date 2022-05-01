@@ -30,7 +30,7 @@ async def main():
         PUBLISHER_PUBLIC_KEY, publisher
     )
 
-    price_pairs = [("ETH", "USD")]
+    price_pairs = [("ETH", "USD"), ("BTC", "USD")]
 
     API_SECRET = os.environ.get("API_SECRET")
     API_KEY = os.environ.get("API_KEY")
