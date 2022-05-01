@@ -4,15 +4,32 @@ import datetime
 import hmac
 import os
 from hashlib import sha256
+from pontis.admin.client import PontisAdminClient
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
+from starkware.crypto.signature.signature import private_to_stark_key
 
 DECIMALS = 18
 
 
 async def main():
+    PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY"))
+    PUBLISHER_PUBLIC_KEY = private_to_stark_key(PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-coinbase"
+
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_client = PontisAdminClient(
+        ORACLE_PROXY_ADDRESS,
+        PUBLISHER_REGISTRY_ADDRESS,
+        admin_private_key,
+        network=NETWORK,
+    )
+    await admin_client.register_publisher_if_not_registered(
+        PUBLISHER_PUBLIC_KEY, publisher
+    )
+
     price_pairs = [("ETH", "USD")]
 
     API_SECRET = os.environ.get("API_SECRET")
@@ -22,8 +39,9 @@ async def main():
     request_path = "/oracle"
     method = "GET"
 
-    PUBLISHER_PRIVATE_KEY = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-    publisher = "coinbase"
+    client = PontisPublisherClient(
+        ORACLE_PROXY_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    )
 
     for price_pair in price_pairs:
         request_timestamp = str(
@@ -54,12 +72,7 @@ async def main():
         result = response.json()
         price = float(result["prices"][price_pair[0]])
         price_int = int(price * (10**DECIMALS))
-
         timestamp = int(result["timestamp"])
-
-        client = PontisPublisherClient(
-            ORACLE_PROXY_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
-        )
 
         await client.publish("/".join(price_pair).lower(), price_int, timestamp)
 
