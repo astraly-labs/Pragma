@@ -563,13 +563,13 @@ async def test_publish_second_publisher(
 
 
 async def register_new_publisher_and_submit_entry(
-    publisher_registry, oracle_proxy, registration_private_key, publisher, entry
+    publisher_registry, oracle_proxy, admin_private_key, publisher, entry
 ):
     publisher_private_key = get_random_private_key()
     publisher_public_key = private_to_stark_key(publisher_private_key)
 
     registration_signature_r, registration_signature_s = sign_publisher_registration(
-        publisher_public_key, publisher, registration_private_key
+        publisher_public_key, publisher, admin_private_key
     )
 
     await publisher_registry.register_publisher(

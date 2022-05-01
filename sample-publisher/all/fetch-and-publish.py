@@ -11,9 +11,7 @@ from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
 from pontis.core.utils import construct_entry
 from pontis.publisher.client import PontisPublisherClient
 
-PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
-    os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
-)
+ADMIN_PRIVATE_KEY = int(os.environ.get("ADMIN_PRIVATE_KEY"))
 
 
 async def fetch_coinapi(price_pairs, decimals):
@@ -23,7 +21,7 @@ async def fetch_coinapi(price_pairs, decimals):
         ORACLE_PROXY_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    r, s = client.sign_publisher_registration(ADMIN_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
 
     COINAPI_KEY = os.environ.get("COINAPI_KEY")
@@ -69,7 +67,7 @@ async def fetch_coinmarketcap(price_pairs, decimals):
         network=NETWORK,
     )
 
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    r, s = client.sign_publisher_registration(ADMIN_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
 
     COINMARKETCAP_KEY = os.environ.get("COINMARKETCAP_KEY")
@@ -123,7 +121,7 @@ async def fetch_coingecko(price_pairs, decimals):
         network=NETWORK,
     )
 
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    r, s = client.sign_publisher_registration(ADMIN_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
 
     headers = {
@@ -190,7 +188,7 @@ async def fetch_coinbase(price_pairs, decimals):
         ORACLE_PROXY_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    r, s = client.sign_publisher_registration(ADMIN_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
 
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
@@ -264,7 +262,7 @@ async def fetch_gemini(price_pairs, decimals):
         ORACLE_PROXY_ADDRESS, GEMINI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
 
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
+    r, s = client.sign_publisher_registration(ADMIN_PRIVATE_KEY)
     await client.register_publisher_if_not_registered(r, s)
 
     base_url = "https://api.gemini.com/v1"

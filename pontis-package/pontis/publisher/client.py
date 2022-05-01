@@ -38,45 +38,11 @@ class PontisPublisherClient:
                 "Publisher ID must be string (will be converted to felt) or integer"
             )
 
-    def sign_publisher_registration(self, publisher_registration_private_key):
-        (
-            registration_signature_r,
-            registration_signature_s,
-        ) = sign_publisher_registration(
-            self.publisher_public_key,
-            self.publisher,
-            publisher_registration_private_key,
-        )
-        return registration_signature_r, registration_signature_s
-
     async def fetch_oracle_proxy_contract(self):
         if self.oracle_proxy_contract is None:
             self.oracle_proxy_contract = await Contract.from_address(
                 self.oracle_proxy_address, Client(self.network)
             )
-
-    async def register_publisher_if_not_registered(
-        self,
-        registration_signature_r,
-        registration_signature_s,
-    ):
-        await self.fetch_oracle_proxy_contract()
-
-        result = await self.oracle_proxy_contract.functions[
-            "get_publisher_public_key"
-        ].call(self.publisher)
-
-        if result.publisher_public_key == 0:
-            result = await self.oracle_proxy_contract.functions[
-                "register_publisher"
-            ].invoke(
-                self.publisher_public_key,
-                self.publisher,
-                registration_signature_r,
-                registration_signature_s,
-                max_fee=MAX_FEE,
-            )
-            print(f"Registered publisher with transaction {result}")
 
     async def publish(self, key, value, timestamp):
         await self.fetch_oracle_proxy_contract()

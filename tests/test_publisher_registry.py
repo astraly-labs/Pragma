@@ -286,15 +286,15 @@ async def test_rotate_admin_key(
         publisher_public_key, publisher, old_admin_private_key
     )
 
-    new_registration_private_key = get_random_private_key()
-    new_registration_public_key = private_to_stark_key(new_registration_private_key)
+    new_admin_private_key = get_random_private_key()
+    new_admin_public_key = private_to_stark_key(new_admin_private_key)
 
     rotation_signature_r, rotation_signature_s = sign(
-        new_registration_public_key, old_admin_private_key
+        new_admin_public_key, old_admin_private_key
     )
 
     await contract.rotate_admin_public_key(
-        new_registration_public_key,
+        new_admin_public_key,
         rotation_signature_r,
         rotation_signature_s,
     ).invoke()
@@ -308,13 +308,13 @@ async def test_rotate_admin_key(
         ).invoke()
 
         raise Exception(
-            "Transaction to register with old registration key succeeded, but should not have."
+            "Transaction to register with old admin key succeeded, but should not have."
         )
     except StarkException:
         pass
 
     registration_signature_r, registration_signature_s = sign_publisher_registration(
-        publisher_public_key, publisher, new_registration_private_key
+        publisher_public_key, publisher, new_admin_private_key
     )
 
     await contract.register_publisher(

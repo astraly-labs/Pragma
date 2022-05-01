@@ -21,7 +21,7 @@ jobs:
 
       - name: Post updated prices
         env:
-          PUBLISHER_REGISTRATION_PRIVATE_KEY: ${{ secrets.PUBLISHER_REGISTRATION_PRIVATE_KEY }}
+          ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
           COINAPI_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINAPI_PUBLISHER_PRIVATE_KEY }}
           COINMARKETCAP_KEY: ${{ secrets.COINMARKETCAP_KEY }}
@@ -34,7 +34,7 @@ jobs:
           GEMINI_PUBLISHER_PRIVATE_KEY: ${{ secrets.GEMINI_PUBLISHER_PRIVATE_KEY }}
         run: |
           docker run \
-            -e PUBLISHER_REGISTRATION_PRIVATE_KEY=${PUBLISHER_REGISTRATION_PRIVATE_KEY}\
+            -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\
             -e COINAPI_PUBLISHER_PRIVATE_KEY=${COINAPI_PUBLISHER_PRIVATE_KEY}\
             -e COINMARKETCAP_KEY=${COINMARKETCAP_KEY}\
