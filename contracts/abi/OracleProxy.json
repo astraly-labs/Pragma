@@ -29,7 +29,11 @@
     {
         "inputs": [
             {
-                "name": "publisher_registration_key",
+                "name": "admin_public_key",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_registry_address",
                 "type": "felt"
             }
         ],
@@ -38,16 +42,63 @@
         "type": "constructor"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "get_admin_public_key",
+        "outputs": [
             {
-                "name": "publisher",
+                "name": "admin_public_key",
                 "type": "felt"
             }
         ],
-        "name": "get_publisher_public_key",
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_nonce",
         "outputs": [
             {
-                "name": "publisher_public_key",
+                "name": "nonce",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_publisher_registry_address",
+        "outputs": [
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_oracle_implementation_addresses",
+        "outputs": [
+            {
+                "name": "oracle_addresses_len",
+                "type": "felt"
+            },
+            {
+                "name": "oracle_addresses",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_primary_oracle_implementation_address",
+        "outputs": [
+            {
+                "name": "primary_oracle_implementation_address",
                 "type": "felt"
             }
         ],
@@ -57,10 +108,6 @@
     {
         "inputs": [
             {
-                "name": "old_key",
-                "type": "felt"
-            },
-            {
                 "name": "new_key",
                 "type": "felt"
             },
@@ -73,22 +120,14 @@
                 "type": "felt"
             }
         ],
-        "name": "rotate_publisher_registration_key",
+        "name": "rotate_admin_public_key",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "publisher",
-                "type": "felt"
-            },
-            {
-                "name": "old_key",
-                "type": "felt"
-            },
-            {
-                "name": "new_key",
+                "name": "publisher_registry_address",
                 "type": "felt"
             },
             {
@@ -100,38 +139,68 @@
                 "type": "felt"
             }
         ],
-        "name": "rotate_publisher_key",
+        "name": "update_publisher_registry_address",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "publisher_public_key",
+                "name": "oracle_implementation_address",
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "signature_r",
                 "type": "felt"
             },
             {
-                "name": "publisher_signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "publisher_signature_s",
-                "type": "felt"
-            },
-            {
-                "name": "registration_signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "registration_signature_s",
+                "name": "signature_s",
                 "type": "felt"
             }
         ],
-        "name": "register_publisher",
+        "name": "add_oracle_implementation_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "update_oracle_implementation_active_status",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "primary_oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "set_primary_oracle",
         "outputs": [],
         "type": "function"
     },

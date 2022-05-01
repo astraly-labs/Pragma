@@ -33,23 +33,29 @@ def hash_entry(entry):
     return h3
 
 
-def sign_publisher_registration(
-    publisher_public_key, publisher, registration_private_key
-):
+def sign_publisher_registration(publisher_public_key, publisher, admin_private_key):
     publisher_hash = hash_publisher(publisher_public_key, publisher)
-    signature_r, signature_s = sign(publisher_hash, registration_private_key)
+    signature_r, signature_s = sign(publisher_hash, admin_private_key)
+    return signature_r, signature_s
+
+
+def admin_hash_and_sign_with_nonce(arg, nonce, admin_private_key):
+    signature_r, signature_s = sign(pedersen_hash(arg, nonce), admin_private_key)
+    return signature_r, signature_s
+
+
+def admin_hash_and_sign_active_status_with_nonce(
+    address, is_active, nonce, admin_private_key
+):
+    h1 = pedersen_hash(address, is_active)
+    h2 = pedersen_hash(h1, nonce)
+    signature_r, signature_s = sign(h2, admin_private_key)
     return signature_r, signature_s
 
 
 def hash_publisher(publisher_public_key, publisher):
     publisher_hash = pedersen_hash(publisher_public_key, publisher)
     return publisher_hash
-
-
-def sign_publisher(publisher, publisher_private_key):
-    signature_r, signature_s = sign(publisher, publisher_private_key)
-
-    return signature_r, signature_s
 
 
 def construct_entry(key, value, timestamp, publisher):

@@ -1,0 +1,143 @@
+[
+    {
+        "members": [
+            {
+                "name": "key",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "timestamp",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "Entry",
+        "size": 4,
+        "type": "struct"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_proxy_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "get_decimals",
+        "outputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publishers_len",
+                "type": "felt"
+            },
+            {
+                "name": "publishers",
+                "type": "felt*"
+            },
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entries_for_key",
+        "outputs": [
+            {
+                "name": "entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "entries",
+                "type": "Entry*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publishers_len",
+                "type": "felt"
+            },
+            {
+                "name": "publishers",
+                "type": "felt*"
+            },
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_proxy_address",
+                "type": "felt"
+            }
+        ],
+        "name": "set_oracle_proxy_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "name": "submit_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "name": "submit_entry_no_assert",
+        "outputs": [],
+        "type": "function"
+    }
+]

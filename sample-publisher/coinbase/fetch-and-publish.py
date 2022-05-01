@@ -6,14 +6,31 @@ import os
 from hashlib import sha256
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.admin.client import PontisAdminClient
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
+from starkware.crypto.signature.signature import private_to_stark_key
 
 DECIMALS = 18
 
 
 async def main():
-    price_pairs = [("ETH", "USD")]
+    PUBLISHER_PRIVATE_KEY = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    PUBLISHER_PUBLIC_KEY = private_to_stark_key(PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-coinbase"
+
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_client = PontisAdminClient(
+        ORACLE_PROXY_ADDRESS,
+        PUBLISHER_REGISTRY_ADDRESS,
+        admin_private_key,
+        network=NETWORK,
+    )
+    await admin_client.register_publisher_if_not_registered(
+        PUBLISHER_PUBLIC_KEY, publisher
+    )
+
+    price_pairs = [("ETH", "USD"), ("BTC", "USD")]
 
     API_SECRET = os.environ.get("API_SECRET")
     API_KEY = os.environ.get("API_KEY")
@@ -22,10 +39,17 @@ async def main():
     request_path = "/oracle"
     method = "GET"
 
-    PUBLISHER_PRIVATE_KEY = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-    publisher = "coinbase"
+    client = PontisPublisherClient(
+        ORACLE_PROXY_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    )
 
     for price_pair in price_pairs:
+        if price_pair[1] != "USD":
+            print(
+                f"Unable to fetch Coinbase price for non-USD denomination {price_pair[1]}"
+            )
+            continue
+
         request_timestamp = str(
             int(
                 datetime.datetime.now(datetime.timezone.utc)
@@ -52,18 +76,17 @@ async def main():
 
         response.raise_for_status()
         result = response.json()
-        price = float(result["prices"][price_pair[0]])
-        price_int = int(price * (10**DECIMALS))
+        if price_pair[0] in result["prices"]:
+            price = float(result["prices"][price_pair[0]])
+            price_int = int(price * (10**DECIMALS))
+            timestamp = int(result["timestamp"])
 
-        timestamp = int(result["timestamp"])
+            await client.publish("/".join(price_pair).lower(), price_int, timestamp)
 
-        client = PontisPublisherClient(
-            ORACLE_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
-        )
+            print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
 
-        await client.publish("/".join(price_pair).lower(), price_int, timestamp)
-
-        print(f"Submitted price {price} for {'/'.join(price_pair)} from Coinbase")
+        else:
+            print(f"No entry found for {'/'.join(price_pair)} from Coinbase")
 
 
 if __name__ == "__main__":
