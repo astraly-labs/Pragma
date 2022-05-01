@@ -22,6 +22,6 @@ jobs:
         run: |
           export $(grep -v '^#' .env | xargs)
           export PONTIS_PACKAGE_VERSION=$(cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o)
+          echo ${PONTIS_PACKAGE_VERSION}
           docker build . -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
           docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
-          docker push 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
