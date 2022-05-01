@@ -27,5 +27,8 @@ jobs:
           echo "$GITHUB_CONTEXT"
           echo $GITHUB_CONTEXT
           echo $(GITHUB_CONTEXT)
+          cat pontis-package/setup.cfg
+          cat pontis-package/setup.cfg | grep version
+          cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o
           echo $(cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o)
           echo TEST
