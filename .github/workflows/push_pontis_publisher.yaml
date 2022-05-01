@@ -25,5 +25,4 @@ jobs:
           export PONTIS_PACKAGE_VERSION=$(cat pontis-package/setup.cfg | grep version | grep -e '\d.\d.\d' -o)
           echo $PONTIS_PACKAGE_VERSION
           echo "$GITHUB_CONTEXT"
-          docker build . -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
-          docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
+          
