@@ -131,7 +131,7 @@ end
 
 func OracleProxy_update_publisher_registry_address{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(publisher_registry_address : felt, signature_r, signature_s):
+        range_check_ptr}(publisher_registry_address : felt, signature_r : felt, signature_s : felt):
     alloc_locals
 
     let (admin_auth) = OracleProxy_admin_auth_storage.read()
@@ -173,6 +173,20 @@ func OracleProxy_add_oracle_implementation_address{
         was_registered=TRUE, is_active=TRUE)
     OracleProxy_oracle_implementation_status_storage.write(
         oracle_implementation_address, new_oracle_implementation_status)
+    let (
+        primary_oracle_implementation_address) = OracleProxy_get_primary_oracle_implementation_address(
+        )
+    if primary_oracle_implementation_address == 0:
+        OracleProxy_primary_oracle_implementation_address_storage.write(
+            oracle_implementation_address)
+        tempvar syscall_ptr = syscall_ptr
+        tempvar pedersen_ptr = pedersen_ptr
+        tempvar range_check_ptr = range_check_ptr
+    else:
+        tempvar syscall_ptr = syscall_ptr
+        tempvar pedersen_ptr = pedersen_ptr
+        tempvar range_check_ptr = range_check_ptr
+    end
     OracleProxy_increment_admin_auth_nonce()
     return ()
 end

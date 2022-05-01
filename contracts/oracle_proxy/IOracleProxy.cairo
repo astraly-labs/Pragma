@@ -9,7 +9,7 @@ namespace IOracleProxy:
     func get_admin_public_key() -> (admin_public_key : felt):
     end
 
-    func get_none() -> (nonce : felt):
+    func get_nonce() -> (nonce : felt):
     end
 
     func get_publisher_registry_address() -> (publisher_registry_address : felt):
@@ -31,7 +31,7 @@ namespace IOracleProxy:
     end
 
     func update_publisher_registry_address(
-            publisher_registry_address : felt, signature_r, signature_s):
+            publisher_registry_address : felt, signature_r : felt, signature_s : felt):
     end
 
     func add_oracle_implementation_address(
@@ -54,12 +54,10 @@ namespace IOracleProxy:
     func get_decimals() -> (decimals : felt):
     end
 
-    func get_entries_for_key(publishers_len : felt, publishers : felt*, key : felt) -> (
-            entries_len : felt, entries : Entry*):
+    func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
-    func get_value(publishers_len : felt, publishers : felt*, key : felt) -> (
-            value : felt, last_updated_timestamp : felt):
+    func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
     end
 
     #
