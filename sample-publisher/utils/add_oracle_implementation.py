@@ -13,9 +13,11 @@ async def main():
         admin_private_key,
         network=NETWORK,
     )
-    await admin_client.add_oracle_implementation(
+    result = await admin_client.add_oracle_implementation(
         252113243162723766795031183139956862350877741660668887061447484899318784639
     )
+
+    print(f"Added oracle implementation with transaction {result}")
 
 
 if __name__ == "__main__":
