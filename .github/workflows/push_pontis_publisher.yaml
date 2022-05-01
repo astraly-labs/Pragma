@@ -29,8 +29,8 @@ jobs:
           grep --help
           grep '0.3.1' temp.txt
           grep '0.3.1' -o temp.txt
-          grep -e '\d.\d.\d' -o -s temp.txt
           grep 'version' pontis-package/setup.cfg | grep -e '\d.\d.\d' -o -s
+          grep -e '\d.\d.\d' -o -s temp.txt
           grep -e '\d.\d.\d' -s temp.txt
           cat temp.txt
           echo "TEST"
