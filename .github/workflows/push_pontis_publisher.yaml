@@ -26,6 +26,7 @@ jobs:
           export PONTIS_PACKAGE_VERSION=$(grep -e '\d.\d.\d' -o temp.txt)
           cat temp.txt
           echo "CATTED"
+          grep --help
           grep -e '\d.\d.\d' -o temp.txt
           echo "$PONTIS_PACKAGE_VERSION"
           echo "TEST"
