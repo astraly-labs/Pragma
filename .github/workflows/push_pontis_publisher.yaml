@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - fix-publish-image
 
 jobs:
   push_pontis_publisher:
