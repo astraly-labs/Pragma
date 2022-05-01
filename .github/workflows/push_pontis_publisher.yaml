@@ -22,8 +22,10 @@ jobs:
           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
         run: |
           export $(grep -v '^#' .env | xargs)
+          grep 'version' pontis-package/setup.cfg > temp.txt
           export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '\d.\d.\d' -o -s)
           echo "$PONTIS_PACKAGE_VERSION"
+          cat temp.txt
           grep --help
           grep '0.3.1' temp.txt
           grep '0.3.1' -o temp.txt
