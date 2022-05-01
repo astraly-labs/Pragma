@@ -1,5 +1,5 @@
 import React from "react";
-import { getOracleAddress } from "../services/address.service";
+import { getOracleProxyAddress } from "../services/address.service";
 import {
   buildExplorerUrlForAddress,
   networkId,
@@ -10,7 +10,7 @@ const PontisFooter = () => {
   return (
     <div className="w-full py-6 mt-auto text-center text-lg">
       <StyledExternalLink
-        href={buildExplorerUrlForAddress(getOracleAddress(networkId()))}
+        href={buildExplorerUrlForAddress(getOracleProxyAddress(networkId()))}
         target="_blank"
       >
         View on Voyager

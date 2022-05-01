@@ -13,14 +13,14 @@ export const truncateAddress = (fullAddress: string) => {
   return `${hex} ${start} ... ${end}`;
 };
 
-const GOERLI_DEFAULT_ORACLE_CONTRACT_ADDRESS =
-  "0x039d1bb4904cef28755c59f081cc88a576ecdf42240fb73dd44ddd003848ce33";
+const GOERLI_DEFAULT_ORACLE_PROXY_CONTRACT_ADDRESS =
+  "0x04a05a68317edb37d34d29f34193829d7363d51a37068f32b142c637e43b47a2";
 
-export const getOracleAddress = (network: Network): string => {
+export const getOracleProxyAddress = (network: Network): string => {
   if (network == "mainnet-alpha") {
     throw new Error("Not deployed on mainnet yet");
   } else if (network === "goerli-alpha") {
-    return GOERLI_DEFAULT_ORACLE_CONTRACT_ADDRESS;
+    return GOERLI_DEFAULT_ORACLE_PROXY_CONTRACT_ADDRESS;
   } else if (network === "localhost") {
     throw new Error(
       "Unknown contract address on localhost. Add address in `src/services/address.service.ts"
