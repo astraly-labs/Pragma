@@ -27,6 +27,9 @@ jobs:
           cat temp.txt
           echo "CATTED"
           grep --help
+          grep '0.3.1' temp.txt
+          grep -e '\d.\d.\d' temp.txt
+          grep '0.3.1' -o temp.txt
           grep -e '\d.\d.\d' -o temp.txt
           cat temp.txt
           echo "$PONTIS_PACKAGE_VERSION"
