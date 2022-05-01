@@ -1,15 +1,13 @@
-import os
 from statistics import median
-from sys import implementation
 
 import pytest
 import pytest_asyncio
 from pontis.core.entry import Entry
 from pontis.core.utils import (
     admin_hash_and_sign_active_status_with_nonce,
+    admin_hash_and_sign_with_nonce,
     construct_entry,
     sign_entry,
-    admin_hash_and_sign_with_nonce,
     sign_publisher_registration,
     str_to_felt,
 )
@@ -17,10 +15,9 @@ from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
 )
+from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from starkware.starknet.compiler.compile import compile_starknet_files
-
 from utils import cached_contract, construct_path
 
 # The path to the contract source code.

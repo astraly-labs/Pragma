@@ -1,4 +1,3 @@
-from pontis.core.entry import Entry
 from pontis.core.utils import (
     admin_hash_and_sign_with_nonce,
     sign_publisher_registration,

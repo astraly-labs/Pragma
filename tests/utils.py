@@ -1,10 +1,12 @@
 import os
 
-from starkware.starknet.testing.starknet import StarknetContract
 from starkware.starknet.compiler.compile import compile_starknet_files
+from starkware.starknet.testing.starknet import StarknetContract
+
 
 def construct_path(path):
     return os.path.join(os.path.dirname(__file__), "../", path)
+
 
 def get_contract_def(path):
     """Returns the contract definition from the contract path"""

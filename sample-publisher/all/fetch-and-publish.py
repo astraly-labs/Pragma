@@ -5,9 +5,9 @@ import hmac
 import os
 import time
 from hashlib import sha256
-from pontis.admin.client import PontisAdminClient
 
 import requests
+from pontis.admin.client import PontisAdminClient
 from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.core.utils import construct_entry
 from pontis.publisher.client import PontisPublisherClient

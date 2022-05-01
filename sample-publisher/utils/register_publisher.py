@@ -1,7 +1,7 @@
 import asyncio
 import os
-from pontis.admin.client import PontisAdminClient
 
+from pontis.admin.client import PontisAdminClient
 from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 
 publisher = "randomfeedooooor"

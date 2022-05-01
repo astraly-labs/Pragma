@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from pontis.admin.client import PontisAdminClient
-from pontis.core.const import ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, NETWORK
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 
 
 async def main():

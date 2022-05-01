@@ -4,9 +4,9 @@ import datetime
 import hmac
 import os
 from hashlib import sha256
-from pontis.admin.client import PontisAdminClient
 
 import requests
+from pontis.admin.client import PontisAdminClient
 from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.publisher.client import PontisPublisherClient
 from starkware.crypto.signature.signature import private_to_stark_key
