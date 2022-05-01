@@ -15,7 +15,7 @@ DECIMALS = 18
 
 
 async def main():
-    PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY"))
+    PUBLISHER_PRIVATE_KEY = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     PUBLISHER_PUBLIC_KEY = private_to_stark_key(PUBLISHER_PRIVATE_KEY)
     publisher = "pontis-coinbase"
 

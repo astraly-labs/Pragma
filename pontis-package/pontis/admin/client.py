@@ -1,6 +1,7 @@
 from pontis.core.utils import (
     admin_hash_and_sign_with_nonce,
     sign_publisher_registration,
+    str_to_felt,
 )
 from starknet_py.contract import Contract
 from starknet_py.net import Client
@@ -51,6 +52,15 @@ class PontisAdminClient:
         self, publisher_public_key, publisher
     ):
         await self.fetch_contracts()
+
+        if type(publisher) == str:
+            publisher = str_to_felt(publisher)
+        elif type(publisher) == int:
+            publisher = publisher
+        else:
+            raise AssertionError(
+                "Publisher ID must be string (will be converted to felt) or integer"
+            )
 
         result = await self.publisher_registry_contract.functions[
             "get_publisher_public_key"
