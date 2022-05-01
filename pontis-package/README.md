@@ -17,6 +17,6 @@ Simply install this package and run:
 ```
 from pontis.publisher.client import PontisPublisherClient
 
-client = PontisPublisherClient(oracle_address, private_key, publisher)
-client.publish(timestamp, asset, price)
+client = PontisPublisherClient(oracle_proxy_address, private_key, publisher)
+client.publish(key, value, timestamp)
 ```

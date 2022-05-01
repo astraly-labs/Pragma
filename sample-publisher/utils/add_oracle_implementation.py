@@ -4,11 +4,6 @@ import os
 from pontis.admin.client import PontisAdminClient
 from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 
-publisher = "randomfeedooooor"
-PUBLISHER_PUBLIC_KEY = (
-    2572892080975153183919763551985742086696653280963444831903803487009075446703
-)
-
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
@@ -18,12 +13,12 @@ async def main():
         admin_private_key,
         network=NETWORK,
     )
-    result = await admin_client.register_publisher_if_not_registered(
-        PUBLISHER_PUBLIC_KEY, publisher
+    result = await admin_client.add_oracle_implementation(
+        252113243162723766795031183139956862350877741660668887061447484899318784639
     )
-    print(f"Registered publisher with transaction {result}")
+
+    print(f"Added oracle implementation with transaction {result}")
 
 
 if __name__ == "__main__":
-
     asyncio.run(main())

@@ -7,24 +7,22 @@ import time
 from hashlib import sha256
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_ADDRESS
+from pontis.admin.client import PontisAdminClient
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.core.utils import construct_entry
 from pontis.publisher.client import PontisPublisherClient
+from starkware.crypto.signature.signature import private_to_stark_key
 
-PUBLISHER_REGISTRATION_PRIVATE_KEY = int(
-    os.environ.get("PUBLISHER_REGISTRATION_PRIVATE_KEY")
-)
+ADMIN_PRIVATE_KEY = int(os.environ.get("ADMIN_PRIVATE_KEY"))
 
 
-async def fetch_coinapi(price_pairs, decimals):
+async def fetch_coinapi(price_pairs, decimals, admin_client):
     COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
-    publisher = "coinapi"
-    client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINAPI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    COINAPI_PUBLISHER_PUBLIC_KEY = private_to_stark_key(COINAPI_PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-coinapi"
+    await admin_client.register_publisher_if_not_registered(
+        COINAPI_PUBLISHER_PUBLIC_KEY, publisher
     )
-
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
-    await client.register_publisher_if_not_registered(r, s)
 
     COINAPI_KEY = os.environ.get("COINAPI_KEY")
     headers = {"X-CoinAPI-Key": COINAPI_KEY}
@@ -57,20 +55,17 @@ async def fetch_coinapi(price_pairs, decimals):
     return entries
 
 
-async def fetch_coinmarketcap(price_pairs, decimals):
+async def fetch_coinmarketcap(price_pairs, decimals, admin_client):
     COINMARKETCAP_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
     )
-    publisher = "coinmarketcap"
-    client = PontisPublisherClient(
-        ORACLE_ADDRESS,
-        COINMARKETCAP_PUBLISHER_PRIVATE_KEY,
-        publisher,
-        network=NETWORK,
+    COINMARKETCAP_PUBLISHER_PUBLIC_KEY = private_to_stark_key(
+        COINMARKETCAP_PUBLISHER_PRIVATE_KEY
     )
-
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
-    await client.register_publisher_if_not_registered(r, s)
+    publisher = "pontis-coinmarketcap"
+    await admin_client.register_publisher_if_not_registered(
+        COINMARKETCAP_PUBLISHER_PUBLIC_KEY, publisher
+    )
 
     COINMARKETCAP_KEY = os.environ.get("COINMARKETCAP_KEY")
     headers = {
@@ -111,17 +106,17 @@ async def fetch_coinmarketcap(price_pairs, decimals):
     return entries
 
 
-async def fetch_coingecko(price_pairs, decimals):
+async def fetch_coingecko(price_pairs, decimals, admin_client):
     COINGECKO_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")
     )
-    publisher = "coingecko"
-    client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINGECKO_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    COINGECKO_PUBLISHER_PUBLIC_KEY = private_to_stark_key(
+        COINGECKO_PUBLISHER_PRIVATE_KEY
     )
-
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
-    await client.register_publisher_if_not_registered(r, s)
+    publisher = "pontis-coingecko"
+    await admin_client.register_publisher_if_not_registered(
+        COINGECKO_PUBLISHER_PUBLIC_KEY, publisher
+    )
 
     headers = {
         "Accepts": "application/json",
@@ -178,17 +173,15 @@ async def fetch_coingecko(price_pairs, decimals):
     return entries
 
 
-async def fetch_coinbase(price_pairs, decimals):
+async def fetch_coinbase(price_pairs, decimals, admin_client):
     COINBASE_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")
     )
-    publisher = "coinbase"
-    client = PontisPublisherClient(
-        ORACLE_ADDRESS, COINBASE_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    COINBASE_PUBLISHER_PUBLIC_KEY = private_to_stark_key(COINBASE_PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-coinbase"
+    await admin_client.register_publisher_if_not_registered(
+        COINBASE_PUBLISHER_PUBLIC_KEY, publisher
     )
-
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
-    await client.register_publisher_if_not_registered(r, s)
 
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
     COINBASE_API_KEY = os.environ.get("COINBASE_API_KEY")
@@ -205,6 +198,7 @@ async def fetch_coinbase(price_pairs, decimals):
             print(
                 f"Unable to fetch Coinbase price for non-USD denomination {price_pair[1]}"
             )
+            continue
 
         request_timestamp = str(
             int(
@@ -254,15 +248,13 @@ async def fetch_coinbase(price_pairs, decimals):
     return entries
 
 
-async def fetch_gemini(price_pairs, decimals):
+async def fetch_gemini(price_pairs, decimals, admin_client):
     GEMINI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
-    publisher = "gemini"
-    client = PontisPublisherClient(
-        ORACLE_ADDRESS, GEMINI_PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+    GEMINI_PUBLISHER_PUBLIC_KEY = private_to_stark_key(GEMINI_PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-gemini"
+    await admin_client.register_publisher_if_not_registered(
+        GEMINI_PUBLISHER_PUBLIC_KEY, publisher
     )
-
-    r, s = client.sign_publisher_registration(PUBLISHER_REGISTRATION_PRIVATE_KEY)
-    await client.register_publisher_if_not_registered(r, s)
 
     base_url = "https://api.gemini.com/v1"
     response = requests.get(base_url + "/pricefeed")
@@ -296,11 +288,19 @@ async def fetch_gemini(price_pairs, decimals):
 
 
 async def publish_all(PRICE_PAIRS, DECIMALS):
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_client = PontisAdminClient(
+        ORACLE_PROXY_ADDRESS,
+        PUBLISHER_REGISTRY_ADDRESS,
+        admin_private_key,
+        network=NETWORK,
+    )
+
     entries = []
     private_keys = []
 
     try:
-        coinapi_entries = await fetch_coinapi(PRICE_PAIRS, DECIMALS)
+        coinapi_entries = await fetch_coinapi(PRICE_PAIRS, DECIMALS, admin_client)
         entries.extend(coinapi_entries)
         coinapi_private_key = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coinapi_private_key] * len(coinapi_entries))
@@ -308,7 +308,9 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coinapi price: {e}")
 
     try:
-        coinmarketcap_entries = await fetch_coinmarketcap(PRICE_PAIRS, DECIMALS)
+        coinmarketcap_entries = await fetch_coinmarketcap(
+            PRICE_PAIRS, DECIMALS, admin_client
+        )
         entries.extend(coinmarketcap_entries)
         coinmarketcap_private_key = int(
             os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
@@ -318,7 +320,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coinmarketcap price: {e}")
 
     try:
-        coingecko_entries = await fetch_coingecko(PRICE_PAIRS, DECIMALS)
+        coingecko_entries = await fetch_coingecko(PRICE_PAIRS, DECIMALS, admin_client)
         entries.extend(coingecko_entries)
         coingecko_private_key = int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coingecko_private_key] * len(coingecko_entries))
@@ -326,7 +328,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coingecko price: {e}")
 
     try:
-        coinbase_entries = await fetch_coinbase(PRICE_PAIRS, DECIMALS)
+        coinbase_entries = await fetch_coinbase(PRICE_PAIRS, DECIMALS, admin_client)
         entries.extend(coinbase_entries)
         coinbase_pricate_key = int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coinbase_pricate_key] * len(coinbase_entries))
@@ -334,7 +336,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coinbase price: {e}")
 
     try:
-        gemini_entries = await fetch_gemini(PRICE_PAIRS, DECIMALS)
+        gemini_entries = await fetch_gemini(PRICE_PAIRS, DECIMALS, admin_client)
         entries.extend(gemini_entries)
         gemini_private_key = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([gemini_private_key] * len(gemini_entries))
@@ -342,7 +344,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Gemini price: {e}")
 
     response = await PontisPublisherClient.publish_many(
-        ORACLE_ADDRESS, NETWORK, entries, private_keys
+        ORACLE_PROXY_ADDRESS, NETWORK, entries, private_keys
     )
     print(f"Bulk updated with response {response}")
 
