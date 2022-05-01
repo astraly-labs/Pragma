@@ -1,0 +1,311 @@
+[
+    {
+        "members": [
+            {
+                "name": "key",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "timestamp",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "Entry",
+        "size": 4,
+        "type": "struct"
+    },
+    {
+        "inputs": [
+            {
+                "name": "admin_public_key",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_public_key",
+        "outputs": [
+            {
+                "name": "admin_public_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_nonce",
+        "outputs": [
+            {
+                "name": "nonce",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_publisher_registry_address",
+        "outputs": [
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_oracle_implementation_addresses",
+        "outputs": [
+            {
+                "name": "oracle_addresses_len",
+                "type": "felt"
+            },
+            {
+                "name": "oracle_addresses",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_primary_oracle_implementation_address",
+        "outputs": [
+            {
+                "name": "primary_oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_key",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "rotate_admin_public_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "update_publisher_registry_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "add_oracle_implementation_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "update_oracle_implementation_active_status",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "primary_oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "set_primary_oracle",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_decimals",
+        "outputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entries_for_key",
+        "outputs": [
+            {
+                "name": "entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "entries",
+                "type": "Entry*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "submit_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
+                "type": "Entry*"
+            },
+            {
+                "name": "signatures_r_len",
+                "type": "felt"
+            },
+            {
+                "name": "signatures_r",
+                "type": "felt*"
+            },
+            {
+                "name": "signatures_s_len",
+                "type": "felt"
+            },
+            {
+                "name": "signatures_s",
+                "type": "felt*"
+            }
+        ],
+        "name": "submit_many_entries",
+        "outputs": [],
+        "type": "function"
+    }
+]
