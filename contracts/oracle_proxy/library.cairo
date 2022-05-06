@@ -302,16 +302,16 @@ func OracleProxy_build_active_oracle_implementation_addresses{
 
     if oracle_implementation_status.is_active == TRUE:
         assert [oracle_addresses + output_idx] = oracle_address
-        let (oracle_addresses_len,
-            oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+        let (recursed_oracle_addresses_len,
+            recursed_oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
             oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx + 1)
-        return (oracle_addresses_len, oracle_addresses)
+        return (recursed_oracle_addresses_len, recursed_oracle_addresses)
+    else:
+        let (recursed_oracle_addresses_len,
+            recursed_oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
+        return (recursed_oracle_addresses_len, recursed_oracle_addresses)
     end
-
-    let (oracle_addresses_len,
-        oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
-        oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
-    return (oracle_addresses_len, oracle_addresses)
 end
 
 #
