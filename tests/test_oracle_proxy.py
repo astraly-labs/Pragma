@@ -1042,4 +1042,27 @@ async def test_rotate_primary_oracle_implementation_address(
     result = await oracle_proxy.get_value(key).invoke()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
+    # Add third (fake) oracle implementation address to proxy
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+
+    (
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ) = admin_hash_and_sign_with_nonce(
+        second_oracle_implementation.contract_address + 1, nonce, admin_private_key
+    )
+
+    await oracle_proxy.add_oracle_implementation_address(
+        second_oracle_implementation.contract_address + 1,
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ).invoke()
+
+    result = await oracle_proxy.get_active_oracle_implementation_addresses().call()
+    assert result.result.oracle_addresses == [
+        second_oracle_implementation.contract_address,
+        second_oracle_implementation.contract_address + 1,
+    ]
+
     return
