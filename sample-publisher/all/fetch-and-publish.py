@@ -3,9 +3,9 @@ import base64
 import datetime
 import hmac
 import os
+import re
 import time
 from hashlib import sha256
-import re
 
 import requests
 from pontis.admin.client import PontisAdminClient
@@ -324,13 +324,13 @@ async def fetch_binance(spot_price_pairs, derivatives, decimals, admin_client):
             price = float(future["markPrice"])
             price_int = int(price * (10**decimals))
 
-            future_expiration_timestamp = int(
+            future_expiration_date = int(
                 datetime.datetime.strptime(
-                    future["symbol"] + "+0000",  # Force UTC
-                    f"{deriv[1]}{deriv[2]}_%y%m%d%z",
-                ).timestamp()
+                    future["symbol"],
+                    f"{deriv[1]}{deriv[2]}_%y%m%d",
+                ).strftime("%Y%m%d")
             )
-            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_timestamp}"
+            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_date}"
 
             print(f"Fetched futures price {price} for {key} from Binance")
 
@@ -440,13 +440,13 @@ async def fetch_ftx(spot_price_pairs, derivatives, decimals, admin_client):
             price = float(future["mark"])
             price_int = int(price * (10**decimals))
 
-            future_expiration_timestamp = int(
+            future_expiration_date = int(
                 datetime.datetime.strptime(
-                    result[0]["expiry"],
+                    future["expiry"],
                     "%Y-%m-%dT%H:%M:%S%z",
-                ).timestamp()
+                ).strftime("%Y%m%d")
             )
-            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_timestamp}"
+            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_date}"
 
             print(f"Fetched futures price {price} for {key} from FTX")
 
