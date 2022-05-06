@@ -143,7 +143,9 @@ class PontisAdminClient:
 
         return result
 
-    async def update_oracle_implementation_active_status(self, oracle_implementation_address, is_active):
+    async def update_oracle_implementation_active_status(
+        self, oracle_implementation_address, is_active
+    ):
         await self.fetch_contracts()
 
         nonce = await self.get_nonce()

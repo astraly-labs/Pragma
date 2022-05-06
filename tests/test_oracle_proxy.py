@@ -1011,7 +1011,9 @@ async def test_rotate_primary_oracle_implementation_address(
     assert result.result.oracle_implementation_status.is_active == 1
 
     result = await oracle_proxy.get_active_oracle_implementation_addresses().call()
-    assert result.result.oracle_addresses == [second_oracle_implementation.contract_address]
+    assert result.result.oracle_addresses == [
+        second_oracle_implementation.contract_address
+    ]
 
     # Submit second entry from second publisher
     admin_private_key, _ = private_and_public_admin_keys
