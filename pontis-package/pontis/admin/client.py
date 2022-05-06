@@ -37,6 +37,15 @@ class PontisAdminClient:
         nonce = result.nonce
         return nonce
 
+    async def get_primary_oracle_implementation_address(self):
+        result = await self.oracle_proxy_contract.functions[
+            "get_primary_oracle_implementation_address"
+        ].call()
+        primary_oracle_implementation_address = (
+            result.primary_oracle_implementation_address
+        )
+        return primary_oracle_implementation_address
+
     async def fetch_contracts(self):
         if self.oracle_proxy_contract is None:
             self.oracle_proxy_contract = await Contract.from_address(
@@ -83,6 +92,8 @@ class PontisAdminClient:
             )
             print(f"Registered publisher with transaction {result}")
 
+            return result
+
     async def add_oracle_implementation(self, oracle_implementation_address):
         await self.fetch_contracts()
 
@@ -104,6 +115,8 @@ class PontisAdminClient:
             max_fee=self.max_fee,
         )
         print(f"Added oracle implementation contract with transaction {result}")
+
+        return result
 
     async def set_primary_oracle(self, primary_oracle_implementation_address):
         await self.fetch_contracts()
@@ -128,6 +141,34 @@ class PontisAdminClient:
 
         print(f"Set oracle implementation to primary with transaction {result}")
 
+        return result
+
+    async def update_oracle_implementation_active_status(self, oracle_implementation_address, is_active):
+        await self.fetch_contracts()
+
+        nonce = await self.get_nonce()
+
+        (
+            oracle_implementation_address_signature_r,
+            oracle_implementation_address_signature_s,
+        ) = admin_hash_and_sign_with_nonce(
+            [oracle_implementation_address, is_active], nonce, self.admin_private_key
+        )
+
+        result = await self.oracle_proxy_contract.functions[
+            "update_oracle_implementation_active_status"
+        ].invoke(
+            oracle_implementation_address,
+            is_active,
+            oracle_implementation_address_signature_r,
+            oracle_implementation_address_signature_s,
+            max_fee=self.max_fee,
+        )
+
+        print(f"Set active status on oracle implementation with transaction {result}")
+
+        return result
+
     async def update_publisher_registry_address(self, new_publisher_registry_address):
         await self.fetch_contracts()
 
@@ -147,3 +188,5 @@ class PontisAdminClient:
         )
 
         print(f"Updated publisher registry address with transaction {result}")
+
+        return result
