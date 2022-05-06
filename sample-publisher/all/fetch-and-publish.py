@@ -390,6 +390,7 @@ async def fetch_ftx(spot_price_pairs, derivatives, decimals, admin_client):
         ), f"Found more than one matching entries for FTX response and price pair {price_pair}"
         price = float(result[0]["price"])
         price_int = int(price * (10**decimals))
+        timestamp = int(time.time())
 
         print(f"Fetched price {price} for {'/'.join(price_pair)} from FTX")
 
