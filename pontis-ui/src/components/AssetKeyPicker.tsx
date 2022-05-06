@@ -14,7 +14,7 @@ const AssetKeyPicker = ({
 
   const dropdown = (
     <div className="absolute inset-x-0 my-2">
-      <div className="bg-white m-auto w-40 rounded-md py-1">
+      <div className="bg-white m-auto w-64 rounded-md py-1 overflow-y-scroll h-64 md:h-96">
         {AssetKeys.map((key, i) => (
           <div
             className={classNames(
