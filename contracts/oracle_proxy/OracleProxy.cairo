@@ -5,12 +5,15 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from contracts.entry.structs import Entry
 from contracts.oracle_proxy.library import (
     OracleProxy_initialize_oracle_proxy, OracleProxy_get_admin_public_key, OracleProxy_get_nonce,
-    OracleProxy_get_publisher_registry_address, OracleProxy_get_oracle_implementation_addresses,
+    OracleProxy_get_publisher_registry_address,
+    OracleProxy_get_active_oracle_implementation_addresses,
+    OracleProxy_get_oracle_implementation_status, OracleProxy_get_oracle_implementation_address,
     OracleProxy_get_primary_oracle_implementation_address, OracleProxy_rotate_admin_public_key,
     OracleProxy_update_publisher_registry_address, OracleProxy_add_oracle_implementation_address,
     OracleProxy_update_oracle_implementation_active_status, OracleProxy_set_primary_oracle,
     OracleProxy_get_decimals, OracleProxy_get_entries_for_key, OracleProxy_get_value,
     OracleProxy_submit_entry, OracleProxy_submit_many_entries)
+from contracts.oracle_proxy.structs import OracleProxy_OracleImplementationStatus
 
 #
 # Constructor
@@ -50,11 +53,30 @@ func get_publisher_registry_address{
 end
 
 @view
-func get_oracle_implementation_addresses{
+func get_active_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         oracle_addresses_len : felt, oracle_addresses : felt*):
-    let (oracle_addresses_len, oracle_addresses) = OracleProxy_get_oracle_implementation_addresses()
+    let (oracle_addresses_len,
+        oracle_addresses) = OracleProxy_get_active_oracle_implementation_addresses()
     return (oracle_addresses_len, oracle_addresses)
+end
+
+@view
+func get_oracle_implementation_status{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        oracle_implementation_address : felt) -> (
+        oracle_implementation_status : OracleProxy_OracleImplementationStatus):
+    let (oracle_implementation_status) = OracleProxy_get_oracle_implementation_status(
+        oracle_implementation_address)
+    return (oracle_implementation_status)
+end
+
+@view
+func get_oracle_implementation_address{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(idx : felt) -> (
+        oracle_implementation_address : felt):
+    let (oracle_implementation_address) = OracleProxy_get_oracle_implementation_address(idx)
+    return (oracle_implementation_address)
 end
 
 @view
