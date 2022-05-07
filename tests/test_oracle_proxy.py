@@ -178,7 +178,7 @@ async def test_oracle_implementation_addresses(
 ):
     _, oracle_proxy, oracle_implementation, _ = initialized_contracts
     admin_private_key, _ = private_and_public_admin_keys
-    result = await oracle_proxy.get_oracle_implementation_addresses().invoke()
+    result = await oracle_proxy.get_active_oracle_implementation_addresses().invoke()
     assert result.result.oracle_addresses == [oracle_implementation.contract_address]
 
     result = await oracle_proxy.get_primary_oracle_implementation_address().invoke()
@@ -206,7 +206,7 @@ async def test_oracle_implementation_addresses(
         oracle_implementation_address_signature_s,
     ).invoke()
 
-    result = await oracle_proxy.get_oracle_implementation_addresses().invoke()
+    result = await oracle_proxy.get_active_oracle_implementation_addresses().invoke()
     assert result.result.oracle_addresses == [
         oracle_implementation.contract_address,
         second_oracle_implementation_address,
@@ -918,5 +918,151 @@ async def test_multiple_oracle_implementations(
 
     result = await oracle_proxy.get_value(key).invoke()
     assert result.result.value == second_entry.value
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_rotate_primary_oracle_implementation_address(
+    initialized_contracts,
+    private_and_public_admin_keys,
+    private_and_public_publisher_keys,
+    publisher,
+):
+    (
+        publisher_registry,
+        oracle_proxy,
+        oracle_implementation,
+        second_oracle_implementation,
+    ) = initialized_contracts
+    admin_private_key, _ = private_and_public_admin_keys
+
+    # Add second oracle implementation address to proxy
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+
+    (
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ) = admin_hash_and_sign_with_nonce(
+        second_oracle_implementation.contract_address, nonce, admin_private_key
+    )
+
+    await oracle_proxy.add_oracle_implementation_address(
+        second_oracle_implementation.contract_address,
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ).invoke()
+
+    # Submit entry
+    key = str_to_felt("eth/usd")
+    publisher_private_key, _ = private_and_public_publisher_keys
+    entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
+    signature_r, signature_s = sign_entry(entry, publisher_private_key)
+    await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
+
+    # Update primary oracle and deactivate old primary oracle
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+
+    (
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ) = admin_hash_and_sign_with_nonce(
+        second_oracle_implementation.contract_address, nonce, admin_private_key
+    )
+
+    await oracle_proxy.set_primary_oracle(
+        second_oracle_implementation.contract_address,
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ).invoke()
+
+    result = await oracle_proxy.get_primary_oracle_implementation_address().invoke()
+    assert (
+        result.result.primary_oracle_implementation_address
+        == second_oracle_implementation.contract_address
+    )
+
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+
+    (signature_r, signature_s,) = admin_hash_and_sign_with_nonce(
+        [oracle_implementation.contract_address, 0], nonce, admin_private_key
+    )
+
+    await oracle_proxy.update_oracle_implementation_active_status(
+        oracle_implementation.contract_address,
+        0,
+        signature_r,
+        signature_s,
+    ).invoke()
+
+    result = await oracle_proxy.get_oracle_implementation_status(
+        oracle_implementation.contract_address
+    ).call()
+    assert result.result.oracle_implementation_status.was_registered == 1
+    assert result.result.oracle_implementation_status.is_active == 0
+
+    result = await oracle_proxy.get_oracle_implementation_status(
+        second_oracle_implementation.contract_address
+    ).call()
+    assert result.result.oracle_implementation_status.was_registered == 1
+    assert result.result.oracle_implementation_status.is_active == 1
+
+    result = await oracle_proxy.get_active_oracle_implementation_addresses().call()
+    assert result.result.oracle_addresses == [
+        second_oracle_implementation.contract_address
+    ]
+
+    # Submit second entry from second publisher
+    admin_private_key, _ = private_and_public_admin_keys
+    second_publisher = str_to_felt("bar")
+    second_publisher_private_key = get_random_private_key()
+    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+
+    (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
+        second_publisher_public_key, second_publisher, admin_private_key
+    )
+
+    await publisher_registry.register_publisher(
+        second_publisher_public_key,
+        second_publisher,
+        registration_signature_r,
+        registration_signature_s,
+    ).invoke()
+
+    second_entry = Entry(key=key, value=3, timestamp=1, publisher=second_publisher)
+    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
+    await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
+
+    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    assert result.result.entries == [entry, second_entry]
+
+    result = await oracle_proxy.get_value(key).invoke()
+    assert result.result.value == (entry.value + second_entry.value) / 2
+
+    # Add third (fake) oracle implementation address to proxy
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+
+    (
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ) = admin_hash_and_sign_with_nonce(
+        second_oracle_implementation.contract_address + 1, nonce, admin_private_key
+    )
+
+    await oracle_proxy.add_oracle_implementation_address(
+        second_oracle_implementation.contract_address + 1,
+        oracle_implementation_address_signature_r,
+        oracle_implementation_address_signature_s,
+    ).invoke()
+
+    result = await oracle_proxy.get_active_oracle_implementation_addresses().call()
+    assert result.result.oracle_addresses == [
+        second_oracle_implementation.contract_address,
+        second_oracle_implementation.contract_address + 1,
+    ]
 
     return

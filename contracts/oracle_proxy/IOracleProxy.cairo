@@ -15,8 +15,15 @@ namespace IOracleProxy:
     func get_publisher_registry_address() -> (publisher_registry_address : felt):
     end
 
-    func get_oracle_implementation_addresses() -> (
+    func get_active_oracle_implementation_addresses() -> (
             oracle_addresses_len : felt, oracle_addresses : felt*):
+    end
+
+    func get_oracle_implementation_status(oracle_implementation_address : felt) -> (
+            oracle_implementation_status : OracleProxy_OracleImplementationStatus):
+    end
+
+    func get_oracle_implementation_address(idx : felt) -> (oracle_implementation_address : felt):
     end
 
     func get_primary_oracle_implementation_address() -> (

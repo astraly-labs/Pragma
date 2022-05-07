@@ -2,6 +2,23 @@
     {
         "members": [
             {
+                "name": "was_registered",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "OracleProxy_OracleImplementationStatus",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "key",
                 "offset": 0,
                 "type": "felt"
@@ -79,7 +96,7 @@
     },
     {
         "inputs": [],
-        "name": "get_oracle_implementation_addresses",
+        "name": "get_active_oracle_implementation_addresses",
         "outputs": [
             {
                 "name": "oracle_addresses_len",
@@ -88,6 +105,40 @@
             {
                 "name": "oracle_addresses",
                 "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "name": "get_oracle_implementation_status",
+        "outputs": [
+            {
+                "name": "oracle_implementation_status",
+                "type": "OracleProxy_OracleImplementationStatus"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "idx",
+                "type": "felt"
+            }
+        ],
+        "name": "get_oracle_implementation_address",
+        "outputs": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
             }
         ],
         "stateMutability": "view",

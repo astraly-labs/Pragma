@@ -66,6 +66,7 @@ export STARKNET_NETWORK=alpha-goerli
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
 starknet deploy --contract publisher_registry_compiled.json --inputs <PUBLIC_ADMIN_KEY>
 starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi contracts/abi/OracleProxy.json --output oracle_proxy_compiled.json
+starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi pontis-ui/src/abi/OracleProxy.json --output oracle_proxy_compiled.json
 starknet deploy --contract oracle_proxy_compiled.json --inputs <PUBLIC_ADMIN_KEY> <PUBLISHER_REGISTRY_ADDRESS>
 starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --abi contracts/abi/OracleImplementation.json --output oracle_implementation_compiled.json
 starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_PROXY_ADDRESS>

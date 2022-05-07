@@ -16,6 +16,10 @@ export const AssetKeys = [
   "shib/usd",
   "temp/usd",
   "eth/mxn",
+  "btc/usd-20220624",
+  "btc/usd-20220930",
+  "eth/usd-20220624",
+  "eth/usd-20220930",
 ];
 
 export type AssetKeyT = typeof AssetKeys[number];

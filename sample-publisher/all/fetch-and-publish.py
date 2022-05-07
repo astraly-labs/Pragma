@@ -3,6 +3,7 @@ import base64
 import datetime
 import hmac
 import os
+import re
 import time
 from hashlib import sha256
 
@@ -16,7 +17,7 @@ from starkware.crypto.signature.signature import private_to_stark_key
 ADMIN_PRIVATE_KEY = int(os.environ.get("ADMIN_PRIVATE_KEY"))
 
 
-async def fetch_coinapi(price_pairs, decimals, admin_client):
+async def fetch_coinapi(spot_price_pairs, derivatives, decimals, admin_client):
     COINAPI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
     COINAPI_PUBLISHER_PUBLIC_KEY = private_to_stark_key(COINAPI_PUBLISHER_PRIVATE_KEY)
     publisher = "pontis-coinapi"
@@ -29,7 +30,7 @@ async def fetch_coinapi(price_pairs, decimals, admin_client):
 
     entries = []
 
-    for price_pair in price_pairs:
+    for price_pair in spot_price_pairs:
         url = f"https://rest.coinapi.io/v1/exchangerate/{'/'.join(price_pair)}"
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -55,7 +56,7 @@ async def fetch_coinapi(price_pairs, decimals, admin_client):
     return entries
 
 
-async def fetch_coinmarketcap(price_pairs, decimals, admin_client):
+async def fetch_coinmarketcap(spot_price_pairs, derivatives, decimals, admin_client):
     COINMARKETCAP_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
     )
@@ -77,7 +78,7 @@ async def fetch_coinmarketcap(price_pairs, decimals, admin_client):
 
     entries = []
 
-    for price_pair in price_pairs:
+    for price_pair in spot_price_pairs:
         parameters = {"symbol": price_pair[0], "convert": price_pair[1]}
 
         response = requests.get(url, headers=headers, params=parameters)
@@ -106,7 +107,7 @@ async def fetch_coinmarketcap(price_pairs, decimals, admin_client):
     return entries
 
 
-async def fetch_coingecko(price_pairs, decimals, admin_client):
+async def fetch_coingecko(spot_price_pairs, derivatives, decimals, admin_client):
     COINGECKO_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY")
     )
@@ -124,7 +125,7 @@ async def fetch_coingecko(price_pairs, decimals, admin_client):
 
     entries = []
 
-    for price_pair in price_pairs:
+    for price_pair in spot_price_pairs:
         if price_pair[0] == "ETH":
             price_pair_id = "ethereum"
         elif price_pair[0] == "BTC":
@@ -173,7 +174,7 @@ async def fetch_coingecko(price_pairs, decimals, admin_client):
     return entries
 
 
-async def fetch_coinbase(price_pairs, decimals, admin_client):
+async def fetch_coinbase(spot_price_pairs, derivatives, decimals, admin_client):
     COINBASE_PUBLISHER_PRIVATE_KEY = int(
         os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY")
     )
@@ -192,7 +193,7 @@ async def fetch_coinbase(price_pairs, decimals, admin_client):
 
     entries = []
 
-    for price_pair in price_pairs:
+    for price_pair in spot_price_pairs:
 
         if price_pair[1] != "USD":
             print(
@@ -248,7 +249,7 @@ async def fetch_coinbase(price_pairs, decimals, admin_client):
     return entries
 
 
-async def fetch_gemini(price_pairs, decimals, admin_client):
+async def fetch_gemini(spot_price_pairs, derivatives, decimals, admin_client):
     GEMINI_PUBLISHER_PRIVATE_KEY = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
     GEMINI_PUBLISHER_PUBLIC_KEY = private_to_stark_key(GEMINI_PUBLISHER_PRIVATE_KEY)
     publisher = "pontis-gemini"
@@ -261,7 +262,7 @@ async def fetch_gemini(price_pairs, decimals, admin_client):
 
     entries = []
 
-    for price_pair in price_pairs:
+    for price_pair in spot_price_pairs:
         timestamp = int(time.time())
         result = [e for e in response.json() if e["pair"] == "".join(price_pair)]
         if len(result) == 0:
@@ -270,7 +271,7 @@ async def fetch_gemini(price_pairs, decimals, admin_client):
 
         assert (
             len(result) == 1
-        ), f"Found more one matching entries for Gemini response and price pair {price_pair}"
+        ), f"Found more than one matching entries for Gemini response and price pair {price_pair}"
         price = float(result[0]["price"])
         price_int = int(price * (10**decimals))
 
@@ -287,7 +288,182 @@ async def fetch_gemini(price_pairs, decimals, admin_client):
     return entries
 
 
-async def publish_all(PRICE_PAIRS, DECIMALS):
+async def fetch_binance(spot_price_pairs, derivatives, decimals, admin_client):
+    BINANCE_PUBLISHER_PRIVATE_KEY = int(os.environ.get("BINANCE_PUBLISHER_PRIVATE_KEY"))
+    BINANCE_PUBLISHER_PUBLIC_KEY = private_to_stark_key(BINANCE_PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-binance"
+    await admin_client.register_publisher_if_not_registered(
+        BINANCE_PUBLISHER_PUBLIC_KEY, publisher
+    )
+
+    entries = []
+
+    # Don't fetch spot data because Binance only has crypto/crypto spot price pairs
+
+    base_url = "https://dapi.binance.com/dapi/v1"
+    response = requests.get(base_url + "/premiumIndex")
+
+    for deriv in derivatives:
+        if deriv[0] != "FUTURE":
+            print(
+                f"Unable to fetch price from Binance for non-future derivative {deriv}"
+            )
+            continue
+
+        result = [
+            e
+            for e in response.json()
+            if re.match(rf"{deriv[1]}{deriv[2]}_[0-9]+", e["symbol"])
+        ]
+        if len(result) == 0:
+            print(f"No entry found for {'/'.join(deriv)} from Binance")
+            continue
+
+        for future in result:
+            timestamp = int(future["time"] / 1000)
+            price = float(future["markPrice"])
+            price_int = int(price * (10**decimals))
+
+            future_expiration_date = int(
+                datetime.datetime.strptime(
+                    future["symbol"],
+                    f"{deriv[1]}{deriv[2]}_%y%m%d",
+                ).strftime("%Y%m%d")
+            )
+            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_date}"
+
+            print(f"Fetched futures price {price} for {key} from Binance")
+
+            entries.append(
+                construct_entry(
+                    key=key.lower(),
+                    value=price_int,
+                    timestamp=timestamp,
+                    publisher=publisher,
+                )
+            )
+
+    return entries
+
+
+async def fetch_ftx(spot_price_pairs, derivatives, decimals, admin_client):
+    FTX_PUBLISHER_PRIVATE_KEY = int(os.environ.get("FTX_PUBLISHER_PRIVATE_KEY"))
+    FTX_PUBLISHER_PUBLIC_KEY = private_to_stark_key(FTX_PUBLISHER_PRIVATE_KEY)
+    publisher = "pontis-ftx"
+    await admin_client.register_publisher_if_not_registered(
+        FTX_PUBLISHER_PUBLIC_KEY, publisher
+    )
+
+    base_url = "https://ftx.com/api"
+    endpoint = "/markets"
+
+    FTX_API_KEY = os.environ.get("FTX_API_KEY")
+    FTX_API_SECRET = os.environ.get("FTX_API_SECRET")
+
+    timestamp = int(time.time() * 1000)
+    signature = hmac.new(
+        FTX_API_SECRET.encode(),
+        (str(timestamp) + "GET" + endpoint).encode("ascii"),
+        "sha256",
+    ).hexdigest()
+
+    headers = {
+        "FTX-KEY": FTX_API_KEY,
+        "FTX-SIGN": signature,
+        "FTX-TS": str(timestamp),
+    }
+
+    response = requests.get(base_url + endpoint, headers=headers)
+
+    entries = []
+
+    for price_pair in spot_price_pairs:
+        result = [
+            e for e in response.json()["result"] if e["name"] == "/".join(price_pair)
+        ]
+        if len(result) == 0:
+            print(f"No entry found for {'/'.join(price_pair)} from FTX")
+            continue
+
+        assert (
+            len(result) == 1
+        ), f"Found more than one matching entries for FTX response and price pair {price_pair}"
+        price = float(result[0]["price"])
+        price_int = int(price * (10**decimals))
+        timestamp = int(time.time())
+
+        print(f"Fetched price {price} for {'/'.join(price_pair)} from FTX")
+
+        entries.append(
+            construct_entry(
+                key="/".join(price_pair).lower(),
+                value=price_int,
+                timestamp=timestamp,
+                publisher=publisher,
+            )
+        )
+
+    endpoint = "/futures"
+    timestamp = int(time.time() * 1000)
+    signature = hmac.new(
+        FTX_API_SECRET.encode(),
+        (str(timestamp) + "GET" + endpoint).encode("ascii"),
+        "sha256",
+    ).hexdigest()
+
+    headers = {
+        "FTX-KEY": FTX_API_KEY,
+        "FTX-SIGN": signature,
+        "FTX-TS": str(timestamp),
+    }
+
+    response = requests.get(base_url + endpoint, headers=headers)
+
+    for deriv in derivatives:
+        if deriv[0] != "FUTURE":
+            print(f"Unable to fetch price from FTX for non-future derivative {deriv}")
+            continue
+        if deriv[2] != "USD":
+            print(f"Unable to fetch price from FTX for non-USD derivative {deriv}")
+            continue
+
+        result = [
+            e
+            for e in response.json()["result"]
+            if re.match(rf"{deriv[1]}-[0-9]+", e["name"])
+        ]
+        if len(result) == 0:
+            print(f"No entry found for {'/'.join(price_pair)} from FTX")
+            continue
+
+        for future in result:
+            timestamp = int(time.time())
+            price = float(future["mark"])
+            price_int = int(price * (10**decimals))
+
+            future_expiration_date = int(
+                datetime.datetime.strptime(
+                    future["expiry"],
+                    "%Y-%m-%dT%H:%M:%S%z",
+                ).strftime("%Y%m%d")
+            )
+            key = f"{deriv[1]}/{deriv[2]}-{future_expiration_date}"
+
+            print(f"Fetched futures price {price} for {key} from FTX")
+
+            entries.append(
+                construct_entry(
+                    key=key.lower(),
+                    value=price_int,
+                    timestamp=timestamp,
+                    publisher=publisher,
+                )
+            )
+
+    return entries
+
+
+async def publish_all(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS):
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
     admin_client = PontisAdminClient(
         ORACLE_PROXY_ADDRESS,
@@ -300,7 +476,9 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
     private_keys = []
 
     try:
-        coinapi_entries = await fetch_coinapi(PRICE_PAIRS, DECIMALS, admin_client)
+        coinapi_entries = await fetch_coinapi(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
         entries.extend(coinapi_entries)
         coinapi_private_key = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coinapi_private_key] * len(coinapi_entries))
@@ -309,7 +487,7 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
 
     try:
         coinmarketcap_entries = await fetch_coinmarketcap(
-            PRICE_PAIRS, DECIMALS, admin_client
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
         )
         entries.extend(coinmarketcap_entries)
         coinmarketcap_private_key = int(
@@ -320,7 +498,9 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coinmarketcap price: {e}")
 
     try:
-        coingecko_entries = await fetch_coingecko(PRICE_PAIRS, DECIMALS, admin_client)
+        coingecko_entries = await fetch_coingecko(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
         entries.extend(coingecko_entries)
         coingecko_private_key = int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coingecko_private_key] * len(coingecko_entries))
@@ -328,7 +508,9 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coingecko price: {e}")
 
     try:
-        coinbase_entries = await fetch_coinbase(PRICE_PAIRS, DECIMALS, admin_client)
+        coinbase_entries = await fetch_coinbase(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
         entries.extend(coinbase_entries)
         coinbase_pricate_key = int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([coinbase_pricate_key] * len(coinbase_entries))
@@ -336,12 +518,34 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
         print(f"Error fetching Coinbase price: {e}")
 
     try:
-        gemini_entries = await fetch_gemini(PRICE_PAIRS, DECIMALS, admin_client)
+        gemini_entries = await fetch_gemini(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
         entries.extend(gemini_entries)
         gemini_private_key = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([gemini_private_key] * len(gemini_entries))
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
+
+    try:
+        binance_entries = await fetch_binance(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
+        entries.extend(binance_entries)
+        binance_private_key = int(os.environ.get("BINANCE_PUBLISHER_PRIVATE_KEY"))
+        private_keys.extend([binance_private_key] * len(binance_entries))
+    except Exception as e:
+        print(f"Error fetching Binance price: {e}")
+
+    try:
+        ftx_entries = await fetch_ftx(
+            SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS, admin_client
+        )
+        entries.extend(ftx_entries)
+        ftx_private_key = int(os.environ.get("FTX_PUBLISHER_PRIVATE_KEY"))
+        private_keys.extend([ftx_private_key] * len(ftx_entries))
+    except Exception as e:
+        print(f"Error fetching FTX price: {e}")
 
     response = await PontisPublisherClient.publish_many(
         ORACLE_PROXY_ADDRESS, NETWORK, entries, private_keys
@@ -354,16 +558,17 @@ async def publish_all(PRICE_PAIRS, DECIMALS):
 
 if __name__ == "__main__":
     DECIMALS = 18
-    PRICE_PAIRS = [
-        ["ETH", "USD"],
-        ["BTC", "USD"],
-        ["LUNA", "USD"],
-        ["SOL", "USD"],
-        ["AVAX", "USD"],
-        ["DOGE", "USD"],
-        ["SHIB", "USD"],
-        ["TEMP", "USD"],
-        ["ETH", "MXN"],
+    SPOT_PRICE_PAIRS = [
+        ("ETH", "USD"),
+        ("BTC", "USD"),
+        ("LUNA", "USD"),
+        ("SOL", "USD"),
+        ("AVAX", "USD"),
+        ("DOGE", "USD"),
+        ("SHIB", "USD"),
+        ("TEMP", "USD"),
+        ("ETH", "MXN"),
     ]
+    DERIVATIVES = [("FUTURE", "BTC", "USD"), ("FUTURE", "ETH", "USD")]
 
-    asyncio.run(publish_all(PRICE_PAIRS, DECIMALS))
+    asyncio.run(publish_all(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS))

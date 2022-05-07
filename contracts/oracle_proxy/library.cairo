@@ -82,22 +82,40 @@ func OracleProxy_get_publisher_registry_address{
     return (publisher_registry_address)
 end
 
-func OracleProxy_get_oracle_implementation_addresses{
+func OracleProxy_get_active_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
         oracle_addresses_len : felt, oracle_addresses : felt*):
     alloc_locals
 
-    let (oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
+    let (total_oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
     let (local oracle_addresses) = alloc()
 
-    if oracle_addresses_len == 0:
-        return (oracle_addresses_len, oracle_addresses)
+    if total_oracle_addresses_len == 0:
+        return (total_oracle_addresses_len, oracle_addresses)
     end
 
-    let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
-        oracle_addresses_len, oracle_addresses, 0, 0)
+    let (oracle_addresses_len,
+        oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0)
 
     return (oracle_addresses_len, oracle_addresses)
+end
+
+func OracleProxy_get_oracle_implementation_status{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        oracle_implementation_address : felt) -> (
+        oracle_implementation_status : OracleProxy_OracleImplementationStatus):
+    let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
+        oracle_implementation_address)
+    return (oracle_implementation_status)
+end
+
+func OracleProxy_get_oracle_implementation_address{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(idx : felt) -> (
+        oracle_implementation_address : felt):
+    let (oracle_implementation_address) = OracleProxy_oracle_implementation_address_storage.read(
+        idx)
+    return (oracle_implementation_address)
 end
 
 func OracleProxy_get_primary_oracle_implementation_address{
@@ -270,28 +288,30 @@ func OracleProxy_increment_admin_auth_nonce{
     return ()
 end
 
-func OracleProxy_build_oracle_implementation_addresses{
+func OracleProxy_build_active_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt,
-        output_idx : felt) -> (oracle_addresses : felt*):
+        output_idx : felt) -> (oracle_addresses_len : felt, oracle_addresses : felt*):
     let (oracle_address) = OracleProxy_oracle_implementation_address_storage.read(storage_idx)
     let (oracle_implementation_status) = OracleProxy_oracle_implementation_status_storage.read(
         oracle_address)
 
     if storage_idx == oracle_addresses_len:
-        return (oracle_addresses)
+        return (output_idx, oracle_addresses)
     end
 
     if oracle_implementation_status.is_active == TRUE:
         assert [oracle_addresses + output_idx] = oracle_address
-        let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
+        let (recursed_oracle_addresses_len,
+            recursed_oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
             oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx + 1)
-        return (oracle_addresses)
+        return (recursed_oracle_addresses_len, recursed_oracle_addresses)
+    else:
+        let (recursed_oracle_addresses_len,
+            recursed_oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
+        return (recursed_oracle_addresses_len, recursed_oracle_addresses)
     end
-
-    OracleProxy_build_oracle_implementation_addresses(
-        oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
-    return (oracle_addresses)
 end
 
 #
@@ -364,13 +384,14 @@ func _OracleProxy_submit_entry{
     let (publisher_public_key) = IPublisherRegistry.get_publisher_public_key(
         publisher_registry_address, new_entry.publisher)
     Entry_assert_valid_entry_signature(new_entry, publisher_public_key, signature_r, signature_s)
-    let (oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
-    if oracle_addresses_len == 0:
+    let (total_oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
+    if total_oracle_addresses_len == 0:
         return ()
     end
     let (local oracle_addresses) = alloc()
-    let (oracle_addresses) = OracleProxy_build_oracle_implementation_addresses(
-        oracle_addresses_len, oracle_addresses, 0, 0)
+    let (oracle_addresses_len,
+        oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0)
     _OracleProxy_submit_entry_for_oracle_addresses(
         oracle_addresses_len, oracle_addresses, 0, new_entry, should_assert)
     return ()

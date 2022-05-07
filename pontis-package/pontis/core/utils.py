@@ -1,3 +1,4 @@
+import functools
 import warnings
 
 from pontis.core.entry import Entry
@@ -40,6 +41,8 @@ def sign_publisher_registration(publisher_public_key, publisher, admin_private_k
 
 
 def admin_hash_and_sign_with_nonce(arg, nonce, admin_private_key):
+    if type(arg) == list:
+        arg = functools.reduce(pedersen_hash, arg)
     signature_r, signature_s = sign(pedersen_hash(arg, nonce), admin_private_key)
     return signature_r, signature_s
 
