@@ -4,7 +4,7 @@ This is the repository for the Pontis Oracle on Starknet.
 
 ## About
 
-You can read more about the Pontis Oracle [here](https://bit.ly/pontis-overview) and you can see the frontend in action [here](https://pontisoracle.xyz).
+You can read more about the Pontis Oracle [here](https://42labs-xyz.notion.site/Pontis-a0cc65b11f4442e080f5698e2eefe051) and you can see the frontend in action [here](https://pontisoracle.xyz).
 
 ### Overview
 
