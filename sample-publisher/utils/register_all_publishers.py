@@ -34,10 +34,7 @@ async def main():
         network=NETWORK,
     )
     for public_key, publisher in zip(public_keys, publishers):
-        result = await admin_client.register_publisher_if_not_registered(
-            public_key, publisher
-        )
-        print(f"Registered publisher with transaction {result}")
+        await admin_client.register_publisher_if_not_registered(public_key, publisher)
 
 
 if __name__ == "__main__":
