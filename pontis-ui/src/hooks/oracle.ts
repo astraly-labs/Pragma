@@ -68,10 +68,11 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   const { contract } = useOracleProxyContract();
   const { decimals } = useOracleGetDecimals(assetKey);
   const arg = strToHexFelt(assetKey);
+  const aggregationMode = 0;
   const { data, loading, error } = useStarknetCall({
     contract,
     method: "get_value",
-    args: [arg],
+    args: [arg, aggregationMode],
   });
 
   if (error !== undefined) {

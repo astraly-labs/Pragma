@@ -91,6 +91,10 @@
             {
                 "name": "key",
                 "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
             }
         ],
         "name": "get_value",

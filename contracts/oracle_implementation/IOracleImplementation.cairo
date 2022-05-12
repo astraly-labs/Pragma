@@ -15,7 +15,8 @@ namespace IOracleImplementation:
             entries_len : felt, entries : Entry*):
     end
 
-    func get_value(publishers_len : felt, publishers : felt*, key : felt) -> (
+    func get_value(
+            publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt) -> (
             value : felt, last_updated_timestamp : felt):
     end
 

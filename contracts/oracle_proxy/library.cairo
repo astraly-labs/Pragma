@@ -353,7 +353,7 @@ func OracleProxy_get_entries_for_key{
 end
 
 func OracleProxy_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (value : felt, last_updated_timestamp : felt):
+        key : felt, aggregation_mode : felt) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
 
     let (publisher_registry_address) = OracleProxy_get_publisher_registry_address()
@@ -363,7 +363,7 @@ func OracleProxy_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
         primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     let (value, last_updated_timestamp) = IOracleImplementation.get_value(
-        primary_oracle_implementation_address, publishers_len, publishers, key)
+        primary_oracle_implementation_address, publishers_len, publishers, key, aggregation_mode)
     return (value, last_updated_timestamp)
 end
 

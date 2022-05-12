@@ -70,7 +70,7 @@ func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
 end
 
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_len : felt, publishers : felt*, key : felt) -> (
+        publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt) -> (
         value : felt, last_updated_timestamp : felt):
     alloc_locals
 

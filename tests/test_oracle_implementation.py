@@ -16,6 +16,7 @@ DECIMALS = 18
 ORACLE_PROXY_ADDRESS = (
     1771898182094063035988424170791013279488407100660629279080401671638225029234
 )
+AGGREGATION_MODE = 0
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -86,7 +87,7 @@ async def test_submit_entries(contract, publisher):
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
 
-    result = await contract.get_value([publisher], entry.key).invoke()
+    result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     second_entry = Entry(
@@ -97,11 +98,13 @@ async def test_submit_entries(contract, publisher):
         caller_address=ORACLE_PROXY_ADDRESS
     )
 
-    result = await contract.get_value([publisher], second_entry.key).invoke()
+    result = await contract.get_value(
+        [publisher], second_entry.key, AGGREGATION_MODE
+    ).invoke()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await contract.get_value([publisher], entry.key).invoke()
+    result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     return
@@ -114,7 +117,7 @@ async def test_republish_stale(contract, publisher):
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
 
-    result = await contract.get_value([publisher], entry.key).invoke()
+    result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     second_entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
@@ -134,7 +137,7 @@ async def test_republish_stale(contract, publisher):
         caller_address=ORACLE_PROXY_ADDRESS
     )  # should not fail and also not update state
 
-    result = await contract.get_value([publisher], key).invoke()
+    result = await contract.get_value([publisher], key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     return
@@ -157,7 +160,9 @@ async def test_mean_aggregation(
         caller_address=ORACLE_PROXY_ADDRESS
     )
 
-    result = await contract.get_value([publisher, second_publisher], key).invoke()
+    result = await contract.get_value(
+        [publisher, second_publisher], key, AGGREGATION_MODE
+    ).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
@@ -200,7 +205,9 @@ async def test_median_aggregation(
         ).invoke()
         assert result.result.entries == entries
 
-        result = await contract.get_value(publishers[: len(entries)], key).invoke()
+        result = await contract.get_value(
+            publishers[: len(entries)], key, AGGREGATION_MODE
+        ).invoke()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")

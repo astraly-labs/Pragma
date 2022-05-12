@@ -43,9 +43,10 @@ end
 
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_len : felt, publishers : felt*, key : felt) -> (
+        publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt) -> (
         value : felt, last_updated_timestamp : felt):
-    let (value, last_updated_timestamp) = Oracle_get_value(publishers_len, publishers, key)
+    let (value, last_updated_timestamp) = Oracle_get_value(
+        publishers_len, publishers, key, aggregation_mode)
     return (value, last_updated_timestamp)
 end
 

@@ -64,7 +64,8 @@ namespace IOracleProxy:
     func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
-    func get_value(key : felt) -> (value : felt, last_updated_timestamp : felt):
+    func get_value(key : felt, aggregation_mode : felt) -> (
+            value : felt, last_updated_timestamp : felt):
     end
 
     #

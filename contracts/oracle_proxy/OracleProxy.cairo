@@ -159,9 +159,9 @@ func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 end
 
 @view
-func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
-        value : felt, last_updated_timestamp : felt):
-    let (value, last_updated_timestamp) = OracleProxy_get_value(key)
+func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, aggregation_mode : felt) -> (value : felt, last_updated_timestamp : felt):
+    let (value, last_updated_timestamp) = OracleProxy_get_value(key, aggregation_mode)
     return (value, last_updated_timestamp)
 end
 
