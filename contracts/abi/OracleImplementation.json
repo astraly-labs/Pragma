@@ -69,7 +69,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_entries_for_key",
+        "name": "get_entries",
         "outputs": [
             {
                 "name": "entries_len",
