@@ -12,7 +12,6 @@ from starkware.starkware_utils.error_handling import StarkException
 from utils import cached_contract, construct_path
 
 CONTRACT_FILE = construct_path("contracts/publisher_registry/PublisherRegistry.cairo")
-DECIMALS = 18
 
 
 @pytest_asyncio.fixture(scope="module")

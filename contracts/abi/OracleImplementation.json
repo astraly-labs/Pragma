@@ -38,7 +38,12 @@
         "type": "constructor"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
         "name": "get_decimals",
         "outputs": [
             {
@@ -64,7 +69,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_entries_for_key",
+        "name": "get_entries",
         "outputs": [
             {
                 "name": "entries_len",
@@ -91,6 +96,10 @@
             {
                 "name": "key",
                 "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
             }
         ],
         "name": "get_value",
@@ -115,6 +124,21 @@
             }
         ],
         "name": "set_oracle_proxy_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "name": "set_decimals",
         "outputs": [],
         "type": "function"
     },

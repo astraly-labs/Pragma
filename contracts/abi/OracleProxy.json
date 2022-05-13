@@ -256,7 +256,12 @@
         "type": "function"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
         "name": "get_decimals",
         "outputs": [
             {
@@ -274,7 +279,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_entries_for_key",
+        "name": "get_entries",
         "outputs": [
             {
                 "name": "entries_len",
@@ -293,6 +298,10 @@
             {
                 "name": "key",
                 "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
             }
         ],
         "name": "get_value",
@@ -307,6 +316,29 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "signature_r",
+                "type": "felt"
+            },
+            {
+                "name": "signature_s",
+                "type": "felt"
+            }
+        ],
+        "name": "set_decimals",
+        "outputs": [],
         "type": "function"
     },
     {

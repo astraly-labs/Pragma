@@ -28,7 +28,8 @@ ORACLE_PROXY_CONTRACT_FILE = construct_path("contracts/oracle_proxy/OracleProxy.
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
-DECIMALS = 18
+DEFAULT_DECIMALS = 18
+AGGREGATION_MODE = 0
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -164,10 +165,29 @@ async def test_deploy(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_get_decimals(initialized_contracts):
+async def test_decimals(initialized_contracts, private_and_public_admin_keys):
     _, oracle_proxy, _, _ = initialized_contracts
-    result = await oracle_proxy.get_decimals().invoke()
-    assert result.result.decimals == DECIMALS
+    admin_private_key, _ = private_and_public_admin_keys
+
+    result = await oracle_proxy.get_decimals(str_to_felt("default")).invoke()
+    assert result.result.decimals == DEFAULT_DECIMALS
+
+    decimals = 100
+    key = str_to_felt("test")
+
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+    (
+        signature_r,
+        signature_s,
+    ) = admin_hash_and_sign_with_nonce([key, decimals], nonce, admin_private_key)
+
+    result = await oracle_proxy.set_decimals(
+        key, decimals, signature_r, signature_s
+    ).invoke()
+
+    result = await oracle_proxy.get_decimals(key).invoke()
+    assert result.result.decimals == decimals
 
     return
 
@@ -403,7 +423,7 @@ async def test_publish(
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(entry.key).invoke()
+    result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
 
@@ -423,7 +443,7 @@ async def test_republish(
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(entry.key).invoke()
+    result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     second_entry = entry = Entry(key=key, value=3, timestamp=2, publisher=publisher)
@@ -432,7 +452,7 @@ async def test_republish(
 
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(second_entry.key).invoke()
+    result = await oracle_proxy.get_value(second_entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == second_entry.value
 
     return
@@ -451,7 +471,7 @@ async def test_republish_stale(
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(entry.key).invoke()
+    result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     second_entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
@@ -471,7 +491,7 @@ async def test_republish_stale(
         [second_entry], [signature_r], [signature_s]
     ).invoke()  # should not fail and also not update state
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     return
@@ -489,7 +509,7 @@ async def test_publish_second_asset(
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(entry.key).invoke()
+    result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     second_entry = Entry(
@@ -500,11 +520,11 @@ async def test_publish_second_asset(
 
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(second_entry.key).invoke()
+    result = await oracle_proxy.get_value(second_entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle_proxy.get_value(entry.key).invoke()
+    result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     return
@@ -547,13 +567,13 @@ async def test_publish_second_publisher(
 
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -618,10 +638,10 @@ async def test_median_aggregation(
             additional_entry,
         )
 
-        result = await oracle_proxy.get_entries_for_key(key).invoke()
+        result = await oracle_proxy.get_entries(key).invoke()
         assert result.result.entries == entries
 
-        result = await oracle_proxy.get_value(key).invoke()
+        result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
@@ -678,10 +698,10 @@ async def test_submit_many(
 
     await oracle_proxy.submit_many_entries(entries, signatures_r, signatures_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == entries
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == int(median(prices[: len(entries)]))
 
     print(f"Succeeded batch updating for {len(entries)} entries")
@@ -721,10 +741,10 @@ async def test_subset_publishers(
         registration_signature_s,
     ).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry]
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     return
@@ -735,10 +755,10 @@ async def test_unknown_key(initialized_contracts):
     _, oracle_proxy, _, _ = initialized_contracts
 
     unknown_key = str_to_felt("answertolife")
-    result = await oracle_proxy.get_entries_for_key(unknown_key).invoke()
+    result = await oracle_proxy.get_entries(unknown_key).invoke()
     assert len(result.result.entries) == 0
 
-    result = await oracle_proxy.get_value(unknown_key).invoke()
+    result = await oracle_proxy.get_value(unknown_key, AGGREGATION_MODE).invoke()
     assert result.result.value == 0
     assert result.result.last_updated_timestamp == 0
 
@@ -812,7 +832,9 @@ async def test_real_data(initialized_contracts, private_and_public_admin_keys):
         "shib/usd",
     ]
     for key in keys:
-        result = await oracle_proxy.get_value(str_to_felt(key)).invoke()
+        result = await oracle_proxy.get_value(
+            str_to_felt(key), AGGREGATION_MODE
+        ).invoke()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
@@ -839,10 +861,10 @@ async def test_multiple_oracle_implementations(
     signature_r, signature_s = sign_entry(entry, publisher_private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry]
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to proxy
@@ -884,10 +906,10 @@ async def test_multiple_oracle_implementations(
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
     # Verify that we can get both entries from the first oracle implementation
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Verify that only the second entry is present in the second oracle implementation
@@ -913,10 +935,10 @@ async def test_multiple_oracle_implementations(
         == second_oracle_implementation.contract_address
     )
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [second_entry]
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == second_entry.value
 
     return
@@ -1036,10 +1058,10 @@ async def test_rotate_primary_oracle_implementation_address(
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_proxy.get_value(key).invoke()
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to proxy

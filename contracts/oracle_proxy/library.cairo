@@ -319,7 +319,7 @@ end
 #
 
 func OracleProxy_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        ) -> (decimals : felt):
+        key : felt) -> (decimals : felt):
     let (
         primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
@@ -327,11 +327,11 @@ func OracleProxy_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
         assert_not_equal(primary_oracle_implementation_address, 0)
     end
 
-    let (decimals) = IOracleImplementation.get_decimals(primary_oracle_implementation_address)
+    let (decimals) = IOracleImplementation.get_decimals(primary_oracle_implementation_address, key)
     return (decimals)
 end
 
-func OracleProxy_get_entries_for_key{
+func OracleProxy_get_entries{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
         entries_len : felt, entries : Entry*):
     alloc_locals
@@ -347,13 +347,13 @@ func OracleProxy_get_entries_for_key{
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
         publisher_registry_address)
 
-    let (entries_len, entries) = IOracleImplementation.get_entries_for_key(
+    let (entries_len, entries) = IOracleImplementation.get_entries(
         primary_oracle_implementation_address, publishers_len, publishers, key)
     return (entries_len, entries)
 end
 
 func OracleProxy_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (value : felt, last_updated_timestamp : felt):
+        key : felt, aggregation_mode : felt) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
 
     let (publisher_registry_address) = OracleProxy_get_publisher_registry_address()
@@ -363,8 +363,55 @@ func OracleProxy_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
         primary_oracle_implementation_address) = OracleProxy_primary_oracle_implementation_address_storage.read(
         )
     let (value, last_updated_timestamp) = IOracleImplementation.get_value(
-        primary_oracle_implementation_address, publishers_len, publishers, key)
+        primary_oracle_implementation_address, publishers_len, publishers, key, aggregation_mode)
     return (value, last_updated_timestamp)
+end
+
+func OracleProxy_set_decimals{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(key : felt, decimals : felt, signature_r : felt, signature_s : felt):
+    alloc_locals
+
+    let (admin_auth) = OracleProxy_admin_auth_storage.read()
+
+    let (t1) = hash2{hash_ptr=pedersen_ptr}(key, decimals)
+    let (signed_hash) = hash2{hash_ptr=pedersen_ptr}(t1, admin_auth.nonce)
+    with_attr error_message(
+            "Signature on hash of oracle implementation address, is_active and nonce is invalid"):
+        verify_ecdsa_signature(signed_hash, admin_auth.public_key, signature_r, signature_s)
+    end
+
+    let (total_oracle_addresses_len) = OracleProxy_oracle_implementations_len_storage.read()
+    if total_oracle_addresses_len == 0:
+        return ()
+    end
+    let (local oracle_addresses) = alloc()
+    let (oracle_addresses_len,
+        oracle_addresses) = OracleProxy_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0)
+
+    _OracleProxy_set_decimals(oracle_addresses_len, oracle_addresses, 0, key, decimals)
+    OracleProxy_increment_admin_auth_nonce()
+    return ()
+end
+
+func _OracleProxy_set_decimals{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(
+        oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, key : felt,
+        decimals : felt):
+    if oracle_addresses_len == 0:
+        return ()
+    end
+
+    if idx == oracle_addresses_len:
+        return ()
+    end
+
+    let oracle_address = [oracle_addresses + idx]
+    IOracleImplementation.set_decimals(oracle_address, key, decimals)
+    _OracleProxy_set_decimals(oracle_addresses_len, oracle_addresses, idx + 1, key, decimals)
+    return ()
 end
 
 func OracleProxy_submit_entry{
