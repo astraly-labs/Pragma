@@ -11,7 +11,7 @@ from contracts.oracle_proxy.library import (
     OracleProxy_get_primary_oracle_implementation_address, OracleProxy_rotate_admin_public_key,
     OracleProxy_update_publisher_registry_address, OracleProxy_add_oracle_implementation_address,
     OracleProxy_update_oracle_implementation_active_status, OracleProxy_set_primary_oracle,
-    OracleProxy_get_decimals, OracleProxy_get_entries_for_key, OracleProxy_get_value,
+    OracleProxy_get_decimals, OracleProxy_get_entries, OracleProxy_get_value,
     OracleProxy_set_decimals, OracleProxy_submit_entry, OracleProxy_submit_many_entries)
 from contracts.oracle_proxy.structs import OracleProxy_OracleImplementationStatus
 
@@ -152,9 +152,9 @@ func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
 end
 
 @view
-func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = OracleProxy_get_entries_for_key(key)
+    let (entries_len, entries) = OracleProxy_get_entries(key)
     return (entries_len, entries)
 end
 

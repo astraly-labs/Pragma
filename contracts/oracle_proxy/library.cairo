@@ -331,7 +331,7 @@ func OracleProxy_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     return (decimals)
 end
 
-func OracleProxy_get_entries_for_key{
+func OracleProxy_get_entries{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
         entries_len : felt, entries : Entry*):
     alloc_locals
@@ -347,7 +347,7 @@ func OracleProxy_get_entries_for_key{
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
         publisher_registry_address)
 
-    let (entries_len, entries) = IOracleImplementation.get_entries_for_key(
+    let (entries_len, entries) = IOracleImplementation.get_entries(
         primary_oracle_implementation_address, publishers_len, publishers, key)
     return (entries_len, entries)
 end

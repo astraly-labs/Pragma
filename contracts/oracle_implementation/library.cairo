@@ -70,7 +70,7 @@ func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     end
 end
 
-func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func Oracle_get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         publishers_len : felt, publishers : felt*, key : felt) -> (
         entries_len : felt, entries : Entry*):
     let (entries_len, entries) = Oracle_get_all_entries_for_key(key, publishers_len, publishers)
@@ -82,7 +82,7 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
         value : felt, last_updated_timestamp : felt):
     alloc_locals
 
-    let (entries_len, entries) = Oracle_get_entries_for_key(publishers_len, publishers, key)
+    let (entries_len, entries) = Oracle_get_entries(publishers_len, publishers, key)
 
     if entries_len == 0:
         return (0, 0)

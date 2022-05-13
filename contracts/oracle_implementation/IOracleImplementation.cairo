@@ -11,7 +11,7 @@ namespace IOracleImplementation:
     func get_decimals(key : felt) -> (decimals : felt):
     end
 
-    func get_entries_for_key(publishers_len : felt, publishers : felt*, key : felt) -> (
+    func get_entries(publishers_len : felt, publishers : felt*, key : felt) -> (
             entries_len : felt, entries : Entry*):
     end
 

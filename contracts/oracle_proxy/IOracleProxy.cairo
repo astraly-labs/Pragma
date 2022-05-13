@@ -61,7 +61,7 @@ namespace IOracleProxy:
     func get_decimals(key : felt) -> (decimals : felt):
     end
 
-    func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
+    func get_entries(key : felt) -> (entries_len : felt, entries : Entry*):
     end
 
     func get_value(key : felt, aggregation_mode : felt) -> (

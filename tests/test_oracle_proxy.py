@@ -573,7 +573,7 @@ async def test_publish_second_publisher(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -638,7 +638,7 @@ async def test_median_aggregation(
             additional_entry,
         )
 
-        result = await oracle_proxy.get_entries_for_key(key).invoke()
+        result = await oracle_proxy.get_entries(key).invoke()
         assert result.result.entries == entries
 
         result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -698,7 +698,7 @@ async def test_submit_many(
 
     await oracle_proxy.submit_many_entries(entries, signatures_r, signatures_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == entries
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -741,7 +741,7 @@ async def test_subset_publishers(
         registration_signature_s,
     ).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry]
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -755,7 +755,7 @@ async def test_unknown_key(initialized_contracts):
     _, oracle_proxy, _, _ = initialized_contracts
 
     unknown_key = str_to_felt("answertolife")
-    result = await oracle_proxy.get_entries_for_key(unknown_key).invoke()
+    result = await oracle_proxy.get_entries(unknown_key).invoke()
     assert len(result.result.entries) == 0
 
     result = await oracle_proxy.get_value(unknown_key, AGGREGATION_MODE).invoke()
@@ -861,7 +861,7 @@ async def test_multiple_oracle_implementations(
     signature_r, signature_s = sign_entry(entry, publisher_private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry]
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -906,7 +906,7 @@ async def test_multiple_oracle_implementations(
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
     # Verify that we can get both entries from the first oracle implementation
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -935,7 +935,7 @@ async def test_multiple_oracle_implementations(
         == second_oracle_implementation.contract_address
     )
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [second_entry]
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
@@ -1058,7 +1058,7 @@ async def test_rotate_primary_oracle_implementation_address(
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
-    result = await oracle_proxy.get_entries_for_key(key).invoke()
+    result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()

@@ -6,7 +6,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.library import (
     Oracle_set_default_decimals, Oracle_set_oracle_proxy_address, Oracle_set_decimals,
-    Oracle_get_decimals, Oracle_get_entries_for_key, Oracle_get_value, Oracle_submit_entry)
+    Oracle_get_decimals, Oracle_get_entries, Oracle_get_value, Oracle_submit_entry)
 
 #
 # Constructor
@@ -32,10 +32,10 @@ func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
 end
 
 @view
-func get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         publishers_len : felt, publishers : felt*, key : felt) -> (
         entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = Oracle_get_entries_for_key(publishers_len, publishers, key)
+    let (entries_len, entries) = Oracle_get_entries(publishers_len, publishers, key)
     return (entries_len, entries)
 end
 
