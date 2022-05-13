@@ -1,17 +1,10 @@
 import asyncio
-import base64
-import datetime
-import hmac
 import os
-from hashlib import sha256
-from pontis.core.utils import currency_pair_to_key
-from pontis.publisher.coinbase import fetch_coinbase
 
-import requests
-from pontis.admin.client import PontisAdminClient
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
+from pontis.core.utils import currency_pair_to_key
 from pontis.publisher.client import PontisPublisherClient
-from starkware.crypto.signature.signature import private_to_stark_key
+from pontis.publisher.coinbase import fetch_coinbase
 
 DECIMALS = 18
 
