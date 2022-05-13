@@ -5,6 +5,7 @@ from starknet_py.net import Client
 from starkware.crypto.signature.signature import private_to_stark_key, sign
 
 MAX_FEE = 0
+DEFAULT_N_RETRIES = 3
 
 
 class PontisPublisherClient:
@@ -15,10 +16,12 @@ class PontisPublisherClient:
         publisher,
         network=None,
         max_fee=None,
+        n_retries=None,
     ):
 
         self.network = "mainnet" if network is None else network
         self.max_fee = MAX_FEE if max_fee is None else max_fee
+        self.n_retries = DEFAULT_N_RETRIES if n_retries is None else n_retries
 
         self.oracle_proxy_address = oracle_proxy_address
         self.oracle_proxy_contract = None
@@ -41,7 +44,8 @@ class PontisPublisherClient:
     async def fetch_oracle_proxy_contract(self):
         if self.oracle_proxy_contract is None:
             self.oracle_proxy_contract = await Contract.from_address(
-                self.oracle_proxy_address, Client(self.network)
+                self.oracle_proxy_address,
+                Client(self.network, n_retries=self.n_retries),
             )
 
     async def publish(self, key, value, timestamp):
@@ -60,12 +64,16 @@ class PontisPublisherClient:
         print(f"Updated entry with transaction {result}")
 
     @classmethod
-    async def get_decimals(cls, oracle_proxy_address, network, key, max_fee=None):
+    async def get_decimals(
+        cls, oracle_proxy_address, network, key, max_fee=None, n_retries=None
+    ):
         if max_fee is None:
             max_fee = MAX_FEE
+        if n_retries is None:
+            n_retries = DEFAULT_N_RETRIES
 
         oracle_proxy_contract = await Contract.from_address(
-            oracle_proxy_address, Client(network)
+            oracle_proxy_address, Client(network, n_retries=n_retries)
         )
 
         if type(key) == str:
@@ -90,6 +98,7 @@ class PontisPublisherClient:
         entries,
         publisher_private_keys,
         max_fee=None,
+        n_retries=None,
     ):
         if len(entries) != len(publisher_private_keys):
             raise Exception(
@@ -98,6 +107,8 @@ class PontisPublisherClient:
 
         if max_fee is None:
             max_fee = MAX_FEE
+        if n_retries is None:
+            n_retries = DEFAULT_N_RETRIES
 
         signatures = [
             sign(hash_entry(entry), private_key)
@@ -107,7 +118,7 @@ class PontisPublisherClient:
         signatures_s = [s[1] for s in signatures]
 
         oracle_proxy_contract = await Contract.from_address(
-            oracle_proxy_address, Client(network)
+            oracle_proxy_address, Client(network, n_retries=n_retries)
         )
 
         response = await oracle_proxy_contract.functions["submit_many_entries"].invoke(
