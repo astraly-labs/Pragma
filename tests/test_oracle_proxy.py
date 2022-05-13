@@ -28,7 +28,7 @@ ORACLE_PROXY_CONTRACT_FILE = construct_path("contracts/oracle_proxy/OracleProxy.
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
-DECIMALS = 18
+DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 
 
@@ -165,10 +165,29 @@ async def test_deploy(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_get_decimals(initialized_contracts):
+async def test_decimals(initialized_contracts, private_and_public_admin_keys):
     _, oracle_proxy, _, _ = initialized_contracts
-    result = await oracle_proxy.get_decimals().invoke()
-    assert result.result.decimals == DECIMALS
+    admin_private_key, _ = private_and_public_admin_keys
+
+    result = await oracle_proxy.get_decimals(str_to_felt("default")).invoke()
+    assert result.result.decimals == DEFAULT_DECIMALS
+
+    decimals = 100
+    key = str_to_felt("test")
+
+    result = await oracle_proxy.get_nonce().invoke()
+    nonce = result.result.nonce
+    (
+        signature_r,
+        signature_s,
+    ) = admin_hash_and_sign_with_nonce(
+        [key, decimals], nonce, admin_private_key
+    )
+
+    result = await oracle_proxy.set_decimals(key, decimals, signature_r, signature_s).invoke()
+
+    result = await oracle_proxy.get_decimals(key).invoke()
+    assert result.result.decimals == decimals
 
     return
 

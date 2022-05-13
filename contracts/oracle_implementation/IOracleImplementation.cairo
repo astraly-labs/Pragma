@@ -8,7 +8,7 @@ namespace IOracleImplementation:
     # Getters
     #
 
-    func get_decimals() -> (decimals : felt):
+    func get_decimals(key : felt) -> (decimals : felt):
     end
 
     func get_entries_for_key(publishers_len : felt, publishers : felt*, key : felt) -> (
@@ -25,6 +25,9 @@ namespace IOracleImplementation:
     #
 
     func set_oracle_proxy_address(oracle_proxy_address : felt):
+    end
+
+    func set_decimals(key : felt, decimals : felt):
     end
 
     func submit_entry(new_entry : Entry):

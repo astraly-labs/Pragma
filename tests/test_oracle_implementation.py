@@ -12,7 +12,7 @@ from utils import cached_contract, construct_path
 CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
-DECIMALS = 18
+DEFAULT_DECIMALS = 18
 ORACLE_PROXY_ADDRESS = (
     1771898182094063035988424170791013279488407100660629279080401671638225029234
 )
@@ -50,8 +50,8 @@ async def test_deploy(contract):
 
 @pytest.mark.asyncio
 async def test_get_decimals(contract):
-    result = await contract.get_decimals().invoke()
-    assert result.result.decimals == DECIMALS
+    result = await contract.get_decimals(str_to_felt("default")).invoke()
+    assert result.result.decimals == DEFAULT_DECIMALS
 
     return
 

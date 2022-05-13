@@ -58,7 +58,7 @@ namespace IOracleProxy:
     # Oracle Implementation Proxy Functions
     #
 
-    func get_decimals() -> (decimals : felt):
+    func get_decimals(key : felt) -> (decimals : felt):
     end
 
     func get_entries_for_key(key : felt) -> (entries_len : felt, entries : Entry*):
@@ -71,6 +71,9 @@ namespace IOracleProxy:
     #
     # Setters
     #
+
+    func set_decimals(key : felt, decimals : felt, signature_r : felt, signature_s : felt):
+    end
 
     func submit_entry(new_entry : Entry, signature_r : felt, signature_s : felt):
     end

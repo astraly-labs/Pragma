@@ -12,7 +12,7 @@ from contracts.oracle_proxy.library import (
     OracleProxy_update_publisher_registry_address, OracleProxy_add_oracle_implementation_address,
     OracleProxy_update_oracle_implementation_active_status, OracleProxy_set_primary_oracle,
     OracleProxy_get_decimals, OracleProxy_get_entries_for_key, OracleProxy_get_value,
-    OracleProxy_submit_entry, OracleProxy_submit_many_entries)
+    OracleProxy_set_decimals, OracleProxy_submit_entry, OracleProxy_submit_many_entries)
 from contracts.oracle_proxy.structs import OracleProxy_OracleImplementationStatus
 
 #
@@ -145,9 +145,9 @@ end
 #
 
 @view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        decimals : felt):
-    let (decimals) = OracleProxy_get_decimals()
+func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (decimals : felt):
+    let (decimals) = OracleProxy_get_decimals(key)
     return (decimals)
 end
 
@@ -163,6 +163,14 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
         key : felt, aggregation_mode : felt) -> (value : felt, last_updated_timestamp : felt):
     let (value, last_updated_timestamp) = OracleProxy_get_value(key, aggregation_mode)
     return (value, last_updated_timestamp)
+end
+
+@external
+func set_decimals{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}(key : felt, decimals : felt, signature_r : felt, signature_s : felt):
+    OracleProxy_set_decimals(key, decimals, signature_r, signature_s)
+    return ()
 end
 
 @external

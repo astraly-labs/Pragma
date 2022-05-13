@@ -14,7 +14,7 @@ func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : f
         is_above_threshold : felt):
     alloc_locals
 
-    let (decimals) = IOracleProxy.get_decimals(ORACLE_PROXY_ADDRESS)
+    let (decimals) = IOracleProxy.get_decimals(ORACLE_PROXY_ADDRESS, KEY)
     let (multiplier) = pow(10, decimals)
 
     let (eth_price, timestamp) = IOracleProxy.get_value(ORACLE_PROXY_ADDRESS, KEY, AGGREGATION_MODE)

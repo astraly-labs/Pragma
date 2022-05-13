@@ -74,3 +74,13 @@ def construct_entry(key, value, timestamp, publisher):
         timestamp=timestamp,
         publisher=publisher,
     )
+
+
+def currency_pair_to_key(quote, base):
+    return f"{quote}/{base}".lower()
+
+
+def pprint_entry(entry):
+    print(
+        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, publisher={felt_to_str(entry.publisher)}"
+    )

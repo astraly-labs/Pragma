@@ -41,10 +41,11 @@ interface GetDecimalsHookT {
 
 const useOracleGetDecimals = (assetKey: AssetKeyT): GetDecimalsHookT => {
   const { contract } = useOracleProxyContract();
+  const arg = strToHexFelt(assetKey);
   const { data, loading, error } = useStarknetCall({
     contract,
     method: "get_decimals",
-    args: [],
+    args: [arg],
   });
   let decimals: number | undefined = undefined;
   if (data !== undefined) {

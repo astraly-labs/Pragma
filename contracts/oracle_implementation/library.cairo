@@ -9,6 +9,8 @@ from starkware.starknet.common.syscalls import get_caller_address
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
+const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
+
 #
 # Storage
 #
@@ -18,7 +20,7 @@ func Oracle_entry_storage(key : felt, publisher : felt) -> (entry : Entry):
 end
 
 @storage_var
-func Oracle_decimals_storage() -> (decimals : felt):
+func Oracle_decimals_storage(key : felt) -> (decimals : felt):
 end
 
 @storage_var
@@ -29,9 +31,9 @@ end
 # Constructor
 #
 
-func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func Oracle_set_default_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         decimals : felt):
-    Oracle_decimals_storage.write(decimals)
+    Oracle_decimals_storage.write(DEFAULT_KEY, decimals)
     return ()
 end
 
@@ -56,10 +58,15 @@ end
 # Getters
 #
 
-func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        decimals : felt):
-    let (decimals) = Oracle_decimals_storage.read()
-    return (decimals)
+func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt) -> (decimals : felt):
+    let (decimals) = Oracle_decimals_storage.read(key)
+    if decimals == 0:
+        let (default_decimals) = Oracle_decimals_storage.read(DEFAULT_KEY)
+        return (default_decimals)
+    else:
+        return (decimals)
+    end
 end
 
 func Oracle_get_entries_for_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -94,6 +101,13 @@ func Oracle_set_oracle_proxy_address{
         oracle_proxy_address : felt):
     Oracle_only_oracle_proxy()
     Oracle_proxy_address_storage.write(oracle_proxy_address)
+    return ()
+end
+
+func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, decimals : felt):
+    Oracle_only_oracle_proxy()
+    Oracle_decimals_storage.write(key, decimals)
     return ()
 end
 

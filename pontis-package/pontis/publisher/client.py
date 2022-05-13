@@ -60,6 +60,29 @@ class PontisPublisherClient:
         print(f"Updated entry with transaction {result}")
 
     @classmethod
+    async def get_decimals(cls, oracle_proxy_address, network, key, max_fee=None):
+        if max_fee is None:
+            max_fee = MAX_FEE
+
+        oracle_proxy_contract = await Contract.from_address(
+            oracle_proxy_address, Client(network)
+        )
+
+        if type(key) == str:
+            key = str_to_felt(key)
+        elif type(key) != int:
+            raise AssertionError(
+                "Key must be string (will be converted to felt) or integer"
+            )
+
+        response = await oracle_proxy_contract.functions["get_decimals"].call(
+            key,
+            max_fee=max_fee,
+        )
+
+        return response.decimals
+
+    @classmethod
     async def publish_many(
         cls,
         oracle_proxy_address,
