@@ -38,7 +38,12 @@
         "type": "constructor"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
         "name": "get_decimals",
         "outputs": [
             {
@@ -119,6 +124,21 @@
             }
         ],
         "name": "set_oracle_proxy_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "name": "set_decimals",
         "outputs": [],
         "type": "function"
     },

@@ -9,8 +9,8 @@ from starkware.starknet.common.syscalls import get_caller_address
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
-const DEFAULT_DECIMALS = 18
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
+const DEFAULT_DECIMALS = 18
 
 #
 # Storage
@@ -33,8 +33,8 @@ end
 #
 
 func Oracle_set_default_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        decimals : felt):
-    Oracle_decimals_storage.write(DEFAULT_KEY, decimals)
+        ):
+    Oracle_decimals_storage.write(DEFAULT_KEY, DEFAULT_DECIMALS)
     return ()
 end
 
