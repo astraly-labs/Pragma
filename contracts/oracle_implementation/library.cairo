@@ -73,7 +73,7 @@ end
 func Oracle_get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         publishers_len : felt, publishers : felt*, key : felt) -> (
         entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = Oracle_get_all_entries_for_key(key, publishers_len, publishers)
+    let (entries_len, entries) = Oracle_get_all_entries(key, publishers_len, publishers)
     return (entries_len, entries)
 end
 
@@ -143,8 +143,7 @@ end
 # Helpers
 #
 
-func Oracle_get_all_entries_for_key{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func Oracle_get_all_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt, publishers_len : felt, publishers : felt*) -> (
         entries_len : felt, entries : Entry*):
     let (entries : Entry*) = alloc()

@@ -13,9 +13,7 @@ CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
 DEFAULT_DECIMALS = 18
-ORACLE_PROXY_ADDRESS = (
-    1771898182094063035988424170791013279488407100660629279080401671638225029234
-)
+ORACLE_PROXY_ADDRESS = 1771898182094063035988424170791013279488407100660629279080401671638225029234  # random number
 AGGREGATION_MODE = 0
 
 
@@ -168,9 +166,7 @@ async def test_mean_aggregation(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await contract.get_entries_for_key(
-        [publisher, second_publisher], key
-    ).invoke()
+    result = await contract.get_entries([publisher, second_publisher], key).invoke()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -200,9 +196,7 @@ async def test_median_aggregation(
             caller_address=ORACLE_PROXY_ADDRESS
         )
 
-        result = await contract.get_entries_for_key(
-            publishers[: len(entries)], key
-        ).invoke()
+        result = await contract.get_entries(publishers[: len(entries)], key).invoke()
         assert result.result.entries == entries
 
         result = await contract.get_value(
