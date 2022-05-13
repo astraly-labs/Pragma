@@ -9,6 +9,7 @@ from starkware.starknet.common.syscalls import get_caller_address
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
+const DEFAULT_DECIMALS = 18
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
 
 #

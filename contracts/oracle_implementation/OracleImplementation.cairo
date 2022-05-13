@@ -8,8 +8,6 @@ from contracts.oracle_implementation.library import (
     Oracle_set_default_decimals, Oracle_set_oracle_proxy_address, Oracle_set_decimals,
     Oracle_get_decimals, Oracle_get_entries_for_key, Oracle_get_value, Oracle_submit_entry)
 
-const DEFAULT_DECIMALS = 18
-
 #
 # Constructor
 #
@@ -17,7 +15,7 @@ const DEFAULT_DECIMALS = 18
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_proxy_address : felt):
-    Oracle_set_default_decimals(DEFAULT_DECIMALS)
+    Oracle_set_default_decimals()
     Oracle_set_oracle_proxy_address(oracle_proxy_address)
     return ()
 end
