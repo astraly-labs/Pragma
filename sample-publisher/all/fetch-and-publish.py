@@ -3,7 +3,7 @@ import os
 
 import requests
 from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
-from pontis.core.utils import pprint_entry
+from pontis.core.utils import currency_pair_to_key, pprint_entry
 from pontis.publisher.binance import fetch_binance
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.coinapi import fetch_coinapi
@@ -20,13 +20,11 @@ async def publish_all(assets):
     private_keys = []
 
     for i, asset in enumerate(assets):
-        """
         key = currency_pair_to_key(*asset["pair"])
         decimals = PontisPublisherClient.get_decimals(
             ORACLE_PROXY_ADDRESS, NETWORK, key
         )
-        """
-        assets[i]["decimals"] = 18
+        assets[i]["decimals"] = decimals
 
     try:
         coinapi_entries = fetch_coinapi(assets)

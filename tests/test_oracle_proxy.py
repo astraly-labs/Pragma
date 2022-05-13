@@ -180,11 +180,11 @@ async def test_decimals(initialized_contracts, private_and_public_admin_keys):
     (
         signature_r,
         signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        [key, decimals], nonce, admin_private_key
-    )
+    ) = admin_hash_and_sign_with_nonce([key, decimals], nonce, admin_private_key)
 
-    result = await oracle_proxy.set_decimals(key, decimals, signature_r, signature_s).invoke()
+    result = await oracle_proxy.set_decimals(
+        key, decimals, signature_r, signature_s
+    ).invoke()
 
     result = await oracle_proxy.get_decimals(key).invoke()
     assert result.result.decimals == decimals
