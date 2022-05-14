@@ -3,14 +3,7 @@ from statistics import median
 import pytest
 import pytest_asyncio
 from pontis.core.entry import Entry
-from pontis.core.utils import (
-    admin_hash_and_sign_active_status_with_nonce,
-    admin_hash_and_sign_with_nonce,
-    construct_entry,
-    sign_entry,
-    sign_publisher_registration,
-    str_to_felt,
-)
+from pontis.core.utils import construct_entry, sign_entry, str_to_felt
 from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,

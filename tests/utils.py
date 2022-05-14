@@ -1,8 +1,8 @@
 import os
 
+from nile.signer import Signer
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import StarknetContract
-from nile.signer import Signer
 
 
 def construct_path(path):
