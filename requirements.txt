@@ -2,6 +2,7 @@ ecdsa==0.17.*
 fastecdsa==2.2.*
 sympy==1.10.*
 cairo-lang==0.8.1
+cairo-nile==0.6.*
 pytest==7.0.*
 pytest-asyncio==0.18.*
 

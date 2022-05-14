@@ -4,16 +4,18 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 
 from contracts.entry.structs import Entry
 from contracts.oracle_proxy.library import (
-    OracleProxy_initialize_oracle_proxy, OracleProxy_get_admin_public_key, OracleProxy_get_nonce,
-    OracleProxy_get_publisher_registry_address,
+    OracleProxy_initialize_oracle_proxy, OracleProxy_get_publisher_registry_address,
     OracleProxy_get_active_oracle_implementation_addresses,
     OracleProxy_get_oracle_implementation_status, OracleProxy_get_oracle_implementation_address,
-    OracleProxy_get_primary_oracle_implementation_address, OracleProxy_rotate_admin_public_key,
+    OracleProxy_get_primary_oracle_implementation_address,
     OracleProxy_update_publisher_registry_address, OracleProxy_add_oracle_implementation_address,
     OracleProxy_update_oracle_implementation_active_status, OracleProxy_set_primary_oracle,
     OracleProxy_get_decimals, OracleProxy_get_entries, OracleProxy_get_value,
     OracleProxy_set_decimals, OracleProxy_submit_entry, OracleProxy_submit_many_entries)
 from contracts.oracle_proxy.structs import OracleProxy_OracleImplementationStatus
+from contracts.admin.library import (
+    Admin_initialize_admin_address, Admin_get_admin_address, Admin_set_admin_address,
+    Admin_only_admin)
 
 #
 # Constructor
@@ -21,8 +23,9 @@ from contracts.oracle_proxy.structs import OracleProxy_OracleImplementationStatu
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        admin_public_key : felt, publisher_registry_address : felt):
-    OracleProxy_initialize_oracle_proxy(admin_public_key, publisher_registry_address)
+        admin_address : felt, publisher_registry_address : felt):
+    Admin_initialize_admin_address(admin_address)
+    OracleProxy_initialize_oracle_proxy(publisher_registry_address)
     return ()
 end
 
@@ -31,17 +34,11 @@ end
 #
 
 @view
-func get_admin_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        admin_public_key : felt):
-    let (admin_public_key) = OracleProxy_get_admin_public_key()
-    return (admin_public_key)
-end
-
-@view
-func get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        nonce : felt):
-    let (nonce) = OracleProxy_get_nonce()
-    return (nonce)
+func get_admin_address{
+        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        range_check_ptr}() -> (admin_address : felt):
+    let (admin_address) = Admin_get_admin_address()
+    return (admin_address)
 end
 
 @view
@@ -94,49 +91,45 @@ end
 #
 
 @external
-func rotate_admin_public_key{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_key : felt, signature_r : felt, signature_s : felt):
-    OracleProxy_rotate_admin_public_key(new_key, signature_r, signature_s)
+func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_address : felt):
+    Admin_only_admin()
+    Admin_set_admin_address(new_address)
     return ()
 end
 
 @external
 func update_publisher_registry_address{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(publisher_registry_address : felt, signature_r, signature_s):
-    OracleProxy_update_publisher_registry_address(
-        publisher_registry_address, signature_r, signature_s)
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        publisher_registry_address : felt):
+    Admin_only_admin()
+    OracleProxy_update_publisher_registry_address(publisher_registry_address)
     return ()
 end
 
 @external
 func add_oracle_implementation_address{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
-    OracleProxy_add_oracle_implementation_address(
-        oracle_implementation_address, signature_r, signature_s)
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        oracle_implementation_address : felt):
+    Admin_only_admin()
+    OracleProxy_add_oracle_implementation_address(oracle_implementation_address)
     return ()
 end
 
 @external
 func update_oracle_implementation_active_status{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        oracle_implementation_address : felt, is_active : felt, signature_r : felt,
-        signature_s : felt):
-    OracleProxy_update_oracle_implementation_active_status(
-        oracle_implementation_address, is_active, signature_r, signature_s)
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        oracle_implementation_address : felt, is_active : felt):
+    Admin_only_admin()
+    OracleProxy_update_oracle_implementation_active_status(oracle_implementation_address, is_active)
     return ()
 end
 
 @external
-func set_primary_oracle{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        primary_oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
-    OracleProxy_set_primary_oracle(primary_oracle_implementation_address, signature_r, signature_s)
+func set_primary_oracle{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        primary_oracle_implementation_address : felt):
+    Admin_only_admin()
+    OracleProxy_set_primary_oracle(primary_oracle_implementation_address)
     return ()
 end
 
@@ -152,8 +145,8 @@ func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
 end
 
 @view
-func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (entries_len : felt, entries : Entry*):
+func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
+        entries_len : felt, entries : Entry*):
     let (entries_len, entries) = OracleProxy_get_entries(key)
     return (entries_len, entries)
 end
@@ -168,8 +161,9 @@ end
 @external
 func set_decimals{
         syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(key : felt, decimals : felt, signature_r : felt, signature_s : felt):
-    OracleProxy_set_decimals(key, decimals, signature_r, signature_s)
+        range_check_ptr}(key : felt, decimals : felt):
+    Admin_only_admin()
+    OracleProxy_set_decimals(key, decimals)
     return ()
 end
 

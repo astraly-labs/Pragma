@@ -28,12 +28,16 @@ ORACLE_PROXY_CONTRACT_FILE = construct_path("contracts/oracle_proxy/OracleProxy.
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
+ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_defs():
+    account_contract_def = compile_starknet_files(
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+    )
     publisher_registry_def = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE], debug_info=True
     )
@@ -43,21 +47,41 @@ async def contract_defs():
     oracle_implementation_def = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE], debug_info=True
     )
-    return publisher_registry_def, oracle_proxy_def, oracle_implementation_def
+    return (
+        account_contract_def,
+        publisher_registry_def,
+        oracle_proxy_def,
+        oracle_implementation_def,
+    )
 
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_init(contract_defs, private_and_public_admin_keys):
     _, admin_public_key = private_and_public_admin_keys
-    publisher_registry_def, oracle_proxy_def, oracle_implementation_def = contract_defs
+    (
+        account_contract_def,
+        publisher_registry_def,
+        oracle_proxy_def,
+        oracle_implementation_def,
+    ) = contract_defs
 
     starknet = await Starknet.empty()
+    account_contract = await starknet.deploy(
+        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+    )
+    second_account_contract = await starknet.deploy(
+        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+    )
     publisher_registry = await starknet.deploy(
-        contract_def=publisher_registry_def, constructor_calldata=[admin_public_key]
+        contract_def=publisher_registry_def,
+        constructor_calldata=[account_contract.contract_address],
     )
     oracle_proxy = await starknet.deploy(
         contract_def=oracle_proxy_def,
-        constructor_calldata=[admin_public_key, publisher_registry.contract_address],
+        constructor_calldata=[
+            account_contract.contract_address,
+            publisher_registry.contract_address,
+        ],
     )
     oracle_implementation = await starknet.deploy(
         contract_def=oracle_implementation_def,
@@ -70,6 +94,8 @@ async def contract_init(contract_defs, private_and_public_admin_keys):
 
     return (
         starknet.state,
+        account_contract,
+        second_account_contract,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
@@ -79,15 +105,26 @@ async def contract_init(contract_defs, private_and_public_admin_keys):
 
 @pytest.fixture
 def contracts(contract_defs, contract_init):
-    publisher_registry_def, oracle_proxy_def, oracle_implementation_def = contract_defs
+    (
+        account_contract_def,
+        publisher_registry_def,
+        oracle_proxy_def,
+        oracle_implementation_def,
+    ) = contract_defs
     (
         state,
+        account_contract,
+        second_account_contract,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
         second_oracle_implementation,
     ) = contract_init
     _state = state.copy()
+    account_contract = cached_contract(_state, account_contract_def, account_contract)
+    second_account_contract = cached_contract(
+        _state, account_contract_def, second_account_contract
+    )
     publisher_registry = cached_contract(
         _state, publisher_registry_def, publisher_registry
     )
@@ -99,6 +136,8 @@ def contracts(contract_defs, contract_init):
         _state, oracle_implementation_def, second_oracle_implementation
     )
     return (
+        account_contract,
+        second_account_contract,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
@@ -110,48 +149,38 @@ def contracts(contract_defs, contract_init):
 async def initialized_contracts(
     contracts,
     private_and_public_publisher_keys,
-    private_and_public_admin_keys,
+    signer,
     publisher,
 ):
     (
+        account_contract,
+        second_account_contract,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
         second_oracle_implementation,
     ) = contracts
     _, publisher_public_key = private_and_public_publisher_keys
-    admin_private_key, _ = private_and_public_admin_keys
 
     # Register publisher
-    registration_signature_r, registration_signature_s = sign_publisher_registration(
-        publisher_public_key, publisher, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [publisher_public_key, publisher],
     )
-
-    await publisher_registry.register_publisher(
-        publisher_public_key,
-        publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
 
     # Add oracle implementation address to proxy
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        oracle_implementation.contract_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "add_oracle_implementation_address",
+        [oracle_implementation.contract_address],
     )
 
-    await oracle_proxy.add_oracle_implementation_address(
-        oracle_implementation.contract_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
-
     return (
+        account_contract,
+        second_account_contract,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
@@ -165,9 +194,8 @@ async def test_deploy(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_decimals(initialized_contracts, private_and_public_admin_keys):
-    _, oracle_proxy, _, _ = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
+async def test_decimals(initialized_contracts, signer):
+    account_contract, _, _, oracle_proxy, _, _ = initialized_contracts
 
     result = await oracle_proxy.get_decimals(str_to_felt("default")).invoke()
     assert result.result.decimals == DEFAULT_DECIMALS
@@ -175,16 +203,12 @@ async def test_decimals(initialized_contracts, private_and_public_admin_keys):
     decimals = 100
     key = str_to_felt("test")
 
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-    (
-        signature_r,
-        signature_s,
-    ) = admin_hash_and_sign_with_nonce([key, decimals], nonce, admin_private_key)
-
-    result = await oracle_proxy.set_decimals(
-        key, decimals, signature_r, signature_s
-    ).invoke()
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "set_decimals",
+        [key, decimals],
+    )
 
     result = await oracle_proxy.get_decimals(key).invoke()
     assert result.result.decimals == decimals
@@ -193,11 +217,15 @@ async def test_decimals(initialized_contracts, private_and_public_admin_keys):
 
 
 @pytest.mark.asyncio
-async def test_oracle_implementation_addresses(
-    initialized_contracts, private_and_public_admin_keys
-):
-    _, oracle_proxy, oracle_implementation, _ = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
+async def test_oracle_implementation_addresses(initialized_contracts, signer):
+    (
+        account_contract,
+        _,
+        _,
+        oracle_proxy,
+        oracle_implementation,
+        _,
+    ) = initialized_contracts
     result = await oracle_proxy.get_active_oracle_implementation_addresses().invoke()
     assert result.result.oracle_addresses == [oracle_implementation.contract_address]
 
@@ -210,21 +238,12 @@ async def test_oracle_implementation_addresses(
     # Add second oracle implementation address
     second_oracle_implementation_address = oracle_implementation.contract_address + 1
 
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "add_oracle_implementation_address",
+        [second_oracle_implementation_address],
     )
-
-    await oracle_proxy.add_oracle_implementation_address(
-        second_oracle_implementation_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_active_oracle_implementation_addresses().invoke()
     assert result.result.oracle_addresses == [
@@ -233,23 +252,13 @@ async def test_oracle_implementation_addresses(
     ]
 
     # Ensure that setting first (primary) implementation address to inactive fails
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_active_status_with_nonce(
-        oracle_implementation.contract_address, 0, nonce, admin_private_key
-    )
-
     try:
-        await oracle_proxy.update_oracle_implementation_active_status(
-            oracle_implementation.contract_address,
-            0,
-            oracle_implementation_address_signature_r,
-            oracle_implementation_address_signature_s,
-        ).invoke()
+        await signer.send_transaction(
+            account_contract,
+            oracle_proxy.contract_address,
+            "update_oracle_implementation_active_status",
+            [oracle_implementation.contract_address, 0],
+        )
 
         raise Exception(
             "Transaction to set oracle implementation status as inactive on primary oracle implementation succeeded, but should not have."
@@ -258,40 +267,21 @@ async def test_oracle_implementation_addresses(
         pass
 
     # Set second oracle implementation to inactive
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_active_status_with_nonce(
-        second_oracle_implementation_address, 0, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "update_oracle_implementation_active_status",
+        [second_oracle_implementation_address, 0],
     )
-
-    await oracle_proxy.update_oracle_implementation_active_status(
-        second_oracle_implementation_address,
-        0,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     # Try setting second oracle implementation to primary and fail
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation_address, nonce, admin_private_key
-    )
-
     try:
-        await oracle_proxy.set_primary_oracle(
-            second_oracle_implementation_address,
-            oracle_implementation_address_signature_r,
-            oracle_implementation_address_signature_s,
-        ).invoke()
+        await signer.send_transaction(
+            account_contract,
+            oracle_proxy.contract_address,
+            "set_primary_oracle",
+            [second_oracle_implementation_address],
+        )
 
         raise Exception(
             "Transaction to set inactive oracle implementation as primary succeeded, but should not have."
@@ -300,39 +290,20 @@ async def test_oracle_implementation_addresses(
         pass
 
     # Set second oracle implementation back to active
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_active_status_with_nonce(
-        second_oracle_implementation_address, 1, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "update_oracle_implementation_active_status",
+        [second_oracle_implementation_address, 1],
     )
-
-    await oracle_proxy.update_oracle_implementation_active_status(
-        second_oracle_implementation_address,
-        1,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     # Set second oracle implementation as primary
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "set_primary_oracle",
+        [second_oracle_implementation_address],
     )
-
-    await oracle_proxy.set_primary_oracle(
-        second_oracle_implementation_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_primary_oracle_implementation_address().invoke()
     assert (
@@ -344,44 +315,35 @@ async def test_oracle_implementation_addresses(
 
 
 @pytest.mark.asyncio
-async def test_rotate_admin_public_key(
-    initialized_contracts, private_and_public_admin_keys
-):
-    _, oracle_proxy, _, _ = initialized_contracts
-    admin_private_key, admin_public_key = private_and_public_admin_keys
-
-    result = await oracle_proxy.get_admin_public_key().invoke()
-    assert result.result.admin_public_key == admin_public_key
-
-    new_admin_private_key = get_random_private_key()
-    new_admin_public_key = private_to_stark_key(new_admin_private_key)
-
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
+async def test_rotate_admin_address(initialized_contracts, signer):
     (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(new_admin_public_key, nonce, admin_private_key)
+        account_contract,
+        second_account_contract,
+        _,
+        oracle_proxy,
+        _,
+        _,
+    ) = initialized_contracts
 
-    await oracle_proxy.rotate_admin_public_key(
-        new_admin_public_key,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
+    result = await oracle_proxy.get_admin_address().invoke()
+    assert result.result.admin_address == account_contract.contract_address
 
-    result = await oracle_proxy.get_admin_public_key().invoke()
-    assert result.result.admin_public_key == new_admin_public_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "set_admin_address",
+        [second_account_contract.contract_address],
+    )
+
+    result = await oracle_proxy.get_admin_address().invoke()
+    assert result.result.admin_address == second_account_contract.contract_address
 
     return
 
 
 @pytest.mark.asyncio
-async def test_update_publisher_registry_address(
-    initialized_contracts, private_and_public_admin_keys
-):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
+async def test_update_publisher_registry_address(initialized_contracts, signer):
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     result = await oracle_proxy.get_publisher_registry_address().invoke()
     assert (
         result.result.publisher_registry_address == publisher_registry.contract_address
@@ -389,21 +351,12 @@ async def test_update_publisher_registry_address(
 
     new_publisher_registry_address = publisher_registry.contract_address + 1
 
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        new_publisher_registry_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "update_publisher_registry_address",
+        [new_publisher_registry_address],
     )
-
-    await oracle_proxy.update_publisher_registry_address(
-        new_publisher_registry_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_publisher_registry_address().invoke()
     assert result.result.publisher_registry_address == new_publisher_registry_address
@@ -415,7 +368,7 @@ async def test_update_publisher_registry_address(
 async def test_publish(
     initialized_contracts, private_and_public_publisher_keys, publisher
 ):
-    _, oracle_proxy, _, _ = initialized_contracts
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
 
@@ -434,7 +387,7 @@ async def test_publish(
 async def test_republish(
     initialized_contracts, private_and_public_publisher_keys, publisher
 ):
-    _, oracle_proxy, _, _ = initialized_contracts
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=2, timestamp=1, publisher=publisher)
@@ -462,7 +415,7 @@ async def test_republish(
 async def test_republish_stale(
     initialized_contracts, private_and_public_publisher_keys, publisher
 ):
-    _, oracle_proxy, _, _ = initialized_contracts
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=2, timestamp=2, publisher=publisher)
@@ -501,7 +454,7 @@ async def test_republish_stale(
 async def test_publish_second_asset(
     initialized_contracts, private_and_public_publisher_keys, publisher
 ):
-    _, oracle_proxy, _, _ = initialized_contracts
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
 
@@ -534,10 +487,10 @@ async def test_publish_second_asset(
 async def test_publish_second_publisher(
     initialized_contracts,
     private_and_public_publisher_keys,
-    private_and_public_admin_keys,
+    signer,
     publisher,
 ):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("eth/usd")
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
@@ -549,17 +502,13 @@ async def test_publish_second_publisher(
     second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
     second_publisher = str_to_felt("bar")
-    admin_private_key, _ = private_and_public_admin_keys
-    registration_signature_r, registration_signature_s = sign_publisher_registration(
-        second_publisher_public_key, second_publisher, admin_private_key
-    )
 
-    await publisher_registry.register_publisher(
-        second_publisher_public_key,
-        second_publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [second_publisher_public_key, second_publisher],
+    )
 
     second_entry = Entry(key=key, value=5, timestamp=1, publisher=second_publisher)
 
@@ -580,21 +529,17 @@ async def test_publish_second_publisher(
 
 
 async def register_new_publisher_and_submit_entry(
-    publisher_registry, oracle_proxy, admin_private_key, publisher, entry
+    account_contract, publisher_registry, oracle_proxy, signer, publisher, entry
 ):
     publisher_private_key = get_random_private_key()
     publisher_public_key = private_to_stark_key(publisher_private_key)
 
-    registration_signature_r, registration_signature_s = sign_publisher_registration(
-        publisher_public_key, publisher, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [publisher_public_key, publisher],
     )
-
-    await publisher_registry.register_publisher(
-        publisher_public_key,
-        publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
 
     signature_r, signature_s = sign_entry(entry, publisher_private_key)
 
@@ -607,10 +552,10 @@ async def register_new_publisher_and_submit_entry(
 async def test_median_aggregation(
     initialized_contracts,
     private_and_public_publisher_keys,
-    private_and_public_admin_keys,
+    signer,
     publisher,
 ):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
@@ -622,8 +567,6 @@ async def test_median_aggregation(
 
     entries = [entry]
 
-    admin_private_key, _ = private_and_public_admin_keys
-
     for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
         additional_publisher = str_to_felt(additional_publisher_str)
         additional_entry = Entry(
@@ -631,9 +574,10 @@ async def test_median_aggregation(
         )
         entries.append(additional_entry)
         await register_new_publisher_and_submit_entry(
+            account_contract,
             publisher_registry,
             oracle_proxy,
-            admin_private_key,
+            signer,
             additional_publisher,
             additional_entry,
         )
@@ -653,10 +597,10 @@ async def test_median_aggregation(
 async def test_submit_many(
     initialized_contracts,
     private_and_public_publisher_keys,
-    private_and_public_admin_keys,
+    signer,
     publisher,
 ):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
@@ -666,27 +610,18 @@ async def test_submit_many(
     signatures_r = [signature_r]
     signatures_s = [signature_s]
 
-    admin_private_key, _ = private_and_public_admin_keys
-
     for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
         additional_publisher = str_to_felt(additional_publisher_str)
 
         publisher_private_key = get_random_private_key()
         publisher_public_key = private_to_stark_key(publisher_private_key)
 
-        (
-            registration_signature_r,
-            registration_signature_s,
-        ) = sign_publisher_registration(
-            publisher_public_key, additional_publisher, admin_private_key
+        await signer.send_transaction(
+            account_contract,
+            publisher_registry.contract_address,
+            "register_publisher",
+            [publisher_public_key, additional_publisher],
         )
-
-        await publisher_registry.register_publisher(
-            publisher_public_key,
-            additional_publisher,
-            registration_signature_r,
-            registration_signature_s,
-        ).invoke()
 
         additional_entry = Entry(
             key=key, value=price, timestamp=1, publisher=additional_publisher
@@ -713,33 +648,27 @@ async def test_submit_many(
 async def test_subset_publishers(
     initialized_contracts,
     private_and_public_publisher_keys,
-    private_and_public_admin_keys,
+    signer,
     publisher,
 ):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("luna/usd")
     private_key, _ = private_and_public_publisher_keys
     entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
     signature_r, signature_s = sign_entry(entry, private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
-    admin_private_key, _ = private_and_public_admin_keys
-
     additional_publisher = str_to_felt("bar")
 
     publisher_private_key = get_random_private_key()
     publisher_public_key = private_to_stark_key(publisher_private_key)
 
-    (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
-        publisher_public_key, additional_publisher, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [publisher_public_key, additional_publisher],
     )
-
-    await publisher_registry.register_publisher(
-        publisher_public_key,
-        additional_publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_entries(key).invoke()
     assert result.result.entries == [entry]
@@ -752,7 +681,7 @@ async def test_subset_publishers(
 
 @pytest.mark.asyncio
 async def test_unknown_key(initialized_contracts):
-    _, oracle_proxy, _, _ = initialized_contracts
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
 
     unknown_key = str_to_felt("answertolife")
     result = await oracle_proxy.get_entries(unknown_key).invoke()
@@ -764,9 +693,8 @@ async def test_unknown_key(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_real_data(initialized_contracts, private_and_public_admin_keys):
-    publisher_registry, oracle_proxy, _, _ = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
+async def test_real_data(initialized_contracts, signer):
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     entries = [
         construct_entry("eth/usd", 29898560234403, 1650590880, "coinmarketcap"),
         construct_entry("btc/usd", 404308601528970, 1650590880, "coinmarketcap"),
@@ -798,19 +726,12 @@ async def test_real_data(initialized_contracts, private_and_public_admin_keys):
         publisher_private_key = get_random_private_key()
         publisher_public_key = private_to_stark_key(publisher_private_key)
 
-        (
-            registration_signature_r,
-            registration_signature_s,
-        ) = sign_publisher_registration(
-            publisher_public_key, publisher, admin_private_key
+        await signer.send_transaction(
+            account_contract,
+            publisher_registry.contract_address,
+            "register_publisher",
+            [publisher_public_key, publisher],
         )
-
-        await publisher_registry.register_publisher(
-            publisher_public_key,
-            publisher,
-            registration_signature_r,
-            registration_signature_s,
-        ).invoke()
 
         publisher_keys[publisher] = publisher_private_key
 
@@ -842,17 +763,18 @@ async def test_real_data(initialized_contracts, private_and_public_admin_keys):
 @pytest.mark.asyncio
 async def test_multiple_oracle_implementations(
     initialized_contracts,
-    private_and_public_admin_keys,
     private_and_public_publisher_keys,
+    signer,
     publisher,
 ):
     (
+        account_contract,
+        _,
         publisher_registry,
         oracle_proxy,
         _,
         second_oracle_implementation,
     ) = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
 
     # Submit entry
     key = str_to_felt("eth/usd")
@@ -868,38 +790,24 @@ async def test_multiple_oracle_implementations(
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to proxy
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation.contract_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "add_oracle_implementation_address",
+        [second_oracle_implementation.contract_address],
     )
 
-    await oracle_proxy.add_oracle_implementation_address(
-        second_oracle_implementation.contract_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
-
     # Submit second entry from second publisher
-    admin_private_key, _ = private_and_public_admin_keys
     second_publisher = str_to_felt("bar")
     second_publisher_private_key = get_random_private_key()
     second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
-    (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
-        second_publisher_public_key, second_publisher, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [second_publisher_public_key, second_publisher],
     )
-
-    await publisher_registry.register_publisher(
-        second_publisher_public_key,
-        second_publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
 
     second_entry = Entry(key=key, value=3, timestamp=1, publisher=second_publisher)
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
@@ -913,21 +821,12 @@ async def test_multiple_oracle_implementations(
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Verify that only the second entry is present in the second oracle implementation
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation.contract_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "set_primary_oracle",
+        [second_oracle_implementation.contract_address],
     )
-
-    await oracle_proxy.set_primary_oracle(
-        second_oracle_implementation.contract_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_primary_oracle_implementation_address().invoke()
     assert (
@@ -947,34 +846,26 @@ async def test_multiple_oracle_implementations(
 @pytest.mark.asyncio
 async def test_rotate_primary_oracle_implementation_address(
     initialized_contracts,
-    private_and_public_admin_keys,
     private_and_public_publisher_keys,
+    signer,
     publisher,
 ):
     (
+        account_contract,
+        _,
         publisher_registry,
         oracle_proxy,
         oracle_implementation,
         second_oracle_implementation,
     ) = initialized_contracts
-    admin_private_key, _ = private_and_public_admin_keys
 
     # Add second oracle implementation address to proxy
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation.contract_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "add_oracle_implementation_address",
+        [second_oracle_implementation.contract_address],
     )
-
-    await oracle_proxy.add_oracle_implementation_address(
-        second_oracle_implementation.contract_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     # Submit entry
     key = str_to_felt("eth/usd")
@@ -984,21 +875,12 @@ async def test_rotate_primary_oracle_implementation_address(
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
     # Update primary oracle and deactivate old primary oracle
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation.contract_address, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "set_primary_oracle",
+        [second_oracle_implementation.contract_address],
     )
-
-    await oracle_proxy.set_primary_oracle(
-        second_oracle_implementation.contract_address,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_primary_oracle_implementation_address().invoke()
     assert (
@@ -1006,19 +888,12 @@ async def test_rotate_primary_oracle_implementation_address(
         == second_oracle_implementation.contract_address
     )
 
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (signature_r, signature_s,) = admin_hash_and_sign_with_nonce(
-        [oracle_implementation.contract_address, 0], nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "update_oracle_implementation_active_status",
+        [oracle_implementation.contract_address, 0],
     )
-
-    await oracle_proxy.update_oracle_implementation_active_status(
-        oracle_implementation.contract_address,
-        0,
-        signature_r,
-        signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_oracle_implementation_status(
         oracle_implementation.contract_address
@@ -1038,21 +913,16 @@ async def test_rotate_primary_oracle_implementation_address(
     ]
 
     # Submit second entry from second publisher
-    admin_private_key, _ = private_and_public_admin_keys
     second_publisher = str_to_felt("bar")
     second_publisher_private_key = get_random_private_key()
     second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
-    (registration_signature_r, registration_signature_s,) = sign_publisher_registration(
-        second_publisher_public_key, second_publisher, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [second_publisher_public_key, second_publisher],
     )
-
-    await publisher_registry.register_publisher(
-        second_publisher_public_key,
-        second_publisher,
-        registration_signature_r,
-        registration_signature_s,
-    ).invoke()
 
     second_entry = Entry(key=key, value=3, timestamp=1, publisher=second_publisher)
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
@@ -1065,21 +935,12 @@ async def test_rotate_primary_oracle_implementation_address(
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to proxy
-    result = await oracle_proxy.get_nonce().invoke()
-    nonce = result.result.nonce
-
-    (
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ) = admin_hash_and_sign_with_nonce(
-        second_oracle_implementation.contract_address + 1, nonce, admin_private_key
+    await signer.send_transaction(
+        account_contract,
+        oracle_proxy.contract_address,
+        "add_oracle_implementation_address",
+        [second_oracle_implementation.contract_address + 1],
     )
-
-    await oracle_proxy.add_oracle_implementation_address(
-        second_oracle_implementation.contract_address + 1,
-        oracle_implementation_address_signature_r,
-        oracle_implementation_address_signature_s,
-    ).invoke()
 
     result = await oracle_proxy.get_active_oracle_implementation_addresses().call()
     assert result.result.oracle_addresses == [

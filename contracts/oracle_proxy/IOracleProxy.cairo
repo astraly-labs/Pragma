@@ -6,10 +6,7 @@ namespace IOracleProxy:
     # Getters
     #
 
-    func get_admin_public_key() -> (admin_public_key : felt):
-    end
-
-    func get_nonce() -> (nonce : felt):
+    func get_admin_address() -> (admin_address : felt):
     end
 
     func get_publisher_registry_address() -> (publisher_registry_address : felt):
@@ -34,24 +31,20 @@ namespace IOracleProxy:
     # Setters
     #
 
-    func rotate_admin_public_key(new_key : felt, signature_r : felt, signature_s : felt):
+    func set_admin_address(new_address : felt):
     end
 
-    func update_publisher_registry_address(
-            publisher_registry_address : felt, signature_r : felt, signature_s : felt):
+    func update_publisher_registry_address(publisher_registry_address : felt):
     end
 
-    func add_oracle_implementation_address(
-            oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
+    func add_oracle_implementation_address(oracle_implementation_address : felt):
     end
 
     func update_oracle_implementation_active_status(
-            oracle_implementation_address : felt, is_active : felt, signature_r : felt,
-            signature_s : felt):
+            oracle_implementation_address : felt, is_active : felt):
     end
 
-    func set_primary_oracle(
-            primary_oracle_implementation_address : felt, signature_r : felt, signature_s : felt):
+    func set_primary_oracle(primary_oracle_implementation_address : felt):
     end
 
     #
@@ -72,7 +65,7 @@ namespace IOracleProxy:
     # Setters
     #
 
-    func set_decimals(key : felt, decimals : felt, signature_r : felt, signature_s : felt):
+    func set_decimals(key : felt, decimals : felt):
     end
 
     func submit_entry(new_entry : Entry, signature_r : felt, signature_s : felt):

@@ -1,14 +1,37 @@
 [
     {
+        "data": [
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedAdminAddress",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
-                "name": "admin_public_key",
+                "name": "admin_address",
                 "type": "felt"
             }
         ],
         "name": "constructor",
         "outputs": [],
         "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_address",
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [
@@ -46,19 +69,11 @@
     {
         "inputs": [
             {
-                "name": "new_key",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
+                "name": "new_address",
                 "type": "felt"
             }
         ],
-        "name": "rotate_admin_public_key",
+        "name": "set_admin_address",
         "outputs": [],
         "type": "function"
     },
@@ -70,14 +85,6 @@
             },
             {
                 "name": "publisher",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
