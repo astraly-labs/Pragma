@@ -85,7 +85,6 @@ class PontisPublisherClient:
 
         response = await oracle_proxy_contract.functions["get_decimals"].call(
             key,
-            max_fee=max_fee,
         )
 
         return response.decimals
