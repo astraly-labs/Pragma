@@ -21,7 +21,7 @@ async def publish_all(assets):
 
     for i, asset in enumerate(assets):
         key = currency_pair_to_key(*asset["pair"])
-        decimals = PontisPublisherClient.get_decimals(
+        decimals = await PontisPublisherClient.get_decimals(
             ORACLE_PROXY_ADDRESS, NETWORK, key
         )
         assets[i]["decimals"] = decimals

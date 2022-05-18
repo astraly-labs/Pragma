@@ -1,5 +1,6 @@
 import os
 
+ADMIN_ADDRESS = ""
 ORACLE_PROXY_ADDRESS = (
     "0x04a05a68317edb37d34d29f34193829d7363d51a37068f32b142c637e43b47a2"
 )
@@ -8,11 +9,12 @@ PUBLISHER_REGISTRY_ADDRESS = (
 )
 NETWORK = "testnet"
 
-if os.environ.get("ORACLE_PROXY_ADDRESS") is None:
-    os.environ["ORACLE_PROXY_ADDRESS"] = ORACLE_PROXY_ADDRESS
+if __name__ is "__main__":
+    if os.environ.get("ORACLE_PROXY_ADDRESS") is None:
+        os.environ["ORACLE_PROXY_ADDRESS"] = ORACLE_PROXY_ADDRESS
 
-if os.environ.get("PUBLISHER_REGISTRY_ADDRESS") is None:
-    os.environ["PUBLISHER_REGISTRY_ADDRESS"] = PUBLISHER_REGISTRY_ADDRESS
+    if os.environ.get("PUBLISHER_REGISTRY_ADDRESS") is None:
+        os.environ["PUBLISHER_REGISTRY_ADDRESS"] = PUBLISHER_REGISTRY_ADDRESS
 
-if os.environ.get("NETWORK") is None:
-    os.environ["NETWORK"] = NETWORK
+    if os.environ.get("NETWORK") is None:
+        os.environ["NETWORK"] = NETWORK
