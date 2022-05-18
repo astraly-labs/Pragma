@@ -421,6 +421,10 @@ async def fetch_cex(spot_price_pairs, derivatives, decimals):
         response = requests.get(f"{base_url}/{price_pair[0]}/{price_pair[1]}")
         result = response.json()
 
+        if "error" in result and result["error"] == "Invalid Symbols Pair":
+            print(f"No data found for {'/'.join(price_pair)} from CEX")
+            continue
+
         timestamp = int(result["timestamp"])
         price = float(result["last"])
         price_int = int(price * (10**decimals))
@@ -445,7 +449,13 @@ async def fetch_bitstamp(spot_price_pairs, derivatives, decimals):
     entries = []
 
     for price_pair in spot_price_pairs:
-        response = requests.get(f"{base_url}/{price_pair[0].lower()}{price_pair[1].lower()}")
+        response = requests.get(
+            f"{base_url}/{price_pair[0].lower()}{price_pair[1].lower()}"
+        )
+
+        if response.status_code == 404:
+            print(f"No data found for {'/'.join(price_pair)} from Bitstamp")
+            continue
 
         result = response.json()
 
@@ -464,6 +474,7 @@ async def fetch_bitstamp(spot_price_pairs, derivatives, decimals):
             )
         )
     return entries
+
 
 async def publish_all(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS):
 
