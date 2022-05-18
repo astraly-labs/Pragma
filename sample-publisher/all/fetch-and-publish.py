@@ -77,7 +77,7 @@ async def publish_all(assets):
         print(f"Error fetching Binance price: {e}")
 
     try:
-        ftx_entries = await fetch_ftx(assets)
+        ftx_entries = fetch_ftx(assets)
         entries.extend(ftx_entries)
         ftx_private_key = int(os.environ.get("FTX_PUBLISHER_PRIVATE_KEY"))
         private_keys.extend([ftx_private_key] * len(ftx_entries))

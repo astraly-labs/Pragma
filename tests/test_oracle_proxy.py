@@ -8,6 +8,7 @@ from starkware.crypto.signature.signature import (
     get_random_private_key,
     private_to_stark_key,
 )
+from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
@@ -24,6 +25,8 @@ ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
 ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
+TIMESTAMP_BUFFER = 600
+STARKNET_STARTING_TIMESTAMP = 1650590820
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -59,6 +62,11 @@ async def contract_init(contract_defs, private_and_public_admin_keys):
     ) = contract_defs
 
     starknet = await Starknet.empty()
+    starknet.state.state.block_info = BlockInfo(
+        starknet.state.state.block_info.block_number,
+        STARKNET_STARTING_TIMESTAMP,
+        starknet.state.state.block_info.gas_price,
+    )
     account_contract = await starknet.deploy(
         contract_def=account_contract_def, constructor_calldata=[admin_public_key]
     )
@@ -363,7 +371,12 @@ async def test_publish(
 ):
     _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=str_to_felt("eth/usd"),
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=publisher,
+    )
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -383,7 +396,9 @@ async def test_republish(
     _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     key = str_to_felt("eth/usd")
-    entry = Entry(key=key, value=2, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -392,7 +407,9 @@ async def test_republish(
     result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = entry = Entry(key=key, value=3, timestamp=2, publisher=publisher)
+    second_entry = entry = Entry(
+        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
+    )
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
@@ -411,7 +428,9 @@ async def test_republish_stale(
     _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
     key = str_to_felt("eth/usd")
-    entry = Entry(key=key, value=2, timestamp=2, publisher=publisher)
+    entry = Entry(
+        key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
+    )
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -420,7 +439,9 @@ async def test_republish_stale(
     result = await oracle_proxy.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
+    second_entry = Entry(
+        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
 
@@ -449,7 +470,12 @@ async def test_publish_second_asset(
 ):
     _, _, _, oracle_proxy, _, _ = initialized_contracts
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=str_to_felt("eth/usd"),
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=publisher,
+    )
 
     signature_r, signature_s = sign_entry(entry, private_key)
 
@@ -459,7 +485,10 @@ async def test_publish_second_asset(
     assert result.result.value == entry.value
 
     second_entry = Entry(
-        key=str_to_felt("btc/usd"), value=2, timestamp=1, publisher=publisher
+        key=str_to_felt("btc/usd"),
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=publisher,
     )
 
     signature_r, signature_s = sign_entry(second_entry, private_key)
@@ -486,7 +515,9 @@ async def test_publish_second_publisher(
     account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("eth/usd")
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
@@ -503,7 +534,12 @@ async def test_publish_second_publisher(
         [second_publisher_public_key, second_publisher],
     )
 
-    second_entry = Entry(key=key, value=5, timestamp=1, publisher=second_publisher)
+    second_entry = Entry(
+        key=key,
+        value=5,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=second_publisher,
+    )
 
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
 
@@ -553,7 +589,12 @@ async def test_median_aggregation(
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=key, value=prices[0], timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key,
+        value=prices[0],
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=publisher,
+    )
     signature_r, signature_s = sign_entry(entry, private_key)
 
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
@@ -563,7 +604,10 @@ async def test_median_aggregation(
     for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
         additional_publisher = str_to_felt(additional_publisher_str)
         additional_entry = Entry(
-            key=key, value=price, timestamp=1, publisher=additional_publisher
+            key=key,
+            value=price,
+            timestamp=STARKNET_STARTING_TIMESTAMP,
+            publisher=additional_publisher,
         )
         entries.append(additional_entry)
         await register_new_publisher_and_submit_entry(
@@ -598,7 +642,14 @@ async def test_submit_many(
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     private_key, _ = private_and_public_publisher_keys
-    entries = [Entry(key=key, value=prices[0], timestamp=1, publisher=publisher)]
+    entries = [
+        Entry(
+            key=key,
+            value=prices[0],
+            timestamp=STARKNET_STARTING_TIMESTAMP,
+            publisher=publisher,
+        )
+    ]
     signature_r, signature_s = sign_entry(entries[0], private_key)
     signatures_r = [signature_r]
     signatures_s = [signature_s]
@@ -617,7 +668,10 @@ async def test_submit_many(
         )
 
         additional_entry = Entry(
-            key=key, value=price, timestamp=1, publisher=additional_publisher
+            key=key,
+            value=price,
+            timestamp=STARKNET_STARTING_TIMESTAMP,
+            publisher=additional_publisher,
         )
         entries.append(additional_entry)
         signature_r, signature_s = sign_entry(additional_entry, publisher_private_key)
@@ -647,7 +701,9 @@ async def test_subset_publishers(
     account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
     key = str_to_felt("luna/usd")
     private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
     signature_r, signature_s = sign_entry(entry, private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
@@ -772,7 +828,9 @@ async def test_multiple_oracle_implementations(
     # Submit entry
     key = str_to_felt("eth/usd")
     publisher_private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
     signature_r, signature_s = sign_entry(entry, publisher_private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
@@ -802,7 +860,12 @@ async def test_multiple_oracle_implementations(
         [second_publisher_public_key, second_publisher],
     )
 
-    second_entry = Entry(key=key, value=3, timestamp=1, publisher=second_publisher)
+    second_entry = Entry(
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=second_publisher,
+    )
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
@@ -863,7 +926,9 @@ async def test_rotate_primary_oracle_implementation_address(
     # Submit entry
     key = str_to_felt("eth/usd")
     publisher_private_key, _ = private_and_public_publisher_keys
-    entry = Entry(key=key, value=1, timestamp=1, publisher=publisher)
+    entry = Entry(
+        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+    )
     signature_r, signature_s = sign_entry(entry, publisher_private_key)
     await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
 
@@ -917,7 +982,12 @@ async def test_rotate_primary_oracle_implementation_address(
         [second_publisher_public_key, second_publisher],
     )
 
-    second_entry = Entry(key=key, value=3, timestamp=1, publisher=second_publisher)
+    second_entry = Entry(
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=second_publisher,
+    )
     signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
     await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
 
@@ -940,5 +1010,93 @@ async def test_rotate_primary_oracle_implementation_address(
         second_oracle_implementation.contract_address,
         second_oracle_implementation.contract_address + 1,
     ]
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_ignore_future_entry(
+    initialized_contracts,
+    private_and_public_publisher_keys,
+    publisher,
+):
+    _, _, _, oracle_proxy, _, _ = initialized_contracts
+    key = str_to_felt("eth/usd")
+    private_key, _ = private_and_public_publisher_keys
+    entry = Entry(
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
+        publisher=publisher,
+    )
+    signature_r, signature_s = sign_entry(entry, private_key)
+    try:
+        signature_r, signature_s = sign_entry(entry, private_key)
+        await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
+
+        raise Exception(
+            "Transaction to submit price too far in the future succeeded, but should not have."
+        )
+    except StarkException:
+        pass
+
+    return
+
+
+@pytest.mark.asyncio
+async def test_ignore_stale_entries(
+    initialized_contracts,
+    private_and_public_publisher_keys,
+    signer,
+    publisher,
+):
+    account_contract, _, publisher_registry, oracle_proxy, _, _ = initialized_contracts
+    key = str_to_felt("eth/usd")
+    private_key, _ = private_and_public_publisher_keys
+    entry = Entry(
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        publisher=publisher,
+    )
+    signature_r, signature_s = sign_entry(entry, private_key)
+
+    await oracle_proxy.submit_entry(entry, signature_r, signature_s).invoke()
+
+    second_publisher_private_key = get_random_private_key()
+    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+
+    second_publisher = str_to_felt("bar")
+
+    await signer.send_transaction(
+        account_contract,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [second_publisher_public_key, second_publisher],
+    )
+
+    account_contract.state.state.block_info = BlockInfo(
+        account_contract.state.state.block_info.block_number,
+        account_contract.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
+        account_contract.state.state.block_info.gas_price,
+    )
+
+    second_entry = Entry(
+        key=key,
+        value=5,
+        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
+        publisher=second_publisher,
+    )
+
+    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
+
+    await oracle_proxy.submit_entry(second_entry, signature_r, signature_s).invoke()
+
+    result = await oracle_proxy.get_value(key, AGGREGATION_MODE).invoke()
+    assert result.result.value == second_entry.value
+    assert result.result.last_updated_timestamp == second_entry.timestamp
+
+    result = await oracle_proxy.get_entries(key).invoke()
+    assert result.result.entries == [second_entry]
 
     return
