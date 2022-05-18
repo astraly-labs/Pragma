@@ -2,7 +2,6 @@ import asyncio
 import os
 
 from pontis.admin.client import PontisAdminClient
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from starkware.crypto.signature.signature import private_to_stark_key
 
 publishers = [
@@ -28,10 +27,7 @@ public_keys = [
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
     admin_client = PontisAdminClient(
-        ORACLE_PROXY_ADDRESS,
-        PUBLISHER_REGISTRY_ADDRESS,
         admin_private_key,
-        network=NETWORK,
     )
     for public_key, publisher in zip(public_keys, publishers):
         await admin_client.register_publisher_if_not_registered(public_key, publisher)

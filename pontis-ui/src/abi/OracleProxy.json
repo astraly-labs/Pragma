@@ -44,9 +44,20 @@
         "type": "struct"
     },
     {
+        "data": [
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedAdminAddress",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
-                "name": "admin_public_key",
+                "name": "admin_address",
                 "type": "felt"
             },
             {
@@ -60,22 +71,10 @@
     },
     {
         "inputs": [],
-        "name": "get_admin_public_key",
+        "name": "get_admin_address",
         "outputs": [
             {
-                "name": "admin_public_key",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_nonce",
-        "outputs": [
-            {
-                "name": "nonce",
+                "name": "admin_address",
                 "type": "felt"
             }
         ],
@@ -159,19 +158,11 @@
     {
         "inputs": [
             {
-                "name": "new_key",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
+                "name": "new_address",
                 "type": "felt"
             }
         ],
-        "name": "rotate_admin_public_key",
+        "name": "set_admin_address",
         "outputs": [],
         "type": "function"
     },
@@ -179,14 +170,6 @@
         "inputs": [
             {
                 "name": "publisher_registry_address",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
@@ -198,14 +181,6 @@
         "inputs": [
             {
                 "name": "oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
@@ -222,14 +197,6 @@
             {
                 "name": "is_active",
                 "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
-                "type": "felt"
             }
         ],
         "name": "update_oracle_implementation_active_status",
@@ -240,14 +207,6 @@
         "inputs": [
             {
                 "name": "primary_oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
@@ -326,14 +285,6 @@
             },
             {
                 "name": "decimals",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],

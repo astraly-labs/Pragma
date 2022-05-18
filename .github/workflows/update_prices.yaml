@@ -21,6 +21,7 @@ jobs:
 
       - name: Post updated prices
         env:
+          PUBLISHER_PREFIX: pontis
           ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
           COINAPI_PUBLISHER_PRIVATE_KEY: ${{ secrets.COINAPI_PUBLISHER_PRIVATE_KEY }}

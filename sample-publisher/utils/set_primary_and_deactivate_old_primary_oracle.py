@@ -2,16 +2,12 @@ import asyncio
 import os
 
 from pontis.admin.client import PontisAdminClient
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
     admin_client = PontisAdminClient(
-        ORACLE_PROXY_ADDRESS,
-        PUBLISHER_REGISTRY_ADDRESS,
         admin_private_key,
-        network=NETWORK,
     )
     old_primary_oracle_implementation_address = (
         await admin_client.get_primary_oracle_implementation_address()

@@ -15,11 +15,12 @@ The Pontis Oracle consists of three smart contracts. The first is the Publisher 
 ### Deployed Contracts
 
 On testnet, the contracts are deployed at the following addresses on testnet:
-| Contract | Address | Voyager |
+| Contract | Voyager | Address |
 | --- | ----------- | --- |
-| PublisherRegistry | 0x03fa3e2ab89cde72303dc45e2fc46d57751dbb8e5cc8d0d5e3599293d46d8361 | [Link](https://goerli.voyager.online/contract/0x03fa3e2ab89cde72303dc45e2fc46d57751dbb8e5cc8d0d5e3599293d46d8361) |
-| OracleProxy | 0x04a05a68317edb37d34d29f34193829d7363d51a37068f32b142c637e43b47a2 | [Link](https://goerli.voyager.online/contract/0x04a05a68317edb37d34d29f34193829d7363d51a37068f32b142c637e43b47a2) |
-| OracleImplementation (primary) | 0x008eb0e7ec0e0b1a4601d2a7ab8d7e7c232f3a3d1ce6b24753f556cddd73627f | [Link](https://goerli.voyager.online/contract/0x008eb0e7ec0e0b1a4601d2a7ab8d7e7c232f3a3d1ce6b24753f556cddd73627f) |
+| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540) | 0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540 |
+| OracleProxy | [Link](https://goerli.voyager.online/contract/0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1) | 0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1 |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb) | 0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb |
+| Admin Account | [Link](https://goerli.voyager.online/contract/0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9) | 0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9 |
 
 ## Setup
 
@@ -59,15 +60,17 @@ To run tests, simply run `pytest .` from the project root.
 
 To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the oracle proxy (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
 
-Then run the following commands, replacing `<PUBLIC_ADMIN_KEY>` with the public key you generated in the previous step. Replace `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_PROXY_ADDRESS>` with the addresses of the first and second contract deployed in the steps below, respectively.
+Then run the following commands, replacing `<PUBLIC_ADMIN_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_PROXY_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
 
 ```
 export STARKNET_NETWORK=alpha-goerli
+starknet-compile --account_contract contracts/account/Account.cairo --abi contracts/abi/Account.json --output account_compiled.json
+starknet deploy --contract account_compiled.json --inputs <PUBLIC_ADMIN_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
-starknet deploy --contract publisher_registry_compiled.json --inputs <PUBLIC_ADMIN_KEY>
+starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
 starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi contracts/abi/OracleProxy.json --output oracle_proxy_compiled.json
 starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi pontis-ui/src/abi/OracleProxy.json --output oracle_proxy_compiled.json
-starknet deploy --contract oracle_proxy_compiled.json --inputs <PUBLIC_ADMIN_KEY> <PUBLISHER_REGISTRY_ADDRESS>
+starknet deploy --contract oracle_proxy_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS>
 starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --abi contracts/abi/OracleImplementation.json --output oracle_implementation_compiled.json
 starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_PROXY_ADDRESS>
 ```
@@ -76,9 +79,8 @@ Finally, you must add the oracle implementation to the proxy. You can use the `a
 ```
 import os
 from pontis.admin.client import PontisAdminClient
-from pontis.core.const import ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, NETWORK
 admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
-admin_client = PontisAdminClient(ORACLE_PROXY_ADDRESS, PUBLISHER_REGISTRY_ADDRESS, admin_private_key, network=NETWORK)
+admin_client = PontisAdminClient(admin_private_key)
 await admin_client.add_oracle_implementation(<ORACLE_IMPLEMENTATION_ADDRESS>)
 ```
 

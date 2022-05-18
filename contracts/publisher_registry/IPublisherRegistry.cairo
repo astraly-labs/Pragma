@@ -5,6 +5,8 @@ namespace IPublisherRegistry:
     #
     # Getters
     #
+    func get_admin_address() -> (admin_address : felt):
+    end
 
     func get_publisher_public_key(publisher : felt) -> (publisher_public_key : felt):
     end
@@ -16,11 +18,10 @@ namespace IPublisherRegistry:
     # Setters
     #
 
-    func rotate_admin_public_key(new_key : felt, signature_r : felt, signature_s : felt):
+    func set_admin_address(new_address : felt):
     end
 
-    func register_publisher(
-            publisher_public_key : felt, publisher : felt, signature_r : felt, signature_s : felt):
+    func register_publisher(publisher_public_key : felt, publisher : felt):
     end
 
     func rotate_publisher_public_key(
