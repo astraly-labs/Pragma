@@ -9,7 +9,7 @@ PUBLISHER_REGISTRY_ADDRESS = (
 )
 NETWORK = "testnet"
 
-if __name__ is "__main__":
+if __name__ == "__main__":
     if os.environ.get("ORACLE_PROXY_ADDRESS") is None:
         os.environ["ORACLE_PROXY_ADDRESS"] = ORACLE_PROXY_ADDRESS
 

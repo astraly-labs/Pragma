@@ -1,16 +1,13 @@
-from pontis.core.utils import (
-    str_to_felt,
-)
+from nile.signer import Signer
 from pontis.core.const import (
     ADMIN_ADDRESS,
     NETWORK,
     ORACLE_PROXY_ADDRESS,
     PUBLISHER_REGISTRY_ADDRESS,
 )
+from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
-from starkware.crypto.signature.signature import private_to_stark_key
-from nile.signer import Signer
 
 MAX_FEE = 0
 
