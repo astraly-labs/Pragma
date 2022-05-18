@@ -4,13 +4,14 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
-from starkware.starknet.common.syscalls import get_caller_address
+from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
 const DEFAULT_DECIMALS = 18
+const TIMESTAMP_BUFFER = 600  # 10 minutes
 
 #
 # Storage
@@ -122,8 +123,13 @@ func Oracle_submit_entry{
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
     # use is_le and -1 to get is_lt
-    let (is_new_entry_more_recent) = is_le(entry.timestamp, new_entry.timestamp - 1)
-    if is_new_entry_more_recent == TRUE:
+    let (is_old_entry_more_recent) = is_le(new_entry.timestamp, entry.timestamp)
+    let (current_timestamp) = get_block_timestamp()
+    let (is_entry_stale) = is_le(new_entry.timestamp, current_timestamp - TIMESTAMP_BUFFER)
+    let (is_entry_in_future) = is_le(current_timestamp + TIMESTAMP_BUFFER, new_entry.timestamp)
+    let (is_new_entry_invalid) = is_not_zero(
+        is_old_entry_more_recent + is_entry_stale + is_entry_in_future)
+    if is_new_entry_invalid == FALSE:
         Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
         return ()
     end
@@ -132,8 +138,8 @@ func Oracle_submit_entry{
         return ()
     end
 
-    with_attr error_message("Received stale update (timestamp not newer than current entry)"):
-        assert is_new_entry_more_recent = TRUE
+    with_attr error_message("OracleImplementation: Received invalid update"):
+        assert is_new_entry_invalid = FALSE
     end
 
     return ()
@@ -171,7 +177,12 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     let publisher = [publishers + publishers_idx]
     let (entry) = Oracle_entry_storage.read(key, publisher)
     let (is_entry_initialized) = is_not_zero(entry.timestamp)
-    if is_entry_initialized == 0:
+    let not_is_entry_initialized = 1 - is_entry_initialized
+    let (current_timestamp) = get_block_timestamp()
+    let (is_entry_stale) = is_le(entry.timestamp, current_timestamp - TIMESTAMP_BUFFER)
+    let (should_skip_entry) = is_not_zero(is_entry_stale + not_is_entry_initialized)
+
+    if should_skip_entry == TRUE:
         let (entries_len, entries) = Oracle_build_entries_array(
             key, publishers_len, publishers, publishers_idx + 1, entries_idx, entries)
         return (entries_len, entries)
