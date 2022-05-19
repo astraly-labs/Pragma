@@ -1,3 +1,4 @@
+from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from pontis.core.entry import Entry
 from pontis.core.utils import hash_entry, str_to_felt
 from starknet_py.contract import Contract
@@ -11,15 +12,19 @@ DEFAULT_N_RETRIES = 3
 class PontisPublisherClient:
     def __init__(
         self,
-        oracle_controller_address,
         publisher_private_key,
         publisher,
         network=None,
+        oracle_controller_address=None,
         max_fee=None,
         n_retries=None,
     ):
+        if network is None:
+            network = NETWORK
+        if oracle_controller_address is None:
+            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
 
-        self.network = "mainnet" if network is None else network
+        self.network = network
         self.max_fee = MAX_FEE if max_fee is None else max_fee
         self.n_retries = DEFAULT_N_RETRIES if n_retries is None else n_retries
 
@@ -64,38 +69,12 @@ class PontisPublisherClient:
         print(f"Updated entry with transaction {result}")
 
     @classmethod
-    async def get_decimals(
-        cls, oracle_controller_address, network, key, max_fee=None, n_retries=None
-    ):
-        if max_fee is None:
-            max_fee = MAX_FEE
-        if n_retries is None:
-            n_retries = DEFAULT_N_RETRIES
-
-        oracle_controller_contract = await Contract.from_address(
-            oracle_controller_address, Client(network, n_retries=n_retries)
-        )
-
-        if type(key) == str:
-            key = str_to_felt(key)
-        elif type(key) != int:
-            raise AssertionError(
-                "Key must be string (will be converted to felt) or integer"
-            )
-
-        response = await oracle_controller_contract.functions["get_decimals"].call(
-            key,
-        )
-
-        return response.decimals
-
-    @classmethod
     async def publish_many(
         cls,
-        oracle_controller_address,
-        network,
         entries,
         publisher_private_keys,
+        oracle_controller_address=None,
+        network=None,
         max_fee=None,
         n_retries=None,
     ):
@@ -108,6 +87,10 @@ class PontisPublisherClient:
             max_fee = MAX_FEE
         if n_retries is None:
             n_retries = DEFAULT_N_RETRIES
+        if network is None:
+            network = NETWORK
+        if oracle_controller_address is None:
+            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
 
         signatures = [
             sign(hash_entry(entry), private_key)

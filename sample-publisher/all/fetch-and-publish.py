@@ -2,7 +2,7 @@ import asyncio
 import os
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
+from pontis.core.client import PontisClient
 from pontis.core.utils import currency_pair_to_key, pprint_entry
 from pontis.publisher.binance import fetch_binance
 from pontis.publisher.client import PontisPublisherClient
@@ -19,11 +19,10 @@ async def publish_all(assets):
     entries = []
     private_keys = []
 
+    client = PontisClient()
     for i, asset in enumerate(assets):
         key = currency_pair_to_key(*asset["pair"])
-        decimals = await PontisPublisherClient.get_decimals(
-            ORACLE_CONTROLLER_ADDRESS, NETWORK, key
-        )
+        decimals = await client.get_decimals(key)
         assets[i]["decimals"] = decimals
 
     try:
@@ -88,9 +87,7 @@ async def publish_all(assets):
     for entry in entries:
         pprint_entry(entry)
 
-    response = await PontisPublisherClient.publish_many(
-        ORACLE_CONTROLLER_ADDRESS, NETWORK, entries, private_keys
-    )
+    response = await PontisPublisherClient.publish_many(entries, private_keys)
     print(f"Bulk updated with response {response}")
 
     # Post success to Better Uptime
