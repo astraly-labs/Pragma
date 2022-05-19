@@ -36,6 +36,8 @@ jobs:
           FTX_API_KEY: ${{ secrets.FTX_API_KEY }}
           FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
           FTX_PUBLISHER_PRIVATE_KEY: ${{ secrets.FTX_PUBLISHER_PRIVATE_KEY }}
+          CEX_PUBLISHER_PRIVATE_KEY: ${{ secrets.CEX_PUBLISHER_PRIVATE_KEY }}
+          BITSTAMP_PUBLISHER_PRIVATE_KEY: ${{ secrets.BITSTAMP_PUBLISHER_PRIVATE_KEY }}
         run: |
           docker run \
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
@@ -53,5 +55,7 @@ jobs:
             -e FTX_API_KEY=${FTX_API_KEY}\
             -e FTX_API_SECRET=${FTX_API_SECRET}\
             -e FTX_PUBLISHER_PRIVATE_KEY=${FTX_PUBLISHER_PRIVATE_KEY}\
+            -e CEX_PUBLISHER_PRIVATE_KEY=${CEX_PUBLISHER_PRIVATE_KEY}\
+            -e BITSTAMP_PUBLISHER_PRIVATE_KEY=${BITSTAMP_PUBLISHER_PRIVATE_KEY}\
             publish-all
 

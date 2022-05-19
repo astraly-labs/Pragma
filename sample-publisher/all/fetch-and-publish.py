@@ -411,6 +411,71 @@ async def fetch_ftx(spot_price_pairs, derivatives, decimals):
     return entries
 
 
+async def fetch_cex(spot_price_pairs, derivatives, decimals):
+    publisher = "pontis-cex"
+    base_url = "https://cex.io/api/ticker"
+
+    entries = []
+
+    for price_pair in spot_price_pairs:
+        response = requests.get(f"{base_url}/{price_pair[0]}/{price_pair[1]}")
+        result = response.json()
+
+        if "error" in result and result["error"] == "Invalid Symbols Pair":
+            print(f"No data found for {'/'.join(price_pair)} from CEX")
+            continue
+
+        timestamp = int(result["timestamp"])
+        price = float(result["last"])
+        price_int = int(price * (10**decimals))
+
+        print(f"Fetched price {price} for {'/'.join(price_pair)} from CEX")
+
+        entries.append(
+            construct_entry(
+                key="/".join(price_pair).lower(),
+                value=price_int,
+                timestamp=timestamp,
+                publisher=publisher,
+            )
+        )
+    return entries
+
+
+async def fetch_bitstamp(spot_price_pairs, derivatives, decimals):
+    publisher = "pontis-bitstamp"
+    base_url = "https://www.bitstamp.net/api/v2/ticker"
+
+    entries = []
+
+    for price_pair in spot_price_pairs:
+        response = requests.get(
+            f"{base_url}/{price_pair[0].lower()}{price_pair[1].lower()}"
+        )
+
+        if response.status_code == 404:
+            print(f"No data found for {'/'.join(price_pair)} from Bitstamp")
+            continue
+
+        result = response.json()
+
+        timestamp = int(result["timestamp"])
+        price = float(result["last"])
+        price_int = int(price * (10**decimals))
+
+        print(f"Fetched price {price} for {'/'.join(price_pair)} from Bitstamp")
+
+        entries.append(
+            construct_entry(
+                key="/".join(price_pair).lower(),
+                value=price_int,
+                timestamp=timestamp,
+                publisher=publisher,
+            )
+        )
+    return entries
+
+
 async def publish_all(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS):
 
     entries = []
@@ -477,6 +542,22 @@ async def publish_all(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS):
         private_keys.extend([ftx_private_key] * len(ftx_entries))
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
+
+    try:
+        cex_entries = await fetch_cex(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS)
+        entries.extend(cex_entries)
+        cex_private_key = int(os.environ.get("CEX_PUBLISHER_PRIVATE_KEY"))
+        private_keys.extend([cex_private_key] * len(cex_entries))
+    except Exception as e:
+        print(f"Error fetching CEX price: {e}")
+
+    try:
+        bitstamp_entries = await fetch_bitstamp(SPOT_PRICE_PAIRS, DERIVATIVES, DECIMALS)
+        entries.extend(bitstamp_entries)
+        bitstamp_private_key = int(os.environ.get("BITSTAMP_PUBLISHER_PRIVATE_KEY"))
+        private_keys.extend([bitstamp_private_key] * len(bitstamp_entries))
+    except Exception as e:
+        print(f"Error fetching Bitstamp price: {e}")
 
     response = await PontisPublisherClient.publish_many(
         ORACLE_PROXY_ADDRESS, NETWORK, entries, private_keys
