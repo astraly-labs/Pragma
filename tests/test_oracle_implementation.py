@@ -13,7 +13,7 @@ CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
 DEFAULT_DECIMALS = 18
-ORACLE_PROXY_ADDRESS = 1771898182094063035988424170791013279488407100660629279080401671638225029234  # random number
+ORACLE_CONTROLLER_ADDRESS = 1771898182094063035988424170791013279488407100660629279080401671638225029234  # random number
 AGGREGATION_MODE = 0
 
 
@@ -27,7 +27,7 @@ async def contract_def():
 async def contract_init(contract_def):
     starknet = await Starknet.empty()
     contract = await starknet.deploy(
-        contract_def=contract_def, constructor_calldata=[ORACLE_PROXY_ADDRESS]
+        contract_def=contract_def, constructor_calldata=[ORACLE_CONTROLLER_ADDRESS]
     )
 
     return starknet.state, contract
@@ -55,25 +55,25 @@ async def test_get_decimals(contract):
 
 
 @pytest.mark.asyncio
-async def test_update_oracle_proxy_address(contract):
-    new_oracle_proxy_address = ORACLE_PROXY_ADDRESS + 1
-    await contract.set_oracle_proxy_address(new_oracle_proxy_address).invoke(
-        caller_address=ORACLE_PROXY_ADDRESS
+async def test_update_oracle_controller_address(contract):
+    new_oracle_controller_address = ORACLE_CONTROLLER_ADDRESS + 1
+    await contract.set_oracle_controller_address(new_oracle_controller_address).invoke(
+        caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
     try:
-        await contract.set_oracle_proxy_address(new_oracle_proxy_address).invoke(
-            caller_address=ORACLE_PROXY_ADDRESS
-        )
+        await contract.set_oracle_controller_address(
+            new_oracle_controller_address
+        ).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
         raise Exception(
-            "Transaction to update oracle proxy address from incorrect address succeeded, but should not have."
+            "Transaction to update oracle controller address from incorrect address succeeded, but should not have."
         )
     except StarkException:
         pass
 
-    await contract.set_oracle_proxy_address(ORACLE_PROXY_ADDRESS).invoke(
-        caller_address=new_oracle_proxy_address
+    await contract.set_oracle_controller_address(ORACLE_CONTROLLER_ADDRESS).invoke(
+        caller_address=new_oracle_controller_address
     )
 
     return
@@ -83,7 +83,7 @@ async def test_update_oracle_proxy_address(contract):
 async def test_submit_entries(contract, publisher):
     entry = Entry(key=str_to_felt("eth/usd"), value=2, timestamp=1, publisher=publisher)
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
+    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
@@ -93,7 +93,7 @@ async def test_submit_entries(contract, publisher):
     )
 
     await contract.submit_entry(second_entry).invoke(
-        caller_address=ORACLE_PROXY_ADDRESS
+        caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
     result = await contract.get_value(
@@ -113,7 +113,7 @@ async def test_republish_stale(contract, publisher):
     key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=2, timestamp=2, publisher=publisher)
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
+    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
@@ -122,7 +122,7 @@ async def test_republish_stale(contract, publisher):
 
     try:
         await contract.submit_entry(second_entry).invoke(
-            caller_address=ORACLE_PROXY_ADDRESS
+            caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 
         raise Exception(
@@ -132,7 +132,7 @@ async def test_republish_stale(contract, publisher):
         pass
 
     await contract.submit_entry_no_assert(second_entry).invoke(
-        caller_address=ORACLE_PROXY_ADDRESS
+        caller_address=ORACLE_CONTROLLER_ADDRESS
     )  # should not fail and also not update state
 
     result = await contract.get_value([publisher], key, AGGREGATION_MODE).invoke()
@@ -149,13 +149,13 @@ async def test_mean_aggregation(
     key = str_to_felt("eth/usd")
     entry = Entry(key=key, value=3, timestamp=1, publisher=publisher)
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
+    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     second_publisher = str_to_felt("bar")
     second_entry = Entry(key=key, value=5, timestamp=1, publisher=second_publisher)
 
     await contract.submit_entry(second_entry).invoke(
-        caller_address=ORACLE_PROXY_ADDRESS
+        caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
     result = await contract.get_value(
@@ -182,7 +182,7 @@ async def test_median_aggregation(
     publishers = [str_to_felt(p) for p in publishers_str]
     entry = Entry(key=key, value=prices[0], timestamp=1, publisher=publishers[0])
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_PROXY_ADDRESS)
+    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     entries = [entry]
 
@@ -193,7 +193,7 @@ async def test_median_aggregation(
         entries.append(additional_entry)
 
         await contract.submit_entry(additional_entry).invoke(
-            caller_address=ORACLE_PROXY_ADDRESS
+            caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 
         result = await contract.get_entries(publishers[: len(entries)], key).invoke()

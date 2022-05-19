@@ -2,7 +2,7 @@ import asyncio
 import os
 
 import requests
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from pontis.core.utils import currency_pair_to_key, pprint_entry
 from pontis.publisher.binance import fetch_binance
 from pontis.publisher.client import PontisPublisherClient
@@ -22,7 +22,7 @@ async def publish_all(assets):
     for i, asset in enumerate(assets):
         key = currency_pair_to_key(*asset["pair"])
         decimals = await PontisPublisherClient.get_decimals(
-            ORACLE_PROXY_ADDRESS, NETWORK, key
+            ORACLE_CONTROLLER_ADDRESS, NETWORK, key
         )
         assets[i]["decimals"] = decimals
 
@@ -89,7 +89,7 @@ async def publish_all(assets):
         pprint_entry(entry)
 
     response = await PontisPublisherClient.publish_many(
-        ORACLE_PROXY_ADDRESS, NETWORK, entries, private_keys
+        ORACLE_CONTROLLER_ADDRESS, NETWORK, entries, private_keys
     )
     print(f"Bulk updated with response {response}")
 

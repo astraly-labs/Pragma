@@ -29,7 +29,7 @@
     {
         "inputs": [
             {
-                "name": "oracle_proxy_address",
+                "name": "oracle_controller_address",
                 "type": "felt"
             }
         ],
@@ -119,11 +119,11 @@
     {
         "inputs": [
             {
-                "name": "oracle_proxy_address",
+                "name": "oracle_controller_address",
                 "type": "felt"
             }
         ],
-        "name": "set_oracle_proxy_address",
+        "name": "set_oracle_controller_address",
         "outputs": [],
         "type": "function"
     },

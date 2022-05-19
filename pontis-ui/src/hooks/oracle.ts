@@ -1,8 +1,8 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
 import { strToHexFelt } from "../../utils/felt";
-import { getOracleProxyAddress } from "../services/address.service";
+import { getOracleControllerAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
-import OracleProxyAbi from "../abi/OracleProxy.json";
+import OracleControllerAbi from "../abi/OracleController.json";
 import { Abi } from "starknet";
 import { bigNumberishArrayToDecimalStringArray } from "starknet/utils/number";
 
@@ -24,12 +24,12 @@ export const AssetKeys = [
 
 export type AssetKeyT = typeof AssetKeys[number];
 
-export const useOracleProxyContract = () => {
+export const useOracleControllerContract = () => {
   const network = networkId();
-  const oracleProxyContractAddress = getOracleProxyAddress(network);
+  const oracleControllerContractAddress = getOracleControllerAddress(network);
   return useContract({
-    abi: OracleProxyAbi as Abi,
-    address: oracleProxyContractAddress,
+    abi: OracleControllerAbi as Abi,
+    address: oracleControllerContractAddress,
   });
 };
 
@@ -40,7 +40,7 @@ interface GetDecimalsHookT {
 }
 
 const useOracleGetDecimals = (assetKey: AssetKeyT): GetDecimalsHookT => {
-  const { contract } = useOracleProxyContract();
+  const { contract } = useOracleControllerContract();
   const arg = strToHexFelt(assetKey);
   const { data, loading, error } = useStarknetCall({
     contract,
@@ -66,7 +66,7 @@ export interface GetValueHookT {
 }
 
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
-  const { contract } = useOracleProxyContract();
+  const { contract } = useOracleControllerContract();
   const { decimals } = useOracleGetDecimals(assetKey);
   const arg = strToHexFelt(assetKey);
   const aggregationMode = 0;

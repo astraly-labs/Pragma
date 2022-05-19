@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from pontis.core.const import NETWORK, ORACLE_PROXY_ADDRESS
+from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from pontis.core.utils import currency_pair_to_key
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.coinbase import fetch_coinbase
@@ -22,14 +22,14 @@ async def main():
     for i, asset in enumerate(assets):
         key = currency_pair_to_key(*asset["pair"])
         decimals = PontisPublisherClient.get_decimals(
-            ORACLE_PROXY_ADDRESS, NETWORK, key
+            ORACLE_CONTROLLER_ADDRESS, NETWORK, key
         )
         assets[i]["decimals"] = decimals
 
     entries = fetch_coinbase(assets)
 
     client = PontisPublisherClient(
-        ORACLE_PROXY_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
+        ORACLE_CONTROLLER_ADDRESS, PUBLISHER_PRIVATE_KEY, publisher, network=NETWORK
     )
     for entry in entries:
         await client.publish(entry.key, entry.value, entry.timestamp)

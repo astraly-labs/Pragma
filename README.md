@@ -10,7 +10,7 @@ You can read more about the Pontis Oracle [here](https://42labs-xyz.notion.site/
 
 ![Pontis Architecture](/assets/Pontis-Architecture.png)
 
-The Pontis Oracle consists of three smart contracts. The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because it's state should be permanent (each publisher and their public key). The second is the Oracle Proxy, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which smart protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s). The third contract type is Oracle Implementation which contains the logic for storing and aggregating specific key/value data streams. Oracle implementations can be updated frequently by simply adding them to the Oracle Proxy's list of implementation addresses. While there can be many Oracle Implementations to all of which the Oracle Proxy write data being published to it, there can be only one primary Oracle Implementation, which is where the Oracle Proxy fetches results from when other smart contracts ask it to.
+The Pontis Oracle consists of three smart contracts. The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because it's state should be permanent (each publisher and their public key). The second is the Oracle Controller, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which smart protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s). The third contract type is Oracle Implementation which contains the logic for storing and aggregating specific key/value data streams. Oracle implementations can be updated frequently by simply adding them to the Oracle Controller's list of implementation addresses. While there can be many Oracle Implementations to all of which the Oracle Controller write data being published to it, there can be only one primary Oracle Implementation, which is where the Oracle Controller fetches results from when other smart contracts ask it to.
 
 ### Deployed Contracts
 
@@ -18,7 +18,7 @@ On testnet, the contracts are deployed at the following addresses on testnet:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540) | 0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540 |
-| OracleProxy | [Link](https://goerli.voyager.online/contract/0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1) | 0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1 |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1) | 0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1 |
 | OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb) | 0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb |
 | Admin Account | [Link](https://goerli.voyager.online/contract/0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9) | 0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9 |
 
@@ -38,14 +38,14 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_CONTROLLER_ADDRESS>` with the address of the Oracle (see above):
 ```
-starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/abi/OracleProxy.json --function get_value --inputs 28556963469423460
+starknet call --address <ORACLE_CONTROLLER_ADDRESS> --abi contracts/abi/OracleController.json --function get_value --inputs 28556963469423460
 ```
 
 ## Publishing Data to a Feed in a Deployed Contract
 
-The recommended way to publish data is to use the `pontis-publisher` Docker image which has the oracle proxy's address baked in via the `ORACLE_PROXY_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
+The recommended way to publish data is to use the `pontis-publisher` Docker image which has the Oracle Controller's address baked in via the `ORACLE_CONTROLLER_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
 
 ```
 docker build sample-publisher/coinbase/ -t coinbase
@@ -58,9 +58,9 @@ To run tests, simply run `pytest .` from the project root.
 
 ## Deploying Contracts
 
-To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the oracle proxy (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
+To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the Oracle Controller (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
 
-Then run the following commands, replacing `<PUBLIC_ADMIN_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_PROXY_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
+Then run the following commands, replacing `<PUBLIC_ADMIN_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_CONTROLLER_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
 
 ```
 export STARKNET_NETWORK=alpha-goerli
@@ -68,14 +68,14 @@ starknet-compile --account_contract contracts/account/Account.cairo --abi contra
 starknet deploy --contract account_compiled.json --inputs <PUBLIC_ADMIN_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
 starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
-starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi contracts/abi/OracleProxy.json --output oracle_proxy_compiled.json
-starknet-compile contracts/oracle_proxy/OracleProxy.cairo --abi pontis-ui/src/abi/OracleProxy.json --output oracle_proxy_compiled.json
-starknet deploy --contract oracle_proxy_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS>
+starknet-compile contracts/oracle_controller/OracleController.cairo --abi contracts/abi/OracleController.json --output oracle_controller_compiled.json
+starknet-compile contracts/oracle_controller/OracleController.cairo --abi pontis-ui/src/abi/OracleController.json --output oracle_controller_compiled.json
+starknet deploy --contract oracle_controller_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS>
 starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --abi contracts/abi/OracleImplementation.json --output oracle_implementation_compiled.json
-starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_PROXY_ADDRESS>
+starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_CONTROLLER_ADDRESS>
 ```
 
-Finally, you must add the oracle implementation to the proxy. You can use the `add_oracle_implementation` method of the `PontisAdminClient` class in `pontis.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you could run:
+Finally, you must add the Oracle Implementation to the Controller. You can use the `add_oracle_implementation` method of the `PontisAdminClient` class in `pontis.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you could run:
 ```
 import os
 from pontis.admin.client import PontisAdminClient
@@ -93,9 +93,9 @@ The release flow depends on which parts of the code base changed. Below is a map
 First, compile and then redeploy the contract(s) that have changed. See the section above "Deploying Contracts" for details.
 
 Then, depending on which contracts were redeployed, you have to take further steps:
-- If it was merely the oracle implementation contract that was updated, add it to the oracle proxy's oracle implementations so that it can run in shadow mode. Finally, you need to set that oracle implementation as the primary one by using the `set_primary_oracle` method of the `PontisAdminClient` class in `pontis.admin.client`.
-- If oracle registry is updated, you will first have to pull existing publishers and keys and write them to the new publisher registry. It is probably easiest to do this off-chain, by using the getter functions on the old publisher registry and then using the admin key to effectively re-register all the publishers in the new register. You must also update the `PUBLISHER_REGISTRY_ADDRESS` variable in `pontis.core.const` and then follow the steps to release a new version of the pontis package. Finally, you'll have to update the oracle proxy's publisher registry address which you can do using the `update_publisher_registry_address` method of the `PontisAdminClient` class in `pontis.admin.client`.
-- Finally, if the oracle proxy is updated, you'll have to update the address in pontis-package (`pontis.core.const`), in this README (above), in the sample consumer (`contracts/sample_consumer/SampleConsumer.cairo`) and in pontis-ui (`src/services/address.service.ts`). Then you'll have to follow the release processes for those components. Finally, make sure to coordinate with protocols to update their references.
+- If it was merely the oracle implementation contract that was updated, add it to the Oracle Controller's oracle implementations so that it can run in shadow mode. Finally, you need to set that oracle implementation as the primary one by using the `set_primary_oracle` method of the `PontisAdminClient` class in `pontis.admin.client`.
+- If oracle registry is updated, you will first have to pull existing publishers and keys and write them to the new publisher registry. It is probably easiest to do this off-chain, by using the getter functions on the old publisher registry and then using the admin key to effectively re-register all the publishers in the new register. You must also update the `PUBLISHER_REGISTRY_ADDRESS` variable in `pontis.core.const` and then follow the steps to release a new version of the pontis package. Finally, you'll have to update the Oracle Controller's Publisher Registry address which you can do using the `update_publisher_registry_address` method of the `PontisAdminClient` class in `pontis.admin.client`.
+- Finally, if the Oracle Controller is updated, you'll have to update the address in pontis-package (`pontis.core.const`), in this README (above), in the sample consumer (`contracts/sample_consumer/SampleConsumer.cairo`) and in pontis-ui (`src/services/address.service.ts`). Then you'll have to follow the release processes for those components. Finally, make sure to coordinate with protocols to update their references.
 
 ## Pontis Package
 First, make sure to set the environmental variable `PYPI_API_TOKEN`.

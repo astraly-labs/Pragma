@@ -24,7 +24,7 @@ namespace IOracleImplementation:
     # Setters
     #
 
-    func set_oracle_proxy_address(oracle_proxy_address : felt):
+    func set_oracle_controller_address(oracle_controller_address : felt):
     end
 
     func set_decimals(key : felt, decimals : felt):

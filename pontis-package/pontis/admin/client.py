@@ -2,7 +2,7 @@ from nile.signer import Signer
 from pontis.core.const import (
     ADMIN_ADDRESS,
     NETWORK,
-    ORACLE_PROXY_ADDRESS,
+    ORACLE_CONTROLLER_ADDRESS,
     PUBLISHER_REGISTRY_ADDRESS,
 )
 from pontis.core.utils import str_to_felt
@@ -18,7 +18,7 @@ class PontisAdminClient:
         admin_private_key,
         network=None,
         admin_address=None,
-        oracle_proxy_address=None,
+        oracle_controller_address=None,
         publisher_registry_address=None,
         max_fee=None,
     ):
@@ -26,8 +26,8 @@ class PontisAdminClient:
             network = NETWORK
         if admin_address is None:
             admin_address = ADMIN_ADDRESS
-        if oracle_proxy_address is None:
-            oracle_proxy_address = ORACLE_PROXY_ADDRESS
+        if oracle_controller_address is None:
+            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
         if publisher_registry_address is None:
             publisher_registry_address = PUBLISHER_REGISTRY_ADDRESS
 
@@ -39,8 +39,8 @@ class PontisAdminClient:
 
         self.admin_address = admin_address
         self.admin_contract = None
-        self.oracle_proxy_address = oracle_proxy_address
-        self.oracle_proxy_contract = None
+        self.oracle_controller_address = oracle_controller_address
+        self.oracle_controller_contract = None
         self.publisher_registry_address = publisher_registry_address
         self.publisher_registry_contract = None
 
@@ -52,9 +52,9 @@ class PontisAdminClient:
                 self.admin_address, Client(self.network)
             )
 
-        if self.oracle_proxy_contract is None:
-            self.oracle_proxy_contract = await Contract.from_address(
-                self.oracle_proxy_address, Client(self.network)
+        if self.oracle_controller_contract is None:
+            self.oracle_controller_contract = await Contract.from_address(
+                self.oracle_controller_address, Client(self.network)
             )
 
         if self.publisher_registry_contract is None:
@@ -87,7 +87,7 @@ class PontisAdminClient:
     async def get_primary_oracle_implementation_address(self):
         await self.fetch_contracts()
 
-        result = await self.oracle_proxy_contract.functions[
+        result = await self.oracle_controller_contract.functions[
             "get_primary_oracle_implementation_address"
         ].call()
 

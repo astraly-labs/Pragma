@@ -26,7 +26,7 @@ func Oracle_decimals_storage(key : felt) -> (decimals : felt):
 end
 
 @storage_var
-func Oracle_proxy_address_storage() -> (publisher_address : felt):
+func Oracle_controller_address_storage() -> (publisher_address : felt):
 end
 
 #
@@ -43,15 +43,16 @@ end
 # Guards
 #
 
-func Oracle_only_oracle_proxy{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+func Oracle_only_oracle_controller{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
     let (caller_address) = get_caller_address()
-    let (oracle_proxy_address) = Oracle_proxy_address_storage.read()
-    if oracle_proxy_address == 0:
+    let (oracle_controller_address) = Oracle_controller_address_storage.read()
+    if oracle_controller_address == 0:
         # Assume uninitialized
         return ()
     end
-    with_attr error_message("This function can only be called by the oracle proxy"):
-        assert caller_address = oracle_proxy_address
+    with_attr error_message("This function can only be called by the oracle controller"):
+        assert caller_address = oracle_controller_address
     end
     return ()
 end
@@ -98,17 +99,17 @@ end
 # Setters
 #
 
-func Oracle_set_oracle_proxy_address{
+func Oracle_set_oracle_controller_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_proxy_address : felt):
-    Oracle_only_oracle_proxy()
-    Oracle_proxy_address_storage.write(oracle_proxy_address)
+        oracle_controller_address : felt):
+    Oracle_only_oracle_controller()
+    Oracle_controller_address_storage.write(oracle_controller_address)
     return ()
 end
 
 func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt, decimals : felt):
-    Oracle_only_oracle_proxy()
+    Oracle_only_oracle_controller()
     Oracle_decimals_storage.write(key, decimals)
     return ()
 end
@@ -118,7 +119,7 @@ func Oracle_submit_entry{
         range_check_ptr}(new_entry : Entry, should_assert : felt):
     alloc_locals
 
-    Oracle_only_oracle_proxy()
+    Oracle_only_oracle_controller()
 
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 

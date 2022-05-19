@@ -12,7 +12,7 @@
                 "type": "felt"
             }
         ],
-        "name": "OracleProxy_OracleImplementationStatus",
+        "name": "OracleController_OracleImplementationStatus",
         "size": 2,
         "type": "struct"
     },
@@ -120,7 +120,7 @@
         "outputs": [
             {
                 "name": "oracle_implementation_status",
-                "type": "OracleProxy_OracleImplementationStatus"
+                "type": "OracleController_OracleImplementationStatus"
             }
         ],
         "stateMutability": "view",

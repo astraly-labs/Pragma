@@ -1,7 +1,7 @@
 %lang starknet
 
 @contract_interface
-namespace IOracleProxy:
+namespace IOracleController:
     #
     # Getters
     #
@@ -17,7 +17,7 @@ namespace IOracleProxy:
     end
 
     func get_oracle_implementation_status(oracle_implementation_address : felt) -> (
-            oracle_implementation_status : OracleProxy_OracleImplementationStatus):
+            oracle_implementation_status : OracleController_OracleImplementationStatus):
     end
 
     func get_oracle_implementation_address(idx : felt) -> (oracle_implementation_address : felt):
@@ -48,7 +48,7 @@ namespace IOracleProxy:
     end
 
     #
-    # Oracle Implementation Proxy Functions
+    # Oracle Implementation Controller Functions
     #
 
     func get_decimals(key : felt) -> (decimals : felt):

@@ -5,7 +5,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.library import (
-    Oracle_set_default_decimals, Oracle_set_oracle_proxy_address, Oracle_set_decimals,
+    Oracle_set_default_decimals, Oracle_set_oracle_controller_address, Oracle_set_decimals,
     Oracle_get_decimals, Oracle_get_entries, Oracle_get_value, Oracle_submit_entry)
 
 #
@@ -14,9 +14,9 @@ from contracts.oracle_implementation.library import (
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_proxy_address : felt):
+        oracle_controller_address : felt):
     Oracle_set_default_decimals()
-    Oracle_set_oracle_proxy_address(oracle_proxy_address)
+    Oracle_set_oracle_controller_address(oracle_controller_address)
     return ()
 end
 
@@ -53,9 +53,10 @@ end
 #
 
 @external
-func set_oracle_proxy_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_proxy_address : felt):
-    Oracle_set_oracle_proxy_address(oracle_proxy_address)
+func set_oracle_controller_address{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        oracle_controller_address : felt):
+    Oracle_set_oracle_controller_address(oracle_controller_address)
     return ()
 end
 
