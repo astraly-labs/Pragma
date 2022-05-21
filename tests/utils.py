@@ -2,7 +2,9 @@ import os
 
 from nile.signer import Signer
 from pontis.core.entry import serialize_entries, serialize_entry
+from starkware.starknet.business_logic.execution.objects import Event
 from starkware.starknet.compiler.compile import compile_starknet_files
+from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
 
 
@@ -58,6 +60,18 @@ class TestSigner:
         return await account.__execute__(call_array, calldata, nonce).invoke(
             signature=[sig_r, sig_s]
         )
+
+
+# From OZ: https://github.com/OpenZeppelin/cairo-contracts/blob/main/tests/utils.py
+def assert_event_emitted(tx_exec_info, from_address, name, data):
+    assert (
+        Event(
+            from_address=from_address,
+            keys=[get_selector_from_name(name)],
+            data=data,
+        )
+        in tx_exec_info.raw_events
+    )
 
 
 async def register_new_publisher_and_submit_many_entries_1(
