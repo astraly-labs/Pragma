@@ -9,6 +9,7 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import (
+    assert_event_emitted,
     cached_contract,
     construct_path,
     register_new_publisher_and_submit_entry,
@@ -186,10 +187,16 @@ async def initialized_contracts(
     )
 
     # Add oracle implementation address to controller
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
+        [oracle_implementation.contract_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "AddedOracleImplementation",
         [oracle_implementation.contract_address],
     )
 
@@ -255,10 +262,16 @@ async def test_oracle_implementation_addresses(initialized_contracts, admin_sign
     # Add second oracle implementation address
     second_oracle_implementation_address = oracle_implementation.contract_address + 1
 
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
+        [second_oracle_implementation_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "AddedOracleImplementation",
         [second_oracle_implementation_address],
     )
 
@@ -286,11 +299,17 @@ async def test_oracle_implementation_addresses(initialized_contracts, admin_sign
         pass
 
     # Set second oracle implementation to inactive
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
         "update_oracle_implementation_active_status",
         [second_oracle_implementation_address, 0],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "UpdatedOracleImplementation",
+        [second_oracle_implementation_address, 1, 0],
     )
 
     # Try setting second oracle implementation to primary and fail
@@ -298,7 +317,7 @@ async def test_oracle_implementation_addresses(initialized_contracts, admin_sign
         await admin_signer.send_transaction(
             admin_account,
             oracle_controller.contract_address,
-            "set_primary_oracle",
+            "set_primary_oracle_implementation_address",
             [second_oracle_implementation_address],
         )
 
@@ -317,11 +336,17 @@ async def test_oracle_implementation_addresses(initialized_contracts, admin_sign
     )
 
     # Set second oracle implementation as primary
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
-        "set_primary_oracle",
+        "set_primary_oracle_implementation_address",
         [second_oracle_implementation_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "UpdatedPrimaryOracleImplementation",
+        [oracle_implementation.contract_address, second_oracle_implementation_address],
     )
 
     result = (
@@ -344,11 +369,17 @@ async def test_rotate_admin_address(initialized_contracts, admin_signer):
     result = await oracle_controller.get_admin_address().invoke()
     assert result.result.admin_address == admin_account.contract_address
 
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
         "set_admin_address",
         [second_admin_account.contract_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "UpdatedAdminAddress",
+        [admin_account.contract_address, second_admin_account.contract_address],
     )
 
     result = await oracle_controller.get_admin_address().invoke()
@@ -370,11 +401,17 @@ async def test_update_publisher_registry_address(initialized_contracts, admin_si
 
     new_publisher_registry_address = publisher_registry.contract_address + 1
 
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
         "update_publisher_registry_address",
         [new_publisher_registry_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "UpdatedPublisherRegistryAddress",
+        [publisher_registry.contract_address, new_publisher_registry_address],
     )
 
     result = await oracle_controller.get_publisher_registry_address().invoke()
@@ -384,7 +421,7 @@ async def test_update_publisher_registry_address(initialized_contracts, admin_si
 
 
 @pytest.mark.asyncio
-async def test_publish(initialized_contracts, publisher, publisher_signer):
+async def test_submit(initialized_contracts, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -395,10 +432,16 @@ async def test_publish(initialized_contracts, publisher, publisher_signer):
         publisher=publisher,
     )
 
-    await publisher_signer.send_transaction(
+    tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
         "submit_entry",
+        serialize_entry(entry),
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        oracle_controller.contract_address,
+        "SubmittedEntry",
         serialize_entry(entry),
     )
 
@@ -410,7 +453,7 @@ async def test_publish(initialized_contracts, publisher, publisher_signer):
 
 
 @pytest.mark.asyncio
-async def test_republish(initialized_contracts, publisher, publisher_signer):
+async def test_re_submit(initialized_contracts, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -449,7 +492,7 @@ async def test_republish(initialized_contracts, publisher, publisher_signer):
 
 
 @pytest.mark.asyncio
-async def test_republish_stale(initialized_contracts, publisher, publisher_signer):
+async def test_re_submit_stale(initialized_contracts, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -486,13 +529,6 @@ async def test_republish_stale(initialized_contracts, publisher, publisher_signe
     except StarkException:
         pass
 
-    await publisher_signer.send_transaction(
-        publisher_account,
-        oracle_controller.contract_address,
-        "submit_many_entries",
-        serialize_entries([second_entry]),
-    )  # should not also not update state, but not error explicitly
-
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
@@ -500,7 +536,7 @@ async def test_republish_stale(initialized_contracts, publisher, publisher_signe
 
 
 @pytest.mark.asyncio
-async def test_publish_second_asset(initialized_contracts, publisher, publisher_signer):
+async def test_submit_second_asset(initialized_contracts, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -548,7 +584,7 @@ async def test_publish_second_asset(initialized_contracts, publisher, publisher_
 
 
 @pytest.mark.asyncio
-async def test_publish_second_publisher(
+async def test_submit_second_publisher(
     initialized_contracts,
     admin_signer,
     publisher,
@@ -689,12 +725,19 @@ async def test_submit_many(initialized_contracts, publisher, publisher_signer):
         for i in range(len(keys))
     ]
 
-    await publisher_signer.send_transaction(
+    tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
         "submit_many_entries",
         serialize_entries(entries),
     )
+    for entry in entries:
+        assert_event_emitted(
+            tx_exec_info,
+            oracle_controller.contract_address,
+            "SubmittedEntry",
+            serialize_entry(entry),
+        )
 
     for i, key in enumerate(keys):
         result = await oracle_controller.get_entries(key).invoke()
@@ -900,7 +943,7 @@ async def test_multiple_oracle_implementations(
     await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
-        "set_primary_oracle",
+        "set_primary_oracle_implementation_address",
         [second_oracle_implementation.contract_address],
     )
 
@@ -957,7 +1000,7 @@ async def test_rotate_primary_oracle_implementation_address(
     await admin_signer.send_transaction(
         admin_account,
         oracle_controller.contract_address,
-        "set_primary_oracle",
+        "set_primary_oracle_implementation_address",
         [second_oracle_implementation.contract_address],
     )
 

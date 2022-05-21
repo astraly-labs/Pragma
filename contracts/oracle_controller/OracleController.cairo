@@ -12,7 +12,7 @@ from contracts.oracle_controller.library import (
     OracleController_update_publisher_registry_address,
     OracleController_add_oracle_implementation_address,
     OracleController_update_oracle_implementation_active_status,
-    OracleController_set_primary_oracle, OracleController_get_decimals,
+    OracleController_set_primary_oracle_implementation_address, OracleController_get_decimals,
     OracleController_get_entries, OracleController_get_value, OracleController_set_decimals,
     OracleController_submit_entry, OracleController_submit_many_entries)
 from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
@@ -129,10 +129,12 @@ func update_oracle_implementation_active_status{
 end
 
 @external
-func set_primary_oracle{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func set_primary_oracle_implementation_address{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         primary_oracle_implementation_address : felt):
     Admin_only_admin()
-    OracleController_set_primary_oracle(primary_oracle_implementation_address)
+    OracleController_set_primary_oracle_implementation_address(
+        primary_oracle_implementation_address)
     return ()
 end
 

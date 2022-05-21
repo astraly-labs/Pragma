@@ -131,10 +131,6 @@ async def test_republish_stale(contract, publisher):
     except StarkException:
         pass
 
-    await contract.submit_entry_no_assert(second_entry).invoke(
-        caller_address=ORACLE_CONTROLLER_ADDRESS
-    )  # should not fail and also not update state
-
     result = await contract.get_value([publisher], key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 

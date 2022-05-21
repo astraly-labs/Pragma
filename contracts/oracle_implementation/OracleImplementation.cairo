@@ -70,14 +70,6 @@ end
 @external
 func submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         new_entry : Entry):
-    Oracle_submit_entry(new_entry, TRUE)
-    return ()
-end
-
-# For when the caller wants to submit many and not fail if one of them fails
-@external
-func submit_entry_no_assert{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        new_entry : Entry):
-    Oracle_submit_entry(new_entry, FALSE)
+    Oracle_submit_entry(new_entry)
     return ()
 end
