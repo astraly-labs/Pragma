@@ -100,10 +100,12 @@ class PontisAdminClient(PontisBaseClient):
 
         return result
 
-    async def set_primary_oracle(self, primary_oracle_implementation_address):
+    async def set_primary_oracle_implementation_address(
+        self, primary_oracle_implementation_address
+    ):
         result = await self.send_transaction(
             self.publisher_registry_contract.contract_address,
-            "set_primary_oracle",
+            "set_primary_oracle_implementation_address",
             [primary_oracle_implementation_address],
         )
 

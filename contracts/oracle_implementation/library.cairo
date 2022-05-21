@@ -2,6 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
+from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
@@ -114,34 +115,28 @@ func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     return ()
 end
 
-func Oracle_submit_entry{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry, should_assert : felt):
+func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry):
     alloc_locals
 
     Oracle_only_oracle_controller()
 
     let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
 
-    # use is_le and -1 to get is_lt
-    let (is_old_entry_more_recent) = is_le(new_entry.timestamp, entry.timestamp)
+    with_attr error_message("OracleImplementation: Existing entry is more recent"):
+        assert_le(entry.timestamp, new_entry.timestamp)
+    end
+
     let (current_timestamp) = get_block_timestamp()
-    let (is_entry_stale) = is_le(new_entry.timestamp, current_timestamp - TIMESTAMP_BUFFER)
-    let (is_entry_in_future) = is_le(current_timestamp + TIMESTAMP_BUFFER, new_entry.timestamp)
-    let (is_new_entry_invalid) = is_not_zero(
-        is_old_entry_more_recent + is_entry_stale + is_entry_in_future)
-    if is_new_entry_invalid == FALSE:
-        Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
-        return ()
+    with_attr error_message("OracleImplementation: New entry timestamp is too far in the past"):
+        assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.timestamp)
     end
 
-    if should_assert == FALSE:
-        return ()
+    with_attr error_message("OracleImplementation: New entry timestamp is too far in the future"):
+        assert_le(new_entry.timestamp, current_timestamp + TIMESTAMP_BUFFER)
     end
 
-    with_attr error_message("OracleImplementation: Received invalid update"):
-        assert is_new_entry_invalid = FALSE
-    end
+    Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
 
     return ()
 end

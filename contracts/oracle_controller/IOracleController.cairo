@@ -44,7 +44,7 @@ namespace IOracleController:
             oracle_implementation_address : felt, is_active : felt):
     end
 
-    func set_primary_oracle(primary_oracle_implementation_address : felt):
+    func set_primary_oracle_implementation_address(primary_oracle_implementation_address : felt):
     end
 
     #
@@ -71,7 +71,6 @@ namespace IOracleController:
     func submit_entry(new_entry : Entry):
     end
 
-    func submit_many_entries(
-            new_entries_len : felt, new_entries : Entry*):
+    func submit_many_entries(new_entries_len : felt, new_entries : Entry*):
     end
 end

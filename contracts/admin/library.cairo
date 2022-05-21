@@ -16,7 +16,7 @@ end
 #
 
 @event
-func UpdatedAdminAddress(new_admin_address : felt):
+func UpdatedAdminAddress(old_admin_address : felt, new_admin_address : felt):
 end
 
 #
@@ -50,8 +50,9 @@ end
 
 func Admin_set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         new_address : felt):
+    let (old_admin_address) = Admin_admin_address_storage.read()
     Admin_admin_address_storage.write(new_address)
-    UpdatedAdminAddress.emit(new_admin_address=new_address)
+    UpdatedAdminAddress.emit(old_admin_address, new_address)
     return ()
 end
 

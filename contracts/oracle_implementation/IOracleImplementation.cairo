@@ -32,7 +32,4 @@ namespace IOracleImplementation:
 
     func submit_entry(new_entry : Entry):
     end
-
-    func submit_entry_no_assert(new_entry : Entry):
-    end
 end
