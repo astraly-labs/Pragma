@@ -10,17 +10,16 @@ You can read more about the Pontis Oracle [here](https://42labs-xyz.notion.site/
 
 ![Pontis Architecture](/assets/Pontis-Architecture.png)
 
-The Pontis Oracle consists of three smart contracts. The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because it's state should be permanent (each publisher and their public key). The second is the Oracle Controller, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which smart protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s). The third contract type is Oracle Implementation which contains the logic for storing and aggregating specific key/value data streams. Oracle implementations can be updated frequently by simply adding them to the Oracle Controller's list of implementation addresses. While there can be many Oracle Implementations to all of which the Oracle Controller write data being published to it, there can be only one primary Oracle Implementation, which is where the Oracle Controller fetches results from when other smart contracts ask it to.
+The Pontis Oracle consists of three smart contracts. The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because it's state should be permanent (each publisher and their public key). The second is the Oracle Controller, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which smart protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s). The third contract type is Oracle Implementation which contains the logic for storing and aggregating specific key/value data streams. Oracle Implementations can be updated frequently by simply adding them to the Oracle Controller's list of implementation addresses. While there can be many Oracle Implementations to all of which the Oracle Controller write data being published to it, there can be only one primary Oracle Implementation, which is where the Oracle Controller fetches results from when other smart contracts ask it to.
 
 ### Deployed Contracts
 
-On testnet, the contracts are deployed at the following addresses on testnet:
+On testnet, the contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540) | 0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540 |
 | OracleController | [Link](https://goerli.voyager.online/contract/0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1) | 0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1 |
 | OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb) | 0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb |
-| Admin Account | [Link](https://goerli.voyager.online/contract/0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9) | 0x0710b8239c62572b2c38f1d10422bf0eb12abacf6b087b511d4c4ddd5594a3d9 |
 
 ## Setup
 
@@ -38,7 +37,7 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_CONTROLLER_ADDRESS>` with the address of the Oracle (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `pontis.core.utils`). Then run the following commands, replacing `<ORACLE_CONTROLLER_ADDRESS>` with the address of the Oracle Controller contract (see above):
 ```
 starknet call --address <ORACLE_CONTROLLER_ADDRESS> --abi contracts/abi/OracleController.json --function get_value --inputs 28556963469423460
 ```

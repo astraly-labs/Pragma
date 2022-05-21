@@ -2,7 +2,8 @@ import datetime
 import os
 
 import requests
-from pontis.core.utils import construct_entry, currency_pair_to_key
+from pontis.core.entry import construct_entry
+from pontis.core.utils import currency_pair_to_key
 
 
 def fetch_coinapi(assets):

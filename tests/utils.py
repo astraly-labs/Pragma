@@ -1,6 +1,7 @@
 import os
 
 from nile.signer import Signer
+from pontis.core.entry import serialize_entries, serialize_entry
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import StarknetContract
 
@@ -57,3 +58,57 @@ class TestSigner:
         return await account.__execute__(call_array, calldata, nonce).invoke(
             signature=[sig_r, sig_s]
         )
+
+
+async def register_new_publisher_and_submit_many_entries_1(
+    admin_account,
+    publisher_account,
+    publisher_registry,
+    oracle_controller,
+    admin_signer,
+    publisher_signer,
+    publisher,
+    entries,
+):
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [publisher, publisher_account.contract_address],
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_many_entries",
+        serialize_entries(entries),
+    )
+
+    return
+
+
+async def register_new_publisher_and_submit_entry(
+    admin_account,
+    publisher_account,
+    publisher_registry,
+    oracle_controller,
+    admin_signer,
+    publisher_signer,
+    publisher,
+    entry,
+):
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [publisher, publisher_account.contract_address],
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
+
+    return

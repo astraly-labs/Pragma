@@ -1,11 +1,6 @@
 import pytest
 import pytest_asyncio
 from pontis.core.utils import str_to_felt
-from starkware.crypto.signature.signature import (
-    get_random_private_key,
-    private_to_stark_key,
-    sign,
-)
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
@@ -25,55 +20,97 @@ async def contract_defs():
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_init(contract_defs, private_and_public_admin_keys):
+async def contract_init(
+    contract_defs, private_and_public_admin_keys, private_and_public_publisher_keys
+):
     _, admin_public_key = private_and_public_admin_keys
+    _, publisher_public_key = private_and_public_publisher_keys
     account_contract_def, contract_def = contract_defs
     starknet = await Starknet.empty()
-    account_contract = await starknet.deploy(
+    admin_account = await starknet.deploy(
         contract_def=account_contract_def, constructor_calldata=[admin_public_key]
     )
-    second_account_contract = await starknet.deploy(
+    second_admin_account = await starknet.deploy(
         contract_def=account_contract_def, constructor_calldata=[admin_public_key]
     )
-    contract = await starknet.deploy(
+    publisher_account = await starknet.deploy(
+        contract_def=account_contract_def, constructor_calldata=[publisher_public_key]
+    )
+    second_publisher_account = await starknet.deploy(
+        contract_def=account_contract_def, constructor_calldata=[publisher_public_key]
+    )
+    publisher_registry = await starknet.deploy(
         contract_def=contract_def,
-        constructor_calldata=[account_contract.contract_address],
+        constructor_calldata=[admin_account.contract_address],
     )
 
-    return starknet, account_contract, second_account_contract, contract
+    return {
+        "starknet": starknet,
+        "admin_account": admin_account,
+        "second_admin_account": second_admin_account,
+        "publisher_account": publisher_account,
+        "second_publisher_account": second_publisher_account,
+        "publisher_registry": publisher_registry,
+    }
 
 
 @pytest.fixture
 def contracts(contract_defs, contract_init):
     account_contract_def, contract_def = contract_defs
-    starknet, account_contract, second_account_contract, contract = contract_init
-    _state = starknet.state.copy()
-    account_contract = cached_contract(_state, account_contract_def, account_contract)
-    second_account_contract = cached_contract(
-        _state, account_contract_def, second_account_contract
+    _state = contract_init["starknet"].state.copy()
+    admin_account = cached_contract(
+        _state, account_contract_def, contract_init["admin_account"]
     )
-    contract = cached_contract(_state, contract_def, contract)
-    return account_contract, second_account_contract, contract
+    second_admin_account = cached_contract(
+        _state,
+        account_contract_def,
+        contract_init["second_admin_account"],
+    )
+    publisher_account = cached_contract(
+        _state, account_contract_def, contract_init["publisher_account"]
+    )
+    second_publisher_account = cached_contract(
+        _state, account_contract_def, contract_init["second_publisher_account"]
+    )
+    publisher_registry = cached_contract(
+        _state, contract_def, contract_init["publisher_registry"]
+    )
+    return {
+        "starknet": contract_init["starknet"],
+        "admin_account": admin_account,
+        "second_admin_account": second_admin_account,
+        "publisher_account": publisher_account,
+        "second_publisher_account": second_publisher_account,
+        "publisher_registry": publisher_registry,
+    }
 
 
 @pytest_asyncio.fixture
 async def registered_contracts(
     contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    account_contract, second_account_contract, contract = contracts
-    _, publisher_public_key = private_and_public_publisher_keys
+    admin_account = contracts["admin_account"]
+    second_admin_account = contracts["second_admin_account"]
+    publisher_account = contracts["publisher_account"]
+    publisher_registry = contracts["publisher_registry"]
 
-    await signer.send_transaction(
-        account_contract,
-        contract.contract_address,
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
         "register_publisher",
-        [publisher_public_key, publisher],
+        [publisher, publisher_account.contract_address],
     )
 
-    return account_contract, second_account_contract, contract
+    return {
+        "starknet": contracts["starknet"],
+        "admin_account": admin_account,
+        "second_admin_account": second_admin_account,
+        "publisher_account": contracts["publisher_account"],
+        "second_publisher_account": contracts["second_publisher_account"],
+        "publisher_registry": publisher_registry,
+    }
 
 
 @pytest.mark.asyncio
@@ -84,19 +121,19 @@ async def test_deploy(contracts):
 @pytest.mark.asyncio
 async def test_register_non_admin_fail(
     contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    _, second_account_contract, contract = contracts
-    _, publisher_public_key = private_and_public_publisher_keys
+    second_admin_account = contracts["second_admin_account"]
+    publisher_account = contracts["publisher_account"]
+    publisher_registry = contracts["publisher_registry"]
 
     try:
-        await signer.send_transaction(
-            second_account_contract,
-            contract.contract_address,
+        await admin_signer.send_transaction(
+            second_admin_account,
+            publisher_registry.contract_address,
             "register_publisher",
-            [publisher_public_key, publisher],
+            [publisher, publisher_account.contract_address],
         )
 
         raise Exception(
@@ -109,65 +146,55 @@ async def test_register_non_admin_fail(
 
 
 @pytest.mark.asyncio
-async def test_register_publisher(
-    registered_contracts, private_and_public_publisher_keys, publisher
-):
-    _, _, contract = registered_contracts
-    _, publisher_public_key = private_and_public_publisher_keys
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+async def test_register_publisher(registered_contracts, publisher):
+    publisher_account = registered_contracts["publisher_account"]
+    publisher_registry = registered_contracts["publisher_registry"]
+
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
+
     return
 
 
 @pytest.mark.asyncio
-async def test_rotate_publisher_public_key(
-    registered_contracts, private_and_public_publisher_keys, publisher
+async def test_update_publisher_address(
+    registered_contracts, publisher, publisher_signer
 ):
-    _, _, contract = registered_contracts
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+    publisher_account = registered_contracts["publisher_account"]
+    second_publisher_account = registered_contracts["second_publisher_account"]
+    publisher_registry = registered_contracts["publisher_registry"]
 
-    new_publisher_private_key = get_random_private_key()
-    new_publisher_public_key = private_to_stark_key(new_publisher_private_key)
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
 
-    new_publisher_signature_r, new_publisher_signature_s = sign(
-        new_publisher_public_key, publisher_private_key
+    await publisher_signer.send_transaction(
+        publisher_account,
+        publisher_registry.contract_address,
+        "update_publisher_address",
+        [publisher, second_publisher_account.contract_address],
     )
 
-    await contract.rotate_publisher_public_key(
-        publisher,
-        new_publisher_public_key,
-        new_publisher_signature_r,
-        new_publisher_signature_s,
-    ).invoke()
-
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == new_publisher_public_key
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == second_publisher_account.contract_address
 
     return
 
 
 @pytest.mark.asyncio
 async def test_rotate_fails_for_unregistered_publisher(
-    registered_contracts, private_and_public_publisher_keys, publisher
+    registered_contracts, publisher, publisher_signer
 ):
-    _, _, contract = registered_contracts
-    publisher_private_key, publisher_public_key = private_and_public_publisher_keys
-    new_publisher_private_key = get_random_private_key()
-    new_publisher_public_key = private_to_stark_key(new_publisher_private_key)
-
-    new_publisher_signature_r, new_publisher_signature_s = sign(
-        new_publisher_public_key, publisher_private_key
-    )
+    publisher_account = registered_contracts["publisher_account"]
+    second_publisher_account = registered_contracts["second_publisher_account"]
+    publisher_registry = registered_contracts["publisher_registry"]
 
     try:
-        await contract.rotate_publisher_public_key(
-            publisher,
-            new_publisher_public_key + 1,
-            new_publisher_signature_r,
-            new_publisher_signature_s,
-        ).invoke()
+        await publisher_signer.send_transaction(
+            second_publisher_account,
+            publisher_registry.contract_address,
+            "update_publisher_address",
+            [publisher, second_publisher_account.contract_address],
+        )
 
         raise Exception(
             "Transaction to rotate key for unregistered publisher succeeded, but should not have."
@@ -175,8 +202,8 @@ async def test_rotate_fails_for_unregistered_publisher(
     except StarkException:
         pass
 
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
 
     return
 
@@ -184,31 +211,30 @@ async def test_rotate_fails_for_unregistered_publisher(
 @pytest.mark.asyncio
 async def test_register_second_publisher(
     registered_contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    account_contract, _, contract = registered_contracts
-    _, publisher_public_key = private_and_public_publisher_keys
-    second_publisher_private_key = get_random_private_key()
-    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+    admin_account = registered_contracts["admin_account"]
+    publisher_account = registered_contracts["publisher_account"]
+    second_publisher_account = registered_contracts["second_publisher_account"]
+    publisher_registry = registered_contracts["publisher_registry"]
 
     second_publisher = str_to_felt("bar")
 
-    await signer.send_transaction(
-        account_contract,
-        contract.contract_address,
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
         "register_publisher",
-        [second_publisher_public_key, second_publisher],
+        [second_publisher, second_publisher_account.contract_address],
     )
 
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
 
-    result = await contract.get_publisher_public_key(second_publisher).invoke()
-    assert result.result.publisher_public_key == second_publisher_public_key
+    result = await publisher_registry.get_publisher_address(second_publisher).invoke()
+    assert result.result.publisher_address == second_publisher_account.contract_address
 
-    result = await contract.get_all_publishers().invoke()
+    result = await publisher_registry.get_all_publishers().invoke()
     assert result.result.publishers == [publisher, second_publisher]
 
     return
@@ -217,19 +243,19 @@ async def test_register_second_publisher(
 @pytest.mark.asyncio
 async def test_re_register_fail(
     registered_contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    account_contract, _, contract = registered_contracts
-    _, publisher_public_key = private_and_public_publisher_keys
+    admin_account = registered_contracts["admin_account"]
+    publisher_account = registered_contracts["publisher_account"]
+    publisher_registry = registered_contracts["publisher_registry"]
 
     try:
-        await signer.send_transaction(
-            account_contract,
-            contract.contract_address,
+        await admin_signer.send_transaction(
+            admin_account,
+            publisher_registry.contract_address,
             "register_publisher",
-            [publisher_public_key, publisher],
+            [publisher, publisher_account.contract_address],
         )
 
         raise Exception(
@@ -238,34 +264,35 @@ async def test_re_register_fail(
     except StarkException:
         pass
 
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
     return
 
 
 @pytest.mark.asyncio
 async def test_rotate_admin_address(
     contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    account_contract, second_account_contract, contract = contracts
-    _, publisher_public_key = private_and_public_publisher_keys
+    admin_account = contracts["admin_account"]
+    second_admin_account = contracts["second_admin_account"]
+    publisher_account = contracts["publisher_account"]
+    publisher_registry = contracts["publisher_registry"]
 
-    await signer.send_transaction(
-        account_contract,
-        contract.contract_address,
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
         "set_admin_address",
-        [second_account_contract.contract_address],
+        [second_admin_account.contract_address],
     )
 
     try:
-        await signer.send_transaction(
-            account_contract,
-            contract.contract_address,
+        await admin_signer.send_transaction(
+            admin_account,
+            publisher_registry.contract_address,
             "register_publisher_admin_address",
-            [publisher_public_key, publisher],
+            [publisher],
         )
 
         raise Exception(
@@ -274,13 +301,13 @@ async def test_rotate_admin_address(
     except StarkException:
         pass
 
-    await signer.send_transaction(
-        second_account_contract,
-        contract.contract_address,
+    await admin_signer.send_transaction(
+        second_admin_account,
+        publisher_registry.contract_address,
         "register_publisher",
-        [publisher_public_key, publisher],
+        [publisher, publisher_account.contract_address],
     )
 
-    result = await contract.get_publisher_public_key(publisher).invoke()
-    assert result.result.publisher_public_key == publisher_public_key
+    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    assert result.result.publisher_address == publisher_account.contract_address
     return

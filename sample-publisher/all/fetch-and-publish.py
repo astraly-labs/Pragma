@@ -17,7 +17,6 @@ from pontis.publisher.gemini import fetch_gemini
 async def publish_all(assets):
 
     entries = []
-    private_keys = []
 
     client = PontisClient()
     for i, asset in enumerate(assets):
@@ -28,58 +27,42 @@ async def publish_all(assets):
     try:
         coinapi_entries = fetch_coinapi(assets)
         entries.extend(coinapi_entries)
-        coinapi_private_key = int(os.environ.get("COINAPI_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([coinapi_private_key] * len(coinapi_entries))
     except Exception as e:
         print(f"Error fetching Coinapi price: {e}")
 
     try:
         coinmarketcap_entries = fetch_coinmarketcap(assets)
         entries.extend(coinmarketcap_entries)
-        coinmarketcap_private_key = int(
-            os.environ.get("COINMARKETCAP_PUBLISHER_PRIVATE_KEY")
-        )
-        private_keys.extend([coinmarketcap_private_key] * len(coinmarketcap_entries))
     except Exception as e:
         print(f"Error fetching Coinmarketcap price: {e}")
 
     try:
         coingecko_entries = fetch_coingecko(assets)
         entries.extend(coingecko_entries)
-        coingecko_private_key = int(os.environ.get("COINGECKO_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([coingecko_private_key] * len(coingecko_entries))
     except Exception as e:
         print(f"Error fetching Coingecko price: {e}")
 
     try:
         coinbase_entries = fetch_coinbase(assets)
         entries.extend(coinbase_entries)
-        coinbase_pricate_key = int(os.environ.get("COINBASE_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([coinbase_pricate_key] * len(coinbase_entries))
     except Exception as e:
         print(f"Error fetching Coinbase price: {e}")
 
     try:
         gemini_entries = fetch_gemini(assets)
         entries.extend(gemini_entries)
-        gemini_private_key = int(os.environ.get("GEMINI_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([gemini_private_key] * len(gemini_entries))
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
 
     try:
         binance_entries = fetch_binance(assets)
         entries.extend(binance_entries)
-        binance_private_key = int(os.environ.get("BINANCE_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([binance_private_key] * len(binance_entries))
     except Exception as e:
         print(f"Error fetching Binance price: {e}")
 
     try:
         ftx_entries = fetch_ftx(assets)
         entries.extend(ftx_entries)
-        ftx_private_key = int(os.environ.get("FTX_PUBLISHER_PRIVATE_KEY"))
-        private_keys.extend([ftx_private_key] * len(ftx_entries))
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
 
@@ -87,8 +70,11 @@ async def publish_all(assets):
     for entry in entries:
         pprint_entry(entry)
 
-    response = await PontisPublisherClient.publish_many(entries, private_keys)
-    print(f"Bulk updated with response {response}")
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+    publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
+
+    await publisher_client.publish_many(entries)
 
     # Post success to Better Uptime
     requests.get("https://betteruptime.com/api/v1/heartbeat/eLy7zigidGbx5s6jnsfQiqJQ")
