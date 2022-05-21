@@ -297,14 +297,6 @@
             {
                 "name": "new_entry",
                 "type": "Entry"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
-                "type": "felt"
             }
         ],
         "name": "submit_entry",
@@ -320,22 +312,6 @@
             {
                 "name": "new_entries",
                 "type": "Entry*"
-            },
-            {
-                "name": "signatures_r_len",
-                "type": "felt"
-            },
-            {
-                "name": "signatures_r",
-                "type": "felt*"
-            },
-            {
-                "name": "signatures_s_len",
-                "type": "felt"
-            },
-            {
-                "name": "signatures_s",
-                "type": "felt*"
             }
         ],
         "name": "submit_many_entries",
