@@ -2,17 +2,18 @@ from statistics import median
 
 import pytest
 import pytest_asyncio
-from pontis.core.entry import Entry
-from pontis.core.utils import construct_entry, sign_entry, str_to_felt
-from starkware.crypto.signature.signature import (
-    get_random_private_key,
-    private_to_stark_key,
-)
+from pontis.core.entry import construct_entry, serialize_entries, serialize_entry
+from pontis.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from utils import cached_contract, construct_path
+from utils import (
+    cached_contract,
+    construct_path,
+    register_new_publisher_and_submit_entry,
+    register_new_publisher_and_submit_many_entries_1,
+)
 
 # The path to the contract source code.
 PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
@@ -33,9 +34,7 @@ STARKNET_STARTING_TIMESTAMP = 1650590820
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_defs():
-    account_contract_def = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
-    )
+    account_def = compile_starknet_files(files=[ACCOUNT_CONTRACT_FILE], debug_info=True)
     publisher_registry_def = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE], debug_info=True
     )
@@ -46,7 +45,7 @@ async def contract_defs():
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE], debug_info=True
     )
     return (
-        account_contract_def,
+        account_def,
         publisher_registry_def,
         oracle_controller_def,
         oracle_implementation_def,
@@ -54,10 +53,13 @@ async def contract_defs():
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_init(contract_defs, private_and_public_admin_keys):
+async def contract_init(
+    contract_defs, private_and_public_admin_keys, private_and_public_publisher_keys
+):
     _, admin_public_key = private_and_public_admin_keys
+    _, publisher_public_key = private_and_public_publisher_keys
     (
-        account_contract_def,
+        account_def,
         publisher_registry_def,
         oracle_controller_def,
         oracle_implementation_def,
@@ -69,20 +71,30 @@ async def contract_init(contract_defs, private_and_public_admin_keys):
         STARKNET_STARTING_TIMESTAMP,
         starknet.state.state.block_info.gas_price,
     )
-    account_contract = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+    admin_account = await starknet.deploy(
+        contract_def=account_def, constructor_calldata=[admin_public_key]
     )
-    second_account_contract = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+    second_admin_account = await starknet.deploy(
+        contract_def=account_def, constructor_calldata=[admin_public_key]
     )
+    publisher_account = await starknet.deploy(
+        contract_def=account_def, constructor_calldata=[publisher_public_key]
+    )
+    num_additional_publishers = 5
+    additional_publisher_accounts = [
+        await starknet.deploy(
+            contract_def=account_def, constructor_calldata=[publisher_public_key]
+        )
+        for _ in range(num_additional_publishers)
+    ]
     publisher_registry = await starknet.deploy(
         contract_def=publisher_registry_def,
-        constructor_calldata=[account_contract.contract_address],
+        constructor_calldata=[admin_account.contract_address],
     )
     oracle_controller = await starknet.deploy(
         contract_def=oracle_controller_def,
         constructor_calldata=[
-            account_contract.contract_address,
+            admin_account.contract_address,
             publisher_registry.contract_address,
         ],
     )
@@ -95,102 +107,101 @@ async def contract_init(contract_defs, private_and_public_admin_keys):
         constructor_calldata=[oracle_controller.contract_address],
     )
 
-    return (
-        starknet.state,
-        account_contract,
-        second_account_contract,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    )
+    return {
+        "starknet": starknet,
+        "admin_account": admin_account,
+        "second_admin_account": second_admin_account,
+        "publisher_account": publisher_account,
+        "additional_publisher_accounts": additional_publisher_accounts,
+        "publisher_registry": publisher_registry,
+        "oracle_controller": oracle_controller,
+        "oracle_implementation": oracle_implementation,
+        "second_oracle_implementation": second_oracle_implementation,
+    }
 
 
 @pytest.fixture
 def contracts(contract_defs, contract_init):
     (
-        account_contract_def,
+        account_def,
         publisher_registry_def,
         oracle_controller_def,
         oracle_implementation_def,
     ) = contract_defs
-    (
-        state,
-        account_contract,
-        second_account_contract,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    ) = contract_init
-    _state = state.copy()
-    account_contract = cached_contract(_state, account_contract_def, account_contract)
-    second_account_contract = cached_contract(
-        _state, account_contract_def, second_account_contract
+    _state = contract_init["starknet"].state.copy()
+    admin_account = cached_contract(_state, account_def, contract_init["admin_account"])
+    second_admin_account = cached_contract(
+        _state, account_def, contract_init["second_admin_account"]
     )
+    publisher_account = cached_contract(
+        _state, account_def, contract_init["publisher_account"]
+    )
+    additional_publisher_accounts = [
+        cached_contract(_state, account_def, x)
+        for x in contract_init["additional_publisher_accounts"]
+    ]
     publisher_registry = cached_contract(
-        _state, publisher_registry_def, publisher_registry
+        _state, publisher_registry_def, contract_init["publisher_registry"]
     )
     oracle_controller = cached_contract(
-        _state, oracle_controller_def, oracle_controller
+        _state, oracle_controller_def, contract_init["oracle_controller"]
     )
     oracle_implementation = cached_contract(
-        _state, oracle_implementation_def, oracle_implementation
+        _state, oracle_implementation_def, contract_init["oracle_implementation"]
     )
     second_oracle_implementation = cached_contract(
-        _state, oracle_implementation_def, second_oracle_implementation
+        _state, oracle_implementation_def, contract_init["second_oracle_implementation"]
     )
-    return (
-        account_contract,
-        second_account_contract,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    )
+    return {
+        "starknet": contract_init["starknet"],
+        "admin_account": admin_account,
+        "second_admin_account": second_admin_account,
+        "publisher_account": publisher_account,
+        "additional_publisher_accounts": additional_publisher_accounts,
+        "publisher_registry": publisher_registry,
+        "oracle_controller": oracle_controller,
+        "oracle_implementation": oracle_implementation,
+        "second_oracle_implementation": second_oracle_implementation,
+    }
 
 
 @pytest_asyncio.fixture
 async def initialized_contracts(
     contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
 ):
-    (
-        account_contract,
-        second_account_contract,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    ) = contracts
-    _, publisher_public_key = private_and_public_publisher_keys
+    admin_account = contracts["admin_account"]
+    publisher_account = contracts["publisher_account"]
+    publisher_registry = contracts["publisher_registry"]
+    oracle_controller = contracts["oracle_controller"]
+    oracle_implementation = contracts["oracle_implementation"]
 
     # Register publisher
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [publisher_public_key, publisher],
+        [publisher, publisher_account.contract_address],
     )
 
     # Add oracle implementation address to controller
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
         [oracle_implementation.contract_address],
     )
 
-    return (
-        account_contract,
-        second_account_contract,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    )
+    return {
+        **contracts,
+        "starknet": contracts["starknet"],
+        "admin_account": admin_account,
+        "publisher_account": publisher_account,
+        "publisher_registry": publisher_registry,
+        "oracle_controller": oracle_controller,
+        "oracle_implementation": oracle_implementation,
+    }
 
 
 @pytest.mark.asyncio
@@ -199,8 +210,9 @@ async def test_deploy(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_decimals(initialized_contracts, signer):
-    account_contract, _, _, oracle_controller, _, _ = initialized_contracts
+async def test_decimals(initialized_contracts, admin_signer):
+    admin_account = initialized_contracts["admin_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
 
     result = await oracle_controller.get_decimals(str_to_felt("default")).invoke()
     assert result.result.decimals == DEFAULT_DECIMALS
@@ -208,8 +220,8 @@ async def test_decimals(initialized_contracts, signer):
     decimals = 100
     key = str_to_felt("test")
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "set_decimals",
         [key, decimals],
@@ -222,15 +234,11 @@ async def test_decimals(initialized_contracts, signer):
 
 
 @pytest.mark.asyncio
-async def test_oracle_implementation_addresses(initialized_contracts, signer):
-    (
-        account_contract,
-        _,
-        _,
-        oracle_controller,
-        oracle_implementation,
-        _,
-    ) = initialized_contracts
+async def test_oracle_implementation_addresses(initialized_contracts, admin_signer):
+    admin_account = initialized_contracts["admin_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+    oracle_implementation = initialized_contracts["oracle_implementation"]
+
     result = (
         await oracle_controller.get_active_oracle_implementation_addresses().invoke()
     )
@@ -247,8 +255,8 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
     # Add second oracle implementation address
     second_oracle_implementation_address = oracle_implementation.contract_address + 1
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
         [second_oracle_implementation_address],
@@ -264,8 +272,8 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
 
     # Ensure that setting first (primary) implementation address to inactive fails
     try:
-        await signer.send_transaction(
-            account_contract,
+        await admin_signer.send_transaction(
+            admin_account,
             oracle_controller.contract_address,
             "update_oracle_implementation_active_status",
             [oracle_implementation.contract_address, 0],
@@ -278,8 +286,8 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
         pass
 
     # Set second oracle implementation to inactive
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "update_oracle_implementation_active_status",
         [second_oracle_implementation_address, 0],
@@ -287,8 +295,8 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
 
     # Try setting second oracle implementation to primary and fail
     try:
-        await signer.send_transaction(
-            account_contract,
+        await admin_signer.send_transaction(
+            admin_account,
             oracle_controller.contract_address,
             "set_primary_oracle",
             [second_oracle_implementation_address],
@@ -301,16 +309,16 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
         pass
 
     # Set second oracle implementation back to active
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "update_oracle_implementation_active_status",
         [second_oracle_implementation_address, 1],
     )
 
     # Set second oracle implementation as primary
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "set_primary_oracle",
         [second_oracle_implementation_address],
@@ -328,42 +336,33 @@ async def test_oracle_implementation_addresses(initialized_contracts, signer):
 
 
 @pytest.mark.asyncio
-async def test_rotate_admin_address(initialized_contracts, signer):
-    (
-        account_contract,
-        second_account_contract,
-        _,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+async def test_rotate_admin_address(initialized_contracts, admin_signer):
+    admin_account = initialized_contracts["admin_account"]
+    second_admin_account = initialized_contracts["second_admin_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
 
     result = await oracle_controller.get_admin_address().invoke()
-    assert result.result.admin_address == account_contract.contract_address
+    assert result.result.admin_address == admin_account.contract_address
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "set_admin_address",
-        [second_account_contract.contract_address],
+        [second_admin_account.contract_address],
     )
 
     result = await oracle_controller.get_admin_address().invoke()
-    assert result.result.admin_address == second_account_contract.contract_address
+    assert result.result.admin_address == second_admin_account.contract_address
 
     return
 
 
 @pytest.mark.asyncio
-async def test_update_publisher_registry_address(initialized_contracts, signer):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+async def test_update_publisher_registry_address(initialized_contracts, admin_signer):
+    admin_account = initialized_contracts["admin_account"]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     result = await oracle_controller.get_publisher_registry_address().invoke()
     assert (
         result.result.publisher_registry_address == publisher_registry.contract_address
@@ -371,8 +370,8 @@ async def test_update_publisher_registry_address(initialized_contracts, signer):
 
     new_publisher_registry_address = publisher_registry.contract_address + 1
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "update_publisher_registry_address",
         [new_publisher_registry_address],
@@ -385,21 +384,23 @@ async def test_update_publisher_registry_address(initialized_contracts, signer):
 
 
 @pytest.mark.asyncio
-async def test_publish(
-    initialized_contracts, private_and_public_publisher_keys, publisher
-):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+async def test_publish(initialized_contracts, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
+    entry = construct_entry(
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=publisher,
     )
 
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
@@ -409,32 +410,35 @@ async def test_publish(
 
 
 @pytest.mark.asyncio
-async def test_republish(
-    initialized_contracts, private_and_public_publisher_keys, publisher
-):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
-    private_key, _ = private_and_public_publisher_keys
+async def test_republish(initialized_contracts, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("eth/usd")
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
 
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = entry = Entry(
+    second_entry = entry = construct_entry(
         key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
     )
 
-    signature_r, signature_s = sign_entry(second_entry, private_key)
-
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     result = await oracle_controller.get_value(
         second_entry.key, AGGREGATION_MODE
@@ -445,33 +449,36 @@ async def test_republish(
 
 
 @pytest.mark.asyncio
-async def test_republish_stale(
-    initialized_contracts, private_and_public_publisher_keys, publisher
-):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
-    private_key, _ = private_and_public_publisher_keys
+async def test_republish_stale(initialized_contracts, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("eth/usd")
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
     )
 
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
 
-    signature_r, signature_s = sign_entry(second_entry, private_key)
-
     try:
-        await oracle_controller.submit_entry(
-            second_entry, signature_r, signature_s
-        ).invoke()
+        await publisher_signer.send_transaction(
+            publisher_account,
+            oracle_controller.contract_address,
+            "submit_entry",
+            serialize_entry(second_entry),
+        )
 
         raise Exception(
             "Transaction to submit stale price succeeded, but should not have."
@@ -479,9 +486,12 @@ async def test_republish_stale(
     except StarkException:
         pass
 
-    await oracle_controller.submit_many_entries(
-        [second_entry], [signature_r], [signature_s]
-    ).invoke()  # should not fail and also not update state
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_many_entries",
+        serialize_entries([second_entry]),
+    )  # should not also not update state, but not error explicitly
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
@@ -490,37 +500,40 @@ async def test_republish_stale(
 
 
 @pytest.mark.asyncio
-async def test_publish_second_asset(
-    initialized_contracts, private_and_public_publisher_keys, publisher
-):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+async def test_publish_second_asset(initialized_contracts, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
+    entry = construct_entry(
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=publisher,
     )
 
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=str_to_felt("btc/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=publisher,
     )
 
-    signature_r, signature_s = sign_entry(second_entry, private_key)
-
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     result = await oracle_controller.get_value(
         second_entry.key, AGGREGATION_MODE
@@ -537,51 +550,49 @@ async def test_publish_second_asset(
 @pytest.mark.asyncio
 async def test_publish_second_publisher(
     initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
+    publisher_signer,
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("eth/usd")
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
-
-    second_publisher_private_key = get_random_private_key()
-    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     second_publisher = str_to_felt("bar")
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [second_publisher_public_key, second_publisher],
+        [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=second_publisher,
     )
 
-    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
-
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        second_publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
@@ -595,60 +606,43 @@ async def test_publish_second_publisher(
     return
 
 
-async def register_new_publisher_and_submit_entry(
-    account_contract, publisher_registry, oracle_controller, signer, publisher, entry
-):
-    publisher_private_key = get_random_private_key()
-    publisher_public_key = private_to_stark_key(publisher_private_key)
-
-    await signer.send_transaction(
-        account_contract,
-        publisher_registry.contract_address,
-        "register_publisher",
-        [publisher_public_key, publisher],
-    )
-
-    signature_r, signature_s = sign_entry(entry, publisher_private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
-
-    return
-
-
 @pytest.mark.asyncio
 async def test_median_aggregation(
     initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
+    publisher_signer,
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key,
         value=prices[0],
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=publisher,
     )
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     entries = [entry]
 
-    for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
+    for price, additional_publisher_str, publisher_account in zip(
+        prices[1:],
+        publishers[1:],
+        initialized_contracts["additional_publisher_accounts"],
+    ):
         additional_publisher = str_to_felt(additional_publisher_str)
-        additional_entry = Entry(
+        additional_entry = construct_entry(
             key=key,
             value=price,
             timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -656,10 +650,12 @@ async def test_median_aggregation(
         )
         entries.append(additional_entry)
         await register_new_publisher_and_submit_entry(
-            account_contract,
+            admin_account,
+            publisher_account,
             publisher_registry,
             oracle_controller,
-            signer,
+            admin_signer,
+            publisher_signer,
             additional_publisher,
             additional_entry,
         )
@@ -676,71 +672,36 @@ async def test_median_aggregation(
 
 
 @pytest.mark.asyncio
-async def test_submit_many(
-    initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
-    publisher,
-):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
-    key = str_to_felt("eth/usd")
-    prices = [1, 3, 10, 5, 12, 2]
-    publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
-    private_key, _ = private_and_public_publisher_keys
+async def test_submit_many(initialized_contracts, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
+    keys = [str_to_felt("eth/usd"), str_to_felt("btc/usd"), str_to_felt("doge/usd")]
+    prices = [1, 3, 10]
+    publisher = "foo"
     entries = [
-        Entry(
-            key=key,
-            value=prices[0],
+        construct_entry(
+            key=keys[i],
+            value=prices[i],
             timestamp=STARKNET_STARTING_TIMESTAMP,
             publisher=publisher,
         )
+        for i in range(len(keys))
     ]
-    signature_r, signature_s = sign_entry(entries[0], private_key)
-    signatures_r = [signature_r]
-    signatures_s = [signature_s]
 
-    for price, additional_publisher_str in zip(prices[1:], publishers[1:]):
-        additional_publisher = str_to_felt(additional_publisher_str)
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_many_entries",
+        serialize_entries(entries),
+    )
 
-        publisher_private_key = get_random_private_key()
-        publisher_public_key = private_to_stark_key(publisher_private_key)
+    for i, key in enumerate(keys):
+        result = await oracle_controller.get_entries(key).invoke()
+        assert result.result.entries == [entries[i]]
 
-        await signer.send_transaction(
-            account_contract,
-            publisher_registry.contract_address,
-            "register_publisher",
-            [publisher_public_key, additional_publisher],
-        )
-
-        additional_entry = Entry(
-            key=key,
-            value=price,
-            timestamp=STARKNET_STARTING_TIMESTAMP,
-            publisher=additional_publisher,
-        )
-        entries.append(additional_entry)
-        signature_r, signature_s = sign_entry(additional_entry, publisher_private_key)
-        signatures_r.append(signature_r)
-        signatures_s.append(signature_s)
-
-    await oracle_controller.submit_many_entries(
-        entries, signatures_r, signatures_s
-    ).invoke()
-
-    result = await oracle_controller.get_entries(key).invoke()
-    assert result.result.entries == entries
-
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
-    assert result.result.value == int(median(prices[: len(entries)]))
-
-    print(f"Succeeded batch updating for {len(entries)} entries")
+        result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+        assert result.result.value == prices[i]
 
     return
 
@@ -748,36 +709,34 @@ async def test_submit_many(
 @pytest.mark.asyncio
 async def test_subset_publishers(
     initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
+    admin_signer,
     publisher,
+    publisher_signer,
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("luna/usd")
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
-    signature_r, signature_s = sign_entry(entry, private_key)
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     additional_publisher = str_to_felt("bar")
 
-    publisher_private_key = get_random_private_key()
-    publisher_public_key = private_to_stark_key(publisher_private_key)
-
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [publisher_public_key, additional_publisher],
+        [additional_publisher, second_publisher_account.contract_address],
     )
 
     result = await oracle_controller.get_entries(key).invoke()
@@ -791,7 +750,7 @@ async def test_subset_publishers(
 
 @pytest.mark.asyncio
 async def test_unknown_key(initialized_contracts):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
+    oracle_controller = initialized_contracts["oracle_controller"]
 
     unknown_key = str_to_felt("answertolife")
     result = await oracle_controller.get_entries(unknown_key).invoke()
@@ -803,15 +762,16 @@ async def test_unknown_key(initialized_contracts):
 
 
 @pytest.mark.asyncio
-async def test_real_data(initialized_contracts, signer):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+async def test_real_data(
+    initialized_contracts,
+    admin_signer,
+    publisher_signer,
+    publisher,
+):
+    admin_account = initialized_contracts["admin_account"]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     entries = [
         construct_entry("eth/usd", 29898560234403, 1650590880, "coinmarketcap"),
         construct_entry("btc/usd", 404308601528970, 1650590880, "coinmarketcap"),
@@ -838,29 +798,19 @@ async def test_real_data(initialized_contracts, signer):
     ]
     publishers_str = ["coinmarketcap", "coingecko", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
-    publisher_keys = {}
-    for publisher in publishers:
-        publisher_private_key = get_random_private_key()
-        publisher_public_key = private_to_stark_key(publisher_private_key)
-
-        await signer.send_transaction(
-            account_contract,
-            publisher_registry.contract_address,
-            "register_publisher",
-            [publisher_public_key, publisher],
+    for i, publisher in enumerate(publishers):
+        publisher_entries = [e for e in entries if e.publisher == publisher]
+        publisher_account = initialized_contracts["additional_publisher_accounts"][i]
+        await register_new_publisher_and_submit_many_entries_1(
+            admin_account,
+            publisher_account,
+            publisher_registry,
+            oracle_controller,
+            admin_signer,
+            publisher_signer,
+            publisher,
+            publisher_entries,
         )
-
-        publisher_keys[publisher] = publisher_private_key
-
-    signatures = [
-        sign_entry(entry, publisher_keys[entry.publisher]) for entry in entries
-    ]
-    signatures_r = [s[0] for s in signatures]
-    signatures_s = [s[1] for s in signatures]
-
-    await oracle_controller.submit_many_entries(
-        entries, signatures_r, signatures_s
-    ).invoke()
 
     keys = [
         "eth/usd",
@@ -881,28 +831,26 @@ async def test_real_data(initialized_contracts, signer):
 
 @pytest.mark.asyncio
 async def test_multiple_oracle_implementations(
-    initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
-    publisher,
+    initialized_contracts, admin_signer, publisher, publisher_signer
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        second_oracle_implementation,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+    second_oracle_implementation = initialized_contracts["second_oracle_implementation"]
 
     # Submit entry
     key = str_to_felt("eth/usd")
-    publisher_private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
-    signature_r, signature_s = sign_entry(entry, publisher_private_key)
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     result = await oracle_controller.get_entries(key).invoke()
     assert result.result.entries == [entry]
@@ -911,8 +859,8 @@ async def test_multiple_oracle_implementations(
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to controller
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
         [second_oracle_implementation.contract_address],
@@ -920,26 +868,26 @@ async def test_multiple_oracle_implementations(
 
     # Submit second entry from second publisher
     second_publisher = str_to_felt("bar")
-    second_publisher_private_key = get_random_private_key()
-    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [second_publisher_public_key, second_publisher],
+        [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=second_publisher,
     )
-    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        second_publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     # Verify that we can get both entries from the first oracle implementation
     result = await oracle_controller.get_entries(key).invoke()
@@ -949,8 +897,8 @@ async def test_multiple_oracle_implementations(
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Verify that only the second entry is present in the second oracle implementation
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "set_primary_oracle",
         [second_oracle_implementation.contract_address],
@@ -975,23 +923,19 @@ async def test_multiple_oracle_implementations(
 
 @pytest.mark.asyncio
 async def test_rotate_primary_oracle_implementation_address(
-    initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
-    publisher,
+    initialized_contracts, admin_signer, publisher, publisher_signer
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        oracle_implementation,
-        second_oracle_implementation,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+    oracle_implementation = initialized_contracts["oracle_implementation"]
+    second_oracle_implementation = initialized_contracts["second_oracle_implementation"]
 
     # Add second oracle implementation address to controller
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
         [second_oracle_implementation.contract_address],
@@ -999,16 +943,19 @@ async def test_rotate_primary_oracle_implementation_address(
 
     # Submit entry
     key = str_to_felt("eth/usd")
-    publisher_private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
     )
-    signature_r, signature_s = sign_entry(entry, publisher_private_key)
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     # Update primary oracle and deactivate old primary oracle
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "set_primary_oracle",
         [second_oracle_implementation.contract_address],
@@ -1022,8 +969,8 @@ async def test_rotate_primary_oracle_implementation_address(
         == second_oracle_implementation.contract_address
     )
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "update_oracle_implementation_active_status",
         [oracle_implementation.contract_address, 0],
@@ -1048,26 +995,26 @@ async def test_rotate_primary_oracle_implementation_address(
 
     # Submit second entry from second publisher
     second_publisher = str_to_felt("bar")
-    second_publisher_private_key = get_random_private_key()
-    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [second_publisher_public_key, second_publisher],
+        [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=second_publisher,
     )
-    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        second_publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     result = await oracle_controller.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
@@ -1076,8 +1023,8 @@ async def test_rotate_primary_oracle_implementation_address(
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to controller
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         oracle_controller.contract_address,
         "add_oracle_implementation_address",
         [second_oracle_implementation.contract_address + 1],
@@ -1095,22 +1042,27 @@ async def test_rotate_primary_oracle_implementation_address(
 @pytest.mark.asyncio
 async def test_ignore_future_entry(
     initialized_contracts,
-    private_and_public_publisher_keys,
     publisher,
+    publisher_signer,
 ):
-    _, _, _, oracle_controller, _, _ = initialized_contracts
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
     key = str_to_felt("eth/usd")
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+
+    entry = construct_entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
         publisher=publisher,
     )
-    signature_r, signature_s = sign_entry(entry, private_key)
+
     try:
-        signature_r, signature_s = sign_entry(entry, private_key)
-        await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
+        await publisher_signer.send_transaction(
+            publisher_account,
+            oracle_controller.contract_address,
+            "submit_entry",
+            serialize_entry(entry),
+        )
 
         raise Exception(
             "Transaction to submit price too far in the future succeeded, but should not have."
@@ -1123,61 +1075,57 @@ async def test_ignore_future_entry(
 
 @pytest.mark.asyncio
 async def test_ignore_stale_entries(
-    initialized_contracts,
-    private_and_public_publisher_keys,
-    signer,
-    publisher,
+    initialized_contracts, admin_signer, publisher, publisher_signer
 ):
-    (
-        account_contract,
-        _,
-        publisher_registry,
-        oracle_controller,
-        _,
-        _,
-    ) = initialized_contracts
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
     key = str_to_felt("eth/usd")
-    private_key, _ = private_and_public_publisher_keys
-    entry = Entry(
+    entry = construct_entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         publisher=publisher,
     )
-    signature_r, signature_s = sign_entry(entry, private_key)
-
-    await oracle_controller.submit_entry(entry, signature_r, signature_s).invoke()
-
-    second_publisher_private_key = get_random_private_key()
-    second_publisher_public_key = private_to_stark_key(second_publisher_private_key)
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
 
     second_publisher = str_to_felt("bar")
 
-    await signer.send_transaction(
-        account_contract,
+    await admin_signer.send_transaction(
+        admin_account,
         publisher_registry.contract_address,
         "register_publisher",
-        [second_publisher_public_key, second_publisher],
+        [second_publisher, second_publisher_account.contract_address],
     )
 
-    account_contract.state.state.block_info = BlockInfo(
-        account_contract.state.state.block_info.block_number,
-        account_contract.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
-        account_contract.state.state.block_info.gas_price,
+    # Advance time by TIMESTAMP_BUFFER
+    admin_account.state.state.block_info = BlockInfo(
+        admin_account.state.state.block_info.block_number,
+        admin_account.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
+        admin_account.state.state.block_info.gas_price,
     )
 
-    second_entry = Entry(
+    second_entry = construct_entry(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
         publisher=second_publisher,
     )
 
-    signature_r, signature_s = sign_entry(second_entry, second_publisher_private_key)
-
-    await oracle_controller.submit_entry(
-        second_entry, signature_r, signature_s
-    ).invoke()
+    await publisher_signer.send_transaction(
+        second_publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
     assert result.result.value == second_entry.value

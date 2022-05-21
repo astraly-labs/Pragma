@@ -1,6 +1,6 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.library import (
@@ -37,9 +37,8 @@ end
 #
 
 @view
-func get_admin_address{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}() -> (admin_address : felt):
+func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+        admin_address : felt):
     let (admin_address) = Admin_get_admin_address()
     return (admin_address)
 end
@@ -163,35 +162,24 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 end
 
 @external
-func set_decimals{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(key : felt, decimals : felt):
+func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, decimals : felt):
     Admin_only_admin()
     OracleController_set_decimals(key, decimals)
     return ()
 end
 
 @external
-func submit_entry{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
-    OracleController_submit_entry(new_entry, signature_r, signature_s)
+func submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry):
+    OracleController_submit_entry(new_entry)
     return ()
 end
 
 @external
-func submit_many_entries{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt, signatures_r : felt*,
-        signatures_s_len : felt, signatures_s : felt*):
-    OracleController_submit_many_entries(
-        new_entries_len,
-        new_entries,
-        signatures_r_len,
-        signatures_r,
-        signatures_s_len,
-        signatures_s)
+func submit_many_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entries_len : felt, new_entries : Entry*):
+    OracleController_submit_many_entries(new_entries_len, new_entries)
 
     return ()
 end

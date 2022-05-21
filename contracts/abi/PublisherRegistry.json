@@ -40,10 +40,10 @@
                 "type": "felt"
             }
         ],
-        "name": "get_publisher_public_key",
+        "name": "get_publisher_address",
         "outputs": [
             {
-                "name": "publisher_public_key",
+                "name": "publisher_address",
                 "type": "felt"
             }
         ],
@@ -80,11 +80,11 @@
     {
         "inputs": [
             {
-                "name": "publisher_public_key",
+                "name": "publisher",
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "publisher_address",
                 "type": "felt"
             }
         ],
@@ -99,19 +99,11 @@
                 "type": "felt"
             },
             {
-                "name": "new_key",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
+                "name": "new_address",
                 "type": "felt"
             }
         ],
-        "name": "rotate_publisher_public_key",
+        "name": "update_publisher_address",
         "outputs": [],
         "type": "function"
     }

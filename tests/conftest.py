@@ -34,7 +34,14 @@ def private_and_public_admin_keys():
 
 
 @pytest.fixture(scope="module")
-def signer(private_and_public_admin_keys):
+def admin_signer(private_and_public_admin_keys):
     admin_private_key, _ = private_and_public_admin_keys
     signer = TestSigner(admin_private_key)
+    return signer
+
+
+@pytest.fixture(scope="module")
+def publisher_signer(private_and_public_publisher_keys):
+    publisher_private_key, _ = private_and_public_publisher_keys
+    signer = TestSigner(publisher_private_key)
     return signer

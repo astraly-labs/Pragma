@@ -1,6 +1,6 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
@@ -68,18 +68,16 @@ func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
 end
 
 @external
-func submit_entry{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry):
+func submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry):
     Oracle_submit_entry(new_entry, TRUE)
     return ()
 end
 
 # For when the caller wants to submit many and not fail if one of them fails
 @external
-func submit_entry_no_assert{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry):
+func submit_entry_no_assert{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry):
     Oracle_submit_entry(new_entry, FALSE)
     return ()
 end

@@ -1,13 +1,10 @@
+from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
 
-from pontis.core.const import (
-    NETWORK,
-    ORACLE_CONTROLLER_ADDRESS,
-)
-
 MAX_FEE = 0
+DEFAULT_N_RETRIES = 1
 
 
 class PontisClient:
@@ -24,7 +21,7 @@ class PontisClient:
         self.oracle_controller_contract = None
 
         self.max_fee = MAX_FEE if max_fee is None else max_fee
-        self.n_retries = n_retries
+        self.n_retries = DEFAULT_N_RETRIES if n_retries is None else n_retries
 
     async def fetch_oracle_controller_contract(self):
         if self.oracle_controller_contract is None:
@@ -43,9 +40,9 @@ class PontisClient:
                 "Key must be string (will be converted to felt) or integer"
             )
 
-        response = await self.oracle_controller_contract.functions["get_decimals"].call(
-            key,
-        )
+        response = await self.oracle_controller_contract.functions[
+            "get_decimals"
+        ].call()
 
         return response.decimals
 
@@ -60,10 +57,7 @@ class PontisClient:
             )
 
         response = await self.oracle_controller_contract.functions["get_value"].call(
-            key, aggregation_mode
+            key
         )
 
-        return {
-            "value": response.value,
-            "last_updated_timestamp": response.last_updated_timestamp,
-        }
+        return response.value, response.last_updated_timestamp

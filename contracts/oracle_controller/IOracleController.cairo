@@ -68,11 +68,10 @@ namespace IOracleController:
     func set_decimals(key : felt, decimals : felt):
     end
 
-    func submit_entry(new_entry : Entry, signature_r : felt, signature_s : felt):
+    func submit_entry(new_entry : Entry):
     end
 
     func submit_many_entries(
-            new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt,
-            signatures_r : felt*, signatures_s_len : felt, signatures_s : felt*):
+            new_entries_len : felt, new_entries : Entry*):
     end
 end

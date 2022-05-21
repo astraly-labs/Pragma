@@ -3,7 +3,7 @@ import os
 import re
 
 import requests
-from pontis.core.utils import construct_entry
+from pontis.core.entry import construct_entry
 
 
 def fetch_binance(assets):

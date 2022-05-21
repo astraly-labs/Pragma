@@ -2,11 +2,11 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.math import assert_not_equal
+from starkware.cairo.common.math import assert_not_equal, assert_not_zero
+from starkware.starknet.common.syscalls import get_caller_address
 
-from contracts.entry.library import Entry_assert_valid_entry_signature
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
 from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
@@ -239,7 +239,7 @@ func OracleController_get_decimals{
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message("Primary oracle implementation address must be set first"):
-        assert_not_equal(primary_oracle_implementation_address, 0)
+        assert_not_zero(primary_oracle_implementation_address)
     end
 
     let (decimals) = IOracleImplementation.get_decimals(primary_oracle_implementation_address, key)
@@ -255,7 +255,7 @@ func OracleController_get_entries{
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message("Primary oracle implementation address must be set first"):
-        assert_not_equal(primary_oracle_implementation_address, 0)
+        assert_not_zero(primary_oracle_implementation_address)
     end
 
     let (publisher_registry_address) = OracleController_get_publisher_registry_address()
@@ -319,22 +319,25 @@ func _OracleController_set_decimals{
 end
 
 func OracleController_submit_entry{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(new_entry : Entry, signature_r : felt, signature_s : felt):
-    _OracleController_submit_entry(new_entry, signature_r, signature_s, TRUE)
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(new_entry : Entry):
+    _OracleController_submit_entry(new_entry, TRUE)
     return ()
 end
 
 func _OracleController_submit_entry{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        new_entry : Entry, signature_r : felt, signature_s : felt, should_assert : felt):
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry, should_assert : felt):
     alloc_locals
 
     let (publisher_registry_address) = OracleController_get_publisher_registry_address()
-    let (publisher_public_key) = IPublisherRegistry.get_publisher_public_key(
+    let (publisher_address) = IPublisherRegistry.get_publisher_address(
         publisher_registry_address, new_entry.publisher)
-    Entry_assert_valid_entry_signature(new_entry, publisher_public_key, signature_r, signature_s)
+    let (caller_address) = get_caller_address()
+
+    with_attr error_message("OracleController: Transaction not from publisher account"):
+        assert caller_address = publisher_address
+    end
+
     let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
     if total_oracle_addresses_len == 0:
         return ()
@@ -372,30 +375,14 @@ func _OracleController_submit_entry_for_oracle_addresses{
 end
 
 func OracleController_submit_many_entries{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
-        range_check_ptr}(
-        new_entries_len : felt, new_entries : Entry*, signatures_r_len : felt, signatures_r : felt*,
-        signatures_s_len : felt, signatures_s : felt*):
-    alloc_locals
-
-    with_attr error_message(
-            "Array of entries, signatures_r and signatures_s must all have the same length."):
-        assert new_entries_len = signatures_r_len
-        assert signatures_r_len = signatures_s_len
-    end
-
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entries_len : felt, new_entries : Entry*):
     if new_entries_len == 0:
         return ()
     end
 
-    _OracleController_submit_entry([new_entries], [signatures_r], [signatures_s], FALSE)
-    OracleController_submit_many_entries(
-        new_entries_len - 1,
-        new_entries + Entry.SIZE,
-        signatures_r_len - 1,
-        signatures_r + 1,
-        signatures_s_len - 1,
-        signatures_s + 1)
+    _OracleController_submit_entry([new_entries], FALSE)
+    OracleController_submit_many_entries(new_entries_len - 1, new_entries + Entry.SIZE)
 
     return ()
 end

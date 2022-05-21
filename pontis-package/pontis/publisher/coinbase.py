@@ -5,7 +5,8 @@ import os
 from hashlib import sha256
 
 import requests
-from pontis.core.utils import construct_entry, currency_pair_to_key
+from pontis.core.entry import construct_entry
+from pontis.core.utils import currency_pair_to_key
 
 
 def fetch_coinbase(assets):
@@ -55,6 +56,8 @@ def fetch_coinbase(assets):
         }
 
         response = requests.request(METHOD, URL + REQUEST_PATH, headers=headers)
+
+        breakpoint()
 
         response.raise_for_status()
         result = response.json()

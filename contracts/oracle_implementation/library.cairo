@@ -1,6 +1,6 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
@@ -115,7 +115,7 @@ func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 end
 
 func Oracle_submit_entry{
-        syscall_ptr : felt*, ecdsa_ptr : SignatureBuiltin*, pedersen_ptr : HashBuiltin*,
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
         range_check_ptr}(new_entry : Entry, should_assert : felt):
     alloc_locals
 

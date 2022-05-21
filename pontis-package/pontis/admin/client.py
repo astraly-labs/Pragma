@@ -1,91 +1,51 @@
-from nile.signer import Signer
-from pontis.core.const import (
-    ADMIN_ADDRESS,
-    NETWORK,
-    ORACLE_CONTROLLER_ADDRESS,
-    PUBLISHER_REGISTRY_ADDRESS,
-)
+from pontis.core.base_client import PontisBaseClient
+from pontis.core.const import ADMIN_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
 from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
 
 MAX_FEE = 0
+ADMIN_DEFAULT_N_RETRIES = 1
 
 
-class PontisAdminClient:
+class PontisAdminClient(PontisBaseClient):
     def __init__(
         self,
         admin_private_key,
-        network=None,
         admin_address=None,
+        network=None,
         oracle_controller_address=None,
         publisher_registry_address=None,
         max_fee=None,
     ):
-        if network is None:
-            network = NETWORK
         if admin_address is None:
             admin_address = ADMIN_ADDRESS
-        if oracle_controller_address is None:
-            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
         if publisher_registry_address is None:
             publisher_registry_address = PUBLISHER_REGISTRY_ADDRESS
 
-        assert type(admin_private_key) == int, "Admin private key must be integer"
-        self.admin_private_key = admin_private_key
-        self.signer = Signer(self.admin_private_key)
-
-        self.network = network
-
-        self.admin_address = admin_address
-        self.admin_contract = None
-        self.oracle_controller_address = oracle_controller_address
-        self.oracle_controller_contract = None
         self.publisher_registry_address = publisher_registry_address
         self.publisher_registry_contract = None
 
-        self.max_fee = MAX_FEE if max_fee is None else max_fee
+        n_retries = ADMIN_DEFAULT_N_RETRIES
+        super().__init__(
+            admin_private_key,
+            admin_address,
+            network,
+            oracle_controller_address,
+            max_fee,
+            n_retries,
+        )
 
-    async def fetch_contracts(self):
-        if self.admin_contract is None:
-            self.admin_contract = await Contract.from_address(
-                self.admin_address, Client(self.network)
-            )
-
-        if self.oracle_controller_contract is None:
-            self.oracle_controller_contract = await Contract.from_address(
-                self.oracle_controller_address, Client(self.network)
-            )
+    async def _fetch_contracts(self):
+        self._fetch_base_contracts()
 
         if self.publisher_registry_contract is None:
             self.publisher_registry_contract = await Contract.from_address(
                 self.publisher_registry_address, Client(self.network)
             )
 
-    async def send_transaction(self, to, selector_name, calldata):
-        return await self.send_transactions([(to, selector_name, calldata)])
-
-    async def send_transactions(self, calls):
-        await self.fetch_contracts()
-
-        execution_info = await self.admin_contract.get_nonce().call()
-        (nonce,) = execution_info.result
-
-        build_calls = []
-        for call in calls:
-            build_call = list(call)
-            build_call[0] = hex(build_call[0])
-            build_calls.append(build_call)
-
-        (call_array, calldata, sig_r, sig_s) = self.signer.sign_transaction(
-            hex(self.admin_contract.contract_address), build_calls, nonce, self.max_fee
-        )
-        return await self.admin_contract.__execute__(
-            call_array, calldata, nonce
-        ).invoke(signature=[sig_r, sig_s])
-
     async def get_primary_oracle_implementation_address(self):
-        await self.fetch_contracts()
+        await self._fetch_contracts()
 
         result = await self.oracle_controller_contract.functions[
             "get_primary_oracle_implementation_address"
@@ -93,18 +53,16 @@ class PontisAdminClient:
 
         return result.primary_oracle_implementation_address
 
-    async def get_publisher_public_key(self, publisher):
-        await self.fetch_contracts()
+    async def get_publisher_address(self, publisher):
+        await self._fetch_contracts()
 
         result = await self.publisher_registry_contract.functions[
-            "get_publisher_public_key"
+            "get_publisher_address"
         ].call(publisher)
 
-        return result.publisher_public_key
+        return result.publisher_address
 
-    async def register_publisher_if_not_registered(
-        self, publisher_public_key, publisher
-    ):
+    async def register_publisher_if_not_registered(self, publisher, publisher_address):
         if type(publisher) == str:
             publisher = str_to_felt(publisher)
         elif type(publisher) == int:
@@ -114,19 +72,19 @@ class PontisAdminClient:
                 "Publisher ID must be string (will be converted to felt) or integer"
             )
 
-        existing_publisher_public_key = self.get_publisher_public_key(publisher)
+        existing_publisher_address = self.get_publisher_address(publisher)
 
-        if existing_publisher_public_key == 0:
+        if existing_publisher_address == 0:
             result = await self.send_transaction(
                 self.publisher_registry_contract.contract_address,
                 "register_publisher",
-                [publisher_public_key, publisher],
+                [publisher, publisher_address],
             )
             print(f"Registered publisher with transaction {result}")
 
         else:
             print(
-                f"Skipping registering {publisher}; already registered with key {existing_publisher_public_key}"
+                f"Skipping registering {publisher}; already registered with address {existing_publisher_address}"
             )
 
         return result
