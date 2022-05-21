@@ -152,16 +152,5 @@
         "name": "submit_entry",
         "outputs": [],
         "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "new_entry",
-                "type": "Entry"
-            }
-        ],
-        "name": "submit_entry_no_assert",
-        "outputs": [],
-        "type": "function"
     }
 ]

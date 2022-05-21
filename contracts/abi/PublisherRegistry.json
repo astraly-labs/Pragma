@@ -2,6 +2,44 @@
     {
         "data": [
             {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "RegisteredPublisher",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "old_publisher_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_publisher_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedPublisherAddress",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
+            {
                 "name": "new_admin_address",
                 "type": "felt"
             }

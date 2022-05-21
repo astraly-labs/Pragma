@@ -2,23 +2,6 @@
     {
         "members": [
             {
-                "name": "was_registered",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "offset": 1,
-                "type": "felt"
-            }
-        ],
-        "name": "OracleController_OracleImplementationStatus",
-        "size": 2,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "key",
                 "offset": 0,
                 "type": "felt"
@@ -44,7 +27,99 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "was_registered",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "OracleController_OracleImplementationStatus",
+        "size": 2,
+        "type": "struct"
+    },
+    {
         "data": [
+            {
+                "name": "old_publisher_registry_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedPublisherRegistryAddress",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AddedOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "old_is_active",
+                "type": "felt"
+            },
+            {
+                "name": "new_is_active",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "old_primary_oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_primary_oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedPrimaryOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
             {
                 "name": "new_admin_address",
                 "type": "felt"
@@ -210,7 +285,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_primary_oracle",
+        "name": "set_primary_oracle_implementation_address",
         "outputs": [],
         "type": "function"
     },
