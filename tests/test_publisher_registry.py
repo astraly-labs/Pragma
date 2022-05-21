@@ -4,7 +4,7 @@ from pontis.core.utils import str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from utils import cached_contract, construct_path
+from utils import assert_event_emitted, cached_contract, construct_path
 
 CONTRACT_FILE = construct_path("contracts/publisher_registry/PublisherRegistry.cairo")
 ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
@@ -96,10 +96,16 @@ async def registered_contracts(
     publisher_account = contracts["publisher_account"]
     publisher_registry = contracts["publisher_registry"]
 
-    await admin_signer.send_transaction(
+    tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
         "register_publisher",
+        [publisher, publisher_account.contract_address],
+    )
+    assert_event_emitted(
+        tx_exec_info,
+        publisher_registry.contract_address,
+        "RegisteredPublisher",
         [publisher, publisher_account.contract_address],
     )
 
@@ -167,11 +173,22 @@ async def test_update_publisher_address(
     result = await publisher_registry.get_publisher_address(publisher).invoke()
     assert result.result.publisher_address == publisher_account.contract_address
 
-    await publisher_signer.send_transaction(
+    tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         publisher_registry.contract_address,
         "update_publisher_address",
         [publisher, second_publisher_account.contract_address],
+    )
+
+    assert_event_emitted(
+        tx_exec_info,
+        publisher_registry.contract_address,
+        "UpdatedPublisherAddress",
+        [
+            publisher,
+            publisher_account.contract_address,
+            second_publisher_account.contract_address,
+        ],
     )
 
     result = await publisher_registry.get_publisher_address(publisher).invoke()
