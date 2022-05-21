@@ -24,6 +24,19 @@ func Publisher_publishers_storage(idx : felt) -> (publisher : felt):
 end
 
 #
+# Events
+#
+
+@event
+func RegisteredPublisher(publisher : felt, publisher_address : felt):
+end
+
+@event
+func UpdatedPublisherAddress(
+        publisher : felt, old_publisher_address : felt, new_publisher_address : felt):
+end
+
+#
 # Getters
 #
 
@@ -84,6 +97,8 @@ func Publisher_update_publisher_address{
     end
 
     Publisher_publisher_address_storage.write(publisher, new_publisher_address)
+
+    UpdatedPublisherAddress.emit(publisher, existing_publisher_address, new_publisher_address)
     return ()
 end
 
@@ -98,6 +113,8 @@ func Publisher_add_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, r
     Publisher_publishers_len_storage.write(publishers_len + 1)
     Publisher_publishers_storage.write(publishers_len, publisher)  # 0-indexed, so write at old_len (not new_len=len+1)
     Publisher_publisher_address_storage.write(publisher, publisher_address)
+
+    RegisteredPublisher.emit(publisher, publisher_address)
     return ()
 end
 
