@@ -21,6 +21,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           By being zk-first from the ground up, Pontis offers unique features and improvements over existing solutions."
         ></meta>
         <link rel="canonical" href="https://www.pontisoracle.xyz" />
+        <link rel="icon" type="image/ico" href="/favicon.ico" />
       </Head>
       <StarknetProvider autoConnect connectors={connectors}>
         <div className="bg-fuchsia-800 bg-gradient-to-tr from-indigo-900 min-h-screen flex flex-col justify-start text-slate-200">
