@@ -4,14 +4,18 @@ import os
 import requests
 from pontis.core.client import PontisClient
 from pontis.core.utils import currency_pair_to_key, pprint_entry
-from pontis.publisher.binance import fetch_binance
 from pontis.publisher.client import PontisPublisherClient
-from pontis.publisher.coinapi import fetch_coinapi
-from pontis.publisher.coinbase import fetch_coinbase
-from pontis.publisher.coingecko import fetch_coingecko
-from pontis.publisher.coinmarketcap import fetch_coinmarketcap
-from pontis.publisher.ftx import fetch_ftx
-from pontis.publisher.gemini import fetch_gemini
+from pontis.publisher.fetch import (
+    fetch_binance,
+    fetch_bitstamp,
+    fetch_cex,
+    fetch_coinapi,
+    fetch_coinbase,
+    fetch_coingecko,
+    fetch_coinmarketcap,
+    fetch_ftx,
+    fetch_gemini,
+)
 
 
 async def publish_all(assets):
@@ -65,6 +69,18 @@ async def publish_all(assets):
         entries.extend(ftx_entries)
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
+
+    try:
+        cex_entries = fetch_cex(assets)
+        entries.extend(cex_entries)
+    except Exception as e:
+        print(f"Error fetching CEX price: {e}")
+
+    try:
+        bitstamp_entries = fetch_bitstamp(assets)
+        entries.extend(bitstamp_entries)
+    except Exception as e:
+        print(f"Error fetching Bitstamp price: {e}")
 
     print("Publishing the following entries:")
     for entry in entries:
