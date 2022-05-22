@@ -67,8 +67,7 @@ starknet-compile --account_contract contracts/account/Account.cairo --abi contra
 starknet deploy --contract account_compiled.json --inputs <PUBLIC_ADMIN_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
 starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
-starknet-compile contracts/oracle_controller/OracleController.cairo --abi contracts/abi/OracleController.json --output oracle_controller_compiled.json
-starknet-compile contracts/oracle_controller/OracleController.cairo --abi pontis-ui/src/abi/OracleController.json --output oracle_controller_compiled.json
+starknet-compile contracts/oracle_controller/OracleController.cairo --abi contracts/abi/OracleController.json --output oracle_controller_compiled.json && cp contracts/abi/OracleController.json pontis-ui/src/abi/OracleController.json
 starknet deploy --contract oracle_controller_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS>
 starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --abi contracts/abi/OracleImplementation.json --output oracle_implementation_compiled.json
 starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_CONTROLLER_ADDRESS>
