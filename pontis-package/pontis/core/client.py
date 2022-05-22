@@ -40,9 +40,9 @@ class PontisClient:
                 "Key must be string (will be converted to felt) or integer"
             )
 
-        response = await self.oracle_controller_contract.functions[
-            "get_decimals"
-        ].call()
+        response = await self.oracle_controller_contract.functions["get_decimals"].call(
+            key
+        )
 
         return response.decimals
 

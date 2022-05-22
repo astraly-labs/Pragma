@@ -64,8 +64,6 @@ class PontisBaseClient(ABC):
         return await self.send_transactions([(to_contract, selector_name, calldata)])
 
     async def send_transactions(self, calls):
-        await self._fetch_contracts()
-
         nonce = await self.get_nonce()
 
         call_array = []

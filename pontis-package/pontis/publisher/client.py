@@ -1,4 +1,5 @@
 from pontis.core.base_client import PontisBaseClient
+from pontis.core.entry import serialize_entries, serialize_entry
 
 MAX_FEE = 0
 DEFAULT_N_RETRIES = 3
@@ -26,25 +27,21 @@ class PontisPublisherClient(PontisBaseClient):
         )
 
     async def _fetch_contracts(self):
-        self._fetch_base_contracts()
+        await self._fetch_base_contracts()
 
     async def publish(self, entry):
-        await self._fetch_contracts()
-
         result = await self.send_transaction(
-            self.oracle_controller_address, "submit_entry", [entry._asdict()]
+            self.oracle_controller_address, "submit_entry", serialize_entry(entry)
         )
         print(f"Updated entry with transaction {result}")
 
         return result
 
     async def publish_many(self, entries):
-        await self._fetch_contracts()
-
         result = await self.send_transaction(
             self.oracle_controller_address,
             "submit_many_entries",
-            [entry._asdict() for entry in entries],
+            serialize_entries(entries),
         )
 
         print(
