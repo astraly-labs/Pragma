@@ -182,6 +182,5 @@ end
 func submit_many_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         new_entries_len : felt, new_entries : Entry*):
     OracleController_submit_many_entries(new_entries_len, new_entries)
-
     return ()
 end

@@ -194,14 +194,16 @@ func OracleController_update_oracle_implementation_active_status{
 
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
         oracle_implementation_address)
-    with_attr error_message("OracleController: Oracle implementation with this address has not been registered yet"):
+    with_attr error_message(
+            "OracleController: Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
     end
 
     let (
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
-    with_attr error_message("OracleController: Cannot update is_active for pimary oracle implementation address"):
+    with_attr error_message(
+            "OracleController: Cannot update is_active for pimary oracle implementation address"):
         assert_not_equal(oracle_implementation_address, primary_oracle_implementation_address)
     end
 
@@ -225,11 +227,13 @@ func OracleController_set_primary_oracle_implementation_address{
         )
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
         primary_oracle_implementation_address)
-    with_attr error_message("OracleController: Oracle implementation with this address has not been registered yet"):
+    with_attr error_message(
+            "OracleController: Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
     end
 
-    with_attr error_message("OracleController: Cannot set inactive address as primary implementation address"):
+    with_attr error_message(
+            "OracleController: Cannot set inactive address as primary implementation address"):
         assert oracle_implementation_status.is_active = TRUE
     end
 
@@ -281,7 +285,8 @@ func OracleController_get_decimals{
     let (
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
-    with_attr error_message("OracleController: Primary oracle implementation address must be set first"):
+    with_attr error_message(
+            "OracleController: Primary oracle implementation address must be set first"):
         assert_not_zero(primary_oracle_implementation_address)
     end
 
@@ -297,7 +302,8 @@ func OracleController_get_entries{
     let (
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
-    with_attr error_message("OracleController: Primary oracle implementation address must be set first"):
+    with_attr error_message(
+            "OracleController: Primary oracle implementation address must be set first"):
         assert_not_zero(primary_oracle_implementation_address)
     end
 
