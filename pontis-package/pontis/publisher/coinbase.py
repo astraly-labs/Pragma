@@ -57,8 +57,6 @@ def fetch_coinbase(assets):
 
         response = requests.request(METHOD, URL + REQUEST_PATH, headers=headers)
 
-        breakpoint()
-
         response.raise_for_status()
         result = response.json()
         if pair[0] in result["prices"]:
