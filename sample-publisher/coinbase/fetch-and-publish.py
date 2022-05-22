@@ -27,8 +27,7 @@ async def main():
     entries = fetch_coinbase(assets)
 
     publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
-    for entry in entries:
-        await publisher_client.publish(entry)
+    await publisher_client.publish_many(entries)
 
 
 if __name__ == "__main__":
