@@ -74,14 +74,7 @@ starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --ab
 starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_CONTROLLER_ADDRESS>
 ```
 
-Finally, you must add the Oracle Implementation to the Controller. You can use the `add_oracle_implementation` method of the `PontisAdminClient` class in `pontis.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you could run:
-```
-import os
-from pontis.admin.client import PontisAdminClient
-admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
-admin_client = PontisAdminClient(admin_private_key)
-await admin_client.add_oracle_implementation(<ORACLE_IMPLEMENTATION_ADDRESS>)
-```
+Finally, you must add the Oracle Implementation to the Controller. You can use the `add_oracle_implementation` method of the `PontisAdminClient` class in `pontis.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you would run the `add_oracle_implementation.py` script in sample-publisher/utils. After replacing the Publisher Registry, run the `register_all_publishers.py` in the same location.
 
 # Release Flow
 
