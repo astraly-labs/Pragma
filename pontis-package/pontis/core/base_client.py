@@ -37,6 +37,7 @@ class PontisBaseClient(ABC):
         self.client = Client(self.network, n_retries=n_retries)
 
         self.max_fee = MAX_FEE if max_fee is None else max_fee
+        self.nonce = None
 
     @abstractmethod
     async def _fetch_contracts(self):
@@ -46,7 +47,13 @@ class PontisBaseClient(ABC):
         await self._fetch_contracts()
 
         result = await self.account_contract.functions["get_nonce"].call()
-        return result.res
+        nonce = result.res
+        # If we have sent of tx recently, use that nonce because state won't have been updated yet
+        if self.nonce is not None and self.nonce >= nonce:
+            nonce = self.nonce + 1
+
+        self.nonce = nonce
+        return nonce
 
     async def _fetch_base_contracts(self):
         if self.oracle_controller_contract is None:
