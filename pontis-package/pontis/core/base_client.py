@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract

@@ -1,8 +1,8 @@
 from pontis.core.base_client import PontisBaseClient
 from pontis.core.const import (
     ADMIN_ADDRESS,
-    PUBLISHER_REGISTRY_ADDRESS,
     ORACLE_CONTROLLER_ADDRESS,
+    PUBLISHER_REGISTRY_ADDRESS,
 )
 from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
