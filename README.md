@@ -17,9 +17,9 @@ The Pontis Oracle consists of three smart contracts. The first is the Publisher 
 On testnet, the contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
-| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540) | 0x049cf736d769e7499b0d3aa91c0eabf93892162dd2cb0c1b37efbaa044f77540 |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1) | 0x07cca0f75c4946683f902fda6acd2110926f1ddebdcd4a7506c004e8f7ed21b1 |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb) | 0x011de0577c45b5bd28d12dfb7eec634b030ac8a754c28ac62136fe74e25742fb |
+| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x067021A236DDCEC7E4F4358A5CEA4C92372EA95997B440B0AB23BD315349BE8D) | 0x067021A236DDCEC7E4F4358A5CEA4C92372EA95997B440B0AB23BD315349BE8D |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x02C406E2FB950D8C7F6B8850A3E1E73ECF1A8E8BCD3D6D8C11FDF33A7B7D9CBA) | 0x02C406E2FB950D8C7F6B8850A3E1E73ECF1A8E8BCD3D6D8C11FDF33A7B7D9CBA |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x01ed71f163133e941409d8a74244bb2d8d7eeac63eed99de654db72a83b46872) | 0x01ed71f163133e941409d8a74244bb2d8d7eeac63eed99de654db72a83b46872 |
 
 ## Setup
 
@@ -44,7 +44,7 @@ starknet call --address <ORACLE_CONTROLLER_ADDRESS> --abi contracts/abi/OracleCo
 
 ## Publishing Data to a Feed in a Deployed Contract
 
-The recommended way to publish data is to use the `pontis-publisher` Docker image which has the Oracle Controller's address baked in via the `ORACLE_CONTROLLER_ADDRESS` environmental variable, and the `PontisPublisherClient` available. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
+The recommended way to publish data is to use the `pontis-publisher` Docker image which has the Pontis SDK baked in, which includes the most up to date contract addresses and the `PontisPublisherClient`. You just need to create a Python script that fetches the data and then publishes it via the `PontisPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
 
 ```
 docker build sample-publisher/coinbase/ -t coinbase
@@ -59,12 +59,13 @@ To run tests, simply run `pytest .` from the project root.
 
 To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the Oracle Controller (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
 
-Then run the following commands, replacing `<PUBLIC_ADMIN_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_CONTROLLER_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
+Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_CONTROLLER_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
 
 ```
 export STARKNET_NETWORK=alpha-goerli
 starknet-compile --account_contract contracts/account/Account.cairo --abi contracts/abi/Account.json --output account_compiled.json
-starknet deploy --contract account_compiled.json --inputs <PUBLIC_ADMIN_KEY>
+starknet deploy --contract account_compiled.json --inputs <ADMIN_PUBLIC_KEY>
+starknet deploy --contract account_compiled.json --inputs <PUBLISHER_PUBLIC_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
 starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
 starknet-compile contracts/oracle_controller/OracleController.cairo --abi contracts/abi/OracleController.json --output oracle_controller_compiled.json && cp contracts/abi/OracleController.json pontis-ui/src/abi/OracleController.json

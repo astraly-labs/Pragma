@@ -1,5 +1,9 @@
 from pontis.core.base_client import PontisBaseClient
-from pontis.core.const import ADMIN_ADDRESS, PUBLISHER_REGISTRY_ADDRESS
+from pontis.core.const import (
+    ADMIN_ADDRESS,
+    PUBLISHER_REGISTRY_ADDRESS,
+    ORACLE_CONTROLLER_ADDRESS,
+)
 from pontis.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
@@ -37,7 +41,7 @@ class PontisAdminClient(PontisBaseClient):
         )
 
     async def _fetch_contracts(self):
-        self._fetch_base_contracts()
+        await self._fetch_base_contracts()
 
         if self.publisher_registry_contract is None:
             self.publisher_registry_contract = await Contract.from_address(
@@ -72,11 +76,11 @@ class PontisAdminClient(PontisBaseClient):
                 "Publisher ID must be string (will be converted to felt) or integer"
             )
 
-        existing_publisher_address = self.get_publisher_address(publisher)
+        existing_publisher_address = await self.get_publisher_address(publisher)
 
         if existing_publisher_address == 0:
             result = await self.send_transaction(
-                self.publisher_registry_contract.contract_address,
+                PUBLISHER_REGISTRY_ADDRESS,
                 "register_publisher",
                 [publisher, publisher_address],
             )
@@ -91,7 +95,7 @@ class PontisAdminClient(PontisBaseClient):
 
     async def add_oracle_implementation(self, oracle_implementation_address):
         result = await self.send_transaction(
-            self.publisher_registry_contract.contract_address,
+            ORACLE_CONTROLLER_ADDRESS,
             "add_oracle_implementation_address",
             [oracle_implementation_address],
         )
@@ -104,7 +108,7 @@ class PontisAdminClient(PontisBaseClient):
         self, primary_oracle_implementation_address
     ):
         result = await self.send_transaction(
-            self.publisher_registry_contract.contract_address,
+            ORACLE_CONTROLLER_ADDRESS,
             "set_primary_oracle_implementation_address",
             [primary_oracle_implementation_address],
         )
@@ -117,7 +121,7 @@ class PontisAdminClient(PontisBaseClient):
         self, oracle_implementation_address, is_active
     ):
         result = await self.send_transaction(
-            self.publisher_registry_contract.contract_address,
+            ORACLE_CONTROLLER_ADDRESS,
             "update_oracle_implementation_active_status",
             [oracle_implementation_address, is_active],
         )
@@ -128,7 +132,7 @@ class PontisAdminClient(PontisBaseClient):
 
     async def update_publisher_registry_address(self, new_publisher_registry_address):
         result = await self.send_transaction(
-            self.publisher_registry_contract.contract_address,
+            ORACLE_CONTROLLER_ADDRESS,
             "update_publisher_registry_address",
             [new_publisher_registry_address],
         )

@@ -1,12 +1,15 @@
+from abc import ABC, abstractmethod
 from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
 from starknet_py.net import Client
+from starkware.crypto.signature.signature import sign
+from starkware.starknet.public.abi import get_selector_from_name
 
 MAX_FEE = 0
 
 
-class PontisBaseClient:
+class PontisBaseClient(ABC):
     def __init__(
         self,
         account_private_key,
@@ -28,45 +31,64 @@ class PontisBaseClient:
         self.account_contract = None
 
         assert type(account_private_key) == int, "Account private key must be integer"
-        self.admin_private_key = account_private_key
-        self.signer = Signer(self.admin_private_key)
+        self.account_private_key = account_private_key
+        self.signer = Signer(self.account_private_key)
+
+        self.client = Client(self.network, n_retries=n_retries)
 
         self.max_fee = MAX_FEE if max_fee is None else max_fee
-        self.n_retries = n_retries
+
+    @abstractmethod
+    async def _fetch_contracts(self):
+        pass
+
+    async def get_nonce(self):
+        await self._fetch_contracts()
+
+        result = await self.account_contract.functions["get_nonce"].call()
+        return result.res
 
     async def _fetch_base_contracts(self):
         if self.oracle_controller_contract is None:
             self.oracle_controller_contract = await Contract.from_address(
                 self.oracle_controller_address,
-                Client(self.network, n_retries=self.n_retries),
+                self.client,
             )
 
         if self.account_contract is None:
             self.account_contract = await Contract.from_address(
-                self.account_contract_address, Client(self.network)
+                self.account_contract_address, self.client
             )
 
-    async def send_transaction(self, to, selector_name, calldata):
-        return await self.send_transactions([(to, selector_name, calldata)])
+    async def send_transaction(self, to_contract, selector_name, calldata):
+        return await self.send_transactions([(to_contract, selector_name, calldata)])
 
     async def send_transactions(self, calls):
         await self._fetch_contracts()
 
-        execution_info = await self.account_contract.get_nonce().call()
-        (nonce,) = execution_info.result
+        nonce = await self.get_nonce()
 
-        build_calls = []
-        for call in calls:
-            build_call = list(call)
-            build_call[0] = hex(build_call[0])
-            build_calls.append(build_call)
+        call_array = []
+        offset = 0
+        for i in range(len(calls)):
+            call_array.append(
+                {
+                    "to": calls[i][0],
+                    "selector": get_selector_from_name(calls[i][1]),
+                    "data_offset": offset,
+                    "data_len": len(calls[i][2]),
+                }
+            )
+            offset += len(calls[i][2])
 
-        (call_array, calldata, sig_r, sig_s) = self.signer.sign_transaction(
-            hex(self.account_contract.contract_address),
-            build_calls,
-            nonce,
-            self.max_fee,
+        calldata = [x for call in calls for x in call[2]]
+        prepared = self.account_contract.functions["__execute__"].prepare(
+            call_array=call_array,
+            calldata=calldata,
+            nonce=nonce,
+            max_fee=self.max_fee,
         )
-        return await self.account_contract.__execute__(
-            call_array, calldata, nonce
-        ).invoke(signature=[sig_r, sig_s])
+        signature = sign(prepared.hash, self.account_private_key)
+        invocation = await prepared.invoke(signature, max_fee=self.max_fee)
+
+        return invocation

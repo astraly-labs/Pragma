@@ -9,6 +9,3 @@ RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
 
 COPY pontis-package /pontis-package
 RUN pip install -e pontis-package
-
-# sets constants as environmental variables
-RUN python -c "import pontis.core.const"
