@@ -86,12 +86,14 @@ class PontisAdminClient(PontisBaseClient):
             )
             print(f"Registered publisher with transaction {result}")
 
+            return result
+
         else:
             print(
                 f"Skipping registering {publisher}; already registered with address {existing_publisher_address}"
             )
 
-        return result
+        return
 
     async def add_oracle_implementation(self, oracle_implementation_address):
         result = await self.send_transaction(

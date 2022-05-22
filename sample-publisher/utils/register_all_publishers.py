@@ -4,13 +4,15 @@ import os
 from pontis.admin.client import PontisAdminClient
 
 publishers = [
-    "pontis-coinapi",
-    "pontis-coinmarketcap",
-    "pontis-coingecko",
-    "pontis-coinbase",
-    "pontis-gemini",
     "pontis-binance",
+    "pontis-bitstamp",
+    "pontis-cex",
+    "pontis-coinapi",
+    "pontis-coinbase",
+    "pontis-coingecko",
+    "pontis-coinmarketcap",
     "pontis-ftx",
+    "pontis-gemini",
 ]
 publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
 
