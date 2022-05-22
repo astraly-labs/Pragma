@@ -32,7 +32,7 @@ jobs:
           FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
         run: |
           docker run \
-            -env-file sample-publisher/all/.env
+            --env-file sample-publisher/all/.env
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}
             -e COINAPI_KEY=${COINAPI_KEY}\
