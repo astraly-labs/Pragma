@@ -12,7 +12,7 @@ from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
 const DEFAULT_DECIMALS = 18
-const TIMESTAMP_BUFFER = 600  # 10 minutes
+const TIMESTAMP_BUFFER = 3600  # 60 minutes
 
 #
 # Storage
