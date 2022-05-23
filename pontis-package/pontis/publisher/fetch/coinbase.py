@@ -55,7 +55,9 @@ def fetch_coinbase(assets):
             "CB-ACCESS-PASSPHRASE": COINBASE_API_PASSPHRASE,
         }
 
-        response = requests.request(METHOD, URL + REQUEST_PATH, headers=headers)
+        response = requests.request(
+            METHOD, URL + REQUEST_PATH, headers=headers, timeout=10
+        )
 
         response.raise_for_status()
         result = response.json()

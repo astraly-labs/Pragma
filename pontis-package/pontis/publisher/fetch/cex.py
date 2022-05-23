@@ -18,7 +18,7 @@ def fetch_cex(assets):
             continue
 
         pair = asset["pair"]
-        response = requests.get(f"{base_url}/{pair[0]}/{pair[1]}")
+        response = requests.get(f"{base_url}/{pair[0]}/{pair[1]}", timeout=10)
         result = response.json()
 
         if "error" in result and result["error"] == "Invalid Symbols Pair":

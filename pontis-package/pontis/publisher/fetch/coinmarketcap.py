@@ -29,7 +29,7 @@ def fetch_coinmarketcap(assets):
         key = currency_pair_to_key(*pair)
         parameters = {"symbol": pair[0], "convert": pair[1]}
 
-        response = requests.get(url, headers=headers, params=parameters)
+        response = requests.get(url, headers=headers, params=parameters, timeout=10)
         response.raise_for_status()
         price = response.json()["data"][pair[0]]["quote"][pair[1]]["price"]
         timestamp = int(

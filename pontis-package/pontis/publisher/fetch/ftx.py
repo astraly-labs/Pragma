@@ -94,12 +94,12 @@ def fetch_ftx(assets):
 
     endpoint = "/markets"
     headers = generate_ftx_headers(endpoint)
-    response = requests.get(base_url + endpoint, headers=headers)
+    response = requests.get(base_url + endpoint, headers=headers, timeout=10)
     spot_data = response.json()["result"]
 
     endpoint = "/futures"
     headers = generate_ftx_headers(endpoint)
-    response = requests.get(base_url + endpoint, headers=headers)
+    response = requests.get(base_url + endpoint, headers=headers, timeout=10)
     future_data = response.json()["result"]
 
     entries = []

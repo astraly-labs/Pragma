@@ -11,7 +11,7 @@ def fetch_gemini(assets):
     publisher = PUBLISHER_PREFIX + "-gemini"
 
     base_url = "https://api.gemini.com/v1"
-    response = requests.get(base_url + "/pricefeed")
+    response = requests.get(base_url + "/pricefeed", timeout=20)
 
     entries = []
 

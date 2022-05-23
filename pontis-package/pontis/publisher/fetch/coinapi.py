@@ -22,7 +22,7 @@ def fetch_coinapi(assets):
         pair = asset["pair"]
 
         url = f"https://rest.coinapi.io/v1/exchangerate/{'/'.join(pair)}"
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         price = response.json()["rate"]
         timestamp = int(

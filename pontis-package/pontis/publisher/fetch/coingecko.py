@@ -47,7 +47,7 @@ def fetch_coingecko(assets):
 
         url = f"https://api.coingecko.com/api/v3/coins/{pair_id}?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         price = response.json()["market_data"]["current_price"][pair[1].lower()]
         timestamp = int(

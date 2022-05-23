@@ -11,7 +11,7 @@ def fetch_binance(assets):
     publisher = PUBLISHER_PREFIX + "-binance"
 
     base_url = "https://dapi.binance.com/dapi/v1"
-    response = requests.get(base_url + "/premiumIndex")
+    response = requests.get(base_url + "/premiumIndex", timeout=20)
 
     entries = []
 
