@@ -17,8 +17,8 @@ The Pontis Oracle consists of three smart contracts. The first is the Publisher 
 On testnet, the contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
-| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x07E05E4DEA8A62988D9A06EA47BDAC34C759A413DB5B358E4A3A3D691D9D89E4) | 0x07E05E4DEA8A62988D9A06EA47BDAC34C759A413DB5B358E4A3A3D691D9D89E4 |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x013BEFE6EDA920CE4AF05A50A67BD808D67EEE6BA47BB0892BEF2D630EAF1BBA) | 0x013BEFE6EDA920CE4AF05A50A67BD808D67EEE6BA47BB0892BEF2D630EAF1BBA |
+| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x07e05e4dea8a62988d9a06ea47bdac34c759a413db5b358e4a3a3d691d9d89e4) | 0x07e05e4dea8a62988d9a06ea47bdac34c759a413db5b358e4a3a3d691d9d89e4 |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba) | 0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba |
 | OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x041508634809fa47d1b7a6958b55c2044a6c802c4fdabb027ab4044094092efc) | 0x041508634809fa47d1b7a6958b55c2044a6c802c4fdabb027ab4044094092efc |
 
 ## Setup
