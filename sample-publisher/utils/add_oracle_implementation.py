@@ -8,7 +8,7 @@ async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
     admin_client = PontisAdminClient(admin_private_key)
     await admin_client.add_oracle_implementation(
-        1846413073285495567555818487162880181188584589644086414307299604548431720188
+        2798922674947025525023815748744490191423741149769824865676652064363168685077
     )
 
 
