@@ -4,7 +4,7 @@ import os
 from pontis.core.client import PontisClient
 from pontis.core.utils import currency_pair_to_key
 from pontis.publisher.client import PontisPublisherClient
-from pontis.publisher.coinbase import fetch_coinbase
+from pontis.publisher.fetch import fetch_coinbase
 
 DECIMALS = 18
 
