@@ -57,7 +57,7 @@ class PontisClient:
             )
 
         response = await self.oracle_controller_contract.functions["get_value"].call(
-            key
+            key, aggregation_mode
         )
 
         return response.value, response.last_updated_timestamp
