@@ -2,23 +2,6 @@
     {
         "members": [
             {
-                "name": "was_registered",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "offset": 1,
-                "type": "felt"
-            }
-        ],
-        "name": "OracleProxy_OracleImplementationStatus",
-        "size": 2,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "key",
                 "offset": 0,
                 "type": "felt"
@@ -44,9 +27,112 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "was_registered",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "OracleController_OracleImplementationStatus",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "data": [
+            {
+                "name": "old_publisher_registry_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedPublisherRegistryAddress",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AddedOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "old_is_active",
+                "type": "felt"
+            },
+            {
+                "name": "new_is_active",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "old_primary_oracle_implementation_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_primary_oracle_implementation_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedPrimaryOracleImplementation",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedAdminAddress",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
-                "name": "admin_public_key",
+                "name": "admin_address",
                 "type": "felt"
             },
             {
@@ -60,22 +146,10 @@
     },
     {
         "inputs": [],
-        "name": "get_admin_public_key",
+        "name": "get_admin_address",
         "outputs": [
             {
-                "name": "admin_public_key",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_nonce",
-        "outputs": [
-            {
-                "name": "nonce",
+                "name": "admin_address",
                 "type": "felt"
             }
         ],
@@ -121,7 +195,7 @@
         "outputs": [
             {
                 "name": "oracle_implementation_status",
-                "type": "OracleProxy_OracleImplementationStatus"
+                "type": "OracleController_OracleImplementationStatus"
             }
         ],
         "stateMutability": "view",
@@ -159,19 +233,11 @@
     {
         "inputs": [
             {
-                "name": "new_key",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
+                "name": "new_address",
                 "type": "felt"
             }
         ],
-        "name": "rotate_admin_public_key",
+        "name": "set_admin_address",
         "outputs": [],
         "type": "function"
     },
@@ -179,14 +245,6 @@
         "inputs": [
             {
                 "name": "publisher_registry_address",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
@@ -198,14 +256,6 @@
         "inputs": [
             {
                 "name": "oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
                 "type": "felt"
             }
         ],
@@ -222,14 +272,6 @@
             {
                 "name": "is_active",
                 "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
-                "type": "felt"
             }
         ],
         "name": "update_oracle_implementation_active_status",
@@ -241,22 +283,19 @@
             {
                 "name": "primary_oracle_implementation_address",
                 "type": "felt"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
-                "type": "felt"
             }
         ],
-        "name": "set_primary_oracle",
+        "name": "set_primary_oracle_implementation_address",
         "outputs": [],
         "type": "function"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
         "name": "get_decimals",
         "outputs": [
             {
@@ -274,7 +313,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_entries_for_key",
+        "name": "get_entries",
         "outputs": [
             {
                 "name": "entries_len",
@@ -292,6 +331,10 @@
         "inputs": [
             {
                 "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
                 "type": "felt"
             }
         ],
@@ -312,16 +355,23 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "name": "set_decimals",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_entry",
                 "type": "Entry"
-            },
-            {
-                "name": "signature_r",
-                "type": "felt"
-            },
-            {
-                "name": "signature_s",
-                "type": "felt"
             }
         ],
         "name": "submit_entry",
@@ -337,22 +387,6 @@
             {
                 "name": "new_entries",
                 "type": "Entry*"
-            },
-            {
-                "name": "signatures_r_len",
-                "type": "felt"
-            },
-            {
-                "name": "signatures_r",
-                "type": "felt*"
-            },
-            {
-                "name": "signatures_s_len",
-                "type": "felt"
-            },
-            {
-                "name": "signatures_s",
-                "type": "felt*"
             }
         ],
         "name": "submit_many_entries",
