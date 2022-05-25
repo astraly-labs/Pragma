@@ -4,9 +4,9 @@ from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
 from starknet_py.net import Client
+from starknet_py.net.models import InvokeFunction
 from starkware.crypto.signature.signature import sign
 from starkware.starknet.public.abi import get_selector_from_name
-from starknet_py.net.models import InvokeFunction
 
 MAX_FEE = 0
 FEE_SCALING_FACTOR = 1.1  # estimated fee is multiplied by this to set max_fee
