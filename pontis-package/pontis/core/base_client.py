@@ -43,7 +43,7 @@ class PontisBaseClient(ABC):
     async def _fetch_contracts(self):
         pass
 
-    async def get_nonce(self):
+    async def get_nonce_uncached(self):
         await self._fetch_contracts()
 
         [nonce] = await self.client.call_contract(
@@ -56,6 +56,12 @@ class PontisBaseClient(ABC):
                 version=0,
             )
         )
+        return nonce
+
+    async def get_nonce(self):
+        await self._fetch_contracts()
+
+        nonce = await self.get_nonce_uncached()
         # If we have sent a tx recently, use local nonce because network state won't have been updated yet
         if self.nonce is not None and self.nonce >= nonce:
             nonce = self.nonce + 1
@@ -84,6 +90,7 @@ class PontisBaseClient(ABC):
 
     async def send_transactions(self, calls, max_fee=None):
         nonce = await self.get_nonce()
+        uncached_nonce = await self.get_nonce_uncached()
 
         # Format data for submission
         call_array = []
@@ -104,7 +111,7 @@ class PontisBaseClient(ABC):
         prepared = self.account_contract.functions["__execute__"].prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=nonce,
+            nonce=uncached_nonce,
         )
         signature = sign(prepared.hash, self.account_private_key)
         # TODO: Change to using AccountClient once estimate_fee is fixed there

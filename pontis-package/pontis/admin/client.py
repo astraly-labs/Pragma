@@ -36,7 +36,6 @@ class PontisAdminClient(PontisBaseClient):
             admin_address,
             network,
             oracle_controller_address,
-            max_fee,
             n_retries,
         )
 
