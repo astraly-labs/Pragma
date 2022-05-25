@@ -67,10 +67,8 @@ async def contract_init(
     ) = contract_defs
 
     starknet = await Starknet.empty()
-    starknet.state.state.block_info = BlockInfo(
-        starknet.state.state.block_info.block_number,
-        STARKNET_STARTING_TIMESTAMP,
-        starknet.state.state.block_info.gas_price,
+    starknet.state.state.block_info = BlockInfo.create_for_testing(
+        starknet.state.state.block_info.block_number, STARKNET_STARTING_TIMESTAMP
     )
     admin_account = await starknet.deploy(
         contract_def=account_def, constructor_calldata=[admin_public_key]
@@ -1150,10 +1148,9 @@ async def test_ignore_stale_entries(
     )
 
     # Advance time by TIMESTAMP_BUFFER
-    admin_account.state.state.block_info = BlockInfo(
+    admin_account.state.state.block_info = BlockInfo.create_for_testing(
         admin_account.state.state.block_info.block_number,
         admin_account.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
-        admin_account.state.state.block_info.gas_price,
     )
 
     second_entry = construct_entry(

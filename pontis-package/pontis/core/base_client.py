@@ -4,10 +4,12 @@ from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
 from starknet_py.net import Client
+from starknet_py.net.models import InvokeFunction
 from starkware.crypto.signature.signature import sign
 from starkware.starknet.public.abi import get_selector_from_name
 
 MAX_FEE = 0
+FEE_SCALING_FACTOR = 1.1  # estimated fee is multiplied by this to set max_fee
 
 
 class PontisBaseClient(ABC):
@@ -17,7 +19,6 @@ class PontisBaseClient(ABC):
         account_contract_address,
         network=None,
         oracle_controller_address=None,
-        max_fee=None,
         n_retries=None,
     ):
         if network is None:
@@ -36,20 +37,32 @@ class PontisBaseClient(ABC):
         self.signer = Signer(self.account_private_key)
 
         self.client = Client(self.network, n_retries=n_retries)
-
-        self.max_fee = MAX_FEE if max_fee is None else max_fee
         self.nonce = None
 
     @abstractmethod
     async def _fetch_contracts(self):
         pass
 
+    async def get_nonce_uncached(self):
+        await self._fetch_contracts()
+
+        [nonce] = await self.client.call_contract(
+            InvokeFunction(
+                contract_address=self.account_contract_address,
+                entry_point_selector=get_selector_from_name("get_nonce"),
+                calldata=[],
+                signature=[],
+                max_fee=0,
+                version=0,
+            )
+        )
+        return nonce
+
     async def get_nonce(self):
         await self._fetch_contracts()
 
-        result = await self.account_contract.functions["get_nonce"].call()
-        nonce = result.res
-        # If we have sent of tx recently, use that nonce because state won't have been updated yet
+        nonce = await self.get_nonce_uncached()
+        # If we have sent a tx recently, use local nonce because network state won't have been updated yet
         if self.nonce is not None and self.nonce >= nonce:
             nonce = self.nonce + 1
 
@@ -68,12 +81,18 @@ class PontisBaseClient(ABC):
                 self.account_contract_address, self.client
             )
 
-    async def send_transaction(self, to_contract, selector_name, calldata):
-        return await self.send_transactions([(to_contract, selector_name, calldata)])
+    async def send_transaction(
+        self, to_contract, selector_name, calldata, max_fee=None
+    ):
+        return await self.send_transactions(
+            [(to_contract, selector_name, calldata)], max_fee
+        )
 
-    async def send_transactions(self, calls):
+    async def send_transactions(self, calls, max_fee=None):
         nonce = await self.get_nonce()
+        uncached_nonce = await self.get_nonce_uncached()
 
+        # Format data for submission
         call_array = []
         offset = 0
         for i in range(len(calls)):
@@ -86,15 +105,31 @@ class PontisBaseClient(ABC):
                 }
             )
             offset += len(calls[i][2])
-
         calldata = [x for call in calls for x in call[2]]
+
+        # Estimate fee
         prepared = self.account_contract.functions["__execute__"].prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=nonce,
-            max_fee=self.max_fee,
+            nonce=uncached_nonce,
         )
         signature = sign(prepared.hash, self.account_private_key)
-        invocation = await prepared.invoke(signature, max_fee=self.max_fee)
+        # TODO: Change to using AccountClient once estimate_fee is fixed there
+        tx = prepared._make_invoke_function(signature=signature)
+        estimate = await prepared._client.estimate_fee(tx=tx)
+        max_fee_estimate = int(estimate * FEE_SCALING_FACTOR)
+        max_fee = (
+            max_fee_estimate if max_fee is None else min(max_fee_estimate, max_fee)
+        )
+
+        # Submit transaction with fee
+        prepared_with_fee = self.account_contract.functions["__execute__"].prepare(
+            call_array=call_array,
+            calldata=calldata,
+            nonce=nonce,
+            max_fee=max_fee,
+        )
+        signature = sign(prepared_with_fee.hash, self.account_private_key)
+        invocation = await prepared_with_fee.invoke(signature, max_fee=max_fee)
 
         return invocation
