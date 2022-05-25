@@ -6,6 +6,7 @@ from starknet_py.contract import Contract
 from starknet_py.net import Client
 from starkware.crypto.signature.signature import sign
 from starkware.starknet.public.abi import get_selector_from_name
+from starknet_py.net.models import InvokeFunction
 
 MAX_FEE = 0
 FEE_SCALING_FACTOR = 1.1  # estimated fee is multiplied by this to set max_fee
@@ -45,8 +46,16 @@ class PontisBaseClient(ABC):
     async def get_nonce(self):
         await self._fetch_contracts()
 
-        result = await self.account_contract.functions["get_nonce"].call()
-        nonce = result.res
+        [nonce] = await self.client.call_contract(
+            InvokeFunction(
+                contract_address=self.account_contract_address,
+                entry_point_selector=get_selector_from_name("get_nonce"),
+                calldata=[],
+                signature=[],
+                max_fee=0,
+                version=0,
+            )
+        )
         # If we have sent a tx recently, use local nonce because network state won't have been updated yet
         if self.nonce is not None and self.nonce >= nonce:
             nonce = self.nonce + 1
