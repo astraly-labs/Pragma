@@ -55,7 +55,7 @@ class PontisBaseClient(ABC):
                 max_fee=0,
                 version=0,
             ),
-            block_number="latest",
+            block_number="pending",
         )
         return nonce
 
