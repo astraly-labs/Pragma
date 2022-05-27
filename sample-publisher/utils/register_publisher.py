@@ -4,10 +4,18 @@ import os
 from pontis.admin.client import PontisAdminClient
 
 publishers = [
-    f"argent-{source}"
-    for source in ["binance", "bitstamp", "cex", "coingecko", "gemini"]
+    f"equilibrium-{source}"
+    for source in [
+        "coinapi",
+        "coinmarketcap",
+        "coingecko",
+        "coinbase",
+        "gemini",
+        "binance",
+        "ftx",
+    ]
 ]
-publisher_address = 0x5E54EDB59E1B1E398F9647E617276F6DA0EB9DDFC0C02723269B9BAA2489DCE
+publisher_address = 0x0315E364B162653E5C7B23EFD34F8DA27BA9C069B68E3042B7D76CE1DF890313
 
 
 async def main():

@@ -54,7 +54,8 @@ class PontisBaseClient(ABC):
                 signature=[],
                 max_fee=0,
                 version=0,
-            )
+            ),
+            block_number="latest",
         )
         return nonce
 
@@ -111,7 +112,7 @@ class PontisBaseClient(ABC):
         prepared = self.account_contract.functions["__execute__"].prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=uncached_nonce,
+            nonce=uncached_nonce,  # have to use uncached because we call (not invoke), i.e. run against current starknet state
         )
         signature = sign(prepared.hash, self.account_private_key)
         # TODO: Change to using AccountClient once estimate_fee is fixed there
