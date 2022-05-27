@@ -52,7 +52,7 @@ func Oracle_only_oracle_controller{
         # Assume uninitialized
         return ()
     end
-    with_attr error_message("This function can only be called by the oracle controller"):
+    with_attr error_message("OracleImplementation: This function can only be called by the oracle controller"):
         assert caller_address = oracle_controller_address
     end
     return ()

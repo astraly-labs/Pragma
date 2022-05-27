@@ -203,7 +203,7 @@ func OracleController_update_oracle_implementation_active_status{
         primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
         )
     with_attr error_message(
-            "OracleController: Cannot update is_active for pimary oracle implementation address"):
+            "OracleController: Cannot update is_active for primary oracle implementation address"):
         assert_not_equal(oracle_implementation_address, primary_oracle_implementation_address)
     end
 
