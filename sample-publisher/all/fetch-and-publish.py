@@ -1,5 +1,6 @@
 import asyncio
 import os
+import traceback
 
 import requests
 from pontis.core.client import PontisClient
@@ -38,6 +39,7 @@ async def publish_all(assets):
         entries.extend(coinapi_entries)
     except Exception as e:
         print(f"Error fetching Coinapi price: {e}")
+        print(traceback.format_exc())
 
     try:
         coinmarketcap_entries = fetch_coinmarketcap(assets)
@@ -45,6 +47,7 @@ async def publish_all(assets):
         entries.extend(coinmarketcap_entries)
     except Exception as e:
         print(f"Error fetching Coinmarketcap price: {e}")
+        print(traceback.format_exc())
 
     try:
         coingecko_entries = fetch_coingecko(assets)
@@ -52,6 +55,7 @@ async def publish_all(assets):
         entries.extend(coingecko_entries)
     except Exception as e:
         print(f"Error fetching Coingecko price: {e}")
+        print(traceback.format_exc())
 
     try:
         coinbase_entries = fetch_coinbase(assets)
@@ -59,6 +63,7 @@ async def publish_all(assets):
         entries.extend(coinbase_entries)
     except Exception as e:
         print(f"Error fetching Coinbase price: {e}")
+        print(traceback.format_exc())
 
     try:
         gemini_entries = fetch_gemini(assets)
@@ -66,6 +71,7 @@ async def publish_all(assets):
         entries.extend(gemini_entries)
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
+        print(traceback.format_exc())
 
     try:
         binance_entries = fetch_binance(assets)
@@ -73,6 +79,7 @@ async def publish_all(assets):
         entries.extend(binance_entries)
     except Exception as e:
         print(f"Error fetching Binance price: {e}")
+        print(traceback.format_exc())
 
     try:
         ftx_entries = fetch_ftx(assets)
@@ -80,6 +87,7 @@ async def publish_all(assets):
         entries.extend(ftx_entries)
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
+        print(traceback.format_exc())
 
     try:
         cex_entries = fetch_cex(assets)
@@ -87,6 +95,7 @@ async def publish_all(assets):
         entries.extend(cex_entries)
     except Exception as e:
         print(f"Error fetching CEX price: {e}")
+        print(traceback.format_exc())
 
     try:
         bitstamp_entries = fetch_bitstamp(assets)
@@ -94,6 +103,7 @@ async def publish_all(assets):
         entries.extend(bitstamp_entries)
     except Exception as e:
         print(f"Error fetching Bitstamp price: {e}")
+        print(traceback.format_exc())
 
     print("Publishing the following entries:")
     for entry in entries:
