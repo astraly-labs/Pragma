@@ -2,7 +2,7 @@ import React from "react";
 
 const PontisHeader = () => {
   return (
-    <div className="my-8 mx-6 text-3xl">
+    <div className="my-8 mx-6 text-3xl text-white">
       <img
         className="inline mr-4"
         style={{ width: "40px", marginTop: "-8px" }}
