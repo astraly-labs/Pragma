@@ -13,6 +13,8 @@ publishers = [
         "gemini",
         "binance",
         "ftx",
+        "cex",
+        "bitstamp",
     ]
 ]
 publisher_address = 0x0315E364B162653E5C7B23EFD34F8DA27BA9C069B68E3042B7D76CE1DF890313
