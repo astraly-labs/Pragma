@@ -36,6 +36,10 @@ class PontisPublisherClient(PontisBaseClient):
         return result
 
     async def publish_many(self, entries):
+        if len(entries) == 0:
+            print("Skipping publishing as entries array is empty")
+            return
+
         result = await self.send_transaction(
             self.oracle_controller_address,
             "submit_many_entries",

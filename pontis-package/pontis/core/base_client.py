@@ -1,8 +1,10 @@
+import json
 from abc import ABC, abstractmethod
+from os import path
 
 from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
-from starknet_py.contract import Contract
+from starknet_py.contract import Contract, ContractData, ContractFunction
 from starknet_py.net import Client
 from starknet_py.net.models import InvokeFunction
 from starkware.crypto.signature.signature import sign
@@ -109,7 +111,16 @@ class PontisBaseClient(ABC):
         calldata = [x for call in calls for x in call[2]]
 
         # Estimate fee
-        prepared = self.account_contract.functions["__execute__"].prepare(
+        with open(path.join(path.dirname(__file__), "../abi/Account.json"), "r") as f:
+            account_abi = json.load(f)
+        contract_data = ContractData.from_abi(
+            self.account_contract_address, account_abi
+        )
+        execute_abi = [a for a in account_abi if a["name"] == "__execute__"][0]
+        execute_function = ContractFunction(
+            "__execute__", execute_abi, contract_data, self.client
+        )
+        prepared = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
             nonce=uncached_nonce,  # have to use uncached because we call (not invoke), i.e. run against current starknet state
@@ -118,13 +129,14 @@ class PontisBaseClient(ABC):
         # TODO: Change to using AccountClient once estimate_fee is fixed there
         tx = prepared._make_invoke_function(signature=signature)
         estimate = await prepared._client.estimate_fee(tx=tx)
+
         max_fee_estimate = int(estimate * FEE_SCALING_FACTOR)
         max_fee = (
             max_fee_estimate if max_fee is None else min(max_fee_estimate, max_fee)
         )
 
         # Submit transaction with fee
-        prepared_with_fee = self.account_contract.functions["__execute__"].prepare(
+        prepared_with_fee = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
             nonce=nonce,
