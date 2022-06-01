@@ -17,7 +17,8 @@ publishers = [
         "bitstamp",
     ]
 ]
-publisher_address = 0x0315E364B162653E5C7B23EFD34F8DA27BA9C069B68E3042B7D76CE1DF890313
+publishers = ["cmt"]
+publisher_address = 0x02FE2CA4C677AF0FF601A5AA37F799701C3ECD6F5D04F2EE072CB4C37FDFCDEF
 
 
 async def main():
