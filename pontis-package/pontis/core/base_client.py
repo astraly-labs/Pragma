@@ -111,7 +111,7 @@ class PontisBaseClient(ABC):
         calldata = [x for call in calls for x in call[2]]
 
         # Estimate fee
-        with open(path.join(path.dirname(__file__), "../abi/Account.json"), "r") as f:
+        with open(path.join(path.dirname(__file__), "abi/Account.json"), "r") as f:
             account_abi = json.load(f)
         contract_data = ContractData.from_abi(
             self.account_contract_address, account_abi

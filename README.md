@@ -63,7 +63,7 @@ Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public 
 
 ```
 export STARKNET_NETWORK=alpha-goerli
-starknet-compile --account_contract contracts/account/Account.cairo --abi contracts/abi/Account.json --output account_compiled.json && cp contracts/abi/Account.json pontis-package/pontis/abi/Account.json
+starknet-compile --account_contract contracts/account/Account.cairo --abi contracts/abi/Account.json --output account_compiled.json && cp contracts/abi/Account.json pontis-package/pontis/core/abi/Account.json
 starknet deploy --contract account_compiled.json --inputs <ADMIN_PUBLIC_KEY>
 starknet deploy --contract account_compiled.json --inputs <PUBLISHER_PUBLIC_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
