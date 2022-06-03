@@ -84,6 +84,28 @@ class PontisBaseClient(ABC):
                 self.account_contract_address, self.client
             )
 
+    async def get_eth_balance(self):
+        if self.network == "testnet":
+            eth_address = (
+                0x049D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7
+            )
+        else:
+            raise NotImplementedError(
+                "PontisBaseClient.get_eth_balance: Unknown network type"
+            )
+
+        with open(path.join(path.dirname(__file__), "abi/ERC20.json"), "r") as f:
+            erc20_abi = json.load(f)
+        contract_data = ContractData.from_abi(eth_address, erc20_abi)
+        balance_of_abi = [a for a in erc20_abi if a["name"] == "balanceOf"][0]
+        balance_of_function = ContractFunction(
+            "balanceOf", balance_of_abi, contract_data, self.client
+        )
+
+        result = await balance_of_function.call(self.account_contract_address)
+
+        return result.balance
+
     async def send_transaction(
         self, to_contract, selector_name, calldata, max_fee=None
     ):

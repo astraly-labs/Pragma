@@ -20,7 +20,6 @@ class PontisAdminClient(PontisBaseClient):
         network=None,
         oracle_controller_address=None,
         publisher_registry_address=None,
-        max_fee=None,
     ):
         if admin_address is None:
             admin_address = ADMIN_ADDRESS
@@ -55,6 +54,15 @@ class PontisAdminClient(PontisBaseClient):
         ].call()
 
         return result.primary_oracle_implementation_address
+
+    async def get_all_publishers(self):
+        await self._fetch_contracts()
+
+        result = await self.publisher_registry_contract.functions[
+            "get_all_publishers"
+        ].call()
+
+        return result.publishers
 
     async def get_publisher_address(self, publisher):
         await self._fetch_contracts()
