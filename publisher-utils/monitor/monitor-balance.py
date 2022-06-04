@@ -10,7 +10,7 @@ from pontis.publisher.client import PontisPublisherClient
 # [Optional]: Publisher names; if empty, query for all
 # [Optional]: Balance threshold; if empty, default to 0.1
 
-# Behavior: Ping betteruptime if all is good, do not ping if all is bad
+# Behavior: Ping betteruptime iff all is good
 
 
 async def main(publishers=None, threshold_wei=None):
@@ -55,8 +55,8 @@ async def main(publishers=None, threshold_wei=None):
         requests.get(
             "https://betteruptime.com/api/v1/heartbeat/zqdgL5skHfT2AMZTCcuKAbEJ"
         )
-    else:
-        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
 
 if __name__ == "__main__":
