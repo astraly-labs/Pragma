@@ -110,7 +110,8 @@ async def publish_all(assets):
         pprint_entry(entry)
 
     # Post success to Better Uptime
-    requests.get("https://betteruptime.com/api/v1/heartbeat/eLy7zigidGbx5s6jnsfQiqJQ")
+    betteruptime_id = os.environ.get("BETTERUPTIME_ID")
+    requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
 
 if __name__ == "__main__":

@@ -81,9 +81,8 @@ async def main():
 
     if all_prices_valid:
         # Ping betteruptime
-        requests.get(
-            "https://betteruptime.com/api/v1/heartbeat/RVXYz4tMHb7wnr9CTKFTuRES"
-        )
+        betteruptime_id = os.environ.get("BETTERUPTIME_ID")
+        requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%s"))
 

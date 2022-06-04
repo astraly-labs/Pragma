@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import os
 
 import requests
 from pontis.admin.client import PontisAdminClient
@@ -52,9 +53,8 @@ async def main(publishers=None, threshold_wei=None):
 
     if all_above_threshold:
         # Ping betteruptime
-        requests.get(
-            "https://betteruptime.com/api/v1/heartbeat/zqdgL5skHfT2AMZTCcuKAbEJ"
-        )
+        betteruptime_id = os.environ.get("BETTERUPTIME_ID")
+        requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
