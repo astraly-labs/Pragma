@@ -10,12 +10,11 @@ from pontis.publisher.client import PontisPublisherClient
 # [Optional]: Publisher names; if empty, query for all
 # [Optional]: Balance threshold; if empty, default to 0.1
 
-# Behavior
-# Ping betteruptime if all is good, do not ping if all is bad
+# Behavior: Ping betteruptime if all is good, do not ping if all is bad
 
 
 async def main(publishers=None, threshold_wei=None):
-    # Set admin private key to None because we aren't using protected invokes
+    # Set admin private key to None because we aren't using the client for protected invokes
     client = PontisAdminClient(1)
 
     if publishers is None:
@@ -30,7 +29,6 @@ async def main(publishers=None, threshold_wei=None):
     }  # CMT mis-registered the first time so ignore that publisher (they use cmt not cmtd today)
 
     for publisher in publishers:
-        # Get address
         address = await client.get_publisher_address(publisher)
         if address in addresses:
             # Already checked this address (different publishers can share the same address)
@@ -38,9 +36,8 @@ async def main(publishers=None, threshold_wei=None):
 
         addresses.add(address)
 
-        # Set publisher private key to None because we aren't using protected invokes
+        # Set publisher private key to None because we aren't using the client for protected invokes
         publisher_client = PontisPublisherClient(1, address)
-        # Query balance of contract
         balance = await publisher_client.get_eth_balance()
 
         if balance < threshold_wei:
