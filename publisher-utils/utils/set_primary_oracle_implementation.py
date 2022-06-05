@@ -9,14 +9,8 @@ async def main():
     admin_client = PontisAdminClient(
         admin_private_key,
     )
-    old_primary_oracle_implementation_address = (
-        await admin_client.get_primary_oracle_implementation_address()
-    )
     await admin_client.set_primary_oracle_implementation_address(
-        2798922674947025525023815748744490191423741149769824865676652064363168685077
-    )
-    await admin_client.update_oracle_implementation_active_status(
-        old_primary_oracle_implementation_address, 0
+        0x072FA0C2D3427353F372B94614F2ED5E9DA6EC358FD720CF7706BE0EE42A1449
     )
 
 
