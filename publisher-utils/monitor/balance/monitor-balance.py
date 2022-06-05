@@ -9,7 +9,7 @@ from pontis.publisher.client import PontisPublisherClient
 
 # Inputs
 # [Optional]: Publisher names; if empty, query for all
-# [Optional]: Balance threshold; if empty, default to 0.1
+# [Optional]: Balance threshold; if empty, defaults to 0.1 * 10**18 Wei
 
 # Behavior: Ping betteruptime iff all is good
 
@@ -52,7 +52,6 @@ async def main(publishers=None, threshold_wei=None):
             )
 
     if all_above_threshold:
-        # Ping betteruptime
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
         requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
