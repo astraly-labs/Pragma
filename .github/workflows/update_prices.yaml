@@ -17,7 +17,7 @@ jobs:
       - name: Build publisher images locally
         run: |
           docker build . -t 42labs/pontis-publisher:latest
-          docker build sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
+          docker build publisher-utils/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
 
       - name: Post updated prices
         env:
@@ -32,7 +32,7 @@ jobs:
           FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
         run: |
           docker run \
-            --env-file sample-publisher/all/.env\
+            --env-file publisher-utils/sample-publisher/all/.env\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\
