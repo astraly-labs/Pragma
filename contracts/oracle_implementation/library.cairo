@@ -52,7 +52,8 @@ func Oracle_only_oracle_controller{
         # Assume uninitialized
         return ()
     end
-    with_attr error_message("OracleImplementation: This function can only be called by the oracle controller"):
+    with_attr error_message(
+            "OracleImplementation: This function can only be called by the oracle controller"):
         assert caller_address = oracle_controller_address
     end
     return ()
@@ -94,6 +95,12 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     let (value) = Entry_aggregate_entries(entries_len, entries)
     let (last_updated_timestamp) = Entry_aggregate_timestamps_max(entries_len, entries)
     return (value, last_updated_timestamp)
+end
+
+func Oracle_get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, publisher : felt) -> (entry : Entry):
+    let (entry) = Oracle_entry_storage.read(key, publisher)
+    return (entry)
 end
 
 #

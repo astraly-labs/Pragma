@@ -119,6 +119,27 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entry",
+        "outputs": [
+            {
+                "name": "entry",
+                "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "oracle_controller_address",
                 "type": "felt"
             }

@@ -6,7 +6,8 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.library import (
     Oracle_set_default_decimals, Oracle_set_oracle_controller_address, Oracle_set_decimals,
-    Oracle_get_decimals, Oracle_get_entries, Oracle_get_value, Oracle_submit_entry)
+    Oracle_get_decimals, Oracle_get_entries, Oracle_get_value, Oracle_get_entry,
+    Oracle_submit_entry)
 
 #
 # Constructor
@@ -46,6 +47,13 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     let (value, last_updated_timestamp) = Oracle_get_value(
         publishers_len, publishers, key, aggregation_mode)
     return (value, last_updated_timestamp)
+end
+
+@view
+func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, publisher : felt) -> (entry : Entry):
+    let (entry) = Oracle_get_entry(key, publisher)
+    return (entry)
 end
 
 #

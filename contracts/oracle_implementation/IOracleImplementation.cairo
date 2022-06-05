@@ -20,6 +20,9 @@ namespace IOracleImplementation:
             value : felt, last_updated_timestamp : felt):
     end
 
+    func get_entry(key : felt, publisher : felt) -> (entry : Entry):
+    end
+
     #
     # Setters
     #
