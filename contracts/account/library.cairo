@@ -6,6 +6,7 @@ from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.memcpy import memcpy
+from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import call_contract, get_caller_address, get_tx_info
 
 #
@@ -42,11 +43,12 @@ end
 
 namespace Account:
     #
-    # Constructor
+    # Initializer
     #
 
-    func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            _public_key : felt):
+    func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        _public_key : felt
+    ):
         Account_public_key.write(_public_key)
         return ()
     end
@@ -69,13 +71,15 @@ namespace Account:
     #
 
     func get_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-            res : felt):
+        res : felt
+    ):
         let (res) = Account_public_key.read()
         return (res=res)
     end
 
     func get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-            res : felt):
+        res : felt
+    ):
         let (res) = Account_current_nonce.read()
         return (res=res)
     end
@@ -85,7 +89,8 @@ namespace Account:
     #
 
     func set_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            new_public_key : felt):
+        new_public_key : felt
+    ):
         assert_only_self()
         Account_public_key.write(new_public_key)
         return ()
@@ -96,9 +101,11 @@ namespace Account:
     #
 
     func is_valid_signature{
-            syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr,
-            ecdsa_ptr : SignatureBuiltin*}(
-            hash : felt, signature_len : felt, signature : felt*) -> ():
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr,
+        ecdsa_ptr : SignatureBuiltin*,
+    }(hash : felt, signature_len : felt, signature : felt*) -> (is_valid : felt):
         let (_public_key) = Account_public_key.read()
 
         # This interface expects a signature pointer and length to make
@@ -108,17 +115,30 @@ namespace Account:
         let sig_s = signature[1]
 
         verify_ecdsa_signature(
-            message=hash, public_key=_public_key, signature_r=sig_r, signature_s=sig_s)
+            message=hash, public_key=_public_key, signature_r=sig_r, signature_s=sig_s
+        )
 
-        return ()
+        return (is_valid=TRUE)
     end
 
     func execute{
-            syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr,
-            ecdsa_ptr : SignatureBuiltin*}(
-            call_array_len : felt, call_array : AccountCallArray*, calldata_len : felt,
-            calldata : felt*, nonce : felt) -> (response_len : felt, response : felt*):
+        syscall_ptr : felt*,
+        pedersen_ptr : HashBuiltin*,
+        range_check_ptr,
+        ecdsa_ptr : SignatureBuiltin*,
+    }(
+        call_array_len : felt,
+        call_array : AccountCallArray*,
+        calldata_len : felt,
+        calldata : felt*,
+        nonce : felt,
+    ) -> (response_len : felt, response : felt*):
         alloc_locals
+
+        let (caller) = get_caller_address()
+        with_attr error_message("Account: no reentrant call"):
+            assert caller = 0
+        end
 
         let (__fp__, _) = get_fp_and_pc()
         let (tx_info) = get_tx_info()
@@ -135,7 +155,12 @@ namespace Account:
         let calls_len = call_array_len
 
         # validate transaction
-        is_valid_signature(tx_info.transaction_hash, tx_info.signature_len, tx_info.signature)
+        let (is_valid) = is_valid_signature(
+            tx_info.transaction_hash, tx_info.signature_len, tx_info.signature
+        )
+        with_attr error_message("Account: invalid signature"):
+            assert is_valid = TRUE
+        end
 
         # bump nonce
         Account_current_nonce.write(_current_nonce + 1)
@@ -148,7 +173,8 @@ namespace Account:
     end
 
     func _execute_list{syscall_ptr : felt*}(calls_len : felt, calls : Call*, response : felt*) -> (
-            response_len : felt):
+        response_len : felt
+    ):
         alloc_locals
 
         # if no more calls
@@ -162,17 +188,20 @@ namespace Account:
             contract_address=this_call.to,
             function_selector=this_call.selector,
             calldata_size=this_call.calldata_len,
-            calldata=this_call.calldata)
+            calldata=this_call.calldata,
+        )
         # copy the result in response
         memcpy(response, res.retdata, res.retdata_size)
         # do the next calls recursively
         let (response_len) = _execute_list(
-            calls_len - 1, calls + Call.SIZE, response + res.retdata_size)
+            calls_len - 1, calls + Call.SIZE, response + res.retdata_size
+        )
         return (response_len + res.retdata_size)
     end
 
     func _from_call_array_to_call{syscall_ptr : felt*}(
-            call_array_len : felt, call_array : AccountCallArray*, calldata : felt*, calls : Call*):
+        call_array_len : felt, call_array : AccountCallArray*, calldata : felt*, calls : Call*
+    ):
         # if no more calls
         if call_array_len == 0:
             return ()
@@ -187,7 +216,8 @@ namespace Account:
             )
         # parse the remaining calls recursively
         _from_call_array_to_call(
-            call_array_len - 1, call_array + AccountCallArray.SIZE, calldata, calls + Call.SIZE)
+            call_array_len - 1, call_array + AccountCallArray.SIZE, calldata, calls + Call.SIZE
+        )
         return ()
     end
 end
