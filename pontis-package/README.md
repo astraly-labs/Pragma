@@ -15,8 +15,10 @@ Once you have chosen your publisher_id and have a public/private key pair that i
 Simply install this package and run:
 
 ```
+from pontis.core.entry import construct_entry
 from pontis.publisher.client import PontisPublisherClient
 
-client = PontisPublisherClient(oracle_controller_address, private_key, publisher)
-client.publish(key, value, timestamp)
+client = PontisPublisherClient(private_key, publisher_address)
+entry = construct_entry(key, value, timestamp, publisher)
+client.publish(entry)
 ```

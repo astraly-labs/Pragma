@@ -113,3 +113,26 @@ pontis-publisher base images are versioned together with the pontis Python packa
 If your changes involve changes to the fetching and publishing code, run `scp -i LightsailDefaultKey-us-east-2.pem -r ../all/ ubuntu@<IP_ADDRESS>:` to copy over the code again, where `IP_ADDRESS` is the IP address of the Lightsail instance. The existing instance will automatically rebuild the docker image using that new code.
 
 If your changes are to the cron command, it is easiest to ssh into the instance and edit the cron command there directtly using `crontab -e`.
+
+# Staging Environment
+
+## Separate Environment
+We have a staging environment set up in order to be able to test our code without affecting the production environment.
+
+On testnet, the staging contracts are deployed at the following addresses:
+| Contract | Voyager | Address |
+| --- | ----------- | --- |
+| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x07cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797) | 0x07cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797 |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff) | 0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d) | 0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d |
+
+The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Pontis publisher account that is registered is located at 0x7cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797.
+
+The main part of our CI setup that uses the staging environment is the update prices GHA.
+
+## Staging in Shadow Mode
+Sometimes it is important to test how contracts function in the real world. We can do that for Oracle Implementations, by running them in shadow mode.
+
+In order to run an Oracle Implementation in shadow mode, first deploy the Oracle Implementation contract. Then, run the `add_oracle_implementation.py` script in `publisher-utils/utils` with the address from the new Oracle Implementation. The new contract is now in shadow mode, i.e. it receives updates (writes) from the Oracle Controller, but is not used to answer queries (reads). You can read from the new Oracle Implementation contract directly in order to test the new logic.
+
+If the new Oracle Implementation has passed testing and is ready to be promoted to the primary Oracle Implementation (the one used for answering queries), run the `set_primary_oracle_implementation.py` script in `publisher-utils/utils` with the address from the new Oracle Implementation. Once that is complete and the new system is up and running, you can retire the old Oracle Implementation using the `deactivate_oracle_implementation.py` script located in the same directory.
