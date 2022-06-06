@@ -61,3 +61,19 @@ class PontisClient:
         )
 
         return response.value, response.last_updated_timestamp
+
+    async def get_entries(self, key):
+        await self.fetch_oracle_controller_contract()
+
+        if type(key) == str:
+            key = str_to_felt(key)
+        elif type(key) != int:
+            raise AssertionError(
+                "Key must be string (will be converted to felt) or integer"
+            )
+
+        response = await self.oracle_controller_contract.functions["get_entries"].call(
+            key
+        )
+
+        return response.entries
