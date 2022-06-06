@@ -21,6 +21,8 @@ jobs:
 
       - name: Post updated prices
         env:
+          __PONTIS_STAGING_ENV__: "TRUE"
+          PUBLISHER_ADDRESS: ${{ 3527031202539726809369828423261199428914820403898404682145487988372973647767 }}
           ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           PUBLISHER_PRIVATE_KEY : ${{ secrets.PUBLISHER_PRIVATE_KEY }}
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
@@ -33,6 +35,8 @@ jobs:
         run: |
           docker run \
             --env-file publisher-utils/sample-publisher/all/.env\
+            -e __PONTIS_STAGING_ENV__=${__PONTIS_STAGING_ENV__}\
+            -e PUBLISHER_ADDRESS=${PUBLISHER_ADDRESS}\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\
