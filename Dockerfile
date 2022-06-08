@@ -8,4 +8,4 @@ COPY requirements.txt /requirements.txt
 RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
 
 ARG PONTIS_PACKAGE_VERSION
-RUN pip install pontis-package==$PONTIS_PACKAGE_VERSION
+RUN pip install pontis==$PONTIS_PACKAGE_VERSION
