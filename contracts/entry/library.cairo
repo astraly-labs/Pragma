@@ -111,6 +111,9 @@ func Entry_entries_mean{range_check_ptr}(
         num_entries : felt, entries_ptr : Entry*, idx : felt, remainder : felt) -> (
         value : felt, remainder : felt):
     alloc_locals
+    #adding two ref'd values could result in an overflow bc we naively add w/o sizechecks
+    #A publisher can cuase overflow if either the felt they pass for remainder or running_value is too large
+    #This error knocks down to line 124 value = summand + recursive summand since summand includes both remainder and running value
     let running_value = [entries_ptr + idx * Entry.SIZE].value
     let (local summand, new_remainder) = unsigned_div_rem(running_value + remainder, num_entries)
     if idx + 1 == num_entries:
@@ -124,10 +127,14 @@ end
 
 func Entry_average_entries_value{range_check_ptr}(entry_1 : Entry, entry_2 : Entry) -> (
         value : felt):
+    #if deciminal remainders (r1 + r2) have high resolution (beyond the P deciminal places) can overflow
     let (summand_1, r1) = unsigned_div_rem(entry_1.value, 2)
     let (summand_2, r2) = unsigned_div_rem(entry_2.value, 2)
     let (summand_3, r3) = unsigned_div_rem(r1 + r2, 2)
 
+    #if publishers pass in a mistakenly large value for entry, value would overflow, but an overflow would prob happen before this step
+    #Correction: value (and it's addends) should not overflow because the standard library implementation for unsigned_div_rem has a range check
+    #See https://github.com/starkware-libs/cairo-lang/blob/master/src/starkware/cairo/common/math.cairo
     let value = summand_1 + summand_2 + summand_3
     return (value)
 end
