@@ -19,11 +19,11 @@ def get_contract_def(path):
     return contract_def
 
 
-def cached_contract(state, definition, deployed):
+def cached_contract(state, contract_class, deployed):
     """Returns the cached contract"""
     contract = StarknetContract(
         state=state,
-        abi=definition.abi,
+        abi=contract_class.abi,
         contract_address=deployed.contract_address,
         deploy_execution_info=deployed.deploy_execution_info,
     )

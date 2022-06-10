@@ -18,26 +18,26 @@ AGGREGATION_MODE = 0
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_def():
-    contract_def = compile_starknet_files(files=[CONTRACT_FILE], debug_info=True)
-    return contract_def
+async def contract_class():
+    contract_class = compile_starknet_files(files=[CONTRACT_FILE], debug_info=True)
+    return contract_class
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_init(contract_def):
+async def contract_init(contract_class):
     starknet = await Starknet.empty()
     contract = await starknet.deploy(
-        contract_def=contract_def, constructor_calldata=[ORACLE_CONTROLLER_ADDRESS]
+        contract_class=contract_class, constructor_calldata=[ORACLE_CONTROLLER_ADDRESS]
     )
 
     return starknet.state, contract
 
 
 @pytest.fixture
-def contract(contract_def, contract_init):
+def contract(contract_class, contract_init):
     state, contract = contract_init
     _state = state.copy()
-    contract = cached_contract(_state, contract_def, contract)
+    contract = cached_contract(_state, contract_class, contract)
     return contract
 
 
