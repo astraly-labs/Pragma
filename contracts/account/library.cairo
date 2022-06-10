@@ -128,6 +128,7 @@ namespace Account:
         with_attr error_message("Account: nonce is invalid"):
             assert _current_nonce = nonce
         end
+        assert calldata_len = call_array[call_array_len-1].data_offset + call_array[call_array_len-1].data_len
         # TMP: Convert `AccountCallArray` to 'Call'.
         let (calls : Call*) = alloc()
         _from_call_array_to_call(call_array_len, call_array, calldata, calls)
