@@ -3,7 +3,7 @@
 
 %lang starknet
 
-from openzeppelin.account.library import AccountCallArray
+from contracts.account.library import AccountCallArray
 
 @contract_interface
 namespace IAccount:
@@ -18,11 +18,17 @@ namespace IAccount:
     # Business logic
     #
 
-    func is_valid_signature(hash : felt, signature_len : felt, signature : felt*):
+    func is_valid_signature(hash : felt, signature_len : felt, signature : felt*) -> (
+        is_valid : felt
+    ):
     end
 
     func __execute__(
-            call_array_len : felt, call_array : AccountCallArray*, calldata_len : felt,
-            calldata : felt*, nonce : felt) -> (response_len : felt, response : felt*):
+        call_array_len : felt,
+        call_array : AccountCallArray*,
+        calldata_len : felt,
+        calldata : felt*,
+        nonce : felt,
+    ) -> (response_len : felt, response : felt*):
     end
 end

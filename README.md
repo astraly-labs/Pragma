@@ -30,6 +30,16 @@ After you have cloned the repository, run the following commands to set up the r
 
 # Usage
 
+## Developing Contracts Locally
+
+To ensure your IDE settings and contracts compile correctly, make sure to run any Pontis code after activating your Cairo virtual environment.
+
+Then add this line of code to your shell profile:
+
+```code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}```
+
+After doing so, open all subsequent windows of the repo from the CLI, using the ```code . ``` command, for correct formatting.
+
 ## Pulling Data Locally from Feeds in Deployed Contracts
 
 Make sure you set the following environment variables to be able to interact with the deployed contract:

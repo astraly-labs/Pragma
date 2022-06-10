@@ -1,7 +1,8 @@
 {
-    "cairo.cairoFormatPath": "/Users/jonas/.virtualenvs/sns/bin/cairo-format",
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
     "prettier.printWidth": 80,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveTimeout": 1500
 }

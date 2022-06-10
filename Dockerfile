@@ -7,5 +7,5 @@ RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev
 COPY requirements.txt /requirements.txt
 RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
 
-COPY pontis-package /pontis-package
-RUN pip install -e pontis-package
+ARG PONTIS_PACKAGE_VERSION
+RUN pip install pontis==$PONTIS_PACKAGE_VERSION
