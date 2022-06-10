@@ -100,7 +100,7 @@ namespace Account:
             ecdsa_ptr : SignatureBuiltin*}(
             hash : felt, signature_len : felt, signature : felt*) -> ():
         let (_public_key) = Account_public_key.read()
-
+        assert signature_len = 2
         # This interface expects a signature pointer and length to make
         # no assumption about signature validation schemes.
         # But this implementation does, and it expects a (sig_r, sig_s) pair.
@@ -128,7 +128,6 @@ namespace Account:
         with_attr error_message("Account: nonce is invalid"):
             assert _current_nonce = nonce
         end
-
         # TMP: Convert `AccountCallArray` to 'Call'.
         let (calls : Call*) = alloc()
         _from_call_array_to_call(call_array_len, call_array, calldata, calls)
