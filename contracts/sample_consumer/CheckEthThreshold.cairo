@@ -19,7 +19,8 @@ func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : f
 
     let (eth_price, timestamp) = IOracleController.get_value(
         ORACLE_CONTROLLER_ADDRESS, KEY, AGGREGATION_MODE)
-
+    #if you accidentally specificy a threshold in gwei and forget we already do the ETH to wei conversion internally, 
+    #shifted threshold could overflow. Not much of an issue, and reminds me to resolve create conversion helper function tickets
     let shifted_threshold = threshold * multiplier
     let (is_above_threshold) = is_le(shifted_threshold, eth_price)
     return (is_above_threshold)
