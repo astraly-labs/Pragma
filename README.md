@@ -136,7 +136,7 @@ On testnet, the staging contracts are deployed at the following addresses:
 | OracleController | [Link](https://goerli.voyager.online/contract/0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff) | 0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff |
 | OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d) | 0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d |
 
-The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Pontis publisher account that is registered is located at 0x7cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797.
+The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Pontis publisher account that is registered is located at 3251373723367219268498787183941698604007480963314075130334762142902855469511.
 
 The main part of our CI setup that uses the staging environment is the update prices GHA.
 
