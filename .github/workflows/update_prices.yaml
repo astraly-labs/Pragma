@@ -16,12 +16,14 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '[0-9]\.[0-9]\.[0-9]' -o)
+          export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '[0-9]*\.[0-9]*\.[0-9]*' -o)
           docker build . --build-arg PONTIS_PACKAGE_VERSION=${PONTIS_PACKAGE_VERSION} -t 42labs/pontis-publisher:latest
-          docker build publisher-utils/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
+          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
 
       - name: Post updated prices
         env:
+          __PONTIS_STAGING_ENV__: "TRUE"
+          PUBLISHER_ADDRESS: "3251373723367219268498787183941698604007480963314075130334762142902855469511"
           ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           PUBLISHER_PRIVATE_KEY : ${{ secrets.PUBLISHER_PRIVATE_KEY }}
           COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
@@ -33,7 +35,9 @@ jobs:
           FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
         run: |
           docker run \
-            --env-file publisher-utils/sample-publisher/all/.env\
+            --env-file publisher/sample-publisher/all/.env\
+            -e __PONTIS_STAGING_ENV__=${__PONTIS_STAGING_ENV__}\
+            -e PUBLISHER_ADDRESS=${PUBLISHER_ADDRESS}\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINAPI_KEY=${COINAPI_KEY}\

@@ -34,75 +34,79 @@ STARKNET_STARTING_TIMESTAMP = 1650590820
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_defs():
-    account_def = compile_starknet_files(files=[ACCOUNT_CONTRACT_FILE], debug_info=True)
-    publisher_registry_def = compile_starknet_files(
+async def contract_classes():
+    account_class = compile_starknet_files(
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+    )
+    publisher_registry_class = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE], debug_info=True
     )
-    oracle_controller_def = compile_starknet_files(
+    oracle_controller_class = compile_starknet_files(
         files=[ORACLE_CONTROLLER_CONTRACT_FILE], debug_info=True
     )
-    oracle_implementation_def = compile_starknet_files(
+    oracle_implementation_class = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE], debug_info=True
     )
     return (
-        account_def,
-        publisher_registry_def,
-        oracle_controller_def,
-        oracle_implementation_def,
+        account_class,
+        publisher_registry_class,
+        oracle_controller_class,
+        oracle_implementation_class,
     )
 
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_init(
-    contract_defs, private_and_public_admin_keys, private_and_public_publisher_keys
+    contract_classes, private_and_public_admin_keys, private_and_public_publisher_keys
 ):
     _, admin_public_key = private_and_public_admin_keys
     _, publisher_public_key = private_and_public_publisher_keys
     (
-        account_def,
-        publisher_registry_def,
-        oracle_controller_def,
-        oracle_implementation_def,
-    ) = contract_defs
+        account_class,
+        publisher_registry_class,
+        oracle_controller_class,
+        oracle_implementation_class,
+    ) = contract_classes
 
     starknet = await Starknet.empty()
     starknet.state.state.block_info = BlockInfo.create_for_testing(
         starknet.state.state.block_info.block_number, STARKNET_STARTING_TIMESTAMP
     )
+    # account_declared_class = await starknet.declare(contract_class=account_class)
     admin_account = await starknet.deploy(
-        contract_def=account_def, constructor_calldata=[admin_public_key]
+        contract_class=account_class, constructor_calldata=[admin_public_key]
     )
     second_admin_account = await starknet.deploy(
-        contract_def=account_def, constructor_calldata=[admin_public_key]
+        contract_class=account_class, constructor_calldata=[admin_public_key]
     )
     publisher_account = await starknet.deploy(
-        contract_def=account_def, constructor_calldata=[publisher_public_key]
+        contract_class=account_class, constructor_calldata=[publisher_public_key]
     )
     num_additional_publishers = 5
     additional_publisher_accounts = [
         await starknet.deploy(
-            contract_def=account_def, constructor_calldata=[publisher_public_key]
+            contract_class=account_class,
+            constructor_calldata=[publisher_public_key],
         )
         for _ in range(num_additional_publishers)
     ]
     publisher_registry = await starknet.deploy(
-        contract_def=publisher_registry_def,
+        contract_class=publisher_registry_class,
         constructor_calldata=[admin_account.contract_address],
     )
     oracle_controller = await starknet.deploy(
-        contract_def=oracle_controller_def,
+        contract_class=oracle_controller_class,
         constructor_calldata=[
             admin_account.contract_address,
             publisher_registry.contract_address,
         ],
     )
     oracle_implementation = await starknet.deploy(
-        contract_def=oracle_implementation_def,
+        contract_class=oracle_implementation_class,
         constructor_calldata=[oracle_controller.contract_address],
     )
     second_oracle_implementation = await starknet.deploy(
-        contract_def=oracle_implementation_def,
+        contract_class=oracle_implementation_class,
         constructor_calldata=[oracle_controller.contract_address],
     )
 
@@ -120,36 +124,40 @@ async def contract_init(
 
 
 @pytest.fixture
-def contracts(contract_defs, contract_init):
+def contracts(contract_classes, contract_init):
     (
-        account_def,
-        publisher_registry_def,
-        oracle_controller_def,
-        oracle_implementation_def,
-    ) = contract_defs
+        account_class,
+        publisher_registry_class,
+        oracle_controller_class,
+        oracle_implementation_class,
+    ) = contract_classes
     _state = contract_init["starknet"].state.copy()
-    admin_account = cached_contract(_state, account_def, contract_init["admin_account"])
+    admin_account = cached_contract(
+        _state, account_class, contract_init["admin_account"]
+    )
     second_admin_account = cached_contract(
-        _state, account_def, contract_init["second_admin_account"]
+        _state, account_class, contract_init["second_admin_account"]
     )
     publisher_account = cached_contract(
-        _state, account_def, contract_init["publisher_account"]
+        _state, account_class, contract_init["publisher_account"]
     )
     additional_publisher_accounts = [
-        cached_contract(_state, account_def, x)
+        cached_contract(_state, account_class, x)
         for x in contract_init["additional_publisher_accounts"]
     ]
     publisher_registry = cached_contract(
-        _state, publisher_registry_def, contract_init["publisher_registry"]
+        _state, publisher_registry_class, contract_init["publisher_registry"]
     )
     oracle_controller = cached_contract(
-        _state, oracle_controller_def, contract_init["oracle_controller"]
+        _state, oracle_controller_class, contract_init["oracle_controller"]
     )
     oracle_implementation = cached_contract(
-        _state, oracle_implementation_def, contract_init["oracle_implementation"]
+        _state, oracle_implementation_class, contract_init["oracle_implementation"]
     )
     second_oracle_implementation = cached_contract(
-        _state, oracle_implementation_def, contract_init["second_oracle_implementation"]
+        _state,
+        oracle_implementation_class,
+        contract_init["second_oracle_implementation"],
     )
     return {
         "starknet": contract_init["starknet"],

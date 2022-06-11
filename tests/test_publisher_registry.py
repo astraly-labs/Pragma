@@ -11,36 +11,39 @@ ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 
 
 @pytest_asyncio.fixture(scope="module")
-async def contract_defs():
-    account_contract_def = compile_starknet_files(
+async def contract_classes():
+    account_class = compile_starknet_files(
         files=[ACCOUNT_CONTRACT_FILE], debug_info=True
     )
-    contract_def = compile_starknet_files(files=[CONTRACT_FILE], debug_info=True)
-    return account_contract_def, contract_def
+    publisher_registry_class = compile_starknet_files(
+        files=[CONTRACT_FILE], debug_info=True
+    )
+
+    return account_class, publisher_registry_class
 
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_init(
-    contract_defs, private_and_public_admin_keys, private_and_public_publisher_keys
+    contract_classes, private_and_public_admin_keys, private_and_public_publisher_keys
 ):
     _, admin_public_key = private_and_public_admin_keys
     _, publisher_public_key = private_and_public_publisher_keys
-    account_contract_def, contract_def = contract_defs
+    account_class, publisher_registry_class = contract_classes
     starknet = await Starknet.empty()
     admin_account = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+        contract_class=account_class, constructor_calldata=[admin_public_key]
     )
     second_admin_account = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[admin_public_key]
+        contract_class=account_class, constructor_calldata=[admin_public_key]
     )
     publisher_account = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[publisher_public_key]
+        contract_class=account_class, constructor_calldata=[publisher_public_key]
     )
     second_publisher_account = await starknet.deploy(
-        contract_def=account_contract_def, constructor_calldata=[publisher_public_key]
+        contract_class=account_class, constructor_calldata=[publisher_public_key]
     )
     publisher_registry = await starknet.deploy(
-        contract_def=contract_def,
+        contract_class=publisher_registry_class,
         constructor_calldata=[admin_account.contract_address],
     )
 
@@ -55,25 +58,25 @@ async def contract_init(
 
 
 @pytest.fixture
-def contracts(contract_defs, contract_init):
-    account_contract_def, contract_def = contract_defs
+def contracts(contract_classes, contract_init):
+    account_class, publisher_registry_class = contract_classes
     _state = contract_init["starknet"].state.copy()
     admin_account = cached_contract(
-        _state, account_contract_def, contract_init["admin_account"]
+        _state, account_class, contract_init["admin_account"]
     )
     second_admin_account = cached_contract(
         _state,
-        account_contract_def,
+        account_class,
         contract_init["second_admin_account"],
     )
     publisher_account = cached_contract(
-        _state, account_contract_def, contract_init["publisher_account"]
+        _state, account_class, contract_init["publisher_account"]
     )
     second_publisher_account = cached_contract(
-        _state, account_contract_def, contract_init["second_publisher_account"]
+        _state, account_class, contract_init["second_publisher_account"]
     )
     publisher_registry = cached_contract(
-        _state, contract_def, contract_init["publisher_registry"]
+        _state, publisher_registry_class, contract_init["publisher_registry"]
     )
     return {
         "starknet": contract_init["starknet"],
