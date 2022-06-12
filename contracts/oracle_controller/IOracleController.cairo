@@ -1,5 +1,8 @@
 %lang starknet
 
+from contracts.entry.structs import Entry
+from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+
 @contract_interface
 namespace IOracleController:
     #
