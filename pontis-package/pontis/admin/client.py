@@ -20,6 +20,7 @@ class PontisAdminClient(PontisBaseClient):
         network=None,
         oracle_controller_address=None,
         publisher_registry_address=None,
+        n_retries=None,
     ):
         if admin_address is None:
             admin_address = ADMIN_ADDRESS
@@ -29,7 +30,7 @@ class PontisAdminClient(PontisBaseClient):
         self.publisher_registry_address = publisher_registry_address
         self.publisher_registry_contract = None
 
-        n_retries = ADMIN_DEFAULT_N_RETRIES
+        n_retries = ADMIN_DEFAULT_N_RETRIES if n_retries is None else n_retries
         super().__init__(
             admin_private_key,
             admin_address,

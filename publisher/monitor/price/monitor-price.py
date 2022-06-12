@@ -33,7 +33,7 @@ async def main():
     ]
     os.environ["PUBLISHER_PREFIX"] = "pontis"
 
-    client = PontisClient()
+    client = PontisClient(n_retries=5)
     for i, asset in enumerate(assets):
         key = currency_pair_to_key(*asset["pair"])
         decimals = await client.get_decimals(key)
