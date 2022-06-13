@@ -472,7 +472,7 @@ func _build_future_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     end
 
     let (future_key) = future_key_storage.read(spot_key, storage_idx)
-    let (future_key_is_active) = future_key_status_storage.read(spot_key, future_key)
+    let (future_key_is_active) = get_future_key_is_active(spot_key, future_key)
     if future_key_is_active == TRUE:
         assert [future_keys + output_idx] = future_key
         let (recursed_future_keys_len, recursed_future_keys) = _build_future_keys_array(
