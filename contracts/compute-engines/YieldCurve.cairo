@@ -368,20 +368,6 @@ func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     return ()
 end
 
-#This function below will be deprecated. It assumes that future_key_status just holds activtiy, not a struct including expiry
-@external
-func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        spot_key : felt, future_key : felt, is_active : felt) -> ():
-    Admin_only_admin()
-    # Check that spot key is active
-    with_attr error_message("YieldCurve: Spot key provided is not active"):
-        let (spot_key_is_active) = spot_key_status_storage.read(spot_key)
-        assert spot_key_is_active = TRUE
-    end
-    future_key_status_storage.write(spot_key, future_key, is_active)
-    return ()
-end
-
 @external
 func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         on_key : felt) -> ():
@@ -406,6 +392,11 @@ end
 func set_future_key_status_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key: felt, future_key: felt, new_future_key_status: FutureKeyStatus) -> ():
     Admin_only_admin()
+     # Check that spot key is active
+    with_attr error_message("YieldCurve: Spot key provided is not active"):
+        let (spot_key_is_active) = spot_key_status_storage.read(spot_key)
+        assert spot_key_is_active = TRUE
+    end
     future_key_status_storage.write(spot_key, future_key, new_future_key_status)
     return ()
 end 
@@ -414,14 +405,15 @@ end
 func set_future_key_status_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key: felt, future_key: felt, new_is_active: felt) -> ():
     Admin_only_admin()
-   
-    let (old_expiry) = get_future_key_status_expiry(spot_key, future_key)
-    #used instead of, but equivalent to
-    #let old_struct = get_future_key_status(spot_key, future_key)
-    #let old_expiry = old_struct.expiry_timestamp
 
+    with_attr error_message("YieldCurve: Spot key provided is not active"):
+        let (spot_key_is_active) = spot_key_status_storage.read(spot_key)
+        assert spot_key_is_active = TRUE
+    end
+
+    let (old_expiry) = get_future_key_status_expiry(spot_key, future_key)
     #create a new struct with old expiry and move it in to overwrite the storage slot. 
-    let (new_future_key_status) = FutureKeyStatus(new_is_active, old_expiry)
+    let new_future_key_status = FutureKeyStatus(new_is_active, old_expiry)
     set_future_key_status_struct(spot_key, future_key, new_future_key_status)
     
     return ()
@@ -431,10 +423,14 @@ end
 func set_future_key_status_expiry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key: felt, future_key: felt, new_expiry: felt) -> ():
     Admin_only_admin()
-
+     # Check that spot key is active
+    with_attr error_message("YieldCurve: Spot key provided is not active"):
+        let (spot_key_is_active) = spot_key_status_storage.read(spot_key)
+        assert spot_key_is_active = TRUE
+    end
     let (old_is_active) = get_future_key_is_active(spot_key, future_key)
     #create a new struct with old expiry and move it in to overwrite the storage slot. 
-    let (new_future_key_status) = FutureKeyStatus(old_is_active, new_expiry)
+    let new_future_key_status = FutureKeyStatus(old_is_active, new_expiry)
     set_future_key_status_struct(spot_key, future_key, new_future_key_status)
     
     return ()
