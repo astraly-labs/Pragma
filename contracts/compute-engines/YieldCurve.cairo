@@ -20,6 +20,10 @@ const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828
 #
 # Structs
 #
+struct FutureKeyStatus:
+    member is_active : felt  #boolean if included expiry in structure
+    member expiry_timestamp : felt 
+end
 
 struct YieldPoint:
     member capture_timestamp : felt  # timestamp of data capture
@@ -60,7 +64,7 @@ func future_key_storage(spot_key : felt, idx : felt) -> (future_key : felt):
 end
 
 @storage_var
-func future_key_status_storage(spot_key : felt, future_key : felt) -> (future_key_is_active : felt):
+func future_key_status_storage(spot_key : felt, future_key : felt) -> (future_key_status : FutureKeyStatus):
 end
 
 @storage_var
@@ -146,7 +150,7 @@ func _build_on_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
 
         # Add to on_yield_points and recurse
         # Assume expiry is 24 hours into the future
-        let expiry_timestamp = on_entry.last_updated_timestamp * 24 * 60 * 60
+        let expiry_timestamp = on_entry.last_updated_timestamp + 1 * 24 * 60 * 60 
         assert [yield_points + yield_points_idx * YieldPoint.SIZE] = YieldPoint(on_entry.last_updated_timestamp, expiry_timestamp, shifted_on_value, ON_SOURCE_KEY)
 
         let (recursed_on_yield_points_len, recursed_on_yield_points) = _build_on_yield_points(
@@ -234,13 +238,6 @@ func get_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
 end
 
 @view
-func get_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        spot_key : felt, future_key : felt) -> (future_key_is_active : felt):
-    let (future_key_is_active) = future_key_status_storage.read(spot_key, future_key)
-    return (future_key_is_active)
-end
-
-@view
 func get_future_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key : felt) -> (future_keys_len : felt, future_keys : felt*):
     let (future_keys) = alloc()
@@ -287,6 +284,33 @@ func get_on_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return (on_keys_len, on_keys)
 end
 
+#TODO, setters for FutureKeyStatus which gets us the expiry timestamp for a particular future
+#TODO update frontend referencing the new setters
+
+@view
+func get_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key : felt, future_key : felt) -> (future_key_status : FutureKeyStatus):
+    let (future_key_status) = future_key_status_storage.read(spot_key, future_key)
+    return (future_key_status)
+end
+
+@view
+func get_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key : felt, future_key : felt) -> (future_key_is_active : felt):
+    let (future_key_status) = get_future_key_status(spot_key, future_key)
+    let future_key_is_active = future_key_status.is_active
+    return (future_key_is_active)
+end
+
+@view
+func get_future_key_status_expiry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key : felt, future_key : felt) -> (future_key_status_expiry : felt):
+    let (Future_Key_Status) = get_future_key_status(spot_key, future_key)
+    let future_key_status_expiry = Future_Key_Status.expiry_timestamp
+    return(future_key_status_expiry)
+end
+
+
 #
 # Setters
 #
@@ -299,7 +323,7 @@ func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return ()
 end
 
-@view
+@external
 func set_oracle_controller_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         oracle_controller_address : felt) -> ():
@@ -308,7 +332,7 @@ func set_oracle_controller_address{
     return ()
 end
 
-@view
+@external
 func add_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key : felt) -> ():
     Admin_only_admin()
@@ -319,7 +343,7 @@ func add_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return ()
 end
 
-@view
+@external
 func set_spot_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key : felt, is_active : felt) -> ():
     Admin_only_admin()
@@ -327,9 +351,9 @@ func set_spot_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     return ()
 end
 
-@view
+@external
 func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        spot_key : felt, future_key : felt, is_active : felt) -> ():
+        spot_key : felt, future_key : felt, is_active : felt, expiry_timestamp : felt ) -> ():
     Admin_only_admin()
     # Check that spot key is active
     with_attr error_message("YieldCurve: Spot key provided is not active"):
@@ -338,12 +362,14 @@ func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     end
     let (future_key_len) = future_key_len_storage.read(spot_key)
     future_key_storage.write(spot_key, future_key_len, future_key)
-    future_key_status_storage.write(spot_key, future_key, TRUE)
+    let future_key_status = FutureKeyStatus(is_active, expiry_timestamp) 
+    future_key_status_storage.write(spot_key, future_key, future_key_status)
     future_key_len_storage.write(spot_key, future_key_len + 1)
     return ()
 end
 
-@view
+#This function below will be deprecated. It assumes that future_key_status just holds activtiy, not a struct including expiry
+@external
 func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         spot_key : felt, future_key : felt, is_active : felt) -> ():
     Admin_only_admin()
@@ -356,7 +382,7 @@ func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     return ()
 end
 
-@view
+@external
 func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         on_key : felt) -> ():
     Admin_only_admin()
@@ -367,13 +393,55 @@ func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_pt
     return ()
 end
 
-@view
+@external
 func set_on_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         on_key : felt, is_active : felt) -> ():
     Admin_only_admin()
     on_key_status_storage.write(on_key, is_active)
     return ()
 end
+
+
+@external
+func set_future_key_status_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key: felt, future_key: felt, new_future_key_status: FutureKeyStatus) -> ():
+    Admin_only_admin()
+    future_key_status_storage.write(spot_key, future_key, new_future_key_status)
+    return ()
+end 
+
+@external
+func set_future_key_status_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key: felt, future_key: felt, new_is_active: felt) -> ():
+    Admin_only_admin()
+   
+    let (old_expiry) = get_future_key_status_expiry(spot_key, future_key)
+    #used instead of, but equivalent to
+    #let old_struct = get_future_key_status(spot_key, future_key)
+    #let old_expiry = old_struct.expiry_timestamp
+
+    #create a new struct with old expiry and move it in to overwrite the storage slot. 
+    let (new_future_key_status) = FutureKeyStatus(new_is_active, old_expiry)
+    set_future_key_status_struct(spot_key, future_key, new_future_key_status)
+    
+    return ()
+end 
+
+@external
+func set_future_key_status_expiry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        spot_key: felt, future_key: felt, new_expiry: felt) -> ():
+    Admin_only_admin()
+
+    let (old_is_active) = get_future_key_is_active(spot_key, future_key)
+    #create a new struct with old expiry and move it in to overwrite the storage slot. 
+    let (new_future_key_status) = FutureKeyStatus(old_is_active, new_expiry)
+    set_future_key_status_struct(spot_key, future_key, new_future_key_status)
+    
+    return ()
+end 
+
+
+
 
 #
 # Helpers
