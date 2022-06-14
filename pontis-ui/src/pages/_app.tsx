@@ -24,8 +24,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <link rel="icon" type="image/ico" href="/favicon.ico" />
       </Head>
       <StarknetProvider autoConnect connectors={connectors}>
-        <div className="bg-fuchsia-800 bg-gradient-to-tr from-indigo-900 min-h-screen flex flex-col justify-start text-slate-200">
-          <PontisHeader />
+        <div className="min-h-screen flex flex-col justify-start bg-white">
+          {/* <PontisHeader /> */}
           <Component {...pageProps} />
           <PontisFooter />
         </div>

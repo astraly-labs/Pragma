@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AssetKeyPicker from "../components/AssetKeyPicker";
 import CurrentPrice from "../components/CurrentPrice";
+import { Hero } from "../components/Hero";
 import { AssetKeyT } from "../hooks/oracle";
 
 const IndexPage = () => {
@@ -11,12 +12,15 @@ const IndexPage = () => {
   };
 
   return (
-    <div className="m-auto text-center text-xl">
-      <AssetKeyPicker
+    <div className="mx-auto">
+      <section className="w-screen">
+        <Hero />
+      </section>
+      {/* <AssetKeyPicker
         selectedAssetKey={currentKey}
         onKeyChange={handleKeyChange}
       />
-      <CurrentPrice key={currentKey} assetKey={currentKey} />
+      <CurrentPrice key={currentKey} assetKey={currentKey} /> */}
     </div>
   );
 };

@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        whiterock: {
+        secondary: {
           50: "#fefefd",
           100: "#fdfdfb",
           200: "#faf9f4",
@@ -16,7 +16,7 @@ module.exports = {
           800: "#8c8b7f",
           900: "#727268",
         },
-        bluewood: {
+        primary: {
           50: "#f5f6f7",
           100: "#ebedef",
           200: "#ced1d6",
