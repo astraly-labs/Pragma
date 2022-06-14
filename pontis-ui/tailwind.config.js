@@ -349,6 +349,7 @@ module.exports = {
     },
     fontFamily: {
       sans: [
+        'Space Grotesk',
         'ui-sans-serif',
         'system-ui',
         '-apple-system',
@@ -366,6 +367,7 @@ module.exports = {
       ],
       serif: ['ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
       mono: [
+        'iA Writer Duospace',
         'ui-monospace',
         'SFMono-Regular',
         'Menlo',
