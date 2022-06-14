@@ -1,10 +1,9 @@
 import asyncio
-from collections import namedtuple
 import time
+from collections import namedtuple
+
 from pontis.core.client import PontisClient
 from pontis.core.const import DEFAULT_AGGREGATION_MODE
-
-from pontis.core.utils import str_to_felt, felt_to_str
 
 YieldPoint = namedtuple(
     "YieldPoint", ["capture_timestamp", "expiry_timestamp", "rate", "source"]
