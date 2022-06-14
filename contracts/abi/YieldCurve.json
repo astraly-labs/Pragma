@@ -350,6 +350,10 @@
             {
                 "name": "spot_key",
                 "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
             }
         ],
         "name": "add_spot_key",
@@ -367,7 +371,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_spot_key_status",
+        "name": "set_spot_key_is_active",
         "outputs": [],
         "type": "function"
     },
@@ -397,32 +401,6 @@
     {
         "inputs": [
             {
-                "name": "on_key",
-                "type": "felt"
-            }
-        ],
-        "name": "add_on_key",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "on_key",
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "type": "felt"
-            }
-        ],
-        "name": "set_on_key_status",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "name": "spot_key",
                 "type": "felt"
             },
@@ -435,7 +413,7 @@
                 "type": "FutureKeyStatus"
             }
         ],
-        "name": "set_future_key_status_struct",
+        "name": "set_future_key_status",
         "outputs": [],
         "type": "function"
     },
@@ -454,26 +432,37 @@
                 "type": "felt"
             }
         ],
-        "name": "set_future_key_status_is_active",
+        "name": "set_future_key_is_active",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "on_key",
                 "type": "felt"
             },
             {
-                "name": "future_key",
-                "type": "felt"
-            },
-            {
-                "name": "new_expiry",
+                "name": "is_active",
                 "type": "felt"
             }
         ],
-        "name": "set_future_key_expiry",
+        "name": "add_on_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "on_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "set_on_key_is_active",
         "outputs": [],
         "type": "function"
     }

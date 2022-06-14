@@ -71,6 +71,10 @@ async def get_yield_points(output_decimals):
                 ),
             )
 
+            print(
+                f"future_last_updated_timestamp: {future_last_updated_timestamp}, spot_last_updated_timestamp: {spot_last_updated_timestamp}"
+            )
+
             yield_points.append(
                 YieldPoint(
                     future_last_updated_timestamp,
