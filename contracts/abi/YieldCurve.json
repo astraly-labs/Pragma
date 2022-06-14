@@ -27,6 +27,23 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "is_active",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "FutureKeyStatus",
+        "size": 2,
+        "type": "struct"
+    },
+    {
         "data": [
             {
                 "name": "old_admin_address",
@@ -177,27 +194,6 @@
             {
                 "name": "spot_key",
                 "type": "felt"
-            },
-            {
-                "name": "future_key",
-                "type": "felt"
-            }
-        ],
-        "name": "get_future_key_is_active",
-        "outputs": [
-            {
-                "name": "future_key_is_active",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "spot_key",
-                "type": "felt"
             }
         ],
         "name": "get_future_keys",
@@ -238,7 +234,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_on_key_status",
+        "name": "get_on_key_is_active",
         "outputs": [
             {
                 "name": "on_key_is_active",
@@ -267,6 +263,69 @@
     {
         "inputs": [
             {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_status",
+        "outputs": [
+            {
+                "name": "future_key_status",
+                "type": "FutureKeyStatus"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_is_active",
+        "outputs": [
+            {
+                "name": "future_key_is_active",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_expiry",
+        "outputs": [
+            {
+                "name": "future_key_expiry",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_address",
                 "type": "felt"
             }
@@ -284,7 +343,6 @@
         ],
         "name": "set_oracle_controller_address",
         "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -296,7 +354,6 @@
         ],
         "name": "add_spot_key",
         "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -312,7 +369,6 @@
         ],
         "name": "set_spot_key_status",
         "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -327,32 +383,15 @@
             },
             {
                 "name": "is_active",
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
                 "type": "felt"
             }
         ],
         "name": "add_future_key",
         "outputs": [],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "spot_key",
-                "type": "felt"
-            },
-            {
-                "name": "future_key",
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "type": "felt"
-            }
-        ],
-        "name": "set_future_key_status",
-        "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -364,7 +403,6 @@
         ],
         "name": "add_on_key",
         "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -380,7 +418,63 @@
         ],
         "name": "set_on_key_status",
         "outputs": [],
-        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "new_future_key_status",
+                "type": "FutureKeyStatus"
+            }
+        ],
+        "name": "set_future_key_status_struct",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "new_is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "set_future_key_status_is_active",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "new_expiry",
+                "type": "felt"
+            }
+        ],
+        "name": "set_future_key_expiry",
+        "outputs": [],
         "type": "function"
     }
 ]

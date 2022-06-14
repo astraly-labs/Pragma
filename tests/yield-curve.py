@@ -41,13 +41,13 @@ async def get_yield_points(output_decimals):
 
     for spot_key in spot_keys:
         spot_decimals = await client.get_decimals(spot_key)
-        spot_value, last_updated_timestamp = await client.get_value(
+        spot_value, spot_last_updated_timestamp = await client.get_value(
             spot_key, DEFAULT_AGGREGATION_MODE
         )
 
         for future_key in future_keys:
             future_decimals = await client.get_decimals(future_key)
-            future_value, last_updated_timestamp = await client.get_value(
+            future_value, future_last_updated_timestamp = await client.get_value(
                 future_key, DEFAULT_AGGREGATION_MODE
             )
 
@@ -73,7 +73,7 @@ async def get_yield_points(output_decimals):
 
             yield_points.append(
                 YieldPoint(
-                    last_updated_timestamp,
+                    future_last_updated_timestamp,
                     expiry_timestamp,
                     output_value,
                     "future/spot",
