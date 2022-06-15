@@ -24,17 +24,17 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
 
   setInterval(updateCurrentTimestampSeconds, 1000);
   return (
-    <div className="flex flex-row items-center space-x-2">
-      <ClockCircleOutlined />
+    <div className="flex flex-row items-center space-x-2 md:space-x-3">
+      <ClockCircleOutlined className="text-slate-900" />
       {/* {loading ? ( */}
       {/* <div className="w-12 h-2 bg-slate-200 animate-pulse" />
       ) : ( */}
-      <div className="text-slate-900 text-lg font-mono">
+      <div className="text-slate-900 text-base font-mono">
         {minutesSinceUpdate !== 0 && (
-          <span className="text-2xl">{minutesSinceUpdate}</span>
+          <span className="sm:text-xl md:text-2xl">{minutesSinceUpdate}</span>
         )}
         {minutesSinceUpdate !== 0 && "min "}
-        <span className="text-2xl">{secondsSinceUpdate}</span>sec
+        <span className="sm:text-xl md:text-2xl">{secondsSinceUpdate}</span>sec
       </div>
       {/* )} */}
     </div>
