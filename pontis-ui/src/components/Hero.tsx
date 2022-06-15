@@ -2,7 +2,7 @@ import React from "react";
 
 export const Hero = () => {
   return (
-    <section className="py-40 px-16 sm:px-24 md:px-32 bg-slate-50 w-screen">
+    <section className="py-40 px-6 sm:px-24 md:px-32 bg-slate-50 w-screen">
       <div className="mx-auto w-full sm:max-w-md md:max-w-3xl">
         <p className="uppercase text-large sm:text-2xl text-slate-600 tracking-wide mb-2 md:mb-4">
           Pontis

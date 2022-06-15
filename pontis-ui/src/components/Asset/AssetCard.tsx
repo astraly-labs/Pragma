@@ -1,24 +1,65 @@
 import React from "react";
+import { RightOutlined } from "@ant-design/icons";
 
-import CurrentPrice from "./CurrentPrice";
-import { AssetKeyT } from "../../hooks/oracle";
+import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
+import AssetName from "./AssetCardName";
+import AssetCardPrice from "./AssetCardPrice";
+import AssetCardTime from "./AssetCardTime";
+import LoadingBar from "./LoadingBar";
 
 interface AssetCardProps {
   assetKey: AssetKeyT;
 }
 
-export const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
+const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
+  const { oracleResponse, error } = useOracleGetValue(assetKey);
   return (
-    <div className="bg-white shadow-xl rounded-xl max-w-3xl h-48 flex flex-col overflow-hidden">
-      <div className="w-full max-w-full flex flex-row justify-between items-center text-slate-900 mx-4">
-        <div className="text-3xl uppercase">{assetKey}</div>
-        <CurrentPrice assetKey={assetKey} />
+    <div className="bg-slate-50 shadow-lg hover:shadow-xl rounded-xl flex flex-row overflow-hidden w-full cursor-pointer">
+      <div className="w-full max-w-full flex flex-row flex-wrap justify-between items-center text-slate-900 mx-4 py-4">
+        <AssetName assetKey={assetKey} />
+        {/* {error === undefined ? (
+          <React.Fragment>
+            <AssetCardPrice response={oracleResponse} />
+            <AssetCardTime
+              response={oracleResponse}
+            />
+          </React.Fragment>
+        ) : (
+          <div>
+            <div>Error fetching price for {assetKey.toLocaleUpperCase()}.</div>
+            <div>Please try again later.</div>
+          </div>
+        )} */}
+
+        {oracleResponse?.value !== undefined || false ? (
+          oracleResponse.lastUpdatedTimestamp === 0 ? (
+            <div>No results found for {assetKey.toLocaleUpperCase()}</div>
+          ) : (
+            <React.Fragment>
+              <AssetCardPrice price={oracleResponse.value} />
+              <AssetCardTime
+                lastUpdatedTimestamp={oracleResponse.lastUpdatedTimestamp}
+              />
+            </React.Fragment>
+          )
+        ) : error !== undefined ? (
+          <div>
+            <div>Error fetching price for {assetKey.toLocaleUpperCase()}.</div>
+            <div>Please check the console for details and try again later.</div>
+          </div>
+        ) : (
+          <React.Fragment>
+            <LoadingBar />
+            <LoadingBar />
+          </React.Fragment>
+        )}
       </div>
-      <div className="bg-slate-100 w-full flex flex-row items-center justify-end">
-        <a className="bg-slate-600 text-slate-200 hover:bg-slate-500 px-4 py-2 rounded-sm mr-8">
-          More info
-        </a>
+      <div className="bg-slate-300 w-12 sm:w-16 md:w-24 flex flex-row items-center justify-center">
+        <RightOutlined className="text-slate-900 text-2xl" />
+        {/* <img src="/assets/chevron-right.svg" alt="right arrow" /> */}
       </div>
     </div>
   );
 };
+
+export default AssetCard;
