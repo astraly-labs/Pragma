@@ -30,7 +30,8 @@ end
 
 @storage_var
 func OracleController_oracle_implementation_status_storage(oracle_address : felt) -> (
-        oracle_implementation_status : OracleController_OracleImplementationStatus):
+    oracle_implementation_status : OracleController_OracleImplementationStatus
+):
 end
 
 @storage_var
@@ -43,7 +44,8 @@ end
 
 @event
 func UpdatedPublisherRegistryAddress(
-        old_publisher_registry_address : felt, new_publisher_registry_address : felt):
+    old_publisher_registry_address : felt, new_publisher_registry_address : felt
+):
 end
 
 @event
@@ -52,13 +54,15 @@ end
 
 @event
 func UpdatedOracleImplementation(
-        oracle_implementation_address : felt, old_is_active : felt, new_is_active : felt):
+    oracle_implementation_address : felt, old_is_active : felt, new_is_active : felt
+):
 end
 
 @event
 func UpdatedPrimaryOracleImplementation(
-        old_primary_oracle_implementation_address : felt,
-        new_primary_oracle_implementation_address : felt):
+    old_primary_oracle_implementation_address : felt,
+    new_primary_oracle_implementation_address : felt,
+):
 end
 
 @event
@@ -70,8 +74,8 @@ end
 #
 
 func OracleController_initialize_oracle_controller{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher_registry_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publisher_registry_address : felt):
     OracleController_publisher_registry_address_storage.write(publisher_registry_address)
     return ()
 end
@@ -81,15 +85,15 @@ end
 #
 
 func OracleController_get_publisher_registry_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        publisher_registry_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (publisher_registry_address : felt):
     let (publisher_registry_address) = OracleController_publisher_registry_address_storage.read()
     return (publisher_registry_address)
 end
 
 func OracleController_get_active_oracle_implementation_addresses{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        oracle_addresses_len : felt, oracle_addresses : felt*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (oracle_addresses_len : felt, oracle_addresses : felt*):
     alloc_locals
 
     let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
@@ -99,37 +103,41 @@ func OracleController_get_active_oracle_implementation_addresses{
         return (total_oracle_addresses_len, oracle_addresses)
     end
 
-    let (oracle_addresses_len,
-        oracle_addresses) = OracleController_build_active_oracle_implementation_addresses(
-        total_oracle_addresses_len, oracle_addresses, 0, 0)
+    let (
+        oracle_addresses_len, oracle_addresses
+    ) = OracleController_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0
+    )
 
     return (oracle_addresses_len, oracle_addresses)
 end
 
 func OracleController_get_oracle_implementation_status{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_implementation_address : felt) -> (
-        oracle_implementation_status : OracleController_OracleImplementationStatus):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_implementation_address : felt) -> (
+    oracle_implementation_status : OracleController_OracleImplementationStatus
+):
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-        oracle_implementation_address)
+        oracle_implementation_address
+    )
     return (oracle_implementation_status)
 end
 
 func OracleController_get_oracle_implementation_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(idx : felt) -> (
-        oracle_implementation_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(idx : felt) -> (oracle_implementation_address : felt):
     let (
-        oracle_implementation_address) = OracleController_oracle_implementation_address_storage.read(
-        idx)
+        oracle_implementation_address
+    ) = OracleController_oracle_implementation_address_storage.read(idx)
     return (oracle_implementation_address)
 end
 
 func OracleController_get_primary_oracle_implementation_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        primary_oracle_implementation_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (primary_oracle_implementation_address : felt):
     let (
-        primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     return (primary_oracle_implementation_address)
 end
 
@@ -138,8 +146,8 @@ end
 #
 
 func OracleController_update_publisher_registry_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher_registry_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publisher_registry_address : felt):
     let (old_publisher_registry_address) = OracleController_publisher_registry_address_storage.read(
         )
     OracleController_publisher_registry_address_storage.write(publisher_registry_address)
@@ -148,12 +156,13 @@ func OracleController_update_publisher_registry_address{
 end
 
 func OracleController_add_oracle_implementation_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_implementation_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_implementation_address : felt):
     alloc_locals
 
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-        oracle_implementation_address)
+        oracle_implementation_address
+    )
     with_attr error_message(
             "OracleController: Oracle implementation with this address already registered"):
         assert oracle_implementation_status.was_registered = FALSE
@@ -163,17 +172,21 @@ func OracleController_add_oracle_implementation_address{
 
     OracleController_oracle_implementations_len_storage.write(oracle_implementations_len + 1)
     OracleController_oracle_implementation_address_storage.write(
-        oracle_implementations_len, oracle_implementation_address)  # 0-indexed, so write at old_len (not new_len=len+1)
+        oracle_implementations_len, oracle_implementation_address
+    )  # 0-indexed, so write at old_len (not new_len=len+1)
     let new_oracle_implementation_status = OracleController_OracleImplementationStatus(
-        was_registered=TRUE, is_active=TRUE)  # Default active when registered
+        was_registered=TRUE, is_active=TRUE
+    )  # Default active when registered
     OracleController_oracle_implementation_status_storage.write(
-        oracle_implementation_address, new_oracle_implementation_status)
+        oracle_implementation_address, new_oracle_implementation_status
+    )
     let (
-        primary_oracle_implementation_address) = OracleController_get_primary_oracle_implementation_address(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_get_primary_oracle_implementation_address()
     if primary_oracle_implementation_address == 0:
         OracleController_primary_oracle_implementation_address_storage.write(
-            oracle_implementation_address)
+            oracle_implementation_address
+        )
         tempvar syscall_ptr = syscall_ptr
         tempvar pedersen_ptr = pedersen_ptr
         tempvar range_check_ptr = range_check_ptr
@@ -188,45 +201,50 @@ func OracleController_add_oracle_implementation_address{
 end
 
 func OracleController_update_oracle_implementation_active_status{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_implementation_address : felt, is_active : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_implementation_address : felt, is_active : felt):
     alloc_locals
 
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-        oracle_implementation_address)
+        oracle_implementation_address
+    )
     with_attr error_message(
             "OracleController: Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
     end
 
     let (
-        primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     with_attr error_message(
             "OracleController: Cannot update is_active for primary oracle implementation address"):
         assert_not_equal(oracle_implementation_address, primary_oracle_implementation_address)
     end
 
     let new_oracle_implementation_status = OracleController_OracleImplementationStatus(
-        was_registered=TRUE, is_active=is_active)
+        was_registered=TRUE, is_active=is_active
+    )
     OracleController_oracle_implementation_status_storage.write(
-        oracle_implementation_address, new_oracle_implementation_status)
+        oracle_implementation_address, new_oracle_implementation_status
+    )
 
     UpdatedOracleImplementation.emit(
-        oracle_implementation_address, oracle_implementation_status.is_active, is_active)
+        oracle_implementation_address, oracle_implementation_status.is_active, is_active
+    )
     return ()
 end
 
 func OracleController_set_primary_oracle_implementation_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        primary_oracle_implementation_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(primary_oracle_implementation_address : felt):
     alloc_locals
 
     let (
-        old_primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        old_primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-        primary_oracle_implementation_address)
+        primary_oracle_implementation_address
+    )
     with_attr error_message(
             "OracleController: Oracle implementation with this address has not been registered yet"):
         assert oracle_implementation_status.was_registered = TRUE
@@ -238,10 +256,12 @@ func OracleController_set_primary_oracle_implementation_address{
     end
 
     OracleController_primary_oracle_implementation_address_storage.write(
-        primary_oracle_implementation_address)
+        primary_oracle_implementation_address
+    )
 
     UpdatedPrimaryOracleImplementation.emit(
-        old_primary_oracle_implementation_address, primary_oracle_implementation_address)
+        old_primary_oracle_implementation_address, primary_oracle_implementation_address
+    )
     return ()
 end
 
@@ -250,12 +270,14 @@ end
 #
 
 func OracleController_build_active_oracle_implementation_addresses{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt,
-        output_idx : felt) -> (oracle_addresses_len : felt, oracle_addresses : felt*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt, output_idx : felt) -> (
+    oracle_addresses_len : felt, oracle_addresses : felt*
+):
     let (oracle_address) = OracleController_oracle_implementation_address_storage.read(storage_idx)
     let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-        oracle_address)
+        oracle_address
+    )
 
     if storage_idx == oracle_addresses_len:
         return (output_idx, oracle_addresses)
@@ -263,14 +285,18 @@ func OracleController_build_active_oracle_implementation_addresses{
 
     if oracle_implementation_status.is_active == TRUE:
         assert [oracle_addresses + output_idx] = oracle_address
-        let (recursed_oracle_addresses_len,
-            recursed_oracle_addresses) = OracleController_build_active_oracle_implementation_addresses(
-            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx + 1)
+        let (
+            recursed_oracle_addresses_len, recursed_oracle_addresses
+        ) = OracleController_build_active_oracle_implementation_addresses(
+            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx + 1
+        )
         return (recursed_oracle_addresses_len, recursed_oracle_addresses)
     else:
-        let (recursed_oracle_addresses_len,
-            recursed_oracle_addresses) = OracleController_build_active_oracle_implementation_addresses(
-            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx)
+        let (
+            recursed_oracle_addresses_len, recursed_oracle_addresses
+        ) = OracleController_build_active_oracle_implementation_addresses(
+            oracle_addresses_len, oracle_addresses, storage_idx + 1, output_idx
+        )
         return (recursed_oracle_addresses_len, recursed_oracle_addresses)
     end
 end
@@ -280,11 +306,11 @@ end
 #
 
 func OracleController_get_decimals{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
-        decimals : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt) -> (decimals : felt):
     let (
-        primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     with_attr error_message(
             "OracleController: Primary oracle implementation address must be set first"):
         assert_not_zero(primary_oracle_implementation_address)
@@ -295,13 +321,13 @@ func OracleController_get_decimals{
 end
 
 func OracleController_get_entries{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt) -> (
-        entries_len : felt, entries : Entry*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt) -> (entries_len : felt, entries : Entry*):
     alloc_locals
 
     let (
-        primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     with_attr error_message(
             "OracleController: Primary oracle implementation address must be set first"):
         assert_not_zero(primary_oracle_implementation_address)
@@ -309,31 +335,50 @@ func OracleController_get_entries{
 
     let (publisher_registry_address) = OracleController_get_publisher_registry_address()
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
-        publisher_registry_address)
+        publisher_registry_address
+    )
 
     let (entries_len, entries) = IOracleImplementation.get_entries(
-        primary_oracle_implementation_address, publishers_len, publishers, key)
+        primary_oracle_implementation_address, publishers_len, publishers, key
+    )
     return (entries_len, entries)
 end
 
 func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, aggregation_mode : felt) -> (value : felt, last_updated_timestamp : felt):
+    key : felt, aggregation_mode : felt
+) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
 
     let (publisher_registry_address) = OracleController_get_publisher_registry_address()
     let (publishers_len, publishers) = IPublisherRegistry.get_all_publishers(
-        publisher_registry_address)
+        publisher_registry_address
+    )
     let (
-        primary_oracle_implementation_address) = OracleController_primary_oracle_implementation_address_storage.read(
-        )
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     let (value, last_updated_timestamp) = IOracleImplementation.get_value(
-        primary_oracle_implementation_address, publishers_len, publishers, key, aggregation_mode)
+        primary_oracle_implementation_address, publishers_len, publishers, key, aggregation_mode
+    )
+    return (value, last_updated_timestamp)
+end
+
+func OracleController_get_value_for_publisher{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt, publisher : felt) -> (value : felt, last_updated_timestamp : felt):
+    alloc_locals
+
+    let (
+        primary_oracle_implementation_address
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
+    let (value, last_updated_timestamp) = IOracleImplementation.get_value_for_publisher(
+        primary_oracle_implementation_address, publisher, key
+    )
     return (value, last_updated_timestamp)
 end
 
 func OracleController_set_decimals{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, decimals : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt, decimals : felt):
     alloc_locals
 
     let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
@@ -341,18 +386,19 @@ func OracleController_set_decimals{
         return ()
     end
     let (local oracle_addresses) = alloc()
-    let (oracle_addresses_len,
-        oracle_addresses) = OracleController_build_active_oracle_implementation_addresses(
-        total_oracle_addresses_len, oracle_addresses, 0, 0)
+    let (
+        oracle_addresses_len, oracle_addresses
+    ) = OracleController_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0
+    )
 
     _OracleController_set_decimals(oracle_addresses_len, oracle_addresses, 0, key, decimals)
     return ()
 end
 
 func _OracleController_set_decimals{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, key : felt,
-        decimals : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, key : felt, decimals : felt):
     if oracle_addresses_len == 0:
         return ()
     end
@@ -368,18 +414,21 @@ func _OracleController_set_decimals{
 end
 
 func OracleController_submit_entry{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(new_entry : Entry):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(new_entry : Entry):
     _OracleController_submit_entry(new_entry)
     return ()
 end
 
 func _OracleController_submit_entry{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(new_entry : Entry):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(new_entry : Entry):
     alloc_locals
 
     let (publisher_registry_address) = OracleController_get_publisher_registry_address()
     let (publisher_address) = IPublisherRegistry.get_publisher_address(
-        publisher_registry_address, new_entry.publisher)
+        publisher_registry_address, new_entry.publisher
+    )
     let (caller_address) = get_caller_address()
 
     with_attr error_message("OracleController: Transaction not from publisher account"):
@@ -391,19 +440,22 @@ func _OracleController_submit_entry{
         return ()
     end
     let (local oracle_addresses) = alloc()
-    let (oracle_addresses_len,
-        oracle_addresses) = OracleController_build_active_oracle_implementation_addresses(
-        total_oracle_addresses_len, oracle_addresses, 0, 0)
+    let (
+        oracle_addresses_len, oracle_addresses
+    ) = OracleController_build_active_oracle_implementation_addresses(
+        total_oracle_addresses_len, oracle_addresses, 0, 0
+    )
     _OracleController_submit_entry_for_oracle_addresses(
-        oracle_addresses_len, oracle_addresses, 0, new_entry)
+        oracle_addresses_len, oracle_addresses, 0, new_entry
+    )
 
     SubmittedEntry.emit(new_entry)
     return ()
 end
 
 func _OracleController_submit_entry_for_oracle_addresses{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, new_entry : Entry):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, new_entry : Entry):
     if oracle_addresses_len == 0:
         return ()
     end
@@ -415,13 +467,14 @@ func _OracleController_submit_entry_for_oracle_addresses{
     let oracle_address = [oracle_addresses + idx]
     IOracleImplementation.submit_entry(oracle_address, new_entry)
     _OracleController_submit_entry_for_oracle_addresses(
-        oracle_addresses_len, oracle_addresses, idx + 1, new_entry)
+        oracle_addresses_len, oracle_addresses, idx + 1, new_entry
+    )
     return ()
 end
 
 func OracleController_submit_many_entries{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        new_entries_len : felt, new_entries : Entry*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(new_entries_len : felt, new_entries : Entry*):
     if new_entries_len == 0:
         return ()
     end
