@@ -1,5 +1,5 @@
 import React from "react";
-import { AssetKeyT, useOracleGetValue } from "../hooks/oracle";
+import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
 import TimeSinceUpdate from "./TimeSinceUpdate";
 import ReactLoading from "react-loading";
 
