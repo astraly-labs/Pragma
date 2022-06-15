@@ -20,15 +20,14 @@ const TimeSinceUpdate = ({
   const secondsSinceUpdate = Math.round(
     currentTimestampSeconds - lastUpdatedTimestamp - minutesSinceUpdate * 60
   );
-
   setInterval(updateCurrentTimestampSeconds, 1000);
 
   const minuteStr = minutesSinceUpdate == 1 ? "minute" : "minutes";
 
   return (
     <div className="px-4">
-      Last updated:
-      {minutesSinceUpdate ? ` ${minutesSinceUpdate} ${minuteStr} and ` : " "}
+      Last updated:{" "}
+      {minutesSinceUpdate !== 0 && `${minutesSinceUpdate} ${minuteStr} and `}
       {secondsSinceUpdate} seconds ago
     </div>
   );
