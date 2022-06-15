@@ -116,18 +116,17 @@ func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
 
     # Spot & Futures
     let (spot_keys_len, spot_keys) = get_spot_keys()
-    # For each spot key
     let (yield_points_len, yield_points) = YieldCurve.build_future_spot_yield_points(
         decimals,
         oracle_controller_address,
         on_yield_points,
-        on_keys_len,
-        on_keys,
+        spot_keys_len,
+        spot_keys,
         on_yield_points_len,
         0,
     )
 
-    return (on_yield_points_len, on_yield_points)
+    return (yield_points_len, yield_points)
 end
 
 @view
@@ -380,7 +379,7 @@ func _build_spot_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
     let (spot_key) = get_spot_key(storage_idx)
     let (spot_key_is_active) = get_spot_key_is_active(spot_key)
     if spot_key_is_active == TRUE:
-        assert [spot_keys + output_idx] = spot_key
+        assert spot_keys[output_idx] = spot_key
         let (recursed_spot_keys_len, recursed_spot_keys) = _build_spot_keys_array(
             spot_keys_len, spot_keys, output_idx + 1, storage_idx + 1
         )
@@ -407,7 +406,7 @@ func _build_future_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     let (future_key) = get_future_key(spot_key, storage_idx)
     let (future_key_is_active) = get_future_key_is_active(spot_key, future_key)
     if future_key_is_active == TRUE:
-        assert [future_keys + output_idx] = future_key
+        assert future_keys[output_idx] = future_key
         let (recursed_future_keys_len, recursed_future_keys) = _build_future_keys_array(
             spot_key, future_keys_len, future_keys, output_idx + 1, storage_idx + 1
         )
@@ -430,7 +429,7 @@ func _build_on_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
     let (on_key) = get_on_key(storage_idx)
     let (on_key_is_active) = get_on_key_is_active(on_key)
     if on_key_is_active == TRUE:
-        assert [on_keys + output_idx] = on_key
+        assert on_keys[output_idx] = on_key
         let (recursed_on_keys_len, recursed_on_keys) = _build_on_keys_array(
             on_keys_len, on_keys, output_idx + 1, storage_idx + 1
         )
@@ -473,7 +472,7 @@ namespace YieldCurve:
         if on_keys_idx == on_keys_len:
             return (yield_points_idx, yield_points)
         end
-        let on_key = [on_keys + on_keys_idx]
+        let on_key = on_keys[on_keys_idx]
         let (is_active) = get_on_key_is_active(on_key)
         if is_active == FALSE:
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
@@ -511,7 +510,7 @@ namespace YieldCurve:
             # Add to on_yield_points and recurse
             # Set expiry to be 24 hours into the future
             let expiry_timestamp = on_last_updated_timestamp + 1 * 24 * 60 * 60
-            assert [yield_points + yield_points_idx * YieldPoint.SIZE] = YieldPoint(on_last_updated_timestamp, expiry_timestamp, shifted_on_value, ON_SOURCE_KEY)
+            assert yield_points[yield_points_idx] = YieldPoint(on_last_updated_timestamp, expiry_timestamp, shifted_on_value, ON_SOURCE_KEY)
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -543,7 +542,7 @@ namespace YieldCurve:
         if spot_keys_idx == spot_keys_len:
             return (yield_points_idx, yield_points)
         end
-        let spot_key = [spot_keys + spot_keys_idx]
+        let spot_key = spot_keys[spot_keys_idx]
         let (is_active) = get_spot_key_is_active(spot_key)
 
         if is_active == FALSE:
@@ -637,7 +636,7 @@ namespace YieldCurve:
         end
 
         # Check that future key is active
-        let future_key = [future_keys + future_keys_idx]
+        let future_key = future_keys[future_keys_idx]
         let (future_key_status) = get_future_key_status(spot_key, future_key)
 
         if future_key_status.is_active == FALSE:
@@ -692,6 +691,51 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
+        let (yield_point) = calculate_future_spot_yield_point(
+            future_value,
+            future_last_updated_timestamp,
+            future_key_status.expiry_timestamp,
+            spot_value,
+            spot_last_updated_timestamp,
+            spot_decimals,
+            future_decimals,
+            output_decimals,
+        )
+
+        assert yield_points[yield_points_idx] = yield_point
+
+        let (
+            recursed_future_yield_points_len, recursed_future_yield_points
+        ) = build_future_yield_points(
+            output_decimals,
+            oracle_controller_address,
+            yield_points,
+            future_keys_len,
+            future_keys,
+            yield_points_idx + 1,
+            future_keys_idx + 1,
+            spot_key,
+            spot_value,
+            spot_last_updated_timestamp,
+            spot_decimals,
+        )
+
+        return (recursed_future_yield_points_len, recursed_future_yield_points)
+    end
+
+    func calculate_future_spot_yield_point{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+    }(
+        future_value : felt,
+        future_last_updated_timestamp : felt,
+        future_expiry_timestamp : felt,
+        spot_value : felt,
+        spot_last_updated_timestamp : felt,
+        spot_decimals : felt,
+        future_decimals : felt,
+        output_decimals : felt,
+    ) -> (yield_point : YieldPoint):
+        alloc_locals
         let (is_backwardation) = is_le(future_value, spot_value)
 
         if is_backwardation == TRUE:
@@ -700,13 +744,11 @@ namespace YieldCurve:
         else:
             let (current_timestamp) = get_block_timestamp()
             with_attr error_message("YieldCurve: expiry timestamp for future is in the past"):
-                let (is_future_expired) = is_le(
-                    future_key_status.expiry_timestamp, current_timestamp
-                )
+                let (is_future_expired) = is_le(future_expiry_timestamp, current_timestamp)
                 assert is_future_expired = FALSE
             end
 
-            let seconds_to_expiry = future_key_status.expiry_timestamp - current_timestamp
+            let seconds_to_expiry = future_expiry_timestamp - current_timestamp
 
             let (decimals_multiplier) = pow(10, output_decimals)
             let (time_multiplier, r) = unsigned_div_rem(
@@ -731,34 +773,18 @@ namespace YieldCurve:
             let (local time_scaled_value, _) = unsigned_div_rem(
                 interest_ratio * time_multiplier, decimals_multiplier
             )
+
             tempvar time_scaled_value = time_scaled_value
             tempvar syscall_ptr = syscall_ptr
         end
 
-        assert [yield_points + yield_points_idx * YieldPoint.SIZE] = YieldPoint(
+        let yield_point = YieldPoint(
             future_last_updated_timestamp,
-            future_key_status.expiry_timestamp,
+            future_expiry_timestamp,
             time_scaled_value,
-            FUTURE_SPOT_SOURCE_KEY
-            )
-
-        let (
-            recursed_future_yield_points_len, recursed_future_yield_points
-        ) = build_future_yield_points(
-            output_decimals,
-            oracle_controller_address,
-            yield_points,
-            future_keys_len,
-            future_keys,
-            yield_points_idx + 1,
-            future_keys_idx + 1,
-            spot_key,
-            spot_value,
-            spot_last_updated_timestamp,
-            spot_decimals,
+            FUTURE_SPOT_SOURCE_KEY,
         )
-
-        return (recursed_future_yield_points_len, recursed_future_yield_points)
+        return (yield_point)
     end
 
     func change_decimals{range_check_ptr}(

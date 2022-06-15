@@ -206,15 +206,7 @@ async def initialized_contracts(
         [oracle_implementation.contract_address],
     )
 
-    return {
-        **contracts,
-        "starknet": contracts["starknet"],
-        "admin_account": admin_account,
-        "publisher_account": publisher_account,
-        "publisher_registry": publisher_registry,
-        "oracle_controller": oracle_controller,
-        "oracle_implementation": oracle_implementation,
-    }
+    return contracts
 
 
 @pytest.mark.asyncio
