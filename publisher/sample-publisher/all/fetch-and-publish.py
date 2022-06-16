@@ -5,6 +5,7 @@ import traceback
 import requests
 from pontis.core.client import PontisClient
 from pontis.core.utils import currency_pair_to_key, pprint_entry
+from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.fetch import (
     fetch_binance,
@@ -17,7 +18,6 @@ from pontis.publisher.fetch import (
     fetch_ftx,
     fetch_gemini,
 )
-from pontis.publisher.assets import PONTIS_ALL_ASSETS
 
 
 async def publish_all(assets):

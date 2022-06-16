@@ -8,8 +8,8 @@ import requests
 from pontis.core.client import PontisClient
 from pontis.core.const import DEFAULT_AGGREGATION_MODE
 from pontis.core.utils import currency_pair_to_key, str_to_felt
-from pontis.publisher.fetch import fetch_coingecko
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
+from pontis.publisher.fetch import fetch_coingecko
 
 # Behavior: Ping betteruptime iff all is good
 
