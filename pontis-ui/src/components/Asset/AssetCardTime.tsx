@@ -29,7 +29,7 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
       {/* {loading ? ( */}
       {/* <div className="w-12 h-2 bg-slate-200 animate-pulse" />
       ) : ( */}
-      <div className="text-slate-900 text-base font-mono">
+      <div className="font-mono text-base text-slate-900">
         {minutesSinceUpdate !== 0 && (
           <span className="sm:text-xl md:text-2xl">{minutesSinceUpdate}</span>
         )}

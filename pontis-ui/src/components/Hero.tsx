@@ -1,13 +1,13 @@
 import React from "react";
 
-export const Hero = () => {
+const Hero = () => {
   return (
-    <section className="py-40 px-6 sm:px-24 md:px-32 bg-slate-50 w-screen">
+    <section className="w-screen bg-slate-50 py-40 px-6 sm:px-24 md:px-32">
       <div className="mx-auto w-full md:max-w-3xl">
-        <p className="uppercase text-large sm:text-2xl text-slate-600 tracking-wide mb-2 md:mb-4">
+        <p className="text-large mb-2 uppercase tracking-wide text-slate-600 sm:text-2xl md:mb-4">
           Pontis
         </p>
-        <h1 className="text-5xl font-medium tracking-tight text-slate-900 sm:text-6xl md:text-7xl sm:leading-tight mb-4 md:mb-6">
+        <h1 className="mb-4 text-5xl font-medium tracking-tight text-slate-900 sm:text-6xl sm:leading-tight md:mb-6 md:text-7xl">
           The zk-Oracle
         </h1>
         <p className="text-base text-slate-600 sm:text-xl">
@@ -18,3 +18,5 @@ export const Hero = () => {
     </section>
   );
 };
+
+export default Hero;

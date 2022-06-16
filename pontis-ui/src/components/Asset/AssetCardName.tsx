@@ -2,18 +2,18 @@ import React from "react";
 
 import { AssetKeyT } from "../../hooks/oracle";
 
-interface AssetNameProps {
-  assetKey: AssetKeyT;
-}
-
 /**
  *
- * @param {string} assetKey string containing the coin abbreviation before a '/'
+ * @param {AssetKeyT} assetKey string containing the coin abbreviation before a '/'
  * @return {string} returns string that matches corresponding file name in /assets/logos
  */
-function getLogo(assetKey: string): string {
+function getLogo(assetKey: AssetKeyT): string {
   const indexOfSlash = assetKey.indexOf("/");
   return indexOfSlash > 0 ? assetKey.slice(0, indexOfSlash).toLowerCase() : "";
+}
+
+interface AssetNameProps {
+  assetKey: AssetKeyT;
 }
 
 const AssetName: React.FC<AssetNameProps> = ({ assetKey }) => {
@@ -21,15 +21,17 @@ const AssetName: React.FC<AssetNameProps> = ({ assetKey }) => {
   return (
     <div className="flex flex-row items-center">
       <img
-        src={`/assets/logos/${logoString}.svg`}
+        src={`/assets/currencies/${logoString}.svg`}
         alt={`${logoString} logo`}
-        className="h-5 mr-2 md:mr-3"
+        className="mr-2 h-5 md:mr-3"
         onError={({ currentTarget }) => {
           currentTarget.onerror = null; // prevents looping
-          currentTarget.src = "/assets/logos/fallback.svg";
+          if (currentTarget.src !== "/assets/currencies/fallback.svg") {
+            currentTarget.src = "/assets/currencies/fallback.svg";
+          }
         }}
       />
-      <span className="text-lg sm:text-xl md:text-2xl uppercase font-mono">
+      <span className="font-mono text-lg uppercase sm:text-xl md:text-2xl">
         {assetKey.toLocaleUpperCase()}
       </span>
     </div>
