@@ -366,7 +366,6 @@
         ],
         "name": "set_publisher_key",
         "outputs": [],
-        "stateMutability": "view",
         "type": "function"
     },
     {
