@@ -17,6 +17,7 @@ from pontis.publisher.fetch import (
     fetch_ftx,
     fetch_gemini,
 )
+from pontis.publisher.assets import PONTIS_ALL_ASSETS
 
 
 async def publish_all(assets):
@@ -115,18 +116,4 @@ async def publish_all(assets):
 
 
 if __name__ == "__main__":
-    assets = [
-        {"type": "SPOT", "pair": ("BTC", "USD")},
-        {"type": "SPOT", "pair": ("ETH", "USD")},
-        {"type": "SPOT", "pair": ("LUNA", "USD")},
-        {"type": "SPOT", "pair": ("SOL", "USD")},
-        {"type": "SPOT", "pair": ("AVAX", "USD")},
-        {"type": "SPOT", "pair": ("DOGE", "USD")},
-        {"type": "SPOT", "pair": ("SHIB", "USD")},
-        {"type": "SPOT", "pair": ("TEMP", "USD")},
-        {"type": "SPOT", "pair": ("ETH", "MXN")},
-        {"type": "FUTURE", "pair": ("BTC", "USD")},
-        {"type": "FUTURE", "pair": ("ETH", "USD")},
-    ]
-
-    asyncio.run(publish_all(assets))
+    asyncio.run(publish_all(PONTIS_ALL_ASSETS))
