@@ -206,6 +206,13 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
+        "set_publisher_key",
+        [publisher],
+    )
+
+    await admin_signer.send_transaction(
+        admin_account,
+        yield_curve.contract_address,
         "add_spot_key",
         [str_to_felt(SPOT_KEY), 1],
     )
