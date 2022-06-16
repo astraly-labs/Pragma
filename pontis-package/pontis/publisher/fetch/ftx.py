@@ -9,7 +9,7 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def parse_ftx_spot(asset, data, publisher):
+def parse_ftx_spot(asset, data, publisher, timestamp):
     pair = asset["pair"]
     key = currency_pair_to_key(*pair)
 
@@ -23,7 +23,6 @@ def parse_ftx_spot(asset, data, publisher):
     ), f"Found more than one matching entries for FTX response and price pair {pair}"
     price = float(result[0]["price"])
     price_int = int(price * (10 ** asset["decimals"]))
-    timestamp = int(time.time())
 
     print(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
@@ -35,7 +34,7 @@ def parse_ftx_spot(asset, data, publisher):
     )
 
 
-def parse_ftx_future(asset, data, publisher):
+def parse_ftx_futures(asset, data, publisher, timestamp):
     pair = asset["pair"]
     if pair[1] != "USD":
         print(f"Unable to fetch price from FTX for non-USD derivative {pair}")
@@ -46,8 +45,9 @@ def parse_ftx_future(asset, data, publisher):
         print(f"No entry found for {'/'.join(pair)} from FTX")
         return
 
+    entries = []
+
     for future in result:
-        timestamp = int(time.time())
         price = float(future["mark"])
         price_int = int(price * (10 ** asset["decimals"]))
 
@@ -61,12 +61,16 @@ def parse_ftx_future(asset, data, publisher):
 
         print(f"Fetched futures price {price} for {key} from FTX")
 
-        return construct_entry(
-            key=key,
-            value=price_int,
-            timestamp=timestamp,
-            publisher=publisher,
+        entries.append(
+            construct_entry(
+                key=key,
+                value=price_int,
+                timestamp=timestamp,
+                publisher=publisher,
+            )
         )
+
+    return entries
 
 
 def generate_ftx_headers(endpoint):
@@ -102,18 +106,20 @@ def fetch_ftx(assets):
     response = requests.get(base_url + endpoint, headers=headers, timeout=10)
     future_data = response.json()["result"]
 
+    timestamp = int(time.time())
+
     entries = []
 
     for asset in assets:
         if asset["type"] == "SPOT":
-            entry = parse_ftx_spot(asset, spot_data, publisher)
+            entry = parse_ftx_spot(asset, spot_data, publisher, timestamp)
             if entry is not None:
                 entries.append(entry)
             continue
         elif asset["type"] == "FUTURE":
-            entry = parse_ftx_future(asset, future_data, publisher)
-            if entry is not None:
-                entries.append(entry)
+            future_entries = parse_ftx_futures(asset, future_data, publisher, timestamp)
+            if len(future_entries) is not None:
+                entries.extend(future_entries)
             continue
         else:
             print(f"Unable to fetch FTX for un-supported asset type {asset}")
