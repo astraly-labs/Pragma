@@ -18,6 +18,7 @@ from contracts.admin.library import (
 
 from contracts.oracle_controller.IOracleController import IOracleController
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
+from contracts.compute_engines.yield_curve.structs import YieldPoint
 
 #
 # Consts
@@ -107,10 +108,10 @@ end
 @view
 func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     decimals : felt
-) -> (yield_points_len : felt, yield_points : YieldCurve.YieldPoint*):
+) -> (yield_points_len : felt, yield_points : YieldPoint*):
     alloc_locals
 
-    let (yield_points_init : YieldCurve.YieldPoint*) = alloc()
+    let (yield_points_init : YieldPoint*) = alloc()
 
     let (oracle_controller_address) = oracle_controller_address_storage.read()
 
@@ -307,7 +308,7 @@ func set_oracle_controller_address{
     return ()
 end
 
-@view
+@external
 func set_publisher_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher_key : felt
 ) -> ():
@@ -477,17 +478,6 @@ end
 #
 
 namespace YieldCurve:
-    struct YieldPoint:
-        member capture_timestamp : felt  # timestamp of data capture
-        member expiry_timestamp : felt  # timestamp of expiry of the instrument
-        # (1 day for overnight rates and expiration date for futures)
-        member rate : felt  # The calculated yield rate: either overnight rate
-        member source : felt  # An indicator for the source (str_to_felt encode lowercase one of:
-        # "on" (overnight rate aave),
-        # "fut/spot" (deribit future/sport rate),
-        # "other" (for future additional data sources))
-    end
-
     func build_on_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         output_decimals : felt,
         oracle_controller_address : felt,

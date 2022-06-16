@@ -2,12 +2,12 @@
     {
         "members": [
             {
-                "name": "capture_timestamp",
+                "name": "expiry_timestamp",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "expiry_timestamp",
+                "name": "capture_timestamp",
                 "offset": 1,
                 "type": "felt"
             },
@@ -112,6 +112,18 @@
         "outputs": [
             {
                 "name": "oracle_controller_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_publisher_key",
+        "outputs": [
+            {
+                "name": "publisher_key",
                 "type": "felt"
             }
         ],
@@ -343,6 +355,18 @@
         ],
         "name": "set_oracle_controller_address",
         "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher_key",
+                "type": "felt"
+            }
+        ],
+        "name": "set_publisher_key",
+        "outputs": [],
+        "stateMutability": "view",
         "type": "function"
     },
     {

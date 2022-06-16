@@ -21,7 +21,9 @@ ORACLE_CONTROLLER_CONTRACT_FILE = construct_path(
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
     "contracts/oracle_implementation/OracleImplementation.cairo"
 )
-YIELD_CURVE_CONTRACT_FILE = construct_path("contracts/compute_engines/YieldCurve.cairo")
+YIELD_CURVE_CONTRACT_FILE = construct_path(
+    "contracts/compute_engines/yield_curve/YieldCurve.cairo"
+)
 ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
