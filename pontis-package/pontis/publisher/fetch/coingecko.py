@@ -40,6 +40,14 @@ def fetch_coingecko(assets):
             pair_id = "shiba-inu"
         elif pair[0] == "TEMP":
             pair_id = "tempus"
+        elif pair[0] == "DAI":
+            pair_id = "dai"
+        elif pair[0] == "USDT":
+            pair_id = "tether"
+        elif pair[0] == "USDC":
+            pair_id = "usd-coin"
+        elif pair[0] == "TUSD":
+            pair_id = "true-usd"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"
