@@ -5,6 +5,6 @@ struct YieldPoint:
     member rate : felt  # The calculated yield rate: either overnight rate
     member source : felt  # An indicator for the source (str_to_felt encode lowercase one of:
     # "on" (overnight rate aave),
-    # "fut/spot" (deribit future/sport rate),
+    # "future/spot" (deribit future/spot rate),
     # "other" (for future additional data sources))
 end
