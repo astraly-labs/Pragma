@@ -16,6 +16,7 @@ from contracts.admin.library import (
     Admin_only_admin,
 )
 
+from contracts.entry.structs import Entry
 from contracts.oracle_controller.IOracleController import IOracleController
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
 from contracts.compute_engines.yield_curve.structs import YieldPoint
@@ -588,11 +589,11 @@ namespace YieldCurve:
         let (spot_decimals) = IOracleImplementation.get_decimals(
             oracle_implementation_address, spot_key
         )
-        let (spot_value, spot_last_updated_timestamp) = IOracleImplementation.get_value(
-            oracle_implementation_address, 1, &publisher_key, spot_key, DEFAULT_AGGREGATION_MODE
+        let (spot_entries_len, spot_entries) = IOracleImplementation.get_entries(
+            oracle_implementation_address, 1, &publisher_key, spot_key
         )
-        if spot_last_updated_timestamp == 0:
-            # Entry was empty to skip to next one
+        if spot_entries_len == 0:
+            # No entry so skip to next one
             let (
                 recursed_spot_yield_points_len, recursed_spot_yield_points
             ) = build_future_spot_yield_points(
@@ -608,6 +609,7 @@ namespace YieldCurve:
 
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         else:
+            let spot_entry = spot_entries[0]
             # Get all futures, and for each, calculate yield point
             let (future_keys_len, future_keys) = get_future_keys(spot_key)
 
@@ -620,9 +622,7 @@ namespace YieldCurve:
                 future_keys,
                 yield_points_idx,
                 0,
-                spot_key,
-                spot_value,
-                spot_last_updated_timestamp,
+                spot_entry,
                 spot_decimals,
             )
 
@@ -654,9 +654,7 @@ namespace YieldCurve:
         future_keys : felt*,
         yield_points_idx : felt,
         future_keys_idx : felt,
-        spot_key : felt,
-        spot_value : felt,
-        spot_last_updated_timestamp : felt,
+        spot_entry : Entry,
         spot_decimals : felt,
     ) -> (yield_points_len : felt, yield_points : YieldPoint*):
         alloc_locals
@@ -667,7 +665,7 @@ namespace YieldCurve:
 
         # Check that future key is active
         let future_key = future_keys[future_keys_idx]
-        let (future_key_status) = get_future_key_status(spot_key, future_key)
+        let (future_key_status) = get_future_key_status(spot_entry.key, future_key)
 
         if future_key_status.is_active == FALSE:
             let (
@@ -681,9 +679,7 @@ namespace YieldCurve:
                 future_keys,
                 yield_points_idx,
                 future_keys_idx + 1,
-                spot_key,
-                spot_value,
-                spot_last_updated_timestamp,
+                spot_entry,
                 spot_decimals,
             )
 
@@ -695,14 +691,33 @@ namespace YieldCurve:
         let (future_decimals) = IOracleImplementation.get_decimals(
             oracle_implementation_address, future_key
         )
-        let (future_value, future_last_updated_timestamp) = IOracleImplementation.get_value(
-            oracle_implementation_address, 1, &publisher_key, future_key, DEFAULT_AGGREGATION_MODE
+        let (future_entries_len, future_entries) = IOracleImplementation.get_entries(
+            oracle_implementation_address, 1, &publisher_key, future_key
         )
+        if future_entries_len == 0:
+            let (
+                recursed_future_yield_points_len, recursed_future_yield_points
+            ) = build_future_yield_points(
+                output_decimals,
+                oracle_implementation_address,
+                publisher_key,
+                yield_points,
+                future_keys_len,
+                future_keys,
+                yield_points_idx,
+                future_keys_idx + 1,
+                spot_entry,
+                spot_decimals,
+            )
+
+            return (recursed_future_yield_points_len, recursed_future_yield_points)
+        end
+        let future_entry = future_entries[0]
 
         # TODO: Replace with
-        # is_not_zero(future_last_updated_timestamp - spot_last_updated_timestamp) == TRUE
+        # is_not_zero(future_entry.timestamp - spot_entry.timestamp) == TRUE
         let (are_future_spot_simultaneous) = is_le(
-            future_last_updated_timestamp - spot_last_updated_timestamp, 10
+            future_entry.timestamp - spot_entry.timestamp, 10
         )
         if are_future_spot_simultaneous == FALSE:
             let (
@@ -716,9 +731,7 @@ namespace YieldCurve:
                 future_keys,
                 yield_points_idx,
                 future_keys_idx + 1,
-                spot_key,
-                spot_value,
-                spot_last_updated_timestamp,
+                spot_entry,
                 spot_decimals,
             )
 
@@ -726,11 +739,9 @@ namespace YieldCurve:
         end
 
         let (yield_point) = calculate_future_spot_yield_point(
-            future_value,
-            future_last_updated_timestamp,
+            future_entry,
             future_key_status.expiry_timestamp,
-            spot_value,
-            spot_last_updated_timestamp,
+            spot_entry,
             spot_decimals,
             future_decimals,
             output_decimals,
@@ -749,9 +760,7 @@ namespace YieldCurve:
             future_keys,
             yield_points_idx + 1,
             future_keys_idx + 1,
-            spot_key,
-            spot_value,
-            spot_last_updated_timestamp,
+            spot_entry,
             spot_decimals,
         )
 
@@ -761,17 +770,15 @@ namespace YieldCurve:
     func calculate_future_spot_yield_point{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
-        future_value : felt,
-        future_last_updated_timestamp : felt,
+        future_entry : Entry,
         future_expiry_timestamp : felt,
-        spot_value : felt,
-        spot_last_updated_timestamp : felt,
+        spot_entry : Entry,
         spot_decimals : felt,
         future_decimals : felt,
         output_decimals : felt,
     ) -> (yield_point : YieldPoint):
         alloc_locals
-        let (is_backwardation) = is_le(future_value, spot_value)
+        let (is_backwardation) = is_le(future_entry.value, spot_entry.value)
 
         if is_backwardation == TRUE:
             tempvar time_scaled_value = 0
@@ -794,13 +801,13 @@ namespace YieldCurve:
                 # Shift future/spot to the left by output_decimals + spot_decimals - future_decimals
                 let (ratio_multiplier) = pow(10, output_decimals + spot_decimals - future_decimals)
                 let (shifted_ratio, _) = unsigned_div_rem(
-                    future_value * ratio_multiplier, spot_value
+                    future_entry.value * ratio_multiplier, spot_entry.value
                 )
             else:
                 # Shift future/spot to the right by -1 * (output_decimals + spot_decimals - future_decimals)
                 let (ratio_multiplier) = pow(10, future_decimals - output_decimals - spot_decimals)
                 let (shifted_ratio, _) = unsigned_div_rem(
-                    future_value, spot_value * ratio_multiplier
+                    future_entry.value, spot_entry.value * ratio_multiplier
                 )
             end
 
@@ -814,7 +821,7 @@ namespace YieldCurve:
         end
 
         let yield_point = YieldPoint(
-            future_last_updated_timestamp,
+            future_entry.timestamp,
             future_expiry_timestamp,
             time_scaled_value,
             FUTURE_SPOT_SOURCE_KEY,
