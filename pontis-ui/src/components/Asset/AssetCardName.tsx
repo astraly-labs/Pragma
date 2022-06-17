@@ -25,6 +25,7 @@ const AssetName: React.FC<AssetNameProps> = ({ assetKey }) => {
         alt={`${logoString} logo`}
         className="mr-2 h-5 md:mr-3"
         onError={({ currentTarget }) => {
+          // Broken
           currentTarget.onerror = null; // prevents looping
           if (currentTarget.src !== "/assets/currencies/fallback.svg") {
             currentTarget.src = "/assets/currencies/fallback.svg";

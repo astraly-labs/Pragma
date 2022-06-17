@@ -19,20 +19,6 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
         <div className="col-span-1 row-span-1 place-self-start">
           <AssetName assetKey={assetKey} />
         </div>
-        {/* {error === undefined ? (
-          <React.Fragment>
-            <AssetCardPrice response={oracleResponse} />
-            <AssetCardTime
-              response={oracleResponse}
-            />
-          </React.Fragment>
-        ) : (
-          <div>
-            <div>Error fetching price for {assetKey.toLocaleUpperCase()}.</div>
-            <div>Please try again later.</div>
-          </div>
-        )} */}
-
         {oracleResponse?.value !== undefined || false ? (
           oracleResponse.lastUpdatedTimestamp === 0 ? (
             <div>No results found for {assetKey.toLocaleUpperCase()}</div>
