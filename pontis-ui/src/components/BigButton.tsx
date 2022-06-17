@@ -24,7 +24,7 @@ const BigButton: React.FC<BigButtonProps> = ({
       >
         <div className="mb-2 capitalize sm:mb-4 lg:mb-6">{name}</div>
         <div className="text-right">
-          <ChevronRightIcon className="ml-auto w-12 sm:w-16" />
+          <ChevronRightIcon className="ml-auto w-12 lg:w-16" />
         </div>
       </a>
     </div>
