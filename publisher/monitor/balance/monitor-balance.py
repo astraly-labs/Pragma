@@ -16,7 +16,7 @@ from pontis.publisher.client import PontisPublisherClient
 
 async def main(publishers=None, threshold_wei=None):
     # Set admin private key to None because we aren't using the client for protected invokes
-    client = PontisAdminClient(1)
+    client = PontisAdminClient(1, n_retries=5)
 
     if publishers is None:
         publishers = await client.get_all_publishers()
@@ -38,7 +38,7 @@ async def main(publishers=None, threshold_wei=None):
         addresses.add(address)
 
         # Set publisher private key to None because we aren't using the client for protected invokes
-        publisher_client = PontisPublisherClient(1, address)
+        publisher_client = PontisPublisherClient(1, address, n_retries=5)
         balance = await publisher_client.get_eth_balance()
 
         if balance < threshold_wei:

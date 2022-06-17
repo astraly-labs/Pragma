@@ -120,7 +120,7 @@ docker push 42labs/pontis-publisher:latest
 pontis-publisher base images are versioned together with the pontis Python package because when the pontis package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new pontis package release, the release flow will overwrite the pontis package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.
 
 ## Sample Publisher
-If your changes involve changes to the fetching and publishing code, run `scp -i LightsailDefaultKey-us-east-2.pem -r ../all/ ubuntu@<IP_ADDRESS>:` to copy over the code again, where `IP_ADDRESS` is the IP address of the Lightsail instance. The existing instance will automatically rebuild the docker image using that new code.
+If your changes involve changes to the fetching and publishing code, navigate to `publisher/manage-deployment` and run `scp -i LightsailDefaultKey-us-east-2.pem -r ../sample-publisher/all ubuntu@<IP_ADDRESS>:` to copy over the code again, where `IP_ADDRESS` is the IP address of the Lightsail instance. The existing instance will automatically rebuild the docker image using that new code.
 
 If your changes are to the cron command, it is easiest to ssh into the instance and edit the cron command there directtly using `crontab -e`.
 
