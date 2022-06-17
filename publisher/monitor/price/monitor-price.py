@@ -8,6 +8,7 @@ import requests
 from pontis.core.client import PontisClient
 from pontis.core.const import DEFAULT_AGGREGATION_MODE
 from pontis.core.utils import currency_pair_to_key, str_to_felt
+from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.fetch import fetch_coingecko
 
 # Behavior: Ping betteruptime iff all is good
@@ -18,19 +19,7 @@ TIME_TOLERANCE = 600  # in seconds
 
 
 async def main():
-    assets = [
-        {"type": "SPOT", "pair": ("BTC", "USD")},
-        {"type": "SPOT", "pair": ("ETH", "USD")},
-        {"type": "SPOT", "pair": ("LUNA", "USD")},
-        {"type": "SPOT", "pair": ("SOL", "USD")},
-        {"type": "SPOT", "pair": ("AVAX", "USD")},
-        {"type": "SPOT", "pair": ("DOGE", "USD")},
-        {"type": "SPOT", "pair": ("SHIB", "USD")},
-        {"type": "SPOT", "pair": ("TEMP", "USD")},
-        {"type": "SPOT", "pair": ("ETH", "MXN")},
-        {"type": "FUTURE", "pair": ("BTC", "USD")},
-        {"type": "FUTURE", "pair": ("ETH", "USD")},
-    ]
+    assets = PONTIS_ALL_ASSETS
     os.environ["PUBLISHER_PREFIX"] = "pontis"
 
     client = PontisClient(n_retries=5)
