@@ -1,5 +1,5 @@
 import React from "react";
-import { RightOutlined } from "@ant-design/icons";
+import { ChevronRightIcon } from "@heroicons/react/outline";
 
 import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
 import AssetName from "./AssetCardName";
@@ -54,7 +54,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
         )}
       </div>
       <div className="flex w-12 flex-row items-center justify-center bg-slate-300 sm:w-16 md:w-24">
-        <RightOutlined className="text-2xl text-slate-900" />
+        <ChevronRightIcon className="w-8 text-slate-900" />
       </div>
     </div>
   );

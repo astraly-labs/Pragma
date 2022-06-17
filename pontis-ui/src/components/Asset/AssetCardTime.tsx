@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ClockCircleOutlined } from "@ant-design/icons";
+import { ClockIcon } from "@heroicons/react/outline";
 
 interface AssetNameProps {
   lastUpdatedTimestamp: number;
@@ -25,7 +25,7 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
   setInterval(updateCurrentTimestampSeconds, 1000);
   return (
     <div className="flex flex-row items-center space-x-2 md:space-x-3">
-      <ClockCircleOutlined className="text-slate-900" />
+      <ClockIcon className="w-6 text-slate-900" />
       {/* {loading ? ( */}
       {/* <div className="w-12 h-2 bg-slate-200 animate-pulse" />
       ) : ( */}

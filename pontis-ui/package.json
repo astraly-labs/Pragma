@@ -7,7 +7,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
+    "@heroicons/react": "^1.0.6",
     "@starknet-react/core": "^0.11.0",
     "classnames": "^2.3.1",
     "get-starknet": "^1.4.2",

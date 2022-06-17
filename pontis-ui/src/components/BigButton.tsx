@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { ChevronRightIcon } from "@heroicons/react/outline";
 
 interface BigButtonProps {
   name: string;
@@ -24,7 +24,7 @@ const BigButton: React.FC<BigButtonProps> = ({
       >
         <div className="mb-2 capitalize sm:mb-4 lg:mb-6">{name}</div>
         <div className="text-right">
-          <CaretRightOutlined />
+          <ChevronRightIcon className="ml-auto w-12 sm:w-16" />
         </div>
       </a>
     </div>
