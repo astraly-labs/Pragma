@@ -19,6 +19,10 @@ TIME_TOLERANCE = 600  # in seconds
 
 
 async def main():
+    slack_url = "https://slack.com/api/chat.postMessage"
+    slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
+    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+
     assets = PONTIS_ALL_ASSETS
     os.environ["PUBLISHER_PREFIX"] = "pontis"
 
@@ -66,6 +70,15 @@ async def main():
             )
             print(e)
             print(traceback.format_exc())
+
+            requests.post(
+                slack_url,
+                headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
+                data={
+                    "text": f"Error with Pontis price<!channel> \n\nPrice inaccurate or stale! Asset: {asset}, Coingecko: {coingecko[felt_key]}, Pontis: {value} \n{traceback.format_exc()}",
+                    "channel": channel_id,
+                },
+            )
             all_prices_valid = False
 
     if all_prices_valid:
