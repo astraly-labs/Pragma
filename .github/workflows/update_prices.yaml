@@ -16,9 +16,8 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '[0-9]*\.[0-9]*\.[0-9]*' -o)
-          docker build . --build-arg PONTIS_PACKAGE_VERSION=${PONTIS_PACKAGE_VERSION} -t 42labs/pontis-publisher:latest
-          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
+          docker build . --target test -t 42labs/pontis-publisher:test
+          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
 
       - name: Post updated prices
         env:
