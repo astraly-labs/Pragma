@@ -1,6 +1,6 @@
 from pontis.core.base_client import PontisBaseClient
-from pontis.core.entry import serialize_entries, serialize_entry
 from pontis.core.const import PUBLISHER_REGISTRY_ADDRESS
+from pontis.core.entry import serialize_entries, serialize_entry
 
 DEFAULT_N_RETRIES = 3
 
