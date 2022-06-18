@@ -126,8 +126,6 @@ class PontisBaseClient(ABC):
         )
 
     async def send_transactions(self, calls, max_fee=None):
-        await self.get_nonces()
-
         # Format data for submission
         call_array = []
         offset = 0
@@ -153,6 +151,7 @@ class PontisBaseClient(ABC):
         execute_function = ContractFunction(
             "__execute__", execute_abi, contract_data, self.client
         )
+        await self.get_nonces()  # get nonce as late as possible to decrease the probability of it being stale
         prepared = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
