@@ -40,7 +40,6 @@ async def publish_all(assets):
         coinapi_entries = fetch_coinapi(assets)
         await publisher_client.publish_many(coinapi_entries)
         entries.extend(coinapi_entries)
-        raise Exception("Test exception!")
     except Exception as e:
         print(f"Error fetching Coinapi price: {e}")
         print(traceback.format_exc())
