@@ -11,7 +11,6 @@ from pontis.publisher.fetch import (
     fetch_binance,
     fetch_bitstamp,
     fetch_cex,
-    fetch_coinapi,
     fetch_coinbase,
     fetch_coingecko,
     fetch_coinmarketcap,
@@ -35,16 +34,6 @@ async def publish_all(assets):
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
-
-    try:
-        coinapi_entries = fetch_coinapi(assets)
-        await publisher_client.publish_many(coinapi_entries)
-        entries.extend(coinapi_entries)
-    except Exception as e:
-        print(f"Error fetching Coinapi price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
 
     try:
         coinmarketcap_entries = fetch_coinmarketcap(assets)
