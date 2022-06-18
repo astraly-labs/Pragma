@@ -34,7 +34,7 @@ jobs:
           docker run \
             --env-file publisher/sample-publisher/all/.env\
             -e __PONTIS_STAGING_ENV__=TRUE\
-            -e __PONTIS_PUBLISHER_EXIT_ON_ERROR__=FALSE\
+            -e __PONTIS_PUBLISHER_EXIT_ON_ERROR__=TRUE\
             -e PUBLISHER_ADDRESS=3251373723367219268498787183941698604007480963314075130334762142902855469511\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
