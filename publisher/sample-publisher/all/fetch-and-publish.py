@@ -37,7 +37,7 @@ async def publish_all(assets):
 
     try:
         coinmarketcap_entries = fetch_coinmarketcap(assets)
-        await publisher_client.publish_many(coinmarketcap_entries)
+        tx_exec_info = await publisher_client.publish_many(coinmarketcap_entries)
         entries.extend(coinmarketcap_entries)
     except Exception as e:
         print(f"Error fetching Coinmarketcap price: {e}")
@@ -47,7 +47,7 @@ async def publish_all(assets):
 
     try:
         coingecko_entries = fetch_coingecko(assets)
-        await publisher_client.publish_many(coingecko_entries)
+        tx_exec_info = await publisher_client.publish_many(coingecko_entries)
         entries.extend(coingecko_entries)
     except Exception as e:
         print(f"Error fetching Coingecko price: {e}")
@@ -57,7 +57,7 @@ async def publish_all(assets):
 
     try:
         coinbase_entries = fetch_coinbase(assets)
-        await publisher_client.publish_many(coinbase_entries)
+        tx_exec_info = await publisher_client.publish_many(coinbase_entries)
         entries.extend(coinbase_entries)
     except Exception as e:
         print(f"Error fetching Coinbase price: {e}")
@@ -67,7 +67,7 @@ async def publish_all(assets):
 
     try:
         gemini_entries = fetch_gemini(assets)
-        await publisher_client.publish_many(gemini_entries)
+        tx_exec_info = await publisher_client.publish_many(gemini_entries)
         entries.extend(gemini_entries)
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
@@ -77,7 +77,7 @@ async def publish_all(assets):
 
     try:
         binance_entries = fetch_binance(assets)
-        await publisher_client.publish_many(binance_entries)
+        tx_exec_info = await publisher_client.publish_many(binance_entries)
         entries.extend(binance_entries)
     except Exception as e:
         print(f"Error fetching Binance price: {e}")
@@ -87,7 +87,7 @@ async def publish_all(assets):
 
     try:
         ftx_entries = fetch_ftx(assets)
-        await publisher_client.publish_many(ftx_entries)
+        tx_exec_info = await publisher_client.publish_many(ftx_entries)
         entries.extend(ftx_entries)
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
@@ -97,7 +97,7 @@ async def publish_all(assets):
 
     try:
         cex_entries = fetch_cex(assets)
-        await publisher_client.publish_many(cex_entries)
+        tx_exec_info = await publisher_client.publish_many(cex_entries)
         entries.extend(cex_entries)
     except Exception as e:
         print(f"Error fetching CEX price: {e}")
@@ -107,7 +107,7 @@ async def publish_all(assets):
 
     try:
         bitstamp_entries = fetch_bitstamp(assets)
-        await publisher_client.publish_many(bitstamp_entries)
+        tx_exec_info = await publisher_client.publish_many(bitstamp_entries)
         entries.extend(bitstamp_entries)
     except Exception as e:
         print(f"Error fetching Bitstamp price: {e}")
@@ -122,6 +122,11 @@ async def publish_all(assets):
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")
     requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
+
+    # Wait for the last transaction we sent (tx_exec_info is overwritten) to be confirmed
+    print("Waiting for last tx to be confirmed...")
+    await publisher_client.wait_for_tx(tx_exec_info.hash, wait_for_accept=True)
+    print("Completed, exiting")
 
 
 if __name__ == "__main__":
