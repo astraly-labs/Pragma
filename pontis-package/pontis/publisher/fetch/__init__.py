@@ -6,3 +6,4 @@ from .coingecko import fetch_coingecko
 from .coinmarketcap import fetch_coinmarketcap
 from .ftx import fetch_ftx
 from .gemini import fetch_gemini
+from .thegraph import fetch_thegraph

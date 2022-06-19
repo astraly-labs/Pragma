@@ -12,6 +12,7 @@ publishers = [
     "pontis-coinmarketcap",
     "pontis-ftx",
     "pontis-gemini",
+    "pontis-thegraph",
 ]
 publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
 

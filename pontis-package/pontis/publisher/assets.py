@@ -14,4 +14,14 @@ PONTIS_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("ETH", "MXN")},
     {"type": "FUTURE", "pair": ("BTC", "USD")},
     {"type": "FUTURE", "pair": ("ETH", "USD")},
+    {
+        "type": "ONCHAIN",
+        "source": "AAVE",
+        "key": "aave-on-borrow",
+        "detail": {
+            "asset_name": "USD Coin",
+            "asset_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb480xb53c1a33016b2dc2ff3653530bff1848a515c8c5",
+            "metric": "variableBorrowRate",
+        },
+    },
 ]

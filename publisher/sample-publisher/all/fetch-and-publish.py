@@ -17,6 +17,7 @@ from pontis.publisher.fetch import (
     fetch_ftx,
     fetch_gemini,
 )
+from pontis.publisher.fetch.thegraph import fetch_thegraph
 
 
 async def publish_all(assets):
@@ -27,7 +28,10 @@ async def publish_all(assets):
 
     client = PontisClient()
     for i, asset in enumerate(assets):
-        key = currency_pair_to_key(*asset["pair"])
+        if "pair" in asset:
+            key = currency_pair_to_key(*asset["pair"])
+        else:
+            key = asset["key"]
         decimals = await client.get_decimals(key)
         assets[i]["decimals"] = decimals
 
@@ -111,6 +115,16 @@ async def publish_all(assets):
         entries.extend(bitstamp_entries)
     except Exception as e:
         print(f"Error fetching Bitstamp price: {e}")
+        print(traceback.format_exc())
+        if exit_on_error:
+            raise e
+
+    try:
+        thegraph_entries = fetch_thegraph(assets)
+        tx_exec_info = await publisher_client.publish_many(thegraph_entries)
+        entries.extend(thegraph_entries)
+    except Exception as e:
+        print(f"Error fetching The Graph data: {e}")
         print(traceback.format_exc())
         if exit_on_error:
             raise e
