@@ -18,7 +18,7 @@ const AssetKeyPicker = ({
         {AssetKeys.map((key, i) => (
           <div
             className={classNames(
-              "py-2 text-indigo-600 hover:text-indigo-900 hover:bg-fuchsia-100",
+              "py-4 text-indigo-600 hover:text-indigo-900 hover:bg-fuchsia-100",
               { "border-t border-top border-gray-300": i !== 0 }
             )}
             key={key}
