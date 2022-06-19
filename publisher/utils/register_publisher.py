@@ -6,7 +6,6 @@ from pontis.admin.client import PontisAdminClient
 publishers = [
     f"equilibrium-{source}"
     for source in [
-        "coinapi",
         "coinmarketcap",
         "coingecko",
         "coinbase",
