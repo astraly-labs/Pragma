@@ -40,8 +40,8 @@ class PontisBaseClient(ABC):
         self.signer = Signer(self.account_private_key)
 
         self.client = Client(self.network, n_retries=n_retries)
+        self.latest_nonce = None
         self.nonce = None
-        self.uncached_nonce = None
 
     @abstractmethod
     async def _fetch_contracts(self):
@@ -51,12 +51,18 @@ class PontisBaseClient(ABC):
         try:
             await self.client.wait_for_tx(tx_hash, wait_for_accept, **kwargs)
         except TransactionFailedError as e:
-            # If we errored, might have been due to nonce -> reset nonce optimistically
+            # If we errored, might have been due to nonce -> reset nonce optimistically:
+            # This is our fallback for cases where a transaction fails unbeknownst to us
+            # which would lead to nonce > pending_nonce, from which our get_nonce logic
+            # has no way to recover (because this case is indistinguishable from the one
+            # where nonce > pending_nonce because the submitted tx is not yet reflected).
             self.nonce = None
             raise e
 
-    async def get_nonce_uncached(self):
+    async def get_nonce_uncached(self, include_pending=False):
         await self._fetch_contracts()
+
+        block_number = "pending" if include_pending else "latest"
 
         [nonce] = await self.client.call_contract(
             InvokeFunction(
@@ -67,15 +73,16 @@ class PontisBaseClient(ABC):
                 max_fee=0,
                 version=0,
             ),
-            block_number="pending",
+            block_number=block_number,
         )
         return nonce
 
     async def get_nonces(self):
         await self._fetch_contracts()
 
-        nonce = await self.get_nonce_uncached()
-        self.uncached_nonce = nonce
+        self.latest_nonce = await self.get_nonce_uncached()  # use this for estimate_fee
+        nonce = await self.get_nonce_uncached(include_pending=True)
+        # use this for estimating the nonce to use in the tx we send
 
         # If we have sent a tx recently, use local nonce because network state won't have been updated yet
         if self.nonce is not None and self.nonce >= nonce:
@@ -155,7 +162,7 @@ class PontisBaseClient(ABC):
         prepared = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=self.uncached_nonce,  # have to use uncached because we call (not invoke), i.e. run against current starknet state
+            nonce=self.latest_nonce,  # have to use latest because we call (not invoke), i.e. run against latest starknet state
         )
         signature = sign(prepared.hash, self.account_private_key)
         # TODO: Change to using AccountClient once estimate_fee is fixed there
