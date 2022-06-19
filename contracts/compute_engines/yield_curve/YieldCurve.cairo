@@ -529,9 +529,8 @@ namespace YieldCurve:
             let (shifted_on_value) = change_decimals(on_value, on_decimals, output_decimals)
 
             # Add to on_yield_points and recurse
-            # Set expiry to be 24 hours into the future
-            let expiry_timestamp = on_last_updated_timestamp + 1 * 24 * 60 * 60
-            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=expiry_timestamp, capture_timestamp=on_last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
+            # Set expiry to be same as capture timestamp
+            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_last_updated_timestamp, capture_timestamp=on_last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -715,10 +714,18 @@ namespace YieldCurve:
         let future_entry = future_entries[0]
 
         # TODO: Replace with
-        # is_not_zero(future_entry.timestamp - spot_entry.timestamp) == TRUE
-        let (are_future_spot_simultaneous) = is_le(
-            future_entry.timestamp - spot_entry.timestamp, 10
-        )
+        # is_not_zero(future_entry.timestamp - spot_entry.timestamp) == FALSE
+        let (is_future_more_recent) = is_le(spot_entry.timestamp, future_entry.timestamp)
+        const TIME_TOLERANCE = 10
+        if is_future_more_recent == TRUE:
+            let (are_future_spot_simultaneous) = is_le(
+                future_entry.timestamp - spot_entry.timestamp, TIME_TOLERANCE
+            )
+        else:
+            let (are_future_spot_simultaneous) = is_le(
+                spot_entry.timestamp - future_entry.timestamp, TIME_TOLERANCE
+            )
+        end
         if are_future_spot_simultaneous == FALSE:
             let (
                 recursed_future_yield_points_len, recursed_future_yield_points
