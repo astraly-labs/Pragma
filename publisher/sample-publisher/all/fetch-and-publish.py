@@ -121,7 +121,7 @@ async def publish_all(assets):
 
     try:
         thegraph_entries = fetch_thegraph(assets)
-        await publisher_client.publish_many(thegraph_entries)
+        tx_exec_info = await publisher_client.publish_many(thegraph_entries)
         entries.extend(thegraph_entries)
     except Exception as e:
         print(f"Error fetching The Graph data: {e}")
@@ -130,6 +130,8 @@ async def publish_all(assets):
     print("Publishing the following entries:")
     for entry in entries:
         pprint_entry(entry)
+        if exit_on_error:
+            raise e
 
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")
