@@ -126,12 +126,12 @@ async def publish_all(assets):
     except Exception as e:
         print(f"Error fetching The Graph data: {e}")
         print(traceback.format_exc())
+        if exit_on_error:
+            raise e
 
     print("Publishing the following entries:")
     for entry in entries:
         pprint_entry(entry)
-        if exit_on_error:
-            raise e
 
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")
