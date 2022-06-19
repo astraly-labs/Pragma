@@ -1,4 +1,4 @@
-import { getStarknet } from "@argent/get-starknet";
+import { getStarknet } from "get-starknet";
 
 export const isWalletConnected = (): boolean => !!getStarknet()?.isConnected;
 
