@@ -12,8 +12,8 @@ const ActionsSection: React.FC = () => {
 
   return (
     <section className="w-screen bg-slate-50 py-40 px-6 sm:px-24 md:px-32">
-      <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap space-y-16 sm:space-y-0">
-        <div className="basis-full sm:basis-1/2">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-16 sm:grid-cols-2 sm:gap-0">
+        <div className="col-span-1">
           <BigButton
             name="Learn more"
             isActive={isFirstActive}
@@ -21,7 +21,7 @@ const ActionsSection: React.FC = () => {
             href="https://42labs-xyz.notion.site/Pontis-a0cc65b11f4442e080f5698e2eefe051"
           />
         </div>
-        <div className="basis-full sm:basis-1/2">
+        <div className="col-span-1">
           <BigButton
             name="Voyager"
             isActive={!isFirstActive}

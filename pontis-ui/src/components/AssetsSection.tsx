@@ -21,7 +21,7 @@ const AssetsSection = () => {
             onClick={() => setNumToShow(AssetKeys.length)}
             className={buttonStyle}
           >
-            Show more
+            Show all
           </div>
         ) : (
           <div

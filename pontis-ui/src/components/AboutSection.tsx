@@ -51,7 +51,7 @@ const AboutSection: React.FC = () => {
             <div className="-mt-8 rounded-xl bg-slate-300 p-3 text-slate-700 shadow-md">
               {React.cloneElement(feature.icon, { className: "w-8 h-8" })}
             </div>
-            <h4 className="text-lg font-medium text-slate-700 sm:text-2xl">
+            <h4 className="text-xl font-medium text-slate-700 sm:text-2xl">
               {feature.name}
             </h4>
             <p className="prose prose-slate lg:prose-xl">

@@ -23,7 +23,7 @@ const CurrentPrice = ({ assetKey }: { assetKey: AssetKeyT }) => {
               <div className="inline text-6xl sm:text-8xl">
                 {Math.floor(oracleResponse.value)}
               </div>
-              <div className="sm:inline text-xl sm:text-2xl">
+              <div className="text-xl sm:inline sm:text-2xl">
                 {(oracleResponse.value - Math.floor(oracleResponse.value))
                   .toFixed(DECIMALS_TO_SHOW)
                   .toString()
