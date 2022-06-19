@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - fix-pontis-publisher
 
 jobs:
   push_pontis_publisher:
@@ -23,6 +22,6 @@ jobs:
         run: |
           export $(grep -v '^#' .env | xargs)
           export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '[0-9]*\.[0-9]*\.[0-9]*' -o)
-          docker build . --build-arg PONTIS_PACKAGE_VERSION=${PONTIS_PACKAGE_VERSION} -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
-          docker login -u ${DOCKER_LOGIN} -p ${DOCKER_ACCESS_TOKEN}
+          docker build . --target production --build-arg PONTIS_PACKAGE_VERSION=${PONTIS_PACKAGE_VERSION} -t 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
+          echo $DOCKER_ACCESS_TOKEN | docker login -u ${DOCKER_LOGIN} --password-stdin
           docker push 42labs/pontis-publisher:${PONTIS_PACKAGE_VERSION}
