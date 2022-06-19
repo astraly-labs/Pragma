@@ -6,12 +6,14 @@ interface BigButtonProps {
   name: string;
   isActive: boolean;
   handleMouseEnter: () => void;
+  href: string;
 }
 
 const BigButton: React.FC<BigButtonProps> = ({
   name,
   isActive,
   handleMouseEnter,
+  href,
 }) => {
   return (
     <div className="h-48 w-full sm:h-[300px] lg:h-[500px]">
@@ -21,6 +23,7 @@ const BigButton: React.FC<BigButtonProps> = ({
           { "sm:border-[20px] sm:p-16": isActive }
         )}
         onMouseEnter={handleMouseEnter}
+        href={href}
       >
         <div className="mb-2 capitalize sm:mb-4 lg:mb-6">{name}</div>
         <div className="text-right">

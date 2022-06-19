@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
 import BigButton from "./BigButton";
+import { getOracleControllerAddress } from "../services/address.service";
+import {
+  buildExplorerUrlForAddress,
+  networkId,
+} from "../services/wallet.service";
 
 const ActionsSection: React.FC = () => {
   const [isFirstActive, setIsFirstActive] = useState(true);
@@ -13,6 +18,7 @@ const ActionsSection: React.FC = () => {
             name="Learn more"
             isActive={isFirstActive}
             handleMouseEnter={() => setIsFirstActive(true)}
+            href="https://42labs-xyz.notion.site/Pontis-a0cc65b11f4442e080f5698e2eefe051"
           />
         </div>
         <div className="basis-full sm:basis-1/2">
@@ -20,6 +26,9 @@ const ActionsSection: React.FC = () => {
             name="Voyager"
             isActive={!isFirstActive}
             handleMouseEnter={() => setIsFirstActive(false)}
+            href={buildExplorerUrlForAddress(
+              getOracleControllerAddress(networkId())
+            )}
           />
         </div>
       </div>

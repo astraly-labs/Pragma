@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { getOracleControllerAddress } from "../services/address.service";
-import {
-  buildExplorerUrlForAddress,
-  networkId,
-} from "../services/wallet.service";
+// import { getOracleControllerAddress } from "../services/address.service";
+// import {
+//   buildExplorerUrlForAddress,
+//   networkId,
+// } from "../services/wallet.service";
 import { StyledExternalLink } from "./StyledLink";
 
 const PontisFooter = () => {
@@ -21,12 +21,10 @@ const PontisFooter = () => {
         </p>
         <span className="mt-4 inline-flex justify-center space-x-5 sm:mt-0 sm:ml-auto sm:justify-start">
           <StyledExternalLink
-            href={buildExplorerUrlForAddress(
-              getOracleControllerAddress(networkId())
-            )}
-            target="_blank"
+            href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
+            // target="_blank"
           >
-            View on Voyager
+            Contact Us
           </StyledExternalLink>
         </span>
       </div>
