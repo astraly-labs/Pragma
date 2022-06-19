@@ -531,7 +531,7 @@ namespace YieldCurve:
             # Add to on_yield_points and recurse
             # Set expiry to be 24 hours into the future
             let expiry_timestamp = on_last_updated_timestamp + 1 * 24 * 60 * 60
-            assert yield_points[yield_points_idx] = YieldPoint(on_last_updated_timestamp, expiry_timestamp, shifted_on_value, ON_SOURCE_KEY)
+            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=expiry_timestamp, capture_timestamp=on_last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -821,10 +821,10 @@ namespace YieldCurve:
         end
 
         let yield_point = YieldPoint(
-            future_entry.timestamp,
-            future_expiry_timestamp,
-            time_scaled_value,
-            FUTURE_SPOT_SOURCE_KEY,
+            expiry_timestamp=future_expiry_timestamp,
+            capture_timestamp=future_entry.timestamp,
+            rate=time_scaled_value,
+            source=FUTURE_SPOT_SOURCE_KEY,
         )
         return (yield_point)
     end
