@@ -16,7 +16,7 @@ interface AssetNameProps {
   assetKey: AssetKeyT;
 }
 
-const AssetName: React.FC<AssetNameProps> = ({ assetKey }) => {
+const AssetCardName: React.FC<AssetNameProps> = ({ assetKey }) => {
   // The error state here is needed to prevent an infinite loop if 'fallback.svg' doesn't exist.
   // This stops the browser from sending GET requests.
   const [isError, setIsError] = useState(false);
@@ -41,4 +41,4 @@ const AssetName: React.FC<AssetNameProps> = ({ assetKey }) => {
   );
 };
 
-export default AssetName;
+export default AssetCardName;

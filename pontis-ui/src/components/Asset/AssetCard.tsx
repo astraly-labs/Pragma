@@ -2,7 +2,7 @@ import React from "react";
 import { ChevronRightIcon } from "@heroicons/react/outline";
 
 import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
-import AssetName from "./AssetCardName";
+import AssetCardName from "./AssetCardName";
 import AssetCardPrice from "./AssetCardPrice";
 import AssetCardTime from "./AssetCardTime";
 import LoadingBar from "./LoadingBar";
@@ -17,7 +17,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
     <div className="flex w-full cursor-pointer flex-row overflow-hidden rounded-xl bg-slate-50 shadow-lg hover:shadow-xl">
       <div className="mx-4 grid w-full max-w-full grid-cols-2 grid-rows-2 gap-y-3 py-4 text-slate-900 sm:grid-cols-3 sm:grid-rows-1">
         <div className="col-span-1 row-span-1 place-self-start">
-          <AssetName assetKey={assetKey} />
+          <AssetCardName assetKey={assetKey} />
         </div>
         {oracleResponse?.value !== undefined || false ? (
           oracleResponse.lastUpdatedTimestamp === 0 ? (
