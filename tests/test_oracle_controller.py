@@ -455,6 +455,12 @@ async def test_submit(initialized_contracts, publisher, publisher_signer):
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
 
+    result = await oracle_controller.get_value_for_publisher(
+        publisher, entry.key
+    ).invoke()
+    assert result.result.value == entry.value
+    assert result.result.last_updated_timestamp == entry.timestamp
+
     return
 
 
@@ -644,6 +650,18 @@ async def test_submit_second_publisher(
 
     result = await oracle_controller.get_entries(key).invoke()
     assert result.result.entries == [entry, second_entry]
+
+    result = await oracle_controller.get_value_for_publisher(
+        second_publisher, entry.key
+    ).invoke()
+    assert result.result.value == second_entry.value
+    assert result.result.last_updated_timestamp == second_entry.timestamp
+
+    result = await oracle_controller.get_value_for_publisher(
+        publisher, entry.key
+    ).invoke()
+    assert result.result.value == entry.value
+    assert result.result.last_updated_timestamp == entry.timestamp
 
     return
 
