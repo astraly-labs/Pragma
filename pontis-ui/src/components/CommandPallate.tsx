@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Dialog, Combobox, Transition } from "@headlessui/react";
 
 import { AssetKeys } from "../hooks/oracle";
-import { SearchIcon } from "@heroicons/react/outline";
+import { ChevronRightIcon, SearchIcon } from "@heroicons/react/outline";
 import AssetCardName from "./Asset/AssetCardName";
 
 const CommandPallate: React.FC = () => {
@@ -32,7 +32,7 @@ const CommandPallate: React.FC = () => {
     ? AssetKeys.filter((asset) =>
         asset.toLowerCase().includes(query.toLowerCase())
       )
-    : AssetKeys;
+    : [];
   return (
     <Transition.Root
       show={isOpen}
@@ -70,11 +70,11 @@ const CommandPallate: React.FC = () => {
             as="div"
             className="relative mx-auto max-w-3xl divide-y divide-slate-50 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-slate-900/5"
           >
-            <div className="flex items-center px-4">
+            <div className="flex items-center space-x-4 px-4 py-2">
               <SearchIcon className="h-6 w-6 text-slate-500" />
               <Combobox.Input
                 onChange={(event) => setQuery(event.target.value)}
-                className="h-12 w-full border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 focus:ring-0"
+                className="h-12 w-full appearance-none border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 outline-none focus:ring-0"
                 placeholder="Search assets..."
               />
             </div>
@@ -87,11 +87,17 @@ const CommandPallate: React.FC = () => {
                   <Combobox.Option key={assetKey} value={assetKey}>
                     {({ active }) => (
                       <div
-                        className={classNames("px-2 py-4", {
-                          "bg-slate-400": active,
-                        })}
+                        className={classNames(
+                          "flex items-center justify-between p-4",
+                          {
+                            "bg-slate-300": active,
+                          }
+                        )}
                       >
                         <AssetCardName assetKey={assetKey} />
+                        {active && (
+                          <ChevronRightIcon className="h-6 w-6 text-gray-900" />
+                        )}
                       </div>
                     )}
                   </Combobox.Option>
