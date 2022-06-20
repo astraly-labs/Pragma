@@ -2,15 +2,17 @@
     font-family: "iA Writer Duospace";
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
     src: url(/fonts/iAWriterDuospace-Regular.woff2) format("woff2");
   }
   
 
 @font-face {
-  font-family: "iA Writer Duospace";
-  font-weight: bold;
-  font-style: normal;
-  src: url(/fonts/iAWriterDuospace-Bold.woff2) format("woff2");
+    font-family: "iA Writer Duospace";
+    font-weight: bold;
+    font-style: normal;
+    font-display: optional;
+    src: url(/fonts/iAWriterDuospace-Bold.woff2) format("woff2");
 }
 
 @font-face {
