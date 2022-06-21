@@ -40,7 +40,10 @@ async def main():
 
     all_prices_valid = True
     for asset in assets:
-        key = currency_pair_to_key(*asset["pair"])
+        if "pair" in asset:
+            key = currency_pair_to_key(*asset["pair"])
+        else:
+            key = asset["key"]
         felt_key = str_to_felt(key)
         if felt_key not in coingecko or asset["type"] != "SPOT":
             print(
