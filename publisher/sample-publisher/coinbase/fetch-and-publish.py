@@ -18,7 +18,10 @@ async def main():
 
     client = PontisClient()
     for i, asset in enumerate(assets):
-        key = currency_pair_to_key(*asset["pair"])
+        if "pair" in asset:
+            key = currency_pair_to_key(*asset["pair"])
+        else:
+            key = asset["key"]
         decimals = await client.get_decimals(key)
         assets[i]["decimals"] = decimals
 
