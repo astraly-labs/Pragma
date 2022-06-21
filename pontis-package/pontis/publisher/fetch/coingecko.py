@@ -28,8 +28,6 @@ def fetch_coingecko(assets):
             pair_id = "ethereum"
         elif pair[0] == "BTC":
             pair_id = "bitcoin"
-        elif pair[0] == "LUNA":
-            pair_id = "terra-luna"
         elif pair[0] == "SOL":
             pair_id = "solana"
         elif pair[0] == "AVAX":
