@@ -6,9 +6,8 @@ import requests
 from pontis.core.entry import construct_entry
 
 
-def fetch_binance(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-binance"
+def fetch_binance(assets, publisher):
+    source = "binance"
 
     base_url = "https://dapi.binance.com/dapi/v1"
     response = requests.get(base_url + "/premiumIndex", timeout=20)
@@ -53,6 +52,7 @@ def fetch_binance(assets):
                     key=key,
                     value=price_int,
                     timestamp=timestamp,
+                    source=source,
                     publisher=publisher,
                 )
             )

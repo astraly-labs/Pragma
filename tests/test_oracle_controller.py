@@ -419,7 +419,7 @@ async def test_update_publisher_registry_address(initialized_contracts, admin_si
 
 
 @pytest.mark.asyncio
-async def test_submit(initialized_contracts, publisher, publisher_signer):
+async def test_submit(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -427,6 +427,7 @@ async def test_submit(initialized_contracts, publisher, publisher_signer):
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
 
@@ -451,13 +452,17 @@ async def test_submit(initialized_contracts, publisher, publisher_signer):
 
 
 @pytest.mark.asyncio
-async def test_re_submit(initialized_contracts, publisher, publisher_signer):
+async def test_re_submit(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
     entry = construct_entry(
-        key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
 
     await publisher_signer.send_transaction(
@@ -471,7 +476,11 @@ async def test_re_submit(initialized_contracts, publisher, publisher_signer):
     assert result.result.value == entry.value
 
     second_entry = entry = construct_entry(
-        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP + 2,
+        source=source,
+        publisher=publisher,
     )
 
     await publisher_signer.send_transaction(
@@ -490,13 +499,19 @@ async def test_re_submit(initialized_contracts, publisher, publisher_signer):
 
 
 @pytest.mark.asyncio
-async def test_re_submit_stale(initialized_contracts, publisher, publisher_signer):
+async def test_re_submit_stale(
+    initialized_contracts, source, publisher, publisher_signer
+):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
     entry = construct_entry(
-        key=key, value=2, timestamp=STARKNET_STARTING_TIMESTAMP + 2, publisher=publisher
+        key=key,
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP + 2,
+        source=source,
+        publisher=publisher,
     )
 
     await publisher_signer.send_transaction(
@@ -510,7 +525,11 @@ async def test_re_submit_stale(initialized_contracts, publisher, publisher_signe
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
-        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
 
     try:
@@ -534,7 +553,9 @@ async def test_re_submit_stale(initialized_contracts, publisher, publisher_signe
 
 
 @pytest.mark.asyncio
-async def test_submit_second_asset(initialized_contracts, publisher, publisher_signer):
+async def test_submit_second_asset(
+    initialized_contracts, source, publisher, publisher_signer
+):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -542,6 +563,7 @@ async def test_submit_second_asset(initialized_contracts, publisher, publisher_s
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
 
@@ -559,6 +581,7 @@ async def test_submit_second_asset(initialized_contracts, publisher, publisher_s
         key=str_to_felt("btc/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
 
@@ -585,6 +608,7 @@ async def test_submit_second_asset(initialized_contracts, publisher, publisher_s
 async def test_submit_second_publisher(
     initialized_contracts,
     admin_signer,
+    source,
     publisher,
     publisher_signer,
 ):
@@ -596,7 +620,11 @@ async def test_submit_second_publisher(
 
     key = str_to_felt("eth/usd")
     entry = construct_entry(
-        key=key, value=3, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
     await publisher_signer.send_transaction(
         publisher_account,
@@ -618,6 +646,7 @@ async def test_submit_second_publisher(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=second_publisher,
     )
 
@@ -641,9 +670,62 @@ async def test_submit_second_publisher(
 
 
 @pytest.mark.asyncio
+async def test_submit_second_source(
+    initialized_contracts, source, publisher, publisher_signer
+):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle_controller = initialized_contracts["oracle_controller"]
+
+    key = str_to_felt("eth/usd")
+    entry = construct_entry(
+        key=key,
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
+
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    assert result.result.value == entry.value
+
+    second_entry = entry = construct_entry(
+        key=key,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP + 2,
+        source="1xdata",
+        publisher=publisher,
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(second_entry),
+    )
+
+    result = await oracle_controller.get_value(
+        second_entry.key, AGGREGATION_MODE
+    ).invoke()
+    assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.last_updated_timestamp == max(
+        second_entry.timestamp, entry.timestamp
+    )
+
+    return
+
+
+@pytest.mark.asyncio
 async def test_median_aggregation(
     initialized_contracts,
     admin_signer,
+    source,
     publisher,
     publisher_signer,
 ):
@@ -659,6 +741,7 @@ async def test_median_aggregation(
         key=key,
         value=prices[0],
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
@@ -680,6 +763,7 @@ async def test_median_aggregation(
             key=key,
             value=price,
             timestamp=STARKNET_STARTING_TIMESTAMP,
+            source=source,
             publisher=additional_publisher,
         )
         entries.append(additional_entry)
@@ -706,7 +790,7 @@ async def test_median_aggregation(
 
 
 @pytest.mark.asyncio
-async def test_submit_many(initialized_contracts, publisher, publisher_signer):
+async def test_submit_many(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
@@ -718,6 +802,7 @@ async def test_submit_many(initialized_contracts, publisher, publisher_signer):
             key=keys[i],
             value=prices[i],
             timestamp=STARKNET_STARTING_TIMESTAMP,
+            source=source,
             publisher=publisher,
         )
         for i in range(len(keys))
@@ -751,6 +836,7 @@ async def test_submit_many(initialized_contracts, publisher, publisher_signer):
 async def test_subset_publishers(
     initialized_contracts,
     admin_signer,
+    source,
     publisher,
     publisher_signer,
 ):
@@ -762,7 +848,11 @@ async def test_subset_publishers(
 
     key = str_to_felt("luna/usd")
     entry = construct_entry(
-        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=1,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
     await publisher_signer.send_transaction(
         publisher_account,
@@ -814,28 +904,46 @@ async def test_real_data(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     entries = [
-        construct_entry("eth/usd", 29898560234403, 1650590880, "coinmarketcap"),
-        construct_entry("btc/usd", 404308601528970, 1650590880, "coinmarketcap"),
-        construct_entry("luna/usd", 922793061826, 1650590880, "coinmarketcap"),
-        construct_entry("sol/usd", 1023379113474, 1650590880, "coinmarketcap"),
-        construct_entry("avax/usd", 759878999010, 1650590880, "coinmarketcap"),
-        construct_entry("doge/usd", 1365470994, 1650590880, "coinmarketcap"),
-        construct_entry("shib/usd", 244844, 1650590880, "coinmarketcap"),
-        construct_entry("eth/usd", 29902600000000, 1650590935, "coingecko"),
-        construct_entry("btc/usd", 404070000000000, 1650590889, "coingecko"),
-        construct_entry("luna/usd", 922099999999, 1650590883, "coingecko"),
-        construct_entry("sol/usd", 1023600000000, 1650590886, "coingecko"),
-        construct_entry("avax/usd", 759800000000, 1650590853, "coingecko"),
-        construct_entry("doge/usd", 1365780000, 1650590845, "coingecko"),
-        construct_entry("shib/usd", 245100, 1650590865, "coingecko"),
-        construct_entry("eth/usd", 29924650000000, 1650590820, "coinbase"),
-        construct_entry("btc/usd", 404057899999999, 1650590820, "coinbase"),
-        construct_entry("eth/usd", 29920000000000, 1650590986, "gemini"),
-        construct_entry("btc/usd", 404047800000000, 1650590986, "gemini"),
-        construct_entry("luna/usd", 924700000000, 1650590986, "gemini"),
-        construct_entry("sol/usd", 1023610000000, 1650590986, "gemini"),
-        construct_entry("doge/usd", 1364400000, 1650590986, "gemini"),
-        construct_entry("shib/usd", 245270, 1650590986, "gemini"),
+        construct_entry(
+            "eth/usd", 29898560234403, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "btc/usd", 404308601528970, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "luna/usd", 922793061826, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "sol/usd", 1023379113474, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "avax/usd", 759878999010, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "doge/usd", 1365470994, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "shib/usd", 244844, 1650590880, "coinmarketcap", "coinmarketcap"
+        ),
+        construct_entry(
+            "eth/usd", 29902600000000, 1650590935, "coingecko", "coingecko"
+        ),
+        construct_entry(
+            "btc/usd", 404070000000000, 1650590889, "coingecko", "coingecko"
+        ),
+        construct_entry("luna/usd", 922099999999, 1650590883, "coingecko", "coingecko"),
+        construct_entry("sol/usd", 1023600000000, 1650590886, "coingecko", "coingecko"),
+        construct_entry("avax/usd", 759800000000, 1650590853, "coingecko", "coingecko"),
+        construct_entry("doge/usd", 1365780000, 1650590845, "coingecko", "coingecko"),
+        construct_entry("shib/usd", 245100, 1650590865, "coingecko", "coingecko"),
+        construct_entry("eth/usd", 29924650000000, 1650590820, "coinbase", "coinbase"),
+        construct_entry("btc/usd", 404057899999999, 1650590820, "coinbase", "coinbase"),
+        construct_entry("eth/usd", 29920000000000, 1650590986, "gemini", "gemini"),
+        construct_entry("btc/usd", 404047800000000, 1650590986, "gemini", "gemini"),
+        construct_entry("luna/usd", 924700000000, 1650590986, "gemini", "gemini"),
+        construct_entry("sol/usd", 1023610000000, 1650590986, "gemini", "gemini"),
+        construct_entry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
+        construct_entry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
     ]
     publishers_str = ["coinmarketcap", "coingecko", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
@@ -872,7 +980,7 @@ async def test_real_data(
 
 @pytest.mark.asyncio
 async def test_multiple_oracle_implementations(
-    initialized_contracts, admin_signer, publisher, publisher_signer
+    initialized_contracts, admin_signer, source, publisher, publisher_signer
 ):
     admin_account = initialized_contracts["admin_account"]
     publisher_account = initialized_contracts["publisher_account"]
@@ -884,7 +992,11 @@ async def test_multiple_oracle_implementations(
     # Submit entry
     key = str_to_felt("eth/usd")
     entry = construct_entry(
-        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=1,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
     await publisher_signer.send_transaction(
         publisher_account,
@@ -921,6 +1033,7 @@ async def test_multiple_oracle_implementations(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=second_publisher,
     )
     await publisher_signer.send_transaction(
@@ -964,7 +1077,7 @@ async def test_multiple_oracle_implementations(
 
 @pytest.mark.asyncio
 async def test_rotate_primary_oracle_implementation_address(
-    initialized_contracts, admin_signer, publisher, publisher_signer
+    initialized_contracts, admin_signer, source, publisher, publisher_signer
 ):
     admin_account = initialized_contracts["admin_account"]
     publisher_account = initialized_contracts["publisher_account"]
@@ -985,7 +1098,11 @@ async def test_rotate_primary_oracle_implementation_address(
     # Submit entry
     key = str_to_felt("eth/usd")
     entry = construct_entry(
-        key=key, value=1, timestamp=STARKNET_STARTING_TIMESTAMP, publisher=publisher
+        key=key,
+        value=1,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
     await publisher_signer.send_transaction(
         publisher_account,
@@ -1048,6 +1165,7 @@ async def test_rotate_primary_oracle_implementation_address(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=second_publisher,
     )
     await publisher_signer.send_transaction(
@@ -1083,6 +1201,7 @@ async def test_rotate_primary_oracle_implementation_address(
 @pytest.mark.asyncio
 async def test_ignore_future_entry(
     initialized_contracts,
+    source,
     publisher,
     publisher_signer,
 ):
@@ -1094,6 +1213,7 @@ async def test_ignore_future_entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
+        source=source,
         publisher=publisher,
     )
 
@@ -1116,7 +1236,7 @@ async def test_ignore_future_entry(
 
 @pytest.mark.asyncio
 async def test_ignore_stale_entries(
-    initialized_contracts, admin_signer, publisher, publisher_signer
+    initialized_contracts, admin_signer, source, publisher, publisher_signer
 ):
     admin_account = initialized_contracts["admin_account"]
     publisher_account = initialized_contracts["publisher_account"]
@@ -1129,6 +1249,7 @@ async def test_ignore_stale_entries(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
@@ -1157,6 +1278,7 @@ async def test_ignore_stale_entries(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
+        source=source,
         publisher=second_publisher,
     )
 

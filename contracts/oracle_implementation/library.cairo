@@ -27,7 +27,7 @@ func Oracle_decimals_storage(key : felt) -> (decimals : felt):
 end
 
 @storage_var
-func Oracle_controller_address_storage() -> (publisher_address : felt):
+func Oracle_controller_address_storage() -> (oracle_controller_address : felt):
 end
 
 #
@@ -35,7 +35,7 @@ end
 #
 
 func Oracle_set_default_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        ):
+    ):
     Oracle_decimals_storage.write(DEFAULT_KEY, DEFAULT_DECIMALS)
     return ()
 end
@@ -45,7 +45,8 @@ end
 #
 
 func Oracle_only_oracle_controller{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}():
     let (caller_address) = get_caller_address()
     let (oracle_controller_address) = Oracle_controller_address_storage.read()
     if oracle_controller_address == 0:
@@ -64,7 +65,8 @@ end
 #
 
 func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt) -> (decimals : felt):
+    key : felt
+) -> (decimals : felt):
     let (decimals) = Oracle_decimals_storage.read(key)
     if decimals == 0:
         let (default_decimals) = Oracle_decimals_storage.read(DEFAULT_KEY)
@@ -75,15 +77,15 @@ func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 end
 
 func Oracle_get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_len : felt, publishers : felt*, key : felt) -> (
-        entries_len : felt, entries : Entry*):
+    publishers_len : felt, publishers : felt*, key : felt
+) -> (entries_len : felt, entries : Entry*):
     let (entries_len, entries) = Oracle_get_all_entries(key, publishers_len, publishers)
     return (entries_len, entries)
 end
 
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt) -> (
-        value : felt, last_updated_timestamp : felt):
+    publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt
+) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
 
     let (entries_len, entries) = Oracle_get_entries(publishers_len, publishers, key)
@@ -98,7 +100,8 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
 end
 
 func Oracle_get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, publisher : felt) -> (entry : Entry):
+    key : felt, publisher : felt
+) -> (entry : Entry):
     let (entry) = Oracle_entry_storage.read(key, publisher)
     return (entry)
 end
@@ -108,22 +111,24 @@ end
 #
 
 func Oracle_set_oracle_controller_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        oracle_controller_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_controller_address : felt):
     Oracle_only_oracle_controller()
     Oracle_controller_address_storage.write(oracle_controller_address)
     return ()
 end
 
 func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, decimals : felt):
+    key : felt, decimals : felt
+):
     Oracle_only_oracle_controller()
     Oracle_decimals_storage.write(key, decimals)
     return ()
 end
 
 func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        new_entry : Entry):
+    new_entry : Entry
+):
     alloc_locals
 
     Oracle_only_oracle_controller()
@@ -153,8 +158,8 @@ end
 #
 
 func Oracle_get_all_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, publishers_len : felt, publishers : felt*) -> (
-        entries_len : felt, entries : Entry*):
+    key : felt, publishers_len : felt, publishers : felt*
+) -> (entries_len : felt, entries : Entry*):
     let (entries : Entry*) = alloc()
 
     if publishers_len == 0:
@@ -162,14 +167,20 @@ func Oracle_get_all_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
     end
 
     let (entries_len, entries) = Oracle_build_entries_array(
-        key, publishers_len, publishers, 0, 0, entries)
+        key, publishers_len, publishers, 0, 0, entries
+    )
 
     return (entries_len, entries)
 end
 
 func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, publishers_len : felt, publishers : felt*, publishers_idx : felt,
-        entries_idx : felt, entries : Entry*) -> (entries_len : felt, entries : Entry*):
+    key : felt,
+    publishers_len : felt,
+    publishers : felt*,
+    publishers_idx : felt,
+    entries_idx : felt,
+    entries : Entry*,
+) -> (entries_len : felt, entries : Entry*):
     alloc_locals
 
     if publishers_idx == publishers_len:
@@ -187,13 +198,15 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
 
     if should_skip_entry == TRUE:
         let (entries_len, entries) = Oracle_build_entries_array(
-            key, publishers_len, publishers, publishers_idx + 1, entries_idx, entries)
+            key, publishers_len, publishers, publishers_idx + 1, entries_idx, entries
+        )
         return (entries_len, entries)
     end
 
     assert [entries + entries_idx * Entry.SIZE] = entry
 
     let (entries_len, entries) = Oracle_build_entries_array(
-        key, publishers_len, publishers, publishers_idx + 1, entries_idx + 1, entries)
+        key, publishers_len, publishers, publishers_idx + 1, entries_idx + 1, entries
+    )
     return (entries_len, entries)
 end

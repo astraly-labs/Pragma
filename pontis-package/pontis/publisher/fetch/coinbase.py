@@ -9,9 +9,8 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_coinbase(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-coinbase"
+def fetch_coinbase(assets, publisher):
+    source = "coinbase"
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
     COINBASE_API_KEY = os.environ.get("COINBASE_API_KEY")
     COINBASE_API_PASSPHRASE = os.environ.get("COINBASE_API_PASSPHRASE")
@@ -74,6 +73,7 @@ def fetch_coinbase(assets):
                     key=key,
                     value=price_int,
                     timestamp=timestamp,
+                    source=source,
                     publisher=publisher,
                 )
             )

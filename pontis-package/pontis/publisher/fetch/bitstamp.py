@@ -5,9 +5,8 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_bitstamp(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-bitstamp"
+def fetch_bitstamp(assets, publisher):
+    source = "bitstamp"
     base_url = "https://www.bitstamp.net/api/v2/ticker"
 
     entries = []
@@ -39,6 +38,7 @@ def fetch_bitstamp(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )

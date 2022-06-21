@@ -80,8 +80,10 @@ async def test_update_oracle_controller_address(contract):
 
 
 @pytest.mark.asyncio
-async def test_submit_entries(contract, publisher):
-    entry = construct_entry(key="eth/usd", value=2, timestamp=1, publisher=publisher)
+async def test_submit_entries(contract, source, publisher):
+    entry = construct_entry(
+        key="eth/usd", value=2, timestamp=1, source=source, publisher=publisher
+    )
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
@@ -89,7 +91,7 @@ async def test_submit_entries(contract, publisher):
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
-        key="btc/usd", value=3, timestamp=2, publisher=publisher
+        key="btc/usd", value=3, timestamp=2, source=source, publisher=publisher
     )
 
     await contract.submit_entry(second_entry).invoke(
@@ -109,16 +111,20 @@ async def test_submit_entries(contract, publisher):
 
 
 @pytest.mark.asyncio
-async def test_republish_stale(contract, publisher):
+async def test_republish_stale(contract, source, publisher):
     key = str_to_felt("eth/usd")
-    entry = construct_entry(key=key, value=2, timestamp=2, publisher=publisher)
+    entry = construct_entry(
+        key=key, value=2, timestamp=2, source=source, publisher=publisher
+    )
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     result = await contract.get_value([publisher], entry.key, AGGREGATION_MODE).invoke()
     assert result.result.value == entry.value
 
-    second_entry = construct_entry(key=key, value=3, timestamp=1, publisher=publisher)
+    second_entry = construct_entry(
+        key=key, value=3, timestamp=1, source=source, publisher=publisher
+    )
 
     try:
         await contract.submit_entry(second_entry).invoke(
@@ -140,16 +146,19 @@ async def test_republish_stale(contract, publisher):
 @pytest.mark.asyncio
 async def test_mean_aggregation(
     contract,
+    source,
     publisher,
 ):
     key = str_to_felt("eth/usd")
-    entry = construct_entry(key=key, value=3, timestamp=1, publisher=publisher)
+    entry = construct_entry(
+        key=key, value=3, timestamp=1, source=source, publisher=publisher
+    )
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     second_publisher = str_to_felt("bar")
     second_entry = construct_entry(
-        key=key, value=5, timestamp=1, publisher=second_publisher
+        key=key, value=5, timestamp=1, source=source, publisher=second_publisher
     )
 
     await contract.submit_entry(second_entry).invoke(
@@ -173,13 +182,14 @@ async def test_mean_aggregation(
 @pytest.mark.asyncio
 async def test_median_aggregation(
     contract,
+    source,
 ):
     key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers_str = ["foo", "bar", "baz", "oof", "rab", "zab"]
     publishers = [str_to_felt(p) for p in publishers_str]
     entry = construct_entry(
-        key=key, value=prices[0], timestamp=1, publisher=publishers[0]
+        key=key, value=prices[0], timestamp=1, source=source, publisher=publishers[0]
     )
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
@@ -188,7 +198,11 @@ async def test_median_aggregation(
 
     for price, additional_publisher in zip(prices[1:], publishers[1:]):
         additional_entry = construct_entry(
-            key=key, value=price, timestamp=1, publisher=additional_publisher
+            key=key,
+            value=price,
+            timestamp=1,
+            source=source,
+            publisher=additional_publisher,
         )
         entries.append(additional_entry)
 

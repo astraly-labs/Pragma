@@ -6,9 +6,8 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_coinmarketcap(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-coinmarketcap"
+def fetch_coinmarketcap(assets, publisher):
+    source = "coinmarketcap"
     COINMARKETCAP_KEY = os.environ.get("COINMARKETCAP_KEY")
     headers = {
         "X-CMC_PRO_API_KEY": COINMARKETCAP_KEY,
@@ -47,6 +46,7 @@ def fetch_coinmarketcap(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )

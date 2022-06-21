@@ -27,6 +27,11 @@ def publisher():
 
 
 @pytest.fixture(scope="module")
+def source():
+    return str_to_felt("0xdata")
+
+
+@pytest.fixture(scope="module")
 def private_and_public_admin_keys():
     admin_private_key = get_random_private_key()
     admin_public_key = private_to_stark_key(admin_private_key)

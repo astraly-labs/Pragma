@@ -304,7 +304,7 @@ async def test_empty_yield_curve(initialized_contracts, publisher_signer, publis
 
 
 @pytest.mark.asyncio
-async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
+async def test_yield_curve(initialized_contracts, publisher_signer, source, publisher):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
     yield_curve = initialized_contracts["yield_curve"]
@@ -316,6 +316,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
@@ -330,6 +331,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
             key=spot_key,
             value=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
+            source=source,
             publisher=publisher,
         )
         await publisher_signer.send_transaction(
@@ -351,6 +353,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
                 key=future_key,
                 value=future_data["value"],
                 timestamp=future_data["timestamp"],
+                source=source,
                 publisher=publisher,
             )
             await publisher_signer.send_transaction(

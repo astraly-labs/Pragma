@@ -6,9 +6,8 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_coingecko(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-coingecko"
+def fetch_coingecko(assets, publisher):
+    source = "coingecko"
 
     headers = {
         "Accepts": "application/json",
@@ -73,6 +72,7 @@ def fetch_coingecko(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )
