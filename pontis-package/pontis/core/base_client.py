@@ -41,7 +41,7 @@ class PontisBaseClient(ABC):
 
         self.client = Client(self.network, n_retries=n_retries)
         self.latest_nonce = None
-        self.nonce = None
+        self.next_nonce = None
 
     @abstractmethod
     async def _fetch_contracts(self):
@@ -53,10 +53,10 @@ class PontisBaseClient(ABC):
         except TransactionFailedError as e:
             # If we errored, might have been due to nonce -> reset nonce optimistically:
             # This is our fallback for cases where a transaction fails unbeknownst to us
-            # which would lead to nonce > pending_nonce, from which our get_nonce logic
+            # which would lead to next_nonce > pending_nonce, from which our get_nonce logic
             # has no way to recover (because this case is indistinguishable from the one
-            # where nonce > pending_nonce because the submitted tx is not yet reflected).
-            self.nonce = None
+            # where next_nonce > pending_nonce because the submitted tx is not yet reflected).
+            self.next_nonce = None
             raise e
 
     async def get_nonce_uncached(self, include_pending=False):
@@ -81,15 +81,15 @@ class PontisBaseClient(ABC):
         await self._fetch_contracts()
 
         self.latest_nonce = await self.get_nonce_uncached()  # use this for estimate_fee
-        nonce = await self.get_nonce_uncached(include_pending=True)
+        next_nonce = await self.get_nonce_uncached(include_pending=True)
         # use this for estimating the nonce to use in the tx we send
 
         # If we have sent a tx recently, use local nonce because network state won't have been updated yet
-        if self.nonce is not None and self.nonce >= nonce:
-            nonce = self.nonce + 1
-        self.nonce = nonce
+        if self.next_nonce is not None and self.next_nonce >= next_nonce:
+            next_nonce = self.next_nonce + 1
+        self.next_nonce = next_nonce
 
-        return nonce
+        return next_nonce
 
     async def _fetch_base_contracts(self):
         if self.oracle_controller_contract is None:
@@ -178,7 +178,7 @@ class PontisBaseClient(ABC):
         prepared_with_fee = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=self.nonce,
+            nonce=self.next_nonce,
             max_fee=max_fee,
         )
         signature = sign(prepared_with_fee.hash, self.account_private_key)
