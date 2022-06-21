@@ -16,12 +16,12 @@ jobs:
 
       - name: Build docker images locally
         run: |
-          docker build monitor/balance -t monitor-balance
-          docker build monitor/price -t monitor-price
+          docker build publisher/monitor/balance -t monitor-balance
+          docker build publisher/monitor/price -t monitor-price
 
       - name: Run balance and price monitors
         env:
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
         run: |
-          docker run --env-file monitor/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
-          docker run --env-file monitor/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
+          docker run --env-file publisher/monitor/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
+          docker run --env-file publisher/monitor/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
