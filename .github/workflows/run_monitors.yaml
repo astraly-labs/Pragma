@@ -1,0 +1,27 @@
+name: Run Monitors
+on:
+  push
+
+jobs:
+  update_prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build docker images locally
+        run: |
+          docker build monitor/balance -t monitor-balance
+          docker build monitor/price -t monitor-price
+
+      - name: Run balance and price monitors
+        env:
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+        run: |
+          docker run --env-file monitor/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
+          docker run --env-file monitor/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
