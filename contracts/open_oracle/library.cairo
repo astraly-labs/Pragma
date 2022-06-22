@@ -8,10 +8,10 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
-from starkware.cairo.common.math import unsigned_div_rem
+from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 #pull in an ECDSA signature check 
-#from starkware.cairo.common.cairo_builtins import SignatureBuiltin #do we need to use this?
+from starkware.cairo.common.cairo_builtins import SignatureBuiltin
 from starkware.cairo.common.signature import verify_ecdsa_signature
 
 from contracts.admin.library import (
@@ -55,8 +55,8 @@ end
 #
 # Struct for lookup of public keys. 
 #
-struct SupportedPublicKey:
-    member pub_key : felt
+struct PublicKeyStruct:
+    member public_key : felt
     member is_active : felt
 end
 
@@ -65,15 +65,15 @@ end
 #
 
 @storage_var
-func supported_pub_key_len_storage() -> (supported_pub_key_len : felt):
+func open_oracle_publishers_len_storage() -> (open_oracle_publishers_len : felt):
 end
 
 @storage_var
-func oo_publishers_storage(idx : felt) -> (publisher : felt):
+func open_oracle_publishers_storage(idx : felt) -> (publisher : felt):
 end
 
 @storage_var
-func spk_struct_storage(publisher : felt) -> (spk_struct : SupportedPublicKey):
+func public_key_struct_storage(publisher : felt) -> (public_key_struct : PublicKeyStruct):
 end
 
 
@@ -81,63 +81,63 @@ end
 #Getters: all @view; 
 #
 
-#TODO get spk_len
+
 @view
-func get_supported_pub_key_len{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    ) -> (spk_len : felt):
-    let (spk_len) = supported_pub_key_len_storage.read()
-    return(spk_len)
+func get_publishers_len{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    ) -> (publishers_len : felt):
+    let (publishers_len) = open_oracle_publishers_len_storage.read()
+    return(publishers_len)
 end
 
-#TODO get a single publisher at an spk_len
+
 @view
 func get_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    spk_len : felt) -> (publisher : felt):
-    let (publisher) = oo_publishers_storage.read(idx)
+    idx : felt) -> (publisher : felt):
+    let (publisher) = open_oracle_publishers_storage.read(idx)
     return (publisher)
 end
 
-#TODO get a single struct at a publisher
+
 @view
-func get_spk_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt) -> (spk_struct : SupportedPublicKey):
-    let (spk_struct) = spk_struct_storage.read(publisher)
-    return (spk_struct_storage)
+func get_public_key_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt) -> (public_key_struct : PublicKeyStruct):
+    let (public_key_struct) = public_key_struct_storage.read(publisher)
+    return (public_key_struct_storage)
 end
 
-#TODO get the pub_key from a publisher ---> struct
+
 @view
-func get_spk_pub_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt) -> (pub_key : felt):
-    let (spk_struct) = get_spk_struct(publisher)
-    let pub_key = spk_struct.pub_key
-    return (pub_key)
+func get_public_key_struct_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt) -> (public_key : felt):
+    let (public_key_struct) = get_public_key_struct(publisher)
+    let public_key = public_key_struct.public_key
+    return (public_key)
 end
 
 #TODO get the is_active from a publisher --> struct
 @view
-func get_spk_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func get_public_key_struct_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt) -> (is_active : felt):
-    let (spk_struct) = get_spk_struct(publisher)
-    let is_active = spk_struct.is_active
+    let (public_key_struct) = get_public_key_struct(publisher)
+    let is_active = public_key_struct.is_active
     return (is_active)
 end
 
 #Gets all the active publishers in an array
 @view
-func get_publishers_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    ) -> (publishers_array_len : felt, publishers_array : felt*):
-    let (publishers_array) = alloc()
+func get_active_publishers{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    ) -> (active_publishers_len : felt, active_publishers : felt*):
+    let (active_publishers) = alloc()
 
-    let (total_publishers_array_len) = supported_pub_key_len_storage.read()
+    let (total_publishers_len) = open_oracle_publishers_len_storage.read()
 
-    if total_publishers_array_len == 0:
-        return (0, publishers_array)
+    if total_publishers_len == 0:
+        return (0, active_publishers)
     end
 
-    let (publishers_array_len, publishers_array) = _build_publishers_array(total_publishers_array_len, publishers_array, 0, 0)
+    let (active_publishers_len, active_publishers) = _build_active_publishers_array(total_publishers_len, active_publishers, 0, 0)
 
-    return (publishers_array_len, publishers_array)
+    return (active_publishers_len, active_publishers)
 end
 
 
@@ -163,67 +163,58 @@ func set_oracle_controller_address{syscall_ptr : felt*, pedersen_ptr : HashBuilt
 end
 
 @external
-func add_supported_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, pub_key : felt, is_active : felt) -> ():
+func add_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt, public_key : felt, is_active : felt) -> ():
     Admin_only_admin()
     
-    let (spk_len) = supported_pub_key_len_storage.read()
-    oo_publishers_storage.write(spk_len, publisher)
+    with_attr error_message("OpenOracle: Publisher already registered"):
+        let (existing_public_key) = get_public_key_struct_public_key(publisher)
+        assert existing_public_key = 0
+    end
 
-    #this struct setting might be in our struct setter, or its own function
-    #actually I like how we disaggregate creating the struct and writing to storage as seperate functions
-    #that is good. 
-    let new_spk_struct = SupportedPublicKey(pub_key, is_active)
-    set_spk_struct_storage(new_spk_struct) #or should it be the base line .write()?
-    supported_pub_key_len_storage.write(spk_len+1)
+    let (publishers_len) = open_oracle_publishers_len_storage.read()
+    let new_public_key_struct = PublicKeyStruct(public_key, is_active)
+    
+    open_oracle_publishers_storage.write(publishers_len, publisher)
+    set_public_key_struct_storage(new_public_key_struct)
+    open_oracle_publishers_len_storage.write(publishers_len+1)
     return ()
 end
 
 @external
-func set_spk_struct_storage{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, spk_struct : SupportedPublicKey) -> ():
+func set_public_key_struct_storage{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt, public_key_struct : PublicKeyStruct) -> ():
     Admin_only_admin()
-    spk_struct_storage.write(publisher, spk_struct)
-    return ()
-end
-
-#try not to use set_publisher, only really useful if name change but that would cause breaking changes;
-#will throw off all the old keys; we could avoid through off if we really wanted to using a ring buffer implementation
-#to ensure no gaps. Can we just not implement?
-
-@external
-func set_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    idx : felt, publisher : felt) -> ():
-    Admin_only_admin()
-    oo_publishers_storage.write(idx, publisher)
+    public_key_struct_storage.write(publisher, public_key_struct)
     return ()
 end
 
 @external
-func set_spk_pub_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, new_pub_key : felt, new_is_active : felt) -> ():
+func rotate_public_key_struct{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt, new_public_key : felt, new_is_active : felt) -> ():
     Admin_only_admin()
 
-    #if we assume that the activity status of the old public key carries to the newly set one use this code
-    #let (old_is_active) = get_spk_is_active(publisher)
-    #let new_spk_struct = SupportedPublicKey(new_pub_key, old_is_active)
+    with_attr error_message("OpenOracle: Publisher is not already registered"):
+        let (existing_public_key) = get_public_key_struct_public_key(publisher)
+        assert_not_zero(existing_public_key)
+    end
 
-    #better IMO to interpret that a new pub key has its own activity status given why you rotate keys
-    #throw a with_attr here?
-    let new_spk_struct = SupportedPublicKey(new_pub_key, new_is_active)
-    set_spk_struct_storage(publisher, new_spk_struct)
+    let new_public_key_struct = PublicKeyStruct(new_public_key, new_is_active)
+    set_public_key_struct_storage(publisher, new_public_key_struct)
     return ()
 end
 
 @external
-func set_spk_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func set_public_key_struct_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt, new_is_active : felt) -> ():
     Admin_only_admin()
-    
-    #here we assume that old pub_key holds over
-    let (old_pub_key) = get_spk_pub_key(publisher)
-    let new_spk_struct = SupportedPublicKey(old_pub_key, new_is_active)
-    set_spk_struct_storage(publisher, new_spk_struct)
+    with_attr error_message("OpenOracle: Publisher is not already registered"):
+        let (existing_public_key) = get_public_key_struct_public_key(publisher)
+        assert_not_zero(existing_public_key)
+    end
+    let (old_public_key) = get_public_key_struct_public_key(publisher)
+    let new_public_key_struct = PublicKeyStruct(old_public_key, new_is_active)
+    set_public_key_struct_storage(publisher, new_public_key_struct)
     return ()
 end
 
@@ -231,31 +222,41 @@ end
 #Helpers
 #
 
-#TODO Implement a _build_publishers_array() helper function. Need this for a get_publishers plural array function
-func _build_publishers_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_array_len : felt, 
-        publishers_array : felt*, 
-        output_idx : felt, #can these values be hardcoded in function body or optinonally passed in as optionals
+#TODO Guard function for asserting that a publisher is registered
+func assert_publisher_registered{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    publisher : felt) -> (): 
+
+    with_attr error_message("OpenOracle: Publisher is not already registered"):
+        let (existing_public_key) = get_public_key_struct_public_key(publisher)
+        assert_not_zero(existing_public_key)
+    end
+end
+
+
+#TODO Implement a _build_active_publishers_array() helper function. Need this for a get_publishers plural array function
+func _build_active_publishers_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        total_publishers_len : felt, 
+        active_publishers_array : felt*, 
+        output_idx : felt, 
         storage_idx : felt 
         ) -> (
-        publishers_array_len : felt, 
-        publishers_array : felt*):
+        active_publishers_array_len : felt, 
+        active_publishers_array : felt*):
     
-    if storage_idx == publishers_array_len:
-        return (output_idx, publishers_array) #should this not return publishers_array_len in place of output_idx (or at least storage_idx)?
+    if storage_idx == total_publishers_len:
+        return (output_idx, active_publishers_array) #should this not return active_publishers_array_len in place of output_idx (or at least storage_idx)?
     end
-    let (publisher) = oo_publishers_storage.read(storage_idx)
-    let (publisher_is_active) = get_spk_is_active(publisher)
+    let (publisher) = get_publisher(storage_idx)
+    let (publisher_is_active) = get_public_key_struct_is_active(publisher)
     if publisher_is_active == TRUE: #*bc of this check, returns only active publishers
-        assert [publishers_array + output_idx] = publisher #FLAG How do we know this is going into publishers_array? should I index it first?
-                                                           #have a general append to array function?
-        let (recursed_publishers_array_len, recursed_publishers_array) = _build_publishers_array_array(
-            publishers_array_len, publishers_array, output_idx + 1, storage_idx + 1)
-        return (recursed_publishers_array_len, recursed_publishers_array)
+        assert active_publishers_array[output_idx] = publisher
+        let (recursed_active_publishers_array_len, recursed_active_publishers_array) = _build_active_publishers_array(
+            total_publishers_len, active_publishers_array, output_idx + 1, storage_idx + 1)
+        return (recursed_active_publishers_array_len, recursed_active_publishers_array)
     else:
-        let (recursed_publishers_array_len, recursed_publishers_array) = _build_publishers_array_array(
-            publishers_array_len, publishers_array, output_idx, storage_idx + 1)
-        return (recursed_publishers_array_len, recursed_publishers_array)
+        let (recursed_active_publishers_array_len, recursed_active_publishers_array) = _build_active_publishers_array(
+            total_publishers_len, active_publishers_array, output_idx, storage_idx + 1)
+        return (recursed_active_publishers_array_len, recursed_active_publishers_array)
     end
 end
 
@@ -272,16 +273,19 @@ end
 
 @external
 func postSignature{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*}(
-    message : felt, input_signature : felt, publisher : felt) -> ():
+    message : felt, input_signature_r : felt, input_signature_s : felt, publisher : felt) -> ():
     #in here 
     with_attr error_message("OpenOracle: Public key associated with publisher provided is not active"):
-        let (pub_key_is_active) = get_spk_is_active(publisher)
-        assert pub_key_is_active  = TRUE
+        let (public_key_is_active) = get_public_key_struct_is_active(publisher)
+        assert public_key_is_active = TRUE
     end
     #early check that publisher is initialized 
 
-    let workable_signature = SignatureBuiltin(pub_key, message)
+    #signature validation which throws error if incorrect
+    let (associated_pk) = get_public_key_struct_public_key(publisher)
+    verify_ecdsa_signature(message, associated_pk, input_signature_r, input_signature_s)
 
+    #now logic to send this to the
     return()
 end
 
