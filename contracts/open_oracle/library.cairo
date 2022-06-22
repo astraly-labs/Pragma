@@ -1,7 +1,7 @@
 %lang starknet
 
-from starkware.cairo.common.alloc import alloc # will need for array pulls
-from starkware.cairo.common.bool import TRUE, FALSE #for comparative
+from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.bool import TRUE, FALSE 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
 #Can probably drop everything below here
@@ -10,8 +10,9 @@ from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
 
-#need to pull in the ECDSA hash to check 
-#TODO find this import
+#pull in an ECDSA signature check 
+#from starkware.cairo.common.cairo_builtins import SignatureBuiltin #do we need to use this?
+from starkware.cairo.common.signature import verify_ecdsa_signature
 
 from contracts.admin.library import (
     Admin_initialize_admin_address,
@@ -122,8 +123,22 @@ func get_spk_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (is_active)
 end
 
-#TODO get all the publishers in an array
+#Gets all the active publishers in an array
+@view
+func get_publishers_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    ) -> (publishers_array_len : felt, publishers_array : felt*):
+    let (publishers_array) = alloc()
 
+    let (total_publishers_array_len) = supported_pub_key_len_storage.read()
+
+    if total_publishers_array_len == 0:
+        return (0, publishers_array)
+    end
+
+    let (publishers_array_len, publishers_array) = _build_publishers_array(total_publishers_array_len, publishers_array, 0, 0)
+
+    return (publishers_array_len, publishers_array)
+end
 
 
 #
@@ -160,7 +175,7 @@ func add_supported_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     #that is good. 
     let new_spk_struct = SupportedPublicKey(pub_key, is_active)
     set_spk_struct_storage(new_spk_struct) #or should it be the base line .write()?
-    supported_pub_key_len_storage.write(supported_pub_key_len_storage+1)
+    supported_pub_key_len_storage.write(spk_len+1)
     return ()
 end
 
@@ -184,7 +199,6 @@ func set_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     return ()
 end
 
-#TODO set pubkey; NOT DONE, we also pass in a new is_active? or not have the code being written for not but pass in is there
 @external
 func set_spk_pub_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt, new_pub_key : felt, new_is_active : felt) -> ():
@@ -201,7 +215,6 @@ func set_spk_pub_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
     return ()
 end
 
-#TODO set isactive. use old pub key. so need pub key getter
 @external
 func set_spk_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt, new_is_active : felt) -> ():
@@ -214,8 +227,68 @@ func set_spk_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return ()
 end
 
+#
+#Helpers
+#
+
+#TODO Implement a _build_publishers_array() helper function. Need this for a get_publishers plural array function
+func _build_publishers_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        publishers_array_len : felt, 
+        publishers_array : felt*, 
+        output_idx : felt, #can these values be hardcoded in function body or optinonally passed in as optionals
+        storage_idx : felt 
+        ) -> (
+        publishers_array_len : felt, 
+        publishers_array : felt*):
+    
+    if storage_idx == publishers_array_len:
+        return (output_idx, publishers_array) #should this not return publishers_array_len in place of output_idx (or at least storage_idx)?
+    end
+    let (publisher) = oo_publishers_storage.read(storage_idx)
+    let (publisher_is_active) = get_spk_is_active(publisher)
+    if publisher_is_active == TRUE: #*bc of this check, returns only active publishers
+        assert [publishers_array + output_idx] = publisher #FLAG How do we know this is going into publishers_array? should I index it first?
+                                                           #have a general append to array function?
+        let (recursed_publishers_array_len, recursed_publishers_array) = _build_publishers_array_array(
+            publishers_array_len, publishers_array, output_idx + 1, storage_idx + 1)
+        return (recursed_publishers_array_len, recursed_publishers_array)
+    else:
+        let (recursed_publishers_array_len, recursed_publishers_array) = _build_publishers_array_array(
+            publishers_array_len, publishers_array, output_idx, storage_idx + 1)
+        return (recursed_publishers_array_len, recursed_publishers_array)
+    end
+end
+
 
 #
 #Logic 
 #
 
+
+
+#Will need a function that gets called by sdk or by anyone of posting/attesting to the signature. Use compound's language of
+#posting. Make sure an ABI exists for these functions. identify and group with the reporters. IE, have the feed go to the specific
+#publisher's entry array/struct location
+
+@external
+func postSignature{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*}(
+    message : felt, input_signature : felt, publisher : felt) -> ():
+    #in here 
+    with_attr error_message("OpenOracle: Public key associated with publisher provided is not active"):
+        let (pub_key_is_active) = get_spk_is_active(publisher)
+        assert pub_key_is_active  = TRUE
+    end
+    #early check that publisher is initialized 
+
+    let workable_signature = SignatureBuiltin(pub_key, message)
+
+    return()
+end
+
+#Write a signature validation function. I think we can be nonce agnostic bc timestamp will be included in entries (so we can
+#remove stale bids later
+
+#mapping the OpenOracle data to the struct. 
+
+#Some comparision with the oracle controller to chose if this is appropriate to publish. This might already happen on 
+#at the oracle_controller? Read the code
