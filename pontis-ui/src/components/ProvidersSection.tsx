@@ -1,12 +1,11 @@
 import React from "react";
 
 const providers = [
+  "cmtdigital",
   "bitstamp",
   "cex",
-  "coinapi",
   "coinbase",
   "coingecko",
-  "coinmarketcap",
   "ftx",
   "gemini",
 ];

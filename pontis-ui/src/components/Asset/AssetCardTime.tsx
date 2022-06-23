@@ -27,11 +27,11 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
     <div className="flex flex-row items-center space-x-2 md:space-x-3">
       <ClockIcon className="w-6 text-slate-900" />
       <div className="font-mono text-base text-slate-900">
-        {minutesSinceUpdate !== 0 && (
-          <span className="sm:text-xl md:text-2xl">{minutesSinceUpdate}</span>
-        )}
-        {minutesSinceUpdate !== 0 && "min "}
-        <span className="sm:text-xl md:text-2xl">{secondsSinceUpdate}</span>sec
+        <span className="sm:text-xl md:text-2xl">
+          {minutesSinceUpdate}:{secondsSinceUpdate < 10 && "0"}
+          {secondsSinceUpdate}
+        </span>{" "}
+        min
       </div>
     </div>
   );
