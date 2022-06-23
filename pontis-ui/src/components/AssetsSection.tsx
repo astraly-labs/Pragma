@@ -11,7 +11,7 @@ const AssetsSection = () => {
     "bg-slate-300 rounded-2xl px-4 py-2 text-slate-900 shadow-lg hover:shadow-xl cursor-pointer";
 
   return (
-    <section className="w-screen bg-white px-6 pb-40 sm:px-24 md:px-32">
+    <div className="w-screen bg-white px-6 pb-40 sm:px-24 md:px-32">
       <div className="mx-auto flex max-w-3xl -translate-y-14 flex-col items-center space-y-16 sm:-translate-y-8">
         {AssetKeys.slice(0, numToShow).map((assetKey, index) => (
           <AssetCard assetKey={assetKey} key={index} />
@@ -32,7 +32,7 @@ const AssetsSection = () => {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 

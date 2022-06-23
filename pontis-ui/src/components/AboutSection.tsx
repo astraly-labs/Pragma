@@ -35,7 +35,7 @@ const content: feature[] = [
 ];
 
 const AboutSection: React.FC = () => (
-  <section className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
+  <div className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
     <Header
       title="Reimagining Oracles"
       subtitle="Why Pontis?"
@@ -57,7 +57,7 @@ const AboutSection: React.FC = () => (
         </div>
       ))}
     </div>
-  </section>
+  </div>
 );
 
 export default AboutSection;

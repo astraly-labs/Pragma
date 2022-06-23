@@ -3,7 +3,7 @@ import Link from "next/link";
 import { StyledExternalLink } from "./StyledLink";
 
 const PontisFooter = () => (
-  <section className="w-screen bg-slate-50">
+  <div className="w-screen bg-slate-50">
     <div className="container mx-auto flex max-w-7xl flex-col items-center border-t border-slate-300  p-8 sm:flex-row">
       <Link href="/">
         <a>
@@ -19,7 +19,7 @@ const PontisFooter = () => (
         </StyledExternalLink>
       </span>
     </div>
-  </section>
+  </div>
 );
 
 export default PontisFooter;
