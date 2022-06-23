@@ -75,7 +75,7 @@ async def main():
             print(e)
             print(traceback.format_exc())
 
-            slack_text = f"Error with Pontis price<!channel>"
+            slack_text = "Error with Pontis price<!channel>"
             slack_text += f"\nAsset: {asset}"
             slack_text += f"\nTimestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
             slack_text += f"\nCoingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
