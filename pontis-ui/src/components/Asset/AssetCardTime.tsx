@@ -26,9 +26,6 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
   return (
     <div className="flex flex-row items-center space-x-2 md:space-x-3">
       <ClockIcon className="w-6 text-slate-900" />
-      {/* {loading ? ( */}
-      {/* <div className="w-12 h-2 bg-slate-200 animate-pulse" />
-      ) : ( */}
       <div className="font-mono text-base text-slate-900">
         {minutesSinceUpdate !== 0 && (
           <span className="sm:text-xl md:text-2xl">{minutesSinceUpdate}</span>
@@ -36,7 +33,6 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
         {minutesSinceUpdate !== 0 && "min "}
         <span className="sm:text-xl md:text-2xl">{secondsSinceUpdate}</span>sec
       </div>
-      {/* )} */}
     </div>
   );
 };

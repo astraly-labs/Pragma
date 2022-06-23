@@ -34,34 +34,30 @@ const content: feature[] = [
   },
 ];
 
-const AboutSection: React.FC = () => {
-  return (
-    <section className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
-      <Header
-        title="Reimagining Oracles"
-        subtitle="Why Pontis?"
-        text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we are enabling anything from exchanges, stable coins to prediction markets."
-      />
-      <div className="mx-auto mt-28 grid max-w-7xl grid-cols-1 gap-16 sm:grid-cols-2 lg:grid-cols-3">
-        {content.map((feature, i) => (
-          <div
-            key={i}
-            className="col-span-1 flex flex-col items-center space-y-6 rounded-xl bg-slate-50 px-8 pb-12"
-          >
-            <div className="-mt-8 rounded-xl bg-slate-300 p-3 text-slate-700 shadow-md">
-              {React.cloneElement(feature.icon, { className: "w-8 h-8" })}
-            </div>
-            <h4 className="text-xl font-medium text-slate-700 sm:text-2xl">
-              {feature.name}
-            </h4>
-            <p className="prose prose-slate lg:prose-xl">
-              {feature.description}
-            </p>
+const AboutSection: React.FC = () => (
+  <section className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
+    <Header
+      title="Reimagining Oracles"
+      subtitle="Why Pontis?"
+      text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we are enabling anything from exchanges, stable coins to prediction markets."
+    />
+    <div className="mx-auto mt-28 grid max-w-7xl grid-cols-1 gap-16 sm:grid-cols-2 lg:grid-cols-3">
+      {content.map((feature, i) => (
+        <div
+          key={i}
+          className="col-span-1 flex flex-col items-center space-y-6 rounded-xl bg-slate-50 px-8 pb-12"
+        >
+          <div className="-mt-8 rounded-xl bg-slate-300 p-3 text-slate-700 shadow-md">
+            {React.cloneElement(feature.icon, { className: "w-8 h-8" })}
           </div>
-        ))}
-      </div>
-    </section>
-  );
-};
+          <h4 className="text-xl font-medium text-slate-700 sm:text-2xl">
+            {feature.name}
+          </h4>
+          <p className="prose prose-slate lg:prose-xl">{feature.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
 export default AboutSection;

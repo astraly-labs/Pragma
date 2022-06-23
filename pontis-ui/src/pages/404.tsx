@@ -5,13 +5,13 @@ const Custom404Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Single-page application, returning home");
+    console.log("Page not found, returning home");
     router.push("/");
-  }, []);
+  }, [router]);
 
   return (
     <div className="text-center">
-      <div className="text-3xl mt-2">404 | Page not found</div>
+      <div className="mt-2 text-3xl">404 | Page not found</div>
     </div>
   );
 };

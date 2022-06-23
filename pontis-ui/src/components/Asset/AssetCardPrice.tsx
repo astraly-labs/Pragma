@@ -30,27 +30,21 @@ interface AssetCardPriceProps {
   assetKey: AssetKeyT;
 }
 
-const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => {
-  return (
-    <React.Fragment>
-      {/* {loading || price === undefined ? (
-        <div className="w-12 h-2 bg-slate-200 animate-pulse" />
-      ) : ( */}
-      <div className="inline font-mono">
-        <div className="inline text-lg tracking-wide sm:text-xl md:text-2xl">
-          {getCurrency(assetKey)}
-          {Math.floor(price)}
-        </div>
-        <div className="hidden sm:inline md:text-lg">
-          {(price - Math.floor(price))
-            .toFixed(DECIMALS_TO_SHOW)
-            .toString()
-            .slice(1)}
-        </div>
+const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => (
+  <>
+    <div className="inline font-mono">
+      <div className="inline text-lg tracking-wide sm:text-xl md:text-2xl">
+        {getCurrency(assetKey)}
+        {Math.floor(price)}
       </div>
-      {/* )} */}
-    </React.Fragment>
-  );
-};
+      <div className="hidden sm:inline md:text-lg">
+        {(price - Math.floor(price))
+          .toFixed(DECIMALS_TO_SHOW)
+          .toString()
+          .slice(1)}
+      </div>
+    </div>
+  </>
+);
 
 export default AssetCardPrice;

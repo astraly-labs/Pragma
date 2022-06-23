@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import Link, { LinkProps } from "next/link";
 
 const LinkStyleWrapper = ({ children }: { children: ReactNode }) => (
-  <div className="inline text-blue-700 underline hover:text-blue-400 cursor-pointer">
+  <div className="inline cursor-pointer text-blue-700 underline hover:text-blue-400">
     {children}
   </div>
 );
