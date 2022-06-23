@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from pontis.core.client import PontisClient
-from pontis.core.utils import currency_pair_to_key
+from pontis.core.utils import currency_pair_to_key, key_for_asset
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.fetch import fetch_coinbase
@@ -18,7 +18,7 @@ async def main():
 
     client = PontisClient()
     for i, asset in enumerate(assets):
-        key = currency_pair_to_key(*asset["pair"])
+        key = key_for_asset(asset)
         decimals = await client.get_decimals(key)
         assets[i]["decimals"] = decimals
 

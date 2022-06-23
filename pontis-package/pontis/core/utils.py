@@ -25,3 +25,12 @@ def pprint_entry(entry):
     print(
         f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, publisher={felt_to_str(entry.publisher)}"
     )
+
+
+def key_for_asset(asset):
+    if "key" in asset:
+        key = currency_pair_to_key(*asset["pair"])
+    else:
+        key = asset["key"]
+
+    return key
