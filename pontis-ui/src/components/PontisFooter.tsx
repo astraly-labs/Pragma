@@ -14,10 +14,7 @@ const PontisFooter = () => (
         © 42 Labs - {new Date().getFullYear()}
       </p>
       <span className="mt-4 inline-flex justify-center space-x-5 sm:mt-0 sm:ml-auto sm:justify-start">
-        <StyledExternalLink
-          href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
-          // target="_blank"
-        >
+        <StyledExternalLink href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,">
           Contact Us
         </StyledExternalLink>
       </span>

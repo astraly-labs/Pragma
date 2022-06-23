@@ -23,7 +23,7 @@ const content: feature[] = [
   {
     name: "Compose",
     description:
-      "Pontis allows anyone to flexibly compose that verified data, without sacrificing security or transparency. For instance, protocols are using Pontis to create a verifiable, dynamic yield curve and options pricing.",
+      "Pontis allows anyone to flexibly compose that verified data, without sacrificing security or transparency. For instance, protocols are using Pontis to create the first entirely on-chain, verifiable and dynamic yield curve.",
     icon: <BeakerIcon />,
   },
   {
@@ -39,7 +39,7 @@ const AboutSection: React.FC = () => (
     <Header
       title="Reimagining Oracles"
       subtitle="Why Pontis?"
-      text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we are enabling anything from exchanges, stable coins to prediction markets."
+      text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
     />
     <div className="mx-auto mt-28 grid max-w-7xl grid-cols-1 gap-16 sm:grid-cols-2 lg:grid-cols-3">
       {content.map((feature, i) => (

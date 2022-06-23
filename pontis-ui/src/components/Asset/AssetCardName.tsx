@@ -4,12 +4,14 @@ import { AssetKeyT } from "../../hooks/oracle";
 
 /**
  *
- * @param {AssetKeyT} assetKey string containing the coin abbreviation before a '/'
+ * @param {AssetKeyT} assetKey string containing the coin abbreviation delimited by a '/'
  * @return {string} returns string that matches corresponding file name in /assets/logos
  */
 function getLogo(assetKey: AssetKeyT): string {
   const indexOfSlash = assetKey.indexOf("/");
-  return indexOfSlash > 0 ? assetKey.slice(0, indexOfSlash).toLowerCase() : "";
+  return indexOfSlash > 0
+    ? assetKey.slice(0, indexOfSlash).toLowerCase()
+    : "fallback";
 }
 
 interface AssetNameProps {

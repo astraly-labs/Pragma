@@ -19,11 +19,11 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
         <div className="col-span-1 row-span-1 place-self-start">
           <AssetCardName assetKey={assetKey} />
         </div>
-        {oracleResponse?.value !== undefined || false ? (
+        {oracleResponse?.value !== undefined ? (
           oracleResponse.lastUpdatedTimestamp === 0 ? (
             <div>No results found for {assetKey.toLocaleUpperCase()}</div>
           ) : (
-            <React.Fragment>
+            <>
               <div className="col-span-1 col-start-2 row-span-2 row-start-1 flex items-start justify-end sm:row-span-1 sm:place-self-center">
                 <AssetCardPrice
                   price={oracleResponse.value}
@@ -35,7 +35,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
                   lastUpdatedTimestamp={oracleResponse.lastUpdatedTimestamp}
                 />
               </div>
-            </React.Fragment>
+            </>
           )
         ) : error !== undefined ? (
           <div className="col-span-2 col-start-2 row-span-2 sm:row-span-1">
@@ -43,14 +43,14 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
             <div>Please try again later.</div>
           </div>
         ) : (
-          <React.Fragment>
+          <>
             <div className="place-self-center">
               <LoadingBar />
             </div>
             <div className="place-self-center">
               <LoadingBar />
             </div>
-          </React.Fragment>
+          </>
         )}
       </div>
       <div className="flex w-12 flex-row items-center justify-center bg-slate-300 sm:w-16 md:w-24">
