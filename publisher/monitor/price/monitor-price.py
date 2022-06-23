@@ -15,7 +15,7 @@ from pontis.publisher.fetch import fetch_coingecko
 
 
 PRICE_TOLERANCE = 0.1  # in percent
-TIME_TOLERANCE = 600  # in seconds
+TIME_TOLERANCE = 1200  # in seconds
 
 
 async def main():
@@ -58,7 +58,7 @@ async def main():
                 coingecko[felt_key] * (1 - PRICE_TOLERANCE)
                 <= value
                 <= coingecko[felt_key] * (1 + PRICE_TOLERANCE)
-            )
+            ), f"Coingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
 
             current_timestamp = int(time.time())
 
@@ -66,22 +66,26 @@ async def main():
                 current_timestamp - TIME_TOLERANCE
                 <= last_updated_timestamp
                 <= current_timestamp + TIME_TOLERANCE
-            )
+            ), f"Timestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
             print(
                 f"Price {value} checks out for asset {key} (reference: {coingecko[felt_key]})"
             )
         except AssertionError as e:
-            print(
-                f"\nWarning: Price inaccurate or stale! Asset: {asset}, Coingecko: {coingecko[felt_key]}, Pontis: {value}\n"
-            )
+            print(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
             print(e)
             print(traceback.format_exc())
+
+            slack_text = f"Error with Pontis price<!channel>"
+            slack_text += f"\nAsset: {asset}"
+            slack_text += f"\nTimestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
+            slack_text += f"\nCoingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
+            slack_text += f"\n{traceback.format_exc()}"
 
             requests.post(
                 slack_url,
                 headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
                 data={
-                    "text": f"Error with Pontis price<!channel> \n\nPrice inaccurate or stale! Asset: {asset}, Coingecko: {coingecko[felt_key]}, Pontis: {value} \n{traceback.format_exc()}",
+                    "text": slack_text,
                     "channel": channel_id,
                 },
             )
