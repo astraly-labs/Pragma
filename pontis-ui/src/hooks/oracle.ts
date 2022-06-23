@@ -9,7 +9,6 @@ import { bigNumberishArrayToDecimalStringArray } from "starknet/utils/number";
 export const AssetKeys = [
   "eth/usd",
   "btc/usd",
-  "luna/usd",
   "sol/usd",
   "avax/usd",
   "doge/usd",
