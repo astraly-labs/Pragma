@@ -6,4 +6,5 @@ struct Entry:
     member timestamp : felt
     member source : felt
     member publisher : felt
+    member decimals : felt
 end

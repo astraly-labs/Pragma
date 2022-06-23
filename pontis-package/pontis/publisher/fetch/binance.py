@@ -54,6 +54,7 @@ def fetch_binance(assets, publisher):
                     timestamp=timestamp,
                     source=source,
                     publisher=publisher,
+                    decimals=asset["decimals"],
                 )
             )
 

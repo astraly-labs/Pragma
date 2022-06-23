@@ -47,6 +47,7 @@ def fetch_thegraph(assets, publisher):
                 timestamp=timestamp,
                 source=source,
                 publisher=publisher,
+                decimals=asset["decimals"],
             )
         )
 

@@ -7,7 +7,12 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
+from contracts.entry.library import (
+    Entry,
+    Entry_aggregate_entries,
+    Entry_aggregate_timestamps_max,
+    shift_entry_decimals,
+)
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
@@ -148,7 +153,9 @@ func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
         assert_le(new_entry.timestamp, current_timestamp + TIMESTAMP_BUFFER)
     end
 
-    Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
+    let (shifted_entry) = shift_entry_decimals(new_entry)
+
+    Oracle_entry_storage.write(shifted_entry.key, shifted_entry.publisher, shifted_entry)
 
     return ()
 end

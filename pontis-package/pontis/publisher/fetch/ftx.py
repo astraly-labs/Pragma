@@ -32,6 +32,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
         timestamp=timestamp,
         source=source,
         publisher=publisher,
+        decimals=asset["decimals"],
     )
 
 
@@ -69,6 +70,7 @@ def parse_ftx_futures(asset, data, source, publisher, timestamp):
                 timestamp=timestamp,
                 source=source,
                 publisher=publisher,
+                decimals=asset["decimals"],
             )
         )
 

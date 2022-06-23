@@ -48,6 +48,7 @@ def fetch_coinmarketcap(assets, publisher):
                 timestamp=timestamp,
                 source=source,
                 publisher=publisher,
+                decimals=asset["decimals"],
             )
         )
 

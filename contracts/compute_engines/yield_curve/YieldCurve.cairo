@@ -16,7 +16,7 @@ from contracts.admin.library import (
     Admin_only_admin,
 )
 
-from contracts.entry.structs import Entry
+from contracts.entry.library import Entry, shift_decimals
 from contracts.oracle_controller.IOracleController import IOracleController
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
 from contracts.compute_engines.yield_curve.structs import YieldPoint
@@ -526,7 +526,7 @@ namespace YieldCurve:
 
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         else:
-            let (shifted_on_value) = change_decimals(on_value, on_decimals, output_decimals)
+            let (shifted_on_value) = shift_decimals(on_value, on_decimals, output_decimals)
 
             # Add to on_yield_points and recurse
             # Set expiry to be same as capture timestamp
@@ -834,25 +834,5 @@ namespace YieldCurve:
             source=FUTURE_SPOT_SOURCE_KEY,
         )
         return (yield_point)
-    end
-
-    func change_decimals{range_check_ptr}(
-        value : felt, old_decimals : felt, new_decimals : felt
-    ) -> (shifted_value : felt):
-        let (should_increase_decimals) = is_le(old_decimals, new_decimals)
-        if should_increase_decimals == TRUE:
-            # Multiply on_entry by 10 ^ (new_decimals - old_decimals)
-            # which is guaranteed to be an integer > 0 by the if statement
-            let (shift_by) = pow(10, new_decimals - old_decimals)
-            let shifted_value = value * shift_by
-            return (shifted_value)
-        else:
-            # Divide on_entry by 10 ^ (old_decimals - new_decimals)
-            # Doing the same operation as in the last branch, so
-            # changed both multiplication/division and sign of the exponent
-            let (shift_by) = pow(10, old_decimals - new_decimals)
-            let (shifted_value, r) = unsigned_div_rem(value, shift_by)
-            return (shifted_value)
-        end
     end
 end

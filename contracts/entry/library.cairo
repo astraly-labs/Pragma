@@ -141,3 +141,41 @@ func Entry_average_entries_value{range_check_ptr}(entry_1 : Entry, entry_2 : Ent
     let value = summand_1 + summand_2 + summand_3
     return (value)
 end
+
+func shift_entry_decimals(entry : Entry):
+    let (output_decimals) = Oracle_get_decimals(entry.key)
+    let input_decimals = entry.decimals
+
+    let (shifted_value) = shift_decimals(entry.value, input_decimals, output_decimals)
+
+    let shifted_entry = Entry(
+        key=entry.key,
+        value=shifted_value,
+        timestamp=entry.timestamp,
+        source=entry.source,
+        publisher=entry.publisher,
+        decimals=output_decimals,
+    )
+
+    return (shifted_entry)
+end
+
+func shift_decimals{range_check_ptr}(value : felt, old_decimals : felt, new_decimals : felt) -> (
+    shifted_value : felt
+):
+    let (should_increase_decimals) = is_le(old_decimals, new_decimals)
+    if should_increase_decimals == TRUE:
+        # Multiply on_entry by 10 ^ (new_decimals - old_decimals)
+        # which is guaranteed to be an integer > 0 by the if statement
+        let (shift_by) = pow(10, new_decimals - old_decimals)
+        let shifted_value = value * shift_by
+        return (shifted_value)
+    else:
+        # Divide on_entry by 10 ^ (old_decimals - new_decimals)
+        # Doing the same operation as in the last branch, so
+        # changed both multiplication/division and sign of the exponent
+        let (shift_by) = pow(10, old_decimals - new_decimals)
+        let (shifted_value, r) = unsigned_div_rem(value, shift_by)
+        return (shifted_value)
+    end
+end

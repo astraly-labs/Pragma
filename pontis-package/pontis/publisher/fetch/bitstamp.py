@@ -40,6 +40,7 @@ def fetch_bitstamp(assets, publisher):
                 timestamp=timestamp,
                 source=source,
                 publisher=publisher,
+                decimals=asset["decimals"],
             )
         )
 

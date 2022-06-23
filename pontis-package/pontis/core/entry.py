@@ -2,7 +2,9 @@ from collections import namedtuple
 
 from pontis.core.utils import str_to_felt
 
-Entry = namedtuple("Entry", ["key", "value", "timestamp", "source", "publisher"])
+Entry = namedtuple(
+    "Entry", ["key", "value", "timestamp", "source", "publisher", "decimals"]
+)
 
 
 def serialize_entry(entry):
@@ -18,7 +20,7 @@ def serialize_entries(entries):
     return [len(entries)] + flattened
 
 
-def construct_entry(key, value, timestamp, source, publisher):
+def construct_entry(key, value, timestamp, source, publisher, decimals):
     if type(key) == str:
         key = str_to_felt(key)
 
@@ -34,4 +36,5 @@ def construct_entry(key, value, timestamp, source, publisher):
         timestamp=timestamp,
         source=source,
         publisher=publisher,
+        decimals=decimals,
     )
