@@ -19,10 +19,8 @@ export const AssetKeys = [
   "usdt/usd",
   "usdc/usd",
   "tusd/usd",
-  "btc/usd-20220624",
   "btc/usd-20220930",
   "btc/usd-20221230",
-  "eth/usd-20220624",
   "eth/usd-20220930",
   "eth/usd-20221230",
 ];
