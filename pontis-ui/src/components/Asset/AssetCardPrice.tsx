@@ -4,14 +4,14 @@ import { AssetKeyT } from "../../hooks/oracle";
 
 // Mapping from asset key abbreviation to currency symbol.
 const currencySymbols = {
-  usd: "$",
-  mxn: "$",
+  usd: "dollar.svg",
+  mxn: "dollar.svg",
 };
 
 /**
- * Converts asset key into currency symbol;
+ * Converts asset key into file name of currency symbol;
  * @param {AssetKeyT} assetKey
- * @return {string} currency symbol
+ * @return {string} file name of currency symbol
  */
 function getCurrency(assetKey: AssetKeyT): string {
   const slashIndex = assetKey.indexOf("/");
@@ -32,16 +32,21 @@ interface AssetCardPriceProps {
 
 const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => (
   <>
-    <div className="inline font-mono">
-      <div className="inline text-lg tracking-wide sm:text-xl md:text-2xl">
-        {getCurrency(assetKey)}
-        {Math.floor(price)}
-      </div>
-      <div className="hidden sm:inline md:text-lg">
-        {(price - Math.floor(price))
-          .toFixed(DECIMALS_TO_SHOW)
-          .toString()
-          .slice(1)}
+    <div className="flex items-center">
+      <img
+        src={`/assets/currencies/${getCurrency(assetKey)}`}
+        className="mr-2 h-6 w-6 md:mr-3"
+      />
+      <div className="inline font-mono">
+        <span className="inline text-lg tracking-wide sm:text-xl md:text-2xl">
+          {Math.floor(price)}
+        </span>
+        <span className="hidden sm:inline md:text-lg">
+          {(price - Math.floor(price))
+            .toFixed(DECIMALS_TO_SHOW)
+            .toString()
+            .slice(1)}
+        </span>
       </div>
     </div>
   </>
