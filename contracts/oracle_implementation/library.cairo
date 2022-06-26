@@ -8,7 +8,6 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
-from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
 const DEFAULT_DECIMALS = 18
@@ -19,7 +18,15 @@ const TIMESTAMP_BUFFER = 3600  # 60 minutes
 #
 
 @storage_var
-func Oracle_entry_storage(key : felt, publisher : felt) -> (entry : Entry):
+func Oracle_entry_storage(key : felt, source : felt) -> (entry : Entry):
+end
+
+@storage_var
+func Oracle_sources_len_storage(key : felt) -> (sources_len : felt):
+end
+
+@storage_var
+func Oracle_sources_storage(key : felt, idx : felt) -> (source : felt):
 end
 
 @storage_var
@@ -77,18 +84,18 @@ func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 end
 
 func Oracle_get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publishers_len : felt, publishers : felt*, key : felt
+    key : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = Oracle_get_all_entries(key, publishers_len, publishers)
+    let (entries_len, entries) = Oracle_get_all_entries(key, sources_len, sources)
     return (entries_len, entries)
 end
 
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt
+    key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
 ) -> (value : felt, last_updated_timestamp : felt):
     alloc_locals
 
-    let (entries_len, entries) = Oracle_get_entries(publishers_len, publishers, key)
+    let (entries_len, entries) = Oracle_get_entries(key, sources_len, sources)
 
     if entries_len == 0:
         return (0, 0)
@@ -100,10 +107,22 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
 end
 
 func Oracle_get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, publisher : felt
+    key : felt, source : felt
 ) -> (entry : Entry):
-    let (entry) = Oracle_entry_storage.read(key, publisher)
+    let (entry) = Oracle_entry_storage.read(key, source)
     return (entry)
+end
+
+func Oracle_get_all_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (sources_len : felt, sources : felt*):
+    alloc_locals
+
+    let (sources) = alloc()
+
+    let (sources_len) = Oracle_sources_len_storage.read(key)
+    let (sources) = Oracle_build_sources_array(key, sources_len, sources, 0)
+    return (sources_len, sources)
 end
 
 #
@@ -133,7 +152,7 @@ func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
 
     Oracle_only_oracle_controller()
 
-    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.publisher)
+    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.source)
 
     with_attr error_message("OracleImplementation: Existing entry is more recent"):
         assert_le(entry.timestamp, new_entry.timestamp)
@@ -148,7 +167,19 @@ func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
         assert_le(new_entry.timestamp, current_timestamp + TIMESTAMP_BUFFER)
     end
 
-    Oracle_entry_storage.write(new_entry.key, new_entry.publisher, new_entry)
+    if entry.timestamp == 0:
+        # Source did not exist yet, so add to our list
+        let (sources_len) = Oracle_sources_len_storage.read(new_entry.key)
+        Oracle_sources_storage.write(new_entry.key, sources_len, new_entry.source)
+        Oracle_sources_len_storage.write(new_entry.key, sources_len + 1)
+        tempvar syscall_ptr = syscall_ptr
+        tempvar pedersen_ptr = pedersen_ptr
+    else:
+        tempvar syscall_ptr = syscall_ptr
+        tempvar pedersen_ptr = pedersen_ptr
+    end
+
+    Oracle_entry_storage.write(new_entry.key, new_entry.source, new_entry)
 
     return ()
 end
@@ -158,38 +189,43 @@ end
 #
 
 func Oracle_get_all_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, publishers_len : felt, publishers : felt*
+    key : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
+    alloc_locals
+
     let (entries : Entry*) = alloc()
 
-    if publishers_len == 0:
-        return (0, entries)
+    if sources_len == 0:
+        let (all_sources_len, all_sources) = Oracle_get_all_sources(key)
+        let (entries_len, entries) = Oracle_build_entries_array(
+            key, all_sources_len, all_sources, 0, 0, entries
+        )
+    else:
+        let (entries_len, entries) = Oracle_build_entries_array(
+            key, sources_len, sources, 0, 0, entries
+        )
     end
-
-    let (entries_len, entries) = Oracle_build_entries_array(
-        key, publishers_len, publishers, 0, 0, entries
-    )
 
     return (entries_len, entries)
 end
 
 func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt,
-    publishers_len : felt,
-    publishers : felt*,
-    publishers_idx : felt,
+    sources_len : felt,
+    sources : felt*,
+    sources_idx : felt,
     entries_idx : felt,
     entries : Entry*,
 ) -> (entries_len : felt, entries : Entry*):
     alloc_locals
 
-    if publishers_idx == publishers_len:
+    if sources_idx == sources_len:
         let entries_len = entries_idx  # 0-indexed
         return (entries_len, entries)
     end
 
-    let publisher = [publishers + publishers_idx]
-    let (entry) = Oracle_entry_storage.read(key, publisher)
+    let source = [sources + sources_idx]
+    let (entry) = Oracle_entry_storage.read(key, source)
     let (is_entry_initialized) = is_not_zero(entry.timestamp)
     let not_is_entry_initialized = 1 - is_entry_initialized
     let (current_timestamp) = get_block_timestamp()
@@ -198,7 +234,7 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
 
     if should_skip_entry == TRUE:
         let (entries_len, entries) = Oracle_build_entries_array(
-            key, publishers_len, publishers, publishers_idx + 1, entries_idx, entries
+            key, sources_len, sources, sources_idx + 1, entries_idx, entries
         )
         return (entries_len, entries)
     end
@@ -206,7 +242,22 @@ func Oracle_build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     assert [entries + entries_idx * Entry.SIZE] = entry
 
     let (entries_len, entries) = Oracle_build_entries_array(
-        key, publishers_len, publishers, publishers_idx + 1, entries_idx + 1, entries
+        key, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
     )
     return (entries_len, entries)
+end
+
+func Oracle_build_sources_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, sources_len : felt, sources : felt*, idx : felt
+) -> (sources : felt*):
+    let (new_source) = Oracle_sources_storage.read(key, idx)
+    assert [sources + idx] = new_source
+
+    if idx == sources_len:
+        return (sources)
+    end
+
+    Oracle_build_sources_array(key, sources_len, sources, idx + 1)
+
+    return (sources)
 end

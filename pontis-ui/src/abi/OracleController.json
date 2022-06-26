@@ -17,13 +17,18 @@
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "source",
                 "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 4,
                 "type": "felt"
             }
         ],
         "name": "Entry",
-        "size": 4,
+        "size": 5,
         "type": "struct"
     },
     {
@@ -311,6 +316,14 @@
             {
                 "name": "key",
                 "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
             }
         ],
         "name": "get_entries",
@@ -334,8 +347,37 @@
                 "type": "felt"
             },
             {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entry",
+        "outputs": [
+            {
+                "name": "entry",
+                "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
                 "name": "aggregation_mode",
                 "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
             }
         ],
         "name": "get_value",

@@ -16,18 +16,21 @@ namespace IOracleController:
     end
 
     func get_active_oracle_implementation_addresses() -> (
-            oracle_addresses_len : felt, oracle_addresses : felt*):
+        oracle_addresses_len : felt, oracle_addresses : felt*
+    ):
     end
 
     func get_oracle_implementation_status(oracle_implementation_address : felt) -> (
-            oracle_implementation_status : OracleController_OracleImplementationStatus):
+        oracle_implementation_status : OracleController_OracleImplementationStatus
+    ):
     end
 
     func get_oracle_implementation_address(idx : felt) -> (oracle_implementation_address : felt):
     end
 
     func get_primary_oracle_implementation_address() -> (
-            primary_oracle_implementation_address : felt):
+        primary_oracle_implementation_address : felt
+    ):
     end
 
     #
@@ -44,7 +47,8 @@ namespace IOracleController:
     end
 
     func update_oracle_implementation_active_status(
-            oracle_implementation_address : felt, is_active : felt):
+        oracle_implementation_address : felt, is_active : felt
+    ):
     end
 
     func set_primary_oracle_implementation_address(primary_oracle_implementation_address : felt):
@@ -57,11 +61,17 @@ namespace IOracleController:
     func get_decimals(key : felt) -> (decimals : felt):
     end
 
-    func get_entries(key : felt) -> (entries_len : felt, entries : Entry*):
+    func get_entries(key : felt, sources_len : felt, sources : felt*) -> (
+        entries_len : felt, entries : Entry*
+    ):
     end
 
-    func get_value(key : felt, aggregation_mode : felt) -> (
-            value : felt, last_updated_timestamp : felt):
+    func get_entry(key : felt, source : felt) -> (entry : Entry):
+    end
+
+    func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
+        value : felt, last_updated_timestamp : felt
+    ):
     end
 
     #
