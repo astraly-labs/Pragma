@@ -7,7 +7,7 @@ import AssetCardName from "./AssetCardName";
 import AssetCardPrice from "./AssetCardPrice";
 import AssetCardTime from "./AssetCardTime";
 import LoadingBar from "./LoadingBar";
-import { assetKeyToUrl } from "../../../utils/encodeURL";
+import { assetKeyToUrl } from "../../../utils/encodeUrl";
 
 interface AssetCardProps {
   assetKey: AssetKeyT;

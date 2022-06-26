@@ -13,7 +13,7 @@ const Custom404Page = () => {
         />
         <div>
           <h1 className="mb-4 text-center text-xl font-bold sm:text-2xl md:text-4xl">
-            404 – This page is lost in space
+            404&#8194;&#8211;&#8194;This page is lost in space
           </h1>
           <p className="prose prose-slate md:prose-xl">
             You thought this mission to the moon would be a quick six month

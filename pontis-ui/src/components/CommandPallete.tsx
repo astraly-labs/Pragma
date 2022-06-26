@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Dialog, Combobox, Transition } from "@headlessui/react";
 
 import { AssetKeys } from "../hooks/oracle";
 import { ChevronRightIcon, SearchIcon } from "@heroicons/react/outline";
 import AssetCardName from "./Asset/AssetCardName";
+import { useSearch } from "../providers/search";
+import { assetKeyToUrl } from "../../utils/encodeUrl";
 
-const CommandPallate: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface CommandPallateProps {
+  isOpen: boolean;
+}
+
+const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
+  const router = useRouter();
+  const setSearch = useSearch();
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -19,14 +27,14 @@ const CommandPallate: React.FC = () => {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         // AFAIK (isOpen) => !isOpen instead of !isOpen allows us to remove isOpen from the dependency array.
         // This prevents us from mounting and unmounting the event listeners on every render.
-        setIsOpen((isOpen) => !isOpen);
+        setSearch((isOpen) => !isOpen);
       }
     }
     window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, []);
+  }, [setSearch]);
 
   const filteredAssets = query
     ? AssetKeys.filter((asset) =>
@@ -40,7 +48,7 @@ const CommandPallate: React.FC = () => {
       afterLeave={() => setQuery("")}
     >
       <Dialog
-        onClose={setIsOpen}
+        onClose={setSearch}
         className="fixed inset-0 overflow-y-auto p-4 pt-[25vh]"
       >
         <Transition.Child
@@ -64,9 +72,8 @@ const CommandPallate: React.FC = () => {
           <Combobox
             value={null}
             onChange={(value) => {
-              setIsOpen(false);
-              // TODO: navigate user
-              console.log(value);
+              setSearch(false);
+              router.push(`/details/${assetKeyToUrl(value)}`);
             }}
             as="div"
             className="relative mx-auto max-w-3xl divide-y divide-slate-50 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-slate-900/5"
@@ -76,7 +83,7 @@ const CommandPallate: React.FC = () => {
               <Combobox.Input
                 onChange={(event) => setQuery(event.target.value)}
                 className="h-12 w-full appearance-none border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 outline-none focus:ring-0"
-                placeholder="eth/usd"
+                placeholder="type eth/usd"
               />
             </div>
             {filteredAssets.length > 0 && (

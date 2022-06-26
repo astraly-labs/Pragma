@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppProps } from "next/app";
 
 import "../styles/index.css";
 import PontisFooter from "../components/PontisFooter";
+import CommandPallate from "../components/CommandPallete";
+import { SearchContext } from "../providers/search";
 import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
 import Head from "next/head";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = [new InjectedConnector()];
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <div>
@@ -24,8 +27,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <StarknetProvider autoConnect connectors={connectors}>
         <div className="flex min-h-screen flex-col justify-start bg-white">
-          <Component {...pageProps} />
-          <PontisFooter />
+          <SearchContext.Provider value={setIsSearchOpen}>
+            <CommandPallate isOpen={isSearchOpen} />
+            <Component {...pageProps} />
+            <PontisFooter />
+          </SearchContext.Provider>
         </div>
       </StarknetProvider>
     </div>
