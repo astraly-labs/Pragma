@@ -16,9 +16,7 @@ const CommandPallate: React.FC = () => {
      * @param {KeyboardEvent} event keydown event
      */
     function onKeydown(event) {
-      if (event.key === "p" && (event.metaKey || event.ctrlKey)) {
-        // This overwrites default print behavior of browser. Notion and VSCode both use cmd + p.
-        event.preventDefault();
+      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         // AFAIK (isOpen) => !isOpen instead of !isOpen allows us to remove isOpen from the dependency array.
         // This prevents us from mounting and unmounting the event listeners on every render.
         setIsOpen((isOpen) => !isOpen);
@@ -78,7 +76,7 @@ const CommandPallate: React.FC = () => {
               <Combobox.Input
                 onChange={(event) => setQuery(event.target.value)}
                 className="h-12 w-full appearance-none border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 outline-none focus:ring-0"
-                placeholder="Search assets..."
+                placeholder="eth/usd"
               />
             </div>
             {filteredAssets.length > 0 && (

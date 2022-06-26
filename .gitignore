@@ -8,3 +8,5 @@
 **.DS_Store
 
 **_compiled.json
+
+pyproject.toml
