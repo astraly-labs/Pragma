@@ -26,8 +26,8 @@ from contracts.compute_engines.yield_curve.structs import YieldPoint
 
 const DEFAULT_AGGREGATION_MODE = 0  # median
 const ON_SOURCE_KEY = 28526  # str_to_felt("on")
-const AAVE_SOURCE = 1633777253  # str_to_felt("aave")
 const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828
+const AAVE_PONTIS_SOURCE_KEY = 1633777253  # str_to_felt("aave")
 const SECONDS_IN_YEAR = 31536000  # 365 * 24 * 60 * 60
 
 #
@@ -48,7 +48,7 @@ func oracle_controller_address_storage() -> (oracle_controller_address : felt):
 end
 
 @storage_var
-func source_key_storage() -> (source_key : felt):
+func future_spot_pontis_source_key_storage() -> (future_spot_pontis_source_key : felt):
 end
 
 @storage_var
@@ -124,11 +124,11 @@ func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
 
     # Spot & Futures
     let (spot_keys_len, spot_keys) = get_spot_keys()
-    let (source_key) = source_key_storage.read()
+    let (future_spot_pontis_source_key) = future_spot_pontis_source_key_storage.read()
     let (yield_points_len, yield_points) = YieldCurve.build_future_spot_yield_points(
         decimals,
         oracle_controller_address,
-        source_key,
+        future_spot_pontis_source_key,
         on_yield_points,
         spot_keys_len,
         spot_keys,
@@ -156,11 +156,11 @@ func get_oracle_controller_address{
 end
 
 @view
-func get_source_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-    source_key : felt
-):
-    let (source_key) = source_key_storage.read()
-    return (source_key)
+func get_future_spot_pontis_source_key{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (future_spot_pontis_source_key : felt):
+    let (future_spot_pontis_source_key) = future_spot_pontis_source_key_storage.read()
+    return (future_spot_pontis_source_key)
 end
 
 @view
@@ -305,11 +305,11 @@ func set_oracle_controller_address{
 end
 
 @external
-func set_source_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    source_key : felt
-) -> ():
+func set_future_spot_pontis_source_key{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(future_spot_pontis_source_key : felt) -> ():
     Admin_only_admin()
-    source_key_storage.write(source_key)
+    future_spot_pontis_source_key_storage.write(future_spot_pontis_source_key)
     return ()
 end
 
@@ -504,10 +504,10 @@ namespace YieldCurve:
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         end
         let (__fp__, _) = get_fp_and_pc()
-        local aave_source = AAVE_SOURCE
+        local aave_pontis_source_key = AAVE_PONTIS_SOURCE_KEY
         let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
         let (on_value, on_last_updated_timestamp) = IOracleController.get_value(
-            oracle_controller_address, on_key, DEFAULT_AGGREGATION_MODE, 1, &aave_source
+            oracle_controller_address, on_key, DEFAULT_AGGREGATION_MODE, 1, &aave_pontis_source_key
         )
         if on_last_updated_timestamp == 0:
             # Entry was empty to skip to next one
@@ -548,7 +548,7 @@ namespace YieldCurve:
     }(
         output_decimals : felt,
         oracle_controller_address : felt,
-        source_key : felt,
+        future_spot_pontis_source_key : felt,
         yield_points : YieldPoint*,
         spot_keys_len : felt,
         spot_keys : felt*,
@@ -569,7 +569,7 @@ namespace YieldCurve:
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -584,7 +584,7 @@ namespace YieldCurve:
 
         let (spot_decimals) = IOracleController.get_decimals(oracle_controller_address, spot_key)
         let (spot_entries_len, spot_entries) = IOracleController.get_entries(
-            oracle_controller_address, spot_key, 1, &source_key
+            oracle_controller_address, spot_key, 1, &future_spot_pontis_source_key
         )
         if spot_entries_len == 0:
             # No entry so skip to next one
@@ -593,7 +593,7 @@ namespace YieldCurve:
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -610,7 +610,7 @@ namespace YieldCurve:
             let (future_yield_points_len, future_yield_points) = build_future_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -625,7 +625,7 @@ namespace YieldCurve:
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 future_yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -642,7 +642,7 @@ namespace YieldCurve:
     }(
         output_decimals : felt,
         oracle_controller_address : felt,
-        source_key : felt,
+        future_spot_pontis_source_key : felt,
         yield_points : YieldPoint*,
         future_keys_len : felt,
         future_keys : felt*,
@@ -667,7 +667,7 @@ namespace YieldCurve:
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -686,7 +686,7 @@ namespace YieldCurve:
             oracle_controller_address, future_key
         )
         let (future_entries_len, future_entries) = IOracleController.get_entries(
-            oracle_controller_address, future_key, 1, &source_key
+            oracle_controller_address, future_key, 1, &future_spot_pontis_source_key
         )
         if future_entries_len == 0:
             let (
@@ -694,7 +694,7 @@ namespace YieldCurve:
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -727,7 +727,7 @@ namespace YieldCurve:
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_controller_address,
-                source_key,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -756,7 +756,7 @@ namespace YieldCurve:
         ) = build_future_yield_points(
             output_decimals,
             oracle_controller_address,
-            source_key,
+            future_spot_pontis_source_key,
             yield_points,
             future_keys_len,
             future_keys,
