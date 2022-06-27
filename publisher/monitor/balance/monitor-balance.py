@@ -15,7 +15,11 @@ from pontis.publisher.client import PontisPublisherClient
 
 
 async def main(publishers=None, threshold_wei=None):
-    # Set admin private key to None because we aren't using the client for protected invokes
+    slack_url = "https://slack.com/api/chat.postMessage"
+    slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
+    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+
+    # Set admin private key to 1 because we aren't using the client for protected invokes
     client = PontisAdminClient(1, n_retries=5)
 
     if publishers is None:
@@ -46,6 +50,14 @@ async def main(publishers=None, threshold_wei=None):
                 f"\nWarning: Balance below threshold! Publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}\n"
             )
             all_above_threshold = False
+            requests.post(
+                slack_url,
+                headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
+                data={
+                    "text": f"Balance below threshold! Publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}",
+                    "channel": channel_id,
+                },
+            )
         else:
             print(
                 f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}"

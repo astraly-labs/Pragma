@@ -1,5 +1,4 @@
 import datetime
-import os
 
 import requests
 from pontis.core.entry import construct_entry
@@ -27,8 +26,6 @@ def fetch_coingecko(assets, publisher):
             pair_id = "ethereum"
         elif pair[0] == "BTC":
             pair_id = "bitcoin"
-        elif pair[0] == "LUNA":
-            pair_id = "terra-luna"
         elif pair[0] == "SOL":
             pair_id = "solana"
         elif pair[0] == "AVAX":

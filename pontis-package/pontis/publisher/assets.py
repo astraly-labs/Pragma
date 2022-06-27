@@ -1,7 +1,6 @@
 PONTIS_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("BTC", "USD")},
     {"type": "SPOT", "pair": ("ETH", "USD")},
-    {"type": "SPOT", "pair": ("LUNA", "USD")},
     {"type": "SPOT", "pair": ("SOL", "USD")},
     {"type": "SPOT", "pair": ("AVAX", "USD")},
     {"type": "SPOT", "pair": ("DOGE", "USD")},
