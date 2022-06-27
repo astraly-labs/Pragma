@@ -7,6 +7,7 @@ import CommandPallate from "../components/CommandPallete";
 import { SearchContext } from "../providers/search";
 import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
 import Head from "next/head";
+import PontisHeader from "../components/PontisHeader";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = [new InjectedConnector()];
@@ -28,6 +29,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <StarknetProvider autoConnect connectors={connectors}>
         <div className="flex min-h-screen flex-col justify-start bg-white">
           <SearchContext.Provider value={setIsSearchOpen}>
+            <PontisHeader />
             <CommandPallate isOpen={isSearchOpen} />
             <Component {...pageProps} />
             <PontisFooter />

@@ -26,6 +26,7 @@ const Custom404Page = () => {
           </p>
         </div>
         <div className="flex flex-col space-y-8 text-center sm:flex-row sm:space-x-12 sm:space-y-0">
+          {/* Should turn the bottom into two components. */}
           <Link href="/">
             <a className="flex cursor-pointer items-center rounded-lg bg-slate-700 px-4 py-3 text-slate-50 shadow-lg hover:bg-slate-800 hover:shadow-xl md:px-6 md:py-4 md:text-xl">
               <HomeIcon className="mr-2 h-5 w-5" />
@@ -34,7 +35,7 @@ const Custom404Page = () => {
           </Link>
           <a
             href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
-            className="relative flex cursor-pointer items-center rounded-lg bg-slate-300 px-4 py-3 text-slate-700 shadow-lg hover:bg-slate-400 hover:shadow-xl md:px-6 md:py-4 md:text-xl"
+            className="flex cursor-pointer items-center rounded-lg bg-slate-300 px-4 py-3 text-slate-700 shadow-lg hover:bg-slate-400 hover:shadow-xl md:px-6 md:py-4 md:text-xl"
           >
             <ChatIcon className="mr-2 h-5 w-5" />
             Request asset

@@ -23,7 +23,8 @@ const BigButton: React.FC<BigButtonProps> = ({
       )}
       onMouseEnter={handleMouseEnter}
       href={href}
-      // target="_blank"
+      target="_blank"
+      rel="noreferrer"
     >
       <div className="mb-2 capitalize sm:mb-4 lg:mb-6">{name}</div>
       <div className="text-right">

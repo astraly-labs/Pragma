@@ -49,7 +49,7 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
     >
       <Dialog
         onClose={setSearch}
-        className="fixed inset-0 overflow-y-auto p-4 pt-[25vh]"
+        className="fixed inset-0 overflow-y-auto p-4 pt-[5vh] sm:pt-[20vh]"
       >
         <Transition.Child
           enter="duration-300 ease-out"
@@ -76,15 +76,18 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
               router.push(`/details/${assetKeyToUrl(value)}`);
             }}
             as="div"
-            className="relative mx-auto max-w-3xl divide-y divide-slate-50 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-slate-900/5"
+            className="relative mx-auto max-w-3xl divide-y divide-slate-50 overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-slate-900/5"
           >
             <div className="flex items-center space-x-4 px-4 py-2">
               <SearchIcon className="h-6 w-6 text-slate-500" />
               <Combobox.Input
                 onChange={(event) => setQuery(event.target.value)}
-                className="h-12 w-full appearance-none border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 outline-none focus:ring-0"
-                placeholder="type eth/usd"
+                className="h-12 flex-auto appearance-none border-0 bg-transparent text-xl text-slate-900 placeholder-slate-400 outline-none focus:ring-0"
+                placeholder="Type eth/usd"
               />
+              <kbd className="hidden font-sans font-semibold text-slate-400 sm:inline">
+                Esc
+              </kbd>
             </div>
             {filteredAssets.length > 0 && (
               <Combobox.Options
