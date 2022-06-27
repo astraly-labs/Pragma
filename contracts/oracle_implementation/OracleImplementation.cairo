@@ -12,6 +12,7 @@ from contracts.oracle_implementation.library import (
     Oracle_get_entries,
     Oracle_get_value,
     Oracle_get_entry,
+    Oracle_get_all_sources,
     Oracle_submit_entry,
 )
 
@@ -64,6 +65,14 @@ func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 ) -> (entry : Entry):
     let (entry) = Oracle_get_entry(key, source)
     return (entry)
+end
+
+@view
+func get_all_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (sources_len : felt, sources : felt*):
+    let (sources_len, sources) = Oracle_get_all_sources(key)
+    return (sources_len, sources)
 end
 
 #

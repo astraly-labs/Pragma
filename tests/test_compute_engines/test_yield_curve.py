@@ -190,11 +190,7 @@ def contracts(contract_classes, contract_init):
 
 
 @pytest_asyncio.fixture
-async def initialized_contracts(
-    contracts,
-    admin_signer,
-    publisher,
-):
+async def initialized_contracts(contracts, admin_signer, source, publisher):
     admin_account = contracts["admin_account"]
     publisher_account = contracts["publisher_account"]
     publisher_registry = contracts["publisher_registry"]
@@ -234,8 +230,8 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
-        "set_publisher_key",
-        [publisher],
+        "set_source_key",
+        [source],
     )
 
     for spot_key in FUTURES_SPOT.keys():
@@ -316,7 +312,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=source,
+        source=str_to_felt("aave"),
         publisher=publisher,
     )
     await publisher_signer.send_transaction(

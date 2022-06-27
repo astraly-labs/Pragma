@@ -186,7 +186,7 @@ func OracleController_add_oracle_implementation_address{
     )
     let (
         primary_oracle_implementation_address
-    ) = OracleController_get_primary_oracle_implementation_address()
+    ) = OracleController_primary_oracle_implementation_address_storage.read()
     if primary_oracle_implementation_address == 0:
         OracleController_primary_oracle_implementation_address_storage.write(
             oracle_implementation_address

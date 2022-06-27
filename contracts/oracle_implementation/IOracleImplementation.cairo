@@ -24,6 +24,9 @@ namespace IOracleImplementation:
     func get_entry(key : felt, source : felt) -> (entry : Entry):
     end
 
+    func get_all_sources(key : felt) -> (sources_len : felt, sources : felt*):
+    end
+
     #
     # Setters
     #

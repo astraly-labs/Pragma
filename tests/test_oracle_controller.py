@@ -444,7 +444,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
 
@@ -472,7 +472,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     second_entry = entry = construct_entry(
@@ -491,7 +491,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE
+        second_entry.key, AGGREGATION_MODE, []
     ).invoke()
     assert result.result.value == second_entry.value
 
@@ -521,7 +521,7 @@ async def test_re_submit_stale(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
@@ -546,7 +546,7 @@ async def test_re_submit_stale(
     except StarkException:
         pass
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     return
@@ -574,7 +574,7 @@ async def test_submit_second_asset(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
@@ -593,12 +593,12 @@ async def test_submit_second_asset(
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE
+        second_entry.key, AGGREGATION_MODE, []
     ).invoke()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     return
@@ -633,6 +633,7 @@ async def test_submit_second_publisher(
         serialize_entry(entry),
     )
 
+    second_source = str_to_felt("1xdata")
     second_publisher = str_to_felt("bar")
 
     await admin_signer.send_transaction(
@@ -646,7 +647,7 @@ async def test_submit_second_publisher(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=source,
+        source=second_source,
         publisher=second_publisher,
     )
 
@@ -657,13 +658,13 @@ async def test_submit_second_publisher(
         serialize_entry(second_entry),
     )
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -692,14 +693,15 @@ async def test_submit_second_source(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
-    second_entry = entry = construct_entry(
+    second_source = str_to_felt("1xdata")
+    second_entry = construct_entry(
         key=key,
-        value=3,
+        value=4,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
-        source="1xdata",
+        source=second_source,
         publisher=publisher,
     )
 
@@ -711,7 +713,7 @@ async def test_submit_second_source(
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE
+        second_entry.key, AGGREGATION_MODE, []
     ).invoke()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
@@ -759,11 +761,12 @@ async def test_median_aggregation(
         initialized_contracts["additional_publisher_accounts"],
     ):
         additional_publisher = str_to_felt(additional_publisher_str)
+        additional_source = str_to_felt(additional_publisher_str + "-source")
         additional_entry = construct_entry(
             key=key,
             value=price,
             timestamp=STARKNET_STARTING_TIMESTAMP,
-            source=source,
+            source=additional_source,
             publisher=additional_publisher,
         )
         entries.append(additional_entry)
@@ -778,10 +781,10 @@ async def test_median_aggregation(
             additional_entry,
         )
 
-        result = await oracle_controller.get_entries(key).invoke()
+        result = await oracle_controller.get_entries(key, []).invoke()
         assert result.result.entries == entries
 
-        result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+        result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
@@ -823,10 +826,10 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         )
 
     for i, key in enumerate(keys):
-        result = await oracle_controller.get_entries(key).invoke()
+        result = await oracle_controller.get_entries(key, []).invoke()
         assert result.result.entries == [entries[i]]
 
-        result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+        result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
         assert result.result.value == prices[i]
 
     return
@@ -870,10 +873,10 @@ async def test_subset_publishers(
         [additional_publisher, second_publisher_account.contract_address],
     )
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     return
@@ -884,10 +887,12 @@ async def test_unknown_key(initialized_contracts):
     oracle_controller = initialized_contracts["oracle_controller"]
 
     unknown_key = str_to_felt("answertolife")
-    result = await oracle_controller.get_entries(unknown_key).invoke()
+    result = await oracle_controller.get_entries(unknown_key, []).invoke()
     assert len(result.result.entries) == 0
 
-    result = await oracle_controller.get_value(unknown_key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(
+        unknown_key, AGGREGATION_MODE, []
+    ).invoke()
     assert result.result.value == 0
     assert result.result.last_updated_timestamp == 0
 
@@ -972,7 +977,7 @@ async def test_real_data(
     ]
     for key in keys:
         result = await oracle_controller.get_value(
-            str_to_felt(key), AGGREGATION_MODE
+            str_to_felt(key), AGGREGATION_MODE, []
         ).invoke()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
@@ -1005,10 +1010,10 @@ async def test_multiple_oracle_implementations(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to controller
@@ -1021,6 +1026,7 @@ async def test_multiple_oracle_implementations(
 
     # Submit second entry from second publisher
     second_publisher = str_to_felt("bar")
+    second_source = str_to_felt("1xdata")
 
     await admin_signer.send_transaction(
         admin_account,
@@ -1033,7 +1039,7 @@ async def test_multiple_oracle_implementations(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=source,
+        source=second_source,
         publisher=second_publisher,
     )
     await publisher_signer.send_transaction(
@@ -1044,10 +1050,10 @@ async def test_multiple_oracle_implementations(
     )
 
     # Verify that we can get both entries from the first oracle implementation
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Verify that only the second entry is present in the second oracle implementation
@@ -1066,10 +1072,10 @@ async def test_multiple_oracle_implementations(
         == second_oracle_implementation.contract_address
     )
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == second_entry.value
 
     return
@@ -1153,6 +1159,7 @@ async def test_rotate_primary_oracle_implementation_address(
 
     # Submit second entry from second publisher
     second_publisher = str_to_felt("bar")
+    second_source = str_to_felt("1xdata")
 
     await admin_signer.send_transaction(
         admin_account,
@@ -1165,7 +1172,7 @@ async def test_rotate_primary_oracle_implementation_address(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=source,
+        source=second_source,
         publisher=second_publisher,
     )
     await publisher_signer.send_transaction(
@@ -1175,10 +1182,10 @@ async def test_rotate_primary_oracle_implementation_address(
         serialize_entry(second_entry),
     )
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to controller
@@ -1289,11 +1296,11 @@ async def test_ignore_stale_entries(
         serialize_entry(second_entry),
     )
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == second_entry.value
     assert result.result.last_updated_timestamp == second_entry.timestamp
 
-    result = await oracle_controller.get_entries(key).invoke()
+    result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [second_entry]
 
     return

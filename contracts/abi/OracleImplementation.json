@@ -145,6 +145,27 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_all_sources",
+        "outputs": [
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "oracle_controller_address",
                 "type": "felt"
             }
