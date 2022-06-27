@@ -10,10 +10,7 @@ def serialize_entry(entry):
 
 
 def serialize_entries(entries):
-    expanded = [
-        [entry.key, entry.value, entry.timestamp, entry.source, entry.publisher]
-        for entry in entries
-    ]
+    expanded = [serialize_entry(entry) for entry in entries]
     flattened = [x for entry in expanded for x in entry]
     return [len(entries)] + flattened
 
