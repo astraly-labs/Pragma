@@ -1,7 +1,7 @@
 import React from "react";
 import { SearchIcon } from "@heroicons/react/outline";
 
-import { useSearch } from "../providers/search";
+import { useSearch } from "../../providers/search";
 
 const SearchBar: React.FC = () => {
   const setSearch = useSearch();

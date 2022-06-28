@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Dialog, Combobox, Transition } from "@headlessui/react";
 
-import { AssetKeys } from "../hooks/oracle";
+import { AssetKeys } from "../../hooks/oracle";
 import { ChevronRightIcon, SearchIcon } from "@heroicons/react/outline";
-import AssetCardName from "./Asset/AssetCardName";
-import { useSearch } from "../providers/search";
-import { assetKeyToUrl } from "../../utils/encodeUrl";
+import AssetCardName from "../Asset/AssetCardName";
+import { useSearch } from "../../providers/search";
+import { assetKeyToUrl } from "../../../utils/encodeUrl";
 
 interface CommandPallateProps {
   isOpen: boolean;
