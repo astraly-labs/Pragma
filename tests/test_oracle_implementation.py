@@ -216,4 +216,7 @@ async def test_median_aggregation(
 
         print(f"Succeeded for {len(entries)} entries")
 
+    result = await contract.get_all_sources(key).invoke()
+    assert len(result.result.sources) == len(publishers)
+
     return
