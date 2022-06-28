@@ -70,7 +70,7 @@ namespace IOracleController:
     end
 
     func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
-        value : felt, last_updated_timestamp : felt
+        value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end
 

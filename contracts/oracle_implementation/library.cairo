@@ -92,18 +92,18 @@ end
 
 func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, last_updated_timestamp : felt):
+) -> (value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     alloc_locals
 
     let (entries_len, entries) = Oracle_get_entries(key, sources_len, sources)
 
     if entries_len == 0:
-        return (0, 0)
+        return (0, 0, 0)
     end
 
     let (value) = Entry_aggregate_entries(entries_len, entries)
     let (last_updated_timestamp) = Entry_aggregate_timestamps_max(entries_len, entries)
-    return (value, last_updated_timestamp)
+    return (value, last_updated_timestamp, entries_len)
 end
 
 func Oracle_get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(

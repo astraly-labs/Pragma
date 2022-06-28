@@ -448,6 +448,11 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
 
+    source_result = await oracle_controller.get_value(
+        entry.key, AGGREGATION_MODE, [source]
+    ).invoke()
+    assert source_result.result == result.result
+
     return
 
 
@@ -524,6 +529,11 @@ async def test_re_submit_stale(
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
 
+    source_result = await oracle_controller.get_value(
+        key, AGGREGATION_MODE, [source]
+    ).invoke()
+    assert result.result == source_result.result
+
     second_entry = construct_entry(
         key=key,
         value=3,
@@ -548,6 +558,11 @@ async def test_re_submit_stale(
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
+
+    source_result = await oracle_controller.get_value(
+        key, AGGREGATION_MODE, [source]
+    ).invoke()
+    assert result.result == source_result.result
 
     return
 
@@ -600,6 +615,11 @@ async def test_submit_second_asset(
     # Check that first asset is still stored accurately
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).invoke()
     assert result.result.value == entry.value
+
+    source_result = await oracle_controller.get_value(
+        entry.key, AGGREGATION_MODE, [source]
+    ).invoke()
+    assert result.result == source_result.result
 
     return
 
@@ -663,6 +683,18 @@ async def test_submit_second_publisher(
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
+
+    source_result = await oracle_controller.get_value(
+        key, AGGREGATION_MODE, [source]
+    ).invoke()
+    assert source_result.result.value == entry.value
+    assert source_result.result.last_updated_timestamp == entry.timestamp
+
+    source_result = await oracle_controller.get_value(
+        key, AGGREGATION_MODE, [second_source]
+    ).invoke()
+    assert source_result.result.value == second_entry.value
+    assert source_result.result.last_updated_timestamp == second_entry.timestamp
 
     result = await oracle_controller.get_entries(key, []).invoke()
     assert result.result.entries == [entry, second_entry]
@@ -873,13 +905,28 @@ async def test_subset_publishers(
         [additional_publisher, second_publisher_account.contract_address],
     )
 
-    result = await oracle_controller.get_entries(key, []).invoke()
+    result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).invoke()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
     return
+
+
+@pytest.mark.asyncio
+async def test_unknown_source(initialized_contracts):
+    oracle_controller = initialized_contracts["oracle_controller"]
+
+    key = str_to_felt("eth/usd")
+    try:
+        result = await oracle_controller.get_value(key, [str_to_felt("unknown")]).call()
+
+        raise Exception(
+            "Transaction to call get_value for single unknown source succeeded, but should not have."
+        )
+    except StarkException:
+        pass
 
 
 @pytest.mark.asyncio
@@ -887,12 +934,10 @@ async def test_unknown_key(initialized_contracts):
     oracle_controller = initialized_contracts["oracle_controller"]
 
     unknown_key = str_to_felt("answertolife")
-    result = await oracle_controller.get_entries(unknown_key, []).invoke()
+    result = await oracle_controller.get_entries(unknown_key, []).call()
     assert len(result.result.entries) == 0
 
-    result = await oracle_controller.get_value(
-        unknown_key, AGGREGATION_MODE, []
-    ).invoke()
+    result = await oracle_controller.get_value(unknown_key, AGGREGATION_MODE, []).call()
     assert result.result.value == 0
     assert result.result.last_updated_timestamp == 0
 
@@ -978,9 +1023,26 @@ async def test_real_data(
     for key in keys:
         result = await oracle_controller.get_value(
             str_to_felt(key), AGGREGATION_MODE, []
-        ).invoke()
+        ).call()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
+
+    result = await oracle_controller.get_value(
+        str_to_felt("eth/usd"),
+        AGGREGATION_MODE,
+        [str_to_felt("gemini"), str_to_felt("coinbase")],
+    ).call()
+    assert result.result.value == (29920000000000 + 29924650000000) / 2
+    assert result.result.last_updated_timestamp == 1650590986
+
+    result = await oracle_controller.get_value(
+        str_to_felt("eth/usd"),
+        AGGREGATION_MODE,
+        [str_to_felt("gemini"), str_to_felt("unknown")],
+    ).call()
+    assert result.result.value == 29920000000000
+    assert result.result.last_updated_timestamp == 1650590986
+    assert result.result.num_sources_aggregated == 1
 
 
 @pytest.mark.asyncio

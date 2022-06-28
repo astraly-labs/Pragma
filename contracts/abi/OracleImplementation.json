@@ -116,6 +116,10 @@
             {
                 "name": "last_updated_timestamp",
                 "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
             }
         ],
         "stateMutability": "view",
