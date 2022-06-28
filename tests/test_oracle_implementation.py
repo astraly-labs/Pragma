@@ -48,7 +48,7 @@ async def test_deploy(contract):
 
 @pytest.mark.asyncio
 async def test_get_decimals(contract):
-    result = await contract.get_decimals(str_to_felt("default")).invoke()
+    result = await contract.get_decimals(str_to_felt("default")).call()
     assert result.result.decimals == DEFAULT_DECIMALS
 
     return
@@ -87,7 +87,7 @@ async def test_submit_entries(contract, source, publisher):
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
-    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
@@ -98,11 +98,11 @@ async def test_submit_entries(contract, source, publisher):
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
-    result = await contract.get_value(second_entry.key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(second_entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
     return
@@ -117,7 +117,7 @@ async def test_republish_stale(contract, source, publisher):
 
     await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
-    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
@@ -135,7 +135,7 @@ async def test_republish_stale(contract, source, publisher):
     except StarkException:
         pass
 
-    result = await contract.get_value(key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
     return
@@ -164,13 +164,13 @@ async def test_mean_aggregation(
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
-    result = await contract.get_value(key, AGGREGATION_MODE, []).invoke()
+    result = await contract.get_value(key, AGGREGATION_MODE, []).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await contract.get_entries(key, []).invoke()
+    result = await contract.get_entries(key, []).call()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -208,15 +208,15 @@ async def test_median_aggregation(
             caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 
-        result = await contract.get_entries(key, []).invoke()
+        result = await contract.get_entries(key, []).call()
         assert result.result.entries == entries
 
-        result = await contract.get_value(key, AGGREGATION_MODE, []).invoke()
+        result = await contract.get_value(key, AGGREGATION_MODE, []).call()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
 
-    result = await contract.get_all_sources(key).invoke()
+    result = await contract.get_all_sources(key).call()
     assert len(result.result.sources) == len(publishers)
 
     return
