@@ -915,10 +915,28 @@ async def test_subset_publishers(
 
 
 @pytest.mark.asyncio
-async def test_unknown_source(initialized_contracts):
+async def test_unknown_source(
+    initialized_contracts, source, publisher, publisher_signer
+):
+    publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
+    entry = construct_entry(
+        key=key,
+        value=2,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_controller.contract_address,
+        "submit_entry",
+        serialize_entry(entry),
+    )
+
     try:
         result = await oracle_controller.get_value(key, [str_to_felt("unknown")]).call()
 
