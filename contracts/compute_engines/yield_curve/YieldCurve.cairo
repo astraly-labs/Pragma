@@ -25,7 +25,7 @@ from contracts.compute_engines.yield_curve.structs import YieldPoint
 
 const DEFAULT_AGGREGATION_MODE = 0  # median
 const ON_SOURCE_KEY = 28526  # str_to_felt("on")
-const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828
+const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828  # str_to_felt("future/spot")
 const AAVE_PONTIS_SOURCE_KEY = 1633777253  # str_to_felt("aave")
 const SECONDS_IN_YEAR = 31536000  # 365 * 24 * 60 * 60
 
