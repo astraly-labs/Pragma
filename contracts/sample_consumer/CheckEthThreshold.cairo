@@ -11,14 +11,16 @@ const AGGREGATION_MODE = 0  # default
 
 @view
 func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : felt) -> (
-        is_above_threshold : felt):
+    is_above_threshold : felt
+):
     alloc_locals
 
     let (num_decimals) = IOracleController.get_decimals(ORACLE_CONTROLLER_ADDRESS, KEY)
     let (multiplier) = pow(10, num_decimals)
 
     let (eth_price, timestamp) = IOracleController.get_value(
-        ORACLE_CONTROLLER_ADDRESS, KEY, AGGREGATION_MODE)
+        ORACLE_CONTROLLER_ADDRESS, KEY, AGGREGATION_MODE, 0, 0
+    )
 
     let shifted_threshold = threshold * multiplier
     let (is_above_threshold) = is_le(shifted_threshold, eth_price)

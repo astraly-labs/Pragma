@@ -1,13 +1,11 @@
-import os
 import time
 
 import requests
 from pontis.core.entry import construct_entry
 
 
-def fetch_thegraph(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-thegraph"
+def fetch_thegraph(assets, publisher):
+    source = "thegraph"
 
     base_url = "https://api.thegraph.com/subgraphs/name/"
 
@@ -46,6 +44,7 @@ def fetch_thegraph(assets):
                 key=key,
                 value=value_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )

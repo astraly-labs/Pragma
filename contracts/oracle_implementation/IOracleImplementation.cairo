@@ -11,16 +11,20 @@ namespace IOracleImplementation:
     func get_decimals(key : felt) -> (decimals : felt):
     end
 
-    func get_entries(publishers_len : felt, publishers : felt*, key : felt) -> (
-            entries_len : felt, entries : Entry*):
+    func get_entries(key : felt, sources_len : felt, sources : felt*) -> (
+        entries_len : felt, entries : Entry*
+    ):
     end
 
-    func get_value(
-            publishers_len : felt, publishers : felt*, key : felt, aggregation_mode : felt) -> (
-            value : felt, last_updated_timestamp : felt):
+    func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
+        value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+    ):
     end
 
-    func get_entry(key : felt, publisher : felt) -> (entry : Entry):
+    func get_entry(key : felt, source : felt) -> (entry : Entry):
+    end
+
+    func get_all_sources(key : felt) -> (sources_len : felt, sources : felt*):
     end
 
     #

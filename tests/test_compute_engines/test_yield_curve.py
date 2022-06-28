@@ -190,11 +190,7 @@ def contracts(contract_classes, contract_init):
 
 
 @pytest_asyncio.fixture
-async def initialized_contracts(
-    contracts,
-    admin_signer,
-    publisher,
-):
+async def initialized_contracts(contracts, admin_signer, source, publisher):
     admin_account = contracts["admin_account"]
     publisher_account = contracts["publisher_account"]
     publisher_registry = contracts["publisher_registry"]
@@ -234,8 +230,8 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
-        "set_publisher_key",
-        [publisher],
+        "set_future_spot_pontis_source_key",
+        [source],
     )
 
     for spot_key in FUTURES_SPOT.keys():
@@ -304,7 +300,7 @@ async def test_empty_yield_curve(initialized_contracts, publisher_signer, publis
 
 
 @pytest.mark.asyncio
-async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
+async def test_yield_curve(initialized_contracts, publisher_signer, source, publisher):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
     yield_curve = initialized_contracts["yield_curve"]
@@ -316,6 +312,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=str_to_felt("aave"),
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
@@ -330,6 +327,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
             key=spot_key,
             value=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
+            source=source,
             publisher=publisher,
         )
         await publisher_signer.send_transaction(
@@ -351,6 +349,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, publisher):
                 key=future_key,
                 value=future_data["value"],
                 timestamp=future_data["timestamp"],
+                source=source,
                 publisher=publisher,
             )
             await publisher_signer.send_transaction(

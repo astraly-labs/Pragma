@@ -120,10 +120,10 @@
     },
     {
         "inputs": [],
-        "name": "get_publisher_key",
+        "name": "get_source_key",
         "outputs": [
             {
-                "name": "publisher_key",
+                "name": "source_key",
                 "type": "felt"
             }
         ],
@@ -360,11 +360,11 @@
     {
         "inputs": [
             {
-                "name": "publisher_key",
+                "name": "source_key",
                 "type": "felt"
             }
         ],
-        "name": "set_publisher_key",
+        "name": "set_source_key",
         "outputs": [],
         "type": "function"
     },

@@ -9,7 +9,7 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def parse_ftx_spot(asset, data, publisher, timestamp):
+def parse_ftx_spot(asset, data, source, publisher, timestamp):
     pair = asset["pair"]
     key = currency_pair_to_key(*pair)
 
@@ -30,11 +30,12 @@ def parse_ftx_spot(asset, data, publisher, timestamp):
         key=key,
         value=price_int,
         timestamp=timestamp,
+        source=source,
         publisher=publisher,
     )
 
 
-def parse_ftx_futures(asset, data, publisher, timestamp):
+def parse_ftx_futures(asset, data, source, publisher, timestamp):
     pair = asset["pair"]
     if pair[1] != "USD":
         print(f"Unable to fetch price from FTX for non-USD derivative {pair}")
@@ -66,6 +67,7 @@ def parse_ftx_futures(asset, data, publisher, timestamp):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )
@@ -91,9 +93,8 @@ def generate_ftx_headers(endpoint):
     return headers
 
 
-def fetch_ftx(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-ftx"
+def fetch_ftx(assets, publisher):
+    source = "ftx"
     base_url = "https://ftx.com/api"
 
     endpoint = "/markets"
@@ -112,12 +113,14 @@ def fetch_ftx(assets):
 
     for asset in assets:
         if asset["type"] == "SPOT":
-            entry = parse_ftx_spot(asset, spot_data, publisher, timestamp)
+            entry = parse_ftx_spot(asset, spot_data, source, publisher, timestamp)
             if entry is not None:
                 entries.append(entry)
             continue
         elif asset["type"] == "FUTURE":
-            future_entries = parse_ftx_futures(asset, future_data, publisher, timestamp)
+            future_entries = parse_ftx_futures(
+                asset, future_data, source, publisher, timestamp
+            )
             if len(future_entries) is not None:
                 entries.extend(future_entries)
             continue

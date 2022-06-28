@@ -27,9 +27,9 @@ async def main():
         print(f"Registered overnight rate key {on_key} with tx: {result}")
 
     result = await admin_client.send_transaction(
-        yield_curve_address, "set_publisher_key", [str_to_felt("pontis-ftx")]
+        yield_curve_address, "set_future_spot_pontis_source_key", [str_to_felt("ftx")]
     )
-    print(f"Set publisher key with tx: {result}")
+    print(f"Set future/spot pontis source-key with tx: {result}")
 
     for spot_key, future_keys in spot_future_keys.items():
         result = await admin_client.send_transaction(

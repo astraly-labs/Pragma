@@ -7,7 +7,6 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
-from starkware.cairo.common.registers import get_fp_and_pc
 
 from contracts.admin.library import (
     Admin_initialize_admin_address,
@@ -18,7 +17,6 @@ from contracts.admin.library import (
 
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.IOracleController import IOracleController
-from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
 from contracts.compute_engines.yield_curve.structs import YieldPoint
 
 #
@@ -26,8 +24,9 @@ from contracts.compute_engines.yield_curve.structs import YieldPoint
 #
 
 const DEFAULT_AGGREGATION_MODE = 0  # median
-const ON_SOURCE_KEY = 28526
-const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828
+const ON_SOURCE_KEY = 28526  # str_to_felt("on")
+const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828  # str_to_felt("future/spot")
+const AAVE_PONTIS_SOURCE_KEY = 1633777253  # str_to_felt("aave")
 const SECONDS_IN_YEAR = 31536000  # 365 * 24 * 60 * 60
 
 #
@@ -48,7 +47,7 @@ func oracle_controller_address_storage() -> (oracle_controller_address : felt):
 end
 
 @storage_var
-func publisher_key_storage() -> (publisher_key : felt):
+func future_spot_pontis_source_key_storage() -> (future_spot_pontis_source_key : felt):
 end
 
 @storage_var
@@ -122,18 +121,13 @@ func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
         decimals, oracle_controller_address, yield_points_init, on_keys_len, on_keys, 0, 0
     )
 
-    # TODO: Change back to oracle controller once lookup by publisher & key is enabled
-    let (
-        oracle_implementation_address
-    ) = IOracleController.get_primary_oracle_implementation_address(oracle_controller_address)
-    let (publisher_key) = get_publisher_key()
-
     # Spot & Futures
     let (spot_keys_len, spot_keys) = get_spot_keys()
+    let (future_spot_pontis_source_key) = future_spot_pontis_source_key_storage.read()
     let (yield_points_len, yield_points) = YieldCurve.build_future_spot_yield_points(
         decimals,
-        oracle_implementation_address,
-        publisher_key,
+        oracle_controller_address,
+        future_spot_pontis_source_key,
         on_yield_points,
         spot_keys_len,
         spot_keys,
@@ -161,11 +155,11 @@ func get_oracle_controller_address{
 end
 
 @view
-func get_publisher_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-    publisher_key : felt
-):
-    let (publisher_key) = publisher_key_storage.read()
-    return (publisher_key)
+func get_future_spot_pontis_source_key{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (future_spot_pontis_source_key : felt):
+    let (future_spot_pontis_source_key) = future_spot_pontis_source_key_storage.read()
+    return (future_spot_pontis_source_key)
 end
 
 @view
@@ -310,11 +304,11 @@ func set_oracle_controller_address{
 end
 
 @external
-func set_publisher_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher_key : felt
-) -> ():
+func set_future_spot_pontis_source_key{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(future_spot_pontis_source_key : felt) -> ():
     Admin_only_admin()
-    publisher_key_storage.write(publisher_key)
+    future_spot_pontis_source_key_storage.write(future_spot_pontis_source_key)
     return ()
 end
 
@@ -508,11 +502,12 @@ namespace YieldCurve:
 
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         end
+
         let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
-        let (on_value, on_last_updated_timestamp) = IOracleController.get_value(
-            oracle_controller_address, on_key, DEFAULT_AGGREGATION_MODE
+        let (on_entry) = IOracleController.get_entry(
+            oracle_controller_address, on_key, AAVE_PONTIS_SOURCE_KEY
         )
-        if on_last_updated_timestamp == 0:
+        if on_entry.timestamp == 0:
             # Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -526,11 +521,11 @@ namespace YieldCurve:
 
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         else:
-            let (shifted_on_value) = change_decimals(on_value, on_decimals, output_decimals)
+            let (shifted_on_value) = change_decimals(on_entry.value, on_decimals, output_decimals)
 
             # Add to on_yield_points and recurse
             # Set expiry to be same as capture timestamp
-            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_last_updated_timestamp, capture_timestamp=on_last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
+            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_entry.timestamp, capture_timestamp=on_entry.timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -550,8 +545,8 @@ namespace YieldCurve:
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
         output_decimals : felt,
-        oracle_implementation_address : felt,
-        publisher_key : felt,
+        oracle_controller_address : felt,
+        future_spot_pontis_source_key : felt,
         yield_points : YieldPoint*,
         spot_keys_len : felt,
         spot_keys : felt*,
@@ -571,8 +566,8 @@ namespace YieldCurve:
                 recursed_spot_yield_points_len, recursed_spot_yield_points
             ) = build_future_spot_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -583,22 +578,18 @@ namespace YieldCurve:
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         end
 
-        let (__fp__, _) = get_fp_and_pc()
-
-        let (spot_decimals) = IOracleImplementation.get_decimals(
-            oracle_implementation_address, spot_key
+        let (spot_decimals) = IOracleController.get_decimals(oracle_controller_address, spot_key)
+        let (spot_entry) = IOracleController.get_entry(
+            oracle_controller_address, spot_key, future_spot_pontis_source_key
         )
-        let (spot_entries_len, spot_entries) = IOracleImplementation.get_entries(
-            oracle_implementation_address, 1, &publisher_key, spot_key
-        )
-        if spot_entries_len == 0:
+        if spot_entry.timestamp == 0:
             # No entry so skip to next one
             let (
                 recursed_spot_yield_points_len, recursed_spot_yield_points
             ) = build_future_spot_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -608,14 +599,13 @@ namespace YieldCurve:
 
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         else:
-            let spot_entry = spot_entries[0]
             # Get all futures, and for each, calculate yield point
             let (future_keys_len, future_keys) = get_future_keys(spot_key)
 
             let (future_yield_points_len, future_yield_points) = build_future_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -629,8 +619,8 @@ namespace YieldCurve:
                 recursed_spot_yield_points_len, recursed_spot_yield_points
             ) = build_future_spot_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 future_yield_points,
                 spot_keys_len,
                 spot_keys,
@@ -646,8 +636,8 @@ namespace YieldCurve:
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
         output_decimals : felt,
-        oracle_implementation_address : felt,
-        publisher_key : felt,
+        oracle_controller_address : felt,
+        future_spot_pontis_source_key : felt,
         yield_points : YieldPoint*,
         future_keys_len : felt,
         future_keys : felt*,
@@ -671,8 +661,8 @@ namespace YieldCurve:
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -685,21 +675,19 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
-        let (__fp__, _) = get_fp_and_pc()
-
-        let (future_decimals) = IOracleImplementation.get_decimals(
-            oracle_implementation_address, future_key
+        let (future_decimals) = IOracleController.get_decimals(
+            oracle_controller_address, future_key
         )
-        let (future_entries_len, future_entries) = IOracleImplementation.get_entries(
-            oracle_implementation_address, 1, &publisher_key, future_key
+        let (future_entry) = IOracleController.get_entry(
+            oracle_controller_address, future_key, future_spot_pontis_source_key
         )
-        if future_entries_len == 0:
+        if future_entry.timestamp == 0:
             let (
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -711,8 +699,6 @@ namespace YieldCurve:
 
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
-        let future_entry = future_entries[0]
-
         # TODO: Replace with
         # is_not_zero(future_entry.timestamp - spot_entry.timestamp) == FALSE
         let (is_future_more_recent) = is_le(spot_entry.timestamp, future_entry.timestamp)
@@ -731,8 +717,8 @@ namespace YieldCurve:
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
                 output_decimals,
-                oracle_implementation_address,
-                publisher_key,
+                oracle_controller_address,
+                future_spot_pontis_source_key,
                 yield_points,
                 future_keys_len,
                 future_keys,
@@ -760,8 +746,8 @@ namespace YieldCurve:
             recursed_future_yield_points_len, recursed_future_yield_points
         ) = build_future_yield_points(
             output_decimals,
-            oracle_implementation_address,
-            publisher_key,
+            oracle_controller_address,
+            future_spot_pontis_source_key,
             yield_points,
             future_keys_len,
             future_keys,

@@ -4,7 +4,7 @@ import traceback
 
 import requests
 from pontis.core.client import PontisClient
-from pontis.core.utils import currency_pair_to_key, pprint_entry
+from pontis.core.utils import key_for_asset, pprint_entry
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.fetch import (
@@ -28,19 +28,17 @@ async def publish_all(assets):
 
     client = PontisClient()
     for i, asset in enumerate(assets):
-        if "pair" in asset:
-            key = currency_pair_to_key(*asset["pair"])
-        else:
-            key = asset["key"]
+        key = key_for_asset(asset)
         decimals = await client.get_decimals(key)
         assets[i]["decimals"] = decimals
 
+    publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
 
     try:
-        coinmarketcap_entries = fetch_coinmarketcap(assets)
+        coinmarketcap_entries = fetch_coinmarketcap(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(coinmarketcap_entries)
         entries.extend(coinmarketcap_entries)
     except Exception as e:
@@ -50,7 +48,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        coingecko_entries = fetch_coingecko(assets)
+        coingecko_entries = fetch_coingecko(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(coingecko_entries)
         entries.extend(coingecko_entries)
     except Exception as e:
@@ -60,7 +58,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        coinbase_entries = fetch_coinbase(assets)
+        coinbase_entries = fetch_coinbase(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(coinbase_entries)
         entries.extend(coinbase_entries)
     except Exception as e:
@@ -70,7 +68,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        gemini_entries = fetch_gemini(assets)
+        gemini_entries = fetch_gemini(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(gemini_entries)
         entries.extend(gemini_entries)
     except Exception as e:
@@ -80,7 +78,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        binance_entries = fetch_binance(assets)
+        binance_entries = fetch_binance(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(binance_entries)
         entries.extend(binance_entries)
     except Exception as e:
@@ -90,7 +88,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        ftx_entries = fetch_ftx(assets)
+        ftx_entries = fetch_ftx(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(ftx_entries)
         entries.extend(ftx_entries)
     except Exception as e:
@@ -100,7 +98,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        cex_entries = fetch_cex(assets)
+        cex_entries = fetch_cex(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(cex_entries)
         entries.extend(cex_entries)
     except Exception as e:
@@ -110,7 +108,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        bitstamp_entries = fetch_bitstamp(assets)
+        bitstamp_entries = fetch_bitstamp(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(bitstamp_entries)
         entries.extend(bitstamp_entries)
     except Exception as e:
@@ -120,7 +118,7 @@ async def publish_all(assets):
             raise e
 
     try:
-        thegraph_entries = fetch_thegraph(assets)
+        thegraph_entries = fetch_thegraph(assets, publisher)
         tx_exec_info = await publisher_client.publish_many(thegraph_entries)
         entries.extend(thegraph_entries)
     except Exception as e:
