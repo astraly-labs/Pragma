@@ -7,7 +7,6 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
-from starkware.cairo.common.registers import get_fp_and_pc
 
 from contracts.admin.library import (
     Admin_initialize_admin_address,
@@ -503,15 +502,12 @@ namespace YieldCurve:
 
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         end
-        let (__fp__, _) = get_fp_and_pc()
-        local aave_pontis_source_key = AAVE_PONTIS_SOURCE_KEY
+
         let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
-        let (
-            on_value, on_last_updated_timestamp, num_sources_aggregated
-        ) = IOracleController.get_value(
-            oracle_controller_address, on_key, DEFAULT_AGGREGATION_MODE, 1, &aave_pontis_source_key
+        let (on_entry) = IOracleController.get_entry(
+            oracle_controller_address, on_key, AAVE_PONTIS_SOURCE_KEY
         )
-        if num_sources_aggregated == 0:
+        if on_entry.timestamp == 0:
             # Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -525,11 +521,11 @@ namespace YieldCurve:
 
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         else:
-            let (shifted_on_value) = change_decimals(on_value, on_decimals, output_decimals)
+            let (shifted_on_value) = change_decimals(on_entry.value, on_decimals, output_decimals)
 
             # Add to on_yield_points and recurse
             # Set expiry to be same as capture timestamp
-            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_last_updated_timestamp, capture_timestamp=on_last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
+            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_entry.timestamp, capture_timestamp=on_entry.timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY)
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -582,13 +578,11 @@ namespace YieldCurve:
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         end
 
-        let (__fp__, _) = get_fp_and_pc()
-
         let (spot_decimals) = IOracleController.get_decimals(oracle_controller_address, spot_key)
-        let (spot_entries_len, spot_entries) = IOracleController.get_entries(
-            oracle_controller_address, spot_key, 1, &future_spot_pontis_source_key
+        let (spot_entry) = IOracleController.get_entry(
+            oracle_controller_address, spot_key, future_spot_pontis_source_key
         )
-        if spot_entries_len == 0:
+        if spot_entry.timestamp == 0:
             # No entry so skip to next one
             let (
                 recursed_spot_yield_points_len, recursed_spot_yield_points
@@ -605,7 +599,6 @@ namespace YieldCurve:
 
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         else:
-            let spot_entry = spot_entries[0]
             # Get all futures, and for each, calculate yield point
             let (future_keys_len, future_keys) = get_future_keys(spot_key)
 
@@ -682,15 +675,13 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
-        let (__fp__, _) = get_fp_and_pc()
-
         let (future_decimals) = IOracleController.get_decimals(
             oracle_controller_address, future_key
         )
-        let (future_entries_len, future_entries) = IOracleController.get_entries(
-            oracle_controller_address, future_key, 1, &future_spot_pontis_source_key
+        let (future_entry) = IOracleController.get_entry(
+            oracle_controller_address, future_key, future_spot_pontis_source_key
         )
-        if future_entries_len == 0:
+        if future_entry.timestamp == 0:
             let (
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
@@ -708,8 +699,6 @@ namespace YieldCurve:
 
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
-        let future_entry = future_entries[0]
-
         # TODO: Replace with
         # is_not_zero(future_entry.timestamp - spot_entry.timestamp) == FALSE
         let (is_future_more_recent) = is_le(spot_entry.timestamp, future_entry.timestamp)
