@@ -230,7 +230,7 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
-        "set_source_key",
+        "set_future_spot_pontis_source_key",
         [source],
     )
 
