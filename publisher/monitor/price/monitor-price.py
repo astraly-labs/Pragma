@@ -24,7 +24,6 @@ async def main():
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
 
     assets = PONTIS_ALL_ASSETS
-    os.environ["PUBLISHER"] = "pontis"
 
     client = PontisClient(n_retries=5)
     for i, asset in enumerate(assets):
