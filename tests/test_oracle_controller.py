@@ -1132,9 +1132,7 @@ async def test_multiple_oracle_implementations(
         [second_oracle_implementation.contract_address],
     )
 
-    result = (
-        await oracle_controller.get_primary_oracle_implementation_address().call()
-    )
+    result = await oracle_controller.get_primary_oracle_implementation_address().call()
     assert (
         result.result.primary_oracle_implementation_address
         == second_oracle_implementation.contract_address
@@ -1193,9 +1191,7 @@ async def test_rotate_primary_oracle_implementation_address(
         [second_oracle_implementation.contract_address],
     )
 
-    result = (
-        await oracle_controller.get_primary_oracle_implementation_address().call()
-    )
+    result = await oracle_controller.get_primary_oracle_implementation_address().call()
     assert (
         result.result.primary_oracle_implementation_address
         == second_oracle_implementation.contract_address
