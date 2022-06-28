@@ -937,16 +937,10 @@ async def test_unknown_source(
         serialize_entry(entry),
     )
 
-    try:
-        await oracle_controller.get_value(
-            key, AGGREGATION_MODE, [str_to_felt("unknown")]
-        ).call()
-
-        raise Exception(
-            "Transaction to call get_value for single unknown source succeeded, but should not have."
-        )
-    except StarkException:
-        pass
+    result = await oracle_controller.get_value(
+        key, AGGREGATION_MODE, [str_to_felt("unknown")]
+    ).call()
+    assert result.result.num_sources_aggregated == 0
 
 
 @pytest.mark.asyncio
