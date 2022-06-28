@@ -446,7 +446,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     assert source_result.result == result.result
 
     entry_result = await oracle_controller.get_entry(entry.key, source).call()
-    assert entry_result.result == entry
+    assert entry_result.result.entry == entry
 
     return
 
