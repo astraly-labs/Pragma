@@ -938,7 +938,9 @@ async def test_unknown_source(
     )
 
     try:
-        await oracle_controller.get_value(key, [str_to_felt("unknown")]).call()
+        await oracle_controller.get_value(
+            key, AGGREGATION_MODE, [str_to_felt("unknown")]
+        ).call()
 
         raise Exception(
             "Transaction to call get_value for single unknown source succeeded, but should not have."

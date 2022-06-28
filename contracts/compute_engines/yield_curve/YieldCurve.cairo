@@ -506,10 +506,12 @@ namespace YieldCurve:
         let (__fp__, _) = get_fp_and_pc()
         local aave_pontis_source_key = AAVE_PONTIS_SOURCE_KEY
         let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
-        let (on_value, on_last_updated_timestamp) = IOracleController.get_value(
+        let (
+            on_value, on_last_updated_timestamp, num_sources_aggregated
+        ) = IOracleController.get_value(
             oracle_controller_address, on_key, DEFAULT_AGGREGATION_MODE, 1, &aave_pontis_source_key
         )
-        if on_last_updated_timestamp == 0:
+        if num_sources_aggregated == 0:
             # Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
