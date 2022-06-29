@@ -17,11 +17,11 @@ const Custom404Page = () => {
           </h1>
           <p className="prose prose-slate md:prose-xl">
             You told your friends you weren’t bringing your phone, to try and
-            experience what travel was like back in the day. You bought a map
-            and a bottle of water and carried your camera for the money shot.
-            But the map was from 2005, the landscape had changed and no one had
-            verified the map. So here you are, in the middle of a large field,
-            that the map continues to claim is a local grocer.
+            experience what travel was like back in the day. You bought a map, a
+            bottle of water and a camera just for this trip. But the map was
+            from 2005, the landscape had changed and no one had verified the
+            map. So here you are, in the middle of a large field, which the map
+            continues to claim is a local grocer.
           </p>
         </div>
         <div className="flex flex-col space-y-8 text-center sm:flex-row sm:space-x-12 sm:space-y-0">
