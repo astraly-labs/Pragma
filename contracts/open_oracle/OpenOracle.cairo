@@ -14,6 +14,9 @@ from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 from starkware.cairo.common.cairo_builtins import SignatureBuiltin
 from starkware.cairo.common.signature import verify_ecdsa_signature
 
+#Struct for lookup of public keys
+from contracts.open_oracle.structs import PublicKeyStruct
+
 from contracts.admin.library import (
     Admin_initialize_admin_address,
     Admin_get_admin_address,
@@ -51,14 +54,6 @@ func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return ()
 end
 
-
-#
-# Struct for lookup of public keys. 
-#
-struct PublicKeyStruct:
-    member public_key : felt
-    member is_active : felt
-end
 
 #
 # Storage 
