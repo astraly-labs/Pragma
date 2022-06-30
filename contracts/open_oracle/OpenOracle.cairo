@@ -3,19 +3,22 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 #Can probably drop everything below here
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
-from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 #pull in an ECDSA signature check 
 from starkware.cairo.common.cairo_builtins import SignatureBuiltin
 from starkware.cairo.common.signature import verify_ecdsa_signature
 
-#Struct for lookup of public keys
+#Struct for lookup of public keys; struct imports
 from contracts.open_oracle.structs import PublicKeyStruct
+from contracts.entry.library import Entry
+
+from contracts.oracle_controller.IOracleController import IOracleController
 
 from contracts.admin.library import (
     Admin_initialize_admin_address,
@@ -60,6 +63,10 @@ end
 #
 
 @storage_var
+func oracle_controller_address_storage() -> (oracle_controller_address : felt):
+end
+
+@storage_var
 func open_oracle_publishers_len_storage() -> (open_oracle_publishers_len : felt):
 end
 
@@ -76,6 +83,13 @@ end
 #Getters: all @view; 
 #
 
+@view
+func get_oracle_controller_address{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (oracle_controller_address : felt):
+    let (oracle_controller_address) = oracle_controller_address_storage.read()
+    return (oracle_controller_address)
+end
 
 @view
 func get_publishers_len{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -269,20 +283,24 @@ end
 @external
 func postSignature{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*}(
     message : felt, input_signature_r : felt, input_signature_s : felt, publisher : felt) -> ():
-    #in here 
+    #early check that publisher is initialized
     with_attr error_message("OpenOracle: Public key associated with publisher provided is not active"):
         let (public_key_is_active) = get_public_key_struct_is_active(publisher)
         assert public_key_is_active = TRUE
     end
-    #early check that publisher is initialized 
+ 
 
     #signature validation which throws error if incorrect
     let (associated_pk) = get_public_key_struct_public_key(publisher)
     verify_ecdsa_signature(message, associated_pk, input_signature_r, input_signature_s)
 
+    #finally logic to send this to the oracle controller
     let(asset, price, timestamp) = parseMessage(message)
+    let new_entry = Entry(asset, price, timestamp, publisher)
 
-    #now logic to send this to the oracle controller
+    let ORACLE_CONTROLLER_ADDRESS = get_oracle_controller_address()
+    IOracleController.submit_entry(ORACLE_CONTROLLER_ADDRESS, new_entry)
+
     return()
 end
 
@@ -294,10 +312,16 @@ end
 #Some comparision with the oracle controller to chose if this is appropriate to publish. This might already happen on 
 #at the oracle_controller? Read the code
 
+@external
 func parseMessage{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     message : felt) -> (asset : felt, price : felt, timestamp : felt):
     #this is where the DER encoding overflow becomes an issue. ideally use TLV hex tag flow to break it up and return. 
     #Should recurse/iterate through each two digits in the hex, and find value tags. Then set them.
+    
+    #there will also need to be string felt conversion on the asset key. I know 0kx specifically posts for /USD pairs
+    #but includes it in the data as BTC. 
+    
+    
     #Doing false outs for passing
     let(asset, price, timestamp) = message
     return (asset, price, timestamp)
