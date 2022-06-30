@@ -280,7 +280,9 @@ func postSignature{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     let (associated_pk) = get_public_key_struct_public_key(publisher)
     verify_ecdsa_signature(message, associated_pk, input_signature_r, input_signature_s)
 
-    #now logic to send this to the
+    let(asset, price, timestamp) = parseMessage(message)
+
+    #now logic to send this to the oracle controller
     return()
 end
 
@@ -291,3 +293,12 @@ end
 
 #Some comparision with the oracle controller to chose if this is appropriate to publish. This might already happen on 
 #at the oracle_controller? Read the code
+
+func parseMessage{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    message : felt) -> (asset : felt, price : felt, timestamp : felt):
+    #this is where the DER encoding overflow becomes an issue. ideally use TLV hex tag flow to break it up and return. 
+    #Should recurse/iterate through each two digits in the hex, and find value tags. Then set them.
+    #Doing false outs for passing
+    let(asset, price, timestamp) = message
+    return (asset, price, timestamp)
+end
