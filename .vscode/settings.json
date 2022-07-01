@@ -1,8 +1,0 @@
-{
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
-    "prettier.printWidth": 80,
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveTimeout": 1500
-}
