@@ -4,9 +4,17 @@ interface HeaderProps {
   title: string;
   subtitle?: string;
   text: string;
+  href?: string;
+  hrefText?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, subtitle, text }) => (
+const Header: React.FC<HeaderProps> = ({
+  title,
+  subtitle,
+  text,
+  href,
+  hrefText,
+}) => (
   <div className="mx-auto w-full md:max-w-3xl">
     {subtitle !== undefined && (
       <h2 className="text-large mb-2 uppercase tracking-wide text-slate-600 sm:text-2xl md:mb-4">
@@ -17,6 +25,13 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, text }) => (
       {title}
     </h1>
     <p className="prose prose-slate lg:prose-xl">{text}</p>
+    {href && hrefText && (
+      <div className="mt-6">
+        <a href={href} className="text-xl font-medium text-indigo-500">
+          {hrefText} &nbsp;&rarr;
+        </a>
+      </div>
+    )}
   </div>
 );
 

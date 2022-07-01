@@ -1,25 +1,140 @@
 import React from "react";
 import Link from "next/link";
-import { StyledExternalLink } from "../StyledLink";
+import { StyledExternalLink, StyledInternalLink } from "../StyledLink";
 
-const PontisFooter = () => (
-  <div className="w-screen bg-slate-50">
-    <div className="container mx-auto flex max-w-7xl flex-col items-center border-t border-slate-300  p-8 sm:flex-row">
-      <Link href="/">
-        <a>
-          <img src="/pontis-logo.svg" className="h-8" alt="Pontis Logo" />
-        </a>
-      </Link>
-      <p className="mt-4 text-sm text-slate-900 sm:mt-0 sm:ml-4 sm:border-l sm:border-slate-300 sm:pl-4">
-        © 42 Labs - {new Date().getFullYear()}
-      </p>
-      <span className="mt-4 inline-flex justify-center space-x-5 sm:mt-0 sm:ml-auto sm:justify-start">
-        <StyledExternalLink href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,">
-          Contact Us
-        </StyledExternalLink>
-      </span>
+interface FooterLink {
+  title: string;
+  href: string;
+  external: boolean;
+}
+
+interface FooterColumn {
+  header: string;
+  links: FooterLink[];
+}
+
+const content: FooterColumn[] = [
+  {
+    header: "Product",
+    links: [
+      {
+        title: "Home",
+        href: "/",
+        external: false,
+      },
+      {
+        title: "Documentation",
+        href: "#",
+        external: false,
+      },
+      {
+        title: "Features",
+        href: "#",
+        external: false,
+      },
+      {
+        title: "View on Block Explorer",
+        href: "#",
+        external: false,
+      },
+    ],
+  },
+  {
+    header: "Company",
+    links: [
+      {
+        title: "About",
+        href: "#",
+        external: false,
+      },
+      {
+        title: "Press",
+        href: "#",
+        external: false,
+      },
+      {
+        title: "Contact Us",
+        href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+        external: true,
+      },
+    ],
+  },
+];
+
+interface SocialMedia {
+  name: string;
+  src: string;
+  href: string;
+}
+
+const socials: SocialMedia[] = [
+  {
+    name: "GitHub",
+    src: "/assets/social/github.svg",
+    href: "https://github.com/42labs/Pontis",
+  },
+  {
+    name: "Twitter",
+    src: "/assets/social/twitter.svg",
+    href: "#",
+  },
+];
+
+const Footer = () => (
+  <div className="w-full bg-white">
+    <div className="mx-auto max-w-7xl border-t border-slate-100 px-8 pb-12 pt-16">
+      <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
+        <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
+          <Link href="/">
+            <a>
+              <span className="sr-only">Pontis</span>
+              <img
+                className="h-8 w-auto sm:h-10"
+                src="/pontis-logo.svg"
+                alt="Pontis"
+              />
+            </a>
+          </Link>
+          <p className="prose prose-slate">
+            Pontis is the leading oracle on Starknet, built to empower native
+            protocols to realize their ambitious potential.
+          </p>
+          <ul className="flex flex-row items-center space-x-6">
+            {socials.map((social) => (
+              <li key={social.name}>
+                <img
+                  src={social.src}
+                  alt={social.name}
+                  className="h-6 w-6 cursor-pointer"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+        {content.map((column) => (
+          <nav key={column.header} className="col-span-1 lg:col-span-3">
+            <p className="font-semibold uppercase tracking-wider text-slate-500">
+              {column.header}
+            </p>
+            <div className="mt-6 flex flex-col space-y-4">
+              {column.links.map(({ external, title, href }) => (
+                <React.Fragment key={title}>
+                  {external ? (
+                    <StyledExternalLink href={href}>{title}</StyledExternalLink>
+                  ) : (
+                    <StyledInternalLink href={href}>{title}</StyledInternalLink>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </nav>
+        ))}
+      </div>
+      <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
+        © 42 Labs - {new Date().getFullYear()}. All rights reserved.
+      </div>
     </div>
   </div>
 );
 
-export default PontisFooter;
+export default Footer;

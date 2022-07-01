@@ -32,7 +32,7 @@ const resources = [
 // List of resources displayed in the more tab
 const additional = [
   {
-    name: "About",
+    name: "About Us",
     description: "Get to know the team behind Pontis.",
     href: "#",
     icon: UserGroupIcon,
@@ -65,6 +65,7 @@ const NavHeader = () => (
           </Link>
         </div>
         <div className="-my-2 -mr-2 md:hidden">
+          {/* To open mobile menu */}
           <Popover.Button className="inline-flex items-center justify-center rounded-md bg-slate-50 p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span className="sr-only">Open menu</span>
             <MenuIcon className="h-6 w-6" aria-hidden="true" />

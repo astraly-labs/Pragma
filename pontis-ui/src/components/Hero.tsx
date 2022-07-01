@@ -7,6 +7,8 @@ const Hero = () => (
       title="Introducing Pontis"
       subtitle="The zk-Oracle"
       text="Pontis is the leading oracle on Starknet, built to empower native protocols to realize their ambitious potential."
+      href="#"
+      hrefText="Get verifyable data for your project"
     />
   </div>
 );

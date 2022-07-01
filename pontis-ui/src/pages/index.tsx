@@ -2,8 +2,9 @@ import React from "react";
 import Hero from "../components/Hero";
 import AssetsSection from "../components/AssetsSection";
 import ProvidersSection from "../components/ProvidersSection";
-import ActionsSection from "../components/ActionsSection";
 import AboutSection from "../components/AboutSection";
+import Testimonial from "../components/Testimonial";
+import CTASection from "../components/CTASection";
 
 const IndexPage = () => {
   return (
@@ -12,7 +13,8 @@ const IndexPage = () => {
       <AssetsSection />
       <ProvidersSection />
       <AboutSection />
-      <ActionsSection />
+      <Testimonial />
+      <CTASection />
     </div>
   );
 };
