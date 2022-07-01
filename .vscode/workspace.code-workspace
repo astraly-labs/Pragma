@@ -1,0 +1,76 @@
+{
+	"folders": [
+		{
+			"name": "ROOT",
+			"path": "../"
+		},
+		{
+			"path": "../pontis-package/",
+			"name": "@pontis/pontis-package"
+		},
+		{
+			"path": "../publisher",
+			"name": "@pontis/publisher"
+		},
+		{
+			"path": "../pontis-ui",
+			"name": "@pontis/pontis-ui"
+		},
+		{
+			"path": "../contracts/abi",
+			"name": "@pontis/contract-abi"
+		},
+		{
+			"path": "../contracts/account",
+			"name": "@pontis/contract-account"
+		},
+		{
+			"path": "../contracts/admin",
+			"name": "@pontis/contract-admin"
+		},
+		{
+			"path": "../contracts/compute_engines/yield_curve",
+			"name": "@pontis/contract-compute-engines-yield_curve"
+		},
+		{
+			"path": "../contracts/entry",
+			"name": "@pontis/contract-entry"
+		},
+		{
+			"path": "../contracts/erc20",
+			"name": "@pontis/contract-erc20"
+		},
+		{
+			"path": "../contracts/orcale_controller",
+			"name": "@pontis/contract-orcale-controller"
+		},
+		{
+			"path": "../contracts/oracle_implementation",
+			"name": "@pontis/contract-orcale-implemtation"
+		},
+		{
+			"path": "../contracts/publisher_registry",
+			"name": "@pontis/contract-publisher-registry"
+		},
+		{
+			"path": "../contracts/sample_consumer",
+			"name": "@pontis/contract-sample-consumer"
+		},
+		{
+			"path": "../contracts/security",
+			"name": "@pontis/contract-security"
+		},
+		{
+			"path": "../tests",
+			"name": "@pontis/tests"
+		}
+	],
+	"settings": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": true
+		},
+		"prettier.printWidth": 80,
+		"editor.formatOnSave": true,
+		"editor.formatOnSaveTimeout": 1500,
+	}
+}
