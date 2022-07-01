@@ -3,7 +3,7 @@ on:
   push
 
 jobs:
-  update_prices:
+  run_monitors:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
