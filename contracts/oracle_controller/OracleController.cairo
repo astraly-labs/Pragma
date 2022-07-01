@@ -103,6 +103,14 @@ func get_primary_oracle_implementation_address{
     return (primary_oracle_implementation_address)
 end
 
+@view
+func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (decimals : felt):
+    let (decimals) = OracleController_get_decimals(key)
+    return (decimals)
+end
+
 #
 # Setters
 #
@@ -156,17 +164,18 @@ func set_primary_oracle_implementation_address{
     return ()
 end
 
+@external
+func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, decimals : felt
+):
+    Admin_only_admin()
+    OracleController_set_decimals(key, decimals)
+    return ()
+end
+
 #
 # Oracle Implementation Controller Functions
 #
-
-@view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
-) -> (decimals : felt):
-    let (decimals) = OracleController_get_decimals(key)
-    return (decimals)
-end
 
 @view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -187,20 +196,13 @@ end
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
-    let (value, last_updated_timestamp, num_sources_aggregated) = OracleController_get_value(
-        key, aggregation_mode, sources_len, sources
-    )
-    return (value, last_updated_timestamp, num_sources_aggregated)
-end
-
-@external
-func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
+) -> (
+    value : felt, num_decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
 ):
-    Admin_only_admin()
-    OracleController_set_decimals(key, decimals)
-    return ()
+    let (
+        value, num_decimals, last_updated_timestamp, num_sources_aggregated
+    ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
+    return (value, num_decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 @external

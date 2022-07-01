@@ -3,8 +3,7 @@ import os
 import traceback
 
 import requests
-from pontis.core.client import PontisClient
-from pontis.core.utils import key_for_asset, pprint_entry
+from pontis.core.utils import pprint_entry
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.fetch import (
@@ -25,12 +24,6 @@ async def publish_all(assets):
     exit_on_error = os.environ.get("__PONTIS_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
 
     entries = []
-
-    client = PontisClient()
-    for i, asset in enumerate(assets):
-        key = key_for_asset(asset)
-        decimals = await client.get_decimals(key)
-        assets[i]["decimals"] = decimals
 
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))

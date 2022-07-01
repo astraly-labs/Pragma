@@ -9,8 +9,6 @@ from starkware.starknet.common.syscalls import get_caller_address, get_block_tim
 
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 
-const DEFAULT_KEY = 28258988067220596  # str_to_felt("default")
-const DEFAULT_DECIMALS = 18
 const TIMESTAMP_BUFFER = 3600  # 60 minutes
 
 #
@@ -30,21 +28,7 @@ func Oracle_sources_storage(key : felt, idx : felt) -> (source : felt):
 end
 
 @storage_var
-func Oracle_decimals_storage(key : felt) -> (decimals : felt):
-end
-
-@storage_var
 func Oracle_controller_address_storage() -> (oracle_controller_address : felt):
-end
-
-#
-# Constructor
-#
-
-func Oracle_set_default_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    ):
-    Oracle_decimals_storage.write(DEFAULT_KEY, DEFAULT_DECIMALS)
-    return ()
 end
 
 #
@@ -70,18 +54,6 @@ end
 #
 # Getters
 #
-
-func Oracle_get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
-) -> (decimals : felt):
-    let (decimals) = Oracle_decimals_storage.read(key)
-    if decimals == 0:
-        let (default_decimals) = Oracle_decimals_storage.read(DEFAULT_KEY)
-        return (default_decimals)
-    else:
-        return (decimals)
-    end
-end
 
 func Oracle_get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, sources_len : felt, sources : felt*
@@ -134,14 +106,6 @@ func Oracle_set_oracle_controller_address{
 }(oracle_controller_address : felt):
     Oracle_only_oracle_controller()
     Oracle_controller_address_storage.write(oracle_controller_address)
-    return ()
-end
-
-func Oracle_set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
-):
-    Oracle_only_oracle_controller()
-    Oracle_decimals_storage.write(key, decimals)
     return ()
 end
 

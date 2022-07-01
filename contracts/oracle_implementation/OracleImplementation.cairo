@@ -34,14 +34,6 @@ end
 #
 
 @view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
-) -> (decimals : felt):
-    let (decimals) = Oracle_get_decimals(key)
-    return (decimals)
-end
-
-@view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
@@ -84,14 +76,6 @@ func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_controller_address : felt):
     Oracle_set_oracle_controller_address(oracle_controller_address)
-    return ()
-end
-
-@external
-func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
-):
-    Oracle_set_decimals(key, decimals)
     return ()
 end
 

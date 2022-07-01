@@ -13,6 +13,11 @@ from contracts.oracle_controller.structs import OracleController_OracleImplement
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
+# Consts
+#
+const DEFAULT_DECIMALS = 18
+
+#
 # Storage
 #
 
@@ -36,6 +41,10 @@ end
 
 @storage_var
 func OracleController_primary_oracle_implementation_address_storage() -> (oracle_address : felt):
+end
+
+@storage_var
+func OracleController_decimals_storage(key : felt) -> (decimals : felt):
 end
 
 #
@@ -67,6 +76,10 @@ end
 
 @event
 func SubmittedEntry(new_entry : Entry):
+end
+
+@event
+func SetDecimals(key : felt, new_decimals : felt):
 end
 
 #
@@ -143,6 +156,18 @@ func OracleController_get_primary_oracle_implementation_address{
         assert_not_zero(primary_oracle_implementation_address)
     end
     return (primary_oracle_implementation_address)
+end
+
+func OracleController_get_decimals{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt) -> (decimals : felt):
+    let (key_decimals) = Oracle_decimals_storage.read(key)
+
+    if key_decimals == 0:
+        return (DEFAULT_DECIMALS)
+    else:
+        return (key_decimals)
+    end
 end
 
 #
@@ -269,6 +294,32 @@ func OracleController_set_primary_oracle_implementation_address{
     return ()
 end
 
+func OracleController_set_decimals{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt, decimals : felt):
+    alloc_locals
+
+    let (existing_decimals) = OracleController_get_decimals(key, decimals)
+
+    with_attr error_message("OracleController: Decimals already set for this key"):
+        assert existing_decimals = DEFAULT_DECIMALS
+    end
+
+    let (empty_source) = alloc()
+    let (entries_len, entries) = OracleController_get_entries(key, 0, empty_source)
+
+    with_attr error_message(
+            "OracleController: Data for this key already on-chain, cannot set decimals retroactively"):
+        assert entries_len = 0
+    end
+
+    OracleController_decimals_storage.write(key, decimals)
+
+    SetDecimals.emit(key, decimals)
+
+    return ()
+end
+
 #
 # Helpers
 #
@@ -309,17 +360,6 @@ end
 # Oracle Implementation Controller Functions
 #
 
-func OracleController_get_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt) -> (decimals : felt):
-    let (
-        primary_oracle_implementation_address
-    ) = OracleController_get_primary_oracle_implementation_address()
-
-    let (decimals) = IOracleImplementation.get_decimals(primary_oracle_implementation_address, key)
-    return (decimals)
-end
-
 func OracleController_get_entries{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(key : felt, sources_len : felt, sources : felt*) -> (entries_len : felt, entries : Entry*):
@@ -352,53 +392,20 @@ end
 
 func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+) -> (
+    value : felt, num_decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+):
     alloc_locals
 
     let (
         primary_oracle_implementation_address
     ) = OracleController_primary_oracle_implementation_address_storage.read()
-    let (value, last_updated_timestamp, num_sources_aggregated) = IOracleImplementation.get_value(
+    let (
+        value, num_decimals, last_updated_timestamp, num_sources_aggregated
+    ) = IOracleImplementation.get_value(
         primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
     )
-    return (value, last_updated_timestamp, num_sources_aggregated)
-end
-
-func OracleController_set_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt, decimals : felt):
-    alloc_locals
-
-    let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
-    if total_oracle_addresses_len == 0:
-        return ()
-    end
-    let (local oracle_addresses) = alloc()
-    let (
-        oracle_addresses_len, oracle_addresses
-    ) = OracleController_build_active_oracle_implementation_addresses(
-        total_oracle_addresses_len, oracle_addresses, 0, 0
-    )
-
-    _OracleController_set_decimals(oracle_addresses_len, oracle_addresses, 0, key, decimals)
-    return ()
-end
-
-func _OracleController_set_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, key : felt, decimals : felt):
-    if oracle_addresses_len == 0:
-        return ()
-    end
-
-    if idx == oracle_addresses_len:
-        return ()
-    end
-
-    let oracle_address = [oracle_addresses + idx]
-    IOracleImplementation.set_decimals(oracle_address, key, decimals)
-    _OracleController_set_decimals(oracle_addresses_len, oracle_addresses, idx + 1, key, decimals)
-    return ()
+    return (value, num_decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 func OracleController_submit_entry{
