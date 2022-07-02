@@ -43,8 +43,8 @@ const content: FooterColumn[] = [
     header: "Company",
     links: [
       {
-        title: "About",
-        href: "#",
+        title: "About Us",
+        href: "/about",
         external: false,
       },
       {
@@ -61,7 +61,7 @@ const content: FooterColumn[] = [
   },
 ];
 
-interface SocialMedia {
+export interface SocialMedia {
   name: string;
   src: string;
   href: string;

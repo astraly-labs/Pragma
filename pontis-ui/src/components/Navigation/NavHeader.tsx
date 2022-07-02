@@ -34,7 +34,7 @@ const additional = [
   {
     name: "About Us",
     description: "Get to know the team behind Pontis.",
-    href: "#",
+    href: "/about",
     icon: UserGroupIcon,
   },
   {

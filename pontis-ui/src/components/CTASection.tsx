@@ -71,7 +71,7 @@ const CTASection = () => (
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-indigo-100">
               Leverage recent breakthroughs in zero knowledge computation by
-              using verifyable and composable data.
+              using verifyable and composable data in your application.
             </p>
           </div>
           <div className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
@@ -92,27 +92,6 @@ const CTASection = () => (
               </a>
             </div>
           </div>
-          {/* <form action="#" className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
-            <div className="min-w-0 flex-1">
-              <label htmlFor="cta-email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="cta-email"
-                type="email"
-                className="block w-full rounded-md border border-transparent px-5 py-3 text-base text-slate-900 placeholder-slate-500 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-rose-500"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="mt-4 sm:mt-0 sm:ml-3">
-              <button
-                type="submit"
-                className="block w-full rounded-md border border-transparent bg-slate-900 px-5 py-3 text-base font-medium text-white shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-rose-500 sm:px-10"
-              >
-                Notify me
-              </button>
-            </div>
-          </form> */}
         </div>
       </div>
     </div>
