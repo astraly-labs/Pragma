@@ -9,6 +9,14 @@ import AssetCardTime from "./AssetCardTime";
 import LoadingBar from "./LoadingBar";
 import { assetKeyToUrl } from "../../../utils/encodeUrl";
 
+/**
+ * @param {AssetKeyT} assetKey
+ * @return {string} display string of asset key
+ */
+export function assetKeyDisplayString(assetKey: AssetKeyT): string {
+  return assetKey.toLocaleUpperCase();
+}
+
 interface AssetCardProps {
   assetKey: AssetKeyT;
 }
@@ -24,7 +32,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
           </div>
           {oracleResponse?.value !== undefined ? (
             oracleResponse.lastUpdatedTimestamp === 0 ? (
-              <div>No results found for {assetKey.toLocaleUpperCase()}</div>
+              <div>No results found for {assetKeyDisplayString(assetKey)}</div>
             ) : (
               <>
                 <div className="col-span-1 col-start-2 row-span-2 row-start-1 flex items-start justify-end sm:row-span-1 sm:place-self-center">
@@ -43,7 +51,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
           ) : error !== undefined ? (
             <div className="col-span-2 col-start-2 row-span-2 sm:row-span-1">
               <div>
-                Error fetching price for {assetKey.toLocaleUpperCase()}.
+                Error fetching price for {assetKeyDisplayString(assetKey)}.
               </div>
               <div>Please try again later.</div>
             </div>

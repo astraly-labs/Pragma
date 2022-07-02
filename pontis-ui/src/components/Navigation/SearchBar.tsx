@@ -5,7 +5,6 @@ import { useSearch } from "../../providers/search";
 
 const SearchBar: React.FC = () => {
   const setSearch = useSearch();
-
   return (
     <button
       type="button"
