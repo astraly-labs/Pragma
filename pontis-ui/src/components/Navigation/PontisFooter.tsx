@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { StyledExternalLink, StyledInternalLink } from "../StyledLink";
+import { StyledExternalLink, StyledInternalLink } from "../common/StyledLink";
 
 interface FooterLink {
   title: string;
