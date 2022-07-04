@@ -47,14 +47,6 @@ async def test_deploy(contract):
 
 
 @pytest.mark.asyncio
-async def test_get_decimals(contract):
-    result = await contract.get_decimals(str_to_felt("default")).call()
-    assert result.result.decimals == DEFAULT_DECIMALS
-
-    return
-
-
-@pytest.mark.asyncio
 async def test_update_oracle_controller_address(contract):
     new_oracle_controller_address = ORACLE_CONTROLLER_ADDRESS + 1
     await contract.set_oracle_controller_address(new_oracle_controller_address).invoke(

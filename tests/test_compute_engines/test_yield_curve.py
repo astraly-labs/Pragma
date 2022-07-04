@@ -123,6 +123,7 @@ async def contract_init(
         constructor_calldata=[
             admin_account.contract_address,
             publisher_registry.contract_address,
+            0,
         ],
     )
     oracle_implementation = await starknet.deploy(
