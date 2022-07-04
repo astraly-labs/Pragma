@@ -434,7 +434,7 @@
                 "type": "Entry"
             }
         ],
-        "name": "submit_entry",
+        "name": "publish_entry",
         "outputs": [],
         "type": "function"
     },
@@ -449,7 +449,7 @@
                 "type": "Entry*"
             }
         ],
-        "name": "submit_many_entries",
+        "name": "publish_entries",
         "outputs": [],
         "type": "function"
     }

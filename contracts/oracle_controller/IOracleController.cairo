@@ -70,10 +70,7 @@ namespace IOracleController:
     end
 
     func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
-        value : felt,
-        decimals : felt,
-        last_updated_timestamp : felt,
-        num_sources_aggregated : felt,
+        value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end
 
@@ -81,9 +78,9 @@ namespace IOracleController:
     # Setters
     #
 
-    func submit_entry(new_entry : Entry):
+    func publish_entry(new_entry : Entry):
     end
 
-    func submit_many_entries(new_entries_len : felt, new_entries : Entry*):
+    func publish_entries(new_entries_len : felt, new_entries : Entry*):
     end
 end

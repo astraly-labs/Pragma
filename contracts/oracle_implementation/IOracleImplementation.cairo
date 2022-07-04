@@ -31,6 +31,6 @@ namespace IOracleImplementation:
     func set_oracle_controller_address(oracle_controller_address : felt):
     end
 
-    func submit_entry(new_entry : Entry):
+    func publish_entry(new_entry : Entry):
     end
 end
