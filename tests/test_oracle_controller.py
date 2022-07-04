@@ -99,6 +99,9 @@ async def contract_init(
         constructor_calldata=[
             admin_account.contract_address,
             publisher_registry.contract_address,
+            1,
+            str_to_felt("decimals-test"),
+            100
         ],
     )
     oracle_implementation = await starknet.deploy(
@@ -222,18 +225,8 @@ async def test_decimals(initialized_contracts, admin_signer):
     result = await oracle_controller.get_decimals(str_to_felt("default")).call()
     assert result.result.decimals == DEFAULT_DECIMALS
 
-    decimals = 100
-    key = str_to_felt("test")
-
-    await admin_signer.send_transaction(
-        admin_account,
-        oracle_controller.contract_address,
-        "set_decimals",
-        [key, decimals],
-    )
-
-    result = await oracle_controller.get_decimals(key).call()
-    assert result.result.decimals == decimals
+    result = await oracle_controller.get_decimals(str_to_felt("decimals-test")).call()
+    assert result.result.decimals == 100
 
     return
 
