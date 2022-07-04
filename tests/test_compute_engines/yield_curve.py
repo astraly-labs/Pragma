@@ -83,8 +83,7 @@ async def get_yield_points(output_decimals):
 
     for on_key in on_keys:
         # fetch data from oracle
-        on_decimals = await client.get_decimals(on_key)
-        on_value, last_updated_timestamp = await client.get_value(
+        on_value, on_decimals, last_updated_timestamp, _ = await client.get_value(
             on_key, DEFAULT_AGGREGATION_MODE
         )
 
@@ -95,16 +94,20 @@ async def get_yield_points(output_decimals):
         )
 
     for spot_key in spot_keys:
-        spot_decimals = await client.get_decimals(spot_key)
-        spot_value, spot_last_updated_timestamp = await client.get_value(
-            spot_key, DEFAULT_AGGREGATION_MODE
-        )
+        (
+            spot_value,
+            spot_decimals,
+            spot_last_updated_timestamp,
+            _,
+        ) = await client.get_value(spot_key, DEFAULT_AGGREGATION_MODE)
 
         for future_key in future_keys:
-            future_decimals = await client.get_decimals(future_key)
-            future_value, future_last_updated_timestamp = await client.get_value(
-                future_key, DEFAULT_AGGREGATION_MODE
-            )
+            (
+                future_value,
+                future_decimals,
+                future_last_updated_timestamp,
+                _,
+            ) = await client.get_value(future_key, DEFAULT_AGGREGATION_MODE)
 
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_value,

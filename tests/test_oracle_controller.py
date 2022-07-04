@@ -1119,6 +1119,7 @@ async def test_multiple_oracle_implementations(
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
     assert result.result.value == (entry.value + second_entry.value) / 2
+    assert result.result.num_sources_aggregated == 2
 
     # Verify that only the second entry is present in the second oracle implementation
     await admin_signer.send_transaction(

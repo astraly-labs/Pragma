@@ -62,7 +62,12 @@ class PontisClient:
             key, aggregation_mode, sources
         )
 
-        return response.value, response.last_updated_timestamp
+        return (
+            response.value,
+            response.decimals,
+            response.last_updated_timestamp,
+            response.num_sources_aggregated,
+        )
 
     async def get_entries(self, key, sources=None):
         await self.fetch_oracle_controller_contract()

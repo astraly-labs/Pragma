@@ -15,12 +15,10 @@ func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : f
 ):
     alloc_locals
 
-    let (decimals) = IOracleController.get_decimals(ORACLE_CONTROLLER_ADDRESS, KEY)
-    let (multiplier) = pow(10, decimals)
-
-    let (eth_price, timestamp) = IOracleController.get_value(
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IOracleController.get_value(
         ORACLE_CONTROLLER_ADDRESS, KEY, AGGREGATION_MODE, 0, 0
     )
+    let (multiplier) = pow(10, decimals)
 
     let shifted_threshold = threshold * multiplier
     let (is_above_threshold) = is_le(shifted_threshold, eth_price)
