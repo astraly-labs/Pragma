@@ -410,20 +410,18 @@ end
 
 func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (
-    value : felt, num_decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
-):
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     alloc_locals
 
     let (
         primary_oracle_implementation_address
     ) = OracleController_primary_oracle_implementation_address_storage.read()
     let (
-        value, num_decimals, last_updated_timestamp, num_sources_aggregated
+        value, decimals, last_updated_timestamp, num_sources_aggregated
     ) = IOracleImplementation.get_value(
         primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
     )
-    return (value, num_decimals, last_updated_timestamp, num_sources_aggregated)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 func OracleController_submit_entry{

@@ -203,13 +203,11 @@ end
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (
-    value : felt, num_decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
-):
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     let (
-        value, num_decimals, last_updated_timestamp, num_sources_aggregated
+        value, decimals, last_updated_timestamp, num_sources_aggregated
     ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
-    return (value, num_decimals, last_updated_timestamp, num_sources_aggregated)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 @external
