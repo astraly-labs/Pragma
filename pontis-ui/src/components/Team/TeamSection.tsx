@@ -38,14 +38,14 @@ const people: Person[] = [
     ],
   },
   {
-    name: "Cheikh Fiteni",
+    name: "Raphael Ruban",
     role: "Software Engineer",
-    imageUrl: "assets/team/cheikh.png",
+    imageUrl: "assets/team/raphael.jpeg",
     socials: [
       {
         name: "GitHub",
         src: "/assets/social/github.svg",
-        href: "https://github.com/cheikhfiteni",
+        href: "https://github.com/ratoru",
       },
     ],
   },

@@ -3,7 +3,7 @@ import { AppProps } from "next/app";
 
 import "../styles/index.css";
 import PontisFooter from "../components/Navigation/PontisFooter";
-import CommandPallate from "../components/Navigation/CommandPallete";
+import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
 import Head from "next/head";
