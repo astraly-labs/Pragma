@@ -9,8 +9,16 @@ from starkware.starknet.common.syscalls import get_caller_address
 
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
-from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+from contracts.oracle_controller.structs import (
+    OracleController_OracleImplementationStatus,
+    KeyDecimalStruct,
+)
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
+
+#
+# Consts
+#
+const DEFAULT_DECIMALS = 18
 
 #
 # Storage
@@ -36,6 +44,10 @@ end
 
 @storage_var
 func OracleController_primary_oracle_implementation_address_storage() -> (oracle_address : felt):
+end
+
+@storage_var
+func OracleController_decimals_storage(key : felt) -> (decimals : felt):
 end
 
 #
@@ -75,8 +87,9 @@ end
 
 func OracleController_initialize_oracle_controller{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(publisher_registry_address : felt):
+}(publisher_registry_address : felt, keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*):
     OracleController_publisher_registry_address_storage.write(publisher_registry_address)
+    _OracleController_set_keys_decimals(keys_decimals_len, keys_decimals, 0)
     return ()
 end
 
@@ -145,9 +158,35 @@ func OracleController_get_primary_oracle_implementation_address{
     return (primary_oracle_implementation_address)
 end
 
+func OracleController_get_decimals{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt) -> (decimals : felt):
+    let (key_decimals) = OracleController_decimals_storage.read(key)
+
+    if key_decimals == 0:
+        return (DEFAULT_DECIMALS)
+    else:
+        return (key_decimals)
+    end
+end
+
 #
 # Setters
 #
+
+func _OracleController_set_keys_decimals{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*, idx : felt):
+    if idx == keys_decimals_len:
+        return ()
+    end
+
+    let key_decimal = keys_decimals[idx]
+    OracleController_decimals_storage.write(key_decimal.key, key_decimal.decimal)
+    _OracleController_set_keys_decimals(keys_decimals_len, keys_decimals, idx + 1)
+
+    return ()
+end
 
 func OracleController_update_publisher_registry_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -309,17 +348,6 @@ end
 # Oracle Implementation Controller Functions
 #
 
-func OracleController_get_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt) -> (decimals : felt):
-    let (
-        primary_oracle_implementation_address
-    ) = OracleController_get_primary_oracle_implementation_address()
-
-    let (decimals) = IOracleImplementation.get_decimals(primary_oracle_implementation_address, key)
-    return (decimals)
-end
-
 func OracleController_get_entries{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(key : felt, sources_len : felt, sources : felt*) -> (entries_len : felt, entries : Entry*):
@@ -352,53 +380,17 @@ end
 
 func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     alloc_locals
 
     let (
         primary_oracle_implementation_address
     ) = OracleController_primary_oracle_implementation_address_storage.read()
+    let (decimals) = OracleController_get_decimals(key)
     let (value, last_updated_timestamp, num_sources_aggregated) = IOracleImplementation.get_value(
         primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
     )
-    return (value, last_updated_timestamp, num_sources_aggregated)
-end
-
-func OracleController_set_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt, decimals : felt):
-    alloc_locals
-
-    let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
-    if total_oracle_addresses_len == 0:
-        return ()
-    end
-    let (local oracle_addresses) = alloc()
-    let (
-        oracle_addresses_len, oracle_addresses
-    ) = OracleController_build_active_oracle_implementation_addresses(
-        total_oracle_addresses_len, oracle_addresses, 0, 0
-    )
-
-    _OracleController_set_decimals(oracle_addresses_len, oracle_addresses, 0, key, decimals)
-    return ()
-end
-
-func _OracleController_set_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, key : felt, decimals : felt):
-    if oracle_addresses_len == 0:
-        return ()
-    end
-
-    if idx == oracle_addresses_len:
-        return ()
-    end
-
-    let oracle_address = [oracle_addresses + idx]
-    IOracleImplementation.set_decimals(oracle_address, key, decimals)
-    _OracleController_set_decimals(oracle_addresses_len, oracle_addresses, idx + 1, key, decimals)
-    return ()
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 func OracleController_submit_entry{

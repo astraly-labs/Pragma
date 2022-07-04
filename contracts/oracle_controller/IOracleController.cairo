@@ -33,6 +33,9 @@ namespace IOracleController:
     ):
     end
 
+    func get_decimals(key : felt) -> (decimals : felt):
+    end
+
     #
     # Setters
     #
@@ -58,9 +61,6 @@ namespace IOracleController:
     # Oracle Implementation Controller Functions
     #
 
-    func get_decimals(key : felt) -> (decimals : felt):
-    end
-
     func get_entries(key : felt, sources_len : felt, sources : felt*) -> (
         entries_len : felt, entries : Entry*
     ):
@@ -70,16 +70,16 @@ namespace IOracleController:
     end
 
     func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
-        value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+        value : felt,
+        decimals : felt,
+        last_updated_timestamp : felt,
+        num_sources_aggregated : felt,
     ):
     end
 
     #
     # Setters
     #
-
-    func set_decimals(key : felt, decimals : felt):
-    end
 
     func submit_entry(new_entry : Entry):
     end

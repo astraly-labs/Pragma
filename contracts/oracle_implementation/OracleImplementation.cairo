@@ -5,10 +5,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.library import (
-    Oracle_set_default_decimals,
     Oracle_set_oracle_controller_address,
-    Oracle_set_decimals,
-    Oracle_get_decimals,
     Oracle_get_entries,
     Oracle_get_value,
     Oracle_get_entry,
@@ -24,7 +21,6 @@ from contracts.oracle_implementation.library import (
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     oracle_controller_address : felt
 ):
-    Oracle_set_default_decimals()
     Oracle_set_oracle_controller_address(oracle_controller_address)
     return ()
 end
@@ -32,14 +28,6 @@ end
 #
 # Getters
 #
-
-@view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
-) -> (decimals : felt):
-    let (decimals) = Oracle_get_decimals(key)
-    return (decimals)
-end
 
 @view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -84,14 +72,6 @@ func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_controller_address : felt):
     Oracle_set_oracle_controller_address(oracle_controller_address)
-    return ()
-end
-
-@external
-func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
-):
-    Oracle_set_decimals(key, decimals)
     return ()
 end
 

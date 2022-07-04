@@ -8,9 +8,6 @@ namespace IOracleImplementation:
     # Getters
     #
 
-    func get_decimals(key : felt) -> (decimals : felt):
-    end
-
     func get_entries(key : felt, sources_len : felt, sources : felt*) -> (
         entries_len : felt, entries : Entry*
     ):
@@ -32,9 +29,6 @@ namespace IOracleImplementation:
     #
 
     func set_oracle_controller_address(oracle_controller_address : felt):
-    end
-
-    func set_decimals(key : felt, decimals : felt):
     end
 
     func submit_entry(new_entry : Entry):

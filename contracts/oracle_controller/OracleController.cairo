@@ -18,11 +18,13 @@ from contracts.oracle_controller.library import (
     OracleController_get_entries,
     OracleController_get_entry,
     OracleController_get_value,
-    OracleController_set_decimals,
     OracleController_submit_entry,
     OracleController_submit_many_entries,
 )
-from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+from contracts.oracle_controller.structs import (
+    OracleController_OracleImplementationStatus,
+    KeyDecimalStruct,
+)
 from contracts.admin.library import (
     Admin_initialize_admin_address,
     Admin_get_admin_address,
@@ -36,10 +38,15 @@ from contracts.admin.library import (
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    admin_address : felt, publisher_registry_address : felt
+    admin_address : felt,
+    publisher_registry_address : felt,
+    keys_decimals_len : felt,
+    keys_decimals : KeyDecimalStruct*,
 ):
     Admin_initialize_admin_address(admin_address)
-    OracleController_initialize_oracle_controller(publisher_registry_address)
+    OracleController_initialize_oracle_controller(
+        publisher_registry_address, keys_decimals_len, keys_decimals
+    )
     return ()
 end
 
@@ -103,6 +110,14 @@ func get_primary_oracle_implementation_address{
     return (primary_oracle_implementation_address)
 end
 
+@view
+func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (decimals : felt):
+    let (decimals) = OracleController_get_decimals(key)
+    return (decimals)
+end
+
 #
 # Setters
 #
@@ -161,14 +176,6 @@ end
 #
 
 @view
-func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
-) -> (decimals : felt):
-    let (decimals) = OracleController_get_decimals(key)
-    return (decimals)
-end
-
-@view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
@@ -187,20 +194,11 @@ end
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
-    let (value, last_updated_timestamp, num_sources_aggregated) = OracleController_get_value(
-        key, aggregation_mode, sources_len, sources
-    )
-    return (value, last_updated_timestamp, num_sources_aggregated)
-end
-
-@external
-func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
-):
-    Admin_only_admin()
-    OracleController_set_decimals(key, decimals)
-    return ()
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+    let (
+        value, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
 @external
