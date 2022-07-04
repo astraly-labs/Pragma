@@ -12,8 +12,8 @@ from utils import (
     assert_event_emitted,
     cached_contract,
     construct_path,
-    register_new_publisher_and_publish_entry,
     register_new_publisher_and_publish_entries_1,
+    register_new_publisher_and_publish_entry,
 )
 
 # The path to the contract source code.
