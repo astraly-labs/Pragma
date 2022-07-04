@@ -81,10 +81,6 @@ end
 func SubmittedEntry(new_entry : Entry):
 end
 
-@event
-func SetDecimals(key : felt, new_decimals : felt):
-end
-
 #
 # Constructor
 #
@@ -165,7 +161,7 @@ end
 func OracleController_get_decimals{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(key : felt) -> (decimals : felt):
-    let (key_decimals) = Oracle_decimals_storage.read(key)
+    let (key_decimals) = OracleController_decimals_storage.read(key)
 
     if key_decimals == 0:
         return (DEFAULT_DECIMALS)
@@ -186,7 +182,7 @@ func _OracleController_set_keys_decimals{
     end
 
     let key_decimal = keys_decimals[idx]
-    Oracle_decimals_storage.write(key_decimal.key, key_decimal.decimal)
+    OracleController_decimals_storage.write(key_decimal.key, key_decimal.decimal)
     _OracleController_set_keys_decimals(keys_decimals_len, keys_decimals, idx + 1)
 
     return ()
@@ -312,32 +308,6 @@ func OracleController_set_primary_oracle_implementation_address{
     return ()
 end
 
-func OracleController_set_decimals{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt, decimals : felt):
-    alloc_locals
-
-    let (existing_decimals) = OracleController_get_decimals(key, decimals)
-
-    with_attr error_message("OracleController: Decimals already set for this key"):
-        assert existing_decimals = DEFAULT_DECIMALS
-    end
-
-    let (empty_source) = alloc()
-    let (entries_len, entries) = OracleController_get_entries(key, 0, empty_source)
-
-    with_attr error_message(
-            "OracleController: Data for this key already on-chain, cannot set decimals retroactively"):
-        assert entries_len = 0
-    end
-
-    OracleController_decimals_storage.write(key, decimals)
-
-    SetDecimals.emit(key, decimals)
-
-    return ()
-end
-
 #
 # Helpers
 #
@@ -416,9 +386,8 @@ func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     let (
         primary_oracle_implementation_address
     ) = OracleController_primary_oracle_implementation_address_storage.read()
-    let (
-        value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = IOracleImplementation.get_value(
+    let (decimals) = OracleController_get_decimals(key)
+    let (value, last_updated_timestamp, num_sources_aggregated) = IOracleImplementation.get_value(
         primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
     )
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)

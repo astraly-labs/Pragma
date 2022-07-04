@@ -34,6 +34,23 @@
     {
         "members": [
             {
+                "name": "key",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "decimal",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "KeyDecimalStruct",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "was_registered",
                 "offset": 0,
                 "type": "felt"
@@ -143,6 +160,14 @@
             {
                 "name": "publisher_registry_address",
                 "type": "felt"
+            },
+            {
+                "name": "keys_decimals_len",
+                "type": "felt"
+            },
+            {
+                "name": "keys_decimals",
+                "type": "KeyDecimalStruct*"
             }
         ],
         "name": "constructor",
@@ -238,6 +263,23 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_decimals",
+        "outputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_address",
                 "type": "felt"
             }
@@ -292,23 +334,6 @@
         ],
         "name": "set_primary_oracle_implementation_address",
         "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            }
-        ],
-        "name": "get_decimals",
-        "outputs": [
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -387,26 +412,19 @@
                 "type": "felt"
             },
             {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
                 "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
                 "type": "felt"
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "name": "set_decimals",
-        "outputs": [],
         "type": "function"
     },
     {

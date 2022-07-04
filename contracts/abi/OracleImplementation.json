@@ -47,23 +47,6 @@
             {
                 "name": "key",
                 "type": "felt"
-            }
-        ],
-        "name": "get_decimals",
-        "outputs": [
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
             },
             {
                 "name": "sources_len",
@@ -175,21 +158,6 @@
             }
         ],
         "name": "set_oracle_controller_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "name": "set_decimals",
         "outputs": [],
         "type": "function"
     },

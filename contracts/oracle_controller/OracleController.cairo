@@ -171,15 +171,6 @@ func set_primary_oracle_implementation_address{
     return ()
 end
 
-@external
-func set_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, decimals : felt
-):
-    Admin_only_admin()
-    OracleController_set_decimals(key, decimals)
-    return ()
-end
-
 #
 # Oracle Implementation Controller Functions
 #
