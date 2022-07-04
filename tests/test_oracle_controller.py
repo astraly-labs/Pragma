@@ -101,7 +101,7 @@ async def contract_init(
             publisher_registry.contract_address,
             1,
             str_to_felt("decimals-test"),
-            100
+            100,
         ],
     )
     oracle_implementation = await starknet.deploy(
@@ -219,7 +219,6 @@ async def test_deploy(initialized_contracts):
 
 @pytest.mark.asyncio
 async def test_decimals(initialized_contracts, admin_signer):
-    admin_account = initialized_contracts["admin_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
     result = await oracle_controller.get_decimals(str_to_felt("default")).call()
@@ -432,6 +431,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
+    assert result.result.decimals == DEFAULT_DECIMALS
 
     source_result = await oracle_controller.get_value(
         entry.key, AGGREGATION_MODE, [source]
