@@ -5,14 +5,16 @@ import ProvidersSection from "../components/ProvidersSection";
 import ActionsSection from "../components/ActionsSection";
 import AboutSection from "../components/AboutSection";
 
-const IndexPage = () => (
-  <div className="w-screen">
-    <Hero />
-    <AssetsSection />
-    <ProvidersSection />
-    <AboutSection />
-    <ActionsSection />
-  </div>
-);
+const IndexPage = () => {
+  return (
+    <div className="w-screen">
+      <Hero />
+      <AssetsSection />
+      <ProvidersSection />
+      <AboutSection />
+      <ActionsSection />
+    </div>
+  );
+};
 
 export default IndexPage;

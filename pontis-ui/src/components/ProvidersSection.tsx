@@ -1,4 +1,5 @@
 import React from "react";
+import SearchCTA from "./SearchCTA";
 
 const providers = [
   "cmtdigital",
@@ -11,8 +12,11 @@ const providers = [
 ];
 
 const ProvidersSection = () => (
-  <div className="w-screen bg-slate-50 py-40 px-6 sm:px-24 md:px-32">
-    <div className="mx-auto flex w-full max-w-7xl  flex-row flex-wrap items-center">
+  <div className="w-screen bg-slate-50 px-6 pb-40 sm:px-24 md:px-32">
+    <div className="-translate-y-1/2">
+      <SearchCTA />
+    </div>
+    <div className="mx-auto mt-10 flex w-full max-w-7xl flex-row flex-wrap items-center sm:mt-20">
       <div className="mb-4 max-w-7xl basis-full text-xl uppercase tracking-wide text-slate-600 sm:mb-8 sm:text-2xl ">
         Data from
       </div>

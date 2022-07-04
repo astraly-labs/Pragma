@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { StyledExternalLink } from "./StyledLink";
+import { StyledExternalLink } from "../StyledLink";
 
 const PontisFooter = () => (
   <div className="w-screen bg-slate-50">
