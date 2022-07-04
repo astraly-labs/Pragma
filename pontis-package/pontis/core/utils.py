@@ -28,9 +28,6 @@ def pprint_entry(entry):
 
 
 def key_for_asset(asset):
-    if "key" in asset:
-        key = currency_pair_to_key(*asset["pair"])
-    else:
-        key = asset["key"]
+    key = asset["key"] if "key" in asset else currency_pair_to_key(*asset["pair"])
 
     return key
