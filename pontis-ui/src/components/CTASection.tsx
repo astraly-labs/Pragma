@@ -1,7 +1,7 @@
 import React from "react";
-import Link from "next/link";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import Dots from "./common/Dots";
+import { ButtonLink } from "./common/Button";
 
 const CTASection = () => (
   <div className="relative mt-24 py-16 sm:mt-32">
@@ -50,21 +50,18 @@ const CTASection = () => (
             </p>
           </div>
           <div className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
-            <Link href="/">
-              <a className="flex cursor-pointer items-center rounded-lg bg-slate-700 px-4 py-3 text-slate-50 shadow-lg hover:bg-slate-800 hover:shadow-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 md:px-6 md:py-4 md:text-xl">
-                <CodeIcon className="mr-2 h-5 w-5" />
-                Read the Docs
-              </a>
-            </Link>
-
+            <ButtonLink variant="solid" color="slate" href="/" icon={CodeIcon}>
+              Read the docs
+            </ButtonLink>
             <div className="mt-4 sm:mt-0 sm:ml-6">
-              <a
+              <ButtonLink
+                variant="solid"
+                color="white"
                 href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
-                className="flex cursor-pointer items-center rounded-lg bg-slate-100 px-4 py-3 text-slate-700 shadow-lg hover:bg-slate-200 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 md:px-6 md:py-4 md:text-xl"
+                icon={ChatIcon}
               >
-                <ChatIcon className="mr-2 h-5 w-5" />
                 Request asset
-              </a>
+              </ButtonLink>
             </div>
           </div>
         </div>

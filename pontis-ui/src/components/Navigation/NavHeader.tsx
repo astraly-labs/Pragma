@@ -13,8 +13,15 @@ import {
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
 
-// List of resources displayed in the nav
-const resources = [
+interface Resource {
+  name: string;
+  description: string;
+  href: string;
+  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+}
+
+// List of resources displayed directly in the nav
+const resources: Resource[] = [
   {
     name: "Docs",
     description: "Start using our data by reading our docs.",

@@ -1,33 +1,51 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import classNames from "classnames";
 
 const baseStyles = {
   solid:
-    "inline-flex justify-center rounded-md py-1 px-4 text-base font-semibold tracking-tight shadow-sm focus:outline-none",
+    "flex cursor-pointer items-center justify-center rounded-lg px-4 py-3 text-base shadow-lg hover:shadow-xl md:px-6 md:py-4 md:text-xl focus:outline-none",
   outline:
-    "inline-flex justify-center rounded-md border py-[calc(theme(spacing.1)-1px)] px-[calc(theme(spacing.4)-1px)] text-base font-semibold tracking-tight focus:outline-none",
-};
+    "flex cursor-pointer items-center justify-center rounded-lg border px-[calc(theme(spacing.4)-1px)] py-[calc(theme(spacing.3)-1px)] text-base md:px-[calc(theme(spacing.6)-1px)] md:py-[calc(theme(spacing.4)-1px)] md:text-xl focus:outline-none",
+} as const;
 
 const variantStyles = {
   solid: {
     slate:
       "bg-slate-900 text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 active:bg-slate-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-slate-900",
-    blue: "bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 active:bg-blue-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-blue-600",
+    indigo:
+      "bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-indigo-600",
     white:
-      "bg-white text-blue-600 hover:text-blue-700 focus-visible:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-blue-50 active:text-blue-900/80 disabled:opacity-40 disabled:hover:text-blue-600",
+      "bg-white text-indigo-600 hover:text-indigo-700 hover:bg-slate-50 focus-visible:text-indigo-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-indigo-50 active:text-indigo-900/80 disabled:opacity-40 disabled:hover:text-indigo-600",
   },
   outline: {
     slate:
       "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 active:border-slate-200 active:bg-slate-50 active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",
-    blue: "border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 active:text-blue-600/70 disabled:opacity-40 disabled:hover:border-blue-300 disabled:hover:bg-transparent",
+    indigo:
+      "border-indigo-300 text-indigo-600 hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:text-indigo-600/70 disabled:opacity-40 disabled:hover:border-indigo-300 disabled:hover:bg-transparent",
+    white:
+      "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 active:border-slate-200 active:bg-slate-50 active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",
   },
-};
+} as const;
 
-export const Button = ({
+interface ButtonProps {
+  variant: keyof typeof baseStyles;
+  color: keyof typeof variantStyles["solid"];
+  className?: string;
+  icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+  children: ReactNode;
+  props?: React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >;
+}
+
+export const Button: React.FC<ButtonProps> = ({
   variant = "solid",
   color = "slate",
   className,
+  icon: Icon,
+  children,
   ...props
 }) => (
   <button
@@ -37,16 +55,26 @@ export const Button = ({
       className
     )}
     {...props}
-  />
+  >
+    {Icon && <Icon className="mr-2 h-5 w-5" />}
+    {children}
+  </button>
 );
 
-export const ButtonLink = ({
+interface ButtonLinkProps extends ButtonProps {
+  href: string;
+}
+
+export const ButtonLink: React.FC<ButtonLinkProps> = ({
   variant = "solid",
   color = "slate",
   href,
   className,
+  icon: Icon,
+  children,
   ...props
 }) => (
+  // I'm unsure whether we need an external vs internal differentiation
   <Link href={href}>
     <a
       className={classNames(
@@ -55,6 +83,9 @@ export const ButtonLink = ({
         className
       )}
       {...props}
-    />
+    >
+      {Icon && <Icon className="mr-2 h-5 w-5" />}
+      {children}
+    </a>
   </Link>
 );
