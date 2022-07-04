@@ -9,7 +9,10 @@ from starkware.starknet.common.syscalls import get_caller_address
 
 from contracts.entry.structs import Entry
 from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
-from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+from contracts.oracle_controller.structs import (
+    OracleController_OracleImplementationStatus,
+    KeyDecimalStruct,
+)
 from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
@@ -88,8 +91,9 @@ end
 
 func OracleController_initialize_oracle_controller{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(publisher_registry_address : felt):
+}(publisher_registry_address : felt, keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*):
     OracleController_publisher_registry_address_storage.write(publisher_registry_address)
+    _OracleController_set_keys_decimals(keys_decimals_len, keys_decimals, 0)
     return ()
 end
 
@@ -173,6 +177,20 @@ end
 #
 # Setters
 #
+
+func _OracleController_set_keys_decimals{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*, idx : felt):
+    if idx == keys_decimals_len:
+        return ()
+    end
+
+    let key_decimal = keys_decimals[idx]
+    Oracle_decimals_storage.write(key_decimal.key, key_decimal.decimal)
+    _OracleController_set_keys_decimals(keys_decimals_len, keys_decimals, idx + 1)
+
+    return ()
+end
 
 func OracleController_update_publisher_registry_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr

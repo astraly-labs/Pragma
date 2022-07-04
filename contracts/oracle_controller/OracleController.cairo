@@ -18,11 +18,13 @@ from contracts.oracle_controller.library import (
     OracleController_get_entries,
     OracleController_get_entry,
     OracleController_get_value,
-    OracleController_set_decimals,
     OracleController_submit_entry,
     OracleController_submit_many_entries,
 )
-from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+from contracts.oracle_controller.structs import (
+    OracleController_OracleImplementationStatus,
+    KeyDecimalStruct,
+)
 from contracts.admin.library import (
     Admin_initialize_admin_address,
     Admin_get_admin_address,
@@ -36,10 +38,15 @@ from contracts.admin.library import (
 
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    admin_address : felt, publisher_registry_address : felt
+    admin_address : felt,
+    publisher_registry_address : felt,
+    keys_decimals_len : felt,
+    keys_decimals : KeyDecimalStruct*,
 ):
     Admin_initialize_admin_address(admin_address)
-    OracleController_initialize_oracle_controller(publisher_registry_address)
+    OracleController_initialize_oracle_controller(
+        publisher_registry_address, keys_decimals_len, keys_decimals
+    )
     return ()
 end
 

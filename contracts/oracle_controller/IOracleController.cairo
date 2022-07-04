@@ -57,9 +57,6 @@ namespace IOracleController:
     func set_primary_oracle_implementation_address(primary_oracle_implementation_address : felt):
     end
 
-    func set_decimals(key : felt, decimals : felt):
-    end
-
     #
     # Oracle Implementation Controller Functions
     #
