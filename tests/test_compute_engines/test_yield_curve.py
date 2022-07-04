@@ -319,7 +319,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(on_entry),
     )
 
@@ -334,7 +334,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_controller.contract_address,
-            "submit_entry",
+            "publish_entry",
             serialize_entry(spot_entry),
         )
 
@@ -356,7 +356,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             await publisher_signer.send_transaction(
                 publisher_account,
                 oracle_controller.contract_address,
-                "submit_entry",
+                "publish_entry",
                 serialize_entry(future_entry),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(

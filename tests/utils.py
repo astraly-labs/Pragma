@@ -74,7 +74,7 @@ def assert_event_emitted(tx_exec_info, from_address, name, data):
     )
 
 
-async def register_new_publisher_and_submit_many_entries_1(
+async def register_new_publisher_and_publish_entries_1(
     admin_account,
     publisher_account,
     publisher_registry,
@@ -94,14 +94,14 @@ async def register_new_publisher_and_submit_many_entries_1(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_many_entries",
+        "publish_entries",
         serialize_entries(entries),
     )
 
     return
 
 
-async def register_new_publisher_and_submit_entry(
+async def register_new_publisher_and_publish_entry(
     admin_account,
     publisher_account,
     publisher_registry,
@@ -121,7 +121,7 @@ async def register_new_publisher_and_submit_entry(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 

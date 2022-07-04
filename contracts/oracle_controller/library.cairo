@@ -393,7 +393,7 @@ func OracleController_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
-func OracleController_submit_entry{
+func OracleController_publish_entry{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(new_entry : Entry):
     alloc_locals
@@ -418,7 +418,7 @@ func OracleController_submit_entry{
     ) = OracleController_build_active_oracle_implementation_addresses(
         total_oracle_addresses_len, oracle_addresses, 0, 0
     )
-    _OracleController_submit_entry_for_oracle_addresses(
+    _OracleController_publish_entry_for_oracle_addresses(
         oracle_addresses_len, oracle_addresses, 0, new_entry
     )
 
@@ -426,7 +426,7 @@ func OracleController_submit_entry{
     return ()
 end
 
-func _OracleController_submit_entry_for_oracle_addresses{
+func _OracleController_publish_entry_for_oracle_addresses{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_addresses_len : felt, oracle_addresses : felt*, idx : felt, new_entry : Entry):
     if oracle_addresses_len == 0:
@@ -438,22 +438,22 @@ func _OracleController_submit_entry_for_oracle_addresses{
     end
 
     let oracle_address = [oracle_addresses + idx]
-    IOracleImplementation.submit_entry(oracle_address, new_entry)
-    _OracleController_submit_entry_for_oracle_addresses(
+    IOracleImplementation.publish_entry(oracle_address, new_entry)
+    _OracleController_publish_entry_for_oracle_addresses(
         oracle_addresses_len, oracle_addresses, idx + 1, new_entry
     )
     return ()
 end
 
-func OracleController_submit_many_entries{
+func OracleController_publish_entries{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(new_entries_len : felt, new_entries : Entry*):
     if new_entries_len == 0:
         return ()
     end
 
-    OracleController_submit_entry([new_entries])
-    OracleController_submit_many_entries(new_entries_len - 1, new_entries + Entry.SIZE)
+    OracleController_publish_entry([new_entries])
+    OracleController_publish_entries(new_entries_len - 1, new_entries + Entry.SIZE)
 
     return ()
 end

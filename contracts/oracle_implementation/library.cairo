@@ -109,7 +109,7 @@ func Oracle_set_oracle_controller_address{
     return ()
 end
 
-func Oracle_submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func Oracle_publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entry : Entry
 ):
     alloc_locals

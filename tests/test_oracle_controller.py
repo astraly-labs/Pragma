@@ -12,8 +12,8 @@ from utils import (
     assert_event_emitted,
     cached_contract,
     construct_path,
-    register_new_publisher_and_submit_entry,
-    register_new_publisher_and_submit_many_entries_1,
+    register_new_publisher_and_publish_entry,
+    register_new_publisher_and_publish_entries_1,
 )
 
 # The path to the contract source code.
@@ -418,7 +418,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
     assert_event_emitted(
@@ -461,7 +461,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -479,7 +479,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -510,7 +510,7 @@ async def test_re_submit_stale(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -534,7 +534,7 @@ async def test_re_submit_stale(
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_controller.contract_address,
-            "submit_entry",
+            "publish_entry",
             serialize_entry(second_entry),
         )
 
@@ -573,7 +573,7 @@ async def test_submit_second_asset(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -591,7 +591,7 @@ async def test_submit_second_asset(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -637,7 +637,7 @@ async def test_submit_second_publisher(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -662,7 +662,7 @@ async def test_submit_second_publisher(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -709,7 +709,7 @@ async def test_submit_second_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -728,7 +728,7 @@ async def test_submit_second_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -769,7 +769,7 @@ async def test_median_aggregation(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -790,7 +790,7 @@ async def test_median_aggregation(
             publisher=additional_publisher,
         )
         entries.append(additional_entry)
-        await register_new_publisher_and_submit_entry(
+        await register_new_publisher_and_publish_entry(
             admin_account,
             publisher_account,
             publisher_registry,
@@ -834,7 +834,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_many_entries",
+        "publish_entries",
         serialize_entries(entries),
     )
     for entry in entries:
@@ -880,7 +880,7 @@ async def test_subset_publishers(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -921,7 +921,7 @@ async def test_unknown_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -1002,7 +1002,7 @@ async def test_real_data(
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.publisher == publisher]
         publisher_account = initialized_contracts["additional_publisher_accounts"][i]
-        await register_new_publisher_and_submit_many_entries_1(
+        await register_new_publisher_and_publish_entries_1(
             admin_account,
             publisher_account,
             publisher_registry,
@@ -1070,7 +1070,7 @@ async def test_multiple_oracle_implementations(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -1109,7 +1109,7 @@ async def test_multiple_oracle_implementations(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -1176,7 +1176,7 @@ async def test_rotate_primary_oracle_implementation_address(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -1239,7 +1239,7 @@ async def test_rotate_primary_oracle_implementation_address(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 
@@ -1289,7 +1289,7 @@ async def test_ignore_future_entry(
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_controller.contract_address,
-            "submit_entry",
+            "publish_entry",
             serialize_entry(entry),
         )
 
@@ -1323,7 +1323,7 @@ async def test_ignore_stale_entries(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(entry),
     )
 
@@ -1353,7 +1353,7 @@ async def test_ignore_stale_entries(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_controller.contract_address,
-        "submit_entry",
+        "publish_entry",
         serialize_entry(second_entry),
     )
 

@@ -18,8 +18,8 @@ from contracts.oracle_controller.library import (
     OracleController_get_entries,
     OracleController_get_entry,
     OracleController_get_value,
-    OracleController_submit_entry,
-    OracleController_submit_many_entries,
+    OracleController_publish_entry,
+    OracleController_publish_entries,
 )
 from contracts.oracle_controller.structs import (
     OracleController_OracleImplementationStatus,
@@ -202,17 +202,17 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 end
 
 @external
-func submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entry : Entry
 ):
-    OracleController_submit_entry(new_entry)
+    OracleController_publish_entry(new_entry)
     return ()
 end
 
 @external
-func submit_many_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entries_len : felt, new_entries : Entry*
 ):
-    OracleController_submit_many_entries(new_entries_len, new_entries)
+    OracleController_publish_entries(new_entries_len, new_entries)
     return ()
 end

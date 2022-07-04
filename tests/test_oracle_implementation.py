@@ -77,7 +77,7 @@ async def test_submit_entries(contract, source, publisher):
         key="eth/usd", value=2, timestamp=1, source=source, publisher=publisher
     )
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
@@ -86,7 +86,7 @@ async def test_submit_entries(contract, source, publisher):
         key="btc/usd", value=3, timestamp=2, source=source, publisher=publisher
     )
 
-    await contract.submit_entry(second_entry).invoke(
+    await contract.publish_entry(second_entry).invoke(
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
@@ -107,7 +107,7 @@ async def test_republish_stale(contract, source, publisher):
         key=key, value=2, timestamp=2, source=source, publisher=publisher
     )
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
@@ -117,7 +117,7 @@ async def test_republish_stale(contract, source, publisher):
     )
 
     try:
-        await contract.submit_entry(second_entry).invoke(
+        await contract.publish_entry(second_entry).invoke(
             caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 
@@ -144,7 +144,7 @@ async def test_mean_aggregation(
         key=key, value=3, timestamp=1, source=source, publisher=publisher
     )
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     second_publisher = str_to_felt("bar")
     second_source = str_to_felt("1xdata")
@@ -152,7 +152,7 @@ async def test_mean_aggregation(
         key=key, value=5, timestamp=1, source=second_source, publisher=second_publisher
     )
 
-    await contract.submit_entry(second_entry).invoke(
+    await contract.publish_entry(second_entry).invoke(
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
@@ -181,7 +181,7 @@ async def test_median_aggregation(
         key=key, value=prices[0], timestamp=1, source=source, publisher=publishers[0]
     )
 
-    await contract.submit_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
 
     entries = [entry]
 
@@ -196,7 +196,7 @@ async def test_median_aggregation(
         )
         entries.append(additional_entry)
 
-        await contract.submit_entry(additional_entry).invoke(
+        await contract.publish_entry(additional_entry).invoke(
             caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 

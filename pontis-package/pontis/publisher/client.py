@@ -45,7 +45,7 @@ class PontisPublisherClient(PontisBaseClient):
     async def publish(self, entry):
         result = await self.send_transaction(
             self.oracle_controller_address,
-            "submit_entry",
+            "publish_entry",
             serialize_entry(entry),
         )
         print(f"Updated entry with transaction {result}")
@@ -59,7 +59,7 @@ class PontisPublisherClient(PontisBaseClient):
 
         result = await self.send_transaction(
             self.oracle_controller_address,
-            "submit_many_entries",
+            "publish_entries",
             serialize_entries(entries),
         )
 

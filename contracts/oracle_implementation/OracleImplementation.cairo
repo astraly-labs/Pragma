@@ -10,7 +10,7 @@ from contracts.oracle_implementation.library import (
     Oracle_get_value,
     Oracle_get_entry,
     Oracle_get_all_sources,
-    Oracle_submit_entry,
+    Oracle_publish_entry,
 )
 
 #
@@ -76,9 +76,9 @@ func set_oracle_controller_address{
 end
 
 @external
-func submit_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entry : Entry
 ):
-    Oracle_submit_entry(new_entry)
+    Oracle_publish_entry(new_entry)
     return ()
 end
