@@ -32,7 +32,7 @@ async def main():
 
     all_prices_valid = True
     for asset in assets:
-        key = key_for_asset(key)
+        key = key_for_asset(asset)
         felt_key = str_to_felt(key)
         if felt_key not in coingecko or asset["type"] != "SPOT":
             print(
