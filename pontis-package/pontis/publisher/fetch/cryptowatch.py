@@ -1,4 +1,3 @@
-import os
 import time
 
 import requests
@@ -33,7 +32,7 @@ def fetch_cryptowatch(assets, publisher):
 
             try:
                 price = source_results["".join(pair).lower()]
-            except:
+            except KeyError:
                 print(f"No entry found for {key} from Cryptowatch-{cryptowatch_source}")
                 continue
 
