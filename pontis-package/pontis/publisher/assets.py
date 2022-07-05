@@ -1,5 +1,6 @@
 PONTIS_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("BTC", "USD"), "decimals": 18},
+    {"type": "SPOT", "pair": ("BTC", "EUR"), "decimals": 18},
     {"type": "SPOT", "pair": ("ETH", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("SOL", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("AVAX", "USD"), "decimals": 18},
@@ -11,6 +12,9 @@ PONTIS_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("USDC", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("TUSD", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("ETH", "MXN"), "decimals": 18},
+    {"type": "SPOT", "pair": ("BNB", "USD"), "decimals": 18},
+    {"type": "SPOT", "pair": ("ADA", "USD"), "decimals": 18},
+    {"type": "SPOT", "pair": ("XRP", "USD"), "decimals": 18},
     {"type": "FUTURE", "pair": ("BTC", "USD"), "decimals": 18},
     {"type": "FUTURE", "pair": ("ETH", "USD"), "decimals": 18},
     {
