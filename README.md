@@ -18,8 +18,8 @@ On testnet, the contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x07e05e4dea8a62988d9a06ea47bdac34c759a413db5b358e4a3a3d691d9d89e4) | 0x07e05e4dea8a62988d9a06ea47bdac34c759a413db5b358e4a3a3d691d9d89e4 |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba) | 0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x06302254031a4b67e521c861a433fe7ad2bdd871838ea3a43915cb1d000c5c15) | 0x06302254031a4b67e521c861a433fe7ad2bdd871838ea3a43915cb1d000c5c15 |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4) | 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4 |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4) | 0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4 |
 
 ## Setup
 

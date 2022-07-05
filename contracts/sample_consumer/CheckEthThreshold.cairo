@@ -5,7 +5,7 @@ from starkware.cairo.common.pow import pow
 
 from contracts.oracle_controller.IOracleController import IOracleController
 
-const ORACLE_CONTROLLER_ADDRESS = 0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba
+const ORACLE_CONTROLLER_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4
 const KEY = 28556963469423460  # str_to_felt("eth/usd")
 const AGGREGATION_MODE = 0  # default
 
