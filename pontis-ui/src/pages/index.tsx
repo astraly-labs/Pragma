@@ -5,6 +5,8 @@ import ProvidersSection from "../components/ProvidersSection";
 import AboutSection from "../components/AboutSection";
 import Testimonial from "../components/Testimonial";
 import CTASection from "../components/CTASection";
+import Code from "../components/Code/Code";
+import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 
 const IndexPage = () => {
   return (
@@ -14,7 +16,17 @@ const IndexPage = () => {
       <ProvidersSection />
       <AboutSection />
       <Testimonial />
-      <CTASection />
+      <Code />
+      <CTASection
+        title="Ready to get the data you need?"
+        description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+        mainAction={{ href: "/", actionText: "Read the docs", icon: CodeIcon }}
+        secondaryAction={{
+          href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+          actionText: "Request asset",
+          icon: ChatIcon,
+        }}
+      />
     </div>
   );
 };

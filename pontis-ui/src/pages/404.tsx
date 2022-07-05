@@ -34,7 +34,7 @@ const Custom404Page = () => {
             href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
             icon={ChatIcon}
           >
-            Request Asset
+            Request asset
           </ButtonLink>
         </div>
       </div>

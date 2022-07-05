@@ -6,7 +6,7 @@ import {
   CodeIcon,
   CursorClickIcon,
   MenuIcon,
-  PuzzleIcon,
+  SpeakerphoneIcon,
   UserGroupIcon,
   XIcon,
 } from "@heroicons/react/outline";
@@ -29,10 +29,10 @@ const resources: Resource[] = [
     icon: CodeIcon,
   },
   {
-    name: "Features",
-    description: "Learn how Pontis works under the hood.",
-    href: "#",
-    icon: PuzzleIcon,
+    name: "Publishers",
+    description: "Meet our data publishers.",
+    href: "/publishers",
+    icon: SpeakerphoneIcon,
   },
 ];
 

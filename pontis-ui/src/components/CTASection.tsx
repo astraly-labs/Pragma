@@ -1,9 +1,26 @@
 import React from "react";
-import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import Dots from "./common/Dots";
 import { ButtonLink } from "./common/Button";
 
-const CTASection = () => (
+interface Action {
+  href: string;
+  actionText: string;
+  icon: (props: React.ComponentProps<"svg">) => JSX.Element;
+}
+
+interface CTASectionProps {
+  title: string;
+  description: string;
+  mainAction: Action;
+  secondaryAction: Action;
+}
+
+const CTASection: React.FC<CTASectionProps> = ({
+  title,
+  description,
+  mainAction,
+  secondaryAction,
+}) => (
   <div className="relative mt-24 py-16 sm:mt-32">
     <div aria-hidden="true" className="hidden sm:block">
       <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-slate-50" />
@@ -42,25 +59,29 @@ const CTASection = () => (
         <div className="relative">
           <div className="sm:text-center">
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Ready to get the data you need?
+              {title}
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-indigo-100">
-              Leverage recent breakthroughs in zero knowledge computation by
-              using verifyable and composable data in your application.
+              {description}
             </p>
           </div>
           <div className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
-            <ButtonLink variant="solid" color="slate" href="/" icon={CodeIcon}>
-              Read the docs
+            <ButtonLink
+              variant="solid"
+              color="slate"
+              href={mainAction.href}
+              icon={mainAction.icon}
+            >
+              {mainAction.actionText}
             </ButtonLink>
             <div className="mt-4 sm:mt-0 sm:ml-6">
               <ButtonLink
                 variant="solid"
                 color="white"
-                href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
-                icon={ChatIcon}
+                href={secondaryAction.href}
+                icon={secondaryAction.icon}
               >
-                Request asset
+                {secondaryAction.actionText}
               </ButtonLink>
             </div>
           </div>

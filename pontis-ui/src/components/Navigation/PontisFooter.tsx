@@ -28,8 +28,8 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
-        title: "Features",
-        href: "#",
+        title: "Publishers",
+        href: "/publishers",
         external: false,
       },
       {
