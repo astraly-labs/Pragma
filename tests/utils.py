@@ -1,4 +1,5 @@
 import os
+import time
 
 from nile.signer import Signer
 from pontis.core.entry import serialize_entries, serialize_entry
@@ -45,8 +46,7 @@ class TestSigner:
 
     async def send_transactions(self, account, calls, nonce=None, max_fee=0):
         if nonce is None:
-            execution_info = await account.get_nonce().call()
-            (nonce,) = execution_info.result
+            nonce = int(time.time())
 
         build_calls = []
         for call in calls:
