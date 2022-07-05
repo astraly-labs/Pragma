@@ -8,6 +8,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import call_contract, get_caller_address, get_tx_info
+from starkware.starknet.common.math import assert_lt
 
 #
 # Storage
@@ -146,7 +147,7 @@ namespace Account:
 
         # validate nonce
         with_attr error_message("Account: nonce is invalid"):
-            assert _current_nonce = nonce
+            assert_lt(_current_nonce, nonce)
         end
 
         # TMP: Convert `AccountCallArray` to 'Call'.
@@ -163,7 +164,7 @@ namespace Account:
         end
 
         # bump nonce
-        Account_current_nonce.write(_current_nonce + 1)
+        Account_current_nonce.write(nonce)
 
         # execute call
         let (response : felt*) = alloc()
