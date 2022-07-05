@@ -10,7 +10,7 @@ async def main():
         admin_private_key,
     )
     await admin_client.set_primary_oracle_implementation_address(
-        0x072FA0C2D3427353F372B94614F2ED5E9DA6EC358FD720CF7706BE0EE42A1449
+        0x02BD808487154776F5275DCDB506C9D55319778567D4460F0C0BBBF42F482370
     )
 
 

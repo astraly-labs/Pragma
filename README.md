@@ -80,7 +80,7 @@ starknet deploy --contract account_compiled.json --inputs <PUBLISHER_PUBLIC_KEY>
 starknet-compile contracts/publisher_registry/PublisherRegistry.cairo --abi contracts/abi/PublisherRegistry.json --output publisher_registry_compiled.json
 starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
 starknet-compile contracts/oracle_controller/OracleController.cairo --abi contracts/abi/OracleController.json --output oracle_controller_compiled.json && cp contracts/abi/OracleController.json pontis-ui/src/abi/OracleController.json
-starknet deploy --contract oracle_controller_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS>
+starknet deploy --contract oracle_controller_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
 starknet-compile contracts/oracle_implementation/OracleImplementation.cairo --abi contracts/abi/OracleImplementation.json --output oracle_implementation_compiled.json
 starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_CONTROLLER_ADDRESS>
 ```
@@ -132,9 +132,9 @@ We have a staging environment set up in order to be able to test our code withou
 On testnet, the staging contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
-| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x07cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797) | 0x07cc3a9a4d1fe77b022e6e35007f0e1d8fdf8b87a8bdbcb2609c5d4e83817797 |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff) | 0x02f2a6fefb5474490cf737da1d1603f5914e525d3e4abd8d87a8e139a864baff |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d) | 0x00dfcf1028eaad141e4f135019847aa3684918d639e8bccf74c9e57851ec0c7d |
+| PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a) | 0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x0043b4d5941906529d8c640cf56b77287dcfe586bac0575b2830b9d7b75dff2f) | 0x0043b4d5941906529d8c640cf56b77287dcfe586bac0575b2830b9d7b75dff2f |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x02bd808487154776f5275dcdb506c9d55319778567d4460f0c0bbbf42f482370) | 0x02bd808487154776f5275dcdb506c9d55319778567d4460f0c0bbbf42f482370 |
 
 The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Pontis publisher account that is registered is located at 3251373723367219268498787183941698604007480963314075130334762142902855469511.
 

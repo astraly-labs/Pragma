@@ -3,9 +3,8 @@ import os
 
 from pontis.admin.client import PontisAdminClient
 
-publisher = "equilibrium"
-publisher = "cmt"
-publisher_address = 0x02FE2CA4C677AF0FF601A5AA37F799701C3ECD6F5D04F2EE072CB4C37FDFCDEF
+publishers = ["pontis"]  # , "equilibrium", "cmt", "argent", "consensys"]
+publisher_address = [int(os.environ.get("PUBLISHER_ADDRESS"))]
 
 
 async def main():
@@ -13,9 +12,8 @@ async def main():
     admin_client = PontisAdminClient(
         admin_private_key,
     )
-    await admin_client.register_publisher_if_not_registered(
-        publisher, publisher_address
-    )
+    for publisher, address in zip(publishers, publisher_address):
+        await admin_client.register_publisher_if_not_registered(publisher, address)
 
 
 if __name__ == "__main__":
