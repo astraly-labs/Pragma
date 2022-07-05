@@ -395,6 +395,39 @@
             {
                 "name": "aggregation_mode",
                 "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
             },
             {
                 "name": "sources_len",
@@ -405,7 +438,7 @@
                 "type": "felt*"
             }
         ],
-        "name": "get_value",
+        "name": "get_value_for_sources",
         "outputs": [
             {
                 "name": "value",
