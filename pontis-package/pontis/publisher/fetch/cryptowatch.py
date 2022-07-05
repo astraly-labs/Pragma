@@ -6,7 +6,11 @@ from pontis.core.utils import currency_pair_to_key
 
 
 def fetch_cryptowatch(assets, publisher):
-    sources = ["cryptowatch-coinbase-pro", "cryptowatch-kraken"]
+    sources = [
+        "cryptowatch-coinbase-pro",
+        "cryptowatch-kraken",
+        "cryptowatch-binance",
+    ]
 
     response = requests.get("https://api.cryptowat.ch/markets/prices")
     result = response.json()["result"]
