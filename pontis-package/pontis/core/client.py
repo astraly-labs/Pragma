@@ -56,11 +56,13 @@ class PontisClient:
                 "Key must be string (will be converted to felt) or integer"
             )
         if sources is None:
-            sources = []
-
-        response = await self.oracle_controller_contract.functions["get_value"].call(
-            key, aggregation_mode, sources
-        )
+            response = await self.oracle_controller_contract.functions[
+                "get_value"
+            ].call(key, aggregation_mode)
+        else:
+            response = await self.oracle_controller_contract.functions[
+                "get_value_for_sources"
+            ].call(key, aggregation_mode, sources)
 
         return (
             response.value,
