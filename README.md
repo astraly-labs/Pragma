@@ -133,8 +133,8 @@ On testnet, the staging contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a) | 0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x0043b4d5941906529d8c640cf56b77287dcfe586bac0575b2830b9d7b75dff2f) | 0x0043b4d5941906529d8c640cf56b77287dcfe586bac0575b2830b9d7b75dff2f |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x02bd808487154776f5275dcdb506c9d55319778567d4460f0c0bbbf42f482370) | 0x02bd808487154776f5275dcdb506c9d55319778567d4460f0c0bbbf42f482370 |
+| OracleController | [Link](https://goerli.voyager.online/contract/0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4) | 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4 |
+| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4) | 0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4 |
 
 The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Pontis publisher account that is registered is located at 3251373723367219268498787183941698604007480963314075130334762142902855469511.
 

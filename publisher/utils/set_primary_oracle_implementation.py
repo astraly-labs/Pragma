@@ -11,11 +11,11 @@ async def main():
     )
     if os.environ.get("__PONTIS_STAGING_ENV__") == "TRUE":
         await admin_client.set_primary_oracle_implementation_address(
-            0x052392D7B748DFBD81314FA41D6BBD6DD528D6C146BB6B212CCE72FB2B5D5801
+            0x019ba8db6b7749c359d9e0226723dcdf664aa7230e880d59166cbf649a518dd6
         )
     else:
         await admin_client.set_primary_oracle_implementation_address(
-            0x02BD808487154776F5275DCDB506C9D55319778567D4460F0C0BBBF42F482370
+            0x05A88457F9292D0596090300713E80724631024E7A92989302D458271C98CAD4
         )
 
 

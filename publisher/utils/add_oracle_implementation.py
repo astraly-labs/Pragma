@@ -9,11 +9,11 @@ async def main():
     admin_client = PontisAdminClient(admin_private_key)
     if os.environ.get("__PONTIS_STAGING_ENV__") == "TRUE":
         await admin_client.add_oracle_implementation(
-            0x052392D7B748DFBD81314FA41D6BBD6DD528D6C146BB6B212CCE72FB2B5D5801
+            0x019BA8DB6B7749C359D9E0226723DCDF664AA7230E880D59166CBF649A518DD6
         )
     else:
         await admin_client.add_oracle_implementation(
-            0x02BD808487154776F5275DCDB506C9D55319778567D4460F0C0BBBF42F482370
+            0x05A88457F9292D0596090300713E80724631024E7A92989302D458271C98CAD4
         )
 
 
