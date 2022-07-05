@@ -48,6 +48,13 @@ class TestSigner:
         if nonce is None:
             nonce = int(time.time())
 
+            # Tests are fast enough that sometimes we get race conditions (many tx sub-second)
+            # handle that special case here by auto-incrementing
+            execution_info = await account.get_nonce().call()
+            (on_chain_nonce,) = execution_info.result
+            if nonce <= on_chain_nonce:
+                nonce = on_chain_nonce + 1
+
         build_calls = []
         for call in calls:
             build_call = list(call)
