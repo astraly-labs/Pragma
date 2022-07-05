@@ -12,7 +12,6 @@ async def main():
     aggregation_mode = DEFAULT_AGGREGATION_MODE
 
     client = PontisClient()
-    decimals = await client.get_decimals(key)
     (
         value,
         decimals,

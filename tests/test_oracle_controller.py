@@ -957,26 +957,24 @@ async def test_real_data(
 
     entries = [
         construct_entry(
-            "eth/usd", 29898560234403, 1650590880, "coinmarketcap", "coinmarketcap"
+            "eth/usd", 29898560234403, 1650590880, "cryptowatch", "cryptowatch"
         ),
         construct_entry(
-            "btc/usd", 404308601528970, 1650590880, "coinmarketcap", "coinmarketcap"
+            "btc/usd", 404308601528970, 1650590880, "cryptowatch", "cryptowatch"
         ),
         construct_entry(
-            "luna/usd", 922793061826, 1650590880, "coinmarketcap", "coinmarketcap"
+            "luna/usd", 922793061826, 1650590880, "cryptowatch", "cryptowatch"
         ),
         construct_entry(
-            "sol/usd", 1023379113474, 1650590880, "coinmarketcap", "coinmarketcap"
+            "sol/usd", 1023379113474, 1650590880, "cryptowatch", "cryptowatch"
         ),
         construct_entry(
-            "avax/usd", 759878999010, 1650590880, "coinmarketcap", "coinmarketcap"
+            "avax/usd", 759878999010, 1650590880, "cryptowatch", "cryptowatch"
         ),
         construct_entry(
-            "doge/usd", 1365470994, 1650590880, "coinmarketcap", "coinmarketcap"
+            "doge/usd", 1365470994, 1650590880, "cryptowatch", "cryptowatch"
         ),
-        construct_entry(
-            "shib/usd", 244844, 1650590880, "coinmarketcap", "coinmarketcap"
-        ),
+        construct_entry("shib/usd", 244844, 1650590880, "cryptowatch", "cryptowatch"),
         construct_entry(
             "eth/usd", 29902600000000, 1650590935, "coingecko", "coingecko"
         ),
@@ -997,7 +995,7 @@ async def test_real_data(
         construct_entry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
         construct_entry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
     ]
-    publishers_str = ["coinmarketcap", "coingecko", "coinbase", "gemini"]
+    publishers_str = ["cryptowatch", "coingecko", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.publisher == publisher]

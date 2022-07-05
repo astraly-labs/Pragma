@@ -7,12 +7,11 @@ from pontis.core.utils import pprint_entry
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.client import PontisPublisherClient
 from pontis.publisher.fetch import (
-    fetch_binance,
     fetch_bitstamp,
     fetch_cex,
     fetch_coinbase,
     fetch_coingecko,
-    fetch_coinmarketcap,
+    fetch_cryptowatch,
     fetch_ftx,
     fetch_gemini,
 )
@@ -29,16 +28,6 @@ async def publish_all(assets):
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
-
-    try:
-        coinmarketcap_entries = fetch_coinmarketcap(assets, publisher)
-        tx_exec_info = await publisher_client.publish_many(coinmarketcap_entries)
-        entries.extend(coinmarketcap_entries)
-    except Exception as e:
-        print(f"Error fetching Coinmarketcap price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
 
     try:
         coingecko_entries = fetch_coingecko(assets, publisher)
@@ -66,16 +55,6 @@ async def publish_all(assets):
         entries.extend(gemini_entries)
     except Exception as e:
         print(f"Error fetching Gemini price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        binance_entries = fetch_binance(assets, publisher)
-        tx_exec_info = await publisher_client.publish_many(binance_entries)
-        entries.extend(binance_entries)
-    except Exception as e:
-        print(f"Error fetching Binance price: {e}")
         print(traceback.format_exc())
         if exit_on_error:
             raise e
@@ -116,6 +95,16 @@ async def publish_all(assets):
         entries.extend(thegraph_entries)
     except Exception as e:
         print(f"Error fetching The Graph data: {e}")
+        print(traceback.format_exc())
+        if exit_on_error:
+            raise e
+
+    try:
+        cryptowatch_entries = fetch_cryptowatch(assets, publisher)
+        tx_exec_info = await publisher_client.publish_many(cryptowatch_entries)
+        entries.extend(cryptowatch_entries)
+    except Exception as e:
+        print(f"Error fetching Cryptowatch price: {e}")
         print(traceback.format_exc())
         if exit_on_error:
             raise e
