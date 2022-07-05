@@ -88,7 +88,12 @@
             }
         ],
         "name": "is_valid_signature",
-        "outputs": [],
+        "outputs": [
+            {
+                "name": "is_valid",
+                "type": "felt"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
     },

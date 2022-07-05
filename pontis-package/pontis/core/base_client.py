@@ -1,4 +1,5 @@
 import json
+import time
 from abc import ABC, abstractmethod
 from os import path
 
@@ -6,8 +7,6 @@ from nile.signer import Signer
 from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract, ContractData, ContractFunction
 from starknet_py.net import Client
-from starknet_py.net.models import InvokeFunction
-from starknet_py.transaction_exceptions import TransactionFailedError
 from starkware.crypto.signature.signature import sign
 from starkware.starknet.public.abi import get_selector_from_name
 
@@ -40,56 +39,10 @@ class PontisBaseClient(ABC):
         self.signer = Signer(self.account_private_key)
 
         self.client = Client(self.network, n_retries=n_retries)
-        self.latest_nonce = None
-        self.next_nonce = None
 
     @abstractmethod
     async def _fetch_contracts(self):
         pass
-
-    async def wait_for_tx(self, tx_hash, wait_for_accept=False, **kwargs):
-        try:
-            await self.client.wait_for_tx(tx_hash, wait_for_accept, **kwargs)
-        except TransactionFailedError as e:
-            # If we errored, might have been due to nonce -> reset nonce optimistically:
-            # This is our fallback for cases where a transaction fails unbeknownst to us
-            # which would lead to next_nonce > pending_nonce, from which our get_nonce logic
-            # has no way to recover (because this case is indistinguishable from the one
-            # where next_nonce > pending_nonce because the submitted tx is not yet reflected).
-            self.next_nonce = None
-            raise e
-
-    async def get_nonce_uncached(self, include_pending=False):
-        await self._fetch_contracts()
-
-        block_number = "pending" if include_pending else "latest"
-
-        [nonce] = await self.client.call_contract(
-            InvokeFunction(
-                contract_address=self.account_contract_address,
-                entry_point_selector=get_selector_from_name("get_nonce"),
-                calldata=[],
-                signature=[],
-                max_fee=0,
-                version=0,
-            ),
-            block_number=block_number,
-        )
-        return nonce
-
-    async def get_nonces(self):
-        await self._fetch_contracts()
-
-        self.latest_nonce = await self.get_nonce_uncached()  # use this for estimate_fee
-        next_nonce = await self.get_nonce_uncached(include_pending=True)
-        # use this for estimating the nonce to use in the tx we send
-
-        # If we have sent a tx recently, use local nonce because network state won't have been updated yet
-        if self.next_nonce is not None and self.next_nonce >= next_nonce:
-            next_nonce = self.next_nonce + 1
-        self.next_nonce = next_nonce
-
-        return next_nonce
 
     async def _fetch_base_contracts(self):
         if self.oracle_controller_contract is None:
@@ -158,11 +111,11 @@ class PontisBaseClient(ABC):
         execute_function = ContractFunction(
             "__execute__", execute_abi, contract_data, self.client
         )
-        await self.get_nonces()  # get nonce as late as possible to decrease the probability of it being stale
+        nonce = int(time.time())
         prepared = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=self.latest_nonce,  # have to use latest because we call (not invoke), i.e. run against latest starknet state
+            nonce=nonce,
         )
         signature = sign(prepared.hash, self.account_private_key)
         # TODO: Change to using AccountClient once estimate_fee is fixed there
@@ -178,7 +131,7 @@ class PontisBaseClient(ABC):
         prepared_with_fee = execute_function.prepare(
             call_array=call_array,
             calldata=calldata,
-            nonce=self.next_nonce,
+            nonce=nonce,
             max_fee=max_fee,
         )
         signature = sign(prepared_with_fee.hash, self.account_private_key)
