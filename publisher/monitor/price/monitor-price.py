@@ -27,7 +27,9 @@ async def main():
 
     client = PontisClient(n_retries=5)
 
-    coingecko = {entry.key: entry.value for entry in fetch_coingecko(assets)}
+    coingecko = {
+        entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
+    }
     aggregation_mode = DEFAULT_AGGREGATION_MODE
 
     all_prices_valid = True
