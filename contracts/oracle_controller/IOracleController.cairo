@@ -69,7 +69,12 @@ namespace IOracleController:
     func get_entry(key : felt, source : felt) -> (entry : Entry):
     end
 
-    func get_value(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
+    func get_value(key : felt, aggregation_mode : felt) -> (
+        value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+    ):
+    end
+
+    func get_value_for_sources(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end

@@ -428,12 +428,12 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
     assert result.result.decimals == DEFAULT_DECIMALS
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         entry.key, AGGREGATION_MODE, [source]
     ).call()
     assert source_result.result == result.result
@@ -465,7 +465,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     second_entry = entry = construct_entry(
@@ -484,7 +484,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE, []
+        second_entry.key, AGGREGATION_MODE
     ).call()
     assert result.result.value == second_entry.value
 
@@ -514,10 +514,10 @@ async def test_re_submit_stale(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         key, AGGREGATION_MODE, [source]
     ).call()
     assert result.result == source_result.result
@@ -544,10 +544,10 @@ async def test_re_submit_stale(
     except StarkException:
         pass
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         key, AGGREGATION_MODE, [source]
     ).call()
     assert result.result == source_result.result
@@ -577,7 +577,7 @@ async def test_submit_second_asset(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     second_entry = construct_entry(
@@ -596,15 +596,15 @@ async def test_submit_second_asset(
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE, []
+        second_entry.key, AGGREGATION_MODE
     ).call()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         entry.key, AGGREGATION_MODE, [source]
     ).call()
     assert result.result == source_result.result
@@ -666,19 +666,23 @@ async def test_submit_second_publisher(
         serialize_entry(second_entry),
     )
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
+    source_result = await oracle_controller.get_value_for_sources(
+        key, AGGREGATION_MODE, [source, second_source]
+    ).call()
+    assert source_result.result == result.result
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         key, AGGREGATION_MODE, [source]
     ).call()
     assert source_result.result.value == entry.value
     assert source_result.result.last_updated_timestamp == entry.timestamp
 
-    source_result = await oracle_controller.get_value(
+    source_result = await oracle_controller.get_value_for_sources(
         key, AGGREGATION_MODE, [second_source]
     ).call()
     assert source_result.result.value == second_entry.value
@@ -713,7 +717,7 @@ async def test_submit_second_source(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     second_source = str_to_felt("1xdata")
@@ -733,7 +737,7 @@ async def test_submit_second_source(
     )
 
     result = await oracle_controller.get_value(
-        second_entry.key, AGGREGATION_MODE, []
+        second_entry.key, AGGREGATION_MODE
     ).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
@@ -804,7 +808,7 @@ async def test_median_aggregation(
         result = await oracle_controller.get_entries(key, []).call()
         assert result.result.entries == entries
 
-        result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+        result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
@@ -849,7 +853,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         result = await oracle_controller.get_entries(key, []).call()
         assert result.result.entries == [entries[i]]
 
-        result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+        result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
         assert result.result.value == prices[i]
 
     return
@@ -896,7 +900,7 @@ async def test_subset_publishers(
     result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     return
@@ -925,7 +929,7 @@ async def test_unknown_source(
         serialize_entry(entry),
     )
 
-    result = await oracle_controller.get_value(
+    result = await oracle_controller.get_value_for_sources(
         key, AGGREGATION_MODE, [str_to_felt("unknown")]
     ).call()
     assert result.result.num_sources_aggregated == 0
@@ -939,7 +943,7 @@ async def test_unknown_key(initialized_contracts):
     result = await oracle_controller.get_entries(unknown_key, []).call()
     assert len(result.result.entries) == 0
 
-    result = await oracle_controller.get_value(unknown_key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(unknown_key, AGGREGATION_MODE).call()
     assert result.result.value == 0
     assert result.result.last_updated_timestamp == 0
 
@@ -1022,12 +1026,12 @@ async def test_real_data(
     ]
     for key in keys:
         result = await oracle_controller.get_value(
-            str_to_felt(key), AGGREGATION_MODE, []
+            str_to_felt(key), AGGREGATION_MODE
         ).call()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
-    result = await oracle_controller.get_value(
+    result = await oracle_controller.get_value_for_sources(
         str_to_felt("eth/usd"),
         AGGREGATION_MODE,
         [str_to_felt("gemini"), str_to_felt("coinbase")],
@@ -1035,7 +1039,7 @@ async def test_real_data(
     assert result.result.value == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
-    result = await oracle_controller.get_value(
+    result = await oracle_controller.get_value_for_sources(
         str_to_felt("eth/usd"),
         AGGREGATION_MODE,
         [str_to_felt("gemini"), str_to_felt("unknown")],
@@ -1075,7 +1079,7 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to controller
@@ -1115,7 +1119,7 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == (entry.value + second_entry.value) / 2
     assert result.result.num_sources_aggregated == 2
 
@@ -1136,7 +1140,7 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == second_entry.value
 
     return
@@ -1244,7 +1248,7 @@ async def test_rotate_primary_oracle_implementation_address(
     result = await oracle_controller.get_entries(key, []).call()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to controller
@@ -1355,7 +1359,7 @@ async def test_ignore_stale_entries(
         serialize_entry(second_entry),
     )
 
-    result = await oracle_controller.get_value(key, AGGREGATION_MODE, []).call()
+    result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
     assert result.result.value == second_entry.value
     assert result.result.last_updated_timestamp == second_entry.timestamp
 

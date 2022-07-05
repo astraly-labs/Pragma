@@ -1,6 +1,7 @@
 %lang starknet
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.alloc import alloc
 
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.library import (
@@ -193,6 +194,17 @@ end
 
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+    let (sources) = alloc()
+    let (
+        value, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = OracleController_get_value(key, aggregation_mode, 0, sources)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
+end
+
+@view
+func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     let (
