@@ -8,7 +8,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import call_contract, get_caller_address, get_tx_info
-from starkware.starknet.common.math import assert_lt
+from starkware.cairo.common.math import assert_lt
 
 #
 # Storage
