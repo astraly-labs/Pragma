@@ -10,6 +10,7 @@ def fetch_cryptowatch(assets, publisher):
         "cryptowatch-coinbase-pro",
         "cryptowatch-kraken",
         "cryptowatch-binance",
+        "cryptowatch-bitfinex",
     ]
 
     response = requests.get("https://api.cryptowat.ch/markets/prices")
