@@ -1,0 +1,28 @@
+name: Run Monitors
+on:
+  push
+
+jobs:
+  run_monitors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build docker images locally
+        run: |
+          docker build . --target test -t 42labs/pontis-publisher:test
+          docker build publisher/monitor/balance -t monitor-balance --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build publisher/monitor/price -t monitor-price --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
+
+      - name: Run balance and price monitors
+        env:
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+        run: |
+          docker run --env-file publisher/monitor/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
+          docker run --env-file publisher/monitor/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price

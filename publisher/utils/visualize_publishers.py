@@ -14,7 +14,11 @@ async def main(pair):
     decimals = await client.get_decimals(key)
     entries = []
 
+<<<<<<< HEAD
     num_reps = 1  # Run for 3 hours
+=======
+    num_reps = 1
+>>>>>>> ui-v1.0
     for i in range(num_reps):
         print("awake - fetching")
         entries.extend(await client.get_entries(key))
@@ -27,17 +31,14 @@ async def main(pair):
     df["value"] = df["value"] / (10**decimals)
     df["datetime"] = pd.to_datetime(df["timestamp"], unit="s")
     df["publisher"] = df["publisher"].apply(felt_to_str)
-    df["publisher_prefix"] = df["publisher"].apply(lambda x: x.split("-")[0])
-    df["source"] = df["publisher"].apply(
-        lambda x: x.split("-")[1] if len(x.split("-")) == 2 else x
-    )  # account for both data integrity members (with dash) and source publishers
+    df["source"] = df["source"].apply(felt_to_str)
 
     fig, (ax1, ax2) = plt.subplots(2)
     fig.tight_layout(pad=4)
 
-    for publisher_prefix in df["publisher_prefix"].unique():
-        subset = df[df["publisher_prefix"] == publisher_prefix]
-        ax1.scatter(subset["datetime"], subset["value"], label=publisher_prefix)
+    for publisher in df["publisher"].unique():
+        subset = df[df["publisher"] == publisher]
+        ax1.scatter(subset["datetime"], subset["value"], label=publisher)
     ax1.legend(ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.2))
 
     for source in df["source"].unique():

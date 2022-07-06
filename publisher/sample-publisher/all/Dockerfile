@@ -1,4 +1,4 @@
-ARG PONTIS_PUBLISHER_BASE_IMAGE_TAG=0.4.13
+ARG PONTIS_PUBLISHER_BASE_IMAGE_TAG=0.6.1
 FROM 42labs/pontis-publisher:$PONTIS_PUBLISHER_BASE_IMAGE_TAG
 
 COPY fetch-and-publish.py ./fetch-and-publish.py

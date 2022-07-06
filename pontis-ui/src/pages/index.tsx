@@ -15,6 +15,7 @@ const IndexPage = () => {
       <AssetsSection />
       <ProvidersSection />
       <AboutSection />
+<<<<<<< HEAD
       <Testimonial />
       <Code />
       <CTASection
@@ -27,6 +28,9 @@ const IndexPage = () => {
           icon: ChatIcon,
         }}
       />
+=======
+      <ActionsSection />
+>>>>>>> ui-v1.0
     </div>
   );
 };

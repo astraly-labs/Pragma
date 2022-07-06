@@ -21,7 +21,6 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
   const secondsSinceUpdate = Math.round(
     currentTimestampSeconds - lastUpdatedTimestamp - minutesSinceUpdate * 60
   );
-
   setInterval(updateCurrentTimestampSeconds, 1000);
   return (
     <div className="flex flex-row items-center space-x-2 md:space-x-3">

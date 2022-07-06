@@ -3,11 +3,19 @@ import { AppProps } from "next/app";
 
 import "../styles/index.css";
 import PontisFooter from "../components/Navigation/PontisFooter";
+<<<<<<< HEAD
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
+=======
+import CommandPallate from "../components/Navigation/CommandPallete";
+import { SearchContext } from "../providers/search";
+import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
+import Head from "next/head";
+import PontisHeader from "../components/Navigation/PontisHeader";
+>>>>>>> ui-v1.0
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = [new InjectedConnector()];
@@ -29,7 +37,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <StarknetProvider autoConnect connectors={connectors}>
         <div className="flex min-h-screen flex-col justify-start bg-white">
           <SearchContext.Provider value={setIsSearchOpen}>
+<<<<<<< HEAD
             <NavHeader />
+=======
+            <PontisHeader />
+>>>>>>> ui-v1.0
             <CommandPallate isOpen={isSearchOpen} />
             <Component {...pageProps} />
             <PontisFooter />

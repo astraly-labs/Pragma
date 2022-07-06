@@ -17,7 +17,11 @@ const ProvidersSection = () => (
       <SearchCTA />
     </div>
     <div className="mx-auto mt-10 flex w-full max-w-7xl flex-row flex-wrap items-center sm:mt-20">
+<<<<<<< HEAD
       <div className="mb-4 basis-full text-xl uppercase tracking-wide text-slate-600 sm:mb-8 sm:text-2xl ">
+=======
+      <div className="mb-4 max-w-7xl basis-full text-xl uppercase tracking-wide text-slate-600 sm:mb-8 sm:text-2xl ">
+>>>>>>> ui-v1.0
         Data from
       </div>
       {providers.map((provider, i) => (
