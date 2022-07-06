@@ -36,11 +36,9 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
     };
   }, [setSearch]);
 
-  const filteredAssets = query
-    ? AssetKeys.filter((asset) =>
-        asset.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
+  const filteredAssets = AssetKeys.filter((asset) =>
+    asset.toLowerCase().includes(query.toLowerCase())
+  );
   return (
     <Transition.Root
       show={isOpen}

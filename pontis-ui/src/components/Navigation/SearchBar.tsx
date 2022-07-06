@@ -5,18 +5,11 @@ import { useSearch } from "../../providers/search";
 
 const SearchBar: React.FC = () => {
   const setSearch = useSearch();
-<<<<<<< HEAD
 
   return (
     <button
       type="button"
       className="flex h-12 w-full items-center space-x-3 rounded-lg bg-white px-4 text-left text-slate-500 shadow-sm ring-1 ring-slate-900/10 hover:ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:w-60"
-=======
-  return (
-    <button
-      type="button"
-      className="flex h-12 items-center space-x-3 rounded-lg bg-white px-4 text-left text-slate-400 shadow-sm ring-1 ring-slate-900/10 hover:ring-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-72"
->>>>>>> ui-v1.0
       onClick={() => setSearch(true)}
     >
       <SearchIcon aria-hidden="true" className="h-6 w-6 text-slate-400" />

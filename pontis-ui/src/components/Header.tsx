@@ -15,9 +15,9 @@ const Header: React.FC<HeaderProps> = ({
   href,
   hrefText,
 }) => (
-  <div className="mx-auto w-full md:max-w-3xl">
+  <div className="mx-auto w-full max-w-3xl">
     {subtitle !== undefined && (
-      <h2 className="text-large mb-2 uppercase tracking-wide text-slate-600 sm:text-2xl md:mb-4">
+      <h2 className="mb-2 text-xl uppercase tracking-wide text-slate-600 sm:text-2xl md:mb-4">
         {subtitle}
       </h2>
     )}

@@ -5,12 +5,15 @@ import "../styles/index.css";
 import PontisFooter from "../components/Navigation/PontisFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
-import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
+import {
+  StarknetProvider,
+  getInstalledInjectedConnectors,
+} from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const connectors = [new InjectedConnector()];
+  const connectors = getInstalledInjectedConnectors();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
