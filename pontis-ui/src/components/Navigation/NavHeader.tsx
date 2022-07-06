@@ -60,7 +60,13 @@ const additional = [
 ];
 
 // Calls to action at the bottom of the more tab.
-const callsToAction = [{ name: "Request Asset", href: "#", icon: ChatIcon }];
+const callsToAction = [
+  {
+    name: "Request Asset",
+    href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+    icon: ChatIcon,
+  },
+];
 
 const NavHeader = () => (
   <Popover className="relative bg-slate-50">
