@@ -17,13 +17,35 @@
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "source",
                 "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 4,
                 "type": "felt"
             }
         ],
         "name": "Entry",
-        "size": 4,
+        "size": 5,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "key",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "decimal",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "KeyDecimalStruct",
+        "size": 2,
         "type": "struct"
     },
     {
@@ -138,6 +160,14 @@
             {
                 "name": "publisher_registry_address",
                 "type": "felt"
+            },
+            {
+                "name": "keys_decimals_len",
+                "type": "felt"
+            },
+            {
+                "name": "keys_decimals",
+                "type": "KeyDecimalStruct*"
             }
         ],
         "name": "constructor",
@@ -233,6 +263,23 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_decimals",
+        "outputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_address",
                 "type": "felt"
             }
@@ -294,23 +341,14 @@
             {
                 "name": "key",
                 "type": "felt"
-            }
-        ],
-        "name": "get_decimals",
-        "outputs": [
+            },
             {
-                "name": "decimals",
+                "name": "sources_len",
                 "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
-                "name": "key",
-                "type": "felt"
+                "name": "sources",
+                "type": "felt*"
             }
         ],
         "name": "get_entries",
@@ -334,6 +372,27 @@
                 "type": "felt"
             },
             {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entry",
+        "outputs": [
+            {
+                "name": "entry",
+                "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
                 "name": "aggregation_mode",
                 "type": "felt"
             }
@@ -345,7 +404,15 @@
                 "type": "felt"
             },
             {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
                 "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
                 "type": "felt"
             }
         ],
@@ -359,12 +426,38 @@
                 "type": "felt"
             },
             {
+                "name": "aggregation_mode",
+                "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
+            }
+        ],
+        "name": "get_value_for_sources",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
                 "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
                 "type": "felt"
             }
         ],
-        "name": "set_decimals",
-        "outputs": [],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -374,7 +467,7 @@
                 "type": "Entry"
             }
         ],
-        "name": "submit_entry",
+        "name": "publish_entry",
         "outputs": [],
         "type": "function"
     },
@@ -389,7 +482,7 @@
                 "type": "Entry*"
             }
         ],
-        "name": "submit_many_entries",
+        "name": "publish_entries",
         "outputs": [],
         "type": "function"
     }

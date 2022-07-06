@@ -12,12 +12,17 @@ async def main():
     aggregation_mode = DEFAULT_AGGREGATION_MODE
 
     client = PontisClient()
-    decimals = await client.get_decimals(key)
-    value, last_updated_timestamp = await client.get_value(key, aggregation_mode)
+    (
+        value,
+        decimals,
+        last_updated_timestamp,
+        num_sources_aggregated,
+    ) = await client.get_value(key, aggregation_mode)
 
     print(
         f"""Value of asset pair {asset_pair} is: {float(value) / (10**decimals)}, \
-        last updated at {datetime.fromtimestamp(last_updated_timestamp).strftime('%Y-%m-%d, %H:%M:%S')}"""
+        last updated at {datetime.fromtimestamp(last_updated_timestamp).strftime('%Y-%m-%d, %H:%M:%S')}, \
+        based off of aggregating {num_sources_aggregated} sources."""
     )
 
 

@@ -1,14 +1,12 @@
 import datetime
-import os
 
 import requests
 from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_coingecko(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-coingecko"
+def fetch_coingecko(assets, publisher):
+    source = "coingecko"
 
     headers = {
         "Accepts": "application/json",
@@ -46,6 +44,16 @@ def fetch_coingecko(assets):
             pair_id = "usd-coin"
         elif pair[0] == "TUSD":
             pair_id = "true-usd"
+        elif pair[0] == "BUSD":
+            pair_id = "binance-usd"
+        elif pair[0] == "BNB":
+            pair_id = "binancecoin"
+        elif pair[0] == "ADA":
+            pair_id = "cardano"
+        elif pair[0] == "XRP":
+            pair_id = "ripple"
+        elif pair[0] == "MATIC":
+            pair_id = "matic-network"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"
@@ -71,6 +79,7 @@ def fetch_coingecko(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )

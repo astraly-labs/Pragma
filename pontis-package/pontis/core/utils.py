@@ -23,5 +23,11 @@ def currency_pair_to_key(quote, base):
 
 def pprint_entry(entry):
     print(
-        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, publisher={felt_to_str(entry.publisher)}"
+        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
+
+
+def key_for_asset(asset):
+    key = asset["key"] if "key" in asset else currency_pair_to_key(*asset["pair"])
+
+    return key

@@ -7,7 +7,7 @@ import traceback
 import requests
 from pontis.core.client import PontisClient
 from pontis.core.const import DEFAULT_AGGREGATION_MODE
-from pontis.core.utils import currency_pair_to_key, str_to_felt
+from pontis.core.utils import key_for_asset, str_to_felt
 from pontis.publisher.assets import PONTIS_ALL_ASSETS
 from pontis.publisher.fetch import fetch_coingecko
 
@@ -24,26 +24,17 @@ async def main():
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
 
     assets = PONTIS_ALL_ASSETS
-    os.environ["PUBLISHER_PREFIX"] = "pontis"
 
     client = PontisClient(n_retries=5)
-    for i, asset in enumerate(assets):
-        if "pair" in asset:
-            key = currency_pair_to_key(*asset["pair"])
-        else:
-            key = asset["key"]
-        decimals = await client.get_decimals(key)
-        assets[i]["decimals"] = decimals
 
-    coingecko = {entry.key: entry.value for entry in fetch_coingecko(assets)}
+    coingecko = {
+        entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
+    }
     aggregation_mode = DEFAULT_AGGREGATION_MODE
 
     all_prices_valid = True
     for asset in assets:
-        if "pair" in asset:
-            key = currency_pair_to_key(*asset["pair"])
-        else:
-            key = asset["key"]
+        key = key_for_asset(asset)
         felt_key = str_to_felt(key)
         if felt_key not in coingecko or asset["type"] != "SPOT":
             print(
@@ -51,7 +42,12 @@ async def main():
             )
             continue
 
-        value, last_updated_timestamp = await client.get_value(key, aggregation_mode)
+        (
+            value,
+            _,
+            last_updated_timestamp,
+            num_sources_aggregated,
+        ) = await client.get_value(key, aggregation_mode)
 
         try:
             assert (
@@ -70,6 +66,10 @@ async def main():
             print(
                 f"Price {value} checks out for asset {key} (reference: {coingecko[felt_key]})"
             )
+
+            assert (
+                num_sources_aggregated >= 3
+            ), f"Aggregated less than 3 sources for asset {key}: {num_sources_aggregated}"
         except AssertionError as e:
             print(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
             print(e)
