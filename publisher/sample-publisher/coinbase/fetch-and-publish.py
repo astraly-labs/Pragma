@@ -9,8 +9,8 @@ DECIMALS = 18
 
 
 async def main():
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
 
     assets = PONTIS_ALL_ASSETS
 

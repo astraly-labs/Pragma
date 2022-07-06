@@ -8,7 +8,7 @@ publisher_address = [int(os.environ.get("PUBLISHER_ADDRESS"))]
 
 
 async def main():
-    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
     admin_client = PontisAdminClient(
         admin_private_key,
     )
