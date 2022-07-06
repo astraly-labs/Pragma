@@ -14,11 +14,7 @@ async def main(pair):
     decimals = await client.get_decimals(key)
     entries = []
 
-<<<<<<< HEAD
-    num_reps = 1  # Run for 3 hours
-=======
     num_reps = 1
->>>>>>> ui-v1.0
     for i in range(num_reps):
         print("awake - fetching")
         entries.extend(await client.get_entries(key))
