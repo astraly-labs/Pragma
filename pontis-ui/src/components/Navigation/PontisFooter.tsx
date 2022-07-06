@@ -15,6 +15,21 @@ interface FooterColumn {
 
 const content: FooterColumn[] = [
   {
+    header: "Developers",
+    links: [
+      {
+        title: "Documentation",
+        href: "#",
+        external: false,
+      },
+      {
+        title: "View on Block Explorer",
+        href: "#",
+        external: false,
+      },
+    ],
+  },
+  {
     header: "Product",
     links: [
       {
@@ -23,18 +38,13 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
-        title: "Documentation",
-        href: "#",
-        external: false,
-      },
-      {
         title: "Publishers",
         href: "/publishers",
         external: false,
       },
       {
-        title: "View on Block Explorer",
-        href: "#",
+        title: "Protocols",
+        href: "/protocols",
         external: false,
       },
     ],
@@ -48,7 +58,7 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
-        title: "Press",
+        title: "Blog",
         href: "#",
         external: false,
       },
@@ -82,7 +92,7 @@ const socials: SocialMedia[] = [
 
 const Footer = () => (
   <div className="w-full bg-white">
-    <div className="mx-auto max-w-7xl border-t border-slate-100 px-8 pb-12 pt-16">
+    <div className="mx-auto max-w-7xl border-t border-slate-100 px-4 pb-12 pt-16 lg:px-8">
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
@@ -112,7 +122,7 @@ const Footer = () => (
           </ul>
         </div>
         {content.map((column) => (
-          <nav key={column.header} className="col-span-1 lg:col-span-3">
+          <nav key={column.header} className="col-span-1 lg:col-span-2">
             <p className="font-semibold uppercase tracking-wider text-slate-500">
               {column.header}
             </p>

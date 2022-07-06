@@ -23,16 +23,18 @@ const TeamCard: React.FC<Person> = ({ name, role, imageUrl, socials }) => (
         <h3>{name}</h3>
         <p className="text-indigo-600">{role}</p>
       </div>
-      <ul role="list" className="flex space-x-5">
-        {socials.map(({ name, src, href }) => (
-          <li key={name}>
-            <a href={href} className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">{name}</span>
-              <img src={src} className="h-5 w-5 stroke-slate-500" />
-            </a>
-          </li>
-        ))}
-      </ul>
+      {socials && (
+        <ul role="list" className="flex space-x-5">
+          {socials.map(({ name, src, href }) => (
+            <li key={name}>
+              <a href={href} className="text-gray-400 hover:text-gray-500">
+                <span className="sr-only">{name}</span>
+                <img src={src} className="h-5 w-5 stroke-slate-500" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   </div>
 );

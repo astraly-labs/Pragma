@@ -8,6 +8,7 @@ import {
   MenuIcon,
   SpeakerphoneIcon,
   UserGroupIcon,
+  ViewListIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import NavPopover from "./NavPopover";
@@ -38,6 +39,12 @@ const resources: Resource[] = [
 
 // List of resources displayed in the more tab
 const additional = [
+  {
+    name: "Protocols",
+    description: "Take a look at who is already using Pontis.",
+    href: "/protocols",
+    icon: ViewListIcon,
+  },
   {
     name: "About Us",
     description: "Get to know the team behind Pontis.",

@@ -1,9 +1,9 @@
 import React from "react";
 
 const Testimonial = () => (
-  <div className="relative mx-auto max-w-3xl px-4 pt-20 pb-12 sm:px-6 lg:px-8 lg:py-20">
+  <div className="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8 lg:py-20">
     <div className="relative lg:flex lg:items-center">
-      <div className="relative lg:ml-10">
+      <div className="relative">
         <svg
           className="absolute top-0 left-0 h-36 w-36 -translate-x-8 -translate-y-24 transform text-indigo-200 opacity-50"
           stroke="currentColor"

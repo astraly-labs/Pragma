@@ -1,4 +1,5 @@
 import React from "react";
+import Container from "../common/Container";
 import Header from "../Header";
 import TeamCard, { Person } from "./TeamCard";
 
@@ -53,7 +54,7 @@ const people: Person[] = [
 
 const TeamSection = () => (
   <div className="w-full bg-slate-50">
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8 lg:py-24">
+    <Container>
       <div className="space-y-24">
         <Header
           title="Developed by experts"
@@ -78,7 +79,7 @@ const TeamSection = () => (
           ))}
         </ul>
       </div>
-    </div>
+    </Container>
   </div>
 );
 export default TeamSection;
