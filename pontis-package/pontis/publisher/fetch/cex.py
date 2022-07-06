@@ -1,13 +1,10 @@
-import os
-
 import requests
 from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_cex(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-cex"
+def fetch_cex(assets, publisher):
+    source = "cex"
     base_url = "https://cex.io/api/ticker"
 
     entries = []
@@ -37,6 +34,7 @@ def fetch_cex(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )

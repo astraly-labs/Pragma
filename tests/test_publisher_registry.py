@@ -159,7 +159,7 @@ async def test_register_publisher(registered_contracts, publisher):
     publisher_account = registered_contracts["publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
 
     return
@@ -173,7 +173,7 @@ async def test_update_publisher_address(
     second_publisher_account = registered_contracts["second_publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
 
     tx_exec_info = await publisher_signer.send_transaction(
@@ -194,7 +194,7 @@ async def test_update_publisher_address(
         ],
     )
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == second_publisher_account.contract_address
 
     return
@@ -222,7 +222,7 @@ async def test_rotate_fails_for_unregistered_publisher(
     except StarkException:
         pass
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
 
     return
@@ -248,13 +248,13 @@ async def test_register_second_publisher(
         [second_publisher, second_publisher_account.contract_address],
     )
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
 
-    result = await publisher_registry.get_publisher_address(second_publisher).invoke()
+    result = await publisher_registry.get_publisher_address(second_publisher).call()
     assert result.result.publisher_address == second_publisher_account.contract_address
 
-    result = await publisher_registry.get_all_publishers().invoke()
+    result = await publisher_registry.get_all_publishers().call()
     assert result.result.publishers == [publisher, second_publisher]
 
     return
@@ -284,7 +284,7 @@ async def test_re_register_fail(
     except StarkException:
         pass
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
     return
 
@@ -328,6 +328,6 @@ async def test_rotate_admin_address(
         [publisher, publisher_account.contract_address],
     )
 
-    result = await publisher_registry.get_publisher_address(publisher).invoke()
+    result = await publisher_registry.get_publisher_address(publisher).call()
     assert result.result.publisher_address == publisher_account.contract_address
     return

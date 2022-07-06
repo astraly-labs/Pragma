@@ -16,17 +16,13 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          export PONTIS_PACKAGE_VERSION=$(grep 'version' pontis-package/setup.cfg | grep -e '[0-9]*\.[0-9]*\.[0-9]*' -o)
-          docker build . --build-arg PONTIS_PACKAGE_VERSION=${PONTIS_PACKAGE_VERSION} -t 42labs/pontis-publisher:latest
-          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=latest
+          docker build . --target test -t 42labs/pontis-publisher:test
+          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
 
       - name: Post updated prices
         env:
-          __PONTIS_STAGING_ENV__: "TRUE"
-          PUBLISHER_ADDRESS: "3251373723367219268498787183941698604007480963314075130334762142902855469511"
           ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           PUBLISHER_PRIVATE_KEY : ${{ secrets.PUBLISHER_PRIVATE_KEY }}
-          COINAPI_KEY: ${{ secrets.COINAPI_KEY }}
           COINMARKETCAP_KEY: ${{ secrets.COINMARKETCAP_KEY }}
           COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
@@ -36,11 +32,11 @@ jobs:
         run: |
           docker run \
             --env-file publisher/sample-publisher/all/.env\
-            -e __PONTIS_STAGING_ENV__=${__PONTIS_STAGING_ENV__}\
-            -e PUBLISHER_ADDRESS=${PUBLISHER_ADDRESS}\
+            -e __PONTIS_STAGING_ENV__=TRUE\
+            -e __PONTIS_PUBLISHER_EXIT_ON_ERROR__=TRUE\
+            -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
-            -e COINAPI_KEY=${COINAPI_KEY}\
             -e COINMARKETCAP_KEY=${COINMARKETCAP_KEY}\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\

@@ -17,13 +17,18 @@
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "source",
                 "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 4,
                 "type": "felt"
             }
         ],
         "name": "Entry",
-        "size": 4,
+        "size": 5,
         "type": "struct"
     },
     {
@@ -42,31 +47,14 @@
             {
                 "name": "key",
                 "type": "felt"
-            }
-        ],
-        "name": "get_decimals",
-        "outputs": [
+            },
             {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "publishers_len",
+                "name": "sources_len",
                 "type": "felt"
             },
             {
-                "name": "publishers",
+                "name": "sources",
                 "type": "felt*"
-            },
-            {
-                "name": "key",
-                "type": "felt"
             }
         ],
         "name": "get_entries",
@@ -86,20 +74,20 @@
     {
         "inputs": [
             {
-                "name": "publishers_len",
-                "type": "felt"
-            },
-            {
-                "name": "publishers",
-                "type": "felt*"
-            },
-            {
                 "name": "key",
                 "type": "felt"
             },
             {
                 "name": "aggregation_mode",
                 "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
             }
         ],
         "name": "get_value",
@@ -110,6 +98,10 @@
             },
             {
                 "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
                 "type": "felt"
             }
         ],
@@ -123,7 +115,7 @@
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "source",
                 "type": "felt"
             }
         ],
@@ -132,6 +124,27 @@
             {
                 "name": "entry",
                 "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_all_sources",
+        "outputs": [
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
             }
         ],
         "stateMutability": "view",
@@ -151,26 +164,11 @@
     {
         "inputs": [
             {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "name": "set_decimals",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "name": "new_entry",
                 "type": "Entry"
             }
         ],
-        "name": "submit_entry",
+        "name": "publish_entry",
         "outputs": [],
         "type": "function"
     }

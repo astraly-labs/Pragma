@@ -46,7 +46,7 @@ class PontisClient:
 
         return response.decimals
 
-    async def get_value(self, key, aggregation_mode):
+    async def get_value(self, key, aggregation_mode, sources=None):
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -55,14 +55,23 @@ class PontisClient:
             raise AssertionError(
                 "Key must be string (will be converted to felt) or integer"
             )
+        if sources is None:
+            response = await self.oracle_controller_contract.functions[
+                "get_value"
+            ].call(key, aggregation_mode)
+        else:
+            response = await self.oracle_controller_contract.functions[
+                "get_value_for_sources"
+            ].call(key, aggregation_mode, sources)
 
-        response = await self.oracle_controller_contract.functions["get_value"].call(
-            key, aggregation_mode
+        return (
+            response.value,
+            response.decimals,
+            response.last_updated_timestamp,
+            response.num_sources_aggregated,
         )
 
-        return response.value, response.last_updated_timestamp
-
-    async def get_entries(self, key):
+    async def get_entries(self, key, sources=None):
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -71,9 +80,11 @@ class PontisClient:
             raise AssertionError(
                 "Key must be string (will be converted to felt) or integer"
             )
+        if sources is None:
+            sources = []
 
         response = await self.oracle_controller_contract.functions["get_entries"].call(
-            key
+            key, sources
         )
 
         return response.entries

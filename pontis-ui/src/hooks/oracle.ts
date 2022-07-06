@@ -20,10 +20,12 @@ export const AssetKeys = [
   "usdc/usd",
   "tusd/usd",
   "eth/mxn",
-  "btc/usd-20220624",
+  "dai/usd",
+  "usdt/usd",
+  "usdc/usd",
+  "tusd/usd",
   "btc/usd-20220930",
   "btc/usd-20221230",
-  "eth/usd-20220624",
   "eth/usd-20220930",
   "eth/usd-20221230",
 ];
@@ -39,30 +41,11 @@ export const useOracleControllerContract = () => {
   });
 };
 
-interface GetDecimalsHookT {
-  decimals: number;
-  loading: boolean;
-  error: string;
-}
-
-const useOracleGetDecimals = (assetKey: AssetKeyT): GetDecimalsHookT => {
-  const { contract } = useOracleControllerContract();
-  const arg = strToHexFelt(assetKey);
-  const { data, loading, error } = useStarknetCall({
-    contract,
-    method: "get_decimals",
-    args: [arg],
-  });
-  let decimals: number | undefined = undefined;
-  if (data !== undefined) {
-    decimals = parseInt(bigNumberishArrayToDecimalStringArray(data)[0]);
-  }
-  return { decimals, loading, error };
-};
-
 export type OracleResponseT = {
   value: number;
+  decimals: number;
   lastUpdatedTimestamp: number;
+  numSourcesAggregated: number;
 };
 
 export interface GetValueHookT {
@@ -73,7 +56,6 @@ export interface GetValueHookT {
 
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   const { contract } = useOracleControllerContract();
-  const { decimals } = useOracleGetDecimals(assetKey);
   const arg = strToHexFelt(assetKey);
   const aggregationMode = 0;
   const { data, loading, error } = useStarknetCall({
@@ -91,15 +73,25 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
 
   let oracleResponse: OracleResponseT | undefined = undefined;
   if (data !== undefined) {
-    const [strValue, strLastUpdatedTimestamp] =
-      bigNumberishArrayToDecimalStringArray(data);
+    const [
+      strValue,
+      strDecimals,
+      strLastUpdatedTimestamp,
+      strNumSourcesAggregated,
+    ] = bigNumberishArrayToDecimalStringArray(data);
+    const decimals = parseInt(strDecimals);
     const value = parseInt(strValue) / 10 ** decimals;
     const lastUpdatedTimestamp = parseInt(strLastUpdatedTimestamp);
+    const numSourcesAggregated = parseInt(strNumSourcesAggregated);
     oracleResponse = {
       value: isNaN(value) ? undefined : value,
+      decimals: isNaN(decimals) ? undefined : value,
       lastUpdatedTimestamp: isNaN(lastUpdatedTimestamp)
         ? undefined
         : lastUpdatedTimestamp,
+      numSourcesAggregated: isNaN(numSourcesAggregated)
+        ? undefined
+        : numSourcesAggregated,
     };
   }
   return { oracleResponse, loading, error };

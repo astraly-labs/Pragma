@@ -1,4 +1,3 @@
-import os
 import time
 
 import requests
@@ -6,9 +5,8 @@ from pontis.core.entry import construct_entry
 from pontis.core.utils import currency_pair_to_key
 
 
-def fetch_gemini(assets):
-    PUBLISHER_PREFIX = os.environ.get("PUBLISHER_PREFIX")
-    publisher = PUBLISHER_PREFIX + "-gemini"
+def fetch_gemini(assets, publisher):
+    source = "gemini"
 
     base_url = "https://api.gemini.com/v1"
     response = requests.get(base_url + "/pricefeed", timeout=20)
@@ -41,6 +39,7 @@ def fetch_gemini(assets):
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
+                source=source,
                 publisher=publisher,
             )
         )
