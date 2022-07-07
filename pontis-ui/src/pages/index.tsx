@@ -27,7 +27,7 @@ const IndexPage = () => {
           title="Reimagining Oracles"
           subtitle="Why Pontis?"
           text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
-          href="#"
+          href="/features"
           hrefText="Learn more about how Pontis works"
         />
         <FeatureSection />

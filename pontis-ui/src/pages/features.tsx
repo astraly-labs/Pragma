@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import CTASection from "../components/CTASection";
 import FAQ from "../components/FAQ";
 import FeaturesDisplay from "../components/Features/FeaturesDisplay";
+import TimelineExplanation from "../components/TimelineExplanation";
 
 const FeaturesPage = () => {
   return (
@@ -25,6 +26,7 @@ const FeaturesPage = () => {
           subtitle="How it works"
           text="Sit laboris adipisicing id culpa veniam magna Lorem occaecat laboris."
         />
+        <TimelineExplanation />
       </SectionContainer>
       <SectionContainer>
         <FAQ />
