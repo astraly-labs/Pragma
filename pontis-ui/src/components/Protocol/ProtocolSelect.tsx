@@ -2,7 +2,8 @@ import React, { useState, Fragment } from "react";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import { SelectorIcon, CheckIcon } from "@heroicons/react/outline";
-import ProtocolCard, { Protocol, protocolCategories } from "./ProtocolCard";
+import { Protocol, protocolCategories } from "./ProtocolSection";
+import ProtocolCard from "./ProtocolCard";
 
 interface ProtocolSelectProps {
   protocols: Protocol[];

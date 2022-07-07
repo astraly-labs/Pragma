@@ -1,14 +1,14 @@
 import React from "react";
 import SearchCTA from "./SearchCTA";
 
-const providers = [
-  "cmtdigital",
-  "bitstamp",
-  "cex",
-  "coinbase",
-  "coingecko",
-  "ftx",
-  "gemini",
+const providerLogos = [
+  "cmtdigital.svg",
+  "bitstamp.svg",
+  "cex.svg",
+  "coinbase.svg",
+  "coingecko.svg",
+  "ftx.svg",
+  "gemini.svg",
 ];
 
 const ProvidersSection = () => (
@@ -20,11 +20,11 @@ const ProvidersSection = () => (
       <div className="mb-4 basis-full text-xl uppercase tracking-wide text-slate-600 sm:mb-8 sm:text-2xl ">
         Data from
       </div>
-      {providers.map((provider, i) => (
+      {providerLogos.map((provider, i) => (
         <div key={i} className="basis-1/3 py-8 lg:basis-1/4">
           <img
-            src={`/assets/providers/${provider}.svg`}
-            alt={`${provider} logo`}
+            src={`/assets/providers/${provider}`}
+            alt={`${provider}`}
             className="m-auto w-24 md:w-32 lg:w-40"
           />
         </div>

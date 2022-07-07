@@ -1,7 +1,20 @@
 import React from "react";
-import { Protocol } from "./ProtocolCard";
 import ProtocolTabs from "./ProtocolTabs";
 import ProtocolSelect from "./ProtocolSelect";
+
+export const protocolCategories = [
+  "All",
+  "Money-Market",
+  "Social Wallet",
+  "Borrowing",
+] as const;
+
+export interface Protocol {
+  name: string;
+  category: typeof protocolCategories[number];
+  src: string;
+  description: string;
+}
 
 const protocols: Protocol[] = [
   {

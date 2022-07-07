@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AppProps } from "next/app";
 
 import "../styles/index.css";
-import PontisFooter from "../components/Navigation/NavFooter";
+import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import {
@@ -35,7 +35,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <NavHeader />
             <CommandPallate isOpen={isSearchOpen} />
             <Component {...pageProps} />
-            <PontisFooter />
+            <NavFooter />
           </SearchContext.Provider>
         </div>
       </StarknetProvider>

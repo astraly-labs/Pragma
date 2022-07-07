@@ -1,7 +1,8 @@
 import React from "react";
 import classNames from "classnames";
 import { Tab } from "@headlessui/react";
-import ProtocolCard, { Protocol, protocolCategories } from "./ProtocolCard";
+import { Protocol, protocolCategories } from "./ProtocolSection";
+import ProtocolCard from "./ProtocolCard";
 
 interface ProtocolTabsProps {
   protocols: Protocol[];

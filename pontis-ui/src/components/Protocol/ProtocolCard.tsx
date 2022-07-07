@@ -1,18 +1,5 @@
 import React from "react";
-
-export const protocolCategories = [
-  "All",
-  "Money-Market",
-  "Social Wallet",
-  "Borrowing",
-] as const;
-
-export interface Protocol {
-  name: string;
-  category: typeof protocolCategories[number];
-  src: string;
-  description: string;
-}
+import { Protocol } from "./ProtocolSection";
 
 const ProtocolCard: React.FC<Protocol> = ({
   name,
