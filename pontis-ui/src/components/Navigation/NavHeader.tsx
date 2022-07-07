@@ -6,6 +6,7 @@ import {
   CodeIcon,
   CursorClickIcon,
   MenuIcon,
+  PuzzleIcon,
   SpeakerphoneIcon,
   UserGroupIcon,
   ViewListIcon,
@@ -28,6 +29,12 @@ const resources: Resource[] = [
     description: "Start using our data by reading our docs.",
     href: "#",
     icon: CodeIcon,
+  },
+  {
+    name: "Features",
+    description: "Learn about what makes Pontis special.",
+    href: "/features",
+    icon: PuzzleIcon,
   },
   {
     name: "Publishers",

@@ -15,6 +15,7 @@ const Dots: React.FC<DotsProps> = ({ width, height, className }) => {
       height={height}
       fill="none"
       viewBox={`0 0 ${width} ${height}`}
+      aria-hidden="true"
     >
       <defs>
         <pattern
@@ -35,7 +36,7 @@ const Dots: React.FC<DotsProps> = ({ width, height, className }) => {
           />
         </pattern>
       </defs>
-      <rect width={404} height={392} fill={`url(#${patternId})`} />
+      <rect width={width} height={height} fill={`url(#${patternId})`} />
     </svg>
   );
 };
