@@ -21,7 +21,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   mainAction,
   secondaryAction,
 }) => (
-  <div className="relative mt-24 py-16 sm:mt-32">
+  <div className="relative w-full py-16">
     <div aria-hidden="true" className="hidden sm:block">
       <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-slate-50" />
       <Dots
@@ -30,7 +30,7 @@ const CTASection: React.FC<CTASectionProps> = ({
         height={392}
       />
     </div>
-    <div className="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+    <div className="mx-auto max-w-md sm:max-w-3xl lg:max-w-7xl">
       <div className="relative overflow-hidden rounded-2xl bg-indigo-500 px-6 py-10 shadow-xl sm:px-12 sm:py-20">
         <div
           aria-hidden="true"

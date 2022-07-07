@@ -21,7 +21,7 @@ const ProtocolCard: React.FC<Protocol> = ({
   description,
 }) => (
   <article className="space-y-4">
-    <div className="aspect-square h-48">
+    <div className="aspect-square sm:h-48">
       <img className="object-cover" src={src} alt="" />
     </div>
 

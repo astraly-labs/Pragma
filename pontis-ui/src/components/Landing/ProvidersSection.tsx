@@ -12,7 +12,7 @@ const providers = [
 ];
 
 const ProvidersSection = () => (
-  <div className="w-screen bg-slate-50 px-6 pb-40 sm:px-24 md:px-32">
+  <>
     <div className="-translate-y-1/2">
       <SearchCTA />
     </div>
@@ -30,7 +30,7 @@ const ProvidersSection = () => (
         </div>
       ))}
     </div>
-  </div>
+  </>
 );
 
 export default ProvidersSection;

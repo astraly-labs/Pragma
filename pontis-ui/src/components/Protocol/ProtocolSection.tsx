@@ -35,7 +35,7 @@ const protocols: Protocol[] = [
 ];
 
 const ProtocolSection = () => (
-  <div className="w-full">
+  <div className="w-full max-w-7xl">
     <div className="hidden sm:block">
       <ProtocolTabs protocols={protocols} />
     </div>

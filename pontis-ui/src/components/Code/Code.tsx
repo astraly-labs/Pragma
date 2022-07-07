@@ -32,7 +32,7 @@ const Code = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 font-mono sm:px-8">
+    <div className="w-full max-w-3xl font-mono">
       <div className="relative rounded-lg bg-slate-700">
         <div className="flex space-x-2 pl-3 pt-3">
           <span className="block h-3 w-3 rounded-full bg-white bg-opacity-40 hover:bg-red-500" />

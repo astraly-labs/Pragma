@@ -10,7 +10,7 @@ interface StatsProps {
 }
 
 const Stats: React.FC<StatsProps> = ({ stats }) => (
-  <dl className="mx-auto grid max-w-3xl grid-cols-2 gap-x-4 gap-y-8">
+  <dl className="grid w-full max-w-3xl grid-cols-2 gap-x-4 gap-y-8">
     {stats.map(({ label, value }) => (
       <div key={label} className="border-t-2 border-slate-200 pt-6 font-mono">
         <dt className="mb-1 text-base font-medium text-slate-500 lg:text-lg">

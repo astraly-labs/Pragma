@@ -1,7 +1,7 @@
 import React from "react";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import CTASection from "../components/CTASection";
-import Container from "../components/common/Container";
+import SectionContainer from "../components/common/SectionContainer";
 import Stats, { Stat } from "../components/Stats";
 import Code from "../components/Code/Code";
 import Header from "../components/Header";
@@ -29,20 +29,20 @@ const stats: Stat[] = [
 const PublishersPage = () => {
   return (
     <div className="w-screen">
-      <div className="bg-gray-50">
-        <Container className="space-y-12">
-          <Header
-            title="StarkNet's leading protocols"
-            subtitle="Meet our users"
-            text="We work closely with teams to ensure they get exactly what they need. Reach out to us if you need a custom solution."
-            href="#"
-            hrefText="Get verifyable data for your project"
-          />
-          <Stats stats={stats} />
-        </Container>
-      </div>
-      <ProtocolSection />
-      <Container className="space-y-12">
+      <SectionContainer className="bg-slate-50">
+        <Header
+          title="StarkNet's leading protocols"
+          subtitle="Meet our users"
+          text="We work closely with teams to ensure they get exactly what they need. Reach out to us if you need a custom solution."
+          href="#"
+          hrefText="Get verifyable data for your project"
+        />
+        <Stats stats={stats} />
+      </SectionContainer>
+      <SectionContainer className="sm:!pt-0">
+        <ProtocolSection />
+      </SectionContainer>
+      <SectionContainer className="bg-slate-50">
         <Header
           title="3 easy steps"
           subtitle="Try it yourself"
@@ -51,17 +51,23 @@ const PublishersPage = () => {
           hrefText="Read the documentation"
         />
         <Code />
-      </Container>
-      <CTASection
-        title="Ready to get the data you need?"
-        description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
-        mainAction={{ href: "/", actionText: "Read the docs", icon: CodeIcon }}
-        secondaryAction={{
-          href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
-          actionText: "Request asset",
-          icon: ChatIcon,
-        }}
-      />
+      </SectionContainer>
+      <SectionContainer className="sm:!px-0">
+        <CTASection
+          title="Ready to get the data you need?"
+          description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+          mainAction={{
+            href: "/",
+            actionText: "Read the docs",
+            icon: CodeIcon,
+          }}
+          secondaryAction={{
+            href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+            actionText: "Request asset",
+            icon: ChatIcon,
+          }}
+        />
+      </SectionContainer>
     </div>
   );
 };

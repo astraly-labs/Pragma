@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AppProps } from "next/app";
 
 import "../styles/index.css";
-import PontisFooter from "../components/Navigation/PontisFooter";
+import PontisFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import {

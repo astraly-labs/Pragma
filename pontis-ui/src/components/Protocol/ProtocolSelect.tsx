@@ -2,7 +2,6 @@ import React, { useState, Fragment } from "react";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import { SelectorIcon, CheckIcon } from "@heroicons/react/outline";
-import Container from "../common/Container";
 import ProtocolCard, { Protocol, protocolCategories } from "./ProtocolCard";
 
 interface ProtocolSelectProps {
@@ -14,7 +13,7 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
     protocolCategories[0]
   );
   return (
-    <Container>
+    <>
       <Listbox value={selectedCategory} onChange={setSelectedCategory}>
         <div className="sticky top-0">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white/95 py-3 px-4 text-left shadow-lg [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
@@ -87,7 +86,7 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
             </li>
           ))}
       </ul>
-    </Container>
+    </>
   );
 };
 

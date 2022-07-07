@@ -1,5 +1,5 @@
 import React from "react";
-import { SocialMedia } from "../Navigation/PontisFooter";
+import { SocialMedia } from "../Navigation/NavFooter";
 
 export interface Person {
   name: string;

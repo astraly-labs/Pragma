@@ -1,6 +1,4 @@
 import React from "react";
-import Container from "../common/Container";
-import Header from "../Header";
 import PublisherCard, { PublisherCardProps } from "./PublisherCard";
 
 const publishers: PublisherCardProps[] = [
@@ -42,27 +40,14 @@ const publishers: PublisherCardProps[] = [
   },
 ];
 
-const PublisherSeciton = () => (
-  <div className="w-full bg-slate-50">
-    <Container>
-      <div className="space-y-24">
-        <Header
-          title="Your favorite giants"
-          subtitle="Meet our publishers"
-          text="At Pontis, we care about the integrity of our data. We ensure that only high quality data publishers join this list."
-          href="#"
-          hrefText="Find out how you can become a publisher"
-        />
-        <ul className="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:max-w-none lg:grid-cols-3 lg:gap-10">
-          {publishers.map(({ name, src, description }) => (
-            <li key={name}>
-              <PublisherCard name={name} src={src} description={description} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </Container>
-  </div>
+const PublishersSeciton = () => (
+  <ul className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+    {publishers.map(({ name, src, description }) => (
+      <li key={name}>
+        <PublisherCard name={name} src={src} description={description} />
+      </li>
+    ))}
+  </ul>
 );
 
-export default PublisherSeciton;
+export default PublishersSeciton;
