@@ -16,7 +16,7 @@ yield_curve_address = 0x03368F7D9FF915C566DABE424B2669E77D6856EABA449C1A24215148
 
 
 async def main():
-    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
     admin_client = PontisAdminClient(
         admin_private_key,
     )

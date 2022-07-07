@@ -5,7 +5,7 @@ from pontis.admin.client import PontisAdminClient
 
 
 async def main():
-    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"))
+    admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
     admin_client = PontisAdminClient(admin_private_key)
     if os.environ.get("__PONTIS_STAGING_ENV__") == "TRUE":
         await admin_client.add_oracle_implementation(

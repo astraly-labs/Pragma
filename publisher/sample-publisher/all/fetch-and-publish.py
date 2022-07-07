@@ -25,8 +25,8 @@ async def publish_all(assets):
     entries = []
 
     publisher = os.environ.get("PUBLISHER")
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
     publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
 
     try:
