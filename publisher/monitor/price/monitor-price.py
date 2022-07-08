@@ -16,6 +16,9 @@ from pontis.publisher.fetch import fetch_coingecko
 
 PRICE_TOLERANCE = 0.1  # in percent
 TIME_TOLERANCE = 1200  # in seconds
+EXPERIMENTAL_ASSET_KEYS = [
+    ("eth/mxn", "temp/usd")
+]  # do not send slack notifications for these
 
 
 async def main():
@@ -74,6 +77,9 @@ async def main():
             print(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
             print(e)
             print(traceback.format_exc())
+
+            if key in EXPERIMENTAL_ASSET_KEYS:
+                continue
 
             slack_text = "Error with Pontis price<!channel>"
             slack_text += f"\nAsset: {asset}"
