@@ -9,13 +9,13 @@ interface FooterLink {
 }
 
 interface FooterColumn {
-  header: string;
+  heading: string;
   links: FooterLink[];
 }
 
 const content: FooterColumn[] = [
   {
-    header: "Developers",
+    heading: "Developers",
     links: [
       {
         title: "Documentation",
@@ -30,7 +30,7 @@ const content: FooterColumn[] = [
     ],
   },
   {
-    header: "Product",
+    heading: "Product",
     links: [
       {
         title: "Home",
@@ -55,7 +55,7 @@ const content: FooterColumn[] = [
     ],
   },
   {
-    header: "Company",
+    heading: "Company",
     links: [
       {
         title: "About Us",
@@ -127,9 +127,9 @@ const Footer = () => (
           </ul>
         </div>
         {content.map((column) => (
-          <nav key={column.header} className="col-span-1 lg:col-span-2">
+          <nav key={column.heading} className="col-span-1 lg:col-span-2">
             <p className="font-semibold uppercase tracking-wider text-slate-500">
-              {column.header}
+              {column.heading}
             </p>
             <div className="mt-6 flex flex-col space-y-4">
               {column.links.map(({ external, title, href }) => (

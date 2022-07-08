@@ -16,7 +16,7 @@ const FeatureItem: React.FC<Feature> = ({ name, description, icon: Icon }) => (
         {name}
       </p>
     </dt>
-    <dd className="mt-2 ml-16 text-base text-gray-500">{description}</dd>
+    <dd className="mt-2 ml-16 text-base text-slate-600">{description}</dd>
   </div>
 );
 

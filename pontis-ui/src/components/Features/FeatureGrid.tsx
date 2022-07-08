@@ -28,10 +28,10 @@ const FeatureGrid: React.FC<FeatureGridProps> = ({
       )}
     />
     <div className={classNames("relative", { "lg:col-start-2": imageLeft })}>
-      <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+      <h3 className="text-2xl font-medium tracking-tight text-slate-900 sm:text-3xl">
         {title}
       </h3>
-      <p className="mt-4 text-lg text-slate-500">{description}</p>
+      <p className="mt-4 text-lg text-slate-600">{description}</p>
 
       <dl className="mt-10 space-y-10">
         {features.map((feature) => (

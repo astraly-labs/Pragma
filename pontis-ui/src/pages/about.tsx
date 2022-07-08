@@ -1,7 +1,7 @@
 import React from "react";
 import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
-import Header from "../components/Header";
+import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
 import TeamSection from "../components/Team/TeamSection";
 
@@ -9,7 +9,7 @@ const AboutPage = () => {
   return (
     <div className="w-screen">
       <SectionContainer className="bg-slate-50">
-        <Header
+        <Heading
           title="Developed by experts"
           subtitle="Meet our team"
           text="At Pontis we are building a culture around bright people that want to move fast and embrace honest feedback."

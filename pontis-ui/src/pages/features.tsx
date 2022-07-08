@@ -1,7 +1,7 @@
 import React from "react";
 import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
-import Header from "../components/Header";
+import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
 import FAQ from "../components/FAQ";
 import FeaturesDisplay from "../components/Features/FeaturesDisplay";
@@ -11,7 +11,7 @@ const FeaturesPage = () => {
   return (
     <div className="w-screen">
       <SectionContainer className="bg-slate-50">
-        <Header
+        <Heading
           title="Reimagining oracles"
           subtitle="Meet our compute engine"
           text="Sit laboris adipisicing id culpa veniam magna Lorem occaecat laboris."
@@ -21,7 +21,7 @@ const FeaturesPage = () => {
         <FeaturesDisplay />
       </SectionContainer>
       <SectionContainer>
-        <Header
+        <Heading
           title="A closer look"
           subtitle="How it works"
           text="Sit laboris adipisicing id culpa veniam magna Lorem occaecat laboris."

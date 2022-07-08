@@ -1,6 +1,6 @@
 import React from "react";
 import SectionContainer from "../components/common/SectionContainer";
-import Header from "../components/Header";
+import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
 import AssetsSection from "../components/Landing/AssetsSection";
 import ProvidersSection from "../components/Landing/ProvidersSection";
@@ -13,7 +13,7 @@ import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 const IndexPage = () => {
   return (
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-slate-50 pt-12">
         <Hero />
       </SectionContainer>
       <SectionContainer className="!pt-0">
@@ -23,7 +23,7 @@ const IndexPage = () => {
         <ProvidersSection />
       </SectionContainer>
       <SectionContainer>
-        <Header
+        <Heading
           title="Reimagining Oracles"
           subtitle="Why Pontis?"
           text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
