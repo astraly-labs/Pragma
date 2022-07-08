@@ -26,7 +26,7 @@ const stats: Stat[] = [
   },
 ];
 
-const PublishersPage = () => {
+const ProtocolsPage = () => {
   return (
     <div className="w-screen">
       <SectionContainer className="bg-slate-50">
@@ -72,4 +72,4 @@ const PublishersPage = () => {
   );
 };
 
-export default PublishersPage;
+export default ProtocolsPage;

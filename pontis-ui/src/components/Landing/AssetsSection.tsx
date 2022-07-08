@@ -24,7 +24,7 @@ const AssetsSection = () => {
     "bg-slate-300 rounded-lg px-4 py-2 text-slate-900 shadow-lg hover:shadow-xl cursor-pointer flex items-center";
 
   return (
-    <div className="flex max-w-3xl -translate-y-14 flex-col items-center space-y-16 sm:-translate-y-8">
+    <div className="flex w-full max-w-3xl -translate-y-14 flex-col items-center space-y-16 sm:-translate-y-8">
       {AssetKeys.slice(0, numToShow).map((assetKey, index) => (
         <AssetCard assetKey={assetKey} key={index} />
       ))}
