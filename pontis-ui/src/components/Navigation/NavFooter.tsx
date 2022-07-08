@@ -20,12 +20,12 @@ const content: FooterColumn[] = [
       {
         title: "Documentation",
         href: "#",
-        external: false,
+        external: true,
       },
       {
         title: "View on Block Explorer",
         href: "#",
-        external: false,
+        external: true,
       },
     ],
   },

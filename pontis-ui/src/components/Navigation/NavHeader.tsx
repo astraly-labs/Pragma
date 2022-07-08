@@ -1,6 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Link from "next/link";
-import { Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import {
   ChatIcon,
   CodeIcon,
@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/outline";
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
+import StyledTransition from "../common/StyledTransition";
 
 interface Resource {
   name: string;
@@ -114,14 +115,11 @@ const NavHeader = () => (
     </div>
 
     {/* Mobile Version */}
-    <Transition
-      as={Fragment}
-      enter="duration-200 ease-out"
-      enterFrom="opacity-0 scale-95"
-      enterTo="opacity-100 scale-100"
-      leave="duration-100 ease-in"
-      leaveFrom="opacity-100 scale-100"
-      leaveTo="opacity-0 scale-95"
+    <StyledTransition
+      enterFrom="scale-95"
+      enterTo="scale-100"
+      leaveFrom="scale-100"
+      leaveTo="scale-95"
     >
       <Popover.Panel
         focus
@@ -188,7 +186,7 @@ const NavHeader = () => (
           </div>
         </div>
       </Popover.Panel>
-    </Transition>
+    </StyledTransition>
   </Popover>
 );
 

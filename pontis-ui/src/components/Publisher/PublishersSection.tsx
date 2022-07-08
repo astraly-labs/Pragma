@@ -40,7 +40,7 @@ const publishers: PublisherCardProps[] = [
   },
 ];
 
-const PublishersSeciton = () => (
+const PublishersSection = () => (
   <ul className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
     {publishers.map(({ name, src, description }) => (
       <li key={name}>
@@ -50,4 +50,4 @@ const PublishersSeciton = () => (
   </ul>
 );
 
-export default PublishersSeciton;
+export default PublishersSection;

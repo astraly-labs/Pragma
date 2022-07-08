@@ -67,7 +67,7 @@ const people: Person[] = [
   },
   {
     name: "Kevin Jiang",
-    role: "TBD",
+    role: "Chief of Staff",
     imageUrl: "/assets/team/kevin.jpeg",
     socials: [
       {
