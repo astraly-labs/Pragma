@@ -16,9 +16,10 @@ from pontis.publisher.fetch import fetch_coingecko
 
 PRICE_TOLERANCE = 0.1  # in percent
 TIME_TOLERANCE = 1200  # in seconds
-EXPERIMENTAL_ASSET_KEYS = [
-    ("eth/mxn", "temp/usd")
-]  # do not send slack notifications for these
+EXPERIMENTAL_ASSET_KEYS = {
+    "eth/mxn",
+    "temp/usd",
+}  # do not send slack notifications for these
 
 
 async def main():
