@@ -1,7 +1,11 @@
 import React from "react";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
+<<<<<<< HEAD
 import Heading from "../components/Heading";
+=======
+import Header from "../components/Header";
+>>>>>>> ui-v1.0
 import CTASection from "../components/CTASection";
 import PublishersSeciton from "../components/Publisher/PublishersSection";
 
@@ -9,7 +13,11 @@ const PublishersPage = () => {
   return (
     <div className="w-screen">
       <SectionContainer className="bg-slate-50">
+<<<<<<< HEAD
         <Heading
+=======
+        <Header
+>>>>>>> ui-v1.0
           title="Your favorite giants"
           subtitle="Meet our publishers"
           text="At Pontis, we care about the integrity of our data. We ensure that only high quality data publishers join this list."

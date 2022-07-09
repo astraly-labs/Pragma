@@ -13,10 +13,10 @@ const providerLogos = [
 
 const ProvidersSection = () => (
   <>
-    <div className="w-full -translate-y-1/2">
+    <div className="-translate-y-1/2">
       <SearchCTA />
     </div>
-    <div className="mt-10 flex w-full max-w-7xl flex-row flex-wrap items-center sm:mt-20">
+    <div className="mx-auto mt-10 flex w-full max-w-7xl flex-row flex-wrap items-center sm:mt-20">
       <div className="mb-4 basis-full text-xl uppercase tracking-wide text-slate-600 sm:mb-8 sm:text-2xl ">
         Data from
       </div>

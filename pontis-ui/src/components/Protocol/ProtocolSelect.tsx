@@ -1,9 +1,10 @@
 import React, { useState, Fragment } from "react";
 import classNames from "classnames";
-import { Listbox, Transition } from "@headlessui/react";
+import { Listbox } from "@headlessui/react";
 import { SelectorIcon, CheckIcon } from "@heroicons/react/outline";
 import { Protocol, protocolCategories } from "./ProtocolSection";
 import ProtocolCard from "./ProtocolCard";
+import StyledTransition from "../common/StyledTransition";
 
 interface ProtocolSelectProps {
   protocols: Protocol[];
@@ -28,11 +29,11 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
               />
             </span>
           </Listbox.Button>
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+          <StyledTransition
+            enterFrom="-translate-y-1"
+            enterTo="translate-0"
+            leaveFrom="translate-0"
+            leaveTo="-translate-y-1"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white/95 py-1 text-base shadow-lg ring-1 ring-slate-900/5 focus:outline-none [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
               {protocolCategories.map((category) => (
@@ -66,16 +67,17 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
                 </Listbox.Option>
               ))}
             </Listbox.Options>
-          </Transition>
+          </StyledTransition>
         </div>
       </Listbox>
       <ul className="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-3 lg:max-w-none lg:grid-cols-4 lg:gap-8">
         {protocols
-          .filter(
-            (protocol) =>
-              protocol.category === selectedCategory ||
-              selectedCategory === "All"
-          )
+          // Uncomment to enable category filtering
+          // .filter(
+          //   (protocol) =>
+          //     protocol.category === selectedCategory ||
+          //     selectedCategory === "All"
+          // )
           .map(({ name, category, src, description }) => (
             <li key={name}>
               <ProtocolCard
