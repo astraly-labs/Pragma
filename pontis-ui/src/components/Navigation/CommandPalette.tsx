@@ -66,6 +66,7 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
           leave="duration-200 ease-in"
           leaveFrom="scale-100 opacity-100"
           leaveTo="scale-95 opacity-0"
+          className="mx-auto max-w-3xl"
         >
           <Combobox
             value={null}

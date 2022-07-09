@@ -4,11 +4,11 @@ import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
 import AssetsSection from "../components/Landing/AssetsSection";
 import ProvidersSection from "../components/Landing/ProvidersSection";
-import FeatureSection from "../components/Landing/FeatureSection";
 import Testimonial from "../components/Landing/Testimonial";
 import CTASection from "../components/CTASection";
 import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
+import InfoSection from "../components/Info/InfoSection";
 
 const IndexPage = () => {
   return (
@@ -23,17 +23,26 @@ const IndexPage = () => {
         <ProvidersSection />
       </SectionContainer>
       <SectionContainer>
+        <Testimonial />
+      </SectionContainer>
+      <SectionContainer className="overflow-hidden bg-slate-50">
         <Heading
-          title="Reimagining Oracles"
+          title="Reimagine Oracles"
           subtitle="Why Pontis?"
-          text="Pontis is the first oracle live on Starknet. Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
+          text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
           href="/features"
           hrefText="Learn more about how Pontis works"
         />
-        <FeatureSection />
+        <InfoSection />
       </SectionContainer>
       <SectionContainer>
-        <Testimonial />
+        <Heading
+          title="3 easy steps"
+          subtitle="Try it yourself"
+          text="We offer a variety of ways to integrate the data feeds you need into your project."
+          href="#"
+          hrefText="Read the documentation"
+        />
         <Code />
       </SectionContainer>
       <SectionContainer className="sm:!px-0">

@@ -14,7 +14,7 @@ const FeaturesPage = () => {
         <Heading
           title="Reimagining oracles"
           subtitle="Meet our compute engine"
-          text="Sit laboris adipisicing id culpa veniam magna Lorem occaecat laboris."
+          text="Our features empower native protocols to realize their ambitious potential."
           href="#"
           hrefText="Integrate verifyable data into your project"
         />
