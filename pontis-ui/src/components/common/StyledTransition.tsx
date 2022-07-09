@@ -3,6 +3,7 @@ import { Transition } from "@headlessui/react";
 import classNames from "classnames";
 
 interface StyledTransitionProps {
+  show?: boolean;
   enter?: string;
   enterFrom?: string;
   enterTo?: string;
@@ -13,6 +14,7 @@ interface StyledTransitionProps {
 }
 
 const StyledTransition: React.FC<StyledTransitionProps> = ({
+  show,
   enter,
   enterFrom,
   enterTo,
@@ -23,6 +25,7 @@ const StyledTransition: React.FC<StyledTransitionProps> = ({
 }) => (
   <Transition
     as={Fragment}
+    show={show}
     enter={classNames("transition duration-200 ease-out", enter)}
     enterFrom={classNames("opacity-0", enterFrom)}
     enterTo={classNames("opacity-100", enterTo)}
