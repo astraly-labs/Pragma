@@ -3,6 +3,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import AssetCard from "../Asset/AssetCard";
 import { AssetKeys } from "../../hooks/oracle";
 import { Button } from "../common/Button";
+import SearchBar from "../Navigation/SearchBar";
 
 const SHOW_DEFAULT = 3;
 const SHOW_STEP = 5;
@@ -26,25 +27,29 @@ const AssetsSection = () => {
       {AssetKeys.slice(0, numToShow).map((assetKey, index) => (
         <AssetCard assetKey={assetKey} key={index} />
       ))}
-      {numToShow === AssetKeys.length ? (
-        <Button
-          variant="solid"
-          color="slate"
-          onClick={() => setNumToShow(SHOW_DEFAULT)}
-          icon={ChevronUpIcon}
-        >
-          Show less
-        </Button>
-      ) : (
-        <Button
-          variant="solid"
-          color="slate"
-          onClick={() => setNumToShow(incrementShow(numToShow))}
-          icon={ChevronDownIcon}
-        >
-          Show more
-        </Button>
-      )}
+      <div className="flex w-min flex-col items-center space-y-4 sm:w-full sm:flex-row sm:justify-between sm:space-y-0">
+        <div className="flex items-center">
+          <Button
+            variant="outline"
+            color="slate"
+            onClick={() => setNumToShow(incrementShow(numToShow))}
+            icon={ChevronDownIcon}
+            className="rounded-l-lg rounded-r-none border-r-0"
+          >
+            More
+          </Button>
+          <Button
+            variant="outline"
+            color="slate"
+            onClick={() => setNumToShow(SHOW_DEFAULT)}
+            icon={ChevronUpIcon}
+            className="rounded-r-lg rounded-l-none"
+          >
+            Less
+          </Button>
+        </div>
+        <SearchBar />
+      </div>
     </div>
   );
 };

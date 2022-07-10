@@ -41,7 +41,7 @@ const IndexPage = () => (
       <Hero />
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
-      <LogoCloud title="Used by" logos={protocols} />
+      <LogoCloud title="Used by" logos={protocols} square />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
