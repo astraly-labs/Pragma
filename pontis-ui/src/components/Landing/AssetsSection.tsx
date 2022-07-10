@@ -28,6 +28,7 @@ const AssetsSection = () => {
         <AssetCard assetKey={assetKey} key={index} />
       ))}
       <div className="flex w-min flex-col items-center space-y-4 sm:w-full sm:flex-row sm:justify-between sm:space-y-0">
+        <SearchBar />
         <div className="flex items-center">
           <Button
             variant="outline"
@@ -48,7 +49,6 @@ const AssetsSection = () => {
             Less
           </Button>
         </div>
-        <SearchBar />
       </div>
     </div>
   );
