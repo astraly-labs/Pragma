@@ -1,7 +1,7 @@
 import React from "react";
 
 const Hero = () => (
-  <header>
+  <header className="text-center">
     <h1 className="max-w-3xl text-5xl font-medium !leading-[1.1] tracking-tight text-slate-900 sm:text-7xl">
       Pontis is the{" "}
       <span className="relative whitespace-nowrap text-indigo-600">

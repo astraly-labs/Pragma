@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import AssetCard from "../Asset/AssetCard";
 import { AssetKeys } from "../../hooks/oracle";
+import { Button } from "../common/Button";
 
 const SHOW_DEFAULT = 3;
 const SHOW_STEP = 5;
@@ -20,27 +21,29 @@ function incrementShow(curNum: number): number {
 const AssetsSection = () => {
   const [numToShow, setNumToShow] = useState<number>(SHOW_DEFAULT);
 
-  const buttonStyle =
-    "bg-slate-300 rounded-lg px-4 py-2 text-slate-900 shadow-lg hover:shadow-xl cursor-pointer flex items-center";
-
   return (
     <div className="flex w-full max-w-3xl -translate-y-14 flex-col items-center space-y-16 sm:-translate-y-8">
       {AssetKeys.slice(0, numToShow).map((assetKey, index) => (
         <AssetCard assetKey={assetKey} key={index} />
       ))}
       {numToShow === AssetKeys.length ? (
-        <div onClick={() => setNumToShow(SHOW_DEFAULT)} className={buttonStyle}>
+        <Button
+          variant="solid"
+          color="slate"
+          onClick={() => setNumToShow(SHOW_DEFAULT)}
+          icon={ChevronUpIcon}
+        >
           Show less
-          <ChevronUpIcon className="ml-2 h-6 w-6" />
-        </div>
+        </Button>
       ) : (
-        <div
+        <Button
+          variant="solid"
+          color="slate"
           onClick={() => setNumToShow(incrementShow(numToShow))}
-          className={buttonStyle}
+          icon={ChevronDownIcon}
         >
           Show more
-          <ChevronDownIcon className="ml-2 h-6 w-6" />
-        </div>
+        </Button>
       )}
     </div>
   );

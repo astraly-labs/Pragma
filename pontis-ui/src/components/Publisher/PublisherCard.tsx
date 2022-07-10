@@ -1,11 +1,6 @@
 import React from "react";
 import QuoteIcon from "../common/QuoteIcon";
-
-export interface PublisherCardProps {
-  src: string;
-  name: string;
-  description: string;
-}
+import { PublisherCardProps } from "./PublishersSection";
 
 const PublisherCard: React.FC<PublisherCardProps> = ({
   src,

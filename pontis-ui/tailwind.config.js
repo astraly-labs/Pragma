@@ -9,8 +9,18 @@ module.exports = {
       },
       animation: {
         blob: "blob 9s infinite",
+        marquee: "marquee 30s linear infinite",
+        marquee2: "marquee2 30s linear infinite",
       },
       keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        marquee2: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0%)" },
+        },
         blob: {
           "0%": {
             transform: "translate(0px, 0px) scale(1)",

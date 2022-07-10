@@ -68,6 +68,11 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
+        title: "Press Kit",
+        href: "#",
+        external: true,
+      },
+      {
         title: "Contact Us",
         href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
         external: true,

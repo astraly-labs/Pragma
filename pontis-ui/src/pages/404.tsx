@@ -25,7 +25,7 @@ const Custom404Page = () => {
           </p>
         </div>
         <div className="flex flex-col space-y-8 text-center sm:flex-row sm:space-x-12 sm:space-y-0">
-          <ButtonLink variant="solid" color="slate" href="/" icon={HomeIcon}>
+          <ButtonLink variant="solid" color="dark" href="/" icon={HomeIcon}>
             Return home
           </ButtonLink>
           <ButtonLink

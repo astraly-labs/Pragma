@@ -68,7 +68,7 @@ const CTASection: React.FC<CTASectionProps> = ({
           <div className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
             <ButtonLink
               variant="solid"
-              color="slate"
+              color="dark"
               href={mainAction.href}
               icon={mainAction.icon}
             >

@@ -6,7 +6,8 @@ export const protocolCategories = [
   "All",
   "Money-Market",
   "Social Wallet",
-  "Borrowing",
+  "Lending",
+  "Infrastructure",
 ] as const;
 
 export interface Protocol {
@@ -16,7 +17,7 @@ export interface Protocol {
   description: string;
 }
 
-const protocols: Protocol[] = [
+export const protocols: Protocol[] = [
   {
     name: "zkLend",
     category: "Money-Market",
@@ -33,17 +34,23 @@ const protocols: Protocol[] = [
   },
   {
     name: "FujiDAO",
-    category: "Borrowing",
+    category: "Lending",
     src: "/assets/protocols/fujidao.png",
     description:
       "Fuji aggregates lending-borrowing crypto markets within blockchain networks. The protocol optimizes interest rates to both borrowers and lenders by automating routing and movement of funds across lending-borrowing protocols and blockchain networks in search of the best APR.",
   },
   {
     name: "CurveZero",
-    category: "Borrowing",
+    category: "Lending",
     src: "/assets/protocols/curvezero.jpeg",
     description:
       "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
+  },
+  {
+    name: "CANVAS",
+    category: "Infrastructure",
+    src: "/assets/protocols/canvas.jpeg",
+    description: "CANVAS provides scalable infrastructure to access Web3.",
   },
 ];
 

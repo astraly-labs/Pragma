@@ -43,16 +43,16 @@ const resources: Resource[] = [
     href: "/publishers",
     icon: SpeakerphoneIcon,
   },
-];
-
-// List of resources displayed in the more tab
-const additional = [
   {
     name: "Protocols",
     description: "Take a look at who is already using Pontis.",
     href: "/protocols",
     icon: ViewListIcon,
   },
+];
+
+// List of resources displayed in the more tab
+const additional = [
   {
     name: "About Us",
     description: "Get to know the team behind Pontis.",

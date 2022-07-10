@@ -3,13 +3,36 @@ import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
 import AssetsSection from "../components/Landing/AssetsSection";
-import ProvidersSection from "../components/Landing/ProvidersSection";
 import Testimonial from "../components/Landing/Testimonial";
 import CTASection from "../components/CTASection";
 import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
+import LogoCloud from "../components/LogoCloud";
+import Stats from "../components/Stats";
+import Marquee from "../components/Marquee";
+import { protocols } from "../components/Protocol/ProtocolSection";
+import { publishers } from "../components/Publisher/PublishersSection";
+
+const stats = [
+  {
+    label: "Customers",
+    value: "8",
+  },
+  {
+    label: "Data providers",
+    value: "14",
+  },
+  {
+    label: "Data integrity members",
+    value: "6",
+  },
+  {
+    label: "Raised",
+    value: "$7M",
+  },
+];
 
 const IndexPage = () => (
   <div className="w-screen">
@@ -17,14 +40,26 @@ const IndexPage = () => (
     <SectionContainer className="bg-slate-50 pt-12">
       <Hero />
     </SectionContainer>
+    <SectionContainer className="bg-slate-50 !pt-0">
+      <LogoCloud title="Used by" logos={protocols} />
+    </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
+      <Marquee title="Data from" logos={publishers} />
     </SectionContainer>
-    <SectionContainer className="bg-slate-50 !pt-0">
-      <ProvidersSection />
+    <SectionContainer className="bg-slate-50">
+      <Heading
+        title="3 easy steps"
+        subtitle="Try it yourself"
+        text="We offer a variety of ways to integrate the data feeds you need into your project."
+        href="#"
+        hrefText="Read the documentation"
+      />
+      <Code />
     </SectionContainer>
     <SectionContainer>
       <Testimonial />
+      <Stats stats={stats} />
     </SectionContainer>
     <SectionContainer className="overflow-hidden bg-slate-50">
       <Heading
@@ -35,16 +70,6 @@ const IndexPage = () => (
         hrefText="Learn more about how Pontis works"
       />
       <InfoSection />
-    </SectionContainer>
-    <SectionContainer>
-      <Heading
-        title="3 easy steps"
-        subtitle="Try it yourself"
-        text="We offer a variety of ways to integrate the data feeds you need into your project."
-        href="#"
-        hrefText="Read the documentation"
-      />
-      <Code />
     </SectionContainer>
     <SectionContainer className="sm:!px-0">
       <CTASection
