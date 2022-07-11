@@ -1,10 +1,11 @@
 import React from "react";
 import { assetKeyToUrl, urlToAssetKey } from "../../../utils/encodeUrl";
-import { AssetKeys } from "../../hooks/oracle";
+import { AssetKeys, useOracleGetEntries } from "../../hooks/oracle";
 import AssetCardName from "../../components/Asset/AssetCardName";
 import SearchBar from "../../components/Navigation/SearchBar";
 
 const Details = ({ assetKey }) => {
+  useOracleGetEntries(assetKey);
   // In progress
   return (
     <div className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
