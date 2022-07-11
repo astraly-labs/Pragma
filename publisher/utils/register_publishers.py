@@ -3,11 +3,12 @@ import os
 
 from pontis.admin.client import PontisAdminClient
 
-publishers = ["pontis", "argent", "cmt"]  # , "equilibrium", "consensys"]
+publishers = ["pontis", "argent", "cmt", "consensys"]  # , "equilibrium"]
 publisher_address = [
     int(os.environ.get("PUBLISHER_ADDRESS"), 0),
     0x05BD6A92D27E52BF969002B72F263616103E03DA91E8C605AA842BB27C51516C,
     0x03851E76297E6D57C4FF049B502262663D37ABC373600EEBA4F0F6888D5D38AB,
+    0x076317F7DDCC0B73FAC7BE8950514C0630E40665CF098488E243BDEDA3ABF4B9,
 ]
 
 
