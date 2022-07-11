@@ -2,7 +2,7 @@ import React from "react";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
-import AssetsSection from "../components/Landing/AssetsSection";
+import AssetsSection from "../components/Asset/AssetsSection";
 import Testimonial from "../components/Landing/Testimonial";
 import CTASection from "../components/CTASection";
 import Code from "../components/Code/Code";

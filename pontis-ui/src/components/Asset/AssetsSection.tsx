@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
-import AssetCard from "../Asset/AssetCard";
+import AssetCard from "./AssetCard";
 import { AssetKeys } from "../../hooks/oracle";
 import { Button } from "../common/Button";
 import SearchBar from "../Navigation/SearchBar";
@@ -36,6 +36,8 @@ const AssetsSection = () => {
             onClick={() => setNumToShow(incrementShow(numToShow))}
             icon={ChevronDownIcon}
             className="rounded-l-lg rounded-r-none border-r-0"
+            type="button"
+            disabled={numToShow === AssetKeys.length}
           >
             More
           </Button>
@@ -45,6 +47,8 @@ const AssetsSection = () => {
             onClick={() => setNumToShow(SHOW_DEFAULT)}
             icon={ChevronUpIcon}
             className="rounded-r-lg rounded-l-none"
+            type="button"
+            disabled={numToShow === SHOW_DEFAULT}
           >
             Less
           </Button>

@@ -30,26 +30,26 @@ const variantStyles = {
   },
 } as const;
 
-interface ButtonProps {
+interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
   color: keyof typeof variantStyles["solid"];
   className?: string;
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
   children: ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  props?: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<
+  GeneralButtonProps &
+    React.DetailedHTMLProps<
+      React.ButtonHTMLAttributes<HTMLButtonElement>,
+      HTMLButtonElement
+    >
+> = ({
   variant = "solid",
   color = "dark",
   className,
   icon: Icon,
   children,
-  onClick,
   ...props
 }) => (
   <button
@@ -58,7 +58,6 @@ export const Button: React.FC<ButtonProps> = ({
       variantStyles[variant][color],
       className
     )}
-    onClick={onClick}
     {...props}
   >
     {Icon && <Icon className="mr-2 h-5 w-5" />}
@@ -66,18 +65,19 @@ export const Button: React.FC<ButtonProps> = ({
   </button>
 );
 
-interface ButtonLinkProps extends ButtonProps {
-  href: string;
-}
-
-export const ButtonLink: React.FC<ButtonLinkProps> = ({
+export const ButtonLink: React.FC<
+  GeneralButtonProps &
+    React.DetailedHTMLProps<
+      React.AnchorHTMLAttributes<HTMLAnchorElement>,
+      HTMLAnchorElement
+    >
+> = ({
   variant = "solid",
   color = "dark",
   href,
   className,
   icon: Icon,
   children,
-  onClick,
   ...props
 }) => (
   // I'm unsure whether we need an external vs internal differentiation
