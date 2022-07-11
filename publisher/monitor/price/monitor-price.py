@@ -16,6 +16,10 @@ from pontis.publisher.fetch import fetch_coingecko
 
 PRICE_TOLERANCE = 0.1  # in percent
 TIME_TOLERANCE = 1200  # in seconds
+EXPERIMENTAL_ASSET_KEYS = {
+    "eth/mxn",
+    "temp/usd",
+}  # do not send slack notifications for these
 
 
 async def main():
@@ -75,21 +79,22 @@ async def main():
             print(e)
             print(traceback.format_exc())
 
-            slack_text = "Error with Pontis price<!channel>"
-            slack_text += f"\nAsset: {asset}"
-            slack_text += f"\nTimestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-            slack_text += f"\nCoingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
-            slack_text += f"\n{traceback.format_exc()}"
+            if key not in EXPERIMENTAL_ASSET_KEYS:
+                slack_text = "Error with Pontis price<!channel>"
+                slack_text += f"\nAsset: {asset}"
+                slack_text += f"\nTimestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
+                slack_text += f"\nCoingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
+                slack_text += f"\n{traceback.format_exc()}"
 
-            requests.post(
-                slack_url,
-                headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
-                data={
-                    "text": slack_text,
-                    "channel": channel_id,
-                },
-            )
-            all_prices_valid = False
+                requests.post(
+                    slack_url,
+                    headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
+                    data={
+                        "text": slack_text,
+                        "channel": channel_id,
+                    },
+                )
+                all_prices_valid = False
 
     if all_prices_valid:
         # Ping betteruptime
