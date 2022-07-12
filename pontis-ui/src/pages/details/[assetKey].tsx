@@ -23,6 +23,10 @@ const Details = ({ assetKey }) => {
     error: entriesError,
   } = useOracleGetEntries(assetKey);
 
+  React.useEffect(() => {
+    console.log("page initial render");
+  }, []);
+
   const decimals = useMemo(() => {
     return valueLoading || !valueResponse?.decimals || valueError
       ? 1

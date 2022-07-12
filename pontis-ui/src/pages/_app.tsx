@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 
 import "../styles/index.css";
@@ -15,6 +16,7 @@ import NavHeader from "../components/Navigation/NavHeader";
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div>
@@ -34,7 +36,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
             <CommandPallate isOpen={isSearchOpen} />
-            <Component {...pageProps} />
+            <Component {...pageProps} key={router.asPath} />
             <NavFooter />
           </SearchContext.Provider>
         </div>
