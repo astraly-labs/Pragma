@@ -5,8 +5,8 @@ import os
 from hashlib import sha256
 
 import requests
-from pontis.core.entry import construct_entry
-from pontis.core.utils import currency_pair_to_key
+from empiric.core.entry import construct_entry
+from empiric.core.utils import currency_pair_to_key
 
 
 def fetch_coinbase(assets, publisher):
