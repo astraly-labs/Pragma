@@ -16,9 +16,9 @@ jobs:
 
       - name: Build docker images locally
         run: |
-          docker build . --target test -t 42labs/pontis-publisher:test
-          docker build publisher/monitor/balance -t monitor-balance --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
-          docker build publisher/monitor/price -t monitor-price --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build . --target test -t 42labs/empiric-publisher:test
+          docker build publisher/monitor/balance -t monitor-balance --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build publisher/monitor/price -t monitor-price --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
 
       - name: Run balance and price monitors
         env:

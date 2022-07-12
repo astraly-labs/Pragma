@@ -3,14 +3,14 @@ import time
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from pontis.core.client import PontisClient
-from pontis.core.utils import currency_pair_to_key, felt_to_str
+from empiric.core.client import EmpiricClient
+from empiric.core.utils import currency_pair_to_key, felt_to_str
 
 
 async def main(pair):
     key = currency_pair_to_key(*pair)
 
-    client = PontisClient()
+    client = EmpiricClient()
     decimals = await client.get_decimals(key)
     entries = []
 

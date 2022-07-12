@@ -1,8 +1,8 @@
 import asyncio
 import os
 
-from pontis.admin.client import PontisAdminClient
-from pontis.core.utils import str_to_felt
+from empiric.admin.client import EmpiricAdminClient
+from empiric.core.utils import str_to_felt
 
 on_keys = ["aave-on-borrow"]
 spot_future_keys = {
@@ -17,7 +17,7 @@ yield_curve_address = 0x03368F7D9FF915C566DABE424B2669E77D6856EABA449C1A24215148
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = PontisAdminClient(
+    admin_client = EmpiricAdminClient(
         admin_private_key,
     )
     for on_key in on_keys:
@@ -27,9 +27,9 @@ async def main():
         print(f"Registered overnight rate key {on_key} with tx: {result}")
 
     result = await admin_client.send_transaction(
-        yield_curve_address, "set_future_spot_pontis_source_key", [str_to_felt("ftx")]
+        yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("ftx")]
     )
-    print(f"Set future/spot pontis source-key with tx: {result}")
+    print(f"Set future/spot empiric source-key with tx: {result}")
 
     for spot_key, future_keys in spot_future_keys.items():
         result = await admin_client.send_transaction(

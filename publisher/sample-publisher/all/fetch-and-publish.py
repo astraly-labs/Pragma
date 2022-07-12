@@ -3,10 +3,10 @@ import os
 import traceback
 
 import requests
-from pontis.core.utils import pprint_entry
-from pontis.publisher.assets import PONTIS_ALL_ASSETS
-from pontis.publisher.client import PontisPublisherClient
-from pontis.publisher.fetch import (
+from empiric.core.utils import pprint_entry
+from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher.client import EmpiricPublisherClient
+from empiric.publisher.fetch import (
     fetch_bitstamp,
     fetch_cex,
     fetch_coinbase,
@@ -15,19 +15,19 @@ from pontis.publisher.fetch import (
     fetch_ftx,
     fetch_gemini,
 )
-from pontis.publisher.fetch.thegraph import fetch_thegraph
+from empiric.publisher.fetch.thegraph import fetch_thegraph
 
 
 async def publish_all(assets):
 
-    exit_on_error = os.environ.get("__PONTIS_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
+    exit_on_error = os.environ.get("__EMPIRIC_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
 
     entries = []
 
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
-    publisher_client = PontisPublisherClient(publisher_private_key, publisher_address)
+    publisher_client = EmpiricPublisherClient(publisher_private_key, publisher_address)
 
     try:
         coingecko_entries = fetch_coingecko(assets, publisher)
@@ -119,4 +119,4 @@ async def publish_all(assets):
 
 
 if __name__ == "__main__":
-    asyncio.run(publish_all(PONTIS_ALL_ASSETS))
+    asyncio.run(publish_all(EMPIRIC_ALL_ASSETS))

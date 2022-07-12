@@ -16,8 +16,8 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          docker build . --target test -t 42labs/pontis-publisher:test
-          docker build publisher/sample-publisher/all/ -t publish-all --build-arg PONTIS_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build . --target test -t 42labs/empiric-publisher:test
+          docker build publisher/sample-publisher/all/ -t publish-all --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
 
       - name: Post updated prices
         env:
@@ -32,8 +32,8 @@ jobs:
         run: |
           docker run \
             --env-file publisher/sample-publisher/all/.env\
-            -e __PONTIS_STAGING_ENV__=TRUE\
-            -e __PONTIS_PUBLISHER_EXIT_ON_ERROR__=TRUE\
+            -e __EMPIRIC_STAGING_ENV__=TRUE\
+            -e __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__=TRUE\
             -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
             -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
