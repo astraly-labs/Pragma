@@ -7,7 +7,6 @@ from pontis.core.utils import str_to_felt
 on_keys = ["aave-on-borrow"]
 spot_future_keys = {
     "btc/usd": {
-        "btc/usd-20220624": 1656039600,
         "btc/usd-20220930": 1664506800,
         "btc/usd-20221230": 1672369200,
     }
