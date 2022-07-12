@@ -6,7 +6,7 @@ import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
 import AssetCardName from "./AssetCardName";
 import AssetCardPrice from "./AssetCardPrice";
 import AssetCardTime from "./AssetCardTime";
-import LoadingBar from "./LoadingBar";
+import LoadingBar from "../common/LoadingBar";
 import { assetKeyToUrl } from "../../../utils/encodeUrl";
 
 /**

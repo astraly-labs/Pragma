@@ -1,5 +1,5 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
-import { strToHexFelt } from "../../utils/felt";
+import { hexToString, strToHexFelt } from "../../utils/felt";
 import { getOracleControllerAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
 import OracleControllerAbi from "../abi/OracleController.json";
@@ -101,7 +101,7 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   return { oracleResponse, loading, error };
 };
 
-interface Entry {
+export interface Entry {
   key: string;
   value: number;
   timestamp: number;
@@ -115,16 +115,7 @@ export interface GetEntriesT {
   error: string;
 }
 
-function hex2a(hex) {
-  if (hex === undefined) {
-    return undefined;
-  }
-  let str = "";
-  for (let i = 0; i < hex.length; i += 2)
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  return str;
-}
-
+// Reason for const vs function?
 export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   const { contract } = useOracleControllerContract();
   const arg = strToHexFelt(assetKey);
@@ -141,26 +132,29 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
       error
     );
   }
+
+  let oracleResponse: Entry[] | undefined = undefined;
   if (data !== undefined) {
-    console.log(data["0"]);
-    const newData = data["0"].map((entry: Object) => {
+    oracleResponse = data["0"].map((entry: Object): Entry => {
       // General Approach
-      const convertedEntry = {};
-      Object.entries(entry).reduce((obj, keyValPair) => {
-        obj[keyValPair[0]] = toHex(keyValPair[1]);
-        return obj;
-      }, convertedEntry);
-      return convertedEntry;
+      // const convertedEntry = {};
+      // Object.entries(entry).reduce((obj, keyValPair) => {
+      //   obj[keyValPair[0]] = toHex(keyValPair[1]);
+      //   return obj;
+      // }, convertedEntry);
+      // return convertedEntry;
 
       // Build Entry
-      // return {
-      //   key: hex2a(toHex(entry["key"])),
-      //   value: parseInt(toHex(entry["value"])),
-      //   timestamp: parseInt(toHex(entry["timestamp"])),
-      //   source: hex2a(toHex(entry["source"])),
-      //   publisher: hex2a(toHex[entry["publisher"]]),
-      // };
+      return {
+        key: hexToString(toHex(entry["key"])),
+        value: parseInt(toHex(entry["value"])),
+        timestamp: parseInt(toHex(entry["timestamp"])),
+        source: hexToString(toHex(entry["source"])),
+        publisher: hexToString(toHex(entry["publisher"])),
+      };
     });
-    console.log(newData);
+
+    // Why is the isNAN check necessary?
   }
+  return { oracleResponse, loading, error };
 };

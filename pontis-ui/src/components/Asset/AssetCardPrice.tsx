@@ -13,7 +13,7 @@ const currencySymbols = {
  * @param {AssetKeyT} assetKey
  * @return {string} file name of currency symbol
  */
-function getCurrency(assetKey: AssetKeyT): string {
+export function getCurrency(assetKey: AssetKeyT): string {
   const slashIndex = assetKey.indexOf("/");
   const dashIndex = assetKey.indexOf("-");
   const cur =

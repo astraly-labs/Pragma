@@ -1,28 +1,62 @@
 import React from "react";
+import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import { assetKeyToUrl, urlToAssetKey } from "../../../utils/encodeUrl";
-import { AssetKeys, useOracleGetEntries } from "../../hooks/oracle";
-import AssetCardName from "../../components/Asset/AssetCardName";
-import SearchBar from "../../components/Navigation/SearchBar";
+import {
+  AssetKeys,
+  useOracleGetEntries,
+  useOracleGetValue,
+} from "../../hooks/oracle";
+import SectionContainer from "../../components/common/SectionContainer";
+import CTASection from "../../components/CTASection";
+import EntriesTable from "../../components/Details/EntriesTable";
+import DetailDisplay from "../../components/Details/DetailDisplay";
 
 const Details = ({ assetKey }) => {
-  useOracleGetEntries(assetKey);
-  // In progress
+  const {
+    oracleResponse: valueResponse,
+    loading: valueLoading,
+    error: valueError,
+  } = useOracleGetValue(assetKey);
+  const {
+    oracleResponse: entriesResponse,
+    loading: entriesLoading,
+    error: entriesError,
+  } = useOracleGetEntries(assetKey);
+
   return (
-    <div className="w-screen bg-white py-40 px-6 sm:px-24 md:px-32">
-      <div className="mx-auto max-w-3xl md:grid md:grid-cols-3 md:gap-6">
-        <div className="px-4 sm:px-0 md:col-span-1 md:place-self-start">
-          <AssetCardName assetKey={assetKey} />
-        </div>
-        <div className="mt-5 flex flex-col space-y-10 overflow-hidden rounded-xl bg-slate-50 shadow-lg md:col-span-2 md:mt-0">
-          <div className="grid grid-cols-2 gap-12 px-4 py-3 sm:px-6">
-            <div className="text-xl text-slate-900">Price</div>
-            <div className="text-xl text-slate-900">Last updated</div>
-          </div>
-          <div className="flex items-center justify-end bg-slate-300 px-4 py-3 sm:px-6">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
+    <div className="w-screen">
+      <SectionContainer className="bg-slate-50">
+        <DetailDisplay
+          assetKey={assetKey}
+          oracleResponse={valueResponse}
+          loading={valueLoading}
+          error={valueError}
+        />
+      </SectionContainer>
+      <SectionContainer>
+        <EntriesTable
+          assetKey={assetKey}
+          oracleResponse={entriesResponse}
+          loading={entriesLoading}
+          error={entriesError}
+        />
+      </SectionContainer>
+      <SectionContainer>
+        <CTASection
+          title="Ready to get the data you need?"
+          description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+          mainAction={{
+            href: "/",
+            actionText: "Get started",
+            icon: CodeIcon,
+          }}
+          secondaryAction={{
+            href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+            actionText: "Request asset",
+            icon: ChatIcon,
+          }}
+        />
+      </SectionContainer>
     </div>
   );
 };
