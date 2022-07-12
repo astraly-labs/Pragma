@@ -3,7 +3,7 @@ import React from "react";
 interface HeadingProps {
   title: string;
   subtitle?: string;
-  text: string;
+  text?: string;
   href?: string;
   hrefText?: string;
 }
@@ -24,7 +24,7 @@ const Heading: React.FC<HeadingProps> = ({
     <h2 className="mb-5 text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
       {title}
     </h2>
-    <p className="prose prose-slate lg:prose-xl">{text}</p>
+    {text && <p className="prose prose-slate lg:prose-xl">{text}</p>}
     {href && hrefText && (
       <p className="prose prose-slate mt-4 prose-a:no-underline lg:prose-xl">
         <a href={href} className="font-medium text-indigo-500">

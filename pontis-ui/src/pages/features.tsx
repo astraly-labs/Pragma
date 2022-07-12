@@ -28,7 +28,8 @@ const FeaturesPage = () => {
         />
         <TimelineExplanation />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-slate-50">
+        <Heading title="Frequently asked questions" subtitle="Answers to" />
         <FAQ />
       </SectionContainer>
       <SectionContainer className="sm:!px-0">

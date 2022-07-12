@@ -18,7 +18,7 @@ const Banner = () => {
                 <span>StarkNet is experiencing delays.</span>
                 <span className="hidden md:inline">
                   {" "}
-                  Our feeds will update again once there is less congestion.
+                  The network is taking longer to process our updates.
                 </span>
               </p>
             </div>
