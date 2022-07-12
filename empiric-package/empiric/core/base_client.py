@@ -3,8 +3,8 @@ import time
 from abc import ABC, abstractmethod
 from os import path
 
-from nile.signer import Signer
 from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
+from nile.signer import Signer
 from starknet_py.contract import Contract, ContractData, ContractFunction
 from starknet_py.net import Client
 from starkware.crypto.signature.signature import sign
