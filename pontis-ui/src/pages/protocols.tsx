@@ -4,7 +4,7 @@ import CTASection from "../components/CTASection";
 import SectionContainer from "../components/common/SectionContainer";
 import Stats, { Stat } from "../components/Stats";
 import Code from "../components/Code/Code";
-import Header from "../components/Header";
+import Heading from "../components/Heading";
 import ProtocolSection from "../components/Protocol/ProtocolSection";
 
 const stats: Stat[] = [
@@ -26,11 +26,11 @@ const stats: Stat[] = [
   },
 ];
 
-const ProtocolPage = () => {
+const ProtocolsPage = () => {
   return (
     <div className="w-screen">
       <SectionContainer className="bg-slate-50">
-        <Header
+        <Heading
           title="StarkNet's leading protocols"
           subtitle="Meet our users"
           text="We work closely with teams to ensure they get exactly what they need. Reach out to us if you need a custom solution."
@@ -43,7 +43,7 @@ const ProtocolPage = () => {
         <ProtocolSection />
       </SectionContainer>
       <SectionContainer className="bg-slate-50">
-        <Header
+        <Heading
           title="3 easy steps"
           subtitle="Try it yourself"
           text="We offer a variety of ways to interact with the oracle."
@@ -72,4 +72,4 @@ const ProtocolPage = () => {
   );
 };
 
-export default ProtocolPage;
+export default ProtocolsPage;

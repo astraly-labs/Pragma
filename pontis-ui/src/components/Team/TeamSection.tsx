@@ -56,7 +56,7 @@ const people: Person[] = [
   {
     name: "Estragon Gross",
     role: "TBD",
-    imageUrl: "/assets/team/estragon.png",
+    imageUrl: "/assets/team/estragon.jpeg",
     socials: [
       {
         name: "LinkedIn",

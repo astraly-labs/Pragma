@@ -6,6 +6,7 @@ import {
   CodeIcon,
   CursorClickIcon,
   MenuIcon,
+  PuzzleIcon,
   SpeakerphoneIcon,
   UserGroupIcon,
   ViewListIcon,
@@ -31,21 +32,27 @@ const resources: Resource[] = [
     icon: CodeIcon,
   },
   {
+    name: "Features",
+    description: "Learn about what makes Pontis special.",
+    href: "/features",
+    icon: PuzzleIcon,
+  },
+  {
     name: "Publishers",
     description: "Meet our data publishers.",
     href: "/publishers",
     icon: SpeakerphoneIcon,
   },
-];
-
-// List of resources displayed in the more tab
-const additional = [
   {
     name: "Protocols",
     description: "Take a look at who is already using Pontis.",
     href: "/protocols",
     icon: ViewListIcon,
   },
+];
+
+// List of resources displayed in the more tab
+const additional = [
   {
     name: "About Us",
     description: "Get to know the team behind Pontis.",
@@ -70,9 +77,9 @@ const callsToAction = [
 ];
 
 const NavHeader = () => (
-  <Popover className="relative bg-slate-50">
-    <div className="mx-auto max-w-7xl px-4 sm:px-6">
-      <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
+  <Popover className="relative bg-slate-50 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl">
+      <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10 lg:space-x-0">
         <div className="flex justify-start lg:w-0 lg:flex-1">
           <Link href="/">
             <a>
