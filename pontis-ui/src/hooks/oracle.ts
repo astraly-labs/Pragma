@@ -84,18 +84,11 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
       strNumSourcesAggregated,
     ] = bigNumberishArrayToDecimalStringArray(data);
     const decimals = parseInt(strDecimals);
-    const value = parseInt(strValue) / 10 ** decimals;
-    const lastUpdatedTimestamp = parseInt(strLastUpdatedTimestamp);
-    const numSourcesAggregated = parseInt(strNumSourcesAggregated);
     oracleResponse = {
-      value: isNaN(value) ? undefined : value,
-      decimals: isNaN(decimals) ? undefined : value,
-      lastUpdatedTimestamp: isNaN(lastUpdatedTimestamp)
-        ? undefined
-        : lastUpdatedTimestamp,
-      numSourcesAggregated: isNaN(numSourcesAggregated)
-        ? undefined
-        : numSourcesAggregated,
+      value: parseInt(strValue) / 10 ** decimals,
+      decimals: decimals,
+      lastUpdatedTimestamp: parseInt(strLastUpdatedTimestamp),
+      numSourcesAggregated: parseInt(strNumSourcesAggregated),
     };
   }
   return { oracleResponse, loading, error };

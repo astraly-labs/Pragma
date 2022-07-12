@@ -8,7 +8,7 @@ interface DetailCardProps {
   label: string;
   toDisplay: ReactNode;
   img: ReactNode;
-  description?: string;
+  description: string;
 }
 
 const DetailCard: React.FC<DetailCardProps> = ({
@@ -21,31 +21,31 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
   return (
     <figure
-      className="group flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-lg bg-white p-2 px-6 py-10 shadow-lg duration-300 hover:bg-slate-500 hover:shadow-xl"
+      className="group flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-lg bg-white px-4 py-6 shadow-lg duration-300 hover:bg-slate-500 hover:shadow-xl sm:px-6 sm:py-10"
       onClick={() => setShowDescription(!showDescription)}
     >
       {showDescription ? (
-        <p className="prose prose-slate mb-auto group-hover:text-slate-50">
+        <p className="prose prose-slate flex-grow group-hover:text-slate-50">
           {description}
         </p>
       ) : (
-        <>
-          <div className="flex flex-row items-center justify-between">
-            <div className="rounded-lg bg-slate-300 bg-opacity-30 p-3 group-hover:bg-slate-50">
-              {img}
-            </div>
-            {/* This is an indicator for changing prices */}
-            {/* <div className="inline-flex text-sm text-gray-600 group-hover:text-gray-200 sm:text-base">
-          <MinusCircleIcon className="mr-2 h-6 w-6 stroke-green-500 group-hover:stroke-slate-200" />
-          12%
-        </div> */}
+        <div className="flex flex-grow flex-row-reverse items-end justify-between sm:flex-col sm:items-start">
+          {/* <div className="flex flex-row items-center justify-between"> */}
+          <div className="rounded-lg bg-slate-300 bg-opacity-30 p-3 group-hover:bg-slate-50">
+            {img}
           </div>
-          <div className="mt-8 font-mono text-3xl font-bold text-slate-700 group-hover:text-slate-50 sm:mt-10 sm:text-4xl md:mt-12 xl:text-5xl">
+          {/* This is an indicator for changing prices */}
+          {/* <div className="inline-flex text-sm text-gray-600 group-hover:text-gray-200 sm:text-base">
+              <MinusCircleIcon className="mr-2 h-6 w-6 stroke-green-500 group-hover:stroke-slate-200" />
+              12%
+            </div> */}
+          {/* </div> */}
+          <div className="font-mono text-3xl font-bold text-slate-700 group-hover:text-slate-50 sm:mt-10 sm:text-4xl md:mt-12 xl:text-5xl">
             {toDisplay}
           </div>
-        </>
+        </div>
       )}
-      <figcaption className="mt-2 flex flex-row justify-between group-hover:text-slate-50">
+      <figcaption className="mt-4 flex flex-row justify-between group-hover:text-slate-50 sm:mt-2">
         <p>{label}</p>
         <span>
           {showDescription ? (

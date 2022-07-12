@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import { assetKeyToUrl, urlToAssetKey } from "../../../utils/encodeUrl";
 import {
@@ -23,9 +23,15 @@ const Details = ({ assetKey }) => {
     error: entriesError,
   } = useOracleGetEntries(assetKey);
 
+  const decimals = useMemo(() => {
+    return valueLoading || !valueResponse?.decimals || valueError
+      ? 1
+      : valueResponse.decimals;
+  }, [valueResponse, valueLoading, valueError]);
+
   return (
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-slate-50 pt-12">
         <DetailDisplay
           assetKey={assetKey}
           oracleResponse={valueResponse}
@@ -33,9 +39,13 @@ const Details = ({ assetKey }) => {
           error={valueError}
         />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="relative">
+        {/* <div className="absolute inset-y-0 top-0 -translate-y-6">
+          <SearchBar />
+        </div> */}
         <EntriesTable
           assetKey={assetKey}
+          decimals={decimals}
           oracleResponse={entriesResponse}
           loading={entriesLoading}
           error={entriesError}
@@ -46,7 +56,7 @@ const Details = ({ assetKey }) => {
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
           mainAction={{
-            href: "/",
+            href: "https://docs.empiric.network/",
             actionText: "Get started",
             icon: CodeIcon,
           }}

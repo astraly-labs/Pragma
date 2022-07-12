@@ -24,11 +24,11 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
   error,
 }) => {
   const priceContent = useMemo(() => {
-    if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4 !w-full" />;
-    }
     if (error) {
       return <p className="text-lg font-normal">Error fetching price.</p>;
+    }
+    if (loading || !oracleResponse?.value) {
+      return <LoadingBar className="my-4 !w-full" />;
     }
     const price = oracleResponse.value;
     return (
@@ -57,13 +57,12 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
   setInterval(updateCurrentTimestampSeconds, 1000);
 
   const timeContent = useMemo(() => {
-    if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4 !w-full" />;
-    }
     if (error) {
       return <p className="text-lg font-normal">Error fetching time.</p>;
     }
-
+    if (loading || !oracleResponse?.value) {
+      return <LoadingBar className="my-4 !w-full" />;
+    }
     const { minutesSinceUpdate, secondsSinceUpdate } = timeSinceUpdate(
       currentTimestampSeconds,
       oracleResponse.lastUpdatedTimestamp
@@ -78,12 +77,12 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
   }, [oracleResponse, loading, error, currentTimestampSeconds]);
 
   return (
-    <div className="grid w-full max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 lg:gap-12">
       <DetailCard
         label="Asset"
         description="The asset you asked for."
         toDisplay={<h3>{assetKeyDisplayString(assetKey)}</h3>}
-        img={<AssetLogo assetKey={assetKey} className="h-5 w-5" />}
+        img={<AssetLogo assetKey={assetKey} className="h-6 w-6" />}
       />
       <DetailCard
         label="Price"
@@ -92,7 +91,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         img={
           <img
             src={`/assets/currencies/${getCurrency(assetKey)}`}
-            className="h-5 w-5"
+            className="h-6 w-6"
           />
         }
       />
@@ -100,7 +99,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         label="Last updated"
         description="This is the last time this price was updated on StarkNet. You might see bigger delays when StarkNet is slow in processing our requests."
         toDisplay={timeContent}
-        img={<ClockIcon className="h-5 w-5 stroke-slate-700" />}
+        img={<ClockIcon className="h-6 w-6 stroke-slate-700" />}
       />
     </div>
   );

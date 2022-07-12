@@ -7,10 +7,15 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { Entry } from "../../hooks/oracle";
+import { getCurrency } from "../Asset/AssetCardPrice";
 import { capitalize, secondsToTime } from "../../../utils/display";
+
+const MINUTES_ALLOWED = 30;
+const DECIMALS_TO_SHOW = 10;
 
 interface EntriesTableProps {
   assetKey: string;
+  decimals: number;
   oracleResponse: Entry[];
   loading: boolean;
   error: string;
@@ -18,15 +23,16 @@ interface EntriesTableProps {
 
 const EntriesTable: React.FC<EntriesTableProps> = ({
   assetKey,
+  decimals,
   oracleResponse,
   loading,
   error,
 }) => {
   const data = useMemo(() => {
-    if (loading || !oracleResponse?.length) {
+    if (error) {
       return [];
     }
-    if (error) {
+    if (loading || !oracleResponse?.length) {
       return [];
     }
     return oracleResponse;
@@ -35,26 +41,52 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
   const columns = useMemo<ColumnDef<Entry>[]>(
     () => [
       {
-        accessorKey: "source",
-        accessorFn: (entry) => capitalize(entry.source),
         header: "Source",
+        accessorFn: (entry) => capitalize(entry.source),
+        cell: (info) => (
+          <div className="flex items-center">
+            <span
+              className={classNames(
+                "mr-2 inline-block h-2 w-2 rounded-full",
+                new Date().valueOf() / 1000 - info.row.original.timestamp >
+                  60 * MINUTES_ALLOWED
+                  ? "bg-yellow-500"
+                  : "bg-green-600"
+              )}
+            />
+            {info.getValue()}
+          </div>
+        ),
       },
       {
+        header: () => (
+          <div className="flex items-center">
+            <img
+              src={`/assets/currencies/${getCurrency(assetKey)}`}
+              className="mr-2 inline h-5 w-5 md:mr-3"
+            />
+            Value
+          </div>
+        ),
         accessorKey: "value",
-        header: "Value",
+        cell: (info) => (
+          <span>
+            {(info.row.original.value / 10 ** decimals).toPrecision(
+              DECIMALS_TO_SHOW
+            )}
+          </span>
+        ),
       },
       {
-        accessorKey: "timestamp",
-        accessorFn: (entry) => secondsToTime(entry.timestamp),
         header: "Time",
+        accessorFn: (entry) => secondsToTime(entry.timestamp),
       },
       {
-        accessorKey: "publisher",
-        accessorFn: (entry) => capitalize(entry.publisher),
         header: "Publisher",
+        accessorFn: (entry) => capitalize(entry.publisher),
       },
     ],
-    []
+    [decimals, assetKey]
   );
 
   const table = useReactTable({

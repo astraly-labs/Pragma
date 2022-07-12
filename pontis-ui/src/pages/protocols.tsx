@@ -2,29 +2,9 @@ import React from "react";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import CTASection from "../components/CTASection";
 import SectionContainer from "../components/common/SectionContainer";
-import Stats, { Stat } from "../components/Stats";
 import Code from "../components/Code/Code";
 import Heading from "../components/Heading";
 import ProtocolSection from "../components/Protocol/ProtocolSection";
-
-const stats: Stat[] = [
-  {
-    label: "Customers",
-    value: "8",
-  },
-  {
-    label: "Data providers",
-    value: "14",
-  },
-  {
-    label: "Data integrity members",
-    value: "6",
-  },
-  {
-    label: "Raised",
-    value: "$7M",
-  },
-];
 
 const ProtocolsPage = () => {
   return (
@@ -37,7 +17,6 @@ const ProtocolsPage = () => {
           href="#"
           hrefText="Get verifyable data for your project"
         />
-        <Stats stats={stats} />
       </SectionContainer>
       <SectionContainer className="sm:!pt-0">
         <ProtocolSection />
@@ -57,7 +36,7 @@ const ProtocolsPage = () => {
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
           mainAction={{
-            href: "/",
+            href: "https://docs.empiric.network/",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}

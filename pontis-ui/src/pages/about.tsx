@@ -18,6 +18,10 @@ const AboutPage = () => {
         />
         <TeamSection />
       </SectionContainer>
+      <SectionContainer>
+        <Heading title="Backed by" subtitle="Meet our investors" />
+        <TeamSection />
+      </SectionContainer>
       <SectionContainer className="sm:!px-0">
         <CTASection
           title="Looking for a way to get involved?"
@@ -28,7 +32,7 @@ const AboutPage = () => {
             icon: ChatIcon,
           }}
           secondaryAction={{
-            href: "/",
+            href: "https://docs.empiric.network/",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}

@@ -15,7 +15,7 @@ const FeaturesPage = () => {
           title="Reimagining oracles"
           subtitle="Meet our compute engine"
           text="Our features empower native protocols to realize their ambitious potential."
-          href="#"
+          href="https://docs.empiric.network/"
           hrefText="Integrate verifyable data into your project"
         />
         <FeaturesDisplay />
@@ -37,7 +37,7 @@ const FeaturesPage = () => {
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
           mainAction={{
-            href: "/",
+            href: "https://docs.empiric.network/",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}
