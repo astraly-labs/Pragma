@@ -28,7 +28,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
       return <p className="text-lg font-normal">Error fetching price.</p>;
     }
     if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4 !w-full" />;
+      return <LoadingBar className="my-4" />;
     }
     const price = oracleResponse.value;
     return (
@@ -61,7 +61,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
       return <p className="text-lg font-normal">Error fetching time.</p>;
     }
     if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4 !w-full" />;
+      return <LoadingBar className="my-4" />;
     }
     const { minutesSinceUpdate, secondsSinceUpdate } = timeSinceUpdate(
       currentTimestampSeconds,

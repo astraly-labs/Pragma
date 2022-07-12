@@ -17,7 +17,7 @@ const SectionContainer: React.FC<ContainerProps> = ({
 }) => (
   <div
     className={classNames(
-      "flex w-full flex-col items-center space-y-12 px-4 py-32 sm:px-6 lg:space-y-20 lg:py-40 lg:px-8",
+      "flex w-full flex-col items-center space-y-12 px-4 py-32 sm:px-6 lg:space-y-20 lg:py-32 lg:px-8",
       className
     )}
     {...props}

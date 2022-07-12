@@ -51,7 +51,7 @@ const Details = ({ assetKey }) => {
           error={entriesError}
         />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="!pt-0">
         <CTASection
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
