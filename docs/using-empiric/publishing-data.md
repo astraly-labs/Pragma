@@ -26,21 +26,31 @@ CMD python fetch-and-publish.py
 #### Using the Empiric Network Python SDK
 
 ```python
+import asyncio
 import os
+import time
 
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
-from empiric.publisher.client import PontisPublisherClient
+from empiric.publisher.client import EmpiricPublisherClient
 
-publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
 
-client = PontisPublisherClient(publisher_private_key, publisher_address)
-entry = construct_entry(
-	key=currency_pair_to_key("ETH", "USD"),
-	value=10, # shifted 10 ** decimals; see get_decimals above
-	timestamp=1653265959,
-	publisher="gemini",
-)
-await client.publish(entry)
+async def main():
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+
+    client = EmpiricPublisherClient(publisher_private_key, publisher_address)
+    entry = construct_entry(
+        key=currency_pair_to_key("TEST", "USD"),
+        value=10,  # shifted 10 ** decimals; see get_decimals above
+        timestamp=int(time.time()),
+        source="gemini",
+        publisher="<your name here>",
+    )
+
+    await client.publish(entry)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
