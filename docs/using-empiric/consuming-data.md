@@ -11,33 +11,36 @@ The current Empiric Network proxy addresses are:
 
 ## Sample Code
 
-In order to consume data in your smart contract, simply grab the oracle interface and address from the snippet below and get going! You can find a full sample data feed consumer contract [here](https://github.com/42labs/Pontis/blob/master/contracts/sample\_consumer/CheckEthThreshold.cairo) \[TODO CHANGE TO USE CONSUMER ONLY INTERFACE] and the full Oracle interface specification is available [here](https://github.com/42labs/Pontis/blob/master/contracts/oracle\_controller/IOracleController.cairo) \[TODO: UPDATE LINK TO POINT TO CONSUMER ONLY INTERFACE].
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Pontis/blob/master/contracts/sample\_consumer/CheckEthThreshold.cairo) \[TODO CHANGE TO USE CONSUMER ONLY INTERFACE] and the full Oracle interface specification is available [here](https://github.com/42labs/Pontis/blob/master/contracts/oracle\_controller/IOracleController.cairo) \[TODO: UPDATE LINK TO POINT TO CONSUMER ONLY INTERFACE].
 
 ```
 %lang starknet
 
-# Oracle Interface Definition
-const ORACLE_CONTROLLER_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4
+from starkware.cairo.common.math_cmp import is_le
+from starkware.cairo.common.pow import pow
+
+from contracts.oracle_controller.IEmpiricOracle import IEmpiricOracle
+
+const EMPIRIC_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4
 const KEY = 28556963469423460  # str_to_felt("eth/usd")
-const AGGREGATION_MODE = 120282243752302  # str_to_felt("median")
+const AGGREGATION_MODE = 0  # default
 
-@contract_interface
-namespace IOracleController:
-    func get_value(key : felt, aggregation_mode : felt) -> (
-        value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
-    ):
-    end
-end
-
-# Your function
 @view
-func my_func() -> ():
-    let (eth_price, decimals, last_updated_timestamp, num_sources_aggregated) = IOracleController.get_value(
-        ORACLE_CONTROLLER_ADDRESS, KEY, AGGREGATION_MODE
+func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : felt) -> (
+    is_above_threshold : felt
+):
+    alloc_locals
+
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_value(
+        EMPIRIC_ORACLE_ADDRESS, KEY, AGGREGATION_MODE
     )
-    # Your smart contract logic!
-    return ()
+    let (multiplier) = pow(10, decimals)
+
+    let shifted_threshold = threshold * multiplier
+    let (is_above_threshold) = is_le(shifted_threshold, eth_price)
+    return (is_above_threshold)
 end
+
 ```
 
 ## Technical Specification
@@ -74,10 +77,11 @@ Inputs
 ```
 struct Entry:
     member key : felt  # UTF-8 encoded lowercased string, e.g. "eth/usd"
-    member value : felt
-    member timestamp : felt  # Unix timestamp
-    member source : felt  # UTF-8 encoded lowercased string, "ftx"
-    member publisher : felt  # UTF-8 encoded lowercased string, "ftx"
+    member value : felt  # Value shifted to the left by decimals
+    member timestamp : felt  # Timestamp of the most recent update, UTC epoch
+    member source : felt  # UTF-8 encoded lowercased string, e.g. "ftx"
+    member publisher : felt  # UTF-8 encoded lowercased string, e.g. "consensys"
+    # Publisher of the data (usually the source, but occasionally a third party)
 end
 ```
 

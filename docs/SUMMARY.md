@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Introducing Empiric Network](README.md)
+* [Quickstart](quickstart.md)
 
 ## Using Empiric
 

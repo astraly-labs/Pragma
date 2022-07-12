@@ -1,6 +1,8 @@
 # Supported Assets
 
-The following assets are officially supported by Empiric. More are added every week, so just reach out on [Twitter](https://twitter.com/EmpiricNetwork) if you have a specific one you need. The key is calculated by utf-8 encoding the lowercased string (e.g. `str_to_felt("btc/usd")`).
+The following assets are officially supported by Empiric. More are added every week, so just reach out on [Twitter](https://twitter.com/EmpiricNetwork) if you have a specific one you need.&#x20;
+
+The key is calculated by utf-8 encoding the lowercased string (e.g. `str_to_felt("btc/usd")`) and used to refer to specific feeds on-chain (each oracle function takes a `key` argument).
 
 ### **Spot assets**
 
