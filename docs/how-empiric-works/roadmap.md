@@ -2,6 +2,10 @@
 
 The Empiric team is constantly working to improve the network's robustness and functionality. Here are a few of the exciting things we are working on and plan to share with you soon. If you are interested in certain projects or have requests you don't see here, let us know on [Twitter](https://twitter.com/EmpiricNetwork).
 
+### Auditing
+
+We have upcoming audits by leading security research firms such as Trail of Bits (who are auditing StarkNet as well) and will release the results of those as soon as they are ready.
+
 ### Native Data From The Most Liquid Markets
 
 We are actively working on building out functionality to pull data (e.g. Uniswap TWAP, overnight rates, etc.) directly from L1 to L2. There are a few different approaches we are considering, including L1 state-verification on L2 and L1-L2 messaging.
