@@ -3,9 +3,9 @@ import datetime
 import os
 
 import requests
-from pontis.admin.client import PontisAdminClient
-from pontis.core.utils import felt_to_str
-from pontis.publisher.client import PontisPublisherClient
+from empiric.admin.client import EmpiricAdminClient
+from empiric.core.utils import felt_to_str
+from empiric.publisher.client import EmpiricPublisherClient
 
 # Inputs
 # [Optional]: Publisher names; if empty, query for all
@@ -20,7 +20,7 @@ async def main(publishers=None, threshold_wei=None):
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
 
     # Set admin private key to 1 because we aren't using the client for protected invokes
-    client = PontisAdminClient(1, n_retries=5)
+    client = EmpiricAdminClient(1, n_retries=5)
 
     if publishers is None:
         publishers = await client.get_all_publishers()
@@ -42,7 +42,7 @@ async def main(publishers=None, threshold_wei=None):
         addresses.add(address)
 
         # Set publisher private key to None because we aren't using the client for protected invokes
-        publisher_client = PontisPublisherClient(1, address, n_retries=5)
+        publisher_client = EmpiricPublisherClient(1, address, n_retries=5)
         balance = await publisher_client.get_eth_balance()
 
         if balance < threshold_wei:

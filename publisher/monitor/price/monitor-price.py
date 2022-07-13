@@ -5,11 +5,11 @@ import time
 import traceback
 
 import requests
-from pontis.core.client import PontisClient
-from pontis.core.const import DEFAULT_AGGREGATION_MODE
-from pontis.core.utils import key_for_asset, str_to_felt
-from pontis.publisher.assets import PONTIS_ALL_ASSETS
-from pontis.publisher.fetch import fetch_coingecko
+from empiric.core.client import EmpiricClient
+from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.utils import key_for_asset, str_to_felt
+from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher.fetch import fetch_coingecko
 
 # Behavior: Ping betteruptime iff all is good
 
@@ -27,9 +27,9 @@ async def main():
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
 
-    assets = PONTIS_ALL_ASSETS
+    assets = EMPIRIC_ALL_ASSETS
 
-    client = PontisClient(n_retries=5)
+    client = EmpiricClient(n_retries=5)
 
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
@@ -58,7 +58,7 @@ async def main():
                 coingecko[felt_key] * (1 - PRICE_TOLERANCE)
                 <= value
                 <= coingecko[felt_key] * (1 + PRICE_TOLERANCE)
-            ), f"Coingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
+            ), f"Coingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
 
             current_timestamp = int(time.time())
 
@@ -66,7 +66,7 @@ async def main():
                 current_timestamp - TIME_TOLERANCE
                 <= last_updated_timestamp
                 <= current_timestamp + TIME_TOLERANCE
-            ), f"Timestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
+            ), f"Timestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
             print(
                 f"Price {value} checks out for asset {key} (reference: {coingecko[felt_key]})"
             )
@@ -80,10 +80,10 @@ async def main():
             print(traceback.format_exc())
 
             if key not in EXPERIMENTAL_ASSET_KEYS:
-                slack_text = "Error with Pontis price<!channel>"
+                slack_text = "Error with Empiric price<!channel>"
                 slack_text += f"\nAsset: {asset}"
-                slack_text += f"\nTimestamp is {current_timestamp}, Pontis has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-                slack_text += f"\nCoingecko says {coingecko[felt_key]}, Pontis says {value} (ratio {coingecko[felt_key]/value})"
+                slack_text += f"\nTimestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
+                slack_text += f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
                 slack_text += f"\n{traceback.format_exc()}"
 
                 requests.post(

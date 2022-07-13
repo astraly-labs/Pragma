@@ -2,9 +2,9 @@ import asyncio
 import time
 from collections import namedtuple
 
-from pontis.core.client import PontisClient
-from pontis.core.const import DEFAULT_AGGREGATION_MODE
-from pontis.core.utils import str_to_felt
+from empiric.core.client import EmpiricClient
+from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.utils import str_to_felt
 
 YieldPoint = namedtuple(
     "YieldPoint", ["expiry_timestamp", "capture_timestamp", "rate", "source"]
@@ -72,7 +72,7 @@ def calculate_future_spot_yield_point(
 
 
 async def get_yield_points(output_decimals):
-    client = PontisClient()
+    client = EmpiricClient()
 
     yield_points = []
 

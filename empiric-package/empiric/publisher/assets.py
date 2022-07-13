@@ -1,6 +1,6 @@
-from pontis.core.utils import key_for_asset
+from empiric.core.utils import key_for_asset
 
-PONTIS_ALL_ASSETS = [
+EMPIRIC_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("BTC", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("BTC", "EUR"), "decimals": 18},
     {"type": "SPOT", "pair": ("ETH", "USD"), "decimals": 18},
@@ -34,12 +34,12 @@ PONTIS_ALL_ASSETS = [
     },
 ]
 
-_PONTIS_ASSET_BY_KEY = {
+_EMPIRIC_ASSET_BY_KEY = {
     key_for_asset(asset): asset
-    for asset in PONTIS_ALL_ASSETS
+    for asset in EMPIRIC_ALL_ASSETS
     if asset["type"] == "SPOT"
 }
 
 
 def get_spot_asset_spec_for_key(key):
-    return _PONTIS_ASSET_BY_KEY[key]
+    return _EMPIRIC_ASSET_BY_KEY[key]

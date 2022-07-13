@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
-from pontis.core.entry import construct_entry, serialize_entry
-from pontis.core.utils import str_to_felt
+from empiric.core.entry import construct_entry, serialize_entry
+from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
@@ -231,7 +231,7 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
-        "set_future_spot_pontis_source_key",
+        "set_future_spot_empiric_source_key",
         [source],
     )
 

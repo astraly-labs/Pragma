@@ -11,7 +11,7 @@ ORACLE_CONTROLLER_ADDRESS = (
 NETWORK = "testnet"
 DEFAULT_AGGREGATION_MODE = 0
 
-if os.environ.get("__PONTIS_STAGING_ENV__") == "TRUE":
+if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":
     print("Warning: Communicating with staging contracts, not production")
     ORACLE_CONTROLLER_ADDRESS = (
         0x00225A37DE623DBD4D2287DDED4E0CB0EB4A5D7D9051D0E89A1321D4BCF9FDB2

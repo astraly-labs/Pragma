@@ -2,8 +2,8 @@ from statistics import median
 
 import pytest
 import pytest_asyncio
-from pontis.core.entry import construct_entry
-from pontis.core.utils import felt_to_str, str_to_felt
+from empiric.core.entry import construct_entry
+from empiric.core.utils import felt_to_str, str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException

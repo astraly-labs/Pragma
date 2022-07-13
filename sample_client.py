@@ -1,9 +1,9 @@
 import asyncio
 from datetime import datetime
 
-from pontis.core.client import PontisClient
-from pontis.core.const import DEFAULT_AGGREGATION_MODE
-from pontis.core.utils import currency_pair_to_key
+from empiric.core.client import EmpiricClient
+from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.utils import currency_pair_to_key
 
 
 async def main():
@@ -11,7 +11,7 @@ async def main():
     key = currency_pair_to_key(*asset_pair)
     aggregation_mode = DEFAULT_AGGREGATION_MODE
 
-    client = PontisClient()
+    client = EmpiricClient()
     (
         value,
         decimals,

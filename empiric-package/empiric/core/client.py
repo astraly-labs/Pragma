@@ -1,5 +1,5 @@
-from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
-from pontis.core.utils import str_to_felt
+from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
+from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
 
@@ -7,7 +7,7 @@ MAX_FEE = 0
 DEFAULT_N_RETRIES = 1
 
 
-class PontisClient:
+class EmpiricClient:
     def __init__(
         self, network=None, oracle_controller_address=None, max_fee=None, n_retries=None
     ):

@@ -1,7 +1,7 @@
 import time
 
 import requests
-from pontis.core.entry import construct_entry
+from empiric.core.entry import construct_entry
 
 
 def fetch_thegraph(assets, publisher):

@@ -1,11 +1,11 @@
-from pontis.core.base_client import PontisBaseClient
-from pontis.core.const import PUBLISHER_REGISTRY_ADDRESS
-from pontis.core.entry import serialize_entries, serialize_entry
+from empiric.core.base_client import EmpiricBaseClient
+from empiric.core.const import PUBLISHER_REGISTRY_ADDRESS
+from empiric.core.entry import serialize_entries, serialize_entry
 
 DEFAULT_N_RETRIES = 3
 
 
-class PontisPublisherClient(PontisBaseClient):
+class EmpiricPublisherClient(EmpiricBaseClient):
     def __init__(
         self,
         publisher_private_key,

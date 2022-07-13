@@ -1,6 +1,6 @@
 import requests
-from pontis.core.entry import construct_entry
-from pontis.core.utils import currency_pair_to_key
+from empiric.core.entry import construct_entry
+from empiric.core.utils import currency_pair_to_key
 
 
 def fetch_cex(assets, publisher):

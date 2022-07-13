@@ -3,8 +3,8 @@ import time
 from abc import ABC, abstractmethod
 from os import path
 
+from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from nile.signer import Signer
-from pontis.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract, ContractData, ContractFunction
 from starknet_py.net import Client
 from starkware.crypto.signature.signature import sign
@@ -14,7 +14,7 @@ MAX_FEE = 0
 FEE_SCALING_FACTOR = 1.1  # estimated fee is multiplied by this to set max_fee
 
 
-class PontisBaseClient(ABC):
+class EmpiricBaseClient(ABC):
     def __init__(
         self,
         account_private_key,
@@ -63,7 +63,7 @@ class PontisBaseClient(ABC):
             )
         else:
             raise NotImplementedError(
-                "PontisBaseClient.get_eth_balance: Unknown network type"
+                "EmpiricBaseClient.get_eth_balance: Unknown network type"
             )
 
         with open(path.join(path.dirname(__file__), "abi/ERC20.json"), "r") as f:

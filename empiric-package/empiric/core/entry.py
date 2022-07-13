@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from pontis.core.utils import str_to_felt
+from empiric.core.utils import str_to_felt
 
 Entry = namedtuple("Entry", ["key", "value", "timestamp", "source", "publisher"])
 

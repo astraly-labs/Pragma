@@ -1,10 +1,10 @@
-from pontis.core.base_client import PontisBaseClient
-from pontis.core.const import (
+from empiric.core.base_client import EmpiricBaseClient
+from empiric.core.const import (
     ADMIN_ADDRESS,
     ORACLE_CONTROLLER_ADDRESS,
     PUBLISHER_REGISTRY_ADDRESS,
 )
-from pontis.core.utils import str_to_felt
+from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net import Client
 
@@ -12,7 +12,7 @@ MAX_FEE = 0
 ADMIN_DEFAULT_N_RETRIES = 1
 
 
-class PontisAdminClient(PontisBaseClient):
+class EmpiricAdminClient(EmpiricBaseClient):
     def __init__(
         self,
         admin_private_key,

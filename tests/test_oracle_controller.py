@@ -2,8 +2,8 @@ from statistics import median
 
 import pytest
 import pytest_asyncio
-from pontis.core.entry import construct_entry, serialize_entries, serialize_entry
-from pontis.core.utils import str_to_felt
+from empiric.core.entry import construct_entry, serialize_entries, serialize_entry
+from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
