@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { ClockIcon } from "@heroicons/react/outline";
 
-const TimeSinceUpdate = ({
-  lastUpdatedTimestamp,
-}: {
+interface AssetNameProps {
   lastUpdatedTimestamp: number;
-}) => {
+}
+
+const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
   const getCurrentTimestampSeconds = () =>
     Math.round(new Date().getTime() / 1000);
 
@@ -21,16 +22,18 @@ const TimeSinceUpdate = ({
     currentTimestampSeconds - lastUpdatedTimestamp - minutesSinceUpdate * 60
   );
   setInterval(updateCurrentTimestampSeconds, 1000);
-
-  const minuteStr = minutesSinceUpdate === 1 ? "minute" : "minutes";
-
   return (
-    <div className="px-4">
-      Last updated:{" "}
-      {minutesSinceUpdate !== 0 && `${minutesSinceUpdate} ${minuteStr} and `}
-      {secondsSinceUpdate} seconds ago
+    <div className="flex flex-row items-center space-x-2 md:space-x-3">
+      <ClockIcon className="w-6 text-slate-900" />
+      <div className="font-mono text-base text-slate-900">
+        <span className="sm:text-xl md:text-2xl">
+          {minutesSinceUpdate}:{secondsSinceUpdate < 10 && "0"}
+          {secondsSinceUpdate}
+        </span>{" "}
+        min
+      </div>
     </div>
   );
 };
 
-export default TimeSinceUpdate;
+export default AssetCardTime;

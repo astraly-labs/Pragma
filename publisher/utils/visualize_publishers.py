@@ -14,7 +14,7 @@ async def main(pair):
     decimals = await client.get_decimals(key)
     entries = []
 
-    num_reps = 1  # 2 * 3  # Run for 3 hours
+    num_reps = 1
     for i in range(num_reps):
         print("awake - fetching")
         entries.extend(await client.get_entries(key))
