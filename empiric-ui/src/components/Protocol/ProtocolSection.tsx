@@ -54,7 +54,7 @@ export const protocols: Protocol[] = [
   },
   {
     name: "Serity",
-    category: "All",
+    category: "Infrastructure",
     src: "/assets/protocols/serity.png",
     description:
       "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets.",

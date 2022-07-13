@@ -23,7 +23,7 @@ const PublishersPage = () => {
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."
           mainAction={{
-            href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+            href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
             actionText: "Become a publisher",
             icon: ChatIcon,
           }}

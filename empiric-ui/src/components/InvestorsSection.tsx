@@ -20,10 +20,6 @@ const investors: Logo[] = [
     src: "/assets/publishers/jane-street.png",
   },
   {
-    name: "Portofino",
-    src: "/assets/currencies/fallback.svg",
-  },
-  {
     name: "FTX",
     src: "/assets/publishers/ftx.svg",
   },

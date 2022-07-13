@@ -1,6 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { StyledExternalLink, StyledInternalLink } from "../common/StyledLink";
+import {
+  buildExplorerUrlForAddress,
+  networkId,
+} from "../../services/wallet.service";
 
 interface FooterLink {
   title: string;
@@ -24,7 +28,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "View on Block Explorer",
-        href: "#",
+        href: `${buildExplorerUrlForAddress(networkId())}`,
         external: true,
       },
     ],
@@ -64,8 +68,8 @@ const content: FooterColumn[] = [
       },
       {
         title: "Blog",
-        href: "#",
-        external: false,
+        href: "https://medium.com/@EmpiricNetwork",
+        external: true,
       },
       {
         title: "Press Kit",
@@ -74,7 +78,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Contact Us",
-        href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+        href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
         external: true,
       },
     ],
@@ -96,7 +100,12 @@ const socials: SocialMedia[] = [
   {
     name: "Twitter",
     src: "/assets/social/twitter.svg",
-    href: "#",
+    href: "https://twitter.com/EmpiricNetwork",
+  },
+  {
+    name: "Medium",
+    src: "/assets/social/medium.svg",
+    href: "https://medium.com/@EmpiricNetwork",
   },
 ];
 
@@ -122,11 +131,13 @@ const Footer = () => (
           <ul className="flex flex-row items-center space-x-6">
             {socials.map((social) => (
               <li key={social.name}>
-                <img
-                  src={social.src}
-                  alt={social.name}
-                  className="h-6 w-6 cursor-pointer"
-                />
+                <a href={social.href}>
+                  <img
+                    src={social.src}
+                    alt={social.name}
+                    className="h-6 w-6 cursor-pointer"
+                  />
+                </a>
               </li>
             ))}
           </ul>

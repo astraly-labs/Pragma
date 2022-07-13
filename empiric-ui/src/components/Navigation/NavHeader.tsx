@@ -71,7 +71,7 @@ const additional = [
 const callsToAction = [
   {
     name: "Request Asset",
-    href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
     icon: ChatIcon,
   },
 ];

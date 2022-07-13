@@ -11,14 +11,14 @@ interface LogoCloudProps {
   logos: Logo[];
 }
 
-const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
+const LogoGrid: React.FC<LogoCloudProps> = ({ title, logos }) => (
   <figure className="w-full max-w-7xl">
     <figcaption className="mb-2 text-xl uppercase tracking-wide text-slate-700 sm:text-2xl md:mb-5 ">
       {title}
     </figcaption>
-    <ul className="flex w-full flex-wrap items-center justify-between">
+    <ul className="grid grid-cols-2 place-items-center md:grid-cols-3">
       {logos.map(({ name, src }, i) => (
-        <li key={i} className="py-4 px-4 lg:py-8">
+        <li key={i} className="col-span-1 py-4 px-4 lg:py-8">
           <img
             src={src}
             alt={name}
@@ -30,4 +30,4 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
   </figure>
 );
 
-export default LogoCloud;
+export default LogoGrid;
