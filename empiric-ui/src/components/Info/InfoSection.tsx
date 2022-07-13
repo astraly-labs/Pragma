@@ -26,9 +26,9 @@ const blobBaseStyles =
   "absolute h-48 w-48 rounded-full opacity-70 mix-blend-multiply blur-lg filter md:h-64 md:w-64 animate-blob";
 
 const blobSpecificStyles = [
-  "top-0 -left-4 bg-indigo-300",
+  "top-0 -left-4 bg-blue-300",
   "top-0 -right-4 bg-purple-300 [animation-delay:2s]",
-  "-bottom-8 left-20 bg-blue-300 [animation-delay:4s]",
+  "-bottom-8 left-20 bg-indigo-300 [animation-delay:4s]",
 ];
 
 const InfoSection = () => (

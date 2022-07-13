@@ -73,7 +73,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Press Kit",
-        href: "#",
+        href: "https://drive.google.com/drive/folders/11mE8amIoNa13xeTDI59uyeykPo2iYON9",
         external: true,
       },
       {
@@ -118,7 +118,7 @@ const Footer = () => (
             <a>
               <span className="sr-only">Empiric</span>
               <img
-                className="h-8 w-auto sm:h-10"
+                className="h-12 w-auto sm:h-16 md:h-20"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />

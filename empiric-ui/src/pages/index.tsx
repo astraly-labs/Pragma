@@ -9,11 +9,11 @@ import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
-import LogoCloud from "../components/LogoCloud";
+import LogoCloud from "../components/LogoClouds/LogoCloud";
 import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
 import { publishers } from "../components/Publisher/PublishersSection";
-import LogoGrid from "../components/LogoGrid";
+import LogoGrid from "../components/LogoClouds/LogoGrid";
 
 const stats = [
   {
