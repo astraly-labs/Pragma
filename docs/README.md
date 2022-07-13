@@ -20,4 +20,4 @@ Most existing oracle solutions operate as trusted, off-chain black boxes. Empiri
 
 ### **Composability:** Towards a More Sophisticated DeFi
 
-Empiric allows anyone to flexibly compose that verified data, without sacrificing security or transparency. For instance, protocols are building new financial products on top of Pontis’ verifiable, dynamic yield curve. The same is true for volatility, options pricing (Black Scholes) and many of the more sophisticated data products that TradFi runs on. By doing so, Empiric will be a major accelerator of the evolution of DeFi, unlocking entire new classes of protocols.
+Empiric allows anyone to flexibly compose that verified data, without sacrificing security or transparency. For instance, protocols are building new financial products on top of Empiric’s verifiable, dynamic yield curve. The same is true for volatility, options pricing (Black Scholes) and many of the more sophisticated data products that TradFi runs on. By doing so, Empiric will be a major accelerator of the evolution of DeFi, unlocking entire new classes of protocols.
