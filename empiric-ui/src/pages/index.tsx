@@ -49,9 +49,10 @@ const IndexPage = () => (
     </SectionContainer>
     <SectionContainer className="bg-slate-50">
       <Heading
-        title="3 easy steps"
+        title="A few simple lines to integrate"
         subtitle="Try it yourself"
-        text="We offer a variety of ways to integrate the data feeds you need into your project."
+        text="Ready to get going? Copy the code below and start using high-quality data in your smart contracts!
+        Or read our documentation to understand more about how Empiric works and how you can use Empiric to go beyond simple price feeds."
         href="https://docs.empiric.network/quickstart"
         hrefText="Read the documentation"
       />
