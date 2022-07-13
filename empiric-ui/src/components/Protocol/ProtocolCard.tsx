@@ -7,10 +7,8 @@ const ProtocolCard: React.FC<Protocol> = ({
   src,
   description,
 }) => (
-  <article className="space-y-4">
-    <div className="aspect-square sm:h-48">
-      <img className="object-cover" src={src} alt="" />
-    </div>
+  <article className="space-y-4 md:space-y-8">
+    <img className="mx-auto h-12 sm:h-14 md:h-16" src={src} alt="" />
 
     <div className="space-y-2">
       <header className="space-y-1 text-lg font-medium leading-6">

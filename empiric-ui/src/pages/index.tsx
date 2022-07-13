@@ -9,9 +9,9 @@ import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
-import LogoCloud from "../components/LogoCloud";
+import NormalLogoCloud from "../components/LogoClouds/NormalLogoCloud";
 import Stats from "../components/Stats";
-import Marquee from "../components/Marquee";
+import Marquee from "../components/LogoClouds/Marquee";
 import { protocols } from "../components/Protocol/ProtocolSection";
 import { publishers } from "../components/Publisher/PublishersSection";
 
@@ -41,7 +41,7 @@ const IndexPage = () => (
       <Hero />
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
-      <LogoCloud title="Used by" logos={protocols} square />
+      <NormalLogoCloud title="Used by" logos={protocols} />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />

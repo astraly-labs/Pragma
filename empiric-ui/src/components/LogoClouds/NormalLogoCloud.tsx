@@ -9,10 +9,9 @@ export interface Logo {
 interface LogoCloudProps {
   title: string;
   logos: Logo[];
-  square?: boolean;
 }
 
-const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos, square }) => (
+const NormalLogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
   <figure className="w-full max-w-7xl">
     <figcaption className="mb-2 text-xl uppercase tracking-wide text-slate-700 sm:text-2xl md:mb-5 ">
       {title}
@@ -23,10 +22,7 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos, square }) => (
           <img
             src={logo.src}
             alt={logo.name}
-            className={classNames(
-              "w-auto flex-shrink-0",
-              square ? "h-16 md:h-20 lg:h-24" : "h-6 md:h-8 lg:h-10"
-            )}
+            className={classNames("h-8 w-auto flex-shrink-0 md:h-10 lg:h-14")}
           />
         </li>
       ))}
@@ -34,4 +30,4 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos, square }) => (
   </figure>
 );
 
-export default LogoCloud;
+export default NormalLogoCloud;

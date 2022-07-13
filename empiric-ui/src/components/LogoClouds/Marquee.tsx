@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./LogoCloud";
+import { Logo } from "./NormalLogoCloud";
 
 interface LogoProps {
   title: string;

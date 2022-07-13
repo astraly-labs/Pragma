@@ -3,7 +3,9 @@ import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
-import TeamSection from "../components/Team/TeamSection";
+import TeamSection from "../components/TeamSection";
+import InvestorsSection from "../components/InvestorsSection";
+import AngelsSection from "../components/AngelsSection";
 
 const AboutPage = () => {
   return (
@@ -20,7 +22,8 @@ const AboutPage = () => {
       </SectionContainer>
       <SectionContainer>
         <Heading title="Backed by" subtitle="Meet our investors" />
-        <TeamSection />
+        <InvestorsSection />
+        <AngelsSection />
       </SectionContainer>
       <SectionContainer className="sm:!px-0">
         <CTASection
