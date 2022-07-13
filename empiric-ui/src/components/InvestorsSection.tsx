@@ -8,7 +8,7 @@ const investors: Logo[] = [
     src: "/assets/investors/dao5.webp",
   },
   {
-    name: "Robotventures",
+    name: "Robot Ventures",
     src: "/assets/investors/robotventures.png",
   },
   {

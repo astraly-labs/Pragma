@@ -9,7 +9,7 @@ export interface PublisherCardProps {
 
 export const publishers: PublisherCardProps[] = [
   {
-    name: "Almeda Research",
+    name: "Alameda Research",
     src: "/assets/publishers/alameda.png",
     description:
       "Alameda Research is one of the leading crypto currency high frequently trading firms and liquidity provider. Alameda Research was founded 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. They have a globally focused team and infrastructure to trade on all major exchanges and markets.\n\n Alameda will use their whole business operation to provide price feeds to the Empiric Network.",
