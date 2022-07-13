@@ -16,6 +16,7 @@ import NavHeader from "../components/Navigation/NavHeader";
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
 
   return (

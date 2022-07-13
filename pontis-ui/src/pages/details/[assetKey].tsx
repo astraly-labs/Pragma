@@ -10,6 +10,7 @@ import SectionContainer from "../../components/common/SectionContainer";
 import CTASection from "../../components/CTASection";
 import EntriesTable from "../../components/Details/EntriesTable";
 import DetailDisplay from "../../components/Details/DetailDisplay";
+import Banner from "../../components/Banner";
 
 const Details = ({ assetKey }) => {
   const {
@@ -35,6 +36,7 @@ const Details = ({ assetKey }) => {
 
   return (
     <div className="w-screen">
+      <Banner />
       <SectionContainer className="bg-slate-50 pt-12">
         <DetailDisplay
           assetKey={assetKey}
