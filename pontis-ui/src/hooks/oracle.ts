@@ -9,11 +9,12 @@ import {
   toHex,
 } from "starknet/utils/number";
 
+// List from https://github.com/42labs/Pontis/blob/master/pontis-package/pontis/publisher/assets.py
 export const AssetKeys = [
   "eth/usd",
   "btc/usd",
   "sol/usd",
-  "luna/usd",
+  "btc/eur",
   "avax/usd",
   "doge/usd",
   "shib/usd",
@@ -108,7 +109,6 @@ export interface GetEntriesT {
   error: string;
 }
 
-// Reason for const vs function?
 export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   const { contract } = useOracleControllerContract();
   const arg = strToHexFelt(assetKey);
@@ -129,15 +129,6 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   let oracleResponse: Entry[] | undefined = undefined;
   if (data !== undefined) {
     oracleResponse = data["0"].map((entry: Object): Entry => {
-      // General Approach
-      // const convertedEntry = {};
-      // Object.entries(entry).reduce((obj, keyValPair) => {
-      //   obj[keyValPair[0]] = toHex(keyValPair[1]);
-      //   return obj;
-      // }, convertedEntry);
-      // return convertedEntry;
-
-      // Build Entry
       return {
         key: hexToString(toHex(entry["key"])),
         value: parseInt(toHex(entry["value"])),
@@ -146,8 +137,6 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
         publisher: hexToString(toHex(entry["publisher"])),
       };
     });
-
-    // Why is the isNAN check necessary?
   }
   return { oracleResponse, loading, error };
 };

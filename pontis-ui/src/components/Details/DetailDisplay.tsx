@@ -3,7 +3,7 @@ import { ClockIcon } from "@heroicons/react/outline";
 import AssetLogo from "../Asset/AssetLogo";
 import DetailCard from "./DetailCard";
 import LoadingBar from "../common/LoadingBar";
-import { getCurrency } from "../Asset/AssetCardPrice";
+import { getCurrency } from "../../../utils/mappings";
 import { assetKeyDisplayString } from "../Asset/AssetCard";
 import { GetValueResponseT } from "../../hooks/oracle";
 import { timeSinceUpdate } from "../../../utils/display";
@@ -28,7 +28,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
       return <p className="text-lg font-normal">Error fetching price.</p>;
     }
     if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4" />;
+      return <LoadingBar className="my-4 h-4 w-32" />;
     }
     const price = oracleResponse.value;
     return (
@@ -61,7 +61,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
       return <p className="text-lg font-normal">Error fetching time.</p>;
     }
     if (loading || !oracleResponse?.value) {
-      return <LoadingBar className="my-4" />;
+      return <LoadingBar className="my-4 h-4 w-32" />;
     }
     const { minutesSinceUpdate, secondsSinceUpdate } = timeSinceUpdate(
       currentTimestampSeconds,

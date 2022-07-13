@@ -36,7 +36,7 @@ const ProtocolsPage = () => {
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
           mainAction={{
-            href: "https://docs.empiric.network/",
+            href: "https://docs.empiric.network/quickstart",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}

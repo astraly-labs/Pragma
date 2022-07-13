@@ -24,10 +24,6 @@ const Details = ({ assetKey }) => {
     error: entriesError,
   } = useOracleGetEntries(assetKey);
 
-  React.useEffect(() => {
-    console.log("page initial render");
-  }, []);
-
   const decimals = useMemo(() => {
     return valueLoading || !valueResponse?.decimals || valueError
       ? 1
@@ -46,9 +42,6 @@ const Details = ({ assetKey }) => {
         />
       </SectionContainer>
       <SectionContainer className="relative">
-        {/* <div className="absolute inset-y-0 top-0 -translate-y-6">
-          <SearchBar />
-        </div> */}
         <EntriesTable
           assetKey={assetKey}
           decimals={decimals}
@@ -62,7 +55,7 @@ const Details = ({ assetKey }) => {
           title="Ready to get the data you need?"
           description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
           mainAction={{
-            href: "https://docs.empiric.network/",
+            href: "https://docs.empiric.network/quickstart",
             actionText: "Get started",
             icon: CodeIcon,
           }}

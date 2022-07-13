@@ -2,15 +2,12 @@ import React from "react";
 import classNames from "classnames";
 
 interface LoadingBarProps {
-  className?: string;
+  className: string;
 }
 
 const LoadingBar: React.FC<LoadingBarProps> = ({ className }) => (
   <div
-    className={classNames(
-      "h-4 w-24 animate-pulse rounded-2xl bg-slate-200",
-      className
-    )}
+    className={classNames("animate-pulse rounded-2xl bg-slate-300", className)}
   />
 );
 

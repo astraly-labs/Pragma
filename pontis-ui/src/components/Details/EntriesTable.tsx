@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import classNames from "classnames";
 import { Entry } from "../../hooks/oracle";
-import { getCurrency } from "../Asset/AssetCardPrice";
+import { getCurrency } from "../../../utils/mappings";
 import { capitalize, secondsToTime } from "../../../utils/display";
 
 const MINUTES_ALLOWED = 30;

@@ -37,10 +37,10 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
       return (
         <>
           <div className="place-self-center">
-            <LoadingBar />
+            <LoadingBar className="h-4 w-24" />
           </div>
           <div className="place-self-center">
-            <LoadingBar />
+            <LoadingBar className="h-4 w-24" />
           </div>
         </>
       );

@@ -1,27 +1,6 @@
 import React from "react";
-
 import { AssetKeyT } from "../../hooks/oracle";
-
-// Mapping from asset key abbreviation to currency symbol.
-const currencySymbols = {
-  usd: "dollar.svg",
-  mxn: "dollar.svg",
-};
-
-/**
- * Converts asset key into file name of currency symbol;
- * @param {AssetKeyT} assetKey
- * @return {string} file name of currency symbol
- */
-export function getCurrency(assetKey: AssetKeyT): string {
-  const slashIndex = assetKey.indexOf("/");
-  const dashIndex = assetKey.indexOf("-");
-  const cur =
-    dashIndex === -1
-      ? assetKey.slice(slashIndex + 1)
-      : assetKey.slice(slashIndex + 1, dashIndex);
-  return currencySymbols[cur];
-}
+import { getCurrency } from "../../../utils/mappings";
 
 const DECIMALS_TO_SHOW = 5;
 
