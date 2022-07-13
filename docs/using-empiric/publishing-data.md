@@ -14,7 +14,7 @@ The initial publishing frequency for the oracle is every 5 minutes on Starknet A
 
 #### Docker Image
 
-In this setup, the `fetch-and-publish.py` script would fetch data (your custom logic) and then use the Pontis SDK to publish that data. See this example \[TODO ADD LINK]. The base image is available on [Dockerhub](https://hub.docker.com/repository/docker/42labs/empiric-publisher) and comes with the Python and all requirements (including the empiric-network Python package) installed.
+In this setup, the `fetch-and-publish.py` script would fetch data (your custom logic) and then use the Pontis SDK to publish that data. See this [example](https://github.com/42labs/Empiric/blob/master/publisher/sample-publisher/coinbase/fetch-and-publish.py). The base image is available on [Dockerhub](https://hub.docker.com/repository/docker/42labs/empiric-publisher) and comes with the Python and all requirements (including the empiric-network Python package) installed.
 
 ```docker
 FROM 42labs/empiric-publisher:0.7.0

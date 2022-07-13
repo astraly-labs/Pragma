@@ -11,7 +11,7 @@ The current Empiric Network proxy addresses are:
 
 ## Sample Code
 
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Pontis/blob/master/contracts/sample\_consumer/CheckEthThreshold.cairo) \[TODO CHANGE TO USE CONSUMER ONLY INTERFACE] and the full Oracle interface specification is available [here](https://github.com/42labs/Pontis/blob/master/contracts/oracle\_controller/IOracleController.cairo) \[TODO: UPDATE LINK TO POINT TO CONSUMER ONLY INTERFACE].
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/oracle\_controller/IEmpiricOracle.cairo).
 
 ```
 %lang starknet

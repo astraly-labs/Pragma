@@ -4,7 +4,7 @@
 
 The Empiric Oracle consists of three smart contracts, that each play a role in making the oracle easy to use and robust.
 
-![Architecture overview of the Empiric Network oracle](https://github.com/42labs/Pontis/raw/master/assets/Pontis-Architecture.png)
+![](../.gitbook/assets/Empiric-Architecture.png)
 
 The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because its state should be permanent (each publisher and their address). This is currently an ownable contract but will become permissionless as Empiric decentralizes.
 
