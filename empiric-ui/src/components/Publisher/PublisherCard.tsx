@@ -7,11 +7,9 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
   name,
   description,
 }) => (
-  <figure className="relative rounded-lg bg-white p-6 shadow-xl shadow-slate-900/10">
+  <figure className="relative h-full rounded-lg bg-white p-6 shadow-xl shadow-slate-900/10">
     <figcaption className="relative flex flex-col items-center justify-between border-b border-slate-100 pb-6">
-      <div className="h-full w-48 overflow-hidden">
-        <img src={src} alt={`${name} logo`} />
-      </div>
+      <img src={src} alt={`${name} logo`} className="h-12 w-auto" />
     </figcaption>
     <div className="relative mt-6">
       <h3 className="relative mb-3 text-2xl font-semibold text-slate-900">
@@ -19,7 +17,9 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
       </h3>
       <blockquote className="relative">
         <QuoteIcon className="absolute top-0 left-0 fill-slate-100" />
-        <p className="prose prose-slate relative">{description}</p>
+        <p className="prose prose-slate relative whitespace-pre-line">
+          {description}
+        </p>
       </blockquote>
     </div>
   </figure>

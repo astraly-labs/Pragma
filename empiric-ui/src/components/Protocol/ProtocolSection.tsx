@@ -21,21 +21,21 @@ export const protocols: Protocol[] = [
   {
     name: "zkLend",
     category: "Money-Market",
-    src: "/assets/protocols/zklend.jpeg",
+    src: "/assets/protocols/zklend.svg",
     description:
       "zkLend is an L2 money-market protocol built on StarkNet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
   },
   {
     name: "Magnety",
     category: "Social Wallet",
-    src: "/assets/protocols/magnety.jpeg",
+    src: "/assets/protocols/magnety.png",
     description:
       "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
   },
   {
     name: "FujiDAO",
     category: "Lending",
-    src: "/assets/protocols/fujidao.png",
+    src: "/assets/protocols/fuji-dao.png",
     description:
       "Fuji aggregates lending-borrowing crypto markets within blockchain networks. The protocol optimizes interest rates to both borrowers and lenders by automating routing and movement of funds across lending-borrowing protocols and blockchain networks in search of the best APR.",
   },
@@ -49,8 +49,15 @@ export const protocols: Protocol[] = [
   {
     name: "CANVAS",
     category: "Infrastructure",
-    src: "/assets/protocols/canvas.jpeg",
+    src: "/assets/protocols/canvas.svg",
     description: "CANVAS provides scalable infrastructure to access Web3.",
+  },
+  {
+    name: "Serity",
+    category: "All",
+    src: "/assets/protocols/serity.png",
+    description:
+      "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets.",
   },
 ];
 

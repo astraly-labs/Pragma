@@ -33,7 +33,7 @@ const Details = ({ assetKey }) => {
   return (
     <div className="w-screen">
       <Banner />
-      <SectionContainer className="bg-slate-50 pt-12">
+      <SectionContainer className="bg-slate-50" first>
         <DetailDisplay
           assetKey={assetKey}
           oracleResponse={valueResponse}

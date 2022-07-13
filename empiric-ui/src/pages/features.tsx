@@ -10,7 +10,7 @@ import TimelineExplanation from "../components/TimelineExplanation";
 const FeaturesPage = () => {
   return (
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-slate-50" first>
         <Heading
           title="Reimagining oracles"
           subtitle="Meet our compute engine"
