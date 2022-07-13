@@ -10,6 +10,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         self,
         publisher_private_key,
         publisher_address,
+        publisher=None,
         publisher_registry_address=None,
         network=None,
         oracle_controller_address=None,
@@ -21,6 +22,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             if publisher_registry_address is not None
             else PUBLISHER_REGISTRY_ADDRESS
         )
+        self.publisher = publisher
         super().__init__(
             publisher_private_key,
             publisher_address,
@@ -32,11 +34,18 @@ class EmpiricPublisherClient(EmpiricBaseClient):
     async def _fetch_contracts(self):
         await self._fetch_base_contracts()
 
-    async def update_publisher_address(self, new_address):
+    async def update_publisher_address(self, new_address, publisher=None):
+        if self.publisher is None and publisher is None:
+            raise ValueError(
+                "No publisher provided at method call or instantiation, but need publisher ID to update address"
+            )
+        elif publisher is None:
+            publisher = self.publisher
+
         result = await self.send_transaction(
             self.publisher_registry_address,
             "update_publisher_address",
-            new_address,
+            [publisher, new_address],
         )
         print(f"Updated publisher address with transaction {result}")
 
