@@ -4,6 +4,8 @@
 
 The Empiric Oracle consists of three smart contracts, that each play a role in making the oracle easy to use and robust.
 
+![Architecture overview for Empiric Network smart contracts](../.gitbook/assets/Empiric-Architecture.png)
+
 The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because its state should be permanent (each publisher and their address). This is currently an ownable contract but will become permissionless as Empiric decentralizes.
 
 The second is the Oracle Controller, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s).
