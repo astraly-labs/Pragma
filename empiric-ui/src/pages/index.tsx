@@ -18,18 +18,18 @@ import { publishers } from "../components/Publisher/PublishersSection";
 const stats = [
   {
     label: "Customers",
-    value: "8",
+    value: "6+",
   },
   {
-    label: "Data providers",
-    value: "14",
+    label: "Data sources",
+    value: "12+",
   },
   {
-    label: "Data integrity members",
-    value: "6",
+    label: "Data feeds",
+    value: "20+",
   },
   {
-    label: "Raised",
+    label: "Funding",
     value: "$7M",
   },
 ];
