@@ -9,7 +9,7 @@ import InfoCard, { InfoProps } from "./InfoCard";
 
 const infoCards: InfoProps[] = [
   {
-    title: "Robust feeds with verifyable data",
+    title: "Robust feeds with verifiable data",
     icon: ShieldCheckIcon,
   },
   {

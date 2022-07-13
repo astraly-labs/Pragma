@@ -16,7 +16,7 @@ const FeaturesPage = () => {
           subtitle="Meet our compute engine"
           text="Our features empower native protocols to realize their ambitious potential."
           href="https://docs.empiric.network/quickstart"
-          hrefText="Integrate verifyable data into your project"
+          hrefText="Integrate verifiable data into your project"
         />
         <FeaturesDisplay />
       </SectionContainer>
@@ -40,7 +40,7 @@ const FeaturesPage = () => {
       <SectionContainer className="sm:!px-0">
         <CTASection
           title="Ready to get the data you need?"
-          description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+          description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
           mainAction={{
             href: "https://docs.empiric.network/quickstart",
             actionText: "Read the docs",
