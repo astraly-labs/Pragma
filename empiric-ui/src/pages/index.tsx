@@ -52,8 +52,7 @@ const IndexPage = () => (
         title="A few simple lines to integrate"
         subtitle="Try it yourself"
         text="Ready to get going? Head to our documentation using the link below and start using high-quality data in your smart contracts!
-        Or, copy the code below to install the Empiric Network SDK and start interacting with our feeds locally.
-        Still have questions? You can also browse our documentation to understand more about how Empiric works and how you can use Empiric to go beyond simple price feeds."
+        Or, copy the code below to install the Empiric Network SDK and start interacting with our feeds locally."
         href="https://docs.empiric.network/quickstart"
         hrefText="Read the documentation"
       />
