@@ -17,7 +17,7 @@ const generalFeatures: Feature[] = [
     icon: StarIcon,
   },
   {
-    name: "Verifyable data",
+    name: "Verifiable data",
     description:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
     icon: CheckIcon,

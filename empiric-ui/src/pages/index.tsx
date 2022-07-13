@@ -18,18 +18,18 @@ import { publishers } from "../components/Publisher/PublishersSection";
 const stats = [
   {
     label: "Customers",
-    value: "8",
+    value: "6+",
   },
   {
-    label: "Data providers",
-    value: "14",
+    label: "Data sources",
+    value: "12+",
   },
   {
-    label: "Data integrity members",
-    value: "6",
+    label: "Data feeds",
+    value: "20+",
   },
   {
-    label: "Raised",
+    label: "Funding",
     value: "$7M",
   },
 ];
@@ -49,9 +49,10 @@ const IndexPage = () => (
     </SectionContainer>
     <SectionContainer className="bg-slate-50">
       <Heading
-        title="3 easy steps"
+        title="A few simple lines to integrate"
         subtitle="Try it yourself"
-        text="We offer a variety of ways to integrate the data feeds you need into your project."
+        text="Ready to get going? Head to our documentation using the link below and start using high-quality data in your smart contracts!
+        Or, copy the code below to install the Empiric Network SDK and start interacting with our feeds locally."
         href="https://docs.empiric.network/quickstart"
         hrefText="Read the documentation"
       />
@@ -74,7 +75,7 @@ const IndexPage = () => (
     <SectionContainer className="sm:!px-0">
       <CTASection
         title="Ready to get the data you need?"
-        description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+        description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
         mainAction={{
           href: "https://docs.empiric.network/quickstart",
           actionText: "Get started",

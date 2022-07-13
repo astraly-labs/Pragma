@@ -15,7 +15,7 @@ const ProtocolsPage = () => {
           subtitle="Meet our users"
           text="We work closely with teams to ensure they get exactly what they need. Reach out to us if you need a custom solution."
           href="#"
-          hrefText="Get verifyable data for your project"
+          hrefText="Get verifiable data for your project"
         />
       </SectionContainer>
       <SectionContainer className="sm:!pt-0">
@@ -34,7 +34,7 @@ const ProtocolsPage = () => {
       <SectionContainer className="sm:!px-0">
         <CTASection
           title="Ready to get the data you need?"
-          description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
+          description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
           mainAction={{
             href: "https://docs.empiric.network/quickstart",
             actionText: "Read the docs",
