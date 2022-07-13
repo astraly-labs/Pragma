@@ -33,7 +33,7 @@ const resources: Resource[] = [
   },
   {
     name: "Features",
-    description: "Learn about what makes Pontis special.",
+    description: "Learn about what makes Empiric special.",
     href: "/features",
     icon: PuzzleIcon,
   },
@@ -45,7 +45,7 @@ const resources: Resource[] = [
   },
   {
     name: "Protocols",
-    description: "Take a look at who is already using Pontis.",
+    description: "Take a look at who is already using Empiric.",
     href: "/protocols",
     icon: ViewListIcon,
   },
@@ -55,7 +55,7 @@ const resources: Resource[] = [
 const additional = [
   {
     name: "About Us",
-    description: "Get to know the team behind Pontis.",
+    description: "Get to know the team behind Empiric.",
     href: "/about",
     icon: UserGroupIcon,
   },
@@ -83,11 +83,11 @@ const NavHeader = () => (
         <div className="flex justify-start lg:w-0 lg:flex-1">
           <Link href="/">
             <a>
-              <span className="sr-only">Pontis</span>
+              <span className="sr-only">Empiric</span>
               <img
                 className="h-8 w-auto sm:h-10"
-                src="/pontis-logo.svg"
-                alt="Pontis"
+                src="/empiric-logo.svg"
+                alt="Empiric"
               />
             </a>
           </Link>
@@ -138,8 +138,8 @@ const NavHeader = () => (
               <div>
                 <img
                   className="h-8 w-auto"
-                  src="pontis-logo.svg"
-                  alt="Pontis"
+                  src="empiric-logo.svg"
+                  alt="Empiric"
                 />
               </div>
               <div className="-mr-2">

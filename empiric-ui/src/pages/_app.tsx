@@ -22,14 +22,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <div>
       <Head>
-        <title>Pontis | The zk-Oracle</title>
+        <title>Empiric Network | Decentralized &amp; Composable Data</title>
         <meta name="robots" content="all" />
         <meta
           name="description"
-          content="Pontis is the leading oracle on Starknet, built to empower native protocols to realize their ambitious potential.
-          By being zk-first from the ground up, Pontis offers unique features and improvements over existing solutions."
+          content="Empiric is the leading oracle on Starknet, built to empower native protocols to realize their ambitious potential.
+          By being zk-first from the ground up, Empiric offers unique features and improvements over existing solutions."
         ></meta>
-        <link rel="canonical" href="https://www.pontisoracle.xyz" />
+        <link rel="canonical" href="https://www.empiric.network" />
         <link rel="icon" type="image/ico" href="/favicon.ico" />
       </Head>
       <StarknetProvider autoConnect connectors={connectors}>

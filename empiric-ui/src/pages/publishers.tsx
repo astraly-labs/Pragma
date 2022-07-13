@@ -12,7 +12,7 @@ const PublishersPage = () => {
         <Heading
           title="Your favorite giants"
           subtitle="Meet our publishers"
-          text="At Pontis, we care about the integrity of our data. We ensure that only high quality data publishers join this list."
+          text="At Empiric, we care about the integrity of our data. We ensure that only high quality data publishers join this list."
           href="#"
           hrefText="Find out how you can become a publisher"
         />

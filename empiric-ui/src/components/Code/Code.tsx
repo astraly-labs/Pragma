@@ -14,7 +14,7 @@ const lines: CodeLineProps[] = [
     prefix: "output",
   },
   {
-    text: "Successful integration of Pontis",
+    text: "Successful integration of Empiric",
     prefix: "check",
   },
 ];
@@ -46,11 +46,11 @@ const Code = () => {
                 <ChevronRightIcon className="h-8 w-8 opacity-50" />
               </span>
               <CopyToClipboard
-                text="pip install pontis"
+                text="pip install empiric-network"
                 onCopy={() => copyCode()}
               >
                 <span className="cursor-pointer rounded-md bg-white bg-opacity-10 py-1 px-2 transition-colors duration-150 hover:bg-opacity-20">
-                  pip install pontis
+                  pip install empiric-network
                 </span>
               </CopyToClipboard>
               <div

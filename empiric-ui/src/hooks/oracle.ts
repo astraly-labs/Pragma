@@ -9,7 +9,7 @@ import {
   toHex,
 } from "starknet/utils/number";
 
-// List from https://github.com/42labs/Pontis/blob/master/pontis-package/pontis/publisher/assets.py
+// List from https://github.com/42labs/Empiric/blob/master/empiric-package/empiric/publisher/assets.py
 export const AssetKeys = [
   "eth/usd",
   "btc/usd",

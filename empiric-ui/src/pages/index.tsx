@@ -64,10 +64,10 @@ const IndexPage = () => (
     <SectionContainer className="overflow-hidden bg-slate-50">
       <Heading
         title="Reimagine Oracles"
-        subtitle="Why Pontis?"
+        subtitle="Why Empiric?"
         text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
         href="/features"
-        hrefText="Learn more about how Pontis works"
+        hrefText="Learn more about how Empiric works"
       />
       <InfoSection />
     </SectionContainer>
