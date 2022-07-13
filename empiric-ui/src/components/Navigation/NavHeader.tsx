@@ -28,7 +28,7 @@ const resources: Resource[] = [
   {
     name: "Docs",
     description: "Start using our data by reading our docs.",
-    href: "https://docs.empiric.network/quickstart",
+    href: "https://docs.empiric.network/",
     icon: CodeIcon,
   },
   {
