@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 
 import "../styles/index.css";
-import PontisHeader from "../components/PontisHeader";
-import PontisFooter from "../components/PontisFooter";
-import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
+import NavFooter from "../components/Navigation/NavFooter";
+import CommandPallate from "../components/Navigation/CommandPalette";
+import { SearchContext } from "../providers/search";
+import {
+  StarknetProvider,
+  getInstalledInjectedConnectors,
+} from "@starknet-react/core";
 import Head from "next/head";
+import NavHeader from "../components/Navigation/NavHeader";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const connectors = [new InjectedConnector()];
+  const connectors = getInstalledInjectedConnectors();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
+  const router = useRouter();
 
   return (
     <div>
@@ -24,10 +33,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <link rel="icon" type="image/ico" href="/favicon.ico" />
       </Head>
       <StarknetProvider autoConnect connectors={connectors}>
-        <div className="bg-fuchsia-800 bg-gradient-to-tr from-indigo-900 min-h-screen flex flex-col justify-start text-slate-200">
-          <PontisHeader />
-          <Component {...pageProps} />
-          <PontisFooter />
+        <div className="flex min-h-screen flex-col justify-start bg-white">
+          <SearchContext.Provider value={setIsSearchOpen}>
+            <NavHeader />
+            <CommandPallate isOpen={isSearchOpen} />
+            <Component {...pageProps} key={router.asPath} />
+            <NavFooter />
+          </SearchContext.Provider>
         </div>
       </StarknetProvider>
     </div>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="149.75417mm"
+   height="46.302082mm"
+   viewBox="0 0 149.75417 46.302083"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="ftx logo.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.42053519"
+     inkscape:cx="881.01453"
+     inkscape:cy="102.19582"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="70"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(188.64431,-115.48607)">
+    <g
+       transform="matrix(0.4160462,0,0,-0.41186696,-342.59264,291.23382)"
+       inkscape:label="ink_ext_XXXXXX"
+       id="g10">
+      <g
+         transform="scale(0.1)"
+         id="g12">
+        <path
+           id="path32"
+           style="fill:#131112;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 5495.42,3841.6 v -154 h 309.06 v -153 h -309.06 v -240.1 h -198.05 v 700.2 h 549.12 v -153.1 h -351.07"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path34"
+           style="fill:#131112;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 6133.52,3837.6 h -215.05 v 157.1 h 627.13 v -157.1 h -214.04 v -543.1 h -198.04 v 543.1"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path36"
+           style="fill:#131112;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 7071.68,3294.5 -145.03,217.1 -143.03,-217.1 h -226.05 l 255.06,354.1 -244.05,346.1 h 223.04 l 140.04,-202.1 138.02,202.1 h 214.05 l -244.06,-338.1 260.06,-362.1 h -228.05"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path38"
+           style="fill:#84d6d7;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4067.87,3142.9 h 298.8 v 298.7 h -298.8 v -298.7"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path40"
+           style="fill:#33bbc7;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4631.77,3854.5 h -563.9 v -298.8 h 563.9 v 0 h 102.55 v 298.7 h -102.55 v 0.1"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path42"
+           style="fill:#11a9bc;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4067.87,4267.1 v -298.7 h 925.6 v 298.7 h -925.6"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path44"
+           style="fill:#33bbc7;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3700.27,3555.7 h 298.7 v 298.8 h -298.7 v -298.8"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+  </g>
+</svg>
