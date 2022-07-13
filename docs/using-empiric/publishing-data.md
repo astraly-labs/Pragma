@@ -25,6 +25,8 @@ CMD python fetch-and-publish.py
 
 #### Using the Empiric Network Python SDK
 
+See a full sample script [here](https://github.com/42labs/Empiric/blob/master/publisher/sample-publisher/coinbase/fetch-and-publish.py), or copy paste the minimal code below to get started.
+
 ```python
 import asyncio
 import os
