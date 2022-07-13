@@ -4,7 +4,7 @@ import Underline from "../common/Underline";
 const Hero = () => (
   <header className="text-center">
     <h1 className="max-w-3xl text-5xl font-medium !leading-[1.1] tracking-tight text-slate-900 sm:text-7xl">
-      Pontis is the{" "}
+      Empiric is the{" "}
       <span className="relative whitespace-nowrap text-indigo-600">
         <Underline className="absolute top-2/3 left-0 h-[0.45em] w-full fill-indigo-300/70" />
         <span className="relative">first live</span>

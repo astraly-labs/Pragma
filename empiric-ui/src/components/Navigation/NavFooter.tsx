@@ -91,7 +91,7 @@ const socials: SocialMedia[] = [
   {
     name: "GitHub",
     src: "/assets/social/github.svg",
-    href: "https://github.com/42labs/Pontis",
+    href: "https://github.com/42labs/Empiric",
   },
   {
     name: "Twitter",
@@ -107,16 +107,16 @@ const Footer = () => (
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
             <a>
-              <span className="sr-only">Pontis</span>
+              <span className="sr-only">Empiric</span>
               <img
                 className="h-8 w-auto sm:h-10"
-                src="/pontis-logo.svg"
-                alt="Pontis"
+                src="/empiric-logo.svg"
+                alt="Empiric"
               />
             </a>
           </Link>
           <p className="prose prose-slate">
-            Pontis is the leading oracle on Starknet, built to empower native
+            Empiric is the leading oracle on Starknet, built to empower native
             protocols to realize their ambitious potential.
           </p>
           <ul className="flex flex-row items-center space-x-6">

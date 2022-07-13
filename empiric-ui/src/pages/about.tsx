@@ -12,7 +12,7 @@ const AboutPage = () => {
         <Heading
           title="Developed by experts"
           subtitle="Meet our team"
-          text="At Pontis we are building a culture around bright people that want to move fast and embrace honest feedback."
+          text="At Empiric we are building a culture around bright people that want to move fast and embrace honest feedback."
           href="#"
           hrefText="In fact, give us feedback right now"
         />

@@ -2,9 +2,9 @@ import React from "react";
 
 const faqs = [
   {
-    question: "Does Pontis only provide financial data?",
+    question: "Does Empiric only provide financial data?",
     answer:
-      "Pontis is starting with financial data but will quickly expand to sports, weather, news — any event that happens anywhere should be available on-chain.",
+      "Empiric is starting with financial data but will quickly expand to sports, weather, news — any event that happens anywhere should be available on-chain.",
   },
   {
     question: "What's the best thing about logo?",
