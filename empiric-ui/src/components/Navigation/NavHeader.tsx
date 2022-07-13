@@ -85,7 +85,7 @@ const NavHeader = () => (
             <a>
               <span className="sr-only">Empiric</span>
               <img
-                className="h-8 w-auto sm:h-10"
+                className="h-12 w-auto"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />
