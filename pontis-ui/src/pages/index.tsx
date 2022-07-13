@@ -52,7 +52,7 @@ const IndexPage = () => (
         title="3 easy steps"
         subtitle="Try it yourself"
         text="We offer a variety of ways to integrate the data feeds you need into your project."
-        href="#"
+        href="https://docs.empiric.network/quickstart"
         hrefText="Read the documentation"
       />
       <Code />
@@ -76,8 +76,8 @@ const IndexPage = () => (
         title="Ready to get the data you need?"
         description="Leverage recent breakthroughs in zero knowledge computation by using verifyable and composable data in your application."
         mainAction={{
-          href: "/",
-          actionText: "Read the docs",
+          href: "https://docs.empiric.network/quickstart",
+          actionText: "Get started",
           icon: CodeIcon,
         }}
         secondaryAction={{

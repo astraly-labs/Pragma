@@ -6,7 +6,7 @@ const baseStyles = {
   solid:
     "flex cursor-pointer items-center justify-center rounded-lg px-4 py-3 text-base shadow-lg hover:shadow-xl md:px-6 md:py-4 md:text-xl focus:outline-none",
   outline:
-    "flex cursor-pointer items-center justify-center rounded-lg border px-[calc(theme(spacing.4)-1px)] py-[calc(theme(spacing.3)-1px)] text-base md:px-[calc(theme(spacing.6)-1px)] md:py-[calc(theme(spacing.4)-1px)] md:text-xl focus:outline-none",
+    "flex cursor-pointer items-center justify-center rounded-lg border-2 px-[calc(theme(spacing.4)-2px)] py-[calc(theme(spacing.3)-2px)] text-base md:px-[calc(theme(spacing.6)-1px)] md:py-[calc(theme(spacing.4)-1px)] md:text-xl focus:outline-none",
 } as const;
 
 const variantStyles = {

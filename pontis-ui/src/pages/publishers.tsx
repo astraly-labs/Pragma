@@ -28,7 +28,7 @@ const PublishersPage = () => {
             icon: ChatIcon,
           }}
           secondaryAction={{
-            href: "/",
+            href: "https://docs.empiric.network/quickstart",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}

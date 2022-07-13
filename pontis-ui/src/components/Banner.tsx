@@ -1,9 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StyledTransition from "./common/StyledTransition";
 import { ExclamationIcon, XIcon } from "@heroicons/react/outline";
+import { getStarknetStatus } from "../services/starknetStatus.service";
 
 const Banner = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    /**
+     * Checks whether StarkNet's status is okay.
+     */
+    async function checkStatus() {
+      const { status } = await getStarknetStatus();
+      if (status !== "ok") {
+        setIsOpen(true);
+      }
+    }
+    checkStatus();
+  }, []);
+
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 pb-2 sm:pb-5">
       <StyledTransition show={isOpen}>

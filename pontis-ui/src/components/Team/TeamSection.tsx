@@ -55,7 +55,7 @@ const people: Person[] = [
   },
   {
     name: "Estragon Gross",
-    role: "TBD",
+    role: "Business Development",
     imageUrl: "/assets/team/estragon.jpeg",
     socials: [
       {

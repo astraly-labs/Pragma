@@ -65,7 +65,7 @@ const CTASection: React.FC<CTASectionProps> = ({
               {description}
             </p>
           </div>
-          <div className="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
+          <div className="mt-12 w-fit sm:mx-auto sm:flex">
             <ButtonLink
               variant="solid"
               color="dark"

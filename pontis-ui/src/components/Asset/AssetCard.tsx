@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/outline";
 
@@ -6,7 +6,7 @@ import { AssetKeyT, useOracleGetValue } from "../../hooks/oracle";
 import AssetCardName from "./AssetCardName";
 import AssetCardPrice from "./AssetCardPrice";
 import AssetCardTime from "./AssetCardTime";
-import LoadingBar from "./LoadingBar";
+import LoadingBar from "../common/LoadingBar";
 import { assetKeyToUrl } from "../../../utils/encodeUrl";
 
 /**
@@ -22,7 +22,46 @@ interface AssetCardProps {
 }
 
 const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
-  const { oracleResponse, error } = useOracleGetValue(assetKey);
+  const { oracleResponse, loading, error } = useOracleGetValue(assetKey);
+
+  const content = useMemo(() => {
+    if (error) {
+      return (
+        <div className="col-span-2 col-start-2 row-span-2 sm:row-span-1">
+          <div>Error fetching price for {assetKeyDisplayString(assetKey)}.</div>
+          <div>Please try again later.</div>
+        </div>
+      );
+    }
+    if (loading || !oracleResponse?.value) {
+      return (
+        <>
+          <div className="place-self-center">
+            <LoadingBar className="h-4 w-24" />
+          </div>
+          <div className="place-self-center">
+            <LoadingBar className="h-4 w-24" />
+          </div>
+        </>
+      );
+    }
+    if (oracleResponse?.lastUpdatedTimestamp === 0) {
+      return <div>No results found for {assetKeyDisplayString(assetKey)}</div>;
+    }
+    return (
+      <>
+        <div className="col-span-1 col-start-2 row-span-2 row-start-1 flex items-start justify-end sm:row-span-1 sm:place-self-center">
+          <AssetCardPrice price={oracleResponse.value} assetKey={assetKey} />
+        </div>
+        <div className="col-span-2 col-start-1 row-span-1 row-start-2 sm:col-span-1 sm:col-start-3 sm:row-start-1 sm:flex sm:items-center sm:justify-end">
+          <AssetCardTime
+            lastUpdatedTimestamp={oracleResponse.lastUpdatedTimestamp}
+          />
+        </div>
+      </>
+    );
+  }, [oracleResponse, loading, error, assetKey]);
+
   return (
     <Link href={`/details/${assetKeyToUrl(assetKey)}`}>
       <a className="flex w-full cursor-pointer flex-row overflow-hidden rounded-lg bg-slate-50 shadow-lg hover:shadow-xl">
@@ -30,41 +69,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
           <div className="col-span-1 row-span-1 place-self-start">
             <AssetCardName assetKey={assetKey} />
           </div>
-          {oracleResponse?.value !== undefined ? (
-            oracleResponse.lastUpdatedTimestamp === 0 ? (
-              <div>No results found for {assetKeyDisplayString(assetKey)}</div>
-            ) : (
-              <>
-                <div className="col-span-1 col-start-2 row-span-2 row-start-1 flex items-start justify-end sm:row-span-1 sm:place-self-center">
-                  <AssetCardPrice
-                    price={oracleResponse.value}
-                    assetKey={assetKey}
-                  />
-                </div>
-                <div className="col-span-2 col-start-1 row-span-1 row-start-2 sm:col-span-1 sm:col-start-3 sm:row-start-1 sm:flex sm:items-center sm:justify-end">
-                  <AssetCardTime
-                    lastUpdatedTimestamp={oracleResponse.lastUpdatedTimestamp}
-                  />
-                </div>
-              </>
-            )
-          ) : error !== undefined ? (
-            <div className="col-span-2 col-start-2 row-span-2 sm:row-span-1">
-              <div>
-                Error fetching price for {assetKeyDisplayString(assetKey)}.
-              </div>
-              <div>Please try again later.</div>
-            </div>
-          ) : (
-            <>
-              <div className="place-self-center">
-                <LoadingBar />
-              </div>
-              <div className="place-self-center">
-                <LoadingBar />
-              </div>
-            </>
-          )}
+          {content}
         </div>
         <div className="flex w-12 flex-row items-center justify-center bg-slate-300 sm:w-16 md:w-24">
           <ChevronRightIcon className="w-8 text-slate-900" />

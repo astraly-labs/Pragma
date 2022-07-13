@@ -35,7 +35,7 @@ const AssetsSection = () => {
             color="slate"
             onClick={() => setNumToShow(incrementShow(numToShow))}
             icon={ChevronDownIcon}
-            className="rounded-l-lg rounded-r-none border-r-0"
+            className="rounded-l-lg rounded-r-none"
             type="button"
             disabled={numToShow === AssetKeys.length}
           >
@@ -46,7 +46,7 @@ const AssetsSection = () => {
             color="slate"
             onClick={() => setNumToShow(SHOW_DEFAULT)}
             icon={ChevronUpIcon}
-            className="rounded-r-lg rounded-l-none"
+            className="rounded-r-lg rounded-l-none border-l-0"
             type="button"
             disabled={numToShow === SHOW_DEFAULT}
           >
