@@ -55,7 +55,7 @@ const IndexPage = () => (
         href="https://docs.empiric.network/quickstart"
         hrefText="Read the documentation"
       />
-      <Code />
+      {/* <Code />*/}
     </SectionContainer>
     <SectionContainer>
       <Testimonial />
