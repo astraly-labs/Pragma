@@ -10,7 +10,7 @@ import AngelsSection from "../components/AngelsSection";
 const AboutPage = () => {
   return (
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-slate-50" first>
         <Heading
           title="Developed by experts"
           subtitle="Meet our team"

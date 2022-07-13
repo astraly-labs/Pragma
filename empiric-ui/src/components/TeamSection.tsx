@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./LogoClouds/NormalLogoCloud";
+import { Logo } from "./LogoCloud";
 
 const workLogos: Logo[] = [
   {

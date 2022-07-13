@@ -8,7 +8,7 @@ import PublishersSeciton from "../components/Publisher/PublishersSection";
 const PublishersPage = () => {
   return (
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-slate-50" first>
         <Heading
           title="Your favorite giants"
           subtitle="Meet our publishers"

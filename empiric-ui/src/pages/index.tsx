@@ -9,9 +9,8 @@ import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
-import NormalLogoCloud from "../components/LogoClouds/NormalLogoCloud";
+import LogoCloud from "../components/LogoCloud";
 import Stats from "../components/Stats";
-import Marquee from "../components/LogoClouds/Marquee";
 import { protocols } from "../components/Protocol/ProtocolSection";
 import { publishers } from "../components/Publisher/PublishersSection";
 
@@ -37,15 +36,15 @@ const stats = [
 const IndexPage = () => (
   <div className="w-screen">
     <Banner />
-    <SectionContainer className="bg-slate-50 pt-12">
+    <SectionContainer className="bg-slate-50" first>
       <Hero />
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
-      <NormalLogoCloud title="Used by" logos={protocols} />
+      <LogoCloud title="Data from" logos={publishers} />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
-      <Marquee title="Data from" logos={publishers} />
+      <LogoCloud title="Used by" logos={protocols} />
     </SectionContainer>
     <SectionContainer className="bg-slate-50">
       <Heading
