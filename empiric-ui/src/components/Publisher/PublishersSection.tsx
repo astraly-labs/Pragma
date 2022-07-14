@@ -13,13 +13,14 @@ export const publishers: PublisherCardProps[] = [
     name: "Alameda Research",
     src: "/assets/publishers/alameda.png",
     description:
-      "Alameda Research is one of the leading cryptocurrency high frequently trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. They have a globally focused team and infrastructure to trade on all major exchanges and markets.\n\n Alameda will use their whole business operation to provide price feeds to the Empiric Network.",
+      "Alameda Research is one of the leading cryptocurrency high frequently trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda will use their whole business operation to provide price feeds to the Empiric Network.",
     href: "https://www.alameda-research.com/",
   },
   {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.png",
-    description: "Enim ad reprehenderit pariatur excepteur non do ullamco ad.",
+    description:
+      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of security in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
     href: "https://www.janestreet.com/",
   },
   {

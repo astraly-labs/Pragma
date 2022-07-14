@@ -45,7 +45,7 @@ const angels: SimpleLogo[] = [
   },
   {
     name: "Sina Habibian",
-    src: "/assets/angels/zeitgeist.png",
+    src: "/assets/angels/ethereum-foundation.png",
   },
 ];
 
@@ -59,7 +59,7 @@ const AngelsSection = () => (
         >
           <div>
             <img
-              className="h-5 grayscale group-hover:grayscale-0"
+              className="h-5 grayscale group-hover:grayscale-0 sm:h-6"
               src={src}
               alt={name}
             />
