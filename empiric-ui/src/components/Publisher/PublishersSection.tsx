@@ -27,7 +27,7 @@ export const publishers: PublisherCardProps[] = [
     name: "CMT Digital",
     src: "/assets/publishers/cmtdigital.png",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "CMT is a leading market maker and proprietary trading firm. They have been together for more than two decades and has built a team of professional with significant trading and technology experiences. CMT operates across five continents.\n\n CMT will provide their reliable and stable crypto market data to the Empiric Network.",
     href: "https://cmt.digital/",
   },
   {

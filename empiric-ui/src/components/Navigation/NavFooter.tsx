@@ -154,9 +154,13 @@ const Footer = () => (
               {column.links.map(({ external, title, href }) => (
                 <React.Fragment key={title}>
                   {external ? (
-                    <StyledExternalLink href={href}>{title}</StyledExternalLink>
+                    <StyledExternalLink href={href} underline={false}>
+                      {title}
+                    </StyledExternalLink>
                   ) : (
-                    <StyledInternalLink href={href}>{title}</StyledInternalLink>
+                    <StyledInternalLink href={href} underline={false}>
+                      {title}
+                    </StyledInternalLink>
                   )}
                 </React.Fragment>
               ))}
