@@ -5,7 +5,7 @@ import FeatureItem, { Feature } from "./FeatureItem";
 
 interface FeatureGridProps {
   title: string;
-  description: string;
+  description: string | React.ReactElement;
   features: Feature[];
   imgSrc: string;
   imageLeft: boolean;

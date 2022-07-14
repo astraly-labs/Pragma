@@ -5,6 +5,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
+import { getOracleControllerAddress } from "../../services/address.service";
 
 interface FooterLink {
   title: string;
@@ -28,7 +29,9 @@ const content: FooterColumn[] = [
       },
       {
         title: "View on Block Explorer",
-        href: `${buildExplorerUrlForAddress(networkId())}`,
+        href: `${buildExplorerUrlForAddress(
+          getOracleControllerAddress(networkId())
+        )}#readContract`,
         external: true,
       },
     ],
@@ -162,7 +165,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
-        © 42 Labs - {new Date().getFullYear()}. All rights reserved.
+        © 42 Labs Inc. - {new Date().getFullYear()}. All rights reserved.
       </div>
     </div>
   </div>

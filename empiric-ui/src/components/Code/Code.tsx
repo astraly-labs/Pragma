@@ -14,7 +14,7 @@ const lines: CodeLineProps[] = [
     prefix: "output",
   },
   {
-    text: "Successful integration of Empiric",
+    text: "Successful installation of Empiric SDK",
     prefix: "check",
   },
 ];

@@ -19,6 +19,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
+import { getOracleControllerAddress } from "../../services/address.service";
 
 interface Resource {
   name: string;
@@ -66,7 +67,9 @@ const additional = [
   {
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
-    href: `${buildExplorerUrlForAddress(networkId())}`,
+    href: `${buildExplorerUrlForAddress(
+      getOracleControllerAddress(networkId())
+    )}#readContract`,
     icon: CursorClickIcon,
   },
 ];
@@ -75,7 +78,7 @@ const additional = [
 const callsToAction = [
   {
     name: "Request Asset",
-    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
+    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
     icon: ChatIcon,
   },
 ];
