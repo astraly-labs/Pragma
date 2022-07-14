@@ -12,9 +12,9 @@ const FeaturesPage = () => {
     <div className="w-screen">
       <SectionContainer className="bg-slate-50" first>
         <Heading
-          title="Reimagining oracles"
-          subtitle="Meet our compute engine"
-          text="Our features empower native protocols to realize their ambitious potential."
+          title="Reimagining Oracles"
+          subtitle="Transparent, Decentralized &amp; Composable"
+          text="Empiric Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. "
           href="https://docs.empiric.network/quickstart"
           hrefText="Integrate verifiable data into your project"
         />
@@ -22,9 +22,9 @@ const FeaturesPage = () => {
       </SectionContainer>
       <SectionContainer>
         <Heading
-          title="A closer look"
+          title="Step by Step Overview"
           subtitle="How it works"
-          text="Sit laboris adipisicing id culpa veniam magna Lorem occaecat laboris."
+          text="Follow along as the data moves from the sources on-chain and to your smart contract."
         />
         <TimelineExplanation />
       </SectionContainer>

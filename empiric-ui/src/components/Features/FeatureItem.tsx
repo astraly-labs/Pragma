@@ -2,7 +2,7 @@ import React from "react";
 
 export interface Feature {
   name: string;
-  description: string;
+  description: string | React.ReactElement;
   icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 }
 
