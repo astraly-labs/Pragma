@@ -22,10 +22,10 @@ const ProtocolsPage = () => {
       </SectionContainer>
       <SectionContainer className="bg-slate-50">
         <Heading
-          title="3 easy steps"
+          title="2 easy steps"
           subtitle="Try it yourself"
-          text="We offer a variety of ways to interact with the oracle."
-          href="#"
+          text="We offer a variety of ways to get high-quality, robust data from the oracle."
+          href="https://docs.empiric.network/using-empiric/consuming-data"
           hrefText="Read the documentation"
         />
         <Code />
