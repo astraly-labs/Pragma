@@ -13,7 +13,7 @@ export const publishers: PublisherCardProps[] = [
     name: "Alameda Research",
     src: "/assets/publishers/alameda.png",
     description:
-      "Alameda Research is one of the leading cryptocurrency high frequently trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda will use their whole business operation to provide price feeds to the Empiric Network.",
+      "Alameda Research is one of the leading cryptocurrency high frequently trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
     href: "https://www.alameda-research.com/",
   },
   {
@@ -27,7 +27,7 @@ export const publishers: PublisherCardProps[] = [
     name: "CMT Digital",
     src: "/assets/publishers/cmtdigital.png",
     description:
-      "CMT is a leading market maker and proprietary trading firm. They have been together for more than two decades and has built a team of professional with significant trading and technology experiences. CMT operates across five continents.\n\n CMT will provide their reliable and stable crypto market data to the Empiric Network.",
+      "CMT is a leading market maker and proprietary trading firm. They have been together for more than two decades and has built a team of professionals with significant trading and technology experiences. CMT operates across five continents.\n\n CMT will provide their reliable and stable crypto market data to the Empiric Network.",
     href: "https://cmt.digital/",
   },
   {
