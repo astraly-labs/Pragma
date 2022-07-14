@@ -14,9 +14,7 @@ const AboutPage = () => {
         <Heading
           title="Developed by experts"
           subtitle="Meet our team"
-          text="At Empiric we are building a culture around bright people that want to move fast and embrace honest feedback."
-          href="#"
-          hrefText="In fact, give us feedback right now"
+          text="Behind Empiric is a close-knit team of bright people who move fast to build a more transparent and decentralized future."
         />
         <TeamSection />
       </SectionContainer>
