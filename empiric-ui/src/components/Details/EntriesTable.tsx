@@ -81,10 +81,6 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
         header: "Time",
         accessorFn: (entry) => secondsToTime(entry.timestamp),
       },
-      {
-        header: "Publisher",
-        accessorFn: (entry) => capitalize(entry.publisher),
-      },
     ],
     [decimals, assetKey]
   );
