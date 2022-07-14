@@ -47,6 +47,10 @@ const angels: SimpleLogo[] = [
     name: "Sina Habibian",
     src: "/assets/angels/ethereum-foundation.png",
   },
+  {
+    name: "Alan Curtis",
+    src: "/assets/angels/radar.png",
+  },
 ];
 
 const AngelsSection = () => (
