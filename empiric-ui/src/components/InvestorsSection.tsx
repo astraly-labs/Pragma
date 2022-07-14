@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./LogoCloud";
+import { Logo } from "./LogoClouds/LogoCloud";
 
 const investors: Logo[] = [
   { name: "Variant Fund", src: "/assets/investors/variant.svg" },
@@ -18,10 +18,6 @@ const investors: Logo[] = [
   {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.png",
-  },
-  {
-    name: "Portofino",
-    src: "/assets/currencies/fallback.svg",
   },
   {
     name: "FTX",

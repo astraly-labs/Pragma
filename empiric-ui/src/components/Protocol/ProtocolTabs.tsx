@@ -10,7 +10,7 @@ interface ProtocolTabsProps {
 
 const ProtocolTabs: React.FC<ProtocolTabsProps> = ({ protocols }) => (
   <Tab.Group>
-    <div className="sticky top-0 flex h-28 justify-center border-b border-slate-200 bg-white/95 [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
+    <div className="sticky top-0 z-20 flex h-28 justify-center border-b border-slate-200 bg-white/95 [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
       <Tab.List className="-mb-[2px] grid auto-cols-[minmax(0,15rem)] grid-flow-col text-base font-medium text-slate-900 lg:text-lg">
         {protocolCategories.map((category) => (
           <Tab
@@ -43,9 +43,9 @@ const ProtocolTabs: React.FC<ProtocolTabsProps> = ({ protocols }) => (
                 <li key={name}>
                   <ProtocolCard
                     name={name}
+                    category={category}
                     description={description}
                     src={src}
-                    category={category}
                   />
                 </li>
               ))}

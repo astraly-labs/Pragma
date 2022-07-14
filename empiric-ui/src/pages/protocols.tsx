@@ -41,7 +41,7 @@ const ProtocolsPage = () => {
             icon: CodeIcon,
           }}
           secondaryAction={{
-            href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+            href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
             actionText: "Request asset",
             icon: ChatIcon,
           }}

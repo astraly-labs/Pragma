@@ -17,7 +17,7 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
   return (
     <>
       <Listbox value={selectedCategory} onChange={setSelectedCategory}>
-        <div className="sticky top-0">
+        <div className="sticky top-0 z-20">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white/95 py-3 px-4 text-left shadow-lg [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
             <span className="block truncate text-lg text-slate-900">
               {selectedCategory}
@@ -82,9 +82,9 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
             <li key={name}>
               <ProtocolCard
                 name={name}
+                category={category}
                 description={description}
                 src={src}
-                category={category}
               />
             </li>
           ))}
