@@ -1,9 +1,12 @@
 import React from "react";
 import classNames from "classnames";
 
-export interface Logo {
+export interface SimpleLogo {
   name: string;
   src: string;
+}
+
+export interface Logo extends SimpleLogo {
   href: string;
 }
 

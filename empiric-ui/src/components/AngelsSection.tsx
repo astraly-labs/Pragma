@@ -1,7 +1,11 @@
 import React from "react";
-import { Logo } from "./LogoClouds/LogoCloud";
+import { SimpleLogo } from "./LogoClouds/LogoCloud";
 
-const angels: Logo[] = [
+const angels: SimpleLogo[] = [
+  {
+    name: "Sandeep Nailwal",
+    src: "/assets/angels/polygon.png",
+  },
   { name: "Marc Bhargava", src: "/assets/angels/coinbase.svg" },
   {
     name: "Luke Pearson",
@@ -12,8 +16,16 @@ const angels: Logo[] = [
     src: "/assets/angels/ponto.png",
   },
   {
+    name: "Brendan Farmer",
+    src: "/assets/angels/polygon.png",
+  },
+  {
     name: "Max Kleiman-Weiner",
     src: "/assets/angels/sequoia.svg",
+  },
+  {
+    name: "Austin King",
+    src: "/assets/angels/rift.png",
   },
   {
     name: "Hossein Kakavand",
