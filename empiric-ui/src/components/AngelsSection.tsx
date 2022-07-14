@@ -20,16 +20,16 @@ const angels: SimpleLogo[] = [
     src: "/assets/angels/polygon.png",
   },
   {
-    name: "Max Kleiman-Weiner",
-    src: "/assets/angels/sequoia.svg",
-  },
-  {
     name: "Austin King",
     src: "/assets/angels/rift.png",
   },
   {
     name: "Hossein Kakavand",
     src: "/assets/angels/luther-systems.png",
+  },
+  {
+    name: "Max Kleiman-Weiner",
+    src: "/assets/angels/sequoia.svg",
   },
   {
     name: "Maik Wehmeyer",
@@ -42,6 +42,10 @@ const angels: SimpleLogo[] = [
   {
     name: "Thomas Bailey",
     src: "/assets/angels/road-capital.png",
+  },
+  {
+    name: "Sina Habibian",
+    src: "/assets/angels/zeitgeist.png",
   },
 ];
 
