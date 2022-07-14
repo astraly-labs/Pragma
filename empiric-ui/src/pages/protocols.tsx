@@ -1,6 +1,5 @@
 import React from "react";
-import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
-import CTASection from "../components/CTASection";
+import { DefaultCTASection } from "../components/CTASection";
 import SectionContainer from "../components/common/SectionContainer";
 import Code from "../components/Code/Code";
 import Heading from "../components/Heading";
@@ -32,20 +31,7 @@ const ProtocolsPage = () => {
         <Code />
       </SectionContainer>
       <SectionContainer className="sm:!px-0">
-        <CTASection
-          title="Ready to get the data you need?"
-          description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
-          mainAction={{
-            href: "https://docs.empiric.network/quickstart",
-            actionText: "Read the docs",
-            icon: CodeIcon,
-          }}
-          secondaryAction={{
-            href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
-            actionText: "Request asset",
-            icon: ChatIcon,
-          }}
-        />
+        <DefaultCTASection />
       </SectionContainer>
     </div>
   );

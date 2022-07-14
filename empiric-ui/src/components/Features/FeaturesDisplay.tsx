@@ -1,9 +1,7 @@
 import React from "react";
 import {
-  CheckIcon,
   CubeTransparentIcon,
   PuzzleIcon,
-  ShieldCheckIcon,
   StarIcon,
 } from "@heroicons/react/outline";
 import { Feature } from "./FeatureItem";

@@ -4,9 +4,8 @@ import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
 import AssetsSection from "../components/Asset/AssetsSection";
 import Testimonial from "../components/Landing/Testimonial";
-import CTASection from "../components/CTASection";
+import { DefaultCTASection } from "../components/CTASection";
 import Code from "../components/Code/Code";
-import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
 import LogoCloud from "../components/LogoClouds/LogoCloud";
@@ -73,20 +72,7 @@ const IndexPage = () => (
       <InfoSection />
     </SectionContainer>
     <SectionContainer className="sm:!px-0">
-      <CTASection
-        title="Ready to get the data you need?"
-        description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
-        mainAction={{
-          href: "https://docs.empiric.network/quickstart",
-          actionText: "Get started",
-          icon: CodeIcon,
-        }}
-        secondaryAction={{
-          href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
-          actionText: "Request asset",
-          icon: ChatIcon,
-        }}
-      />
+      <DefaultCTASection />
     </SectionContainer>
   </div>
 );
