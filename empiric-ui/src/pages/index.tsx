@@ -57,7 +57,7 @@ const IndexPage = () => (
         text="Ready to get going? Head to our documentation using the link below and start using high-quality data in your smart contracts!
         Or, copy the code below to install the Empiric Network SDK and start interacting with our feeds locally."
         href="https://docs.empiric.network/quickstart"
-        hrefText="Read the documentation"
+        hrefText="Start using robust data on-chain"
       />
       <Code />
     </SectionContainer>
@@ -70,7 +70,7 @@ const IndexPage = () => (
       <Heading
         title="Reimagine Oracles"
         subtitle="Why Empiric?"
-        text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
+        text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stablecoins to money markets."
         href="/features"
         hrefText="Learn more about how Empiric works"
       />
