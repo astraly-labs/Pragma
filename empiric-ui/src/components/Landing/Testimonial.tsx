@@ -7,9 +7,10 @@ const Testimonial = () => (
     <blockquote className="relative">
       <div className="text-2xl font-medium leading-9 text-gray-900">
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo expedita
-          voluptas culpa sapiente alias molestiae. Numquam corrupti in laborum
-          sed rerum et corporis.
+          The Empiric team has attracted fantastic data partners and are already
+          one of the leading protocols on StarkNet. I am excited to see them
+          leverage zk-technology to build out their vision of decentralized,
+          transparent and composable data feeds.
         </p>
       </div>
       <footer className="mt-8">
