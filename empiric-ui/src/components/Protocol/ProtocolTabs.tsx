@@ -20,7 +20,7 @@ const ProtocolTabs: React.FC<ProtocolTabsProps> = ({ protocols }) => (
                 selected
                   ? "border-indigo-600 bg-slate-50 text-indigo-600"
                   : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700",
-                "flex w-full flex-col items-center justify-center border-b-2"
+                "flex w-full flex-col items-center justify-center border-b-2 focus:outline-0"
               )
             }
           >

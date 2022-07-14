@@ -115,7 +115,7 @@ const Footer = () => (
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
-            <a>
+            <a className="w-fit">
               <span className="sr-only">Empiric</span>
               <img
                 className="h-12 w-auto sm:h-16 md:h-20"

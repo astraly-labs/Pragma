@@ -40,13 +40,6 @@ export const protocols: Protocol[] = [
       "Fuji aggregates lending-borrowing crypto markets within blockchain networks. The protocol optimizes interest rates to both borrowers and lenders by automating routing and movement of funds across lending-borrowing protocols and blockchain networks in search of the best APR.",
   },
   {
-    name: "CurveZero",
-    category: "Lending",
-    src: "/assets/protocols/curvezero.jpeg",
-    description:
-      "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
-  },
-  {
     name: "CANVAS",
     category: "Infrastructure",
     src: "/assets/protocols/canvas.svg",
@@ -58,6 +51,13 @@ export const protocols: Protocol[] = [
     src: "/assets/protocols/serity.png",
     description:
       "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets.",
+  },
+  {
+    name: "CurveZero",
+    category: "Lending",
+    src: "/assets/protocols/curvezero.jpeg",
+    description:
+      "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
   },
 ];
 
