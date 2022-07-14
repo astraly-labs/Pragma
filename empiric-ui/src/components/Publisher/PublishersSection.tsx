@@ -13,14 +13,14 @@ export const publishers: PublisherCardProps[] = [
     name: "Alameda Research",
     src: "/assets/publishers/alameda.png",
     description:
-      "Alameda Research is one of the leading cryptocurrency high frequently trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
+      "Alameda Research is one of the leading cryptocurrency high frequency trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
     href: "https://www.alameda-research.com/",
   },
   {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.png",
     description:
-      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of security in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
+      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of securities in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
     href: "https://www.janestreet.com/",
   },
   {
@@ -41,7 +41,7 @@ export const publishers: PublisherCardProps[] = [
     name: "FTX",
     src: "/assets/publishers/ftx.svg",
     description:
-      "FTX is one of the leading cryptocurrency exchanges built by traders for traders. FTX offers innovative products including industry-first derivates, options, volatility products and leveraged tokens and an OTC desk. They have $10 billion of daily trading volume and over one millions active users.\n\n FTX will contribute its 24/7 real-time market data through the custom integration to the Empiric Network.",
+      "FTX is one of the leading cryptocurrency exchanges built by traders for traders. FTX offers innovative products including industry-first derivates, options, volatility products and leveraged tokens and an OTC desk. They have $10 billion of daily trading volume and over one million active users.\n\n FTX will contribute its 24/7 real-time market data through the custom integration with the Empiric Network.",
     href: "https://ftx.us/",
   },
   {

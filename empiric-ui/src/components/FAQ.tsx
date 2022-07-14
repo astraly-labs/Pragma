@@ -22,24 +22,24 @@ const faqs = [
       "Every data point on Empiric is timestamped and signed directly by the source.",
   },
   {
-    question: "What are the differences between an off- and on-chain oracles?",
+    question: "What are the differences between off- and on-chain oracles?",
     answer:
-      "Historically, limited performance of blockchains has meant that oracles gathered all data off-chain and only posted the final answer on-chain, thereby operating as a block box with a trusted output. On-chain oracles use performant new technologies such as zero knowledge cryptography to bring the core logic on-chain. This makes the on-chain oracle much more secure and trustless.",
+      "Historically, the limited performance of blockchains has meant that oracles gathered all data off-chain and only posted the final answer on-chain, thereby operating as a block box with a trusted output. On-chain oracles use performant new technologies such as zero-knowledge cryptography to bring the core logic on-chain. This makes the on-chain oracle much more secure and trustless.",
   },
   {
     question: "Why do blockchains need oracles? What is the oracle problem?",
     answer:
-      "Blockchains are extremely secure but applications running on them are not able to communicate with the outside world. Oracles bring information about real-life events onto the blockchain, thereby enabling applications to have a useful impact in the outside world.",
+      "Blockchains are extremely secure but applications running on them are not able to communicate with the outside world. Oracles bring information about real-life events onto the blockchain, thereby enabling applications to have a useful impact on the outside world.",
   },
   {
     question: "How will Empiric become permissionless?",
     answer:
-      "Empiric is already decentralized, transparent and composable as described above. But a critical further step in the evolution of the protocol is becoming permissionless, so that anyone can provide their own data, while maintaining the highest standard of robustness. We are working on a whitepaper that discusses our plans for this next phase and will release that soon.",
+      "Empiric is already decentralized, transparent and composable as described above. But a critical further step in the evolution of the protocol is becoming permissionless so that anyone can provide their own data while maintaining the highest standard of robustness. We are working on a whitepaper that discusses our plans for this next phase and will release that soon.",
   },
   {
     question: "Why does data composability matter?",
     answer:
-      "DeFi is still in its early days: Simple, overcollateralized protocols have shown the massive appeal of the technology. In order to reach the next billion users, DeFi will need to become more sophisticated and user-friendly. Key to this advance is leveraging advanced feeds such as those on Empiric, such as yield curves (fixed rate loans) or volatility oracles (hedging against market swings).",
+      "DeFi is still in its early days: Simple, overcollateralized protocols have shown the massive appeal of the technology. To reach the next billion users, DeFi will need to become more sophisticated and user-friendly. Key to this advance is leveraging advanced feeds such as those on Empiric, such as yield curves (fixed-rate loans) or volatility oracles (hedging against market swings).",
   },
   {
     question: "Why use Empiric rather than building your own oracle?",
@@ -49,7 +49,7 @@ const faqs = [
   {
     question: "Does Empiric only provide financial data?",
     answer:
-      "Empiric is starting with financial data but will quickly expand to sports, weather, news — any event that happens anywhere should be available on-chain.",
+      "Empiric is starting with financial data but will quickly expand to sports, weather and news — any event that happens anywhere should be available on-chain.",
   },
   {
     question: "Wen token?",

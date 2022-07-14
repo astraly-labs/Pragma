@@ -42,7 +42,7 @@ const IndexPage = () => (
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
       <LogoGrid
-        title="Proprietary data from custom integrations"
+        title="Proprietary data from custom integrations with"
         logos={publishers}
       />
     </SectionContainer>

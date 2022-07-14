@@ -11,7 +11,7 @@ const features: FeatureGridProps[] = [
           "Anyone can verify any data point from origin through transformation to destination.",
       },
       {
-        title: "Historical Performance",
+        title: "Verifiable Performance",
         description:
           "Every time a publisher sends new data to Empiric, the smart contracts emit events, so anyone can inspect the network's historical performance.",
       },
@@ -29,7 +29,7 @@ const features: FeatureGridProps[] = [
       {
         title: "Proprietary data",
         description:
-          "Hight-quality publishers sign and bring their proprietary data directly on-chain - giving Empiric Network its best-in-class robustness and accuracy.",
+          "High-quality publishers sign and bring their proprietary data directly on-chain, giving Empiric Network its best-in-class robustness and accuracy.",
       },
       {
         title: "No off-chain infrastructure",
@@ -44,14 +44,14 @@ const features: FeatureGridProps[] = [
     title: "Composability",
     bulletPoints: [
       {
-        title: "Zk-computation",
+        title: "Cheap zk-computation",
         description:
           "Raw data building blocks can be composed on-chain. Thus, new feeds that are just as secure and robust as the main price feeds can be created using verifiable computation.",
       },
       {
         title: "Advanced computational feeds",
         description:
-          "We are working with leading protocols to create dynamic yield curves, risk metrics, volatility surfaces ...",
+          "We are working with leading protocols to create dynamic yield curves, risk metrics, volatility surfaces and more...",
       },
     ],
     imgSrc: "/assets/features/placeholder3.png",

@@ -97,7 +97,7 @@ export default CTASection;
 export const DefaultCTASection = () => (
   <CTASection
     title="Ready to get the data you need?"
-    description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your decentralized application."
+    description="Leverage recent breakthroughs in zero-knowledge computation by using verifiable and composable data in your decentralized application."
     mainAction={{
       href: "https://docs.empiric.network/quickstart",
       actionText: "Get started",
