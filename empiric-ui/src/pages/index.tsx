@@ -40,11 +40,14 @@ const IndexPage = () => (
       <Hero />
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
-      <LogoGrid title="Data from" logos={publishers} />
+      <LogoGrid
+        title="Proprietary data from custom integrations with"
+        logos={publishers}
+      />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
-      <LogoCloud title="Used by" logos={protocols} />
+      <LogoCloud title="Trusted by" logos={protocols} />
     </SectionContainer>
     <SectionContainer className="bg-slate-50">
       <Heading
