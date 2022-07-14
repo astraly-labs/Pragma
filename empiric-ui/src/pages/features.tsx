@@ -32,7 +32,7 @@ const FeaturesPage = () => {
         <Heading
           title="Frequently asked questions"
           subtitle="Answers to"
-          href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
+          href="mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,"
           hrefText="Send us your question"
         />
         <FAQ />
@@ -47,7 +47,7 @@ const FeaturesPage = () => {
             icon: CodeIcon,
           }}
           secondaryAction={{
-            href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+            href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
             actionText: "Request asset",
             icon: ChatIcon,
           }}

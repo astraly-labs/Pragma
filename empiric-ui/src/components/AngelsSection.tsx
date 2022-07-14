@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./LogoCloud";
+import { Logo } from "./LogoClouds/LogoCloud";
 
 const angels: Logo[] = [
   { name: "Marc Bhargava", src: "/assets/angels/coinbase.svg" },

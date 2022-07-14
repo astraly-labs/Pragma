@@ -9,10 +9,11 @@ import Code from "../components/Code/Code";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
-import LogoCloud from "../components/LogoCloud";
+import LogoCloud from "../components/LogoClouds/LogoCloud";
 import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
 import { publishers } from "../components/Publisher/PublishersSection";
+import LogoGrid from "../components/LogoClouds/LogoGrid";
 
 const stats = [
   {
@@ -40,7 +41,7 @@ const IndexPage = () => (
       <Hero />
     </SectionContainer>
     <SectionContainer className="bg-slate-50 !pt-0">
-      <LogoCloud title="Data from" logos={publishers} />
+      <LogoGrid title="Data from" logos={publishers} />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
@@ -81,7 +82,7 @@ const IndexPage = () => (
           icon: CodeIcon,
         }}
         secondaryAction={{
-          href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+          href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
           actionText: "Request asset",
           icon: ChatIcon,
         }}

@@ -15,6 +15,10 @@ import {
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
 import StyledTransition from "../common/StyledTransition";
+import {
+  buildExplorerUrlForAddress,
+  networkId,
+} from "../../services/wallet.service";
 
 interface Resource {
   name: string;
@@ -62,7 +66,7 @@ const additional = [
   {
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
-    href: "#",
+    href: `${buildExplorerUrlForAddress(networkId())}`,
     icon: CursorClickIcon,
   },
 ];
@@ -71,7 +75,7 @@ const additional = [
 const callsToAction = [
   {
     name: "Request Asset",
-    href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
     icon: ChatIcon,
   },
 ];
@@ -85,7 +89,7 @@ const NavHeader = () => (
             <a>
               <span className="sr-only">Empiric</span>
               <img
-                className="h-12 w-auto"
+                className="h-12 w-auto sm:h-16"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />

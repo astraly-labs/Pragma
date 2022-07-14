@@ -31,7 +31,7 @@ const Custom404Page = () => {
           <ButtonLink
             variant="solid"
             color="indigo"
-            href="mailto:oskar@42labs.xyz?body=Hi%20Oskar,"
+            href="mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,"
             icon={ChatIcon}
           >
             Request asset
