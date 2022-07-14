@@ -39,13 +39,14 @@ const ProtocolTabs: React.FC<ProtocolTabsProps> = ({ protocols }) => (
               //   (protocol) =>
               //     protocol.category === category || category === "All"
               // )
-              .map(({ name, category, src, description }) => (
+              .map(({ name, category, src, description, href }) => (
                 <li key={name}>
                   <ProtocolCard
                     name={name}
                     category={category}
                     description={description}
                     src={src}
+                    href={href}
                   />
                 </li>
               ))}

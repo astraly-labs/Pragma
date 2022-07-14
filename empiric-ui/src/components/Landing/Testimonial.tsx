@@ -16,12 +16,12 @@ const Testimonial = () => (
         <div className="flex items-center">
           <div className="flex-shrink-0">
             <img
-              className="h-12 w-12 rounded-full lg:h-16 lg:w-16"
+              className="h-16 w-16 rounded-full lg:h-20 lg:w-20"
               src="/assets/testimonial/uri-starkware.jpeg"
               alt="Uri Kolodny"
             />
           </div>
-          <div className="ml-4">
+          <div className="ml-4 space-y-1">
             <div className="text-base font-medium text-gray-900">
               Uri Kolodny
             </div>

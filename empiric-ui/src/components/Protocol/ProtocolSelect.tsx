@@ -78,13 +78,14 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
           //     protocol.category === selectedCategory ||
           //     selectedCategory === "All"
           // )
-          .map(({ name, category, src, description }) => (
+          .map(({ name, category, src, description, href }) => (
             <li key={name}>
               <ProtocolCard
                 name={name}
                 category={category}
                 description={description}
                 src={src}
+                href={href}
               />
             </li>
           ))}
