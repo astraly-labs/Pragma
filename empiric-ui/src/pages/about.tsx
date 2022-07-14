@@ -35,7 +35,7 @@ const AboutPage = () => {
             icon: ChatIcon,
           }}
           secondaryAction={{
-            href: "https://docs.empiric.network/quickstart",
+            href: "https://docs.empiric.network/",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}
