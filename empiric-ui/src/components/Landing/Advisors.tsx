@@ -14,7 +14,7 @@ const advisors: Advisor[] = [
   },
   {
     name: "Peteris Erins",
-    role: "Auditless",
+    role: "Yagi",
     src: "/assets/advisors/peteris-erins.jpeg",
   },
   {
