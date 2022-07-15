@@ -56,12 +56,12 @@ const TimelineExplanation = () => (
       >
         {stepIdx !== steps.length - 1 && (
           <div
-            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-indigo-500 sm:top-8 sm:left-8"
+            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-indigo-600 sm:top-8 sm:left-8"
             aria-hidden="true"
           />
         )}
         <div className="relative flex items-start">
-          <span className="relative flex items-center justify-center rounded-lg bg-indigo-500 p-3 ring-8 ring-white sm:p-4">
+          <span className="relative flex items-center justify-center rounded-lg bg-indigo-600 p-3 ring-8 ring-white sm:p-4">
             <step.icon
               className="h-6 w-6 text-white sm:h-8 sm:w-8"
               aria-hidden="true"
