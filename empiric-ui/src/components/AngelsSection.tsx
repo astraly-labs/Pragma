@@ -20,10 +20,6 @@ const angels: SimpleLogo[] = [
     src: "/assets/angels/polygon.webp",
   },
   {
-    name: "Austin King",
-    src: "/assets/angels/rift.webp",
-  },
-  {
     name: "Hossein Kakavand",
     src: "/assets/angels/luther-systems.webp",
   },
