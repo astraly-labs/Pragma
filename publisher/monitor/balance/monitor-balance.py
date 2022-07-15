@@ -29,9 +29,7 @@ async def main(publishers=None, threshold_wei=None):
         threshold_wei = 0.1 * 10**18
 
     all_above_threshold = True
-    addresses = {
-        1969689300318551773111895249684342317364263860557875973397862221206369869737
-    }  # CMT mis-registered the first time so ignore that publisher (they use cmt not cmtd today)
+    addresses = {}
 
     for publisher in publishers:
         address = await client.get_publisher_address(publisher)
