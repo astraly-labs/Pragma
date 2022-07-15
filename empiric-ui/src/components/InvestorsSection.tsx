@@ -4,27 +4,27 @@ import { Logo } from "./LogoClouds/LogoCloud";
 const investors: Logo[] = [
   {
     name: "Variant Fund",
-    src: "/assets/investors/variant.png",
+    src: "/assets/investors/variant.webp",
     href: "https://variant.fund/",
   },
   {
     name: "Dao5",
-    src: "/assets/investors/dao5.png",
+    src: "/assets/investors/dao5.webp",
     href: "https://dao5.com/",
   },
   {
     name: "Robot Ventures",
-    src: "/assets/investors/robot-ventures.png",
+    src: "/assets/investors/robot-ventures.webp",
     href: "https://robvc.com/",
   },
   {
     name: "Alameda Research",
-    src: "/assets/publishers/alameda.png",
+    src: "/assets/publishers/alameda.webp",
     href: "https://www.alameda-research.com/",
   },
   {
     name: "Jane Street",
-    src: "/assets/publishers/jane-street.png",
+    src: "/assets/publishers/jane-street.webp",
     href: "https://www.janestreet.com/",
   },
   {

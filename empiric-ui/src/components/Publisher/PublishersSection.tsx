@@ -11,21 +11,21 @@ export interface PublisherCardProps {
 export const publishers: PublisherCardProps[] = [
   {
     name: "Alameda Research",
-    src: "/assets/publishers/alameda.png",
+    src: "/assets/publishers/alameda.webp",
     description:
       "Alameda Research is one of the leading cryptocurrency high frequency trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
     href: "https://www.alameda-research.com/",
   },
   {
     name: "CMT Digital",
-    src: "/assets/publishers/cmtdigital.png",
+    src: "/assets/publishers/cmtdigital.webp",
     description:
       "CMT is a leading market maker and proprietary trading firm. They have been together for more than two decades and has built a team of professionals with significant trading and technology experiences. CMT operates across five continents.\n\n CMT will provide their reliable and stable crypto market data to the Empiric Network.",
     href: "https://cmt.digital/",
   },
   {
     name: "Flow Traders",
-    src: "/assets/publishers/flow-traders.png",
+    src: "/assets/publishers/flow-traders.webp",
     description:
       "Flow Traders is an established global financial technology-enabled liquidity provider in financial markets. Flow Traders was founded in 2017 and provide liquidity in financial products, historically with a focus on exchange-traded products (ETPs). In recent years, they have diversified the products they trade under virtually all market circumstances.\n\n Flow Traders will contribute its real-time crypto market data directly on-chain to the Empiric Network.",
     href: "https://www.flowtraders.com/",
@@ -46,14 +46,14 @@ export const publishers: PublisherCardProps[] = [
   },
   {
     name: "Jane Street",
-    src: "/assets/publishers/jane-street.png",
+    src: "/assets/publishers/jane-street.webp",
     description:
       "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of securities in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
     href: "https://www.janestreet.com/",
   },
   {
     name: "Portofino",
-    src: "/assets/publishers/portofino.png",
+    src: "/assets/publishers/portofino.webp",
     description:
       "Portofino is a leading quantitative trading firm providing liquidity and pricing on derivatives exchanges around the world. Portofino Technologies was founded in Zug and has offices around the globe.\n\n Portofino will contribute its unique crypto market data to the Empiric Network.",
   },

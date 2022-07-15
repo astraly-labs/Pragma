@@ -16,7 +16,7 @@ const Testimonial = () => (
           <div className="flex-shrink-0">
             <img
               className="h-16 w-16 rounded-full lg:h-20 lg:w-20"
-              src="/assets/testimonial/uri-starkware.jpeg"
+              src="/assets/testimonial/uri-starkware.webp"
               alt="Uri Kolodny"
             />
           </div>
