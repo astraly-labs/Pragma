@@ -17,8 +17,8 @@ import Advisors from "../components/Landing/Advisors";
 
 const stats = [
   {
-    label: "Customers",
-    value: "6+",
+    label: "Updates per 24h",
+    value: "50k+",
   },
   {
     label: "Data sources",
@@ -29,8 +29,8 @@ const stats = [
     value: "20+",
   },
   {
-    label: "Latency",
-    value: "~1s",
+    label: "Seed round",
+    value: "$7M",
   },
 ];
 
