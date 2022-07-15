@@ -1,7 +1,11 @@
 import React from "react";
-import { Logo } from "./LogoClouds/LogoCloud";
+import { SimpleLogo } from "./LogoClouds/LogoCloud";
 
-const angels: Logo[] = [
+const angels: SimpleLogo[] = [
+  {
+    name: "Sandeep Nailwal",
+    src: "/assets/angels/polygon.png",
+  },
   { name: "Marc Bhargava", src: "/assets/angels/coinbase.svg" },
   {
     name: "Luke Pearson",
@@ -12,12 +16,20 @@ const angels: Logo[] = [
     src: "/assets/angels/ponto.png",
   },
   {
-    name: "Max Kleiman-Weiner",
-    src: "/assets/angels/sequoia.svg",
+    name: "Brendan Farmer",
+    src: "/assets/angels/polygon.png",
+  },
+  {
+    name: "Austin King",
+    src: "/assets/angels/rift.png",
   },
   {
     name: "Hossein Kakavand",
     src: "/assets/angels/luther-systems.png",
+  },
+  {
+    name: "Max Kleiman-Weiner",
+    src: "/assets/angels/sequoia.svg",
   },
   {
     name: "Maik Wehmeyer",
@@ -31,6 +43,14 @@ const angels: Logo[] = [
     name: "Thomas Bailey",
     src: "/assets/angels/road-capital.png",
   },
+  {
+    name: "Sina Habibian",
+    src: "/assets/angels/ethereum-foundation.png",
+  },
+  {
+    name: "Alan Curtis",
+    src: "/assets/angels/radar.png",
+  },
 ];
 
 const AngelsSection = () => (
@@ -43,7 +63,7 @@ const AngelsSection = () => (
         >
           <div>
             <img
-              className="h-5 grayscale group-hover:grayscale-0"
+              className="h-5 grayscale group-hover:grayscale-0 sm:h-6"
               src={src}
               alt={name}
             />

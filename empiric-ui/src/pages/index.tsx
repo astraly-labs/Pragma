@@ -4,9 +4,8 @@ import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
 import AssetsSection from "../components/Asset/AssetsSection";
 import Testimonial from "../components/Landing/Testimonial";
-import CTASection from "../components/CTASection";
+import { DefaultCTASection } from "../components/CTASection";
 import Code from "../components/Code/Code";
-import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import InfoSection from "../components/Info/InfoSection";
 import Banner from "../components/Banner";
 import LogoCloud from "../components/LogoClouds/LogoCloud";
@@ -14,6 +13,7 @@ import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
 import { publishers } from "../components/Publisher/PublishersSection";
 import LogoGrid from "../components/LogoClouds/LogoGrid";
+import Advisors from "../components/Landing/Advisors";
 
 const stats = [
   {
@@ -40,12 +40,15 @@ const IndexPage = () => (
     <SectionContainer className="bg-slate-50" first>
       <Hero />
     </SectionContainer>
-    <SectionContainer className="bg-slate-50 !pt-0">
-      <LogoGrid title="Data from" logos={publishers} />
+    <SectionContainer className="bg-slate-50 !pt-0 !pb-32">
+      <LogoGrid
+        title="Proprietary data from custom integrations with"
+        logos={publishers}
+      />
     </SectionContainer>
     <SectionContainer className="!pt-0">
       <AssetsSection />
-      <LogoCloud title="Used by" logos={protocols} />
+      <LogoCloud title="Trusted by" logos={protocols} />
     </SectionContainer>
     <SectionContainer className="bg-slate-50">
       <Heading
@@ -54,39 +57,27 @@ const IndexPage = () => (
         text="Ready to get going? Head to our documentation using the link below and start using high-quality data in your smart contracts!
         Or, copy the code below to install the Empiric Network SDK and start interacting with our feeds locally."
         href="https://docs.empiric.network/quickstart"
-        hrefText="Read the documentation"
+        hrefText="Start using robust data on-chain"
       />
       <Code />
     </SectionContainer>
     <SectionContainer>
       <Testimonial />
       <Stats stats={stats} />
+      <Advisors />
     </SectionContainer>
     <SectionContainer className="overflow-hidden bg-slate-50">
       <Heading
         title="Reimagine Oracles"
         subtitle="Why Empiric?"
-        text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stable coins to money markets."
+        text="Built zk-first from the ground up, we power the DeFi ecosystem, from exchanges to stablecoins to money markets."
         href="/features"
         hrefText="Learn more about how Empiric works"
       />
       <InfoSection />
     </SectionContainer>
     <SectionContainer className="sm:!px-0">
-      <CTASection
-        title="Ready to get the data you need?"
-        description="Leverage recent breakthroughs in zero knowledge computation by using verifiable and composable data in your application."
-        mainAction={{
-          href: "https://docs.empiric.network/quickstart",
-          actionText: "Get started",
-          icon: CodeIcon,
-        }}
-        secondaryAction={{
-          href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
-          actionText: "Request asset",
-          icon: ChatIcon,
-        }}
-      />
+      <DefaultCTASection />
     </SectionContainer>
   </div>
 );

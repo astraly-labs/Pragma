@@ -6,15 +6,15 @@ import CodeLine, { CodeLineProps } from "./CodeLine";
 
 const lines: CodeLineProps[] = [
   {
-    text: "Creating local dev environment",
+    text: "Checking dependencies",
     prefix: "output",
   },
   {
-    text: "Checking dev dependencies",
+    text: "Collecting packages...",
     prefix: "output",
   },
   {
-    text: "Successful integration of Empiric",
+    text: "Successful installation of Empiric SDK",
     prefix: "check",
   },
 ];

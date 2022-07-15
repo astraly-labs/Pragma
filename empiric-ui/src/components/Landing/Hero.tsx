@@ -2,7 +2,7 @@ import React from "react";
 import Underline from "../common/Underline";
 
 const Hero = () => (
-  <header className="text-center">
+  <header className="text-center md:py-8 lg:py-10">
     <h1 className="max-w-7xl text-3xl font-medium !leading-[1.2] tracking-tight text-slate-900 md:text-5xl lg:text-7xl">
       <span className="relative text-indigo-600 md:whitespace-nowrap">
         <Underline className="absolute top-2/3 left-0 hidden h-[0.45em] w-full fill-indigo-300/70 md:block" />

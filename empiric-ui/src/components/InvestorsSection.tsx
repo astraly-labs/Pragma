@@ -2,48 +2,63 @@ import React from "react";
 import { Logo } from "./LogoClouds/LogoCloud";
 
 const investors: Logo[] = [
-  { name: "Variant Fund", src: "/assets/investors/variant.svg" },
+  {
+    name: "Variant Fund",
+    src: "/assets/investors/variant.png",
+    href: "https://variant.fund/",
+  },
   {
     name: "Dao5",
-    src: "/assets/investors/dao5.webp",
+    src: "/assets/investors/dao5.png",
+    href: "https://dao5.com/",
   },
   {
     name: "Robot Ventures",
-    src: "/assets/investors/robotventures.png",
+    src: "/assets/investors/robot-ventures.png",
+    href: "https://robvc.com/",
   },
   {
     name: "Alameda Research",
     src: "/assets/publishers/alameda.png",
+    href: "https://www.alameda-research.com/",
   },
   {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.png",
+    href: "https://www.janestreet.com/",
   },
   {
     name: "FTX",
     src: "/assets/publishers/ftx.svg",
+    href: "https://ftx.us/",
+  },
+  {
+    name: "StarkWare",
+    src: "/assets/starkware.svg",
+    href: "https://starkware.co/",
   },
   {
     name: "Gemini",
     src: "/assets/publishers/gemini.svg",
+    href: "https://www.gemini.com/",
   },
 ];
 
 const InvestorsSection = () => (
   <div className="w-full max-w-7xl">
     <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
-      {investors.map(({ name, src }) => (
+      {investors.map(({ name, src, href }) => (
         <div
           key={name}
           className="group col-span-1 flex justify-center bg-gray-100 p-8 sm:p-4"
         >
-          <div>
+          <a href={href}>
             <img
               className="h-auto max-h-12 w-auto max-w-full grayscale group-hover:grayscale-0"
               src={src}
               alt={name}
             />
-          </div>
+          </a>
         </div>
       ))}
     </div>

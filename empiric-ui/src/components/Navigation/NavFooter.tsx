@@ -5,6 +5,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
+import { getOracleControllerAddress } from "../../services/address.service";
 
 interface FooterLink {
   title: string;
@@ -28,7 +29,9 @@ const content: FooterColumn[] = [
       },
       {
         title: "View on Block Explorer",
-        href: `${buildExplorerUrlForAddress(networkId())}`,
+        href: `${buildExplorerUrlForAddress(
+          getOracleControllerAddress(networkId())
+        )}#readContract`,
         external: true,
       },
     ],
@@ -115,7 +118,7 @@ const Footer = () => (
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
-            <a>
+            <a className="w-fit">
               <span className="sr-only">Empiric</span>
               <img
                 className="h-12 w-auto sm:h-16 md:h-20"
@@ -151,9 +154,13 @@ const Footer = () => (
               {column.links.map(({ external, title, href }) => (
                 <React.Fragment key={title}>
                   {external ? (
-                    <StyledExternalLink href={href}>{title}</StyledExternalLink>
+                    <StyledExternalLink href={href} underline={false}>
+                      {title}
+                    </StyledExternalLink>
                   ) : (
-                    <StyledInternalLink href={href}>{title}</StyledInternalLink>
+                    <StyledInternalLink href={href} underline={false}>
+                      {title}
+                    </StyledInternalLink>
                   )}
                 </React.Fragment>
               ))}
@@ -162,7 +169,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
-        © 42 Labs - {new Date().getFullYear()}. All rights reserved.
+        © 42 Labs Inc. - {new Date().getFullYear()}. All rights reserved.
       </div>
     </div>
   </div>

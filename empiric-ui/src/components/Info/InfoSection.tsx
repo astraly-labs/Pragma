@@ -32,24 +32,27 @@ const blobSpecificStyles = [
 ];
 
 const InfoSection = () => (
-  <div className="grid w-full max-w-7xl grid-cols-2 place-items-center md:grid-cols-8">
-    {<InfoCard title={infoCards[0].title} icon={infoCards[0].icon} />}
-    <div className="col-span-2 md:col-span-1">
-      <p className="font-mono text-7xl text-slate-400">+</p>
-    </div>
-    {<InfoCard title={infoCards[1].title} icon={infoCards[1].icon} />}
-    <div className="col-span-2 md:col-span-1">
-      <p className="font-mono text-7xl text-slate-400">=</p>
-    </div>
-    <div className="relative col-span-2 h-full w-full">
-      {blobSpecificStyles.map((blob, i) => (
-        <div
-          className={classNames(blobBaseStyles, blob)}
-          aria-hidden="true"
-          key={i}
-        />
-      ))}
-      {<InfoCard title={infoCards[2].title} icon={infoCards[2].icon} />}
+  // Need an extra wrapper in order to properly display on Safari
+  <div>
+    <div className="grid w-full max-w-7xl grid-cols-2 place-items-center md:grid-cols-8">
+      {<InfoCard title={infoCards[0].title} icon={infoCards[0].icon} />}
+      <div className="col-span-2 md:col-span-1">
+        <p className="font-mono text-7xl text-slate-400">+</p>
+      </div>
+      {<InfoCard title={infoCards[1].title} icon={infoCards[1].icon} />}
+      <div className="col-span-2 md:col-span-1">
+        <p className="font-mono text-7xl text-slate-400">=</p>
+      </div>
+      <div className="relative col-span-2 h-full w-full">
+        {blobSpecificStyles.map((blob, i) => (
+          <div
+            className={classNames(blobBaseStyles, blob)}
+            aria-hidden="true"
+            key={i}
+          />
+        ))}
+        {<InfoCard title={infoCards[2].title} icon={infoCards[2].icon} />}
+      </div>
     </div>
   </div>
 );
