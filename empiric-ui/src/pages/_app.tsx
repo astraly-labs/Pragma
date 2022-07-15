@@ -26,7 +26,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <meta name="robots" content="all" />
         <meta
           name="description"
-          content="Empiric Network is the first zk-native oracle, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability.
+          content="Empiric Network is the zk-native oracle, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability.
           Empiric is the leading oracle on Starknet, powered by high-quality data from the biggest market makers and exchanges, such as Alameda, CMT, Flow Traders, Gemini and Jane Street."
         ></meta>
         <link rel="canonical" href="https://www.empiric.network" />
