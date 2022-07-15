@@ -29,7 +29,7 @@ const features: FeatureGridProps[] = [
         ),
       },
     ],
-    imgSrc: "/assets/features/placeholder1.png",
+    imgSrc: "/assets/features/placeholder1.webp",
     imgLeft: false,
   },
   {
@@ -46,7 +46,7 @@ const features: FeatureGridProps[] = [
           "This makes Empiric as decentralized as the underlying zk-rollup networks.",
       },
     ],
-    imgSrc: "/assets/features/placeholder2.png",
+    imgSrc: "/assets/features/placeholder2.webp",
     imgLeft: true,
   },
   {
@@ -63,7 +63,7 @@ const features: FeatureGridProps[] = [
           "We are working with leading protocols to create dynamic yield curves, risk metrics, volatility surfaces and more...",
       },
     ],
-    imgSrc: "/assets/features/placeholder3.png",
+    imgSrc: "/assets/features/placeholder3.webp",
     imgLeft: false,
   },
 ];

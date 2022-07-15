@@ -10,17 +10,17 @@ const advisors: Advisor[] = [
   {
     name: "guiltygyoza",
     role: "Topology",
-    src: "/assets/advisors/guiltygyoza.png",
+    src: "/assets/advisors/guiltygyoza.webp",
   },
   {
     name: "Peteris Erins",
     role: "Yagi",
-    src: "/assets/advisors/peteris-erins.jpeg",
+    src: "/assets/advisors/peteris-erins.webp",
   },
   {
     name: "Milan Cermak",
     role: "Aura Protocol",
-    src: "/assets/advisors/milan-cermak.jpeg",
+    src: "/assets/advisors/milan-cermak.webp",
   },
 ];
 

@@ -30,7 +30,7 @@ export const protocols: Protocol[] = [
   {
     name: "Magnety",
     category: "Social Wallet",
-    src: "/assets/protocols/magnety.png",
+    src: "/assets/protocols/magnety.webp",
     description:
       "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
     href: "https://www.magnety.finance/",
@@ -38,7 +38,7 @@ export const protocols: Protocol[] = [
   {
     name: "FujiDAO",
     category: "Lending",
-    src: "/assets/protocols/fuji-dao.png",
+    src: "/assets/protocols/fuji-dao.webp",
     description:
       "Fuji aggregates lending-borrowing crypto markets within blockchain networks. The protocol optimizes interest rates to both borrowers and lenders by automating routing and movement of funds across lending-borrowing protocols and blockchain networks in search of the best APR.",
     href: "https://www.fujidao.org/",
@@ -54,7 +54,7 @@ export const protocols: Protocol[] = [
   {
     name: "Serity",
     category: "Infrastructure",
-    src: "/assets/protocols/serity.png",
+    src: "/assets/protocols/serity.webp",
     description:
       "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets. They consist of three core pillars: a PCV-backed stable asset, yield-backed synthetics, and an exchange built on a permissionless ZK rollup.",
     href: "https://serity.finance/",
@@ -62,7 +62,7 @@ export const protocols: Protocol[] = [
   {
     name: "CurveZero",
     category: "Lending",
-    src: "/assets/protocols/curvezero.jpeg",
+    src: "/assets/protocols/curvezero.webp",
     description:
       "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
     href: "https://github.com/xan-crypto/CurveZero",

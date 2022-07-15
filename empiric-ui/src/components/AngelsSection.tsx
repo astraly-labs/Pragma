@@ -4,7 +4,7 @@ import { SimpleLogo } from "./LogoClouds/LogoCloud";
 const angels: SimpleLogo[] = [
   {
     name: "Sandeep Nailwal",
-    src: "/assets/angels/polygon.png",
+    src: "/assets/angels/polygon.webp",
   },
   { name: "Marc Bhargava", src: "/assets/angels/coinbase.svg" },
   {
@@ -13,19 +13,15 @@ const angels: SimpleLogo[] = [
   },
   {
     name: "Will Haering",
-    src: "/assets/angels/ponto.png",
+    src: "/assets/angels/ponto.webp",
   },
   {
     name: "Brendan Farmer",
-    src: "/assets/angels/polygon.png",
-  },
-  {
-    name: "Austin King",
-    src: "/assets/angels/rift.png",
+    src: "/assets/angels/polygon.webp",
   },
   {
     name: "Hossein Kakavand",
-    src: "/assets/angels/luther-systems.png",
+    src: "/assets/angels/luther-systems.webp",
   },
   {
     name: "Max Kleiman-Weiner",
@@ -33,23 +29,23 @@ const angels: SimpleLogo[] = [
   },
   {
     name: "Maik Wehmeyer",
-    src: "/assets/angels/taktile.png",
+    src: "/assets/angels/taktile.webp",
   },
   {
     name: "Maximilian Eber",
-    src: "/assets/angels/taktile.png",
+    src: "/assets/angels/taktile.webp",
   },
   {
     name: "Thomas Bailey",
-    src: "/assets/angels/road-capital.png",
+    src: "/assets/angels/road-capital.webp",
   },
   {
     name: "Sina Habibian",
-    src: "/assets/angels/ethereum-foundation.png",
+    src: "/assets/angels/ethereum-foundation.webp",
   },
   {
     name: "Alan Curtis",
-    src: "/assets/angels/radar.png",
+    src: "/assets/angels/radar.webp",
   },
 ];
 

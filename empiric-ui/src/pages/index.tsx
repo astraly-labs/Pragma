@@ -37,22 +37,22 @@ const stats = [
 const dataPublishers: Logo[] = [
   {
     name: "Alameda Research",
-    src: "/assets/publishers/alameda.png",
+    src: "/assets/publishers/alameda.webp",
     href: "https://www.alameda-research.com/",
   },
   {
     name: "Jane Street",
-    src: "/assets/publishers/jane-street.png",
+    src: "/assets/publishers/jane-street.webp",
     href: "https://www.janestreet.com/",
   },
   {
     name: "CMT Digital",
-    src: "/assets/publishers/cmtdigital.png",
+    src: "/assets/publishers/cmtdigital.webp",
     href: "https://cmt.digital/",
   },
   {
     name: "Flow Traders",
-    src: "/assets/publishers/flow-traders.png",
+    src: "/assets/publishers/flow-traders.webp",
     href: "https://www.flowtraders.com/",
   },
   {
