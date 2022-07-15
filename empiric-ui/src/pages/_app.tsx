@@ -23,6 +23,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
+        <meta name="robots" content="all" />
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
