@@ -56,12 +56,12 @@ const Code = () => {
               <div
                 className={classNames(
                   isCopied ? "w-20 lg:w-32 xl:w-40" : "w-40 lg:w-64 xl:w-72",
-                  "absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md bg-indigo-500 p-4 text-base font-normal text-white transition-all duration-300 md:block"
+                  "absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md bg-indigo-600 p-4 text-base font-normal text-white transition-all duration-300 md:block"
                 )}
               >
                 {isCopied ? "Copied!" : "Just copy the command to get started."}
                 <svg
-                  className="absolute right-full top-1/2 -translate-y-1/2 text-indigo-500"
+                  className="absolute right-full top-1/2 -translate-y-1/2 text-indigo-600"
                   xmlns="http://www.w3.org/2000/svg"
                   width="8"
                   height="22"

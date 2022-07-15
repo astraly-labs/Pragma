@@ -27,7 +27,7 @@ const Heading: React.FC<HeadingProps> = ({
     {text && <p className="prose prose-slate lg:prose-xl">{text}</p>}
     {href && hrefText && (
       <p className="prose prose-slate mt-4 prose-a:no-underline lg:prose-xl">
-        <a href={href} className="font-medium text-indigo-500">
+        <a href={href} className="font-medium text-indigo-600">
           {hrefText} &nbsp;&rarr;
         </a>
       </p>

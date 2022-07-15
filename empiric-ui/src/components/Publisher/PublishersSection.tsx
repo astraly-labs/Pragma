@@ -5,7 +5,7 @@ export interface PublisherCardProps {
   src: string;
   name: string;
   description: string;
-  href: string;
+  href?: string;
 }
 
 export const publishers: PublisherCardProps[] = [
@@ -15,13 +15,6 @@ export const publishers: PublisherCardProps[] = [
     description:
       "Alameda Research is one of the leading cryptocurrency high frequency trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
     href: "https://www.alameda-research.com/",
-  },
-  {
-    name: "Jane Street",
-    src: "/assets/publishers/jane-street.png",
-    description:
-      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of securities in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
-    href: "https://www.janestreet.com/",
   },
   {
     name: "CMT Digital",
@@ -50,6 +43,19 @@ export const publishers: PublisherCardProps[] = [
     description:
       "Gemini is a one of the most important cryptocurrency exchanges that allows people to buy, sell, and store digital assets. Gemini is the world first licensed Ether exchange and one of the most secure with significant daily trading volumes.\n\n Gemini will contribute its proprietary crypto market data to the Empiric Network.",
     href: "https://www.gemini.com/",
+  },
+  {
+    name: "Jane Street",
+    src: "/assets/publishers/jane-street.png",
+    description:
+      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of securities in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
+    href: "https://www.janestreet.com/",
+  },
+  {
+    name: "Portofino",
+    src: "/assets/publishers/portofino.png",
+    description:
+      "Portofino is a leading quantitative trading firm providing liquidity and pricing on derivatives exchanges around the world. Portofino Technologies was founded in Zug and has offices around the globe.\n\n Portofino will contribute its unique crypto market data to the Empiric Network.",
   },
 ];
 
