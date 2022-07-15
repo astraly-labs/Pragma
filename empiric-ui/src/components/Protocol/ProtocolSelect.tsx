@@ -72,12 +72,11 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
       </Listbox>
       <ul className="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:max-w-none lg:grid-cols-4 lg:gap-12">
         {protocols
-          // Uncomment to enable category filtering
-          // .filter(
-          //   (protocol) =>
-          //     protocol.category === selectedCategory ||
-          //     selectedCategory === "All"
-          // )
+          .filter(
+            (protocol) =>
+              protocol.category === selectedCategory ||
+              selectedCategory === "All"
+          )
           .map(({ name, category, src, description, href }) => (
             <li key={name}>
               <ProtocolCard

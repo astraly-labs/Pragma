@@ -34,11 +34,10 @@ const ProtocolTabs: React.FC<ProtocolTabsProps> = ({ protocols }) => (
         <Tab.Panel key={category}>
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-3 lg:max-w-none lg:grid-cols-4 lg:gap-8">
             {protocols
-              // Uncomment to enable protocol filtering
-              // .filter(
-              //   (protocol) =>
-              //     protocol.category === category || category === "All"
-              // )
+              .filter(
+                (protocol) =>
+                  protocol.category === category || category === "All"
+              )
               .map(({ name, category, src, description, href }) => (
                 <li key={name}>
                   <ProtocolCard

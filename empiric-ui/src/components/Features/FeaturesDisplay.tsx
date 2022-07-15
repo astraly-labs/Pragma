@@ -1,4 +1,5 @@
 import React from "react";
+import { StyledExternalLink } from "../common/StyledLink";
 import FeatureGrid, { FeatureGridProps } from "./FeatureGrid";
 
 const features: FeatureGridProps[] = [
@@ -17,7 +18,15 @@ const features: FeatureGridProps[] = [
       },
       {
         title: "Open Source",
-        description: "Check out Empiric's source code on GitHub.",
+        description: (
+          <>
+            Check out Empiric&apos;s source code on{" "}
+            <StyledExternalLink href="https://github.com/42labs/Empiric">
+              Github
+            </StyledExternalLink>
+            .
+          </>
+        ),
       },
     ],
     imgSrc: "/assets/features/placeholder1.png",

@@ -16,7 +16,7 @@ const workLogos: SimpleLogo[] = [
   },
   {
     name: "Stanford",
-    src: "/assets/team/stanford.png",
+    src: "/assets/team/stanford.svg",
   },
 ];
 

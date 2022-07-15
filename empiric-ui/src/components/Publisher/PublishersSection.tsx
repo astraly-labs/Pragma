@@ -48,7 +48,7 @@ export const publishers: PublisherCardProps[] = [
     name: "Gemini",
     src: "/assets/publishers/gemini.svg",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "Gemini is a one of the most important cryptocurrency exchange and custodian that allows people to buy, sell, and store digital assets. Gemini is the world first licensed Ether exchange and one of the most secure with significant daily trading volumes.\n\n Gemini will contribute its proprietary crypto market data to the Empiric Network.",
     href: "https://www.gemini.com/",
   },
 ];

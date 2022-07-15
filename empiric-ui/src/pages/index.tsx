@@ -40,7 +40,7 @@ const IndexPage = () => (
     <SectionContainer className="bg-slate-50" first>
       <Hero />
     </SectionContainer>
-    <SectionContainer className="bg-slate-50 !pt-0">
+    <SectionContainer className="bg-slate-50 !pt-0 !pb-32">
       <LogoGrid
         title="Proprietary data from custom integrations with"
         logos={publishers}

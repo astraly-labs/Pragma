@@ -13,7 +13,7 @@ const ProtocolsPage = () => {
           title="StarkNet's leading protocols"
           subtitle="Meet our users"
           text="We work closely with teams to ensure they get exactly what they need. Reach out to us if you need a custom solution."
-          href="#"
+          href="https://docs.empiric.network/using-empiric/consuming-data"
           hrefText="Get verifiable data for your project"
         />
       </SectionContainer>
@@ -22,7 +22,7 @@ const ProtocolsPage = () => {
       </SectionContainer>
       <SectionContainer className="bg-slate-50">
         <Heading
-          title="2 easy steps"
+          title="A few simple lines to integrate"
           subtitle="Try it yourself"
           text="We offer a variety of ways to get high-quality, robust data from the oracle."
           href="https://docs.empiric.network/using-empiric/consuming-data"

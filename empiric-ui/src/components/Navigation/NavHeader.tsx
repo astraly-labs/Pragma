@@ -5,6 +5,7 @@ import {
   ChatIcon,
   CodeIcon,
   CursorClickIcon,
+  HomeIcon,
   MenuIcon,
   PuzzleIcon,
   SpeakerphoneIcon,
@@ -83,6 +84,15 @@ const callsToAction = [
   },
 ];
 
+// Mobile only
+const mobileResources = [
+  {
+    name: "Home",
+    href: "/",
+    icon: HomeIcon,
+  },
+];
+
 const NavHeader = () => (
   <Popover className="relative bg-slate-50 px-4 sm:px-6 lg:px-8">
     <div className="mx-auto max-w-7xl">
@@ -158,7 +168,7 @@ const NavHeader = () => (
             </div>
             <div className="mt-6">
               <nav className="grid gap-y-8">
-                {resources.map((resource) => (
+                {[...mobileResources, ...resources].map((resource) => (
                   <a
                     key={resource.name}
                     href={resource.href}

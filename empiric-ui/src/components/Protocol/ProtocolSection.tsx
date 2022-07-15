@@ -47,7 +47,8 @@ export const protocols: Protocol[] = [
     name: "CANVAS",
     category: "Infrastructure",
     src: "/assets/protocols/canvas.svg",
-    description: "CANVAS provides scalable infrastructure to access Web3.",
+    description:
+      "CANVAS provides scalable infrastructure to access Web3. They have two main products: CANVAS Connect, a Layer 2 Scaling solution for DeFi transactions, and CANVAS Digital, a way to securely access and invest in DeFi and Web3.",
     href: "https://canvas.co/",
   },
   {
@@ -55,7 +56,7 @@ export const protocols: Protocol[] = [
     category: "Infrastructure",
     src: "/assets/protocols/serity.png",
     description:
-      "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets.",
+      "Serity is a community-owned protocol powering the creation and trading of yield-backed synthetic assets. They consist of three core pillars: a PCV-backed stable asset, yield-backed synthetics, and an exchange built on a permissionless ZK rollup.",
     href: "https://serity.finance/",
   },
   {

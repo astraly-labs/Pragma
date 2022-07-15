@@ -1,8 +1,8 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 export interface BulletPoint {
   title: string;
-  description: string;
+  description: string | ReactNode;
 }
 
 interface FeatureProps {
