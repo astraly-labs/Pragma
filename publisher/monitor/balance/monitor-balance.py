@@ -29,7 +29,7 @@ async def main(publishers=None, threshold_wei=None):
         threshold_wei = 0.1 * 10**18
 
     all_above_threshold = True
-    addresses = {}
+    addresses = set()
 
     for publisher in publishers:
         address = await client.get_publisher_address(publisher)
