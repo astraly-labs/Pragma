@@ -11,8 +11,8 @@ import Banner from "../components/Banner";
 import LogoCloud from "../components/LogoClouds/LogoCloud";
 import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
-import { publishers } from "../components/Publisher/PublishersSection";
 import LogoGrid from "../components/LogoClouds/LogoGrid";
+import { Logo } from "../components/LogoClouds/LogoCloud";
 import Advisors from "../components/Landing/Advisors";
 
 const stats = [
@@ -29,8 +29,41 @@ const stats = [
     value: "20+",
   },
   {
-    label: "Funding",
-    value: "$7M",
+    label: "Latency",
+    value: "~1s",
+  },
+];
+
+const dataPublishers: Logo[] = [
+  {
+    name: "Alameda Research",
+    src: "/assets/publishers/alameda.png",
+    href: "https://www.alameda-research.com/",
+  },
+  {
+    name: "Jane Street",
+    src: "/assets/publishers/jane-street.png",
+    href: "https://www.janestreet.com/",
+  },
+  {
+    name: "CMT Digital",
+    src: "/assets/publishers/cmtdigital.png",
+    href: "https://cmt.digital/",
+  },
+  {
+    name: "Flow Traders",
+    src: "/assets/publishers/flow-traders.png",
+    href: "https://www.flowtraders.com/",
+  },
+  {
+    name: "FTX",
+    src: "/assets/publishers/ftx.svg",
+    href: "https://ftx.us/",
+  },
+  {
+    name: "Gemini",
+    src: "/assets/publishers/gemini.svg",
+    href: "https://www.gemini.com/",
   },
 ];
 
@@ -43,7 +76,7 @@ const IndexPage = () => (
     <SectionContainer className="bg-slate-50 !pt-0 !pb-32">
       <LogoGrid
         title="Proprietary data from custom integrations with"
-        logos={publishers}
+        logos={dataPublishers}
       />
     </SectionContainer>
     <SectionContainer className="!pt-0">
