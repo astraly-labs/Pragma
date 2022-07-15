@@ -38,6 +38,8 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
     return oracleResponse;
   }, [oracleResponse, loading, error]);
 
+  const { src: currencySrc, alt: currencyAlt } = getCurrency(assetKey);
+
   const columns = useMemo<ColumnDef<Entry>[]>(
     () => [
       {
@@ -62,7 +64,8 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
         header: () => (
           <div className="flex items-center">
             <img
-              src={`/assets/currencies/${getCurrency(assetKey)}`}
+              src={`/assets/currencies/${currencySrc}`}
+              alt={currencyAlt}
               className="mr-2 inline h-5 w-5 md:mr-3"
             />
             Value

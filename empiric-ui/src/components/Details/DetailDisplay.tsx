@@ -76,6 +76,8 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
     );
   }, [oracleResponse, loading, error, currentTimestampSeconds]);
 
+  const { src: currencySrc, alt: currencyAlt } = getCurrency(assetKey);
+
   return (
     <div className="grid w-full max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 lg:gap-12">
       <DetailCard
@@ -90,8 +92,9 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         toDisplay={priceContent}
         img={
           <img
-            src={`/assets/currencies/${getCurrency(assetKey)}`}
+            src={`/assets/currencies/${currencySrc}`}
             className="h-6 w-6"
+            alt={currencyAlt}
           />
         }
       />
