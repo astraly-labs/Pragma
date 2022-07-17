@@ -4,7 +4,7 @@ The Empiric team is constantly working to improve the network's robustness and f
 
 ### Auditing
 
-We have upcoming audits by leading security research firms such as Trail of Bits (who are auditing StarkNet as well) and will release the results of those as soon as they are ready.
+We will be audited soon by leading security research firms such as Trail of Bits (who are auditing StarkNet as well) and will release the results of those as soon as they are ready.
 
 ### Native Data From The Most Liquid Markets
 
@@ -18,6 +18,6 @@ If you are building a protocol on a zk-rollup that needs real-world data that is
 
 ### Permissionlessness
 
-Today, Empiric's publishers are selected by the team to be the most liquid exchanges and the biggest market makers who provide their signed, proprietary data because they too believe that zk-rollups will push the frontier of what decentralized applications can achieve. Working with these world-class partners is critical to guarantee data quality and reliability in the early days of the network.
+Today, the Empiric core team selects publishers, prioritizing the most liquid exchanges and biggest market makers. Working with these world-class partners is critical to guarantee data quality and reliability in the early days of the network.
 
-Tomorrow, anyone who has high quality should be able to provide that data to the Empiric Network. We are actively working on a proposal that would enable this, leveraging programmable money and incentive systems to ensure that honest publishers are compensated fairly for their data while malicious actors are unable to corrupt the data feeds.
+Tomorrow, anyone who has high quality should be able to provide that data to the Empiric Network. We are actively working on leveraging programmable money and incentive systems to ensure that honest publishers are compensated fairly for their data while malicious actors are unable to corrupt the data feeds. We will have more updates on this soon.
