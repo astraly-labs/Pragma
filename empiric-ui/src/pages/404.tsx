@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+import tourist from "../../public/assets/tourist.webp";
 import { ChatIcon, HomeIcon } from "@heroicons/react/outline";
 import { ButtonLink } from "../components/common/Button";
 
@@ -6,11 +8,14 @@ const Custom404Page = () => {
   return (
     <div className="w-screen grow bg-slate-50 px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
       <div className="mx-auto flex max-w-3xl flex-col items-center space-y-8 sm:space-y-10 md:space-y-16">
-        <img
-          src="/assets/tourist.webp"
-          alt="Broken Clock"
-          className="w-32 sm:w-48"
-        />
+        <div className="w-32 sm:w-48">
+          <Image
+            src={tourist}
+            alt="Tourist looking at a map"
+            priority
+            layout="responsive"
+          />
+        </div>
         <div>
           <h1 className="mb-4 text-center text-xl font-bold sm:text-2xl md:text-4xl">
             404&#8194;&#8211;&#8194;Zero knowledge of this page

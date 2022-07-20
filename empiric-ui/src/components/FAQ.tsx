@@ -7,10 +7,9 @@ const faqs = [
     answer: (
       <>
         Integration is simple, just add a few lines of code to your smart
-        contract and you can start using our price feeds. See a sample code
-        snippet{" "}
+        contract and you can start using our price feeds. See a{" "}
         <StyledExternalLink href="https://docs.empiric.network/quickstart#sample-code">
-          here
+          sample code snippet
         </StyledExternalLink>
         .
       </>
