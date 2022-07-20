@@ -101,13 +101,11 @@ const NavHeader = () => (
           <Link href="/">
             <a>
               <span className="sr-only">Empiric</span>
-              <div className="w-[120px] lg:w-[160px]">
-                <img
-                  className="h-12 w-auto sm:h-16"
-                  src="/empiric-logo.svg"
-                  alt="Empiric"
-                />
-              </div>
+              <img
+                className="h-12 w-auto sm:h-16"
+                src="/empiric-logo.svg"
+                alt="Empiric"
+              />
             </a>
           </Link>
         </div>
