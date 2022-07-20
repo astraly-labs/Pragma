@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import {
@@ -14,7 +13,6 @@ import {
   ViewListIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import empiricLogo from "../../../public/empiric-logo.svg";
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
 import StyledTransition from "../common/StyledTransition";
@@ -104,11 +102,10 @@ const NavHeader = () => (
             <a>
               <span className="sr-only">Empiric</span>
               <div className="w-[120px] lg:w-[160px]">
-                <Image
-                  src={empiricLogo}
+                <img
+                  className="h-12 w-auto sm:h-16"
+                  src="/empiric-logo.svg"
                   alt="Empiric"
-                  layout="responsive"
-                  priority
                 />
               </div>
             </a>
