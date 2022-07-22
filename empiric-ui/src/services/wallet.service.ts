@@ -43,9 +43,9 @@ export type Network = "mainnet-alpha" | "goerli-alpha" | "localhost";
 export const networkId = (): Network | undefined => {
   try {
     const { baseUrl } = getStarknet().provider;
-    if (baseUrl.includes("alpha-mainnet.starknet.io")) {
+    if (baseUrl === "https://alpha-mainnet.starknet.io") {
       return "mainnet-alpha";
-    } else if (baseUrl.includes("alpha4.starknet.io")) {
+    } else if (baseUrl === "https://alpha4.starknet.io") {
       return "goerli-alpha";
     } else if (baseUrl.match(/^https?:\/\/localhost.*/)) {
       return "localhost";
