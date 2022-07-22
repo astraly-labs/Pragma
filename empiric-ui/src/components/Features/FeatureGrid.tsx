@@ -1,4 +1,5 @@
 import React from "react";
+import Image, { StaticImageData } from "next/image";
 import classNames from "classnames";
 import Dots from "../common/Dots";
 import Feature, { BulletPoint } from "./Feature";
@@ -6,7 +7,7 @@ import Feature, { BulletPoint } from "./Feature";
 export interface FeatureGridProps {
   title: string;
   bulletPoints: BulletPoint[];
-  imgSrc: string;
+  imgSrc: StaticImageData;
   imgLeft: boolean;
 }
 
@@ -40,15 +41,19 @@ const FeatureGrid: React.FC<FeatureGridProps> = ({
         height={404}
         className="absolute left-1/2 -translate-x-1/2 translate-y-16 lg:hidden"
       />
-      <img
+      <div
         className={classNames(
           "relative mx-auto w-[245px] sm:w-[490px]",
           imgLeft ? "sm:mr-auto sm:ml-0" : "sm:ml-auto sm:mr-0"
         )}
-        src={imgSrc}
-        alt=""
-        aria-hidden="true"
-      />
+      >
+        <Image
+          src={imgSrc}
+          alt="colorful blob"
+          aria-hidden="true"
+          layout="responsive"
+        />
+      </div>
     </div>
   </div>
 );

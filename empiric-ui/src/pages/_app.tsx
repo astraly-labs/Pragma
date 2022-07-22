@@ -23,6 +23,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
+        <meta charSet="UTF-8" key="charset" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1"
+          key="viewport"
+        />
         <meta name="robots" content="all" />
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
@@ -46,13 +52,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <DefaultSeo
         title="Empiric Network | ZK-Oracle"
-        description="Empiric Network is the first zk-native oracle, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability. Empiric is the leading oracle on Starknet, powered by high-quality data from the biggest market makers and exchanges, such as Alameda, CMT, Flow Traders, Gemini and Jane Street."
+        description="Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable."
         canonical="https://www.empiric.network"
         openGraph={{
           url: "https://www.empiric.network",
           title: "Empiric Network | ZK-Oracle",
           description:
-            "Empiric Network is the first zk-native oracle, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability. Empiric is the leading oracle on Starknet, powered by high-quality data from the biggest market makers and exchanges, such as Alameda, CMT, Flow Traders, Gemini and Jane Street.",
+            "Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable.",
           images: [
             {
               url: "https://www.empiric.network/empiric-og-img.png",

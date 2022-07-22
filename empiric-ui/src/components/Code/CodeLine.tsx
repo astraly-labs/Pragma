@@ -4,7 +4,7 @@ import { ChevronRightIcon, CheckIcon } from "@heroicons/react/solid";
 
 const codeStyles = {
   output: "text-white",
-  check: "text-green-500",
+  check: "text-green-300",
 } as const;
 
 export interface CodeLineProps {
