@@ -52,13 +52,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <DefaultSeo
         title="Empiric Network | ZK-Oracle"
-        description="Empiric Network is the leading zk-native oracle live on StarkNet, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability."
+        description="Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable."
         canonical="https://www.empiric.network"
         openGraph={{
           url: "https://www.empiric.network",
           title: "Empiric Network | ZK-Oracle",
           description:
-            "Empiric Network is the leading zk-native oracle live on StarkNet, bringing the principles of DeFi to data infrastructure: decentralization, transparency and composability.",
+            "Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable.",
           images: [
             {
               url: "https://www.empiric.network/empiric-og-img.png",
