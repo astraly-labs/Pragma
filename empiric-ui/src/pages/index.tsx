@@ -67,6 +67,24 @@ const dataPublishers: Logo[] = [
   },
 ];
 
+const ecosystemPartners: Logo[] = [
+  {
+    name: "Consensys",
+    src: "/assets/ecosystem/consensys.webp",
+    href: "https://consensys.net/",
+  },
+  {
+    name: "Argent",
+    src: "/assets/ecosystem/argent.webp",
+    href: "https://www.argent.xyz/",
+  },
+  {
+    name: "Equilibrium",
+    src: "/assets/ecosystem/equilibrium.webp",
+    href: "https://equilibrium.io/en",
+  },
+];
+
 const IndexPage = () => (
   <div className="w-screen">
     <Banner />
@@ -109,7 +127,8 @@ const IndexPage = () => (
       />
       <InfoSection />
     </SectionContainer>
-    <SectionContainer className="sm:!px-0">
+    <SectionContainer>
+      <LogoCloud title="Ecosystem Partners" logos={ecosystemPartners} />
       <DefaultCTASection />
     </SectionContainer>
   </div>

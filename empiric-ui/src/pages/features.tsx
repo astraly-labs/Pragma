@@ -36,7 +36,7 @@ const FeaturesPage = () => {
         />
         <FAQ />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <DefaultCTASection />
       </SectionContainer>
     </div>
