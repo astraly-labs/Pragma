@@ -29,7 +29,7 @@ async def main():
 
     assets = EMPIRIC_ALL_ASSETS
 
-    client = EmpiricClient(n_retries=5)
+    client = EmpiricClient()
 
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
