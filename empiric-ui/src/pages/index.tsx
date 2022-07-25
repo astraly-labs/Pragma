@@ -81,7 +81,7 @@ const ecosystemPartners: Logo[] = [
   {
     name: "Equilibrium",
     src: "/assets/ecosystem/equilibrium.webp",
-    href: "https://equilibrium.io/en",
+    href: "https://equilibrium.co/",
   },
 ];
 
