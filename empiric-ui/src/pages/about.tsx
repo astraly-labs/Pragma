@@ -23,7 +23,7 @@ const AboutPage = () => {
         <InvestorsSection />
         <AngelsSection />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <CTASection
           title="Looking for a way to get involved?"
           description="If you’re looking for somewhere you can learn quickly and make a meaningful impact in a fast-paced company, you’re in the right place."

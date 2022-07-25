@@ -18,7 +18,7 @@ const PublishersPage = () => {
         />
         <PublishersSeciton />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <CTASection
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."

@@ -22,7 +22,7 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
     </figcaption>
     <ul className="flex w-full flex-wrap items-center justify-between">
       {logos.map(({ name, src, href }, i) => (
-        <li key={i} className="py-4 px-4 lg:py-8">
+        <li key={i} className="py-4 px-3 lg:py-8">
           <a href={href}>
             <img
               src={src}
