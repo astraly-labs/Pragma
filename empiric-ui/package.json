@@ -14,7 +14,7 @@
     "classnames": "^2.3.1",
     "get-starknet": "^1.4.2",
     "next": "^12.2.2",
-    "next-seo": "^5.4.0",
+    "next-seo": "^5.5.0",
     "postcss": "^8.0.9",
     "prop-types": "^15.6.0",
     "react": "^18.0.0",

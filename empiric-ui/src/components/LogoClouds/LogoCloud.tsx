@@ -1,5 +1,4 @@
 import React from "react";
-import classNames from "classnames";
 
 export interface SimpleLogo {
   name: string;
@@ -22,12 +21,15 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
     </figcaption>
     <ul className="flex w-full flex-wrap items-center justify-between">
       {logos.map(({ name, src, href }, i) => (
-        <li key={i} className="py-4 px-3 lg:py-8">
+        <li
+          key={i}
+          className="basis-1/2 self-center py-4 px-3 md:basis-1/4 lg:py-8"
+        >
           <a href={href}>
             <img
               src={src}
               alt={name}
-              className={classNames("h-6 w-auto flex-shrink-0 md:h-10 lg:h-14")}
+              className="mx-auto h-6 w-auto flex-shrink-0 md:h-10 lg:h-14"
             />
           </a>
         </li>

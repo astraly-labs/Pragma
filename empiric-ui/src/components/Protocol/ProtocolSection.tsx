@@ -20,6 +20,14 @@ export interface Protocol {
 
 export const protocols: Protocol[] = [
   {
+    name: "Magnety",
+    category: "Social Wallet",
+    src: "/assets/protocols/magnety.webp",
+    description:
+      "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
+    href: "https://www.magnety.finance/",
+  },
+  {
     name: "zkLend",
     category: "Money-Market",
     src: "/assets/protocols/zklend.svg",
@@ -28,12 +36,12 @@ export const protocols: Protocol[] = [
     href: "https://zklend.com/",
   },
   {
-    name: "Magnety",
-    category: "Social Wallet",
-    src: "/assets/protocols/magnety.webp",
+    name: "CurveZero",
+    category: "Lending",
+    src: "/assets/protocols/curvezero.webp",
     description:
-      "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
-    href: "https://www.magnety.finance/",
+      "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
+    href: "https://github.com/xan-crypto/CurveZero",
   },
   {
     name: "FujiDAO",
@@ -60,12 +68,12 @@ export const protocols: Protocol[] = [
     href: "https://serity.finance/",
   },
   {
-    name: "CurveZero",
+    name: "Hashstack",
     category: "Lending",
-    src: "/assets/protocols/curvezero.webp",
+    src: "/assets/protocols/hashstack.webp",
     description:
-      "CurveZero is a lend borrow protocol. Liquidity providers deposit USDC into the protocol and borrowers can access this money at fixed rates and at any term they choose.",
-    href: "https://github.com/xan-crypto/CurveZero",
+      "Hashstack Finance is a DeFi platform whose Open protocol aims to disrupt the DeFi lending market by offering under-collateralized loans. It addresses the need of lacking under-collateralized lending avenues by enabling loans at up to 3x collateral.",
+    href: "https://hashstack.finance/",
   },
 ];
 
