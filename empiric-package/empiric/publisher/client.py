@@ -33,6 +33,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             network,
             oracle_controller_address,
         )
+        # Override default account_client with one that uses timestamp for nonce
         self.account_client = EmpiricPublisherAccountClient(
             self.account_contract_address, self.client, self.signer
         )
