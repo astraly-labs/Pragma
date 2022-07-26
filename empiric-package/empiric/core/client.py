@@ -1,16 +1,11 @@
 from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
-from starknet_py.net import Client
-
-MAX_FEE = 0
-DEFAULT_N_RETRIES = 1
+from starknet_py.net.gateway_client import GatewayClient
 
 
 class EmpiricClient:
-    def __init__(
-        self, network=None, oracle_controller_address=None, max_fee=None, n_retries=None
-    ):
+    def __init__(self, network=None, oracle_controller_address=None):
         if network is None:
             network = NETWORK
         if oracle_controller_address is None:
@@ -20,14 +15,11 @@ class EmpiricClient:
         self.oracle_controller_address = oracle_controller_address
         self.oracle_controller_contract = None
 
-        self.max_fee = MAX_FEE if max_fee is None else max_fee
-        self.n_retries = DEFAULT_N_RETRIES if n_retries is None else n_retries
-
     async def fetch_oracle_controller_contract(self):
         if self.oracle_controller_contract is None:
             self.oracle_controller_contract = await Contract.from_address(
                 self.oracle_controller_address,
-                Client(self.network, n_retries=self.n_retries),
+                GatewayClient(self.network),
             )
 
     async def get_decimals(self, key):

@@ -1,8 +1,14 @@
+import time
+
 from empiric.core.base_client import EmpiricBaseClient
 from empiric.core.const import PUBLISHER_REGISTRY_ADDRESS
 from empiric.core.entry import serialize_entries, serialize_entry
+from starknet_py.net import AccountClient
 
-DEFAULT_N_RETRIES = 3
+
+class EmpiricPublisherAccountClient(AccountClient):
+    async def _get_nonce(self) -> int:
+        return int(time.time())
 
 
 class EmpiricPublisherClient(EmpiricBaseClient):
@@ -14,9 +20,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         publisher_registry_address=None,
         network=None,
         oracle_controller_address=None,
-        n_retries=None,
     ):
-        n_retries = DEFAULT_N_RETRIES if n_retries is None else n_retries
         self.publisher_registry_address = (
             publisher_registry_address
             if publisher_registry_address is not None
@@ -28,7 +32,10 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             publisher_address,
             network,
             oracle_controller_address,
-            n_retries,
+        )
+        # Override default account_client with one that uses timestamp for nonce
+        self.account_client = EmpiricPublisherAccountClient(
+            self.account_contract_address, self.client, self.signer
         )
 
     async def _fetch_contracts(self):
@@ -73,7 +80,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         )
 
         print(
-            f"Successfully sent {len(entries)} updated entries  with transaction {result}"
+            f"Successfully sent {len(entries)} updated entries with transaction {result}"
         )
 
         return result
