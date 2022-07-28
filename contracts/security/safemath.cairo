@@ -7,14 +7,23 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.math import assert_not_zero
 from starkware.cairo.common.uint256 import (
-    Uint256, uint256_check, uint256_add, uint256_sub, uint256_mul, uint256_unsigned_div_rem,
-    uint256_le, uint256_lt, uint256_eq)
+    Uint256,
+    uint256_check,
+    uint256_add,
+    uint256_sub,
+    uint256_mul,
+    uint256_unsigned_div_rem,
+    uint256_le,
+    uint256_lt,
+    uint256_eq,
+)
 
 namespace SafeUint256:
     # Adds two integers.
     # Reverts if the sum overflows.
     func add{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            a : Uint256, b : Uint256) -> (c : Uint256):
+        a : Uint256, b : Uint256
+    ) -> (c : Uint256):
         uint256_check(a)
         uint256_check(b)
         let (c : Uint256, is_overflow) = uint256_add(a, b)
@@ -27,7 +36,8 @@ namespace SafeUint256:
     # Subtracts two integers.
     # Reverts if minuend (`b`) is greater than subtrahend (`a`).
     func sub_le{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            a : Uint256, b : Uint256) -> (c : Uint256):
+        a : Uint256, b : Uint256
+    ) -> (c : Uint256):
         alloc_locals
         uint256_check(a)
         uint256_check(b)
@@ -42,7 +52,8 @@ namespace SafeUint256:
     # Subtracts two integers.
     # Reverts if minuend (`b`) is greater than or equal to subtrahend (`a`).
     func sub_lt{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            a : Uint256, b : Uint256) -> (c : Uint256):
+        a : Uint256, b : Uint256
+    ) -> (c : Uint256):
         alloc_locals
         uint256_check(a)
         uint256_check(b)
@@ -58,7 +69,8 @@ namespace SafeUint256:
     # Multiplies two integers.
     # Reverts if product is greater than 2^256.
     func mul{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            a : Uint256, b : Uint256) -> (c : Uint256):
+        a : Uint256, b : Uint256
+    ) -> (c : Uint256):
         alloc_locals
         uint256_check(a)
         uint256_check(b)
@@ -85,7 +97,8 @@ namespace SafeUint256:
     #    remainder < divisor
     #    quotient * divisor + remainder == dividend
     func div_rem{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            a : Uint256, b : Uint256) -> (c : Uint256, rem : Uint256):
+        a : Uint256, b : Uint256
+    ) -> (c : Uint256, rem : Uint256):
         alloc_locals
         uint256_check(a)
         uint256_check(b)

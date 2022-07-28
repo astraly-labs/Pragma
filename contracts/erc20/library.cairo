@@ -59,7 +59,8 @@ namespace ERC20:
     #
 
     func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            name : felt, symbol : felt, decimals : felt):
+        name : felt, symbol : felt, decimals : felt
+    ):
         ERC20_name.write(name)
         ERC20_symbol.write(symbol)
         with_attr error_message("ERC20: decimals exceed 2^8"):
@@ -79,44 +80,51 @@ namespace ERC20:
     end
 
     func symbol{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-            symbol : felt):
+        symbol : felt
+    ):
         let (symbol) = ERC20_symbol.read()
         return (symbol)
     end
 
     func total_supply{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-            total_supply : Uint256):
+        total_supply : Uint256
+    ):
         let (total_supply : Uint256) = ERC20_total_supply.read()
         return (total_supply)
     end
 
     func decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-            decimals : felt):
+        decimals : felt
+    ):
         let (decimals) = ERC20_decimals.read()
         return (decimals)
     end
 
     func balance_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            account : felt) -> (balance : Uint256):
+        account : felt
+    ) -> (balance : Uint256):
         let (balance : Uint256) = ERC20_balances.read(account)
         return (balance)
     end
 
     func allowance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            owner : felt, spender : felt) -> (remaining : Uint256):
+        owner : felt, spender : felt
+    ) -> (remaining : Uint256):
         let (remaining : Uint256) = ERC20_allowances.read(owner, spender)
         return (remaining)
     end
 
     func transfer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            recipient : felt, amount : Uint256):
+        recipient : felt, amount : Uint256
+    ):
         let (sender) = get_caller_address()
         _transfer(sender, recipient, amount)
         return ()
     end
 
     func transfer_from{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            sender : felt, recipient : felt, amount : Uint256) -> ():
+        sender : felt, recipient : felt, amount : Uint256
+    ) -> ():
         alloc_locals
         let (caller) = get_caller_address()
         # subtract allowance
@@ -127,7 +135,8 @@ namespace ERC20:
     end
 
     func approve{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            spender : felt, amount : Uint256):
+        spender : felt, amount : Uint256
+    ):
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)
         end
@@ -138,7 +147,8 @@ namespace ERC20:
     end
 
     func increase_allowance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            spender : felt, added_value : Uint256) -> ():
+        spender : felt, added_value : Uint256
+    ) -> ():
         with_attr error("ERC20: added_value is not a valid Uint256"):
             uint256_check(added_value)
         end
@@ -156,7 +166,8 @@ namespace ERC20:
     end
 
     func decrease_allowance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            spender : felt, subtracted_value : Uint256) -> ():
+        spender : felt, subtracted_value : Uint256
+    ) -> ():
         alloc_locals
         with_attr error_message("ERC20: subtracted_value is not a valid Uint256"):
             uint256_check(subtracted_value)
@@ -178,7 +189,8 @@ namespace ERC20:
     #
 
     func _mint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            recipient : felt, amount : Uint256):
+        recipient : felt, amount : Uint256
+    ):
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)
         end
@@ -204,7 +216,8 @@ namespace ERC20:
     end
 
     func _burn{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            account : felt, amount : Uint256):
+        account : felt, amount : Uint256
+    ):
         alloc_locals
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)
@@ -229,7 +242,8 @@ namespace ERC20:
     end
 
     func _transfer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            sender : felt, recipient : felt, amount : Uint256):
+        sender : felt, recipient : felt, amount : Uint256
+    ):
         alloc_locals
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)  # almost surely not needed, might remove after confirmation
@@ -260,7 +274,8 @@ namespace ERC20:
     end
 
     func _approve{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            owner : felt, spender : felt, amount : Uint256):
+        owner : felt, spender : felt, amount : Uint256
+    ):
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)
         end
@@ -279,7 +294,8 @@ namespace ERC20:
     end
 
     func _spend_allowance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-            owner : felt, spender : felt, amount : Uint256):
+        owner : felt, spender : felt, amount : Uint256
+    ):
         alloc_locals
         with_attr error_message("ERC20: amount is not a valid Uint256"):
             uint256_check(amount)  # almost surely not needed, might remove after confirmation
