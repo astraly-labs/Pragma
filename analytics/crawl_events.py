@@ -1,9 +1,9 @@
 import json
-import requests
 import os.path
-import pandas as pd
-from empiric.core.utils import felt_to_str
 
+import pandas as pd
+import requests
+from empiric.core.utils import felt_to_str
 
 JSON_FILE = "empiric-events.json"
 CSV_FILE = "empiric-events.csv"
@@ -12,12 +12,18 @@ CSV_FILE = "empiric-events.csv"
 def get_events():
     """If no JSON file in current directory, requests all events from Starknet Indexer."""
     if not os.path.isfile(JSON_FILE):
-        print("Requesting all SubmittedEntry events from Starknet Indexer...")
+        print(
+            "Requesting all SubmittedEntry events from Starknet Indexer. This might take a while..."
+        )
         url = "https://starknet-archive.hasura.app/v1/graphql"
         request_json = {
             "query": 'query empiric { event(where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
         }
         r = requests.post(url=url, json=request_json)
+        if r.status_code != 200:
+            raise Exception(
+                f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
+            )
         data = r.json()
     else:
         print(f"Reading in {JSON_FILE}...")
