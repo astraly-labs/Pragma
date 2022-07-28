@@ -1,12 +1,14 @@
 import React from "react";
+import { NextSeo } from "next-seo";
 import { DefaultCTASection } from "../components/CTASection";
 import SectionContainer from "../components/common/SectionContainer";
 import Code from "../components/Code/Code";
 import Heading from "../components/Heading";
 import ProtocolSection from "../components/Protocol/ProtocolSection";
 
-const ProtocolsPage = () => {
-  return (
+const ProtocolsPage = () => (
+  <>
+    <NextSeo title="Protocols" />
     <div className="w-screen">
       <SectionContainer className="bg-slate-50" first>
         <Heading
@@ -30,11 +32,11 @@ const ProtocolsPage = () => {
         />
         <Code />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <DefaultCTASection />
       </SectionContainer>
     </div>
-  );
-};
+  </>
+);
 
 export default ProtocolsPage;

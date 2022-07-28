@@ -1,4 +1,5 @@
 import React from "react";
+import { NextSeo } from "next-seo";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import { DefaultCTASection } from "../components/CTASection";
@@ -6,8 +7,9 @@ import FAQ from "../components/FAQ";
 import FeaturesDisplay from "../components/Features/FeaturesDisplay";
 import TimelineExplanation from "../components/TimelineExplanation";
 
-const FeaturesPage = () => {
-  return (
+const FeaturesPage = () => (
+  <>
+    <NextSeo title="Features" />
     <div className="w-screen">
       <SectionContainer className="bg-slate-50" first>
         <Heading
@@ -36,11 +38,11 @@ const FeaturesPage = () => {
         />
         <FAQ />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <DefaultCTASection />
       </SectionContainer>
     </div>
-  );
-};
+  </>
+);
 
 export default FeaturesPage;

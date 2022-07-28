@@ -1,12 +1,14 @@
 import React from "react";
+import { NextSeo } from "next-seo";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
 import PublishersSeciton from "../components/Publisher/PublishersSection";
 
-const PublishersPage = () => {
-  return (
+const PublishersPage = () => (
+  <>
+    <NextSeo title="Publishers" />
     <div className="w-screen">
       <SectionContainer className="bg-slate-50" first>
         <Heading
@@ -18,7 +20,7 @@ const PublishersPage = () => {
         />
         <PublishersSeciton />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <CTASection
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."
@@ -35,7 +37,7 @@ const PublishersPage = () => {
         />
       </SectionContainer>
     </div>
-  );
-};
+  </>
+);
 
 export default PublishersPage;

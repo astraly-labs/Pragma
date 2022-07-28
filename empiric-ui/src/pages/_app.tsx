@@ -51,12 +51,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2151af" />
       </Head>
       <DefaultSeo
-        title="Empiric Network | ZK-Oracle"
+        titleTemplate="%s - Empiric Network - StarkNet Oracle"
+        defaultTitle="Empiric Network - StarkNet Oracle"
         description="Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable."
         canonical="https://www.empiric.network"
         openGraph={{
           url: "https://www.empiric.network",
-          title: "Empiric Network | ZK-Oracle",
+          title: "Empiric Network - StarkNet Oracle",
           description:
             "Empiric Network is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Empiric makes data decentralized, transparent and composable.",
           images: [

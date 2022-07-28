@@ -1,4 +1,5 @@
 import React from "react";
+import { NextSeo } from "next-seo";
 import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
@@ -7,8 +8,9 @@ import TeamSection from "../components/TeamSection";
 import InvestorsSection from "../components/InvestorsSection";
 import AngelsSection from "../components/AngelsSection";
 
-const AboutPage = () => {
-  return (
+const AboutPage = () => (
+  <>
+    <NextSeo title="About" />
     <div className="w-screen">
       <SectionContainer className="bg-slate-50" first>
         <Heading
@@ -23,7 +25,7 @@ const AboutPage = () => {
         <InvestorsSection />
         <AngelsSection />
       </SectionContainer>
-      <SectionContainer className="sm:!px-0">
+      <SectionContainer>
         <CTASection
           title="Looking for a way to get involved?"
           description="If you’re looking for somewhere you can learn quickly and make a meaningful impact in a fast-paced company, you’re in the right place."
@@ -40,7 +42,7 @@ const AboutPage = () => {
         />
       </SectionContainer>
     </div>
-  );
-};
+  </>
+);
 
 export default AboutPage;
