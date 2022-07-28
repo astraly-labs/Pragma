@@ -5,7 +5,8 @@ from starkware.cairo.common.alloc import alloc
 
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.library import (
-    OracleController_initialize_oracle_controller, OracleController_get_publisher_registry_address,
+    OracleController_initialize_oracle_controller,
+    OracleController_get_publisher_registry_address,
     OracleController_get_active_oracle_implementation_addresses,
     OracleController_get_oracle_implementation_status,
     OracleController_get_oracle_implementation_address,
