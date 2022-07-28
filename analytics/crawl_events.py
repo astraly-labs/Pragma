@@ -26,6 +26,8 @@ def get_events():
                 f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
             )
         data = r.json()
+        with open(JSON_FILE, "w") as data_file:
+            json.dump(data, data_file)
     else:
         print(f"Reading in {JSON_FILE}...")
         with open(JSON_FILE) as data_file:
