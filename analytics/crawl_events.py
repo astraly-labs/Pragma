@@ -16,6 +16,7 @@ def get_events():
             "Requesting all SubmittedEntry events from Starknet Indexer. This might take a while..."
         )
         url = "https://starknet-archive.hasura.app/v1/graphql"
+        # Note that the contract address can't have a leading 0 or the GraphQl query won't find the contract.
         request_json = {
             "query": 'query empiric { event(where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
         }
