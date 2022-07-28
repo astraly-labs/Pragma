@@ -38,7 +38,13 @@ def get_events():
 def format_events(data):
     """Returns a list of Events. Each event's fields are converted to ints."""
     events = data["data"]["event"]
-    formatted_events = [event["arguments"][0]["value"] for event in events]
+    formatted_events = [
+        {
+            **event["arguments"][0]["value"],
+            "transaction_hash": event["transaction_hash"],
+        }
+        for event in events
+    ]
     return [
         {key: int(value, 16) for key, value in event.items()}
         for event in formatted_events
