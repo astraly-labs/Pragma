@@ -33,7 +33,8 @@ end
 
 @event
 func UpdatedPublisherAddress(
-        publisher : felt, old_publisher_address : felt, new_publisher_address : felt):
+    publisher : felt, old_publisher_address : felt, new_publisher_address : felt
+):
 end
 
 #
@@ -41,15 +42,15 @@ end
 #
 
 func Publisher_get_publisher_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(publisher : felt) -> (
-        publisher_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publisher : felt) -> (publisher_address : felt):
     let (publisher_address) = Publisher_publisher_address_storage.read(publisher)
     return (publisher_address)
 end
 
 func Publisher_get_all_publishers{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        publishers_len : felt, publishers : felt*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (publishers_len : felt, publishers : felt*):
     alloc_locals
 
     let (publishers_len) = Publisher_publishers_len_storage.read()
@@ -69,8 +70,8 @@ end
 #
 
 func Publisher_register_publisher{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher : felt, publisher_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publisher : felt, publisher_address : felt):
     let (existing_publisher_address) = Publisher_get_publisher_address(publisher)
 
     with_attr error_message("PublisherRegistry: Publisher with this name already registered"):
@@ -83,8 +84,8 @@ func Publisher_register_publisher{
 end
 
 func Publisher_update_publisher_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher : felt, new_publisher_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publisher : felt, new_publisher_address : felt):
     let (existing_publisher_address) = Publisher_get_publisher_address(publisher)
     let (caller_address) = get_caller_address()
 
@@ -107,7 +108,8 @@ end
 #
 
 func Publisher_add_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publisher : felt, publisher_address : felt):
+    publisher : felt, publisher_address : felt
+):
     let (publishers_len) = Publisher_publishers_len_storage.read()
 
     Publisher_publishers_len_storage.write(publishers_len + 1)
@@ -119,8 +121,8 @@ func Publisher_add_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, r
 end
 
 func Publisher_build_publishers_array{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        publishers_len : felt, publishers : felt*, idx : felt) -> (publishers : felt*):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(publishers_len : felt, publishers : felt*, idx : felt) -> (publishers : felt*):
     let (new_value) = Publisher_publishers_storage.read(idx)
     assert [publishers + idx] = new_value
 

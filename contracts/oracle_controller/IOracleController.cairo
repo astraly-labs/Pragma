@@ -74,7 +74,9 @@ namespace IOracleController:
     ):
     end
 
-    func get_value_for_sources(key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*) -> (
+    func get_value_for_sources(
+        key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+    ) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end

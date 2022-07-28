@@ -24,7 +24,8 @@ end
 #
 
 func Admin_initialize_admin_address{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(admin_address : felt):
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(admin_address : felt):
     let (existing_admin_address) = Admin_admin_address_storage.read()
     with_attr error_message("Admin: Admin address is already initialized"):
         assert existing_admin_address = 0
@@ -39,7 +40,7 @@ end
 #
 
 func Admin_get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        ) -> (admin_address : felt):
+    ) -> (admin_address : felt):
     let (admin_address) = Admin_admin_address_storage.read()
     return (admin_address)
 end
@@ -49,7 +50,8 @@ end
 #
 
 func Admin_set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        new_address : felt):
+    new_address : felt
+):
     let (old_admin_address) = Admin_admin_address_storage.read()
     Admin_admin_address_storage.write(new_address)
     UpdatedAdminAddress.emit(old_admin_address, new_address)
