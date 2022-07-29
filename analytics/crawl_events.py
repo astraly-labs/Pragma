@@ -26,6 +26,8 @@ def get_events():
                 f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
             )
         data = r.json()
+        with open(JSON_FILE, "w") as data_file:
+            json.dump(data, data_file)
     else:
         print(f"Reading in {JSON_FILE}...")
         with open(JSON_FILE) as data_file:
@@ -36,7 +38,13 @@ def get_events():
 def format_events(data):
     """Returns a list of Events. Each event's fields are converted to ints."""
     events = data["data"]["event"]
-    formatted_events = [event["arguments"][0]["value"] for event in events]
+    formatted_events = [
+        {
+            **event["arguments"][0]["value"],
+            "transaction_hash": event["transaction_hash"],
+        }
+        for event in events
+    ]
     return [
         {key: int(value, 16) for key, value in event.items()}
         for event in formatted_events
