@@ -1,9 +1,4 @@
-<!-- public/sitemap.xml -->
-<xml version="1.0" encoding="UTF-8">
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-    <loc>https://empiric.network</loc>
-    <lastmod>2022-07-13</lastmod>
-    </url>
-</urlset>
-</xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://empiric.network/sitemap-0.xml</loc></sitemap>
+</sitemapindex>

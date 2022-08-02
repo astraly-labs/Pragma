@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://empiric.network</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/about</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/features</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/protocols</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/publishers</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/eth-usd</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/btc-usd</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/sol-usd</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/btc-eur</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/avax-usd</loc><lastmod>2022-08-02T22:02:55.555Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/doge-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/shib-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/dai-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/usdt-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/usdc-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/tusd-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/busd-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/bnb-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/ada-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/xrp-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/matic-usd</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/btc-usd-20220930</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/btc-usd-20221230</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/eth-usd-20220930</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://empiric.network/details/eth-usd-20221230</loc><lastmod>2022-08-02T22:02:55.556Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+</urlset>
