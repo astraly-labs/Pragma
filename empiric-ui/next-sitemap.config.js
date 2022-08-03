@@ -14,7 +14,7 @@ const config = {
     return {
       loc: path, // => this will be exported as http(s)://<config.siteUrl>/<path>
       changefreq: config.changefreq,
-      priority: path === "/" ? 0.8 : config.priority, // Give homepage higher priority
+      priority: path === "/" ? 1 : config.priority, // Give homepage higher priority
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       alternateRefs: config.alternateRefs ?? [],
     };
