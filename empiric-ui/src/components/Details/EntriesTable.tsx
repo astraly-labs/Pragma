@@ -85,7 +85,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
         accessorFn: (entry) => secondsToTime(entry.timestamp),
       },
     ],
-    [decimals, assetKey]
+    [decimals, currencyAlt, currencySrc]
   );
 
   const table = useReactTable({

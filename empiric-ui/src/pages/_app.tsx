@@ -29,7 +29,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           content="width=device-width,initial-scale=1"
           key="viewport"
         />
-        <meta name="robots" content="all" />
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
