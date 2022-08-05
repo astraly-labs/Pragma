@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import time
 
 from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
@@ -9,6 +10,11 @@ from starknet_py.net.models import StarknetChainId
 from starknet_py.net.networks import MAINNET, TESTNET
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starkware.starknet.public.abi import get_selector_from_name
+
+
+class EmpiricAccountClient(AccountClient):
+    async def _get_nonce(self) -> int:
+        return int(time.time())
 
 
 class EmpiricBaseClient(ABC):

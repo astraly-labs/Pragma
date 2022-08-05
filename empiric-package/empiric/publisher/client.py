@@ -1,14 +1,6 @@
-import time
-
-from empiric.core.base_client import EmpiricBaseClient
+from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.const import PUBLISHER_REGISTRY_ADDRESS
 from empiric.core.entry import serialize_entries, serialize_entry
-from starknet_py.net import AccountClient
-
-
-class EmpiricPublisherAccountClient(AccountClient):
-    async def _get_nonce(self) -> int:
-        return int(time.time())
 
 
 class EmpiricPublisherClient(EmpiricBaseClient):
@@ -34,7 +26,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             oracle_controller_address,
         )
         # Override default account_client with one that uses timestamp for nonce
-        self.account_client = EmpiricPublisherAccountClient(
+        self.account_client = EmpiricAccountClient(
             self.account_contract_address, self.client, self.signer
         )
 
