@@ -28,7 +28,7 @@ ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 STARKNET_STARTING_TIMESTAMP = 1650590820
-ON_KEY = "aave-on-borrow"
+ON_KEY = "thegraph"
 FUTURES_SPOT = {
     "btc/usd": {
         "value": 100,
@@ -38,7 +38,7 @@ FUTURES_SPOT = {
                 "timestamp": STARKNET_STARTING_TIMESTAMP,
                 "expiry_timestamp": 1656039600,
                 "value": 90,
-            },  # backwardation
+            },  # backwardation, expect floor at 0
             "btc/usd-20220930": {
                 "timestamp": STARKNET_STARTING_TIMESTAMP,
                 "expiry_timestamp": 1664506800,
