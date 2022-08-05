@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 
 from empiric.admin.client import EmpiricAdminClient
 from empiric.core.utils import str_to_felt
@@ -11,7 +12,7 @@ spot_future_keys = {
         "btc/usd-20221230": 1672369200,
     }
 }
-yield_curve_address = 0x03368F7D9FF915C566DABE424B2669E77D6856EABA449C1A24215148F2031396
+yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E659962EC
 
 
 async def main():
@@ -24,17 +25,20 @@ async def main():
             yield_curve_address, "add_on_key", [str_to_felt(on_key), 1]
         )
         print(f"Registered overnight rate key {on_key} with tx: {result}")
+        time.sleep(1)  # sleep for nonce
 
     result = await admin_client.send_transaction(
         yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("ftx")]
     )
     print(f"Set future/spot empiric source-key with tx: {result}")
+    time.sleep(1)  # sleep for nonce
 
     for spot_key, future_keys in spot_future_keys.items():
         result = await admin_client.send_transaction(
             yield_curve_address, "add_spot_key", [str_to_felt(spot_key), 1]
         )
         print(f"Added spot key {spot_key} with tx: {result}")
+        time.sleep(1)  # sleep for nonce
         for future_key, future_expiry_timestamp in future_keys.items():
             result = await admin_client.send_transaction(
                 yield_curve_address,
@@ -46,6 +50,7 @@ async def main():
                     future_expiry_timestamp,
                 ],
             )
+            time.sleep(1)  # sleep for nonce
             print(f"Added future key {future_key} with tx: {result}")
 
 
