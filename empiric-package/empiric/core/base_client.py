@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import time
+from abc import ABC, abstractmethod
 
 from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
