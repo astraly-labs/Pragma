@@ -28,7 +28,7 @@ ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 STARKNET_STARTING_TIMESTAMP = 1650590820
-ON_KEY = "thegraph"
+ON_KEY = "aave-on-borrow"
 FUTURES_SPOT = {
     "btc/usd": {
         "value": 100,
@@ -313,7 +313,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=str_to_felt("aave"),
+        source=str_to_felt("thegraph"),
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
