@@ -1,4 +1,4 @@
-from empiric.core.base_client import EmpiricBaseClient
+from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.const import (
     ADMIN_ADDRESS,
     ORACLE_CONTROLLER_ADDRESS,
@@ -31,6 +31,10 @@ class EmpiricAdminClient(EmpiricBaseClient):
             admin_address,
             network,
             oracle_controller_address,
+        )
+        # Override default account_client with one that uses timestamp for nonce
+        self.account_client = EmpiricAccountClient(
+            self.account_contract_address, self.client, self.signer
         )
 
     async def _fetch_contracts(self):
