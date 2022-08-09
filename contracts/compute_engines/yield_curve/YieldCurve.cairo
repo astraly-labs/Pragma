@@ -26,7 +26,7 @@ from contracts.compute_engines.yield_curve.structs import YieldPoint
 const DEFAULT_AGGREGATION_MODE = 0  # median
 const ON_SOURCE_KEY = 28526  # str_to_felt("on")
 const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828  # str_to_felt("future/spot")
-const AAVE_EMPIRIC_SOURCE_KEY = 1633777253  # str_to_felt("aave")
+const THEGRAPH_EMPIRIC_SOURCE_KEY = 8388065800952574056  # str_to_felt("thegraph")
 const SECONDS_IN_YEAR = 31536000  # 365 * 24 * 60 * 60
 
 #
@@ -505,7 +505,7 @@ namespace YieldCurve:
 
         let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
         let (on_entry) = IOracleController.get_entry(
-            oracle_controller_address, on_key, AAVE_EMPIRIC_SOURCE_KEY
+            oracle_controller_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY
         )
         if on_entry.timestamp == 0:
             # Entry was empty to skip to next one

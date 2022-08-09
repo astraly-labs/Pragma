@@ -79,7 +79,7 @@ async def get_yield_points(output_decimals):
     on_keys = ["aave-on-borrow"]
     spot_keys = ["btc/usd"]
     future_keys = ["btc/usd-20220624", "btc/usd-20220930"]
-    future_status = {"btc/usd-20220624": 1656043200, "btc/usd-20220930": 1664510400}
+    future_status = {"btc/usd-20220930": 1664506800, "btc/usd-20221230": 1672369200}
 
     for on_key in on_keys:
         # fetch data from oracle
