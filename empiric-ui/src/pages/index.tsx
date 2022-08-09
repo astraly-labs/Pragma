@@ -83,6 +83,11 @@ const ecosystemPartners: Logo[] = [
     src: "/assets/ecosystem/equilibrium.webp",
     href: "https://equilibrium.co/",
   },
+  {
+    name: "Braavos",
+    src: "/assets/ecosystem/braavos.webp",
+    href: "https://braavos.app/",
+  },
 ];
 
 const IndexPage = () => (
