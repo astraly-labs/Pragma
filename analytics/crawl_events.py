@@ -17,11 +17,11 @@ def get_events():
             f"Requesting all SubmittedEntry events from Starknet Indexer. Using chunks of size {chunk_size} This might take a while..."
         )
         url = "https://starknet-archive.hasura.app/v1/graphql"
-        # Note that the contract address can't have a leading 0 or the GraphQl query won't find the contract.
         i = 0
         data = None
         while True:
             print(f"Fetching chunk {i+1}")
+            # Note that the contract address can't have a leading 0 or the GraphQl query won't find the contract.
             request_json = {
                 "query": "query empiric { event(limit: "
                 + str(chunk_size)
