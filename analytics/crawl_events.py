@@ -12,20 +12,37 @@ CSV_FILE = "empiric-events.csv"
 def get_events():
     """If no JSON file in current directory, requests all events from Starknet Indexer."""
     if not os.path.isfile(JSON_FILE):
+        chunk_size = 1_000_000
         print(
-            "Requesting all SubmittedEntry events from Starknet Indexer. This might take a while..."
+            f"Requesting all SubmittedEntry events from Starknet Indexer. Using chunks of size {chunk_size} This might take a while..."
         )
         url = "https://starknet-archive.hasura.app/v1/graphql"
         # Note that the contract address can't have a leading 0 or the GraphQl query won't find the contract.
-        request_json = {
-            "query": 'query empiric { event(where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
-        }
-        r = requests.post(url=url, json=request_json)
-        if r.status_code != 200:
-            raise Exception(
-                f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
-            )
-        data = r.json()
+        i = 0
+        data = None
+        while True:
+            print(f"Fetching chunk {i+1}")
+            request_json = {
+                "query": "query empiric { event(limit: "
+                + str(chunk_size)
+                + ", offset: "
+                + str(i * chunk_size)
+                + ', order_by: {id: asc}, where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
+            }
+            r = requests.post(url=url, json=request_json)
+            if r.status_code != 200:
+                raise Exception(
+                    f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
+                )
+            new_data = r.json()
+            if data is None:
+                data = new_data
+            elif len(new_data["data"]["event"]) > 0:
+                data["data"]["event"].extend(new_data["data"]["event"])
+            else:
+                break
+            i += 1
+
         with open(JSON_FILE, "w") as data_file:
             json.dump(data, data_file)
     else:
