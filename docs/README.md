@@ -8,15 +8,15 @@ Empiric Network is the decentralized, transparent and composable oracle network,
 
 Empiric is particularly robust because it has no off-chain infrastructure, eliminating an entire class of attack vectors. All sources sign and timestamp their data and post directly to Starknet.
 
-Empiric is also built with a system of failsafes and redundancies, from independent implementations to using multiple different infrastructure providers across data partners.
+Empiric is also built with a system of failsafes and redundancies, including independent implementations and using multiple different infrastructure providers across data partners.
 
-### Decentralized: Data From Many, Highly Liquid Exchanges & Market Makers
+### Decentralized: Data From Many Highly Liquid Exchanges & Market Makers
 
-Empiric works with the most liquid exchanges and biggest market makers who sign their proprietary data and send it directly on-chain. In the future, we will implement mechanisms to make data publishing permissionless so that anyone can provide data through the Empiric Network (see [Roadmap](../how-empiric-works/roadmap.md)).
+Empiric works with the most liquid exchanges and biggest market makers who sign their proprietary data and send it directly on-chain. In the future, we will implement mechanisms to make data publishing permissionless so that anyone can provide data through the Empiric Network (see [Roadmap](https://github.com/42labs/Empiric/blob/master/how-empiric-works/roadmap.md)).
 
 ### Transparency: Don't Trust, But Verify
 
-Most existing oracle solutions operate as trusted, off-chain black boxes. Empiric smart contracts leverage zk computation to aggregate raw signed data with total transparency and robustness. Because the oracle is entirely on-chain, anyone can verify any data point from origin through transformation to destination.
+Most existing oracle solutions operate as trusted, off-chain black boxes. Empiric's smart contracts leverage zk computation to aggregate raw signed data with total transparency and robustness. Because the oracle is entirely on-chain, anyone can verify any data point from origin through transformation to destination.
 
 ### **Composability:** Towards a More Sophisticated DeFi
 
