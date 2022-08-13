@@ -18,6 +18,7 @@ The key is calculated by utf-8 encoding the lowercased string (e.g. `str_to_felt
 * ADA/USD, key: 27413441311765348
 * XRP/USD, key: 33902823363408740
 * MATIC/USD, key: 2017717457628037477220
+* AAVE/USD, key: 7017019871379944292
 * TEMP/USD \[Experimental], key: 8387230209647407972
 
 ### **Stablecoins**

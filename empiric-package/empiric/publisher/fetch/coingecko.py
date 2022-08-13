@@ -54,6 +54,8 @@ def fetch_coingecko(assets, publisher):
             pair_id = "ripple"
         elif pair[0] == "MATIC":
             pair_id = "matic-network"
+        elif pair[0] == "AAVE":
+            pair_id = "aave"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"

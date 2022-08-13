@@ -29,6 +29,7 @@ export const AssetKeys = [
   "ada/usd",
   "xrp/usd",
   "matic/usd",
+  "aave/usd",
   "btc/usd-20220930",
   "btc/usd-20221230",
   "eth/usd-20220930",
