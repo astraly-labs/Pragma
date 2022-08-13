@@ -1,6 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import { StyledExternalLink, StyledInternalLink } from "../common/StyledLink";
+import {
+  buildExplorerUrlForAddress,
+  networkId,
+} from "../../services/wallet.service";
+import { getOracleControllerAddress } from "../../services/address.service";
 
 interface FooterLink {
   title: string;
@@ -24,7 +29,9 @@ const content: FooterColumn[] = [
       },
       {
         title: "View on Block Explorer",
-        href: "#",
+        href: `${buildExplorerUrlForAddress(
+          getOracleControllerAddress(networkId())
+        )}#readContract`,
         external: true,
       },
     ],
@@ -64,17 +71,17 @@ const content: FooterColumn[] = [
       },
       {
         title: "Blog",
-        href: "#",
-        external: false,
+        href: "https://medium.com/@EmpiricNetwork",
+        external: true,
       },
       {
         title: "Press Kit",
-        href: "#",
+        href: "https://drive.google.com/drive/folders/11mE8amIoNa13xeTDI59uyeykPo2iYON9",
         external: true,
       },
       {
         title: "Contact Us",
-        href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+        href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
         external: true,
       },
     ],
@@ -96,7 +103,12 @@ const socials: SocialMedia[] = [
   {
     name: "Twitter",
     src: "/assets/social/twitter.svg",
-    href: "#",
+    href: "https://twitter.com/EmpiricNetwork",
+  },
+  {
+    name: "Medium",
+    src: "/assets/social/medium.svg",
+    href: "https://medium.com/@EmpiricNetwork",
   },
 ];
 
@@ -106,10 +118,10 @@ const Footer = () => (
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
-            <a>
+            <a className="w-fit">
               <span className="sr-only">Empiric</span>
               <img
-                className="h-8 w-auto sm:h-10"
+                className="h-12 w-auto sm:h-16 md:h-20"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />
@@ -122,11 +134,13 @@ const Footer = () => (
           <ul className="flex flex-row items-center space-x-6">
             {socials.map((social) => (
               <li key={social.name}>
-                <img
-                  src={social.src}
-                  alt={social.name}
-                  className="h-6 w-6 cursor-pointer"
-                />
+                <a href={social.href}>
+                  <img
+                    src={social.src}
+                    alt={social.name}
+                    className="h-6 w-6 cursor-pointer"
+                  />
+                </a>
               </li>
             ))}
           </ul>
@@ -140,9 +154,13 @@ const Footer = () => (
               {column.links.map(({ external, title, href }) => (
                 <React.Fragment key={title}>
                   {external ? (
-                    <StyledExternalLink href={href}>{title}</StyledExternalLink>
+                    <StyledExternalLink href={href} underline={false}>
+                      {title}
+                    </StyledExternalLink>
                   ) : (
-                    <StyledInternalLink href={href}>{title}</StyledInternalLink>
+                    <StyledInternalLink href={href} underline={false}>
+                      {title}
+                    </StyledInternalLink>
                   )}
                 </React.Fragment>
               ))}
@@ -151,7 +169,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
-        © 42 Labs - {new Date().getFullYear()}. All rights reserved.
+        © 42 Labs Inc. - {new Date().getFullYear()}. All rights reserved.
       </div>
     </div>
   </div>

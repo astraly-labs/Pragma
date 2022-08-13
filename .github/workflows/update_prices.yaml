@@ -18,10 +18,10 @@ jobs:
         run: |
           docker build . --target test -t 42labs/empiric-publisher:test
           docker build publisher/sample-publisher/all/ -t publish-all --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build publisher/sample-publisher/coinbase/ -t publish-coinbase --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
 
       - name: Post updated prices
         env:
-          ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
           PUBLISHER_PRIVATE_KEY : ${{ secrets.PUBLISHER_PRIVATE_KEY }}
           COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
@@ -34,7 +34,6 @@ jobs:
             -e __EMPIRIC_STAGING_ENV__=TRUE\
             -e __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__=TRUE\
             -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
-            -e ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
@@ -42,4 +41,13 @@ jobs:
             -e FTX_API_KEY=${FTX_API_KEY}\
             -e FTX_API_SECRET=${FTX_API_SECRET}\
             publish-all
+          docker run \
+            --env-file publisher/sample-publisher/coinbase/.env\
+            -e __EMPIRIC_STAGING_ENV__=TRUE\
+            -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
+            -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
+            -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
+            -e COINBASE_API_KEY=${COINBASE_API_KEY}\
+            -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
+            publish-coinbase
 

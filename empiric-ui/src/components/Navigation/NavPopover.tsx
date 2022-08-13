@@ -33,14 +33,16 @@ const NavPopover: React.FC<NavPopoverProps> = ({
       <>
         <Popover.Button
           className={classNames(
-            open ? "text-slate-900" : "text-slate-500",
-            "group inline-flex items-center rounded-md bg-slate-50 text-base font-medium hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-4"
+            open ? "text-indigo-600 hover:text-indigo-400" : "text-slate-500",
+            "group inline-flex items-center rounded-md bg-slate-50 text-base font-medium hover:text-slate-900 focus:outline-none"
           )}
         >
           <span>{buttonName}</span>
           <ChevronDownIcon
             className={classNames(
-              open ? "text-slate-600" : "text-slate-400",
+              open
+                ? "stroke-indigo-600 group-hover:stroke-indigo-400"
+                : "stroke-slate-400",
               "ml-2 h-5 w-5 group-hover:text-slate-500"
             )}
             aria-hidden="true"

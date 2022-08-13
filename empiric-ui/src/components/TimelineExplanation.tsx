@@ -1,10 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 import {
-  BadgeCheckIcon,
-  BookOpenIcon,
-  ChipIcon,
-  SpeakerphoneIcon,
+  CloudUploadIcon,
+  DatabaseIcon,
+  LockClosedIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/outline";
 import Dots from "./common/Dots";
 
@@ -16,26 +16,27 @@ interface Step {
 
 const steps: Step[] = [
   {
-    title: "Sign and publish",
+    title: "Timestamp & Sign",
+    description: "Data sources timestamp and sign their proprietary data.",
+    icon: LockClosedIcon,
+  },
+  {
+    title: "Publish",
     description:
-      "Data publishers sign their data and publish it on-chain to the Oracle Controller via their account contract.",
-    icon: SpeakerphoneIcon,
+      "The data sources themselves publish their signed data on-chain, directly sending it to the Empiric oracle contract via their account contract.",
+    icon: CloudUploadIcon,
   },
   {
-    title: "Quality control",
-    description: "The data integrity committee checks the provided data.",
-    icon: BadgeCheckIcon,
-  },
-  {
-    title: "Aggregate data on chain",
-    description: "The Oracle Implementation aggregates the data feeds.",
-    icon: ChipIcon,
-  },
-  {
-    title: "Read data from compute engine",
+    title: "Verify",
     description:
-      "Our compute engines combine the verified data building blocks to create new data primitives, which can be read by your contracts.",
-    icon: BookOpenIcon,
+      "The Empiric oracle contract verifies that the data is valid, including checks on its signature, timestamp and value.",
+    icon: ShieldCheckIcon,
+  },
+  {
+    title: "Persist",
+    description:
+      "Finally, once the data has been verified on-chain, it is stored transparently for future retrieval by smart contracts that need to interact with the real world — whether that is via price feeds, computational feeds or other data.",
+    icon: DatabaseIcon,
   },
 ];
 
@@ -55,12 +56,12 @@ const TimelineExplanation = () => (
       >
         {stepIdx !== steps.length - 1 && (
           <div
-            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-indigo-500 sm:top-8 sm:left-8"
+            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-indigo-600 sm:top-8 sm:left-8"
             aria-hidden="true"
           />
         )}
         <div className="relative flex items-start">
-          <span className="relative flex items-center justify-center rounded-lg bg-indigo-500 p-3 ring-8 ring-white sm:p-4">
+          <span className="relative flex items-center justify-center rounded-lg bg-indigo-600 p-3 ring-8 ring-white sm:p-4">
             <step.icon
               className="h-6 w-6 text-white sm:h-8 sm:w-8"
               aria-hidden="true"

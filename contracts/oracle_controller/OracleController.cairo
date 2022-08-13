@@ -52,6 +52,63 @@ func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
 end
 
 #
+# Oracle Implementation Controller Functions
+#
+
+@view
+func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, sources_len : felt, sources : felt*
+) -> (entries_len : felt, entries : Entry*):
+    let (entries_len, entries) = OracleController_get_entries(key, sources_len, sources)
+    return (entries_len, entries)
+end
+
+@view
+func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, source : felt
+) -> (entry : Entry):
+    let (entry) = OracleController_get_entry(key, source)
+    return (entry)
+end
+
+@view
+func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+    let (sources) = alloc()
+    let (
+        value, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = OracleController_get_value(key, aggregation_mode, 0, sources)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
+end
+
+@view
+func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+    let (
+        value, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
+    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
+end
+
+@external
+func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_entry : Entry
+):
+    OracleController_publish_entry(new_entry)
+    return ()
+end
+
+@external
+func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_entries_len : felt, new_entries : Entry*
+):
+    OracleController_publish_entries(new_entries_len, new_entries)
+    return ()
+end
+
+#
 # Getters
 #
 
@@ -169,62 +226,5 @@ func set_primary_oracle_implementation_address{
     OracleController_set_primary_oracle_implementation_address(
         primary_oracle_implementation_address
     )
-    return ()
-end
-
-#
-# Oracle Implementation Controller Functions
-#
-
-@view
-func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, sources_len : felt, sources : felt*
-) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = OracleController_get_entries(key, sources_len, sources)
-    return (entries_len, entries)
-end
-
-@view
-func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, source : felt
-) -> (entry : Entry):
-    let (entry) = OracleController_get_entry(key, source)
-    return (entry)
-end
-
-@view
-func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, aggregation_mode : felt
-) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
-    let (sources) = alloc()
-    let (
-        value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController_get_value(key, aggregation_mode, 0, sources)
-    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
-end
-
-@view
-func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
-    let (
-        value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
-    return (value, decimals, last_updated_timestamp, num_sources_aggregated)
-end
-
-@external
-func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    new_entry : Entry
-):
-    OracleController_publish_entry(new_entry)
-    return ()
-end
-
-@external
-func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    new_entries_len : felt, new_entries : Entry*
-):
-    OracleController_publish_entries(new_entries_len, new_entries)
     return ()
 end

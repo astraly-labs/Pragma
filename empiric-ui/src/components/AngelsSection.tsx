@@ -1,7 +1,11 @@
 import React from "react";
-import { Logo } from "./LogoCloud";
+import { SimpleLogo } from "./LogoClouds/LogoCloud";
 
-const angels: Logo[] = [
+const angels: SimpleLogo[] = [
+  {
+    name: "Sandeep Nailwal",
+    src: "/assets/angels/polygon.webp",
+  },
   { name: "Marc Bhargava", src: "/assets/angels/coinbase.svg" },
   {
     name: "Luke Pearson",
@@ -9,27 +13,39 @@ const angels: Logo[] = [
   },
   {
     name: "Will Haering",
-    src: "/assets/angels/ponto.png",
+    src: "/assets/angels/ponto.webp",
+  },
+  {
+    name: "Brendan Farmer",
+    src: "/assets/angels/polygon.webp",
+  },
+  {
+    name: "Hossein Kakavand",
+    src: "/assets/angels/luther-systems.webp",
   },
   {
     name: "Max Kleiman-Weiner",
     src: "/assets/angels/sequoia.svg",
   },
   {
-    name: "Hossein Kakavand",
-    src: "/assets/angels/luther-systems.png",
-  },
-  {
     name: "Maik Wehmeyer",
-    src: "/assets/angels/taktile.png",
+    src: "/assets/angels/taktile.webp",
   },
   {
     name: "Maximilian Eber",
-    src: "/assets/angels/taktile.png",
+    src: "/assets/angels/taktile.webp",
   },
   {
     name: "Thomas Bailey",
-    src: "/assets/angels/road-capital.png",
+    src: "/assets/angels/road-capital.webp",
+  },
+  {
+    name: "Sina Habibian",
+    src: "/assets/angels/ethereum-foundation.webp",
+  },
+  {
+    name: "Alan Curtis",
+    src: "/assets/angels/radar.webp",
   },
 ];
 
@@ -43,7 +59,7 @@ const AngelsSection = () => (
         >
           <div>
             <img
-              className="h-5 grayscale group-hover:grayscale-0"
+              className="h-5 grayscale group-hover:grayscale-0 sm:h-6"
               src={src}
               alt={name}
             />

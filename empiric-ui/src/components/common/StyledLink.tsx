@@ -1,27 +1,33 @@
 import React, { ReactNode } from "react";
 import Link, { LinkProps } from "next/link";
+import classNames from "classnames";
 
-const LinkStyleWrapper = ({ children }: { children: ReactNode }) => (
-  <div className="inline cursor-pointer text-slate-900 hover:text-indigo-700">
+const linkBaseStyles = (underline: boolean) =>
+  classNames("inline text-slate-900 hover:text-indigo-600", {
+    underline: underline,
+  });
+
+interface ExtraLinkProps {
+  children: ReactNode;
+  underline?: boolean;
+}
+
+export const StyledInternalLink: React.FC<
+  ExtraLinkProps & React.PropsWithChildren<LinkProps>
+> = ({ underline = true, ...props }) => (
+  <Link {...props}>
+    <a className={linkBaseStyles(underline)}>{props.children}</a>
+  </Link>
+);
+
+export const StyledExternalLink: React.FC<
+  ExtraLinkProps &
+    React.DetailedHTMLProps<
+      React.AnchorHTMLAttributes<HTMLAnchorElement>,
+      HTMLAnchorElement
+    >
+> = ({ children, underline = true, ...props }) => (
+  <a {...props} className={linkBaseStyles(underline)}>
     {children}
-  </div>
-);
-
-export const StyledInternalLink = (
-  props: React.PropsWithChildren<LinkProps>
-) => (
-  <LinkStyleWrapper>
-    <Link {...props}></Link>
-  </LinkStyleWrapper>
-);
-
-export const StyledExternalLink = (
-  props: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >
-) => (
-  <LinkStyleWrapper>
-    <a {...props}></a>
-  </LinkStyleWrapper>
+  </a>
 );

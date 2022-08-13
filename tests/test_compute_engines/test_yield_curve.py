@@ -38,7 +38,7 @@ FUTURES_SPOT = {
                 "timestamp": STARKNET_STARTING_TIMESTAMP,
                 "expiry_timestamp": 1656039600,
                 "value": 90,
-            },  # backwardation
+            },  # backwardation, expect floor at 0
             "btc/usd-20220930": {
                 "timestamp": STARKNET_STARTING_TIMESTAMP,
                 "expiry_timestamp": 1664506800,
@@ -313,7 +313,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=str_to_felt("aave"),
+        source=str_to_felt("thegraph"),
         publisher=publisher,
     )
     await publisher_signer.send_transaction(

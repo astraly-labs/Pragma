@@ -16,7 +16,10 @@ const SearchBar: React.FC = () => {
       <span className="flex-auto">Search assets...</span>
       <kbd className="hidden font-sans font-semibold sm:inline-block">
         <kbd title="Command" className="text-slate-300 no-underline">
-          {/* This needs to be cross-platform compatible */}⌘
+          {/* This needs to be cross-platform compatible.
+            More info at https://github.com/mdn/content/issues/14429.
+          */}
+          ⌘
         </kbd>{" "}
         K
       </kbd>

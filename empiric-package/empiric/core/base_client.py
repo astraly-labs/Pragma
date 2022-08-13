@@ -1,17 +1,20 @@
-import json
 import time
 from abc import ABC, abstractmethod
-from os import path
 
 from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
-from nile.signer import Signer
-from starknet_py.contract import Contract, ContractData, ContractFunction
-from starknet_py.net import Client
-from starkware.crypto.signature.signature import sign
+from starknet_py.contract import Contract
+from starknet_py.net import AccountClient
+from starknet_py.net.client_models import Call
+from starknet_py.net.gateway_client import GatewayClient
+from starknet_py.net.models import StarknetChainId
+from starknet_py.net.networks import MAINNET, TESTNET
+from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starkware.starknet.public.abi import get_selector_from_name
 
-MAX_FEE = 0
-FEE_SCALING_FACTOR = 1.1  # estimated fee is multiplied by this to set max_fee
+
+class EmpiricAccountClient(AccountClient):
+    async def _get_nonce(self) -> int:
+        return int(time.time())
 
 
 class EmpiricBaseClient(ABC):
@@ -21,14 +24,23 @@ class EmpiricBaseClient(ABC):
         account_contract_address,
         network=None,
         oracle_controller_address=None,
-        n_retries=None,
     ):
         if network is None:
             network = NETWORK
         if oracle_controller_address is None:
             oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
 
+        if network == TESTNET:
+            chain_id = StarknetChainId.TESTNET
+        elif network == MAINNET:
+            chain_id = StarknetChainId.MAINNET
+        else:
+            raise NotImplementedError(
+                "Empiric.BaseClient: Network not recognized, unknown Chain ID"
+            )
+
         self.network = network
+        self.chain_id = chain_id
         self.oracle_controller_address = oracle_controller_address
         self.oracle_controller_contract = None
         self.account_contract_address = account_contract_address
@@ -36,9 +48,17 @@ class EmpiricBaseClient(ABC):
 
         assert type(account_private_key) == int, "Account private key must be integer"
         self.account_private_key = account_private_key
-        self.signer = Signer(self.account_private_key)
 
-        self.client = Client(self.network, n_retries=n_retries)
+        self.signer = StarkCurveSigner(
+            self.account_contract_address,
+            KeyPair.from_private_key(self.account_private_key),
+            self.chain_id,
+        )
+
+        self.client = GatewayClient(self.network)
+        self.account_client = AccountClient(
+            self.account_contract_address, self.client, self.signer
+        )
 
     @abstractmethod
     async def _fetch_contracts(self):
@@ -56,85 +76,12 @@ class EmpiricBaseClient(ABC):
                 self.account_contract_address, self.client
             )
 
-    async def get_eth_balance(self):
-        if self.network == "testnet":
-            eth_address = (
-                0x049D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7
-            )
-        else:
-            raise NotImplementedError(
-                "EmpiricBaseClient.get_eth_balance: Unknown network type"
-            )
+    async def get_balance(self):
+        return await self.account_client.get_balance()
 
-        with open(path.join(path.dirname(__file__), "abi/ERC20.json"), "r") as f:
-            erc20_abi = json.load(f)
-        contract_data = ContractData.from_abi(eth_address, erc20_abi)
-        balance_of_abi = [a for a in erc20_abi if a["name"] == "balanceOf"][0]
-        balance_of_function = ContractFunction(
-            "balanceOf", balance_of_abi, contract_data, self.client
-        )
+    async def send_transaction(self, to_contract, selector_name, calldata):
+        selector = get_selector_from_name(selector_name)
+        return await self.send_transactions([Call(to_contract, selector, calldata)])
 
-        result = await balance_of_function.call(self.account_contract_address)
-
-        return result.balance
-
-    async def send_transaction(
-        self, to_contract, selector_name, calldata, max_fee=None
-    ):
-        return await self.send_transactions(
-            [(to_contract, selector_name, calldata)], max_fee
-        )
-
-    async def send_transactions(self, calls, max_fee=None):
-        # Format data for submission
-        call_array = []
-        offset = 0
-        for i in range(len(calls)):
-            call_array.append(
-                {
-                    "to": calls[i][0],
-                    "selector": get_selector_from_name(calls[i][1]),
-                    "data_offset": offset,
-                    "data_len": len(calls[i][2]),
-                }
-            )
-            offset += len(calls[i][2])
-        calldata = [x for call in calls for x in call[2]]
-
-        # Estimate fee
-        with open(path.join(path.dirname(__file__), "abi/Account.json"), "r") as f:
-            account_abi = json.load(f)
-        contract_data = ContractData.from_abi(
-            self.account_contract_address, account_abi
-        )
-        execute_abi = [a for a in account_abi if a["name"] == "__execute__"][0]
-        execute_function = ContractFunction(
-            "__execute__", execute_abi, contract_data, self.client
-        )
-        nonce = int(time.time())
-        prepared = execute_function.prepare(
-            call_array=call_array,
-            calldata=calldata,
-            nonce=nonce,
-        )
-        signature = sign(prepared.hash, self.account_private_key)
-        # TODO: Change to using AccountClient once estimate_fee is fixed there
-        tx = prepared._make_invoke_function(signature=signature)
-        estimate = await prepared._client.estimate_fee(tx=tx)
-
-        max_fee_estimate = int(estimate * FEE_SCALING_FACTOR)
-        max_fee = (
-            max_fee_estimate if max_fee is None else min(max_fee_estimate, max_fee)
-        )
-
-        # Submit transaction with fee
-        prepared_with_fee = execute_function.prepare(
-            call_array=call_array,
-            calldata=calldata,
-            nonce=nonce,
-            max_fee=max_fee,
-        )
-        signature = sign(prepared_with_fee.hash, self.account_private_key)
-        invocation = await prepared_with_fee.invoke(signature, max_fee=max_fee)
-
-        return invocation
+    async def send_transactions(self, calls):
+        return hex((await self.account_client.execute(calls, auto_estimate=True)).hash)

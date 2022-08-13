@@ -5,6 +5,7 @@ import {
   ChatIcon,
   CodeIcon,
   CursorClickIcon,
+  HomeIcon,
   MenuIcon,
   PuzzleIcon,
   SpeakerphoneIcon,
@@ -15,6 +16,11 @@ import {
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
 import StyledTransition from "../common/StyledTransition";
+import {
+  buildExplorerUrlForAddress,
+  networkId,
+} from "../../services/wallet.service";
+import { getOracleControllerAddress } from "../../services/address.service";
 
 interface Resource {
   name: string;
@@ -62,7 +68,9 @@ const additional = [
   {
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
-    href: "#",
+    href: `${buildExplorerUrlForAddress(
+      getOracleControllerAddress(networkId())
+    )}#readContract`,
     icon: CursorClickIcon,
   },
 ];
@@ -71,8 +79,17 @@ const additional = [
 const callsToAction = [
   {
     name: "Request Asset",
-    href: "mailto:oskar@42labs.xyz?body=Hi%20Oskar,",
+    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
     icon: ChatIcon,
+  },
+];
+
+// Mobile only
+const mobileResources = [
+  {
+    name: "Home",
+    href: "/",
+    icon: HomeIcon,
   },
 ];
 
@@ -85,7 +102,7 @@ const NavHeader = () => (
             <a>
               <span className="sr-only">Empiric</span>
               <img
-                className="h-12 w-auto"
+                className="h-12 w-auto sm:h-16"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />
@@ -151,7 +168,7 @@ const NavHeader = () => (
             </div>
             <div className="mt-6">
               <nav className="grid gap-y-8">
-                {resources.map((resource) => (
+                {[...mobileResources, ...resources].map((resource) => (
                   <a
                     key={resource.name}
                     href={resource.href}

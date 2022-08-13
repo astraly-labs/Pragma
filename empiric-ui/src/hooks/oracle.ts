@@ -128,15 +128,18 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
 
   let oracleResponse: Entry[] | undefined = undefined;
   if (data !== undefined) {
-    oracleResponse = data["0"].map((entry: Object): Entry => {
-      return {
-        key: hexToString(toHex(entry["key"])),
-        value: parseInt(toHex(entry["value"])),
-        timestamp: parseInt(toHex(entry["timestamp"])),
-        source: hexToString(toHex(entry["source"])),
-        publisher: hexToString(toHex(entry["publisher"])),
-      };
-    });
+    const responseArray = data["entries"];
+    if (Array.isArray(responseArray)) {
+      oracleResponse = responseArray.map((entry: Object): Entry => {
+        return {
+          key: hexToString(toHex(entry["key"])),
+          value: parseInt(toHex(entry["value"])),
+          timestamp: parseInt(toHex(entry["timestamp"])),
+          source: hexToString(toHex(entry["source"])),
+          publisher: hexToString(toHex(entry["publisher"])),
+        };
+      });
+    }
   }
   return { oracleResponse, loading, error };
 };

@@ -5,57 +5,70 @@ export interface PublisherCardProps {
   src: string;
   name: string;
   description: string;
+  href?: string;
 }
 
 export const publishers: PublisherCardProps[] = [
   {
     name: "Alameda Research",
-    src: "/assets/publishers/alameda.png",
+    src: "/assets/publishers/alameda.webp",
     description:
-      "Alameda Research is one of the leading crypto currency high frequently trading firms and liquidity provider. Alameda Research was founded 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. They have a globally focused team and infrastructure to trade on all major exchanges and markets.\n\n Alameda will use their whole business operation to provide price feeds to the Empiric Network.",
-  },
-  {
-    name: "Jane Street",
-    src: "/assets/publishers/jane-street.png",
-    description: "Enim ad reprehenderit pariatur excepteur non do ullamco ad.",
+      "Alameda Research is one of the leading cryptocurrency high frequency trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
+    href: "https://www.alameda-research.com/",
   },
   {
     name: "CMT Digital",
-    src: "/assets/publishers/cmtdigital.png",
+    src: "/assets/publishers/cmtdigital.webp",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
-  },
-  {
-    name: "Portofino",
-    src: "/assets/currencies/fallback.svg",
-    description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "CMT is a leading market maker and proprietary trading firm. They have been together for more than two decades and has built a team of professionals with significant trading and technology experiences. CMT operates across five continents.\n\n CMT will provide their reliable and stable crypto market data to the Empiric Network.",
+    href: "https://cmt.digital/",
   },
   {
     name: "Flow Traders",
-    src: "/assets/publishers/flow-traders.png",
+    src: "/assets/publishers/flow-traders.webp",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "Flow Traders is an established global financial technology-enabled liquidity provider in financial markets. Flow Traders was founded in 2017 and provide liquidity in financial products, historically with a focus on exchange-traded products (ETPs). In recent years, they have diversified the products they trade under virtually all market circumstances.\n\n Flow Traders will contribute its real-time crypto market data directly on-chain to the Empiric Network.",
+    href: "https://www.flowtraders.com/",
   },
   {
     name: "FTX",
     src: "/assets/publishers/ftx.svg",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "FTX is one of the leading cryptocurrency exchanges built by traders for traders. FTX offers innovative products including industry-first derivates, options, volatility products and leveraged tokens and an OTC desk. They have $10 billion of daily trading volume and over one million active users.\n\n FTX will contribute its 24/7 real-time market data through the custom integration with the Empiric Network.",
+    href: "https://ftx.us/",
   },
   {
     name: "Gemini",
     src: "/assets/publishers/gemini.svg",
     description:
-      "Ipsum dolore qui do nostrud elit dolore. Pariatur ad ea aliquip. Aliquip proident eu labore sint. Id ullamco et excepteur veniam nisi quis dolor consectetur. Irure ut enim aute. Nostrud in labore dolore labore laboris incididunt sint nostrud. Pariatur deserunt eiusmod irure dolore esse veniam incididunt exercitation ad aliquip commodo laborum excepteur proident pariatur. Deserunt nisi qui reprehenderit mollit sit voluptate aliqua consequat aute ullamco est fugiat exercitation.",
+      "Gemini is a one of the most important cryptocurrency exchanges that allows people to buy, sell, and store digital assets. Gemini is the world first licensed Ether exchange and one of the most secure with significant daily trading volumes.\n\n Gemini will contribute its proprietary crypto market data to the Empiric Network.",
+    href: "https://www.gemini.com/",
+  },
+  {
+    name: "Jane Street",
+    src: "/assets/publishers/jane-street.webp",
+    description:
+      "Jane Street is a global liquidity provider and trading firm, using sophisticated quantitative analysis and a deep understanding of market mechanics to help keep the prices consistent and reliable. They traded more than $17 trillion worth of securities in 2020.\n\n Jane Street will provide their accurate low latency crypto data to the Empiric Network.",
+    href: "https://www.janestreet.com/",
+  },
+  {
+    name: "Portofino",
+    src: "/assets/publishers/portofino.webp",
+    description:
+      "Portofino is a leading quantitative trading firm providing liquidity and pricing on derivatives exchanges around the world. Portofino Technologies was founded in Zug and has offices around the globe.\n\n Portofino will contribute its unique crypto market data to the Empiric Network.",
   },
 ];
 
 const PublishersSection = () => (
   <ul className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-    {publishers.map(({ name, src, description }) => (
+    {publishers.map(({ name, src, description, href }) => (
       <li key={name}>
-        <PublisherCard name={name} src={src} description={description} />
+        <PublisherCard
+          name={name}
+          src={src}
+          description={description}
+          href={href}
+        />
       </li>
     ))}
   </ul>

@@ -1,10 +1,24 @@
 import { AssetKeyT } from "../src/hooks/oracle";
 
-// Mapping from asset key abbreviation to currency symbol.
+interface Currency {
+  src: string;
+  alt: string;
+}
+
+// Mapping from asset key abbreviation to Currency.
 const currencySymbols = {
-  usd: "dollar.svg",
-  mxn: "dollar.svg",
-  eur: "euro.svg",
+  usd: {
+    src: "dollar.svg",
+    alt: "US Dollar",
+  },
+  mxn: {
+    src: "dollar.svg",
+    alt: "Mexican Dollar",
+  },
+  eur: {
+    src: "euro.svg",
+    alt: "Euro",
+  },
 };
 
 /**
@@ -12,7 +26,7 @@ const currencySymbols = {
  * @param {AssetKeyT} assetKey
  * @return {string} file name of the currency symbol
  */
-export function getCurrency(assetKey: AssetKeyT): string {
+export function getCurrency(assetKey: AssetKeyT): Currency {
   const slashIndex = assetKey.indexOf("/");
   const dashIndex = assetKey.indexOf("-");
   const cur =

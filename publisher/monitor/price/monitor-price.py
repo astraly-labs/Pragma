@@ -29,7 +29,7 @@ async def main():
 
     assets = EMPIRIC_ALL_ASSETS
 
-    client = EmpiricClient(n_retries=5)
+    client = EmpiricClient()
 
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
@@ -74,7 +74,7 @@ async def main():
             assert (
                 num_sources_aggregated >= 3
             ), f"Aggregated less than 3 sources for asset {key}: {num_sources_aggregated}"
-        except AssertionError as e:
+        except (AssertionError, ZeroDivisionError) as e:
             print(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
             print(e)
             print(traceback.format_exc())
@@ -83,7 +83,12 @@ async def main():
                 slack_text = "Error with Empiric price<!channel>"
                 slack_text += f"\nAsset: {asset}"
                 slack_text += f"\nTimestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-                slack_text += f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
+                if value == 0:
+                    slack_text += (
+                        f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value}"
+                    )
+                else:
+                    slack_text += f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
                 slack_text += f"\n{traceback.format_exc()}"
 
                 requests.post(

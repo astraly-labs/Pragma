@@ -1,4 +1,4 @@
-from empiric.core.base_client import EmpiricBaseClient
+from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.const import (
     ADMIN_ADDRESS,
     ORACLE_CONTROLLER_ADDRESS,
@@ -6,10 +6,7 @@ from empiric.core.const import (
 )
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
-from starknet_py.net import Client
-
-MAX_FEE = 0
-ADMIN_DEFAULT_N_RETRIES = 1
+from starknet_py.net.gateway_client import GatewayClient
 
 
 class EmpiricAdminClient(EmpiricBaseClient):
@@ -20,7 +17,6 @@ class EmpiricAdminClient(EmpiricBaseClient):
         network=None,
         oracle_controller_address=None,
         publisher_registry_address=None,
-        n_retries=None,
     ):
         if admin_address is None:
             admin_address = ADMIN_ADDRESS
@@ -30,13 +26,15 @@ class EmpiricAdminClient(EmpiricBaseClient):
         self.publisher_registry_address = publisher_registry_address
         self.publisher_registry_contract = None
 
-        n_retries = ADMIN_DEFAULT_N_RETRIES if n_retries is None else n_retries
         super().__init__(
             admin_private_key,
             admin_address,
             network,
             oracle_controller_address,
-            n_retries,
+        )
+        # Override default account_client with one that uses timestamp for nonce
+        self.account_client = EmpiricAccountClient(
+            self.account_contract_address, self.client, self.signer
         )
 
     async def _fetch_contracts(self):
@@ -44,7 +42,7 @@ class EmpiricAdminClient(EmpiricBaseClient):
 
         if self.publisher_registry_contract is None:
             self.publisher_registry_contract = await Contract.from_address(
-                self.publisher_registry_address, Client(self.network)
+                self.publisher_registry_address, GatewayClient(self.network)
             )
 
     async def get_primary_oracle_implementation_address(self):

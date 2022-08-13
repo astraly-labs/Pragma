@@ -1,6 +1,7 @@
 import React from "react";
 import Dots from "./common/Dots";
 import { ButtonLink } from "./common/Button";
+import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
 
 interface Action {
   href: string;
@@ -21,7 +22,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   mainAction,
   secondaryAction,
 }) => (
-  <div className="relative w-full py-16">
+  <div className="relative w-full py-16 md:w-screen">
     <div aria-hidden="true" className="hidden sm:block">
       <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-slate-50" />
       <Dots
@@ -92,3 +93,20 @@ const CTASection: React.FC<CTASectionProps> = ({
 );
 
 export default CTASection;
+
+export const DefaultCTASection = () => (
+  <CTASection
+    title="Ready to get the data you need?"
+    description="Leverage recent breakthroughs in zero-knowledge computation by using verifiable and composable data in your decentralized application."
+    mainAction={{
+      href: "https://docs.empiric.network/quickstart",
+      actionText: "Get started",
+      icon: CodeIcon,
+    }}
+    secondaryAction={{
+      href: "mailto:hello@42labs.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
+      actionText: "Request asset",
+      icon: ChatIcon,
+    }}
+  />
+);

@@ -44,7 +44,7 @@ const Banner = () => {
                 rel="noreferrer"
                 className="flex items-center justify-center rounded-md border border-transparent bg-slate-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-600"
               >
-                Learn more
+                Check status
               </a>
             </div>
             <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-2">

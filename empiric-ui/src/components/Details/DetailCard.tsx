@@ -42,7 +42,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
         <p>{label}</p>
         <span>
           {showDescription ? (
-            <InformationCircleIcon className="h-5 w-5 stroke-indigo-500 group-hover:stroke-slate-50" />
+            <InformationCircleIcon className="h-5 w-5 stroke-indigo-600 group-hover:stroke-slate-50" />
           ) : (
             <QuestionMarkCircleIcon className="h-5 w-5 stroke-indigo-600 group-hover:stroke-slate-50" />
           )}

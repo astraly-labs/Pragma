@@ -17,7 +17,7 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
   return (
     <>
       <Listbox value={selectedCategory} onChange={setSelectedCategory}>
-        <div className="sticky top-0">
+        <div className="sticky top-0 z-20">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white/95 py-3 px-4 text-left shadow-lg [@supports(backdrop-filter:blur(0))]:bg-white/80 [@supports(backdrop-filter:blur(0))]:backdrop-blur">
             <span className="block truncate text-lg text-slate-900">
               {selectedCategory}
@@ -72,19 +72,19 @@ const ProtocolSelect: React.FC<ProtocolSelectProps> = ({ protocols }) => {
       </Listbox>
       <ul className="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:max-w-none lg:grid-cols-4 lg:gap-12">
         {protocols
-          // Uncomment to enable category filtering
-          // .filter(
-          //   (protocol) =>
-          //     protocol.category === selectedCategory ||
-          //     selectedCategory === "All"
-          // )
-          .map(({ name, category, src, description }) => (
+          .filter(
+            (protocol) =>
+              protocol.category === selectedCategory ||
+              selectedCategory === "All"
+          )
+          .map(({ name, category, src, description, href }) => (
             <li key={name}>
               <ProtocolCard
                 name={name}
+                category={category}
                 description={description}
                 src={src}
-                category={category}
+                href={href}
               />
             </li>
           ))}
