@@ -10,7 +10,7 @@ struct Entry:
 end
 
 namespace EmpiricAggregationModes:
-    const MEDIAN_AGGREGATION_MODE = 120282243752302
+    const MEDIAN = 120282243752302  # str_to_felt("eth/usd")
 end
 
 @contract_interface
