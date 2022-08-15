@@ -16,7 +16,7 @@ from contracts.admin.library import (
 )
 
 from contracts.entry.structs import Entry
-from contracts.oracle_controller.IEmpiricOracle import IEmpiricOracle
+from contracts.oracle_controller.IOracleController import IOracleController
 from contracts.compute_engines.yield_curve.structs import YieldPoint
 
 #
@@ -502,8 +502,8 @@ namespace YieldCurve:
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         end
 
-        let (on_decimals) = IEmpiricOracle.get_decimals(oracle_controller_address, on_key)
-        let (on_entry) = IEmpiricOracle.get_entry(
+        let (on_decimals) = IOracleController.get_decimals(oracle_controller_address, on_key)
+        let (on_entry) = IOracleController.get_entry(
             oracle_controller_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY
         )
         if on_entry.timestamp == 0:
@@ -577,8 +577,8 @@ namespace YieldCurve:
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         end
 
-        let (spot_decimals) = IEmpiricOracle.get_decimals(oracle_controller_address, spot_key)
-        let (spot_entry) = IEmpiricOracle.get_entry(
+        let (spot_decimals) = IOracleController.get_decimals(oracle_controller_address, spot_key)
+        let (spot_entry) = IOracleController.get_entry(
             oracle_controller_address, spot_key, future_spot_empiric_source_key
         )
         if spot_entry.timestamp == 0:
@@ -674,8 +674,10 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
-        let (future_decimals) = IEmpiricOracle.get_decimals(oracle_controller_address, future_key)
-        let (future_entry) = IEmpiricOracle.get_entry(
+        let (future_decimals) = IOracleController.get_decimals(
+            oracle_controller_address, future_key
+        )
+        let (future_entry) = IOracleController.get_entry(
             oracle_controller_address, future_key, future_spot_empiric_source_key
         )
         if future_entry.timestamp == 0:
