@@ -35,9 +35,12 @@ def get_events():
                     f"Query failed to run by returning code of {r.status_code}.\n{request_json}"
                 )
             new_data = r.json()
-            if data is None:
+            if "errors" in new_data:
+                print(new_data)
+                raise Exception("Error getting data from starknet indexer")
+            elif data is None:
                 data = new_data
-            elif len(new_data["data"]["event"]) > 0:
+            elif "data" in data and len(new_data["data"]["event"]) > 0:
                 data["data"]["event"].extend(new_data["data"]["event"])
             else:
                 break
