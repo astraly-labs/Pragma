@@ -23,7 +23,6 @@ from contracts.compute_engines.yield_curve.structs import YieldPoint
 # Consts
 #
 
-const DEFAULT_AGGREGATION_MODE = 0  # median
 const ON_SOURCE_KEY = 28526  # str_to_felt("on")
 const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828  # str_to_felt("future/spot")
 const THEGRAPH_EMPIRIC_SOURCE_KEY = 8388065800952574056  # str_to_felt("thegraph")

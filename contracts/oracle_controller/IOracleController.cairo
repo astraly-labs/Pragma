@@ -3,6 +3,10 @@
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
 
+namespace EmpiricAggregationModes:
+    const MEDIAN = 120282243752302  # str_to_felt("eth/usd")
+end
+
 @contract_interface
 namespace IOracleController:
     #

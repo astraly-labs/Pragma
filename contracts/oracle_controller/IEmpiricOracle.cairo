@@ -9,6 +9,10 @@ struct Entry:
     # Publisher of the data (usually the source, but occasionally a third party)
 end
 
+namespace EmpiricAggregationModes:
+    const MEDIAN = 120282243752302  # str_to_felt("eth/usd")
+end
+
 @contract_interface
 namespace IEmpiricOracle:
     #
