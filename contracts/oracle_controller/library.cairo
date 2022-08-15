@@ -79,7 +79,6 @@ end
 func SubmittedEntry(new_entry : Entry):
 end
 
-
 namespace OracleController:
     #
     # Constructor
@@ -87,7 +86,11 @@ namespace OracleController:
 
     func initialize_oracle_controller{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(publisher_registry_address : felt, keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*):
+    }(
+        publisher_registry_address : felt,
+        keys_decimals_len : felt,
+        keys_decimals : KeyDecimalStruct*,
+    ):
         OracleController_publisher_registry_address_storage.write(publisher_registry_address)
         _set_keys_decimals(keys_decimals_len, keys_decimals, 0)
         return ()
@@ -100,7 +103,8 @@ namespace OracleController:
     func get_publisher_registry_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }() -> (publisher_registry_address : felt):
-        let (publisher_registry_address) = OracleController_publisher_registry_address_storage.read()
+        let (publisher_registry_address) = OracleController_publisher_registry_address_storage.read(
+            )
         return (publisher_registry_address)
     end
 
@@ -109,16 +113,15 @@ namespace OracleController:
     }() -> (oracle_addresses_len : felt, oracle_addresses : felt*):
         alloc_locals
 
-        let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
+        let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read(
+            )
         let (local oracle_addresses) = alloc()
 
         if total_oracle_addresses_len == 0:
             return (total_oracle_addresses_len, oracle_addresses)
         end
 
-        let (
-            oracle_addresses_len, oracle_addresses
-        ) = build_active_oracle_implementation_addresses(
+        let (oracle_addresses_len, oracle_addresses) = build_active_oracle_implementation_addresses(
             total_oracle_addresses_len, oracle_addresses, 0, 0
         )
 
@@ -130,7 +133,9 @@ namespace OracleController:
     }(oracle_implementation_address : felt) -> (
         oracle_implementation_status : OracleController_OracleImplementationStatus
     ):
-        let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
+        let (
+            oracle_implementation_status
+        ) = OracleController_oracle_implementation_status_storage.read(
             oracle_implementation_address
         )
         return (oracle_implementation_status)
@@ -158,9 +163,9 @@ namespace OracleController:
         return (primary_oracle_implementation_address)
     end
 
-    func get_decimals{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(key : felt) -> (decimals : felt):
+    func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt
+    ) -> (decimals : felt):
         let (key_decimals) = OracleController_decimals_storage.read(key)
 
         if key_decimals == 0:
@@ -174,9 +179,9 @@ namespace OracleController:
     # Setters
     #
 
-    func _set_keys_decimals{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*, idx : felt):
+    func _set_keys_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*, idx : felt
+    ):
         if idx == keys_decimals_len:
             return ()
         end
@@ -191,10 +196,13 @@ namespace OracleController:
     func update_publisher_registry_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(publisher_registry_address : felt):
-        let (old_publisher_registry_address) = OracleController_publisher_registry_address_storage.read(
-            )
+        let (
+            old_publisher_registry_address
+        ) = OracleController_publisher_registry_address_storage.read()
         OracleController_publisher_registry_address_storage.write(publisher_registry_address)
-        UpdatedPublisherRegistryAddress.emit(old_publisher_registry_address, publisher_registry_address)
+        UpdatedPublisherRegistryAddress.emit(
+            old_publisher_registry_address, publisher_registry_address
+        )
         return ()
     end
 
@@ -203,7 +211,9 @@ namespace OracleController:
     }(oracle_implementation_address : felt):
         alloc_locals
 
-        let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
+        let (
+            oracle_implementation_status
+        ) = OracleController_oracle_implementation_status_storage.read(
             oracle_implementation_address
         )
         with_attr error_message(
@@ -211,7 +221,8 @@ namespace OracleController:
             assert oracle_implementation_status.was_registered = FALSE
         end
 
-        let (oracle_implementations_len) = OracleController_oracle_implementations_len_storage.read()
+        let (oracle_implementations_len) = OracleController_oracle_implementations_len_storage.read(
+            )
 
         OracleController_oracle_implementations_len_storage.write(oracle_implementations_len + 1)
         OracleController_oracle_implementation_address_storage.write(
@@ -248,7 +259,9 @@ namespace OracleController:
     }(oracle_implementation_address : felt, is_active : felt):
         alloc_locals
 
-        let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
+        let (
+            oracle_implementation_status
+        ) = OracleController_oracle_implementation_status_storage.read(
             oracle_implementation_address
         )
         with_attr error_message(
@@ -285,7 +298,9 @@ namespace OracleController:
         let (
             old_primary_oracle_implementation_address
         ) = OracleController_primary_oracle_implementation_address_storage.read()
-        let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
+        let (
+            oracle_implementation_status
+        ) = OracleController_oracle_implementation_status_storage.read(
             primary_oracle_implementation_address
         )
         with_attr error_message(
@@ -314,13 +329,15 @@ namespace OracleController:
 
     func build_active_oracle_implementation_addresses{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt, output_idx : felt) -> (
-        oracle_addresses_len : felt, oracle_addresses : felt*
-    ):
-        let (oracle_address) = OracleController_oracle_implementation_address_storage.read(storage_idx)
-        let (oracle_implementation_status) = OracleController_oracle_implementation_status_storage.read(
-            oracle_address
+    }(
+        oracle_addresses_len : felt, oracle_addresses : felt*, storage_idx : felt, output_idx : felt
+    ) -> (oracle_addresses_len : felt, oracle_addresses : felt*):
+        let (oracle_address) = OracleController_oracle_implementation_address_storage.read(
+            storage_idx
         )
+        let (
+            oracle_implementation_status
+        ) = OracleController_oracle_implementation_status_storage.read(oracle_address)
 
         if storage_idx == oracle_addresses_len:
             return (output_idx, oracle_addresses)
@@ -348,14 +365,12 @@ namespace OracleController:
     # Oracle Implementation Controller Functions
     #
 
-    func get_entries{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(key : felt, sources_len : felt, sources : felt*) -> (entries_len : felt, entries : Entry*):
+    func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, sources_len : felt, sources : felt*
+    ) -> (entries_len : felt, entries : Entry*):
         alloc_locals
 
-        let (
-            primary_oracle_implementation_address
-        ) = get_primary_oracle_implementation_address()
+        let (primary_oracle_implementation_address) = get_primary_oracle_implementation_address()
 
         let (entries_len, entries) = IOracleImplementation.get_entries(
             primary_oracle_implementation_address, key, sources_len, sources
@@ -368,9 +383,7 @@ namespace OracleController:
     ) -> (entry : Entry):
         alloc_locals
 
-        let (
-            primary_oracle_implementation_address
-        ) = get_primary_oracle_implementation_address()
+        let (primary_oracle_implementation_address) = get_primary_oracle_implementation_address()
 
         let (entry) = IOracleImplementation.get_entry(
             primary_oracle_implementation_address, key, source
@@ -380,22 +393,26 @@ namespace OracleController:
 
     func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
-    ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
+    ) -> (
+        value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+    ):
         alloc_locals
 
         let (
             primary_oracle_implementation_address
         ) = OracleController_primary_oracle_implementation_address_storage.read()
         let (decimals) = get_decimals(key)
-        let (value, last_updated_timestamp, num_sources_aggregated) = IOracleImplementation.get_value(
+        let (
+            value, last_updated_timestamp, num_sources_aggregated
+        ) = IOracleImplementation.get_value(
             primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
         )
         return (value, decimals, last_updated_timestamp, num_sources_aggregated)
     end
 
-    func publish_entry{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(new_entry : Entry):
+    func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entry : Entry
+    ):
         alloc_locals
 
         let (publisher_registry_address) = get_publisher_registry_address()
@@ -408,19 +425,16 @@ namespace OracleController:
             assert caller_address = publisher_address
         end
 
-        let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read()
+        let (total_oracle_addresses_len) = OracleController_oracle_implementations_len_storage.read(
+            )
         if total_oracle_addresses_len == 0:
             return ()
         end
         let (local oracle_addresses) = alloc()
-        let (
-            oracle_addresses_len, oracle_addresses
-        ) = build_active_oracle_implementation_addresses(
+        let (oracle_addresses_len, oracle_addresses) = build_active_oracle_implementation_addresses(
             total_oracle_addresses_len, oracle_addresses, 0, 0
         )
-        _publish_entry_for_oracle_addresses(
-            oracle_addresses_len, oracle_addresses, 0, new_entry
-        )
+        _publish_entry_for_oracle_addresses(oracle_addresses_len, oracle_addresses, 0, new_entry)
 
         SubmittedEntry.emit(new_entry)
         return ()
@@ -445,9 +459,9 @@ namespace OracleController:
         return ()
     end
 
-    func publish_entries{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(new_entries_len : felt, new_entries : Entry*):
+    func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_entries_len : felt, new_entries : Entry*
+    ):
         if new_entries_len == 0:
             return ()
         end
