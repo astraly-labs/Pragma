@@ -13,16 +13,11 @@ class EmpiricAdminClient(EmpiricBaseClient):
     def __init__(
         self,
         admin_private_key,
-        admin_address=None,
+        admin_address=ADMIN_ADDRESS,
         network=None,
         oracle_controller_address=None,
-        publisher_registry_address=None,
+        publisher_registry_address=PUBLISHER_REGISTRY_ADDRESS,
     ):
-        if admin_address is None:
-            admin_address = ADMIN_ADDRESS
-        if publisher_registry_address is None:
-            publisher_registry_address = PUBLISHER_REGISTRY_ADDRESS
-
         self.publisher_registry_address = publisher_registry_address
         self.publisher_registry_contract = None
 

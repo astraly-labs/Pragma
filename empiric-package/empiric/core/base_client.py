@@ -1,13 +1,13 @@
 import time
 from abc import ABC, abstractmethod
 
-from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
+from empiric.core.const import ORACLE_CONTROLLER_ADDRESS
 from starknet_py.contract import Contract
 from starknet_py.net import AccountClient
 from starknet_py.net.client_models import Call
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models import StarknetChainId
-from starknet_py.net.networks import MAINNET, TESTNET
+from starknet_py.net.networks import MAINNET, TESTNET, Network
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starkware.starknet.public.abi import get_selector_from_name
 
@@ -20,16 +20,11 @@ class EmpiricAccountClient(AccountClient):
 class EmpiricBaseClient(ABC):
     def __init__(
         self,
-        account_private_key,
-        account_contract_address,
-        network=None,
-        oracle_controller_address=None,
+        account_private_key: int,
+        account_contract_address: int,
+        network: Network=TESTNET,
+        oracle_controller_address: int=ORACLE_CONTROLLER_ADDRESS,
     ):
-        if network is None:
-            network = NETWORK
-        if oracle_controller_address is None:
-            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
-
         if network == TESTNET:
             chain_id = StarknetChainId.TESTNET
         elif network == MAINNET:
