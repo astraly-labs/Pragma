@@ -4,24 +4,8 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 
 from contracts.entry.structs import Entry
-from contracts.oracle_controller.library import (
-    OracleController_initialize_oracle_controller,
-    OracleController_get_publisher_registry_address,
-    OracleController_get_active_oracle_implementation_addresses,
-    OracleController_get_oracle_implementation_status,
-    OracleController_get_oracle_implementation_address,
-    OracleController_get_primary_oracle_implementation_address,
-    OracleController_update_publisher_registry_address,
-    OracleController_add_oracle_implementation_address,
-    OracleController_update_oracle_implementation_active_status,
-    OracleController_set_primary_oracle_implementation_address,
-    OracleController_get_decimals,
-    OracleController_get_entries,
-    OracleController_get_entry,
-    OracleController_get_value,
-    OracleController_publish_entry,
-    OracleController_publish_entries,
-)
+from contracts.oracle_controller.library import OracleController
+
 from contracts.oracle_controller.structs import (
     OracleController_OracleImplementationStatus,
     KeyDecimalStruct,
@@ -45,7 +29,7 @@ func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     keys_decimals : KeyDecimalStruct*,
 ):
     Admin_initialize_admin_address(admin_address)
-    OracleController_initialize_oracle_controller(
+    OracleController.initialize_oracle_controller(
         publisher_registry_address, keys_decimals_len, keys_decimals
     )
     return ()
@@ -59,7 +43,7 @@ end
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = OracleController_get_entries(key, sources_len, sources)
+    let (entries_len, entries) = OracleController.get_entries(key, sources_len, sources)
     return (entries_len, entries)
 end
 
@@ -67,7 +51,7 @@ end
 func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, source : felt
 ) -> (entry : Entry):
-    let (entry) = OracleController_get_entry(key, source)
+    let (entry) = OracleController.get_entry(key, source)
     return (entry)
 end
 
@@ -78,7 +62,7 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     let (sources) = alloc()
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController_get_value(key, aggregation_mode, 0, sources)
+    ) = OracleController.get_value(key, aggregation_mode, 0, sources)
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
@@ -88,7 +72,7 @@ func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController_get_value(key, aggregation_mode, sources_len, sources)
+    ) = OracleController.get_value(key, aggregation_mode, sources_len, sources)
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
@@ -96,7 +80,7 @@ end
 func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entry : Entry
 ):
-    OracleController_publish_entry(new_entry)
+    OracleController.publish_entry(new_entry)
     return ()
 end
 
@@ -104,7 +88,7 @@ end
 func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entries_len : felt, new_entries : Entry*
 ):
-    OracleController_publish_entries(new_entries_len, new_entries)
+    OracleController.publish_entries(new_entries_len, new_entries)
     return ()
 end
 
@@ -124,7 +108,7 @@ end
 func get_publisher_registry_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }() -> (publisher_registry_address : felt):
-    let (publisher_registry_address) = OracleController_get_publisher_registry_address()
+    let (publisher_registry_address) = OracleController.get_publisher_registry_address()
     return (publisher_registry_address)
 end
 
@@ -134,7 +118,7 @@ func get_active_oracle_implementation_addresses{
 }() -> (oracle_addresses_len : felt, oracle_addresses : felt*):
     let (
         oracle_addresses_len, oracle_addresses
-    ) = OracleController_get_active_oracle_implementation_addresses()
+    ) = OracleController.get_active_oracle_implementation_addresses()
     return (oracle_addresses_len, oracle_addresses)
 end
 
@@ -144,7 +128,7 @@ func get_oracle_implementation_status{
 }(oracle_implementation_address : felt) -> (
     oracle_implementation_status : OracleController_OracleImplementationStatus
 ):
-    let (oracle_implementation_status) = OracleController_get_oracle_implementation_status(
+    let (oracle_implementation_status) = OracleController.get_oracle_implementation_status(
         oracle_implementation_address
     )
     return (oracle_implementation_status)
@@ -154,7 +138,7 @@ end
 func get_oracle_implementation_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(idx : felt) -> (oracle_implementation_address : felt):
-    let (oracle_implementation_address) = OracleController_get_oracle_implementation_address(idx)
+    let (oracle_implementation_address) = OracleController.get_oracle_implementation_address(idx)
     return (oracle_implementation_address)
 end
 
@@ -164,7 +148,7 @@ func get_primary_oracle_implementation_address{
 }() -> (primary_oracle_implementation_address : felt):
     let (
         primary_oracle_implementation_address
-    ) = OracleController_get_primary_oracle_implementation_address()
+    ) = OracleController.get_primary_oracle_implementation_address()
     return (primary_oracle_implementation_address)
 end
 
@@ -172,7 +156,7 @@ end
 func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt
 ) -> (decimals : felt):
-    let (decimals) = OracleController_get_decimals(key)
+    let (decimals) = OracleController.get_decimals(key)
     return (decimals)
 end
 
@@ -194,7 +178,7 @@ func update_publisher_registry_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(publisher_registry_address : felt):
     Admin_only_admin()
-    OracleController_update_publisher_registry_address(publisher_registry_address)
+    OracleController.update_publisher_registry_address(publisher_registry_address)
     return ()
 end
 
@@ -203,7 +187,7 @@ func add_oracle_implementation_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_implementation_address : felt):
     Admin_only_admin()
-    OracleController_add_oracle_implementation_address(oracle_implementation_address)
+    OracleController.add_oracle_implementation_address(oracle_implementation_address)
     return ()
 end
 
@@ -212,7 +196,7 @@ func update_oracle_implementation_active_status{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_implementation_address : felt, is_active : felt):
     Admin_only_admin()
-    OracleController_update_oracle_implementation_active_status(
+    OracleController.update_oracle_implementation_active_status(
         oracle_implementation_address, is_active
     )
     return ()
@@ -223,7 +207,7 @@ func set_primary_oracle_implementation_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(primary_oracle_implementation_address : felt):
     Admin_only_admin()
-    OracleController_set_primary_oracle_implementation_address(
+    OracleController.set_primary_oracle_implementation_address(
         primary_oracle_implementation_address
     )
     return ()
