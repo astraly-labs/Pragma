@@ -9,7 +9,7 @@ from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
 
 class EmpiricPublisherClient(EmpiricBaseClient):
     publisher: Optional[ADDRESS]
-    publisher_registry_address: Optional[ADDRESS]
+    publisher_registry_address: ADDRESS
     account_client: EmpiricAccountClient
 
     def __init__(

@@ -3,7 +3,7 @@ from typing import Optional
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.config import CONFIG, IConfig
 from empiric.core.errors import InvalidNetworkError
-from empiric.core.types import TESTNET, Network
+from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
@@ -16,9 +16,9 @@ class EmpiricAdminClient(EmpiricBaseClient):
         self,
         admin_private_key,
         network: Network = TESTNET,
-        admin_address: Optional[int] = None,
-        oracle_controller_address: Optional[int] = None,
-        publisher_registry_address: Optional[int] = None,
+        admin_address: Optional[ADDRESS] = None,
+        oracle_controller_address: Optional[ADDRESS] = None,
+        publisher_registry_address: Optional[ADDRESS] = None,
     ):
         config = CONFIG.get(network)
         if config is None:

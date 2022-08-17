@@ -15,7 +15,7 @@ class EmpiricClient:
     def __init__(
         self,
         network: Network = TESTNET,
-        oracle_controller_address: Optional[int] = None,
+        oracle_controller_address: Optional[ADDRESS] = None,
     ):
         self.network = network
         try:
