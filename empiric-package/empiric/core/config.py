@@ -2,11 +2,11 @@ import os
 
 from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, Network
 from starknet_py.net.models import StarknetChainId
+from typing_extensions import Protocol
 
 
-# TODO (rlkelly): typing.Protocol cannot be used because we support python 3.7
-#                 We need a consistent way to implement interfaces
-class IConfig:
+# TODO (rlkelly): We need a consistent way to implement interfaces.  This seems to be the preferred method
+class IConfig(Protocol):
     ADMIN_ADDRESS: int
     DEFAULT_AGGREGATION_MODE: int
     NETWORK: Network
