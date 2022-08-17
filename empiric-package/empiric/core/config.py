@@ -79,7 +79,7 @@ CONFIG = {
 
 def get_config(network: Network):
     # TODO rlkelly: we should discuss our reliance on environment variables in config selection
-    if os.environ.get("__EMPIRIC_STAGING_ENV__") == "True":
+    if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":
         print("Warning: Communicating with staging contracts, not production")
         raw_config = CONFIG.get(STAGING)
     else:
