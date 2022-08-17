@@ -1,10 +1,9 @@
-import os
 import time
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from empiric.core.config import get_config, IConfig
-from empiric.core.types import ADDRESS, HEX_STR, STAGING, TESTNET, Network
+from empiric.core.config import IConfig, get_config
+from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
 from starknet_py.contract import Contract
 from starknet_py.net import AccountClient
 from starknet_py.net.client_models import Call
