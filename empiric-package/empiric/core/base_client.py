@@ -46,7 +46,8 @@ class EmpiricBaseClient(ABC):
         self.oracle_controller_contract = None
         self.account_contract = None
 
-        assert type(account_private_key) == int, "Account private key must be an int"
+        if not isinstance(account_private_key, int):
+            raise ValueError("Account private key must be an int")
         self.account_private_key = account_private_key
 
         self.signer = StarkCurveSigner(

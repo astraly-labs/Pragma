@@ -1,5 +1,6 @@
 import datetime
 import hmac
+import logging
 import os
 import re
 import time
@@ -8,6 +9,8 @@ import requests
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
 
+logger = logging.getLogger(__name__)
+
 
 def parse_ftx_spot(asset, data, source, publisher, timestamp):
     pair = asset["pair"]
@@ -15,7 +18,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
 
     result = [e for e in data if e["name"] == "/".join(pair)]
     if len(result) == 0:
-        print(f"No entry found for {'/'.join(pair)} from FTX")
+        logger.info(f"No entry found for {'/'.join(pair)} from FTX")
         return
 
     assert (
@@ -24,7 +27,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
     price = float(result[0]["price"])
     price_int = int(price * (10 ** asset["decimals"]))
 
-    print(f"Fetched price {price} for {'/'.join(pair)} from FTX")
+    logger.info(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
     return construct_entry(
         key=key,
@@ -38,12 +41,12 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
 def parse_ftx_futures(asset, data, source, publisher, timestamp):
     pair = asset["pair"]
     if pair[1] != "USD":
-        print(f"Unable to fetch price from FTX for non-USD derivative {pair}")
+        logger.warn(f"Unable to fetch price from FTX for non-USD derivative {pair}")
         return
 
     result = [e for e in data if re.match(rf"{pair[0]}-[0-9]+", e["name"])]
     if len(result) == 0:
-        print(f"No entry found for {'/'.join(pair)} from FTX")
+        logger.info(f"No entry found for {'/'.join(pair)} from FTX")
         return
 
     entries = []
@@ -60,7 +63,7 @@ def parse_ftx_futures(asset, data, source, publisher, timestamp):
         )
         key = f"{pair[0]}/{pair[1]}-{future_expiration_date}".lower()
 
-        print(f"Fetched futures price {price} for {key} from FTX")
+        logger.info(f"Fetched futures price {price} for {key} from FTX")
 
         entries.append(
             construct_entry(
@@ -125,6 +128,6 @@ def fetch_ftx(assets, publisher):
                 entries.extend(future_entries)
             continue
         else:
-            print(f"Unable to fetch FTX for un-supported asset type {asset}")
+            logger.warn(f"Unable to fetch FTX for un-supported asset type {asset}")
 
     return entries

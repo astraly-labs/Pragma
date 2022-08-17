@@ -1,6 +1,10 @@
+import logging
+
 import requests
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_cex(assets, publisher):
@@ -11,7 +15,7 @@ def fetch_cex(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            print(f"Skipping CEX for non-spot asset {asset}")
+            logger.info(f"Skipping CEX for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
@@ -19,7 +23,7 @@ def fetch_cex(assets, publisher):
         result = response.json()
 
         if "error" in result and result["error"] == "Invalid Symbols Pair":
-            print(f"No data found for {'/'.join(pair)} from CEX")
+            logger.warn(f"No data found for {'/'.join(pair)} from CEX")
             continue
 
         timestamp = int(result["timestamp"])
@@ -27,7 +31,7 @@ def fetch_cex(assets, publisher):
         price_int = int(price * (10 ** asset["decimals"]))
         key = currency_pair_to_key(*pair)
 
-        print(f"Fetched price {price} for {'/'.join(pair)} from CEX")
+        logger.info(f"Fetched price {price} for {'/'.join(pair)} from CEX")
 
         entries.append(
             construct_entry(

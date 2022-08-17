@@ -1,8 +1,11 @@
+import logging
 import time
 
 import requests
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_gemini(assets, publisher):
@@ -15,7 +18,7 @@ def fetch_gemini(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            print(f"Skipping Gemini for non-spot asset {asset}")
+            logger.info(f"Skipping Gemini for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
@@ -23,7 +26,7 @@ def fetch_gemini(assets, publisher):
         timestamp = int(time.time())
         result = [e for e in response.json() if e["pair"] == "".join(pair)]
         if len(result) == 0:
-            print(f"No entry found for {key} from Gemini")
+            logger.warn(f"No entry found for {key} from Gemini")
             continue
 
         assert (
@@ -32,7 +35,7 @@ def fetch_gemini(assets, publisher):
         price = float(result[0]["price"])
         price_int = int(price * (10 ** asset["decimals"]))
 
-        print(f"Fetched price {price} for {key} from Gemini")
+        logger.info(f"Fetched price {price} for {key} from Gemini")
 
         entries.append(
             construct_entry(

@@ -1,8 +1,11 @@
+import logging
 import time
 
 import requests
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_cryptowatch(assets, publisher):
@@ -29,7 +32,7 @@ def fetch_cryptowatch(assets, publisher):
 
         for asset in assets:
             if asset["type"] != "SPOT":
-                print(f"Skipping Cryptowatch for non-spot asset {asset}")
+                logger.info(f"Skipping Cryptowatch for non-spot asset {asset}")
                 continue
 
             pair = asset["pair"]
@@ -38,13 +41,15 @@ def fetch_cryptowatch(assets, publisher):
             try:
                 price = source_results["".join(pair).lower()]
             except KeyError:
-                print(f"No entry found for {key} from Cryptowatch-{cryptowatch_source}")
+                logger.warn(
+                    f"No entry found for {key} from Cryptowatch-{cryptowatch_source}"
+                )
                 continue
 
             timestamp = int(time.time())
             price_int = int(price * (10 ** asset["decimals"]))
 
-            print(
+            logger.info(
                 f"Fetched price {price} for {'/'.join(pair)} from Cryptowatch-{cryptowatch_source}"
             )
 

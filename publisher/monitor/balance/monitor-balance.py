@@ -1,11 +1,14 @@
 import asyncio
 import datetime
+import logging
 import os
 
 import requests
 from empiric.admin.client import EmpiricAdminClient
 from empiric.core.utils import felt_to_str
 from empiric.publisher.client import EmpiricPublisherClient
+
+logger = logging.getLogger(__name__)
 
 # Inputs
 # [Optional]: Publisher names; if empty, query for all
@@ -44,7 +47,7 @@ async def main(publishers=None, threshold_wei=None):
         balance = await publisher_client.get_balance()
 
         if balance < threshold_wei:
-            print(
+            logger.warn(
                 f"\nWarning: Balance below threshold! Publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}\n"
             )
             all_above_threshold = False
@@ -57,7 +60,7 @@ async def main(publishers=None, threshold_wei=None):
                 },
             )
         else:
-            print(
+            logger.info(
                 f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}"
             )
 
@@ -65,7 +68,7 @@ async def main(publishers=None, threshold_wei=None):
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
         requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+    logger.info(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
 
 if __name__ == "__main__":

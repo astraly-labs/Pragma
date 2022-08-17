@@ -1,8 +1,11 @@
 import datetime
+import logging
 
 import requests
 from empiric.core.entry import construct_entry
 from empiric.core.utils import currency_pair_to_key
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_coingecko(assets, publisher):
@@ -16,7 +19,7 @@ def fetch_coingecko(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            print(f"Skipping Coingecko for non-spot asset {asset}")
+            logger.info(f"Skipping Coingecko for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
@@ -74,7 +77,7 @@ def fetch_coingecko(assets, publisher):
         )
         price_int = int(price * (10 ** asset["decimals"]))
 
-        print(f"Fetched price {price} for {key} from Coingecko")
+        logger.info(f"Fetched price {price} for {key} from Coingecko")
 
         entries.append(
             construct_entry(

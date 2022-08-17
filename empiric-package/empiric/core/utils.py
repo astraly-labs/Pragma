@@ -1,4 +1,21 @@
+import logging
 import warnings
+
+logger = logging.getLogger(__name__)
+
+
+def get_stream_logger():
+    import sys
+
+    logger.setLevel(logging.DEBUG)
+    streamHandler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(streamHandler)
+
+    return logger
 
 
 def str_to_felt(text):
@@ -23,6 +40,12 @@ def currency_pair_to_key(quote, base):
 
 def pprint_entry(entry):
     print(
+        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+    )
+
+
+def log_entry(entry):
+    logger.info(
         f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
 
