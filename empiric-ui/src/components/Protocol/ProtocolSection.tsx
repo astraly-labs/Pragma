@@ -4,9 +4,8 @@ import ProtocolSelect from "./ProtocolSelect";
 
 export const protocolCategories = [
   "All",
-  "Money-Market",
-  "Social Wallet",
   "Lending",
+  "Social Wallet",
   "Infrastructure",
 ] as const;
 
@@ -29,7 +28,7 @@ export const protocols: Protocol[] = [
   },
   {
     name: "zkLend",
-    category: "Money-Market",
+    category: "Lending",
     src: "/assets/protocols/zklend.svg",
     description:
       "zkLend is an L2 money-market protocol built on StarkNet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
