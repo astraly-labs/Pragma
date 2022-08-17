@@ -1,18 +1,31 @@
-from empiric.core.const import NETWORK, ORACLE_CONTROLLER_ADDRESS
+from typing import Any, Optional
+
+from empiric.core.config import CONFIG
+from empiric.core.errors import InvalidNetworkError
+from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 
 
 class EmpiricClient:
-    def __init__(self, network=None, oracle_controller_address=None):
-        if network is None:
-            network = NETWORK
-        if oracle_controller_address is None:
-            oracle_controller_address = ORACLE_CONTROLLER_ADDRESS
+    oracle_controller_address: ADDRESS
+    oracle_controller_contract: Optional[ADDRESS]
 
+    def __init__(
+        self,
+        network: Network = TESTNET,
+        oracle_controller_address: Optional[int] = None,
+    ):
         self.network = network
-        self.oracle_controller_address = oracle_controller_address
+        try:
+            self.config = CONFIG.get(network)()
+        except TypeError:
+            raise InvalidNetworkError(f"Invalid Network name: {network}")
+
+        self.oracle_controller_address = (
+            oracle_controller_address or self.config.ORACLE_CONTROLLER_ADDRESS
+        )
         self.oracle_controller_contract = None
 
     async def fetch_oracle_controller_contract(self):
@@ -22,7 +35,7 @@ class EmpiricClient:
                 GatewayClient(self.network),
             )
 
-    async def get_decimals(self, key):
+    async def get_decimals(self, key) -> Any:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -38,7 +51,9 @@ class EmpiricClient:
 
         return response.decimals
 
-    async def get_value(self, key, aggregation_mode, sources=None):
+    async def get_value(
+        self, key, aggregation_mode, sources=None
+    ) -> tuple[Any, Any, Any, Any]:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -63,7 +78,7 @@ class EmpiricClient:
             response.num_sources_aggregated,
         )
 
-    async def get_entries(self, key, sources=None):
+    async def get_entries(self, key, sources=None) -> Any:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:

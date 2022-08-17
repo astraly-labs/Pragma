@@ -5,6 +5,7 @@ cairo-lang==0.9.1
 cairo-nile==0.6.*
 pytest==7.0.*
 pytest-asyncio==0.18.*
+typing_extensions==4.3.0
 
 # Publisher
 starknet.py==0.4.1a0
