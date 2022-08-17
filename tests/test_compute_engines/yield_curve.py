@@ -1,10 +1,14 @@
 import asyncio
+import logging
 import time
 from collections import namedtuple
 
 from empiric.core.client import EmpiricClient
 from empiric.core.config import BaseConfig
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
+
+logger = get_stream_logger()
 
 YieldPoint = namedtuple(
     "YieldPoint", ["expiry_timestamp", "capture_timestamp", "rate", "source"]
@@ -123,9 +127,9 @@ async def get_yield_points(output_decimals):
                 yield_points.append(future_spot_yield_point)
 
     for point in yield_points:
-        print(f"source: {point.source}")
-        print(f"time to expiry: {point.expiry_timestamp - int(time.time())}")
-        print(f"value in percent: {point.rate/(10**(output_decimals + 2))}")
+        logger.info(f"source: {point.source}")
+        logger.info(f"time to expiry: {point.expiry_timestamp - int(time.time())}")
+        logger.info(f"value in percent: {point.rate/(10**(output_decimals + 2))}")
 
 
 if __name__ == "__main__":

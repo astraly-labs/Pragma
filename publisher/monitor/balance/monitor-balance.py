@@ -1,14 +1,14 @@
 import asyncio
 import datetime
-import logging
 import os
 
 import requests
 from empiric.admin.client import EmpiricAdminClient
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import felt_to_str
 from empiric.publisher.client import EmpiricPublisherClient
 
-logger = logging.getLogger(__name__)
+logger = get_stream_logger()
 
 # Inputs
 # [Optional]: Publisher names; if empty, query for all

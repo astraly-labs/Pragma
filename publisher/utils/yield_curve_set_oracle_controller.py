@@ -3,8 +3,9 @@ import logging
 import os
 
 from empiric.admin.client import EmpiricAdminClient
+from empiric.core.logger import get_stream_logger
 
-logger = logging.getLogger(__name__)
+logger = get_stream_logger()
 
 yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E659962EC
 new_oracle_controller_address = (

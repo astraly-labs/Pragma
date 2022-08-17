@@ -1,9 +1,9 @@
 import asyncio
-import logging
 import os
 import traceback
 
 import requests
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
@@ -18,7 +18,7 @@ from empiric.publisher.fetch import (
 )
 from empiric.publisher.fetch.thegraph import fetch_thegraph
 
-logger = logging.getLogger(__name__)
+logger = get_stream_logger()
 
 
 async def publish_all(assets):

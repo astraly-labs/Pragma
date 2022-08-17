@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
@@ -7,6 +8,8 @@ from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
+
+logger = logging.getLogger(__name__)
 
 
 class EmpiricAdminClient(EmpiricBaseClient):
@@ -100,12 +103,12 @@ class EmpiricAdminClient(EmpiricBaseClient):
                 "register_publisher",
                 [publisher, publisher_address],
             )
-            print(f"Registered publisher with transaction {result}")
+            logger.info(f"Registered publisher with transaction {result}")
 
             return result
 
         else:
-            print(
+            logger.debug(
                 f"Skipping registering {publisher}; already registered with address {existing_publisher_address}"
             )
 
@@ -118,7 +121,7 @@ class EmpiricAdminClient(EmpiricBaseClient):
             [oracle_implementation_address],
         )
 
-        print(f"Added oracle implementation contract with transaction {result}")
+        logger.info(f"Added oracle implementation contract with transaction {result}")
 
         return result
 
@@ -131,7 +134,7 @@ class EmpiricAdminClient(EmpiricBaseClient):
             [primary_oracle_implementation_address],
         )
 
-        print(f"Set oracle implementation to primary with transaction {result}")
+        logger.info(f"Set oracle implementation to primary with transaction {result}")
 
         return result
 
@@ -144,7 +147,9 @@ class EmpiricAdminClient(EmpiricBaseClient):
             [oracle_implementation_address, is_active],
         )
 
-        print(f"Set active status on oracle implementation with transaction {result}")
+        logger.info(
+            f"Set active status on oracle implementation with transaction {result}"
+        )
 
         return result
 
@@ -158,6 +163,6 @@ class EmpiricAdminClient(EmpiricBaseClient):
             PUBLISHER_REGISTRY_ADDRESS=new_publisher_registry_address,
         )
 
-        print(f"Updated publisher registry address with transaction {result}")
+        logger.info(f"Updated publisher registry address with transaction {result}")
 
         return result

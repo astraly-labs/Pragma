@@ -1,8 +1,11 @@
+import logging
 import os
 
 from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, Network
 from starknet_py.net.models import StarknetChainId
 from typing_extensions import Protocol
+
+logger = logging.getLogger(__name__)
 
 
 # TODO (rlkelly): We need a consistent way to implement interfaces.  This seems to be the preferred method
@@ -80,7 +83,7 @@ CONFIG = {
 def get_config(network: Network):
     # TODO rlkelly: we should discuss our reliance on environment variables in config selection
     if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":
-        print("Warning: Communicating with staging contracts, not production")
+        logger.warn("Warning: Communicating with staging contracts, not production")
         raw_config = CONFIG.get(STAGING)
     else:
         raw_config = CONFIG.get(network)

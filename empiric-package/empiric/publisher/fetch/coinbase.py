@@ -25,14 +25,14 @@ def fetch_coinbase(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            logger.warn(f"Skipping Coinbase for non-spot asset {asset}")
+            logger.debug(f"Skipping Coinbase for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
         key = currency_pair_to_key(*pair)
 
         if pair[1] != "USD":
-            logger.warn(
+            logger.info(
                 f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
             )
             continue

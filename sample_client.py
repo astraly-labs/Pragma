@@ -3,7 +3,8 @@ from datetime import datetime
 
 from empiric.core.client import EmpiricClient
 from empiric.core.config import TestnetConfig
-from empiric.core.utils import currency_pair_to_key, get_stream_logger
+from empiric.core.logger import get_stream_logger
+from empiric.core.utils import currency_pair_to_key
 
 
 async def main():

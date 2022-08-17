@@ -4,9 +4,10 @@ import os
 import time
 
 from empiric.admin.client import EmpiricAdminClient
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
 
-logger = logging.getLogger(__name__)
+logger = get_stream_logger()
 
 on_keys = ["aave-on-borrow"]
 spot_future_keys = {

@@ -15,7 +15,7 @@ def fetch_cex(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            logger.info(f"Skipping CEX for non-spot asset {asset}")
+            logger.debug(f"Skipping CEX for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]

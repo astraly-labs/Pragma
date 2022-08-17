@@ -8,11 +8,12 @@ import traceback
 import requests
 from empiric.core.client import EmpiricClient
 from empiric.core.config import TestnetConfig
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import key_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.fetch import fetch_coingecko
 
-logger = logging.getLogger(__name__)
+logger = get_stream_logger()
 
 # Behavior: Ping betteruptime iff all is good
 

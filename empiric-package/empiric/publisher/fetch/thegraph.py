@@ -16,7 +16,7 @@ def fetch_thegraph(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "ONCHAIN":
-            logger.warn(f"Skipping The Graph for non-on-chain asset {asset}")
+            logger.debug(f"Skipping The Graph for non-on-chain asset {asset}")
             continue
 
         if asset["source"] == "AAVE":

@@ -15,7 +15,7 @@ def fetch_bitstamp(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            logger.info(f"Skipping Bitstamp for non-spot asset {asset}")
+            logger.debug(f"Skipping Bitstamp for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]

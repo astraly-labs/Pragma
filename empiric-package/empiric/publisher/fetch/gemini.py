@@ -18,7 +18,7 @@ def fetch_gemini(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            logger.info(f"Skipping Gemini for non-spot asset {asset}")
+            logger.debug(f"Skipping Gemini for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
@@ -26,7 +26,7 @@ def fetch_gemini(assets, publisher):
         timestamp = int(time.time())
         result = [e for e in response.json() if e["pair"] == "".join(pair)]
         if len(result) == 0:
-            logger.warn(f"No entry found for {key} from Gemini")
+            logger.info(f"No entry found for {key} from Gemini")
             continue
 
         assert (
