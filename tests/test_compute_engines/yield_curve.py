@@ -3,7 +3,7 @@ import time
 from collections import namedtuple
 
 from empiric.core.client import EmpiricClient
-from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.config import BaseConfig
 from empiric.core.utils import str_to_felt
 
 YieldPoint = namedtuple(
@@ -84,7 +84,7 @@ async def get_yield_points(output_decimals):
     for on_key in on_keys:
         # fetch data from oracle
         on_value, on_decimals, last_updated_timestamp, _ = await client.get_value(
-            on_key, DEFAULT_AGGREGATION_MODE
+            on_key, BaseConfig.DEFAULT_AGGREGATION_MODE
         )
 
         yield_points.append(
@@ -99,7 +99,7 @@ async def get_yield_points(output_decimals):
             spot_decimals,
             spot_last_updated_timestamp,
             _,
-        ) = await client.get_value(spot_key, DEFAULT_AGGREGATION_MODE)
+        ) = await client.get_value(spot_key, BaseConfig.DEFAULT_AGGREGATION_MODE)
 
         for future_key in future_keys:
             (
@@ -107,7 +107,7 @@ async def get_yield_points(output_decimals):
                 future_decimals,
                 future_last_updated_timestamp,
                 _,
-            ) = await client.get_value(future_key, DEFAULT_AGGREGATION_MODE)
+            ) = await client.get_value(future_key, BaseConfig.DEFAULT_AGGREGATION_MODE)
 
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_value,

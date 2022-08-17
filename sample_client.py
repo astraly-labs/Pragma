@@ -2,14 +2,14 @@ import asyncio
 from datetime import datetime
 
 from empiric.core.client import EmpiricClient
-from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.config import TestnetConfig
 from empiric.core.utils import currency_pair_to_key
 
 
 async def main():
     asset_pair = ("ETH", "USD")
     key = currency_pair_to_key(*asset_pair)
-    aggregation_mode = DEFAULT_AGGREGATION_MODE
+    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 
     client = EmpiricClient()
     (
