@@ -2,7 +2,7 @@ from typing import Optional
 
 from empiric.core import LOGGER
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
-from empiric.core.config import CONFIG
+from empiric.core.config import get_config
 from empiric.core.entry import serialize_entries, serialize_entry
 from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
 
@@ -21,10 +21,11 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         network: Network = TESTNET,
         oracle_controller_address: Optional[ADDRESS] = None,
     ):
+        raw_config = get_config(network)
         self.publisher_registry_address = (
             publisher_registry_address
             if publisher_registry_address is not None
-            else CONFIG[network].PUBLISHER_REGISTRY_ADDRESS
+            else raw_config.PUBLISHER_REGISTRY_ADDRESS
         )
         self.publisher = publisher
         super().__init__(

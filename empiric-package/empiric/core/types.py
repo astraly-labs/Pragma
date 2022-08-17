@@ -7,5 +7,6 @@ HEX_STR = str
 STAGING = "staging"
 TESTNET = "testnet"
 INTEGRATION = "integration"
+MAINNET = "mainnet"
 
-Network = Literal["staging", "testnet", "integration"]
+Network = Literal["staging", "testnet", "integration", "mainnet"]

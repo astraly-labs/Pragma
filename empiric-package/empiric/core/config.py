@@ -1,6 +1,6 @@
 import os
 
-from empiric.core.types import INTEGRATION, STAGING, TESTNET, Network
+from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, Network
 from starknet_py.net.models import StarknetChainId
 
 
@@ -48,7 +48,19 @@ class IntegrationNetworkConfig(BaseConfig):
 
 class StagingConfig(BaseConfig):
     NETWORK = TESTNET
+    GATEWAY_URL = "https://alpha4.starknet.io"
+    ORACLE_CONTROLLER_ADDRESS = (
+        0x00225A37DE623DBD4D2287DDED4E0CB0EB4A5D7D9051D0E89A1321D4BCF9FDB2
+    )
+    PUBLISHER_REGISTRY_ADDRESS = (
+        0x051949605AB53FCC2C0ADC1D53A72DD0FBCBF83E52399A8B05552F675B1DB4E9
+    )
+
+
+class MainnetConfig(BaseConfig):
+    NETWORK = MAINNET
     GATEWAY_URL = "https://alpha-mainnet.starknet.io"
+    CHAIN_ID = StarknetChainId.MAINNET
     ORACLE_CONTROLLER_ADDRESS = (
         0x00225A37DE623DBD4D2287DDED4E0CB0EB4A5D7D9051D0E89A1321D4BCF9FDB2
     )
@@ -60,8 +72,22 @@ class StagingConfig(BaseConfig):
 CONFIG = {
     TESTNET: TestnetConfig,
     INTEGRATION: IntegrationNetworkConfig,
+    MAINNET: MainnetConfig,
     STAGING: StagingConfig,
 }
 
-if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":
-    print("Warning: Communicating with staging contracts, not production")
+
+def get_config(network: Network):
+    # TODO rlkelly: we should discuss our reliance on environment variables in config selection
+    if os.environ.get("__EMPIRIC_STAGING_ENV__") == "True":
+        print("Warning: Communicating with staging contracts, not production")
+        raw_config = CONFIG.get(STAGING)
+    else:
+        raw_config = CONFIG.get(network)
+
+    if raw_config is None:
+        raise NotImplementedError(
+            "Empiric.BaseClient: Network not recognized, unknown network name"
+        )
+
+    return raw_config

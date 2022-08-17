@@ -1,6 +1,6 @@
 from typing import Any, Optional, Tuple
 
-from empiric.core.config import CONFIG
+from empiric.core.config import get_config
 from empiric.core.errors import InvalidNetworkError
 from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
@@ -19,7 +19,7 @@ class EmpiricClient:
     ):
         self.network = network
         try:
-            self.config = CONFIG.get(network)()
+            self.config = get_config(network)()
         except TypeError:
             raise InvalidNetworkError(f"Invalid Network name: {network}")
 
