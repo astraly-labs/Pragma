@@ -32,7 +32,7 @@ class EmpiricClient:
         if self.oracle_controller_contract is None:
             self.oracle_controller_contract = await Contract.from_address(
                 self.oracle_controller_address,
-                GatewayClient(self.network),
+                GatewayClient(self.network, self.config.CHAIN_ID),
             )
 
     async def get_decimals(self, key) -> Any:

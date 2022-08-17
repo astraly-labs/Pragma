@@ -55,7 +55,7 @@ class EmpiricBaseClient(ABC):
             self.config.CHAIN_ID,
         )
 
-        self.client = GatewayClient(self.config.NETWORK)
+        self.client = GatewayClient(self.config.NETWORK, self.config.CHAIN_ID)
         self.account_client = AccountClient(
             self.account_contract_address, self.client, self.signer
         )
