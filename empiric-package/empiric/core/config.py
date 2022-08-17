@@ -1,6 +1,6 @@
 import os
 
-from empiric.core.types import INTEGRATION, MAINNET, TESTNET, Network
+from empiric.core.types import INTEGRATION, STAGING, TESTNET, Network
 from starknet_py.net.models import StarknetChainId
 
 
@@ -19,11 +19,12 @@ class IConfig:
 class BaseConfig(IConfig):
     ADMIN_ADDRESS = 0x0704CC0F2749637A0345D108AC9CD597BB33CCF7F477978D52E236830812CD98
     DEFAULT_AGGREGATION_MODE = 0
+    # this indicates that the integration network uses goerli
+    CHAIN_ID = StarknetChainId.TESTNET
 
 
 class TestnetConfig(BaseConfig):
     NETWORK = TESTNET
-    CHAIN_ID = StarknetChainId.TESTNET.value
     GATEWAY_URL = "https://alpha4.starknet.io"
     ORACLE_CONTROLLER_ADDRESS = (
         0x012FADD18EC1A23A160CC46981400160FBF4A7A5EED156C4669E39807265BCD4
@@ -35,8 +36,6 @@ class TestnetConfig(BaseConfig):
 
 class IntegrationNetworkConfig(BaseConfig):
     NETWORK = INTEGRATION
-    # this indicates that the integration network uses goerli
-    CHAIN_ID = StarknetChainId.TESTNET.value
     GATEWAY_URL = "https://external.integration.starknet.io"
     ADMIN_ADDRESS = 0x02D64A536926A2B88CAD32D6D55936F04B34A8D93231C1010D78C1B6745751C0
     ORACLE_CONTROLLER_ADDRESS = (
@@ -47,9 +46,8 @@ class IntegrationNetworkConfig(BaseConfig):
     )
 
 
-class MainnetConfig(BaseConfig):
-    NETWORK = MAINNET
-    CHAIN_ID = StarknetChainId.MAINNET.value
+class StagingConfig(BaseConfig):
+    NETWORK = TESTNET
     GATEWAY_URL = "https://alpha-mainnet.starknet.io"
     ORACLE_CONTROLLER_ADDRESS = (
         0x00225A37DE623DBD4D2287DDED4E0CB0EB4A5D7D9051D0E89A1321D4BCF9FDB2
@@ -62,7 +60,7 @@ class MainnetConfig(BaseConfig):
 CONFIG = {
     TESTNET: TestnetConfig,
     INTEGRATION: IntegrationNetworkConfig,
-    MAINNET: MainnetConfig,
+    STAGING: StagingConfig,
 }
 
 if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":

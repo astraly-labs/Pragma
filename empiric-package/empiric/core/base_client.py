@@ -1,9 +1,10 @@
+import os
 import time
 from abc import ABC, abstractmethod
 from typing import Optional
 
 from empiric.core.config import CONFIG, IConfig
-from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
+from empiric.core.types import ADDRESS, HEX_STR, STAGING, TESTNET, Network
 from starknet_py.contract import Contract
 from starknet_py.net import AccountClient
 from starknet_py.net.client_models import Call
@@ -35,7 +36,11 @@ class EmpiricBaseClient(ABC):
         network: Network = TESTNET,
         oracle_controller_address: Optional[ADDRESS] = None,
     ):
-        raw_config = CONFIG.get(network)
+        # TODO rlkelly: we should discuss our reliance on environment variables in config selection
+        if os.environ.get("__EMPIRIC_STAGING_ENV__") is True:
+            raw_config = CONFIG.get(STAGING)
+        else:
+            raw_config = CONFIG.get(network)
         if raw_config is None:
             raise NotImplementedError(
                 "Empiric.BaseClient: Network not recognized, unknown network name"

@@ -24,7 +24,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         self.publisher_registry_address = (
             publisher_registry_address
             if publisher_registry_address is not None
-            else CONFIG[network.value].PUBLISHER_REGISTRY_ADDRESS
+            else CONFIG[network].PUBLISHER_REGISTRY_ADDRESS
         )
         self.publisher = publisher
         super().__init__(

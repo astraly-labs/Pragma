@@ -6,7 +6,7 @@ import traceback
 
 import requests
 from empiric.core.client import EmpiricClient
-from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.config import TestnetConfig
 from empiric.core.utils import key_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.fetch import fetch_coingecko
@@ -34,7 +34,7 @@ async def main():
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
     }
-    aggregation_mode = DEFAULT_AGGREGATION_MODE
+    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 
     all_prices_valid = True
     for asset in assets:

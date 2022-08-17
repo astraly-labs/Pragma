@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from empiric.core.config import CONFIG
 from empiric.core.errors import InvalidNetworkError
@@ -53,7 +53,7 @@ class EmpiricClient:
 
     async def get_value(
         self, key, aggregation_mode, sources=None
-    ) -> tuple[Any, Any, Any, Any]:
+    ) -> Tuple[Any, Any, Any, Any]:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:

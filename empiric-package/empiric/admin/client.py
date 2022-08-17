@@ -51,7 +51,8 @@ class EmpiricAdminClient(EmpiricBaseClient):
 
         if self.publisher_registry_contract is None:
             self.publisher_registry_contract = await Contract.from_address(
-                self.config.PUBLISHER_REGISTRY_ADDRESS, GatewayClient(self.network)
+                self.config.PUBLISHER_REGISTRY_ADDRESS,
+                GatewayClient(self.config.NETWORK),
             )
 
     async def get_primary_oracle_implementation_address(self):
