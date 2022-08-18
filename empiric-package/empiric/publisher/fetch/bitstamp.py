@@ -23,7 +23,7 @@ def fetch_bitstamp(assets, publisher):
             f"{base_url}/{pair[0].lower()}{pair[1].lower()}", timeout=10
         )
         if response.status_code == 404:
-            logger.info(f"No data found for {'/'.join(pair)} from Bitstamp")
+            logger.debug(f"No data found for {'/'.join(pair)} from Bitstamp")
             continue
 
         result = response.json()

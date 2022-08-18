@@ -32,7 +32,7 @@ def fetch_coinbase(assets, publisher):
         key = currency_pair_to_key(*pair)
 
         if pair[1] != "USD":
-            logger.info(
+            logger.debug(
                 f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
             )
             continue
@@ -83,6 +83,6 @@ def fetch_coinbase(assets, publisher):
                 )
             )
         else:
-            logger.warn(f"No entry found for {key} from Coinbase")
+            logger.debug(f"No entry found for {key} from Coinbase")
 
     return entries

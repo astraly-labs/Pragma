@@ -32,7 +32,7 @@ def fetch_cryptowatch(assets, publisher):
 
         for asset in assets:
             if asset["type"] != "SPOT":
-                logger.info(f"Skipping Cryptowatch for non-spot asset {asset}")
+                logger.debug(f"Skipping Cryptowatch for non-spot asset {asset}")
                 continue
 
             pair = asset["pair"]
@@ -41,7 +41,7 @@ def fetch_cryptowatch(assets, publisher):
             try:
                 price = source_results["".join(pair).lower()]
             except KeyError:
-                logger.warn(
+                logger.info(
                     f"No entry found for {key} from Cryptowatch-{cryptowatch_source}"
                 )
                 continue

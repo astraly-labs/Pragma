@@ -23,7 +23,7 @@ def fetch_cex(assets, publisher):
         result = response.json()
 
         if "error" in result and result["error"] == "Invalid Symbols Pair":
-            logger.warn(f"No data found for {'/'.join(pair)} from CEX")
+            logger.debug(f"No data found for {'/'.join(pair)} from CEX")
             continue
 
         timestamp = int(result["timestamp"])

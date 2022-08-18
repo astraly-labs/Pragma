@@ -19,7 +19,7 @@ def fetch_coingecko(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            logger.info(f"Skipping Coingecko for non-spot asset {asset}")
+            logger.debug(f"Skipping Coingecko for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]

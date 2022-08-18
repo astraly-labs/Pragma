@@ -26,7 +26,7 @@ def fetch_gemini(assets, publisher):
         timestamp = int(time.time())
         result = [e for e in response.json() if e["pair"] == "".join(pair)]
         if len(result) == 0:
-            logger.info(f"No entry found for {key} from Gemini")
+            logger.debug(f"No entry found for {key} from Gemini")
             continue
 
         assert (
