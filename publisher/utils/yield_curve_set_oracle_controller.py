@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import os
 
 from empiric.admin.client import EmpiricAdminClient
