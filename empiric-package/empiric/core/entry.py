@@ -1,4 +1,3 @@
-from collections import namedtuple
 from typing import List, NamedTuple
 
 from empiric.core.utils import str_to_felt
