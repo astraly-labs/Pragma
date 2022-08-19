@@ -1,9 +1,10 @@
 from collections import namedtuple
-from typing import Any, List
+from typing import List, NamedTuple
 
 from empiric.core.utils import str_to_felt
 
-Entry = namedtuple("Entry", ["key", "value", "timestamp", "source", "publisher"])
+Entry = NamedTuple("Entry", [("key", int), ("value", int),
+                   ("timestamp", int), ("source", int), ("publisher", int)])
 
 
 def serialize_entry(entry) -> List[int]:
