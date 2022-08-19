@@ -1,6 +1,6 @@
 import os
 
-from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, Network
+from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, AggregationMode, Network
 from starknet_py.net.models import StarknetChainId
 from typing_extensions import Protocol
 
@@ -8,7 +8,7 @@ from typing_extensions import Protocol
 # TODO (rlkelly): We need a consistent way to implement interfaces.  This seems to be the preferred method
 class IConfig(Protocol):
     ADMIN_ADDRESS: int
-    DEFAULT_AGGREGATION_MODE: int
+    DEFAULT_AGGREGATION_MODE: AggregationMode
     NETWORK: Network
     CHAIN_ID: int
     PUBLISHER_REGISTRY_ADDRESS: int
@@ -18,7 +18,7 @@ class IConfig(Protocol):
 
 class BaseConfig(IConfig):
     ADMIN_ADDRESS = 0x0704CC0F2749637A0345D108AC9CD597BB33CCF7F477978D52E236830812CD98
-    DEFAULT_AGGREGATION_MODE = 0
+    DEFAULT_AGGREGATION_MODE = AggregationMode.MEDIAN
     # this indicates that the integration network uses goerli
     CHAIN_ID = StarknetChainId.TESTNET
 
