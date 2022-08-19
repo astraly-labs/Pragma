@@ -1,5 +1,6 @@
-from typing_extensions import Literal
 from enum import Enum
+
+from typing_extensions import Literal
 
 ADDRESS = int
 HEX_STR = str

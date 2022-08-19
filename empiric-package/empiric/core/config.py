@@ -1,6 +1,13 @@
 import os
 
-from empiric.core.types import INTEGRATION, MAINNET, STAGING, TESTNET, AggregationMode, Network
+from empiric.core.types import (
+    INTEGRATION,
+    MAINNET,
+    STAGING,
+    TESTNET,
+    AggregationMode,
+    Network,
+)
 from starknet_py.net.models import StarknetChainId
 from typing_extensions import Protocol
 
