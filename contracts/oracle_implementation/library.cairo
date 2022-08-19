@@ -7,7 +7,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
+from contracts.entry.library import Entry, Entries
 
 const TIMESTAMP_BUFFER = 3600  # 60 minutes
 
@@ -73,8 +73,8 @@ func Oracle_get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
         return (0, 0, 0)
     end
 
-    let (value) = Entry_aggregate_entries(entries_len, entries)
-    let (last_updated_timestamp) = Entry_aggregate_timestamps_max(entries_len, entries)
+    let (value) = Entries.aggregate_entries(entries_len, entries)
+    let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries)
     return (value, last_updated_timestamp, entries_len)
 end
 
