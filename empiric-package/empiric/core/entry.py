@@ -29,11 +29,11 @@ class Entry:
         if type(source) == str:
             source = str_to_felt(source)
 
-        self.key = (key,)
-        self.value = (value,)
-        self.timestamp = (timestamp,)
-        self.source = (source,)
-        self.publisher = (publisher,)
+        self.key = key
+        self.value = value
+        self.timestamp = timestamp
+        self.source = source
+        self.publisher = publisher
 
     def serialize(self) -> List[int]:
         return [self.key, self.value, self.timestamp, self.source, self.publisher]
