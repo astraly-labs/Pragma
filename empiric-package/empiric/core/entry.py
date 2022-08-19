@@ -6,11 +6,11 @@ from empiric.core.utils import str_to_felt
 Entry = namedtuple("Entry", ["key", "value", "timestamp", "source", "publisher"])
 
 
-def serialize_entry(entry) -> List[Any]:
+def serialize_entry(entry) -> List[int]:
     return [entry.key, entry.value, entry.timestamp, entry.source, entry.publisher]
 
 
-def serialize_entries(entries) -> List[Any]:
+def serialize_entries(entries) -> List[int]:
     expanded = [serialize_entry(entry) for entry in entries]
     flattened = [x for entry in expanded for x in entry]
     return [len(entries)] + flattened

@@ -1,8 +1,9 @@
-from typing import Any, Optional, Tuple
+from typing import Optional, Tuple, List
 
 from empiric.core.config import get_config
 from empiric.core.errors import InvalidNetworkError
 from empiric.core.types import ADDRESS, TESTNET, Network
+from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
@@ -35,7 +36,7 @@ class EmpiricClient:
                 GatewayClient(self.network, self.config.CHAIN_ID),
             )
 
-    async def get_decimals(self, key) -> Any:
+    async def get_decimals(self, key) -> int:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -53,7 +54,7 @@ class EmpiricClient:
 
     async def get_value(
         self, key, aggregation_mode, sources=None
-    ) -> Tuple[Any, Any, Any, Any]:
+    ) -> Tuple[int, int, int, int]:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
@@ -78,7 +79,7 @@ class EmpiricClient:
             response.num_sources_aggregated,
         )
 
-    async def get_entries(self, key, sources=None) -> Any:
+    async def get_entries(self, key, sources=None) -> List[Entry]:
         await self.fetch_oracle_controller_contract()
 
         if type(key) == str:
