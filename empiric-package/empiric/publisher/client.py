@@ -1,9 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 
 from empiric.core import LOGGER
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.config import get_config
-from empiric.core.entry import serialize_entries, serialize_entry
+from empiric.core.entry import Entry
 from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
 
 
@@ -58,17 +58,17 @@ class EmpiricPublisherClient(EmpiricBaseClient):
 
         return result
 
-    async def publish(self, entry) -> HEX_STR:
+    async def publish(self, entry: Entry) -> HEX_STR:
         result = await self.send_transaction(
             self.oracle_controller_address,
             "publish_entry",
-            serialize_entry(entry),
+            Entry.serialize(),
         )
         LOGGER.info(f"Updated entry with transaction {result}")
 
         return result
 
-    async def publish_many(self, entries) -> HEX_STR:
+    async def publish_many(self, entries: List[Entry]) -> HEX_STR:
         if len(entries) == 0:
             LOGGER.warn("Skipping publishing as entries array is empty")
             return
@@ -76,7 +76,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         result = await self.send_transaction(
             self.oracle_controller_address,
             "publish_entries",
-            serialize_entries(entries),
+            Entry.serialize_entries(entries),
         )
 
         LOGGER.info(

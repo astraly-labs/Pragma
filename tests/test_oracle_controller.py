@@ -2,7 +2,7 @@ from statistics import median
 
 import pytest
 import pytest_asyncio
-from empiric.core.entry import construct_entry, serialize_entries, serialize_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
@@ -407,7 +407,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
-    entry = construct_entry(
+    entry = Entry(
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -419,13 +419,13 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
     assert_event_emitted(
         tx_exec_info,
         oracle_controller.contract_address,
         "SubmittedEntry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
@@ -450,7 +450,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -462,13 +462,13 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
-    second_entry = entry = construct_entry(
+    second_entry = entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
@@ -480,7 +480,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_value(
@@ -499,7 +499,7 @@ async def test_re_submit_stale(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
@@ -511,7 +511,7 @@ async def test_re_submit_stale(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
@@ -522,7 +522,7 @@ async def test_re_submit_stale(
     ).call()
     assert result.result == source_result.result
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -535,7 +535,7 @@ async def test_re_submit_stale(
             publisher_account,
             oracle_controller.contract_address,
             "publish_entry",
-            serialize_entry(second_entry),
+            second_entry.serialize(),
         )
 
         raise Exception(
@@ -562,7 +562,7 @@ async def test_submit_second_asset(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
-    entry = construct_entry(
+    entry = Entry(
         key=str_to_felt("eth/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -574,13 +574,13 @@ async def test_submit_second_asset(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=str_to_felt("btc/usd"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -592,7 +592,7 @@ async def test_submit_second_asset(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_value(
@@ -627,7 +627,7 @@ async def test_submit_second_publisher(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -638,7 +638,7 @@ async def test_submit_second_publisher(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     second_source = str_to_felt("1xdata")
@@ -651,7 +651,7 @@ async def test_submit_second_publisher(
         [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -663,7 +663,7 @@ async def test_submit_second_publisher(
         second_publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()
@@ -702,7 +702,7 @@ async def test_submit_second_source(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -714,14 +714,14 @@ async def test_submit_second_source(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
     assert result.result.value == entry.value
 
     second_source = str_to_felt("1xdata")
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=4,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
@@ -733,7 +733,7 @@ async def test_submit_second_source(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_value(
@@ -763,7 +763,7 @@ async def test_median_aggregation(
     key = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=prices[0],
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -774,7 +774,7 @@ async def test_median_aggregation(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     entries = [entry]
@@ -786,7 +786,7 @@ async def test_median_aggregation(
     ):
         additional_publisher = str_to_felt(additional_publisher_str)
         additional_source = str_to_felt(additional_publisher_str + "-source")
-        additional_entry = construct_entry(
+        additional_entry = Entry(
             key=key,
             value=price,
             timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -825,7 +825,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
     prices = [1, 3, 10]
     publisher = "foo"
     entries = [
-        construct_entry(
+        Entry(
             key=keys[i],
             value=prices[i],
             timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -839,14 +839,14 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         publisher_account,
         oracle_controller.contract_address,
         "publish_entries",
-        serialize_entries(entries),
+        Entry.serialize_entries(entries),
     )
     for entry in entries:
         assert_event_emitted(
             tx_exec_info,
             oracle_controller.contract_address,
             "SubmittedEntry",
-            serialize_entry(entry),
+            entry.serialize(),
         )
 
     for i, key in enumerate(keys):
@@ -874,7 +874,7 @@ async def test_subset_publishers(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("luna/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=1,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -885,7 +885,7 @@ async def test_subset_publishers(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     additional_publisher = str_to_felt("bar")
@@ -914,7 +914,7 @@ async def test_unknown_source(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -926,7 +926,7 @@ async def test_unknown_source(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_value_for_sources(
@@ -960,44 +960,28 @@ async def test_real_data(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     entries = [
-        construct_entry(
-            "eth/usd", 29898560234403, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry(
-            "btc/usd", 404308601528970, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry(
-            "luna/usd", 922793061826, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry(
-            "sol/usd", 1023379113474, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry(
-            "avax/usd", 759878999010, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry(
-            "doge/usd", 1365470994, 1650590880, "cryptowatch", "cryptowatch"
-        ),
-        construct_entry("shib/usd", 244844, 1650590880, "cryptowatch", "cryptowatch"),
-        construct_entry(
-            "eth/usd", 29902600000000, 1650590935, "coingecko", "coingecko"
-        ),
-        construct_entry(
-            "btc/usd", 404070000000000, 1650590889, "coingecko", "coingecko"
-        ),
-        construct_entry("luna/usd", 922099999999, 1650590883, "coingecko", "coingecko"),
-        construct_entry("sol/usd", 1023600000000, 1650590886, "coingecko", "coingecko"),
-        construct_entry("avax/usd", 759800000000, 1650590853, "coingecko", "coingecko"),
-        construct_entry("doge/usd", 1365780000, 1650590845, "coingecko", "coingecko"),
-        construct_entry("shib/usd", 245100, 1650590865, "coingecko", "coingecko"),
-        construct_entry("eth/usd", 29924650000000, 1650590820, "coinbase", "coinbase"),
-        construct_entry("btc/usd", 404057899999999, 1650590820, "coinbase", "coinbase"),
-        construct_entry("eth/usd", 29920000000000, 1650590986, "gemini", "gemini"),
-        construct_entry("btc/usd", 404047800000000, 1650590986, "gemini", "gemini"),
-        construct_entry("luna/usd", 924700000000, 1650590986, "gemini", "gemini"),
-        construct_entry("sol/usd", 1023610000000, 1650590986, "gemini", "gemini"),
-        construct_entry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
-        construct_entry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
+        Entry("eth/usd", 29898560234403, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("btc/usd", 404308601528970, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("luna/usd", 922793061826, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("sol/usd", 1023379113474, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("avax/usd", 759878999010, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("doge/usd", 1365470994, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("shib/usd", 244844, 1650590880, "cryptowatch", "cryptowatch"),
+        Entry("eth/usd", 29902600000000, 1650590935, "coingecko", "coingecko"),
+        Entry("btc/usd", 404070000000000, 1650590889, "coingecko", "coingecko"),
+        Entry("luna/usd", 922099999999, 1650590883, "coingecko", "coingecko"),
+        Entry("sol/usd", 1023600000000, 1650590886, "coingecko", "coingecko"),
+        Entry("avax/usd", 759800000000, 1650590853, "coingecko", "coingecko"),
+        Entry("doge/usd", 1365780000, 1650590845, "coingecko", "coingecko"),
+        Entry("shib/usd", 245100, 1650590865, "coingecko", "coingecko"),
+        Entry("eth/usd", 29924650000000, 1650590820, "coinbase", "coinbase"),
+        Entry("btc/usd", 404057899999999, 1650590820, "coinbase", "coinbase"),
+        Entry("eth/usd", 29920000000000, 1650590986, "gemini", "gemini"),
+        Entry("btc/usd", 404047800000000, 1650590986, "gemini", "gemini"),
+        Entry("luna/usd", 924700000000, 1650590986, "gemini", "gemini"),
+        Entry("sol/usd", 1023610000000, 1650590986, "gemini", "gemini"),
+        Entry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
+        Entry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
     ]
     publishers_str = ["cryptowatch", "coingecko", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
@@ -1062,7 +1046,7 @@ async def test_multiple_oracle_implementations(
 
     # Submit entry
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=1,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -1073,7 +1057,7 @@ async def test_multiple_oracle_implementations(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     result = await oracle_controller.get_entries(key, []).call()
@@ -1101,7 +1085,7 @@ async def test_multiple_oracle_implementations(
         [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -1112,7 +1096,7 @@ async def test_multiple_oracle_implementations(
         second_publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     # Verify that we can get both entries from the first oracle implementation
@@ -1168,7 +1152,7 @@ async def test_rotate_primary_oracle_implementation_address(
 
     # Submit entry
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=1,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -1179,7 +1163,7 @@ async def test_rotate_primary_oracle_implementation_address(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     # Update primary oracle and deactivate old primary oracle
@@ -1231,7 +1215,7 @@ async def test_rotate_primary_oracle_implementation_address(
         [second_publisher, second_publisher_account.contract_address],
     )
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -1242,7 +1226,7 @@ async def test_rotate_primary_oracle_implementation_address(
         second_publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_entries(key, []).call()
@@ -1279,7 +1263,7 @@ async def test_ignore_future_entry(
     oracle_controller = initialized_contracts["oracle_controller"]
     key = str_to_felt("eth/usd")
 
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
@@ -1292,7 +1276,7 @@ async def test_ignore_future_entry(
             publisher_account,
             oracle_controller.contract_address,
             "publish_entry",
-            serialize_entry(entry),
+            entry.serialize(),
         )
 
         raise Exception(
@@ -1315,7 +1299,7 @@ async def test_ignore_stale_entries(
     oracle_controller = initialized_contracts["oracle_controller"]
 
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
+    entry = Entry(
         key=key,
         value=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -1326,7 +1310,7 @@ async def test_ignore_stale_entries(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     second_publisher = str_to_felt("bar")
@@ -1344,7 +1328,7 @@ async def test_ignore_stale_entries(
         admin_account.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
     )
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key,
         value=5,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
@@ -1356,7 +1340,7 @@ async def test_ignore_stale_entries(
         second_publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(second_entry),
+        second_entry.serialize(),
     )
 
     result = await oracle_controller.get_value(key, AGGREGATION_MODE).call()

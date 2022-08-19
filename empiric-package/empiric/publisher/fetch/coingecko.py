@@ -1,11 +1,12 @@
 import datetime
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 
-def fetch_coingecko(assets, publisher):
+def fetch_coingecko(assets, publisher) -> List[Entry]:
     source = "coingecko"
 
     headers = {
@@ -77,7 +78,7 @@ def fetch_coingecko(assets, publisher):
         print(f"Fetched price {price} for {key} from Coingecko")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,

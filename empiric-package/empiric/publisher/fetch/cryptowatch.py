@@ -1,11 +1,12 @@
 import time
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 
-def fetch_cryptowatch(assets, publisher):
+def fetch_cryptowatch(assets, publisher) -> List[Entry]:
     sources = [
         "cryptowatch-coinbase-pro",
         "cryptowatch-kraken",
@@ -49,7 +50,7 @@ def fetch_cryptowatch(assets, publisher):
             )
 
             entries.append(
-                construct_entry(
+                Entry(
                     key=key,
                     value=price_int,
                     timestamp=timestamp,

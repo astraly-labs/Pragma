@@ -1,9 +1,11 @@
+from typing import List
+
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 
-def fetch_cex(assets, publisher):
+def fetch_cex(assets, publisher) -> List[Entry]:
     source = "cex"
     base_url = "https://cex.io/api/ticker"
 
@@ -30,7 +32,7 @@ def fetch_cex(assets, publisher):
         print(f"Fetched price {price} for {'/'.join(pair)} from CEX")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,

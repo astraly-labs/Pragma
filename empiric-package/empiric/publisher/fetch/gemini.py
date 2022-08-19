@@ -1,11 +1,12 @@
 import time
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 
-def fetch_gemini(assets, publisher):
+def fetch_gemini(assets, publisher) -> List[Entry]:
     source = "gemini"
 
     base_url = "https://api.gemini.com/v1"
@@ -35,7 +36,7 @@ def fetch_gemini(assets, publisher):
         print(f"Fetched price {price} for {key} from Gemini")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
