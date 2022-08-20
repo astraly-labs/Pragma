@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import IntEnum, unique
 
 from typing_extensions import Literal
 
@@ -16,5 +16,6 @@ Network = Literal[
 ]
 
 
-class AggregationMode(Enum):
+@unique
+class AggregationMode(IntEnum):
     MEDIAN = 120282243752302  # str_to_felt("median")
