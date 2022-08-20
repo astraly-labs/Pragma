@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, NamedTuple, Tuple, Union
+from typing import List, Tuple, Union
 
 from empiric.core.utils import str_to_felt
 
