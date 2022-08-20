@@ -41,7 +41,7 @@ def fetch_cryptowatch(assets, publisher):
             try:
                 price = source_results["".join(pair).lower()]
             except KeyError:
-                logger.info(
+                logger.debug(
                     f"No entry found for {key} from Cryptowatch-{cryptowatch_source}"
                 )
                 continue

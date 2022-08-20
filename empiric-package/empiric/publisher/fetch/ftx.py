@@ -41,7 +41,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
 def parse_ftx_futures(asset, data, source, publisher, timestamp):
     pair = asset["pair"]
     if pair[1] != "USD":
-        logger.info(f"Unable to fetch price from FTX for non-USD derivative {pair}")
+        logger.debug(f"Unable to fetch price from FTX for non-USD derivative {pair}")
         return
 
     result = [e for e in data if re.match(rf"{pair[0]}-[0-9]+", e["name"])]
