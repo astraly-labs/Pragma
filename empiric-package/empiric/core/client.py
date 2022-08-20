@@ -53,7 +53,7 @@ class EmpiricClient:
         return response.decimals
 
     async def get_value(
-        self, key, aggregation_mode: AggregationMode, sources=None
+        self, key, aggregation_mode, sources=None
     ) -> Tuple[int, int, int, int]:
         await self.fetch_oracle_controller_contract()
 
