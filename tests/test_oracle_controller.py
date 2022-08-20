@@ -425,7 +425,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         tx_exec_info,
         oracle_controller.contract_address,
         "SubmittedEntry",
-        entry.serialize(),
+        list(entry.serialize()),
     )
 
     result = await oracle_controller.get_value(entry.key, AGGREGATION_MODE).call()
@@ -846,7 +846,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
             tx_exec_info,
             oracle_controller.contract_address,
             "SubmittedEntry",
-            entry.serialize(),
+            list(entry.serialize()),
         )
 
     for i, key in enumerate(keys):

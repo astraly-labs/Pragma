@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Union
+from typing import List, NamedTuple, Tuple, Union
 
 from empiric.core.utils import str_to_felt
 
@@ -35,8 +35,29 @@ class Entry:
         self.source = source
         self.publisher = publisher
 
-    def serialize(self) -> List[int]:
-        return [self.key, self.value, self.timestamp, self.source, self.publisher]
+    def __eq__(self, other):
+        if isinstance(other, Entry):
+            return (
+                self.key == other.key
+                and self.value == other.value
+                and self.timestamp == other.timestamp
+                and self.source == other.source
+                and self.publisher == other.publisher
+            )
+        # This supports comparing against entries that are returned by starknet.py,
+        # which will be namedtuples.
+        if isinstance(other, Tuple) and len(other) == 5:
+            return (
+                self.key == other[0]
+                and self.value == other[1]
+                and self.timestamp == other[2]
+                and self.source == other[3]
+                and self.publisher == other[4]
+            )
+        return False
+
+    def serialize(self) -> Tuple[int, int, int, int, int]:
+        return (self.key, self.value, self.timestamp, self.source, self.publisher)
 
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[int]:

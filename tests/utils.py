@@ -71,7 +71,7 @@ class TestSigner:
 
 
 # From OZ: https://github.com/OpenZeppelin/cairo-contracts/blob/main/tests/utils.py
-def assert_event_emitted(tx_exec_info, from_address, name, data):
+def assert_event_emitted(tx_exec_info, from_address: int, name: str, data: List[int]):
     assert (
         Event(
             from_address=from_address,

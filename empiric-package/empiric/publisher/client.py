@@ -62,7 +62,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         result = await self.send_transaction(
             self.oracle_controller_address,
             "publish_entry",
-            Entry.serialize(),
+            entry.serialize(),
         )
         LOGGER.info(f"Updated entry with transaction {result}")
 
