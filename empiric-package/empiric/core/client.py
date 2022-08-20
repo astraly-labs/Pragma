@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 from empiric.core.config import get_config
 from empiric.core.entry import Entry
 from empiric.core.errors import InvalidNetworkError
-from empiric.core.types import ADDRESS, TESTNET, AggregationMode, Network
+from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
