@@ -205,7 +205,6 @@ async def test_median_aggregation(
         )
 
         result = await contract.get_entries(key, []).call()
-        breakpoint()
         assert result.result.entries == entries
 
         result = await contract.get_value(key, AGGREGATION_MODE, []).call()
