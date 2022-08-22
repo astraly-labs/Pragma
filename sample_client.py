@@ -1,8 +1,8 @@
 import asyncio
 from argparse import ArgumentParser
 from datetime import datetime
-import typing_extensions
 
+import typing_extensions
 from empiric.core.client import EmpiricClient
 from empiric.core.config import TestnetConfig
 from empiric.core.types import TESTNET, Network
