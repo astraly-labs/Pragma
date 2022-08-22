@@ -31,7 +31,7 @@ jobs:
         env:
           PUBLISHER: empiric
           PUBLISHER_PRIVATE_KEY: ${{ secrets.INTEGRATION_PUBLISHER_PRIVATE_KEY }}
-          PUBLISHER_ADDRESS: "0x06c07312672c617ad95f8b245b08fa55bbb5f1fbe10a868fe4b68ede2df159ce"
+          PUBLISHER_ADDRESS: 3053905924911392281185613487163536321775910383295124523151415438844445678030
           __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__: TRUE
         run: python publisher/sample-publisher/integration/fetch-and-publish.py
 
