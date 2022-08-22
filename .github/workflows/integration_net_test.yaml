@@ -1,0 +1,42 @@
+name: Run test on integration net
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 6,18 * * *"
+
+jobs:
+  publish_and_consume_on_integration:
+    name: Publish and get eth/usd price on integration net
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.7"
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --upgrade --upgrade-strategy eager
+          pip install -r dev-requirements.txt --upgrade --upgrade-strategy eager
+          pip install -e empiric-package
+
+      - name: Publish data
+        env:
+          PUBLISHER: empiric
+          PUBLISHER_PRIVATE_KEY: ${{ secrets.INTEGRATION_PUBLISHER_PRIVATE_KEY }}
+          PUBLISHER_ADDRESS: "0x06c07312672c617ad95f8b245b08fa55bbb5f1fbe10a868fe4b68ede2df159ce"
+          __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__: TRUE
+        run: python publisher/sample-publisher/integration/fetch-and-publish.py
+
+      - name: Wait for transaction to be accepted
+        run: sleep 300
+
+      - name: Run sample client
+        run: python sample_client.py --network https://external.integration.starknet.io
