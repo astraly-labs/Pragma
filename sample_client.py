@@ -1,20 +1,20 @@
 import asyncio
+from argparse import ArgumentParser
 from datetime import datetime
+import typing_extensions
 
 from empiric.core.client import EmpiricClient
 from empiric.core.config import TestnetConfig
-from empiric.core.logger import get_stream_logger
+from empiric.core.types import TESTNET, Network
 from empiric.core.utils import currency_pair_to_key
 
 
-async def main():
-    logger = get_stream_logger()
-
+async def main(network: Network):
     asset_pair = ("ETH", "USD")
     key = currency_pair_to_key(*asset_pair)
     aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 
-    client = EmpiricClient()
+    client = EmpiricClient(network=network)
     (
         value,
         decimals,
@@ -22,7 +22,7 @@ async def main():
         num_sources_aggregated,
     ) = await client.get_value(key, aggregation_mode)
 
-    logger.info(
+    print(
         f"""Value of asset pair {asset_pair} is: {float(value) / (10**decimals)}, \
         last updated at {datetime.fromtimestamp(last_updated_timestamp).strftime('%Y-%m-%d, %H:%M:%S')}, \
         based off of aggregating {num_sources_aggregated} sources."""
@@ -30,4 +30,12 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--network",
+        default=TESTNET,
+        choices=typing_extensions.get_args(Network),
+        help="Specify the client's network.",
+    )
+    args = parser.parse_args()
+    asyncio.run(main(args.network))
