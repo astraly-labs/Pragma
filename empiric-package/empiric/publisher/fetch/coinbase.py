@@ -1,6 +1,7 @@
 import base64
 import datetime
 import hmac
+import logging
 import os
 from hashlib import sha256
 from typing import List
@@ -8,6 +9,8 @@ from typing import List
 import requests
 from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_coinbase(assets, publisher) -> List[Entry]:
@@ -23,14 +26,16 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            print(f"Skipping Coinbase for non-spot asset {asset}")
+            logger.debug(f"Skipping Coinbase for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
         key = currency_pair_to_key(*pair)
 
         if pair[1] != "USD":
-            print(f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}")
+            logger.debug(
+                f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
+            )
             continue
 
         request_timestamp = str(
@@ -67,7 +72,7 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
 
             timestamp = int(result["timestamp"])
 
-            print(f"Fetched price {price} for {key} from Coinbase")
+            logger.info(f"Fetched price {price} for {key} from Coinbase")
 
             entries.append(
                 Entry(
@@ -79,6 +84,6 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
                 )
             )
         else:
-            print(f"No entry found for {key} from Coinbase")
+            logger.debug(f"No entry found for {key} from Coinbase")
 
     return entries

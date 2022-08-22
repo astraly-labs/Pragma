@@ -1,8 +1,11 @@
+import logging
 import time
 from typing import List
 
 import requests
 from empiric.core.entry import Entry
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_thegraph(assets, publisher) -> List[Entry]:
@@ -14,7 +17,7 @@ def fetch_thegraph(assets, publisher) -> List[Entry]:
 
     for asset in assets:
         if asset["type"] != "ONCHAIN":
-            print(f"Skipping The Graph for non-on-chain asset {asset}")
+            logger.debug(f"Skipping The Graph for non-on-chain asset {asset}")
             continue
 
         if asset["source"] == "AAVE":
@@ -38,7 +41,7 @@ def fetch_thegraph(assets, publisher) -> List[Entry]:
         value_int = int(value * (10 ** (asset["decimals"] - input_decimals)))
         timestamp = int(time.time())
 
-        print(f"Fetched data {value_int} for {key} from The Graph")
+        logger.info(f"Fetched data {value_int} for {key} from The Graph")
 
         entries.append(
             Entry(

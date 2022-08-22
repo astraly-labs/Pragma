@@ -8,12 +8,7 @@ from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
 
-from contracts.admin.library import (
-    Admin_initialize_admin_address,
-    Admin_get_admin_address,
-    Admin_set_admin_address,
-    Admin_only_admin,
-)
+from contracts.admin.library import Admin
 
 from contracts.entry.structs import Entry
 from contracts.oracle_controller.IOracleController import IOracleController
@@ -95,7 +90,7 @@ end
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt, oracle_controller_address : felt
 ):
-    Admin_initialize_admin_address(admin_address)
+    Admin.initialize_admin_address(admin_address)
     oracle_controller_address_storage.write(oracle_controller_address)
     return ()
 end
@@ -141,7 +136,7 @@ end
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
 ):
-    let (admin_address) = Admin_get_admin_address()
+    let (admin_address) = Admin.get_admin_address()
     return (admin_address)
 end
 
@@ -288,8 +283,8 @@ end
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt
 ):
-    Admin_only_admin()
-    Admin_set_admin_address(new_address)
+    Admin.only_admin()
+    Admin.set_admin_address(new_address)
     return ()
 end
 
@@ -297,7 +292,7 @@ end
 func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(oracle_controller_address : felt) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     oracle_controller_address_storage.write(oracle_controller_address)
     return ()
 end
@@ -306,7 +301,7 @@ end
 func set_future_spot_empiric_source_key{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(future_spot_empiric_source_key : felt) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     future_spot_empiric_source_key_storage.write(future_spot_empiric_source_key)
     return ()
 end
@@ -315,7 +310,7 @@ end
 func add_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, is_active : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     let (spot_key_len) = spot_key_len_storage.read()
     spot_key_storage.write(spot_key_len, spot_key)
     spot_key_is_active_storage.write(spot_key, is_active)
@@ -327,7 +322,7 @@ end
 func set_spot_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, is_active : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     spot_key_is_active_storage.write(spot_key, is_active)
     return ()
 end
@@ -336,7 +331,7 @@ end
 func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, is_active : felt, expiry_timestamp : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
 
     let (future_key_len) = future_key_len_storage.read(spot_key)
     future_key_storage.write(spot_key, future_key_len, future_key)
@@ -350,7 +345,7 @@ end
 func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, new_future_key_status : FutureKeyStatus
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
 
     future_key_status_storage.write(spot_key, future_key, new_future_key_status)
     return ()
@@ -360,7 +355,7 @@ end
 func set_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, new_is_active : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
 
     let (old_expiry) = get_future_key_expiry(spot_key, future_key)
     let new_future_key_status = FutureKeyStatus(new_is_active, old_expiry)
@@ -373,7 +368,7 @@ end
 func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_key : felt, is_active : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     let (on_key_len) = on_key_len_storage.read()
     on_key_storage.write(on_key_len, on_key)
     on_key_is_active_storage.write(on_key, is_active)
@@ -385,7 +380,7 @@ end
 func set_on_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_key : felt, is_active : felt
 ) -> ():
-    Admin_only_admin()
+    Admin.only_admin()
     on_key_is_active_storage.write(on_key, is_active)
     return ()
 end

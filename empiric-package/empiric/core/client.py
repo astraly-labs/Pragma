@@ -21,7 +21,7 @@ class EmpiricClient:
         self.network = network
         try:
             self.config = get_config(network)()
-        except TypeError:
+        except ValueError:
             raise InvalidNetworkError(f"Invalid Network name: {network}")
 
         self.oracle_controller_address = (
@@ -39,12 +39,10 @@ class EmpiricClient:
     async def get_decimals(self, key) -> int:
         await self.fetch_oracle_controller_contract()
 
-        if type(key) == str:
+        if isinstance(key, str):
             key = str_to_felt(key)
-        elif type(key) != int:
-            raise AssertionError(
-                "Key must be string (will be converted to felt) or integer"
-            )
+        elif not isinstance(key, int):
+            raise TypeError("Key must be string (will be converted to felt) or integer")
 
         response = await self.oracle_controller_contract.functions["get_decimals"].call(
             key
@@ -57,12 +55,10 @@ class EmpiricClient:
     ) -> Tuple[int, int, int, int]:
         await self.fetch_oracle_controller_contract()
 
-        if type(key) == str:
+        if isinstance(key, str):
             key = str_to_felt(key)
-        elif type(key) != int:
-            raise AssertionError(
-                "Key must be string (will be converted to felt) or integer"
-            )
+        elif not isinstance(key, int):
+            raise TypeError("Key must be string (will be converted to felt) or integer")
         if sources is None:
             response = await self.oracle_controller_contract.functions[
                 "get_value"
@@ -82,12 +78,10 @@ class EmpiricClient:
     async def get_entries(self, key, sources=None) -> List[Entry]:
         await self.fetch_oracle_controller_contract()
 
-        if type(key) == str:
+        if isinstance(key, str):
             key = str_to_felt(key)
-        elif type(key) != int:
-            raise AssertionError(
-                "Key must be string (will be converted to felt) or integer"
-            )
+        elif not isinstance(key, int):
+            raise TypeError("Key must be string (will be converted to felt) or integer")
         if sources is None:
             sources = []
 

@@ -3,7 +3,10 @@ import os
 import time
 
 from empiric.admin.client import EmpiricAdminClient
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
+
+logger = get_stream_logger()
 
 on_keys = ["aave-on-borrow"]
 spot_future_keys = {
@@ -24,20 +27,23 @@ async def main():
         result = await admin_client.send_transaction(
             yield_curve_address, "add_on_key", [str_to_felt(on_key), 1]
         )
-        print(f"Registered overnight rate key {on_key} with tx: {result}")
+        logger.info(f"Registered overnight rate key {on_key} with tx: {result}")
+        # TODO (rlkelly): let's avoid this
         time.sleep(1)  # sleep for nonce
 
     result = await admin_client.send_transaction(
         yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("ftx")]
     )
-    print(f"Set future/spot empiric source-key with tx: {result}")
+    logger.info(f"Set future/spot empiric source-key with tx: {result}")
+    # TODO (rlkelly): let's avoid this
     time.sleep(1)  # sleep for nonce
 
     for spot_key, future_keys in spot_future_keys.items():
         result = await admin_client.send_transaction(
             yield_curve_address, "add_spot_key", [str_to_felt(spot_key), 1]
         )
-        print(f"Added spot key {spot_key} with tx: {result}")
+        logger.info(f"Added spot key {spot_key} with tx: {result}")
+        # TODO (rlkelly): let's avoid this
         time.sleep(1)  # sleep for nonce
         for future_key, future_expiry_timestamp in future_keys.items():
             result = await admin_client.send_transaction(
@@ -50,8 +56,9 @@ async def main():
                     future_expiry_timestamp,
                 ],
             )
+            # TODO (rlkelly): let's avoid this
             time.sleep(1)  # sleep for nonce
-            print(f"Added future key {future_key} with tx: {result}")
+            logger.info(f"Added future key {future_key} with tx: {result}")
 
 
 if __name__ == "__main__":

@@ -1,10 +1,12 @@
+import logging
 from typing import List, Optional
 
-from empiric.core import LOGGER
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
 from empiric.core.config import get_config
 from empiric.core.entry import Entry
 from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
+
+logger = logging.getLogger(__name__)
 
 
 class EmpiricPublisherClient(EmpiricBaseClient):
@@ -54,7 +56,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             "update_publisher_address",
             [publisher, new_address],
         )
-        LOGGER.info(f"Updated publisher address with transaction {result}")
+        logger.info(f"Updated publisher address with transaction {result}")
 
         return result
 
@@ -64,13 +66,13 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             "publish_entry",
             entry.serialize(),
         )
-        LOGGER.info(f"Updated entry with transaction {result}")
+        logger.info(f"Updated entry with transaction {result}")
 
         return result
 
     async def publish_many(self, entries: List[Entry]) -> HEX_STR:
         if len(entries) == 0:
-            LOGGER.warn("Skipping publishing as entries array is empty")
+            logger.warn("Skipping publishing as entries array is empty")
             return
 
         result = await self.send_transaction(
@@ -79,7 +81,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             Entry.serialize_entries(entries),
         )
 
-        LOGGER.info(
+        logger.info(
             f"Successfully sent {len(entries)} updated entries with transaction {result}"
         )
 
