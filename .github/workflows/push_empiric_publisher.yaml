@@ -20,7 +20,7 @@ jobs:
         env:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          python3 -m pip install --upgrade dev-requirements.txt
+          python3 -m pip install --upgrade -r dev-requirements.txt
           cd empiric-package
           python3 -m build
           twine upload dist/* -u __token__ -p $PYPI_API_TOKEN
