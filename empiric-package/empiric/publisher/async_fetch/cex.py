@@ -44,7 +44,7 @@ class CexFetcher(PublisherInterfaceT):
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
-                logger.info(f"Skipping CEX for non-spot asset {asset}")
+                logger.debug(f"Skipping CEX for non-spot asset {asset}")
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
