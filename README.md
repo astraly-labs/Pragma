@@ -100,11 +100,9 @@ Then, depending on which contracts were redeployed, you have to take further ste
 - Finally, if the Oracle Controller is updated, you'll have to update the address in empiric-package (`empiric.core.config`), in this README (above), in the sample consumer (`contracts/sample_consumer/SampleConsumer.cairo`) and in empiric-ui (`src/services/address.service.ts`). Then you'll have to follow the release processes for those components. Finally, make sure to coordinate with protocols to update their references.
 
 ## Empiric Package
-First, make sure to set the environmental variable `PYPI_API_TOKEN`.
+To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
 
-To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`. Make sure to run `git push --tags` once you've done that.
-
-When you merge to master, the Empiric Publisher GHA will automatically release a new Docker base image with the appropriate tag (the new version of the `empiric-network` package). See the "Empiric Publisher Docker Base Image" section for more details.
+This new version will be released automatically along with the Docker base image when a branch is merged to master.
 
 ## Empiric UI
 Netlify will automatically deploy previews on push if a pull request is open and will redeploy the main website on merge to master.
