@@ -74,7 +74,9 @@ class CoinbaseFetcher(PublisherInterfaceT):
             result = await resp.json()
             return self._construct(asset, result)
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(
+        self, session: ClientSession
+    ) -> List[Union[Entry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -84,7 +86,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def _construct(self, asset, result) -> Entry:
+    def _construct(self, asset, result) -> Union[Entry, PublisherFetchError]:
         pair = asset["pair"]
         key = currency_pair_to_key(*pair)
 

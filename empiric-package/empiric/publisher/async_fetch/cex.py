@@ -38,7 +38,9 @@ class CexFetcher(PublisherInterfaceT):
 
             return self._construct(asset, result)
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(
+        self, session: ClientSession
+    ) -> List[Union[Entry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
