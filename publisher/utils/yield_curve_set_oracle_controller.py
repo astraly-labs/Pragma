@@ -2,6 +2,9 @@ import asyncio
 import os
 
 from empiric.admin.client import EmpiricAdminClient
+from empiric.core.logger import get_stream_logger
+
+logger = get_stream_logger()
 
 yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E659962EC
 new_oracle_controller_address = (
@@ -19,7 +22,7 @@ async def main():
         "set_oracle_controller_address",
         [new_oracle_controller_address],
     )
-    print(
+    logger.info(
         f"Updated oracle controller address to {new_oracle_controller_address} with tx: {result}"
     )
 
