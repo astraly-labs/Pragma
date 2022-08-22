@@ -1,37 +1,49 @@
+import logging
+from typing import Optional
+
 from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
-from empiric.core.const import (
-    ADMIN_ADDRESS,
-    ORACLE_CONTROLLER_ADDRESS,
-    PUBLISHER_REGISTRY_ADDRESS,
-)
+from empiric.core.config import CONFIG, IConfig
+from empiric.core.errors import InvalidNetworkError
+from empiric.core.types import ADDRESS, TESTNET, Network
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 
+logger = logging.getLogger(__name__)
+
 
 class EmpiricAdminClient(EmpiricBaseClient):
+    config: IConfig
+
     def __init__(
         self,
         admin_private_key,
-        admin_address=None,
-        network=None,
-        oracle_controller_address=None,
-        publisher_registry_address=None,
+        network: Network = TESTNET,
+        admin_address: Optional[ADDRESS] = None,
+        oracle_controller_address: Optional[ADDRESS] = None,
+        publisher_registry_address: Optional[ADDRESS] = None,
     ):
-        if admin_address is None:
-            admin_address = ADMIN_ADDRESS
-        if publisher_registry_address is None:
-            publisher_registry_address = PUBLISHER_REGISTRY_ADDRESS
-
-        self.publisher_registry_address = publisher_registry_address
-        self.publisher_registry_contract = None
+        config = CONFIG.get(network)
+        if config is None:
+            raise InvalidNetworkError(f"Invalid Network name: {network}")
 
         super().__init__(
             admin_private_key,
-            admin_address,
+            admin_address or config.ADMIN_ADDRESS,
             network,
             oracle_controller_address,
         )
+
+        # TODO(rlkelly): I don't love this, need to think of a better way to manage config attributes
+        self.config.ORACLE_CONTROLLER_ADDRESS = (
+            oracle_controller_address or self.config.ORACLE_CONTROLLER_ADDRESS
+        )
+        self.config.PUBLISHER_REGISTRY_ADDRESS = (
+            publisher_registry_address or self.config.PUBLISHER_REGISTRY_ADDRESS
+        )
+
+        self.publisher_registry_contract = None
+
         # Override default account_client with one that uses timestamp for nonce
         self.account_client = EmpiricAccountClient(
             self.account_contract_address, self.client, self.signer
@@ -42,7 +54,8 @@ class EmpiricAdminClient(EmpiricBaseClient):
 
         if self.publisher_registry_contract is None:
             self.publisher_registry_contract = await Contract.from_address(
-                self.publisher_registry_address, GatewayClient(self.network)
+                self.config.PUBLISHER_REGISTRY_ADDRESS,
+                GatewayClient(self.config.NETWORK, self.config.CHAIN_ID),
             )
 
     async def get_primary_oracle_implementation_address(self):
@@ -86,16 +99,16 @@ class EmpiricAdminClient(EmpiricBaseClient):
 
         if existing_publisher_address == 0:
             result = await self.send_transaction(
-                PUBLISHER_REGISTRY_ADDRESS,
+                self.config.PUBLISHER_REGISTRY_ADDRESS,
                 "register_publisher",
                 [publisher, publisher_address],
             )
-            print(f"Registered publisher with transaction {result}")
+            logger.info(f"Registered publisher with transaction {result}")
 
             return result
 
         else:
-            print(
+            logger.debug(
                 f"Skipping registering {publisher}; already registered with address {existing_publisher_address}"
             )
 
@@ -103,12 +116,12 @@ class EmpiricAdminClient(EmpiricBaseClient):
 
     async def add_oracle_implementation(self, oracle_implementation_address):
         result = await self.send_transaction(
-            ORACLE_CONTROLLER_ADDRESS,
+            self.config.ORACLE_CONTROLLER_ADDRESS,
             "add_oracle_implementation_address",
             [oracle_implementation_address],
         )
 
-        print(f"Added oracle implementation contract with transaction {result}")
+        logger.info(f"Added oracle implementation contract with transaction {result}")
 
         return result
 
@@ -116,12 +129,12 @@ class EmpiricAdminClient(EmpiricBaseClient):
         self, primary_oracle_implementation_address
     ):
         result = await self.send_transaction(
-            ORACLE_CONTROLLER_ADDRESS,
+            self.config.ORACLE_CONTROLLER_ADDRESS,
             "set_primary_oracle_implementation_address",
             [primary_oracle_implementation_address],
         )
 
-        print(f"Set oracle implementation to primary with transaction {result}")
+        logger.info(f"Set oracle implementation to primary with transaction {result}")
 
         return result
 
@@ -129,22 +142,27 @@ class EmpiricAdminClient(EmpiricBaseClient):
         self, oracle_implementation_address, is_active
     ):
         result = await self.send_transaction(
-            ORACLE_CONTROLLER_ADDRESS,
+            self.config.ORACLE_CONTROLLER_ADDRESS,
             "update_oracle_implementation_active_status",
             [oracle_implementation_address, is_active],
         )
 
-        print(f"Set active status on oracle implementation with transaction {result}")
+        logger.info(
+            f"Set active status on oracle implementation with transaction {result}"
+        )
 
         return result
 
     async def update_publisher_registry_address(self, new_publisher_registry_address):
         result = await self.send_transaction(
-            ORACLE_CONTROLLER_ADDRESS,
+            self.config.ORACLE_CONTROLLER_ADDRESS,
             "update_publisher_registry_address",
             [new_publisher_registry_address],
         )
+        self.config.update(
+            PUBLISHER_REGISTRY_ADDRESS=new_publisher_registry_address,
+        )
 
-        print(f"Updated publisher registry address with transaction {result}")
+        logger.info(f"Updated publisher registry address with transaction {result}")
 
         return result

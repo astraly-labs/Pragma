@@ -1,7 +1,8 @@
 import os
 import time
+from typing import List
 
-from empiric.core.entry import serialize_entries, serialize_entry
+from empiric.core.entry import Entry
 from nile.signer import Signer
 from starkware.starknet.business_logic.execution.objects import Event
 from starkware.starknet.compiler.compile import compile_starknet_files
@@ -70,7 +71,7 @@ class TestSigner:
 
 
 # From OZ: https://github.com/OpenZeppelin/cairo-contracts/blob/main/tests/utils.py
-def assert_event_emitted(tx_exec_info, from_address, name, data):
+def assert_event_emitted(tx_exec_info, from_address: int, name: str, data: List[int]):
     assert (
         Event(
             from_address=from_address,
@@ -89,7 +90,7 @@ async def register_new_publisher_and_publish_entries_1(
     admin_signer,
     publisher_signer,
     publisher,
-    entries,
+    entries: List[Entry],
 ):
     await admin_signer.send_transaction(
         admin_account,
@@ -102,7 +103,7 @@ async def register_new_publisher_and_publish_entries_1(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entries",
-        serialize_entries(entries),
+        Entry.serialize_entries(entries),
     )
 
     return
@@ -116,7 +117,7 @@ async def register_new_publisher_and_publish_entry(
     admin_signer,
     publisher_signer,
     publisher,
-    entry,
+    entry: Entry,
 ):
     await admin_signer.send_transaction(
         admin_account,
@@ -129,7 +130,7 @@ async def register_new_publisher_and_publish_entry(
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(entry),
+        entry.serialize(),
     )
 
     return

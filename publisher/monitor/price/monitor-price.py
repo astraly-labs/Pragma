@@ -6,10 +6,13 @@ import traceback
 
 import requests
 from empiric.core.client import EmpiricClient
-from empiric.core.const import DEFAULT_AGGREGATION_MODE
+from empiric.core.config import TestnetConfig
+from empiric.core.logger import get_stream_logger
 from empiric.core.utils import key_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.fetch import fetch_coingecko
+
+logger = get_stream_logger()
 
 # Behavior: Ping betteruptime iff all is good
 
@@ -34,14 +37,14 @@ async def main():
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
     }
-    aggregation_mode = DEFAULT_AGGREGATION_MODE
+    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 
     all_prices_valid = True
     for asset in assets:
         key = key_for_asset(asset)
         felt_key = str_to_felt(key)
         if felt_key not in coingecko or asset["type"] != "SPOT":
-            print(
+            logger.info(
                 f"Skipping checking price for asset {asset} because no reference data"
             )
             continue
@@ -67,7 +70,7 @@ async def main():
                 <= last_updated_timestamp
                 <= current_timestamp + TIME_TOLERANCE
             ), f"Timestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-            print(
+            logger.info(
                 f"Price {value} checks out for asset {key} (reference: {coingecko[felt_key]})"
             )
 
@@ -75,9 +78,9 @@ async def main():
                 num_sources_aggregated >= 3
             ), f"Aggregated less than 3 sources for asset {key}: {num_sources_aggregated}"
         except (AssertionError, ZeroDivisionError) as e:
-            print(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
-            print(e)
-            print(traceback.format_exc())
+            logger.warn(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
+            logger.warn(e)
+            logger.warn(traceback.format_exc())
 
             if key not in EXPERIMENTAL_ASSET_KEYS:
                 slack_text = "Error with Empiric price<!channel>"
@@ -106,7 +109,7 @@ async def main():
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
         requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%s"))
+    logger.info(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%s"))
 
 
 if __name__ == "__main__":

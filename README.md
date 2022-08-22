@@ -96,15 +96,13 @@ First, compile and then redeploy the contract(s) that have changed. See the sect
 
 Then, depending on which contracts were redeployed, you have to take further steps:
 - If it was merely the oracle implementation contract that was updated, add it to the Oracle Controller's oracle implementations so that it can run in shadow mode. Finally, you need to set that oracle implementation as the primary one by using the `set_primary_oracle` method of the `EmpiricAdminClient` class in `empiric.admin.client`.
-- If oracle registry is updated, you will first have to pull existing publishers and keys and write them to the new publisher registry. It is probably easiest to do this off-chain, by using the getter functions on the old publisher registry and then using the admin key to effectively re-register all the publishers in the new register. You must also update the `PUBLISHER_REGISTRY_ADDRESS` variable in `empiric.core.const` and then follow the steps to release a new version of the Empiric package. Finally, you'll have to update the Oracle Controller's Publisher Registry address which you can do using the `update_publisher_registry_address` method of the `EmpiricAdminClient` class in `empiric.admin.client`.
-- Finally, if the Oracle Controller is updated, you'll have to update the address in empiric-package (`empiric.core.const`), in this README (above), in the sample consumer (`contracts/sample_consumer/SampleConsumer.cairo`) and in empiric-ui (`src/services/address.service.ts`). Then you'll have to follow the release processes for those components. Finally, make sure to coordinate with protocols to update their references.
+- If oracle registry is updated, you will first have to pull existing publishers and keys and write them to the new publisher registry. It is probably easiest to do this off-chain, by using the getter functions on the old publisher registry and then using the admin key to effectively re-register all the publishers in the new register. You must also update the `PUBLISHER_REGISTRY_ADDRESS` variable in `empiric.core.config` and then follow the steps to release a new version of the Empiric package. Finally, you'll have to update the Oracle Controller's Publisher Registry address which you can do using the `update_publisher_registry_address` method of the `EmpiricAdminClient` class in `empiric.admin.client`.
+- Finally, if the Oracle Controller is updated, you'll have to update the address in empiric-package (`empiric.core.config`), in this README (above), in the sample consumer (`contracts/sample_consumer/SampleConsumer.cairo`) and in empiric-ui (`src/services/address.service.ts`). Then you'll have to follow the release processes for those components. Finally, make sure to coordinate with protocols to update their references.
 
 ## Empiric Package
-First, make sure to set the environmental variable `PYPI_API_TOKEN`.
+To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
 
-To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Then run `python3 -m build` to generate the distribution archives. Finally upload the new distribution with `twine upload dist/* -u __token__ -p $PYPI_API_TOKEN`. Make sure to run `git push --tags` once you've done that.
-
-When you merge to master, the Empiric Publisher GHA will automatically release a new Docker base image with the appropriate tag (the new version of the `empiric-network` package). See the "Empiric Publisher Docker Base Image" section for more details.
+This new version will be released automatically along with the Docker base image when a branch is merged to master.
 
 ## Empiric UI
 Netlify will automatically deploy previews on push if a pull request is open and will redeploy the main website on merge to master.

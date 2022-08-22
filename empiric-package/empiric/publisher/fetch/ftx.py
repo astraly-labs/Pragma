@@ -1,21 +1,25 @@
 import datetime
 import hmac
+import logging
 import os
 import re
 import time
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
+logger = logging.getLogger(__name__)
 
-def parse_ftx_spot(asset, data, source, publisher, timestamp):
+
+def parse_ftx_spot(asset, data, source, publisher, timestamp) -> Entry:
     pair = asset["pair"]
     key = currency_pair_to_key(*pair)
 
     result = [e for e in data if e["name"] == "/".join(pair)]
     if len(result) == 0:
-        print(f"No entry found for {'/'.join(pair)} from FTX")
+        logger.debug(f"No entry found for {'/'.join(pair)} from FTX")
         return
 
     assert (
@@ -24,9 +28,9 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
     price = float(result[0]["price"])
     price_int = int(price * (10 ** asset["decimals"]))
 
-    print(f"Fetched price {price} for {'/'.join(pair)} from FTX")
+    logger.info(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
-    return construct_entry(
+    return Entry(
         key=key,
         value=price_int,
         timestamp=timestamp,
@@ -35,15 +39,15 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
     )
 
 
-def parse_ftx_futures(asset, data, source, publisher, timestamp):
+def parse_ftx_futures(asset, data, source, publisher, timestamp) -> List[Entry]:
     pair = asset["pair"]
     if pair[1] != "USD":
-        print(f"Unable to fetch price from FTX for non-USD derivative {pair}")
+        logger.debug(f"Unable to fetch price from FTX for non-USD derivative {pair}")
         return
 
     result = [e for e in data if re.match(rf"{pair[0]}-[0-9]+", e["name"])]
     if len(result) == 0:
-        print(f"No entry found for {'/'.join(pair)} from FTX")
+        logger.debug(f"No entry found for {'/'.join(pair)} from FTX")
         return
 
     entries = []
@@ -60,10 +64,10 @@ def parse_ftx_futures(asset, data, source, publisher, timestamp):
         )
         key = f"{pair[0]}/{pair[1]}-{future_expiration_date}".lower()
 
-        print(f"Fetched futures price {price} for {key} from FTX")
+        logger.info(f"Fetched futures price {price} for {key} from FTX")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
@@ -93,7 +97,7 @@ def generate_ftx_headers(endpoint):
     return headers
 
 
-def fetch_ftx(assets, publisher):
+def fetch_ftx(assets, publisher) -> List[Entry]:
     source = "ftx"
     base_url = "https://ftx.com/api"
 
@@ -125,6 +129,6 @@ def fetch_ftx(assets, publisher):
                 entries.extend(future_entries)
             continue
         else:
-            print(f"Unable to fetch FTX for un-supported asset type {asset}")
+            logger.debug(f"Unable to fetch FTX for un-supported asset type {asset}")
 
     return entries
