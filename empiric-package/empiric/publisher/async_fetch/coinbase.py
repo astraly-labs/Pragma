@@ -71,7 +71,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
         async with session.get(
             self.BASE_URL + self.REQUEST_PATH, headers=headers
         ) as resp:
-            result = resp.json()
+            result = await resp.json()
             return self._construct(asset, result)
 
     async def fetch(self, session: ClientSession) -> List[Entry]:
