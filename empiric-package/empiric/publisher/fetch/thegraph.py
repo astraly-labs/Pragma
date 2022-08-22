@@ -1,13 +1,14 @@
 import logging
 import time
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_thegraph(assets, publisher):
+def fetch_thegraph(assets, publisher) -> List[Entry]:
     source = "thegraph"
 
     base_url = "https://api.thegraph.com/subgraphs/name/"
@@ -43,7 +44,7 @@ def fetch_thegraph(assets, publisher):
         logger.info(f"Fetched data {value_int} for {key} from The Graph")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=value_int,
                 timestamp=timestamp,

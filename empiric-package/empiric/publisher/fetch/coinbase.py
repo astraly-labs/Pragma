@@ -4,15 +4,16 @@ import hmac
 import logging
 import os
 from hashlib import sha256
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_coinbase(assets, publisher):
+def fetch_coinbase(assets, publisher) -> List[Entry]:
     source = "coinbase"
     COINBASE_API_SECRET = os.environ.get("COINBASE_API_SECRET")
     COINBASE_API_KEY = os.environ.get("COINBASE_API_KEY")
@@ -74,7 +75,7 @@ def fetch_coinbase(assets, publisher):
             logger.info(f"Fetched price {price} for {key} from Coinbase")
 
             entries.append(
-                construct_entry(
+                Entry(
                     key=key,
                     value=price_int,
                     timestamp=timestamp,

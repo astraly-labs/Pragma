@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from empiric.core.entry import construct_entry, serialize_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
@@ -309,7 +309,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     output_decimals = 10
 
     # Submit data (on, spot, futures)
-    on_entry = construct_entry(
+    on_entry = Entry(
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -320,11 +320,11 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(on_entry),
+        on_entry.serialize(),
     )
 
     for spot_key in FUTURES_SPOT.keys():
-        spot_entry = construct_entry(
+        spot_entry = Entry(
             key=spot_key,
             value=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
@@ -335,7 +335,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             publisher_account,
             oracle_controller.contract_address,
             "publish_entry",
-            serialize_entry(spot_entry),
+            spot_entry.serialize(),
         )
 
         yield_points = [
@@ -346,7 +346,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         futures = FUTURES_SPOT[spot_key]["futures"]
         for future_key, future_data in futures.items():
-            future_entry = construct_entry(
+            future_entry = Entry(
                 key=future_key,
                 value=future_data["value"],
                 timestamp=future_data["timestamp"],
@@ -357,7 +357,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 publisher_account,
                 oracle_controller.contract_address,
                 "publish_entry",
-                serialize_entry(future_entry),
+                future_entry.serialize(),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_entry.value,

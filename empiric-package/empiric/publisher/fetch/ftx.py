@@ -4,15 +4,16 @@ import logging
 import os
 import re
 import time
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
 logger = logging.getLogger(__name__)
 
 
-def parse_ftx_spot(asset, data, source, publisher, timestamp):
+def parse_ftx_spot(asset, data, source, publisher, timestamp) -> Entry:
     pair = asset["pair"]
     key = currency_pair_to_key(*pair)
 
@@ -29,7 +30,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
 
     logger.info(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
-    return construct_entry(
+    return Entry(
         key=key,
         value=price_int,
         timestamp=timestamp,
@@ -38,7 +39,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp):
     )
 
 
-def parse_ftx_futures(asset, data, source, publisher, timestamp):
+def parse_ftx_futures(asset, data, source, publisher, timestamp) -> List[Entry]:
     pair = asset["pair"]
     if pair[1] != "USD":
         logger.debug(f"Unable to fetch price from FTX for non-USD derivative {pair}")
@@ -66,7 +67,7 @@ def parse_ftx_futures(asset, data, source, publisher, timestamp):
         logger.info(f"Fetched futures price {price} for {key} from FTX")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,
@@ -96,7 +97,7 @@ def generate_ftx_headers(endpoint):
     return headers
 
 
-def fetch_ftx(assets, publisher):
+def fetch_ftx(assets, publisher) -> List[Entry]:
     source = "ftx"
     base_url = "https://ftx.com/api"
 

@@ -37,7 +37,7 @@ async def main():
     coingecko = {
         entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
     }
-    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE.value
+    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 
     all_prices_valid = True
     for asset in assets:

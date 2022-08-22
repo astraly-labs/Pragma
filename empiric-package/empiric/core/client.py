@@ -89,4 +89,9 @@ class EmpiricClient:
             key, sources
         )
 
-        return response.entries
+        return [
+            Entry(
+                entry.key, entry.value, entry.timestamp, entry.source, entry.publisher
+            )
+            for entry in response.entries
+        ]

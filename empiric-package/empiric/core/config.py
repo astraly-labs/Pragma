@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # TODO (rlkelly): We need a consistent way to implement interfaces.  This seems to be the preferred method
 class IConfig(Protocol):
     ADMIN_ADDRESS: int
-    DEFAULT_AGGREGATION_MODE: AggregationMode
+    DEFAULT_AGGREGATION_MODE: int
     NETWORK: Network
     CHAIN_ID: int
     PUBLISHER_REGISTRY_ADDRESS: int
@@ -28,7 +28,7 @@ class IConfig(Protocol):
 
 class BaseConfig(IConfig):
     ADMIN_ADDRESS = 0x0704CC0F2749637A0345D108AC9CD597BB33CCF7F477978D52E236830812CD98
-    DEFAULT_AGGREGATION_MODE = AggregationMode.MEDIAN
+    DEFAULT_AGGREGATION_MODE = AggregationMode.MEDIAN.value
     # this indicates that the integration network uses goerli
     CHAIN_ID = StarknetChainId.TESTNET
 
