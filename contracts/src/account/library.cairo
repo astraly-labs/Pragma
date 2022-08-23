@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 # OpenZeppelin Contracts for Cairo v0.3.1 (account/library.cairo)
+# Modified to handle monotonically increasing nonces
 
 %lang starknet
 
@@ -10,7 +11,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin,
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.uint256 import Uint256
 from starkware.cairo.common.memcpy import memcpy
-from starkware.cairo.common.math import split_felt
+from starkware.cairo.common.math import assert_lt, split_felt
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import call_contract, get_caller_address, get_tx_info
 from starkware.cairo.common.cairo_secp.signature import verify_eth_signature_uint256
@@ -245,7 +246,8 @@ namespace Account:
         let (_current_nonce) = Account_current_nonce.read()
 
         with_attr error_message("Account: nonce is invalid"):
-            assert _current_nonce = nonce
+            # nonce must monotonically increase
+            assert_lt(_current_nonce, nonce)
         end
 
         # bump nonce
