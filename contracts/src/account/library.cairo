@@ -14,9 +14,9 @@ from starkware.cairo.common.math import split_felt
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import call_contract, get_caller_address, get_tx_info
 from starkware.cairo.common.cairo_secp.signature import verify_eth_signature_uint256
-from openzeppelin.introspection.erc165.library import ERC165
 
-from openzeppelin.utils.constants.library import IACCOUNT_ID
+from contracts.introspection.erc165.library import ERC165
+from contracts.utils.constants.library import IACCOUNT_ID
 
 #
 # Storage
