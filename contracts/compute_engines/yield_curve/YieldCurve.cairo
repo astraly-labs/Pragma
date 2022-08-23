@@ -133,7 +133,7 @@ func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
 end
 
 # @notice get address for admin
-# @return admin_address returns admin's address
+# @return admin_address: address of current admin
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -143,7 +143,7 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
 end
 
 # @notice get oracle controller for admin
-# @return oracle_controller_address address for oracle controller
+# @return oracle_controller_address: address for oracle controller
 @view
 func get_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -283,7 +283,7 @@ end
 
 # @notice update admin address
 # @dev only the admin can set the new address
-# @param new_address
+# @param new_address: new admin address
 @external
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt
@@ -295,7 +295,7 @@ end
 
 # @notice update oracle controller address
 # @dev only the admin can update this
-# @param oracle_controller_address new oracle controller address
+# @param oracle_controller_address: new oracle controller address
 @external
 func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr

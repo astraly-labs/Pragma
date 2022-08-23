@@ -16,7 +16,7 @@ from contracts.admin.library import Admin
 
 # @notice initialize the publisher registry
 # @dev only the admin can add publisher's or change admin
-# @param admin_address the administrator's address
+# @param admin_address: the administrator's address
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt
@@ -30,7 +30,7 @@ end
 #
 
 # @notice get address for admin
-# @return admin_address returns admin's address
+# @return admin_address: returns admin's address
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -40,8 +40,8 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
 end
 
 # @notice get address for publisher
-# @param publisher identifier for publisher
-# @return publisher_address publisher's address
+# @param publisher: identifier for publisher
+# @return publisher_address: publisher's address
 @view
 func get_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt
@@ -51,8 +51,8 @@ func get_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
 end
 
 # @notice get array of all publishers
-# @return publishers_len length of publisher's array
-# @return publishers pointer to first publisher in array
+# @return publishers_len: length of publisher's array
+# @return publishers: pointer to first publisher in array
 @view
 func get_all_publishers{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     publishers_len : felt, publishers : felt*
@@ -67,7 +67,7 @@ end
 
 # @notice set the admin address for the contract
 # @dev only admin can set this
-# @param new_address new address to set admin to
+# @param new_address: new address to set admin to
 @external
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt
@@ -78,8 +78,8 @@ func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
 end
 
 # @notice register a new publisher
-# @param publisher name of publisher
-# @param publisher_address address of publisher
+# @param publisher: name of publisher
+# @param publisher_address: address of publisher
 @external
 func register_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt, publisher_address : felt
@@ -90,8 +90,8 @@ func register_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_
 end
 
 # @notice update the address for a publisher
-# @param publisher the name of the publisher
-# @param new_publisher_address new addres to set publisher to
+# @param publisher: the name of the publisher
+# @param new_publisher_address: new address to set publisher to
 @external
 func update_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     publisher : felt, new_address : felt
