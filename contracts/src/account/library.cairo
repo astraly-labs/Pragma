@@ -251,7 +251,7 @@ namespace Account:
         end
 
         # bump nonce
-        Account_current_nonce.write(_current_nonce + 1)
+        Account_current_nonce.write(nonce)
 
         # TMP: Convert `AccountCallArray` to 'Call'.
         let (calls : Call*) = alloc()
