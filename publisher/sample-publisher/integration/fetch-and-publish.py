@@ -7,10 +7,7 @@ from empiric.core.types import INTEGRATION
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import get_spot_asset_spec_for_key
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetch import (
-    fetch_bitstamp,
-    fetch_gemini,
-)
+from empiric.publisher.fetch import fetch_bitstamp, fetch_gemini
 
 logger = get_stream_logger()
 
