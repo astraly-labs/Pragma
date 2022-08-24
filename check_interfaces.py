@@ -1,7 +1,8 @@
-import re
 import os
+import re
 
 from starkware.starknet.compiler.compile import compile_starknet_files
+
 
 # Helper func
 def extract_arg_name_and_type(string):
@@ -14,9 +15,6 @@ def extract_arg_name_and_type(string):
         type = "felt"  # Default type in Cairo
 
     return name, type
-
-
-# Search for all files that are XYZ.cairo aand IXYZ.cairo
 
 
 def check_interface(file_path, contract_filename):
@@ -38,11 +36,11 @@ def check_interface(file_path, contract_filename):
 
             # Check interface is implemented (same functions, same function signatures)
             if line.strip().startswith("func"):
-                match = re.search("func .+?\(", line).group()
+                match = re.search(r"func .+?\(", line).group()
                 function_name = match[5:-1]
                 try:
                     abi = functions[function_name]
-                except KeyError as e:
+                except KeyError:
                     print(
                         f"Function {function_name} not found in the ABI, but is defined in the interface"
                     )
@@ -57,7 +55,7 @@ def check_interface(file_path, contract_filename):
                     j += 1
 
                 # Check that signature matches (inputs)
-                inputs = re.search("\(.*?\)", function_signature).group()[1:-1]
+                inputs = re.search(r"\(.*?\)", function_signature).group()[1:-1]
                 if not inputs:  # inputs is empty
                     assert (
                         abi["inputs"] == []
@@ -80,8 +78,8 @@ def check_interface(file_path, contract_filename):
                         ), f"Function {function_name} types {type} and {abi_input['type']} do not match"
 
                 # Check that signature matches (outputs)
-                if re.search("-> \(.*?\)", line) is not None:  # There are outputs
-                    outputs = re.search("-> \(.*?\)", line).group()[4:-1]
+                if re.search(r"-> \(.*?\)", line) is not None:  # There are outputs
+                    outputs = re.search(r"-> \(.*?\)", line).group()[4:-1]
 
                     assert len(outputs.split(",")) == len(
                         abi["outputs"]
@@ -100,6 +98,7 @@ def check_interface(file_path, contract_filename):
 
 
 if __name__ == "__main__":
+    # Search for all files that are XYZ.cairo aand IXYZ.cairo
     contracts_path = "contracts/"
     file_paths = []
     contract_filenames = []
@@ -116,6 +115,3 @@ if __name__ == "__main__":
     for file_path, contract_filename in zip(file_paths, contract_filenames):
         print(f"Checking file {os.path.join(file_path, contract_filename)}")
         check_interface(file_path, contract_filename)
-
-    file_paths = ["contracts/account"]
-    contract_filenames = ["Account.cairo"]
