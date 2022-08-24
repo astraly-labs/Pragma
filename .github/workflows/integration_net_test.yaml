@@ -39,4 +39,4 @@ jobs:
         run: sleep 300
 
       - name: Run sample client
-        run: python sample_client.py --network https://external.integration.starknet.io
+        run: python sample_client.py --network https://external.integration.starknet.io --throw_if_no_data
