@@ -6,6 +6,7 @@ from starkware.cairo.common.alloc import alloc
 from entry.structs import Entry
 from oracle_controller.library import OracleController
 from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
+
 from admin.library import Admin
 
 #
