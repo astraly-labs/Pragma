@@ -45,6 +45,7 @@ async def publish_all(assets):
             raise e
 
     logger.info("Publishing the following entries:")
+    logger.info(entries)
     for entry in entries:
         log_entry(entry)
 
