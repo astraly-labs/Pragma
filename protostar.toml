@@ -1,6 +1,5 @@
 ["protostar.config"]
 protostar_version = "0.3.2"
-<<<<<<< HEAD
 
 ["protostar.project"]
 libs_path = "contracts/lib"
@@ -36,32 +35,3 @@ cairo-path = ["contracts/src"]
 
 ["protostar.build"]
 output = "contracts/build"
-=======
-cairo-path = ["contracts/src"]
-
-["protostar.project"]
-libs_path = "contracts/src"
-
-["protostar.contracts"]
-Account = [
-    "contracts/account/Account.cairo"
-]
-CheckEthThreshold = [
-    "contracts/sample_consumer/CheckEthThreshold.cairo"
-]
-OracleController = [
-    "contracts/oracle_controller/OracleController.cairo"
-]
-OracleImplementation = [
-    "contracts/oracle_implementation/OracleImplementation.cairo"
-]
-PublisherRegistry = [
-    "contracts/publisher_registry/PublisherRegistry.cairo"
-]
-YieldCurve = [
-    "contracts/compute_engines/yield_curve/YieldCurve.cairo"
-]
-
-["protostar.build"]
-output = "contracts/abi_test"
->>>>>>> c35ff04 (add protostar framework)
