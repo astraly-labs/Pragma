@@ -18,14 +18,16 @@ def extract_arg_name_and_type(string):
 
 
 def check_interface(file_path, contract_filename):
+    # Assumes convention that if contract is called "Contract.cairo"
+    # then interface is "IContract.cairo"
     interface_filename = "I" + contract_filename
 
-    # 1. Compile the XYZ.cairo and get the ABI
+    # 1. Compile Contract.cairo to get the ABI
     compiled = compile_starknet_files([os.path.join(file_path, contract_filename)])
     functions = {d["name"]: d for d in compiled.abi if d["type"] == "function"}
 
     # 2. Check that the interface matches the ABI
-    with open(file_path + "/" + interface_filename, "r") as f:
+    with open(os.path.join(file_path, interface_filename), "r") as f:
         contents = f.readlines()
         for i, line in enumerate(contents):
             # Check that namespace name is identical to interface filename
@@ -54,7 +56,7 @@ def check_interface(file_path, contract_filename):
                     function_signature += contents[i + j].strip()
                     j += 1
 
-                # Check that signature matches (inputs)
+                # Check that function signature matches (inputs)
                 inputs = re.search(r"\(.*?\)", function_signature).group()[1:-1]
                 if not inputs:  # inputs is empty
                     assert (
@@ -77,12 +79,17 @@ def check_interface(file_path, contract_filename):
                             type == abi_input["type"]
                         ), f"Function {function_name} types {type} and {abi_input['type']} do not match"
 
-                # Check that signature matches (outputs)
+                # Check that function signature matches (outputs)
                 if re.search(r"-> \(.*?\)", line) is not None:  # There are outputs
                     outputs = re.search(r"-> \(.*?\)", line).group()[4:-1]
 
-                    assert len(outputs.split(",")) == len(
+                    no_outputs = len(abi["outputs"]) == 0 and outputs == ""
+                    matching_num_outputs = len(outputs.split(",")) == len(
                         abi["outputs"]
+                    )
+
+                    assert (
+                        no_outputs or matching_num_outputs
                     ), f"Function {function_name} has different lengths of outputs in the interface and implementation: {outputs} and {abi['outputs']}"
                     for interface_output, abi_output in zip(
                         outputs.split(","), abi["outputs"]
@@ -98,18 +105,20 @@ def check_interface(file_path, contract_filename):
 
 
 if __name__ == "__main__":
-    # Search for all files that are XYZ.cairo aand IXYZ.cairo
-    contracts_path = "contracts/"
+    # Search for all files that are Contract.cairo
+    # recursively within the "contracts" folder
+    contracts_path = "contracts"
     file_paths = []
     contract_filenames = []
-    for folder in os.listdir(contracts_path):
-        for file in os.listdir(os.path.join(contracts_path, folder)):
+    folders_to_check = os.listdir(contracts_path)
+    for folder, _, files in os.walk(contracts_path):
+        for file in files:
             if (
                 file.endswith(".cairo")
                 and not (file.startswith("I") and file[1].isupper())
                 and file[0].isupper()
             ):
-                file_paths.append(os.path.join(contracts_path, folder))
+                file_paths.append(os.path.join(folder))
                 contract_filenames.append(file)
 
     for file_path, contract_filename in zip(file_paths, contract_filenames):
