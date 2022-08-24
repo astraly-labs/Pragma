@@ -8,7 +8,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.bool import TRUE, FALSE
 
-from contracts.entry.structs import Entry
+from entry.structs import Entry
 
 namespace Entries:
     #

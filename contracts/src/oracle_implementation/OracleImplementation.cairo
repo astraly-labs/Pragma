@@ -3,8 +3,8 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
-from contracts.entry.structs import Entry
-from contracts.oracle_implementation.library import (
+from entry.structs import Entry
+from oracle_implementation.library import (
     Oracle_set_oracle_controller_address,
     Oracle_get_entries,
     Oracle_get_value,

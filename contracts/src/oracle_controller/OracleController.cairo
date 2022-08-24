@@ -3,14 +3,14 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 
-from contracts.entry.structs import Entry
-from contracts.oracle_controller.library import OracleController
+from entry.structs import Entry
+from oracle_controller.library import OracleController
 
-from contracts.oracle_controller.structs import (
+from oracle_controller.structs import (
     OracleController_OracleImplementationStatus,
     KeyDecimalStruct,
 )
-from contracts.admin.library import Admin
+from admin.library import Admin
 
 #
 # Constructor

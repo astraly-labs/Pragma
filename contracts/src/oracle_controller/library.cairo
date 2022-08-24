@@ -7,13 +7,13 @@ from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math import assert_not_equal, assert_not_zero
 from starkware.starknet.common.syscalls import get_caller_address
 
-from contracts.entry.structs import Entry
-from contracts.oracle_implementation.IOracleImplementation import IOracleImplementation
-from contracts.oracle_controller.structs import (
+from entry.structs import Entry
+from oracle_implementation.IOracleImplementation import IOracleImplementation
+from oracle_controller.structs import (
     OracleController_OracleImplementationStatus,
     KeyDecimalStruct,
 )
-from contracts.publisher_registry.IPublisherRegistry import IPublisherRegistry
+from publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
 # Consts

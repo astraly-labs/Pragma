@@ -1,6 +1,6 @@
 %lang starknet
 
-from contracts.account.library import Admin
+from account.library import Admin
 
 #
 # Getters

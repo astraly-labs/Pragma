@@ -1,6 +1,6 @@
 %lang starknet
 
-from contracts.entry.structs import Entry
+from entry.structs import Entry
 
 @contract_interface
 namespace IOracleImplementation:

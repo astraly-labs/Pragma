@@ -1,0 +1,492 @@
+[
+    {
+        "members": [
+            {
+                "name": "expiry_timestamp",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "capture_timestamp",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "YieldPoint",
+        "size": 4,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "is_active",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "FutureKeyStatus",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "data": [
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedAdminAddress",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            },
+            {
+                "name": "oracle_controller_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "name": "get_yield_points",
+        "outputs": [
+            {
+                "name": "yield_points_len",
+                "type": "felt"
+            },
+            {
+                "name": "yield_points",
+                "type": "YieldPoint*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_address",
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_oracle_controller_address",
+        "outputs": [
+            {
+                "name": "oracle_controller_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_future_spot_empiric_source_key",
+        "outputs": [
+            {
+                "name": "future_spot_empiric_source_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "idx",
+                "type": "felt"
+            }
+        ],
+        "name": "get_spot_key",
+        "outputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_spot_key_is_active",
+        "outputs": [
+            {
+                "name": "spot_key_is_active",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_spot_keys",
+        "outputs": [
+            {
+                "name": "spot_keys_len",
+                "type": "felt"
+            },
+            {
+                "name": "spot_keys",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "idx",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key",
+        "outputs": [
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_keys",
+        "outputs": [
+            {
+                "name": "future_keys_len",
+                "type": "felt"
+            },
+            {
+                "name": "future_keys",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "idx",
+                "type": "felt"
+            }
+        ],
+        "name": "get_on_key",
+        "outputs": [
+            {
+                "name": "on_key",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "on_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_on_key_is_active",
+        "outputs": [
+            {
+                "name": "on_key_is_active",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_on_keys",
+        "outputs": [
+            {
+                "name": "on_keys_len",
+                "type": "felt"
+            },
+            {
+                "name": "on_keys",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_status",
+        "outputs": [
+            {
+                "name": "future_key_status",
+                "type": "FutureKeyStatus"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_is_active",
+        "outputs": [
+            {
+                "name": "future_key_is_active",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_key_expiry",
+        "outputs": [
+            {
+                "name": "future_key_expiry",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_address",
+                "type": "felt"
+            }
+        ],
+        "name": "set_admin_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "oracle_controller_address",
+                "type": "felt"
+            }
+        ],
+        "name": "set_oracle_controller_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "future_spot_empiric_source_key",
+                "type": "felt"
+            }
+        ],
+        "name": "set_future_spot_empiric_source_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "add_spot_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "set_spot_key_is_active",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "type": "felt"
+            }
+        ],
+        "name": "add_future_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "new_future_key_status",
+                "type": "FutureKeyStatus"
+            }
+        ],
+        "name": "set_future_key_status",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "spot_key",
+                "type": "felt"
+            },
+            {
+                "name": "future_key",
+                "type": "felt"
+            },
+            {
+                "name": "new_is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "set_future_key_is_active",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "on_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "add_on_key",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "on_key",
+                "type": "felt"
+            },
+            {
+                "name": "is_active",
+                "type": "felt"
+            }
+        ],
+        "name": "set_on_key_is_active",
+        "outputs": [],
+        "type": "function"
+    }
+]

@@ -5,7 +5,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
 
-from contracts.account.library import Account, AccountCallArray
+from account.library import Account, AccountCallArray
 
 #
 # Constructor

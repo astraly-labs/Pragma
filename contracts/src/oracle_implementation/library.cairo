@@ -7,7 +7,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from contracts.entry.library import Entry, Entries
+from entry.library import Entry, Entries
 
 const TIMESTAMP_BUFFER = 3600  # 60 minutes
 

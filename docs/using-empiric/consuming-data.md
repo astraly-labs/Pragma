@@ -19,7 +19,7 @@ If you are just trying to get started with our price feeds, see this self-contai
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 
-from contracts.oracle_controller.IEmpiricOracle import IEmpiricOracle
+from oracle_controller.IEmpiricOracle import IEmpiricOracle
 
 const EMPIRIC_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4
 const KEY = 28556963469423460  # str_to_felt("eth/usd")

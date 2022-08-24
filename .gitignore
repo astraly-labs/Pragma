@@ -26,3 +26,6 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# protostar
+contracts/abi_test/*[!_abi].json
