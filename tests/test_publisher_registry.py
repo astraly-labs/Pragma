@@ -6,17 +6,18 @@ from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import assert_event_emitted, cached_contract, construct_path
 
-CONTRACT_FILE = construct_path("contracts/publisher_registry/PublisherRegistry.cairo")
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
+CONTRACT_FILE = construct_path(
+    "contracts/src/publisher_registry/PublisherRegistry.cairo")
+ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
     )
     publisher_registry_class = compile_starknet_files(
-        files=[CONTRACT_FILE], debug_info=True
+        files=[CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
     )
 
     return account_class, publisher_registry_class

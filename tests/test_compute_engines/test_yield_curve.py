@@ -13,18 +13,18 @@ from utils import assert_event_emitted, cached_contract, construct_path
 
 # The path to the contract source code.
 PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
-    "contracts/publisher_registry/PublisherRegistry.cairo"
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
 )
 ORACLE_CONTROLLER_CONTRACT_FILE = construct_path(
-    "contracts/oracle_controller/OracleController.cairo"
+    "contracts/src/oracle_controller/OracleController.cairo"
 )
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
-    "contracts/oracle_implementation/OracleImplementation.cairo"
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
 )
 YIELD_CURVE_CONTRACT_FILE = construct_path(
-    "contracts/compute_engines/yield_curve/YieldCurve.cairo"
+    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
 )
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
+ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 STARKNET_STARTING_TIMESTAMP = 1650590820
@@ -62,24 +62,28 @@ FUTURES_SPOT = {
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
     )
     publisher_registry_class = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=["contracts/src"]
     )
     oracle_controller_class = compile_starknet_files(
         files=[ORACLE_CONTROLLER_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=["contracts/src"]
     )
     oracle_implementation_class = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=["contracts/src"]
     )
     yield_curve_class = compile_starknet_files(
         files=[YIELD_CURVE_CONTRACT_FILE],
         debug_info=True,
         disable_hint_validation=True,
+        cairo_path=["contracts/src"]
     )
     return (
         account_class,

@@ -1,29 +1,31 @@
 ["protostar.config"]
 protostar_version = "0.3.2"
-cairo-path = ["contracts/src"]
 
 ["protostar.project"]
-libs_path = "contracts/src"
+libs_path = "contracts/lib"
 
 ["protostar.contracts"]
 Account = [
-    "contracts/account/Account.cairo"
+    "contracts/src/account/Account.cairo"
 ]
 CheckEthThreshold = [
-    "contracts/sample_consumer/CheckEthThreshold.cairo"
+    "contracts/src/sample_consumer/CheckEthThreshold.cairo"
 ]
 OracleController = [
-    "contracts/oracle_controller/OracleController.cairo"
+    "contracts/src/oracle_controller/OracleController.cairo"
 ]
 OracleImplementation = [
-    "contracts/oracle_implementation/OracleImplementation.cairo"
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
 ]
 PublisherRegistry = [
-    "contracts/publisher_registry/PublisherRegistry.cairo"
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
 ]
 YieldCurve = [
-    "contracts/compute_engines/yield_curve/YieldCurve.cairo"
+    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
 ]
 
+["protostar.shared_command_configs"]
+cairo-path = ["contracts/src"]
+
 ["protostar.build"]
-output = "contracts/abi_test"
+output = "contracts/build"

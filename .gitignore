@@ -28,4 +28,5 @@ var/
 *.egg
 
 # protostar
-contracts/abi_test/*[!_abi].json
+!contracts/build/
+contracts/build/*[!_abi].json

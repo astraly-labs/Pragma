@@ -17,7 +17,8 @@ def construct_path(path):
 def get_contract_def(path):
     """Returns the contract definition from the contract path"""
     complete_path = construct_path(path)
-    contract_def = compile_starknet_files(files=[complete_path], debug_info=True)
+    contract_def = compile_starknet_files(
+        files=[complete_path], debug_info=True, cairo_path=["contracts/src"])
     return contract_def
 
 
