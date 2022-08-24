@@ -7,7 +7,8 @@ from starkware.starkware_utils.error_handling import StarkException
 from utils import assert_event_emitted, cached_contract, construct_path
 
 CONTRACT_FILE = construct_path(
-    "contracts/src/publisher_registry/PublisherRegistry.cairo")
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
+)
 ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 
 

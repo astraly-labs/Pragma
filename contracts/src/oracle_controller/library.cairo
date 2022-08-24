@@ -9,10 +9,7 @@ from starkware.starknet.common.syscalls import get_caller_address
 
 from entry.structs import Entry
 from oracle_implementation.IOracleImplementation import IOracleImplementation
-from oracle_controller.structs import (
-    OracleController_OracleImplementationStatus,
-    KeyDecimalStruct,
-)
+from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 
 #
