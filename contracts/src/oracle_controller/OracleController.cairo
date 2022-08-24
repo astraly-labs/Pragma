@@ -7,6 +7,10 @@ from entry.structs import Entry
 from oracle_controller.library import OracleController
 from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
 
+<<<<<<< HEAD
+=======
+from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
+>>>>>>> 877cd83 (linted)
 from admin.library import Admin
 
 #
