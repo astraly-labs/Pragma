@@ -10,14 +10,17 @@ from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
 
+# @param new_entries_len: length of entries array
+# @param new_entries: pointer to first Entry in array
+
 namespace Entries:
     #
     # Helpers
     #
 
     # @notice Aggregates entries for a specific value
-    # @param entries_len: number of entries to use for aggregation
-    # @param entries: entries list to use for aggregation
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @return value: the aggregation value
     func aggregate_entries{range_check_ptr}(entries_len : felt, entries : Entry*) -> (value : felt):
         let (value) = entries_median(entries_len, entries)
@@ -25,8 +28,8 @@ namespace Entries:
     end
 
     # @notice returns the max timestamp of an entries array
-    # @param entries_len: number of entries to use
-    # @param entries: pointer to first entry in array
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @return last_updated_timestamp: the latest timestamp from the array
     func aggregate_timestamps_max{range_check_ptr}(entries_len : felt, entries : Entry*) -> (
         last_updated_timestamp : felt
@@ -49,8 +52,8 @@ namespace Entries:
     end
 
     # @notice returns the median value from an entries array
-    # @param entries_len: number of entries to use
-    # @param entries: pointer to first entry in array
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @return value: the median value from the array of entries
     func entries_median{range_check_ptr}(entries_len : felt, entries : Entry*) -> (value : felt):
         let (sorted_entries) = sort_entries_by_value(entries_len, entries)
@@ -74,8 +77,8 @@ namespace Entries:
     end
 
     # @notice returns a copy of the entries array sorted by value
-    # @param entries_len: number of entries to use
-    # @param entries: pointer to first entry in array
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @return sorted_entries: a pointer to a sorted array of entries
     func sort_entries_by_value{range_check_ptr}(entries_len : felt, entries : Entry*) -> (
         sorted_entries : Entry*
@@ -88,8 +91,8 @@ namespace Entries:
     end
 
     # @notice perform a bubblesort on an entries array
-    # @param entries_len: number of entries to use
-    # @param entries: pointer to first entry in array
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @param idx1: left index
     # @param idx2: right index
     # @param sorted_entries: pointer to initial element in sorted array
@@ -137,8 +140,8 @@ namespace Entries:
     end
 
     # @notice get the mean of an entries array
-    # @param entries_len: number of entries to use
-    # @param entries: pointer to first entry in array
+    # @param entries_len: length of entries array
+    # @param entries: pointer to first Entry in array
     # @param idx: current index
     # @param remainder: remaining entries
     # @return value: mean value
