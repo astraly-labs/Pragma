@@ -50,4 +50,4 @@ async def publish_all(assets):
 
 
 if __name__ == "__main__":
-    asyncio.run(publish_all([get_spot_asset_spec_for_key("eth/usd")]))
+    asyncio.run(publish_all(get_spot_asset_spec_for_key("eth/usd")))
