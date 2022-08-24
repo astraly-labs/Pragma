@@ -44,7 +44,7 @@ After doing so, open all subsequent windows of the repo from the CLI, using the 
 
 ## Pulling Data Locally from Feeds in Deployed Contracts
 
-Make sure you set the following environment variables to be able to interact with the deployed contract:
+Make sure you set the following environment variables to be able to interact with the deployed contract:
 
 ```bash
 STARKNET_NETWORK=alpha-goerli
