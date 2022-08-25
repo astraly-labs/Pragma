@@ -72,7 +72,7 @@ func test_decimal_div{range_check_ptr}():
     assert_eq(res_d, 3000)
     assert_eq(dec_d, 3)
 
-    let (res_e, dec_e) = _decimal_div(10000, 4, 2000000, 5) # 1 / 20
+    let (res_e, dec_e) = _decimal_div(10000, 4, 2000000, 5)  # 1 / 20
     assert_eq(res_e, 5000)
     assert_eq(dec_e, 5)
 
@@ -86,7 +86,7 @@ func test_todo{range_check_ptr}():
     alloc_locals
     const dec_a = 60
     const shift_by_dec = 16
-    let (local big_a) = pow(10, dec_a)  
+    let (local big_a) = pow(10, dec_a)
     let (shifted) = _shift_left(big_a, 10, shift_by_dec)
     %{ expect_revert("TRANSACTION_FAILED") %}
     assert_signed_lt(big_a, shifted)
