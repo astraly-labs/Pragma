@@ -145,9 +145,9 @@ end
 #
 
 # @dev converts a currency to an asset key
-#      by constructing felt equivalent of "{currency}/{denominator}"
+#      by constructing felt equivalent of "{currency}{denominator}"
 # @param currency: the currency to be turned into an asset_key
-# @param denominator: the value the asset is denominated in
+# @param denominator: the value the asset is denominated in including the slash
 # @param denominator_bits: the number of bits needed to represent the denominator
 # @return asset_key: the asset key as felt of "{currency}/{denominator}"
 func _convert_currency_to_asset_key{range_check_ptr}(
