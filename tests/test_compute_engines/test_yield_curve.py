@@ -67,23 +67,23 @@ async def contract_classes():
     publisher_registry_class = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"]
+        cairo_path=["contracts/src"],
     )
     oracle_controller_class = compile_starknet_files(
         files=[ORACLE_CONTROLLER_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"]
+        cairo_path=["contracts/src"],
     )
     oracle_implementation_class = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"]
+        cairo_path=["contracts/src"],
     )
     yield_curve_class = compile_starknet_files(
         files=[YIELD_CURVE_CONTRACT_FILE],
         debug_info=True,
         disable_hint_validation=True,
-        cairo_path=["contracts/src"]
+        cairo_path=["contracts/src"],
     )
     return (
         account_class,

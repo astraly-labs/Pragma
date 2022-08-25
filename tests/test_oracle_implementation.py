@@ -20,7 +20,8 @@ AGGREGATION_MODE = 0
 @pytest_asyncio.fixture(scope="module")
 async def contract_class():
     contract_class = compile_starknet_files(
-        files=[CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"])
+        files=[CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
+    )
     return contract_class
 
 
