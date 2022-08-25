@@ -30,7 +30,7 @@ def pprint_entry(entry):
     )
 
 
-def log_entry(entry):
+def log_entry(entry, logger=logger):
     logger.info(
         f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
