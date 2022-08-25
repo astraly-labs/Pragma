@@ -148,7 +148,7 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (admin_address)
 end
 
-# @notice get oracle controller for admin
+# @notice get address for oracle controller
 # @return oracle_controller_address: address for oracle controller
 @view
 func get_oracle_controller_address{
@@ -300,7 +300,7 @@ end
 # @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
 # @param spot_key: Empiric spot key for which this future key is a quarterly future
 # @param future_key: Empiric key for the asset to look up its status
-# @return future_key_status: whether the given future key is active
+# @return future_key_is_active: whether the given future key is active
 @view
 func get_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt

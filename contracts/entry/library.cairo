@@ -10,9 +10,6 @@ from starkware.cairo.common.bool import TRUE, FALSE
 
 from contracts.entry.structs import Entry
 
-# @param new_entries_len: length of entries array
-# @param new_entries: pointer to first Entry in array
-
 namespace Entries:
     #
     # Helpers

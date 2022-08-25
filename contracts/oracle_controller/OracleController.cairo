@@ -38,7 +38,7 @@ end
 # Oracle Implementation Controller Functions
 #
 
-# @notice get array of Entries for a value
+# @notice get array of Entries for a key
 # @param sources_len: the length of the array to fetch
 # @param sources: array of sources to use when fetching Entries
 # @return entries_len: length of array
@@ -52,7 +52,7 @@ func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
 end
 
 # @notice get entry by key and source
-# @param key: the key to fetch Entries from
+# @param key: the key to fetch Entries for
 # @param source: the source to use for Entry
 # @return entry: Entry for key and source
 @view
