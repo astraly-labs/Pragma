@@ -84,8 +84,8 @@ end
 # @notice get value for key for a set of sources
 # @param key: the key to fetch Entries for
 # @param aggregation_mode: the mode of aggregation to use to find value
-# @return sources_len: the number of sources to use
-# @return pointer: to first source in array
+# @param sources_len: the number of sources to use
+# @param sources: point to first source in array
 # @return value: the aggregated value
 # @return decimals: the number of decimals in the Entry
 # @return last_updated_timestamp: timestamp the Entries were last updated
