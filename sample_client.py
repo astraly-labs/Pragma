@@ -31,7 +31,7 @@ async def main(network: Network, throw_if_no_data: bool):
         based off of aggregating {num_sources_aggregated} sources."""
     )
 
-    if (throw_if_no_data and last_updated_timestamp == 0):
+    if throw_if_no_data and last_updated_timestamp == 0:
         logger.error(f"Couldn't find any data for {asset_pair} on network: {network}.")
         raise Exception
 
@@ -46,8 +46,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--throw_if_no_data",
-        action='store_true',
-        help="Raise exception if no data is found."
+        action="store_true",
+        help="Raise exception if no data is found.",
     )
     args = parser.parse_args()
     asyncio.run(main(args.network, args.throw_if_no_data))
