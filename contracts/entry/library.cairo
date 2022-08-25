@@ -90,14 +90,6 @@ namespace Entries:
         return (sorted_entries)
     end
 
-    # @notice perform a bubblesort on an entries array
-    # @param entries_len: length of entries array
-    # @param entries: pointer to first Entry in array
-    # @param idx1: left index
-    # @param idx2: right index
-    # @param sorted_entries: pointer to initial element in sorted array
-    # @param sorted_this_iteration: number of entries sorted so far
-    # @return sorted_entries: a pointer to a sorted array of entries
     func bubble_sort_entries_by_value{range_check_ptr}(
         entries_len : felt,
         entries : Entry*,
@@ -164,7 +156,7 @@ namespace Entries:
         return (value, recursive_remainder)
     end
 
-    # @notice get the mean of an entries array
+    # @notice get the mean of two entries
     # @param entry_1: left entry
     # @param entry_2: right entry
     # @return value: mean value
