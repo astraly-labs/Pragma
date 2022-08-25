@@ -94,8 +94,8 @@ end
 # @param new_publisher_address: new address to set publisher to
 @external
 func update_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, new_address : felt
+    publisher : felt, new_publisher_address : felt
 ):
-    Publisher_update_publisher_address(publisher, new_address)
+    Publisher_update_publisher_address(publisher, new_publisher_address)
     return ()
 end
