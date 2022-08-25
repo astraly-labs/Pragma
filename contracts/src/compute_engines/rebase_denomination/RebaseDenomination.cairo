@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.pow import pow
 from starkware.cairo.common.math_cmp import is_le
-from starkware.cairo.common.math import unsigned_div_rem
+from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 from admin.library import Admin
 from oracle_controller.IOracleController import IOracleController, EmpiricAggregationModes
@@ -40,6 +40,7 @@ end
 #
 
 # @notice Given a quote currency Q and a base currency B returns the value of Q/B
+# @notice Answer has the higher number of decimals of the two currencies
 # @param quote_currency the quote currency: (ex. felt for ETH)
 # @param base_currency the base currency: (ex. felt for BTC)
 # @return value: the aggregated value
@@ -51,6 +52,14 @@ func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     quote_currency : felt, base_currency : felt
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     alloc_locals
+
+    with_attr error_message("The quote currency can't be 0."):
+        assert_not_zero(quote_currency)
+    end
+    with_attr error_message("The base currency can't be 0."):
+        assert_not_zero(base_currency)
+    end
+
     let (local oracle_controller_address) = oracle_controller_address_storage.read()
 
     let (quote_asset_key) = _convert_currency_to_asset_key(
@@ -160,13 +169,14 @@ end
 func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> (
     value : felt, decimals : felt
 ):
-    alloc_locals
-    local a_to_shift = a_value
-    local result_decimals
     # Use that (a * 10^x) / (b * 10^y) = (a / b) * 10^(x - y)
+    alloc_locals
+    local a_to_shift
+    local result_decimals
     let (b_fewer_dec) = is_le(b_decimals, a_decimals)
     if b_fewer_dec == TRUE:
         # x > y
+        a_to_shift = a_value
         result_decimals = a_decimals
         tempvar range_check_ptr = range_check_ptr
     else:
@@ -177,10 +187,12 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
             a_to_shift = a_same_dec
             tempvar range_check_ptr = range_check_ptr
         else:
+            a_to_shift = a_value
             tempvar range_check_ptr = range_check_ptr
         end
         # x == y
         result_decimals = b_decimals
+        tempvar range_check_ptr = range_check_ptr
     end
 
     # If x > y:  (a / b) * 10^((x + y) - y)
