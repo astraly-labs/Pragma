@@ -86,6 +86,8 @@ end
 # Constructor
 #
 
+# @param admin_address: address of account with special privileges
+# @param oracle_controller_address: address from which to read input data
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt, oracle_controller_address : felt
@@ -99,6 +101,10 @@ end
 # Getters
 #
 
+# @notice get the yield curve points (x: time to maturity, y: interest rate)
+# @return decimals: number of decimals for each yield curve point's int rate
+# @return yield_points_len: length of yield points array
+# @param yield_points: pointer to first YieldPoint in array
 @view
 func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     decimals : felt
@@ -132,6 +138,8 @@ func get_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     return (yield_points_len, yield_points)
 end
 
+# @notice get address for admin
+# @return admin_address: address of current admin
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -140,6 +148,8 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (admin_address)
 end
 
+# @notice get address for oracle controller
+# @return oracle_controller_address: address for oracle controller
 @view
 func get_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -148,6 +158,8 @@ func get_oracle_controller_address{
     return (oracle_controller_address)
 end
 
+# @notice get the key/id of the source for which we get spot and futures data
+# @return future_spot_empiric_source_key: Empiric key for the source used to bootstrap the yield curve
 @view
 func get_future_spot_empiric_source_key{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -156,6 +168,9 @@ func get_future_spot_empiric_source_key{
     return (future_spot_empiric_source_key)
 end
 
+# @notice get the key of the asset for which we get spot data to compare to futures data
+# @param idx: index of the spot_key
+# @return spot_key: Empiric key for the spot asset used to bootstrap the yield curve
 @view
 func get_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     idx : felt
@@ -164,6 +179,9 @@ func get_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return (spot_key)
 end
 
+# @notice get the status of whether a spot key is used in the yield curve bootstrapping calculations
+# @param spot_key: Empiric key for the asset to look up its status
+# @return spot_key_is_active: boolean felt for whether the given spot key is active
 @view
 func get_spot_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt
@@ -172,12 +190,14 @@ func get_spot_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
     return (spot_key_is_active)
 end
 
+# @notice get the key of the asset for which we get spot data to compare to futures data
+# @return spot_keys_len: length of Empiric keys for the spot asset used to bootstrap the yield curve
+# @return spot_keys: pointer to the first Empiric key
 @view
 func get_spot_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     spot_keys_len : felt, spot_keys : felt*
 ):
     let (spot_keys) = alloc()
-
     let (total_spot_keys_len) = spot_key_len_storage.read()
 
     if total_spot_keys_len == 0:
@@ -189,6 +209,10 @@ func get_spot_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     return (spot_keys_len, spot_keys)
 end
 
+# @notice get the key of the asset for which we get spot data to compare to futures data
+# @param spot_key: Empiric spot key for which this future key is a quarterly future
+# @param idx: index of the future_key
+# @return future_key: Empiric key for the future asset used to bootstrap the yield curve
 @view
 func get_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, idx : felt
@@ -197,6 +221,10 @@ func get_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     return (future_key)
 end
 
+# @notice get the key of the asset for which we get spot data to compare to futures data
+# @param spot_key: Empiric spot key for which this future key is a quarterly future
+# @return future_keys_len: length of Empiric keys for the future assets used to bootstrap the yield curve
+# @return future_keys: pointer to the first Empiric key
 @view
 func get_future_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt
@@ -216,6 +244,9 @@ func get_future_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
     return (future_keys_len, future_keys)
 end
 
+# @notice get the key of the overnight interest rate
+# @param idx: index of the overight rate key
+# @return on_key: Empiric key for the overnight rate used to bootstrap the yield curve
 @view
 func get_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(idx : felt) -> (
     on_key : felt
@@ -224,6 +255,9 @@ func get_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_pt
     return (on_key)
 end
 
+# @notice get the status of whether a overnight rate key is used in the yield curve bootstrapping calculations
+# @param on_key: Empiric key for the overnight rate to look up its status
+# @return on_key_is_active: boolean felt for whether the given key is active
 @view
 func get_on_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_key : felt
@@ -232,12 +266,14 @@ func get_on_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
     return (on_key_is_active)
 end
 
+# @notice get all overnight keys used to bootstrap the yield curve
+# @return on_keys_len: length of Empiric keys for the overnight rates used to bootstrap the yield curve
+# @return on_keys: pointer to the first Empiric key
 @view
 func get_on_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     on_keys_len : felt, on_keys : felt*
 ):
     let (on_keys) = alloc()
-
     let (total_on_keys_len) = on_key_len_storage.read()
 
     if total_on_keys_len == 0:
@@ -249,6 +285,10 @@ func get_on_keys{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return (on_keys_len, on_keys)
 end
 
+# @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
+# @param spot_key: Empiric spot key for which this future key is a quarterly future
+# @param future_key: Empiric key for the asset to look up its status
+# @return future_key_status: struct describing the given future key's status
 @view
 func get_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt
@@ -257,6 +297,10 @@ func get_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     return (future_key_status)
 end
 
+# @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
+# @param spot_key: Empiric spot key for which this future key is a quarterly future
+# @param future_key: Empiric key for the asset to look up its status
+# @return future_key_is_active: whether the given future key is active
 @view
 func get_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt
@@ -266,6 +310,10 @@ func get_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     return (future_key_is_active)
 end
 
+# @notice get the expiry of a quarterly future used in the yield curve bootstrapping calculations
+# @param spot_key: Empiric spot key for which this future key is a quarterly future
+# @param future_key: Empiric key for the asset to look up its status
+# @return future_key_status: expiry timestamp of the given future key
 @view
 func get_future_key_expiry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt
@@ -279,6 +327,9 @@ end
 # Setters
 #
 
+# @notice update admin address
+# @dev only the admin can set the new address
+# @param new_address: new admin address
 @external
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt
@@ -288,6 +339,9 @@ func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return ()
 end
 
+# @notice update oracle controller address
+# @dev only the admin can update this
+# @param oracle_controller_address: new oracle controller address
 @external
 func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -297,6 +351,9 @@ func set_oracle_controller_address{
     return ()
 end
 
+# @notice set the source key for future and spot assets
+# @dev only the admin can update this
+# @param future_spot_empiric_source_key: new Empiric source key
 @external
 func set_future_spot_empiric_source_key{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -306,6 +363,10 @@ func set_future_spot_empiric_source_key{
     return ()
 end
 
+# @notice add a new spot key to get data for bootstrapping the yield curve
+# @dev only the admin can update this
+# @param spot_key: new Empiric spot key
+# @param is_active: whether the new key should be active immediately or not
 @external
 func add_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, is_active : felt
@@ -318,6 +379,10 @@ func add_spot_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     return ()
 end
 
+# @notice set the is_active status on a spot key
+# @dev only the admin can update this
+# @param spot_key: Empiric spot key
+# @param spot_key: new status of the spot key
 @external
 func set_spot_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, is_active : felt
@@ -327,6 +392,13 @@ func set_spot_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
     return ()
 end
 
+# @notice add a new future key to get data for bootstrapping the yield curve
+# @dev only the admin can update this
+# @dev have to add the spot key first
+# @param spot_key: Empiric spot key for which the future key is a quarterly future
+# @param future_key: new Empiric future key
+# @param is_active: status of the new future key
+# @param expiry_timestamp: expiry timestamp of the new future (used to calculate time to maturity)
 @external
 func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, is_active : felt, expiry_timestamp : felt
@@ -341,6 +413,11 @@ func add_future_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     return ()
 end
 
+# @notice set the status on a future key
+# @dev only the admin can update this
+# @param spot_key: Empiric spot key
+# @param future_key: Empiric future key
+# @param new_future_key_status: new status for the future key
 @external
 func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, new_future_key_status : FutureKeyStatus
@@ -351,6 +428,11 @@ func set_future_key_status{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     return ()
 end
 
+# @notice set the is_active status on a future key
+# @dev only the admin can update this
+# @param spot_key: Empiric spot key
+# @param future_key: Empiric future key
+# @param new_is_active: new is_active of the future key
 @external
 func set_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt, future_key : felt, new_is_active : felt
@@ -364,6 +446,10 @@ func set_future_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     return ()
 end
 
+# @notice add a new overnight rate key
+# @dev only the admin can update this
+# @param on_key: Empiric overnight rate key
+# @param is_active: whether the new key should be active immediately or not
 @external
 func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_key : felt, is_active : felt
@@ -376,6 +462,10 @@ func add_on_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_pt
     return ()
 end
 
+# @notice set the is_active status on a overnight key
+# @dev only the admin can update this
+# @param on_key: Empiric overnight rate key
+# @param is_active: new is_active of the overnight rate key
 @external
 func set_on_key_is_active{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_key : felt, is_active : felt
@@ -389,6 +479,14 @@ end
 # Helpers
 #
 
+# @notice create an array of all spot keys from storage
+# @dev recursive function, set all indices to 0 for external call
+# @param spot_keys_len: number of spot keys to iterate over
+# @param spot_keys: pointer to the first spot_key
+# @param output_idx: offset index in output array (write to array, starts at spot_keys pointer)
+# @param storage_idx: index for spot_key in storage (read from array)
+# @return spot_keys_len: length of the spot_keys array
+# @return spot_keys: pointer to the first spot_key
 func _build_spot_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_keys_len : felt, spot_keys : felt*, output_idx : felt, storage_idx : felt
 ) -> (spot_keys_len : felt, spot_keys : felt*):
@@ -412,6 +510,15 @@ func _build_spot_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
     end
 end
 
+# @notice create an array of the future keys for a given spot key from storage
+# @dev recursive function, set all indices to 0 for external call
+# @param spot_key: spot_key for which the future_keys array should be constructed
+# @param future_keys_len: number of spot keys to iterate over
+# @param future_keys: pointer to the first future_key
+# @param output_idx: offset index in output array (write to array, starts at future_keys pointer)
+# @param storage_idx: index for future_key in storage (read from array)
+# @return future_keys_len: length of the future_keys array
+# @return future_keys: pointer to the first future_key
 func _build_future_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     spot_key : felt,
     future_keys_len : felt,
@@ -439,6 +546,14 @@ func _build_future_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     end
 end
 
+# @notice create an array of all overnight rate keys from storage
+# @dev recursive function, set all indices to 0 for external call
+# @param on_keys_len: number of spot keys to iterate over
+# @param on_keys: pointer to the first on_key
+# @param output_idx: offset index in output array (write to array, starts at on_keys pointer)
+# @param storage_idx: index for on_key in storage (read from array)
+# @return on_keys_len: length of the on_keys array
+# @return on_keys: pointer to the first on_key
 func _build_on_keys_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     on_keys_len : felt, on_keys : felt*, output_idx : felt, storage_idx : felt
 ) -> (on_keys_len : felt, on_keys : felt*):
@@ -467,6 +582,17 @@ end
 #
 
 namespace YieldCurve:
+    # @notice build the subset of yield points based on overnight rate calculations
+    # @dev recursive function, set all indices to 0 for external call (except yield_points idx)
+    # @param output_decimals: number of decimals to use for output
+    # @param oracle_controller_address: address from which to read overnight dataa
+    # @param yield_points: pointer to first element in yield_points array to append to
+    # @param on_keys_len: number of on keys to iterate over
+    # @param on_keys: pointer to the first on_key
+    # @param yield_points_idx: index for current yield_point in yield_points array
+    # @param on_keys_idx: index for on_key in on_keys array
+    # @return on_yield_points_len: number of overnight yield points in the array
+    # @return on_yield_points: pointer to the first overnight yield point
     func build_on_yield_points{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         output_decimals : felt,
         oracle_controller_address : felt,
@@ -535,6 +661,17 @@ namespace YieldCurve:
         end
     end
 
+    # @notice build the subset of yield points based on future and spot price calculations
+    # @dev recursive function, set all indices to 0 for external call (except yield_points idx)
+    # @param output_decimals: number of decimals to use for output
+    # @param oracle_controller_address: address from which to read overnight dataa
+    # @param yield_points: pointer to first element in yield_points array to append to
+    # @param spot_keys_len: number of spot keys to iterate over
+    # @param spot_keys: pointer to the first spot_key
+    # @param yield_points_idx: index for current yield_point in yield_points array
+    # @param spot_keys_idx: index for spot_key in spot_keys array
+    # @return yield_points_len: number of yield points in the array
+    # @return yield_points: pointer to the first yield point
     func build_future_spot_yield_points{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
@@ -626,6 +763,20 @@ namespace YieldCurve:
         end
     end
 
+    # @notice for a given spot key, build the subset of yield points based on the corresponding future keys
+    # @dev recursive function, set all indices to 0 for external call (except yield_points idx)
+    # @param output_decimals: number of decimals to use for output
+    # @param oracle_controller_address: address from which to read overnight dataa
+    # @param future_spot_empiric_source_key: source key for future and spot data
+    # @param yield_points: pointer to first element in yield_points array to append to
+    # @param future_keys_len: number of future keys to iterate over
+    # @param future_keys: pointer to the first future_key
+    # @param yield_points_idx: index for current yield_point in yield_points array
+    # @param future_keys_idx: index for future_key in future_keys array
+    # @param spot_entry: the most recent spot price datapoint
+    # @param spot_decimals: number of decimals used in the spot_entry
+    # @return yield_points_len: number of yield points in the array
+    # @return yield_points: pointer to the first yield point
     func build_future_yield_points{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
@@ -754,6 +905,14 @@ namespace YieldCurve:
         return (recursed_future_yield_points_len, recursed_future_yield_points)
     end
 
+    # @notice given a future and spot entry, calculate the yield point
+    # @param future_entry: the most recent future price datapoint
+    # @param future_expiry_timestamp: timestamp of future maturity
+    # @param spot_entry: the most recent spot price datapoint
+    # @param spot_decimals: number of decimals used in the spot_entry
+    # @param future_decimals: number of decimals used in the future_entry
+    # @param output_decimals: number of decimals to be used in the output
+    # @return yield_point: the resulting yield point
     func calculate_future_spot_yield_point{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
@@ -816,6 +975,11 @@ namespace YieldCurve:
         return (yield_point)
     end
 
+    # @notice shift a value from old number of decimals to the new number
+    # @param value: the value to be shifted
+    # @param old_decimals: the number of decimals value is currently shifted by
+    # @param new_decimals: the number of decimals we want value shifted by
+    # @return shifted_value: the value shifted by new_decimals from base
     func change_decimals{range_check_ptr}(
         value : felt, old_decimals : felt, new_decimals : felt
     ) -> (shifted_value : felt):
