@@ -5,27 +5,18 @@ from starkware.cairo.common.alloc import alloc
 from entry.library import Entries
 from entry.structs import Entry
 
-
-func make_entry(value: felt) -> (entry: Entry):
-    let entry = Entry(
-        key=0,
-        value=value,
-        timestamp=2,
-        source=3,
-        publisher=4
-    )
+func make_entry(value : felt) -> (entry : Entry):
+    let entry = Entry(key=0, value=value, timestamp=2, source=3, publisher=4)
     return (entry)
 end
 
-
-func make_and_add_entry(arr: Entry*, ix: felt, value: felt):
+func make_and_add_entry(arr : Entry*, ix : felt, value : felt):
     let (entry_val) = make_entry(value)
     assert arr[ix] = entry_val
     return ()
 end
 
-
-func make_entry_array() -> (entry: Entry*):
+func make_entry_array() -> (entry : Entry*):
     let (struct_array : Entry*) = alloc()
 
     make_and_add_entry(struct_array, 0, 17)
@@ -52,7 +43,6 @@ func make_entry_array() -> (entry: Entry*):
     return (struct_array)
 end
 
-
 @external
 func test_bubblesort{syscall_ptr : felt*, range_check_ptr}():
     alloc_locals
@@ -69,7 +59,6 @@ func test_bubblesort{syscall_ptr : felt*, range_check_ptr}():
     return ()
 end
 
-
 @external
 func test_mergesort{syscall_ptr : felt*, range_check_ptr}():
     alloc_locals
@@ -85,11 +74,10 @@ func test_mergesort{syscall_ptr : felt*, range_check_ptr}():
     return ()
 end
 
-
 @external
 func test_merge{syscall_ptr : felt*, range_check_ptr}():
     alloc_locals
-    let (sorted_arr: Entry*) = alloc()
+    let (sorted_arr : Entry*) = alloc()
 
     let (left_arr : Entry*) = alloc()
 
@@ -110,16 +98,7 @@ func test_merge{syscall_ptr : felt*, range_check_ptr}():
     let (entry4) = make_entry(1)
     assert right_arr[1] = entry4
 
-    let (merged) = Entries._merge(
-        3,
-        left_arr,
-        2,
-        right_arr,
-        sorted_arr,
-        0,
-        0,
-        0,
-    )
+    let (merged) = Entries._merge(3, left_arr, 2, right_arr, sorted_arr, 0, 0, 0)
 
     assert sorted_arr[0].value = 3
     assert sorted_arr[1].value = 2

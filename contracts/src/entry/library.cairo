@@ -98,7 +98,7 @@ namespace Entries:
 
         # step 2. split list at middle
         let (left_arr_len, _) = unsigned_div_rem(felt_arr_len, 2)
-        let right_arr_len = felt_arr_len - left_arr_len 
+        let right_arr_len = felt_arr_len - left_arr_len
 
         # step 3. create left and right
         let left_arr = felt_arr
@@ -111,14 +111,7 @@ namespace Entries:
 
         # step 5. merge left and right
         let (sorted_arr) = _merge(
-            left_arr_len,
-            sorted_left_arr,
-            right_arr_len,
-            sorted_right_arr,
-            result_arr,
-            0,
-            0,
-            0,
+            left_arr_len, sorted_left_arr, right_arr_len, sorted_right_arr, result_arr, 0, 0, 0
         )
         return (sorted_arr)
     end
@@ -153,7 +146,6 @@ namespace Entries:
                 right_arr_ix + 1,
             )
         end
-
 
         if right_arr_len == right_arr_ix:
             let left_v = left_arr[left_arr_ix].value
