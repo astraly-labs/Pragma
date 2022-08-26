@@ -9,7 +9,7 @@ from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
     calculate_on_yield_point,
 )
-from utils import assert_event_emitted, cached_contract, construct_path
+from utils import CAIRO_PATH, assert_event_emitted, cached_contract, construct_path
 
 # The path to the contract source code.
 PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
@@ -62,28 +62,28 @@ FUTURES_SPOT = {
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
     publisher_registry_class = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"],
+        cairo_path=CAIRO_PATH,
     )
     oracle_controller_class = compile_starknet_files(
         files=[ORACLE_CONTROLLER_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"],
+        cairo_path=CAIRO_PATH,
     )
     oracle_implementation_class = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
         debug_info=True,
-        cairo_path=["contracts/src"],
+        cairo_path=CAIRO_PATH,
     )
     yield_curve_class = compile_starknet_files(
         files=[YIELD_CURVE_CONTRACT_FILE],
         debug_info=True,
         disable_hint_validation=True,
-        cairo_path=["contracts/src"],
+        cairo_path=CAIRO_PATH,
     )
     return (
         account_class,

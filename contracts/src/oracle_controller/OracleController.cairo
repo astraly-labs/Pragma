@@ -5,7 +5,6 @@ from starkware.cairo.common.alloc import alloc
 
 from entry.structs import Entry
 from oracle_controller.library import OracleController
-
 from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
 from admin.library import Admin
 
@@ -13,6 +12,10 @@ from admin.library import Admin
 # Constructor
 #
 
+# @param admin_address: admin for contract
+# @param publisher_registry_address: registry for publishers
+# @param keys_decimals_len: length of array of keys to decimals
+# @param keys_decimals: pointer to first element in an array of structs assigning decimals to each key in OracleController_decimals_storage
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt,
@@ -31,6 +34,11 @@ end
 # Oracle Implementation Controller Functions
 #
 
+# @notice get array of Entries for a key
+# @param sources_len: the length of the array to fetch
+# @param sources: array of sources to use when fetching Entries
+# @return entries_len: length of array
+# @return entries: pointer to first element in Entry array
 @view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, sources_len : felt, sources : felt*
@@ -39,6 +47,10 @@ func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return (entries_len, entries)
 end
 
+# @notice get entry by key and source
+# @param key: the key to fetch Entries for
+# @param source: the source to use for Entry
+# @return entry: Entry for key and source
 @view
 func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, source : felt
@@ -47,6 +59,13 @@ func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     return (entry)
 end
 
+# @notice get value by key and aggregation mode
+# @param key: the key to fetch Entries for
+# @param aggregation_mode: the mode of aggregation to use to find value
+# @return value: the aggregated value
+# @return decimals: the number of decimals in the Entry
+# @return last_updated_timestamp: timestamp the Entries were last updated
+# @return num_sources_aggregated: number of sources used in aggregation
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt
@@ -58,6 +77,15 @@ func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
+# @notice get value for key for a set of sources
+# @param key: the key to fetch Entries for
+# @param aggregation_mode: the mode of aggregation to use to find value
+# @param sources_len: the number of sources to use
+# @param sources: point to first source in array
+# @return value: the aggregated value
+# @return decimals: the number of decimals in the Entry
+# @return last_updated_timestamp: timestamp the Entries were last updated
+# @return num_sources_aggregated: number of sources used in aggregation
 @view
 func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
@@ -68,6 +96,8 @@ func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
+# @notice publish an Entry
+# @param new_entry: an Entry to publish
 @external
 func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entry : Entry
@@ -76,6 +106,9 @@ func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     return ()
 end
 
+# @notice publish an array of entries
+# @param new_entries_len: length of entries array
+# @param new_entries: pointer to first Entry in array
 @external
 func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_entries_len : felt, new_entries : Entry*
@@ -88,6 +121,8 @@ end
 # Getters
 #
 
+# @notice get address for admin
+# @return admin_address: returns admin's address
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -96,6 +131,8 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (admin_address)
 end
 
+# @notice get address of publisher registry
+# @return publisher_registry_address: address of the publisher registry
 @view
 func get_publisher_registry_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -104,6 +141,9 @@ func get_publisher_registry_address{
     return (publisher_registry_address)
 end
 
+# @notice get list of active oracle implementations
+# @return oracle_addresses_len: length of active oracle array
+# @return oracle_addresses: pointer to first element in oracle array
 @view
 func get_active_oracle_implementation_addresses{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -114,6 +154,9 @@ func get_active_oracle_implementation_addresses{
     return (oracle_addresses_len, oracle_addresses)
 end
 
+# @notice get status of an oracle implementation
+# @param oracle_implementation_address: the address of an oracle implementation
+# @return oracle_implementation_status: check if address is registered and active
 @view
 func get_oracle_implementation_status{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -126,6 +169,9 @@ func get_oracle_implementation_status{
     return (oracle_implementation_status)
 end
 
+# @notice get an oracle implementation by index
+# @param idx: the index of the oracle implementation
+# @return oracle_implementation_address: address of the oracle at this index
 @view
 func get_oracle_implementation_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -134,6 +180,9 @@ func get_oracle_implementation_address{
     return (oracle_implementation_address)
 end
 
+# @notice get the primary oracle implementation address
+# @dev this gets the current oracle implementation
+# @return primary_oracle_implementation_address: address of primary oracle
 @view
 func get_primary_oracle_implementation_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -144,6 +193,9 @@ func get_primary_oracle_implementation_address{
     return (primary_oracle_implementation_address)
 end
 
+# @notice get number of decimals used in the asset value
+# @param key: the key of the asset
+# @return decimals: the number of decimals
 @view
 func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt

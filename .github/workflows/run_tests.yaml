@@ -31,6 +31,10 @@ jobs:
           isort . --check-only --diff
           cairo-format $(find contracts -name '*.cairo') -c
 
+      - name: Check contract interface consistency
+        run: |
+          python -m empiric.test.interface_consistency --cairo-path 'contracts/src'
+
       - name: Run tests suite
         run: |
           pytest .

@@ -46,8 +46,8 @@ async def publish_all(assets):
 
     logger.info("Publishing the following entries:")
     for entry in entries:
-        log_entry(entry)
+        log_entry(entry, logger=logger)
 
 
 if __name__ == "__main__":
-    asyncio.run(publish_all(get_spot_asset_spec_for_key("eth/usd")))
+    asyncio.run(publish_all([get_spot_asset_spec_for_key("eth/usd")]))

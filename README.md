@@ -77,21 +77,13 @@ Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public 
 
 ```bash
 export STARKNET_NETWORK=alpha-goerli
-starknet-compile --account_contract contracts/src/account/Account.cairo \
-    --abi contracts/build/Account_abi.json --output account_compiled.json --cairo_path ./contracts/src \
-    && cp contracts/build/Account_abi.json empiric-package/empiric/core/abi/Account.json
-starknet deploy --contract account_compiled.json --inputs <ADMIN_PUBLIC_KEY>
-starknet deploy --contract account_compiled.json --inputs <PUBLISHER_PUBLIC_KEY>
-starknet-compile contracts/src/publisher_registry/PublisherRegistry.cairo \
-    --abi contracts/build/PublisherRegistry_abi.json --output publisher_registry_compiled.json --cairo_path ./contracts/src 
-starknet deploy --contract publisher_registry_compiled.json --inputs <ADMIN_ADDRESS>
-starknet-compile contracts/src/oracle_controller/OracleController.cairo \
-    --abi contracts/build/OracleController_abi.json --output oracle_controller_compiled.json --cairo_path ./contracts/src \
-    && cp contracts/build/OracleController_abi.json empiric-ui/src/abi/OracleController.json
-starknet deploy --contract oracle_controller_compiled.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
-starknet-compile contracts/src/oracle_implementation/OracleImplementation.cairo \
-    --abi contracts/build/OracleImplementation_abi.json --output oracle_implementation_compiled.json --cairo_path ./contracts/src
-starknet deploy --contract oracle_implementation_compiled.json --inputs <ORACLE_CONTROLLER_ADDRESS>
+protostar build
+cp contracts/build/OracleController_abi.json empiric-ui/src/abi/OracleController.json
+starknet deploy --contract contracts/build/Account.json --inputs <ADMIN_PUBLIC_KEY>
+starknet deploy --contract contracts/build/Account.json --inputs <PUBLISHER_PUBLIC_KEY>
+starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>
+starknet deploy --contract contracts/build/OracleController.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
+starknet deploy --contract contracts/build/OracleImplementation.json --inputs <ORACLE_CONTROLLER_ADDRESS>
 ```
 
 Finally, you must add the Oracle Implementation to the Controller. You can use the `add_oracle_implementation` method of the `EmpiricAdminClient` class in `empiric.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you would run the `add_oracle_implementation.py` script in sample-publisher/utils. After replacing the Publisher Registry, run the `register_all_publishers.py` in the same location.

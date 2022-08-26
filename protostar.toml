@@ -8,6 +8,9 @@ libs_path = "contracts/lib"
 Account = [
     "contracts/src/account/Account.cairo"
 ]
+Admin = [
+    "contracts/src/admin/Admin.cairo"
+]
 CheckEthThreshold = [
     "contracts/src/sample_consumer/CheckEthThreshold.cairo"
 ]
@@ -22,6 +25,9 @@ PublisherRegistry = [
 ]
 YieldCurve = [
     "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
+]
+RebaseDenomination = [
+    "contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
 ]
 
 ["protostar.shared_command_configs"]

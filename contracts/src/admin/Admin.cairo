@@ -1,11 +1,16 @@
 %lang starknet
 
-from account.library import Admin
+from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.starknet.common.syscalls import get_caller_address
+
+from admin.library import Admin
 
 #
 # Getters
 #
 
+# @notice get current admin address
+# @return admin_address: address of current admin
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -27,6 +32,8 @@ end
 # Setters
 #
 
+# @notice set admin address for contract
+# @param new_address: address to set admin to
 @external
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt

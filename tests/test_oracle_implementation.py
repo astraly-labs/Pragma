@@ -7,7 +7,7 @@ from empiric.core.utils import felt_to_str, str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from utils import cached_contract, construct_path
+from utils import CAIRO_PATH, cached_contract, construct_path
 
 CONTRACT_FILE = construct_path(
     "contracts/src/oracle_implementation/OracleImplementation.cairo"
@@ -20,7 +20,7 @@ AGGREGATION_MODE = 0
 @pytest_asyncio.fixture(scope="module")
 async def contract_class():
     contract_class = compile_starknet_files(
-        files=[CONTRACT_FILE], debug_info=True, cairo_path=["contracts/src"]
+        files=[CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
     return contract_class
 
