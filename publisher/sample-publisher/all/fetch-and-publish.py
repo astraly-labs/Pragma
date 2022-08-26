@@ -114,7 +114,7 @@ async def publish_all(assets):
 
     logger.info("Publishing the following entries:")
     for entry in entries:
-        log_entry(entry)
+        log_entry(entry, logger=logger)
 
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")

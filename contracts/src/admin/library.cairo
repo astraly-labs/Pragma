@@ -64,6 +64,8 @@ namespace Admin:
     # Guards
     #
 
+    # @notice only allow admin address
+    # @dev only allow callers with the Admin_admin_address_storage address to call method
     func only_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
         let (caller_address) = get_caller_address()
         let (admin_address) = Admin_admin_address_storage.read()

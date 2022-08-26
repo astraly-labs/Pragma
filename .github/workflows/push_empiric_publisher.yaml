@@ -23,7 +23,7 @@ jobs:
           python3 -m pip install --upgrade -r dev-requirements.txt
           cd empiric-package
           python3 -m build
-          twine upload dist/* -u __token__ -p $PYPI_API_TOKEN
+          twine upload dist/* -u __token__ -p $PYPI_API_TOKEN --skip-existing
 
       - name: Build and publish Docker image
         env:

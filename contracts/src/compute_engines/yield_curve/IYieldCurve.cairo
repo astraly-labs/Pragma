@@ -25,9 +25,6 @@ namespace IYieldCurve:
     func get_oracle_controller_address() -> (oracle_controller_address : felt):
     end
 
-    func get_publisher_key() -> (publisher_key : felt):
-    end
-
     func get_spot_key(idx : felt) -> (spot_key : felt):
     end
 
@@ -72,34 +69,31 @@ namespace IYieldCurve:
     func set_admin_address(new_address : felt):
     end
 
-    func set_oracle_controller_address(oracle_controller_address : felt) -> ():
+    func set_oracle_controller_address(oracle_controller_address : felt):
     end
 
-    func set_publisher_key(publisher_key : felt) -> ():
+    func add_spot_key(spot_key : felt, is_active : felt):
     end
 
-    func add_spot_key(spot_key : felt, is_active : felt) -> ():
-    end
-
-    func set_spot_key_is_active(spot_key : felt, is_active : felt) -> ():
+    func set_spot_key_is_active(spot_key : felt, is_active : felt):
     end
 
     func add_future_key(
         spot_key : felt, future_key : felt, is_active : felt, expiry_timestamp : felt
-    ) -> ():
+    ):
     end
 
     func set_future_key_status(
         spot_key : felt, future_key : felt, new_future_key_status : FutureKeyStatus
-    ) -> ():
+    ):
     end
 
-    func set_future_key_is_active(spot_key : felt, future_key : felt, new_is_active : felt) -> ():
+    func set_future_key_is_active(spot_key : felt, future_key : felt, new_is_active : felt):
     end
 
-    func add_on_key(on_key : felt, is_active : felt) -> ():
+    func add_on_key(on_key : felt, is_active : felt):
     end
 
-    func set_on_key_is_active(on_key : felt, is_active : felt) -> ():
+    func set_on_key_is_active(on_key : felt, is_active : felt):
     end
 end
