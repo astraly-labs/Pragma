@@ -1,0 +1,52 @@
+[
+    {
+        "data": [
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedAdminAddress",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_address",
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "test_only_admin",
+        "outputs": [
+            {
+                "name": "caller_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_address",
+                "type": "felt"
+            }
+        ],
+        "name": "set_admin_address",
+        "outputs": [],
+        "type": "function"
+    }
+]

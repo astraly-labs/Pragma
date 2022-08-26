@@ -137,7 +137,7 @@
                 "type": "felt"
             },
             {
-                "name": "new_address",
+                "name": "new_publisher_address",
                 "type": "felt"
             }
         ],
