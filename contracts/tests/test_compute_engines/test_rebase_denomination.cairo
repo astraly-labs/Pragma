@@ -10,7 +10,7 @@ from compute_engines.rebase_denomination.RebaseDenomination import (
     _decimal_div,
     _shift_left,
 )
-from compute_engines.rebase_denomination.IRebaseDenomination import IOracleController
+from compute_engines.rebase_denomination.IRebaseDenomination import IOracleRebaser
 
 const ETH = 6648936  # str_to_felt("eth")
 const BTC = 6452323  # str_to_felt("btc")
@@ -30,7 +30,7 @@ func test_rebase_mock{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     %{ stop_mock = mock_call(ids.oracle_controller_address, "get_value", [3000000, 6, 10000, 4]) %}
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = IOracleController.get_rebased_value(contract_address, ETH, BTC)
+    ) = IOracleRebaser.get_rebased_value(contract_address, ETH, BTC)
     %{ stop_mock() %}
     assert_eq(value, 1000000)
     assert_eq(decimals, 6)
