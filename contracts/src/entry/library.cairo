@@ -82,9 +82,7 @@ namespace Entries:
         sorted_entries : Entry*
     ):
         let (entries_input : Entry*) = alloc()
-        let (sorted_entries) = bubble_sort_entries_by_value(
-            entries_len, entries, 0, 1, entries_input, 0
-        )
+        let (sorted_entries) = mergesort_entries_by_value(entries_len, entries)
         return (sorted_entries)
     end
 
