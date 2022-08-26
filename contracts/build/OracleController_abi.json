@@ -175,6 +175,156 @@
         "type": "constructor"
     },
     {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
+            }
+        ],
+        "name": "get_entries",
+        "outputs": [
+            {
+                "name": "entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "entries",
+                "type": "Entry*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "get_entry",
+        "outputs": [
+            {
+                "name": "entry",
+                "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            },
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
+            }
+        ],
+        "name": "get_value_for_sources",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "name": "publish_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
+                "type": "Entry*"
+            }
+        ],
+        "name": "publish_entries",
+        "outputs": [],
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "get_admin_address",
         "outputs": [
@@ -333,156 +483,6 @@
             }
         ],
         "name": "set_primary_oracle_implementation_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "sources_len",
-                "type": "felt"
-            },
-            {
-                "name": "sources",
-                "type": "felt*"
-            }
-        ],
-        "name": "get_entries",
-        "outputs": [
-            {
-                "name": "entries_len",
-                "type": "felt"
-            },
-            {
-                "name": "entries",
-                "type": "Entry*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "source",
-                "type": "felt"
-            }
-        ],
-        "name": "get_entry",
-        "outputs": [
-            {
-                "name": "entry",
-                "type": "Entry"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "type": "felt"
-            }
-        ],
-        "name": "get_value",
-        "outputs": [
-            {
-                "name": "value",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            },
-            {
-                "name": "last_updated_timestamp",
-                "type": "felt"
-            },
-            {
-                "name": "num_sources_aggregated",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "type": "felt"
-            },
-            {
-                "name": "sources_len",
-                "type": "felt"
-            },
-            {
-                "name": "sources",
-                "type": "felt*"
-            }
-        ],
-        "name": "get_value_for_sources",
-        "outputs": [
-            {
-                "name": "value",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            },
-            {
-                "name": "last_updated_timestamp",
-                "type": "felt"
-            },
-            {
-                "name": "num_sources_aggregated",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "new_entry",
-                "type": "Entry"
-            }
-        ],
-        "name": "publish_entry",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "new_entries_len",
-                "type": "felt"
-            },
-            {
-                "name": "new_entries",
-                "type": "Entry*"
-            }
-        ],
-        "name": "publish_entries",
         "outputs": [],
         "type": "function"
     }

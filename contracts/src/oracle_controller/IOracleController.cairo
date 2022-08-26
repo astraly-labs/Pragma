@@ -1,7 +1,7 @@
 %lang starknet
 
-from contracts.entry.structs import Entry
-from contracts.oracle_controller.structs import OracleController_OracleImplementationStatus
+from entry.structs import Entry
+from oracle_controller.structs import OracleController_OracleImplementationStatus
 
 namespace EmpiricAggregationModes:
     const MEDIAN = 120282243752302  # str_to_felt("median")

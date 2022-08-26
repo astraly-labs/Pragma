@@ -9,6 +9,7 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import (
+    CAIRO_PATH,
     assert_event_emitted,
     cached_contract,
     construct_path,
@@ -18,15 +19,15 @@ from utils import (
 
 # The path to the contract source code.
 PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
-    "contracts/publisher_registry/PublisherRegistry.cairo"
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
 )
 ORACLE_CONTROLLER_CONTRACT_FILE = construct_path(
-    "contracts/oracle_controller/OracleController.cairo"
+    "contracts/src/oracle_controller/OracleController.cairo"
 )
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
-    "contracts/oracle_implementation/OracleImplementation.cairo"
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
 )
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
+ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 TIMESTAMP_BUFFER = 3600
@@ -36,16 +37,22 @@ STARKNET_STARTING_TIMESTAMP = 1650590820
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
     publisher_registry_class = compile_starknet_files(
-        files=[PUBLISHER_REGISTRY_CONTRACT_FILE], debug_info=True
+        files=[PUBLISHER_REGISTRY_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     oracle_controller_class = compile_starknet_files(
-        files=[ORACLE_CONTROLLER_CONTRACT_FILE], debug_info=True
+        files=[ORACLE_CONTROLLER_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     oracle_implementation_class = compile_starknet_files(
-        files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE], debug_info=True
+        files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     return (
         account_class,

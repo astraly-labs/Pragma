@@ -1,5 +1,6 @@
 import os
 import re
+from argparse import ArgumentParser
 
 from starkware.starknet.compiler.compile import compile_starknet_files
 
@@ -17,13 +18,15 @@ def extract_arg_name_and_type(string):
     return name, type
 
 
-def check_interface(file_path, contract_filename):
+def check_interface(file_path, contract_filename, cairo_path=None):
     # Assumes convention that if contract is called "Contract.cairo"
     # then interface is "IContract.cairo"
     interface_filename = "I" + contract_filename
 
     # 1. Compile Contract.cairo to get the ABI
-    compiled = compile_starknet_files([os.path.join(file_path, contract_filename)])
+    compiled = compile_starknet_files(
+        [os.path.join(file_path, contract_filename)], cairo_path=[cairo_path]
+    )
     functions = {d["name"]: d for d in compiled.abi if d["type"] == "function"}
 
     # 2. Check that the interface matches the ABI
@@ -107,11 +110,18 @@ def check_interface(file_path, contract_filename):
 if __name__ == "__main__":
     # Search for all files that are Contract.cairo
     # recursively within the "contracts" folder
-    contracts_path = "contracts"
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--cairo-path",
+        default="contracts",
+        help="Path to Cairo files, used to search for files to check and for relative imports when compiling.",
+    )
+    args = parser.parse_args()
+
     file_paths = []
     contract_filenames = []
-    folders_to_check = os.listdir(contracts_path)
-    for folder, _, files in os.walk(contracts_path):
+    folders_to_check = os.listdir(args.cairo_path)
+    for folder, _, files in os.walk(args.cairo_path):
         for file in files:
             if (
                 file.endswith(".cairo")
@@ -123,4 +133,4 @@ if __name__ == "__main__":
 
     for file_path, contract_filename in zip(file_paths, contract_filenames):
         print(f"Checking file {os.path.join(file_path, contract_filename)}")
-        check_interface(file_path, contract_filename)
+        check_interface(file_path, contract_filename, args.cairo_path)

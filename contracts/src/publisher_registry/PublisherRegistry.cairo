@@ -2,13 +2,13 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-from contracts.publisher_registry.library import (
+from publisher_registry.library import (
     Publisher_get_publisher_address,
     Publisher_get_all_publishers,
     Publisher_update_publisher_address,
     Publisher_register_publisher,
 )
-from contracts.admin.library import Admin
+from admin.library import Admin
 
 #
 # Constructor

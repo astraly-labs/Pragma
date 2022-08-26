@@ -8,11 +8,11 @@ from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
 
-from contracts.admin.library import Admin
+from admin.library import Admin
 
-from contracts.entry.structs import Entry
-from contracts.oracle_controller.IOracleController import IOracleController
-from contracts.compute_engines.yield_curve.structs import YieldPoint
+from entry.structs import Entry
+from oracle_controller.IOracleController import IOracleController
+from compute_engines.yield_curve.structs import YieldPoint
 
 #
 # Consts

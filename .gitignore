@@ -6,7 +6,7 @@
 **_compiled.json
 
 # default python virtual environment name
-venv/
+.venv/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -26,3 +26,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# protostar
+!contracts/build/
+contracts/build/*[!_abi].json

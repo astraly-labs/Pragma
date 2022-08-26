@@ -1,9 +1,9 @@
 %lang starknet
 
-from contracts.compute_engines.yield_curve.structs import YieldPoint
+from compute_engines.yield_curve.structs import YieldPoint
 
 @contract_interface
-namespace IOracleController:
+namespace IYieldCurve:
     #
     # Getters
     #
