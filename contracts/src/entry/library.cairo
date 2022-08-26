@@ -91,6 +91,8 @@ namespace Entries:
     func mergesort_entries_by_value{range_check_ptr}(felt_arr_len : felt, felt_arr : Entry*) -> (
         sorted_entries_ptr : Entry*
     ):
+        alloc_locals
+
         # step 1. if len == 1 => return lst
         if felt_arr_len == 1:
             return (felt_arr)
@@ -98,19 +100,28 @@ namespace Entries:
 
         # step 2. split list at middle
         let (left_arr_len, _) = unsigned_div_rem(felt_arr_len, 2)
-        let right_arr_len = felt_arr_len - left_arr_len
+        let right_arr_len = felt_arr_len - left_arr_len 
 
         # step 3. create left and right
         let left_arr = felt_arr
-        let right_arr = felt_arr + right_arr_len * Entry.SIZE
+        let right_arr = felt_arr + left_arr_len * Entry.SIZE
 
         # step 4. recurse left and right
-        let sorted_left_arr = mergesort_entries_by_value(left_arr_len, left_arr)
-        let sorted_right_arr = mergesort_entries_by_value(right_arr_len, right_arr)
+        let (sorted_left_arr) = mergesort_entries_by_value(left_arr_len, left_arr)
+        let (sorted_right_arr) = mergesort_entries_by_value(right_arr_len, right_arr)
         let (result_arr : Entry*) = alloc()
 
         # step 5. merge left and right
-        let sorted_arr = _merge(left_arr_len, left_arr, right_arr_len, right_arr, 0, 0)
+        let (sorted_arr) = _merge(
+            left_arr_len,
+            sorted_left_arr,
+            right_arr_len,
+            sorted_right_arr,
+            result_arr,
+            0,
+            0,
+            0,
+        )
         return (sorted_arr)
     end
 
@@ -124,11 +135,14 @@ namespace Entries:
         left_arr_ix : felt,
         right_arr_ix : felt,
     ) -> (sorted_arr : Entry*):
-        if left_arr_len == left_arr_ix and right_arr_len == right_arr_ix:
+        alloc_locals
+
+        if (current_ix) == (left_arr_len + right_arr_len):
             return (sorted_arr)
         end
 
         if left_arr_len == left_arr_ix:
+            let right_v = right_arr[right_arr_ix].value
             assert sorted_arr[current_ix] = right_arr[right_arr_ix]
             return _merge(
                 left_arr_len,
@@ -142,7 +156,9 @@ namespace Entries:
             )
         end
 
+
         if right_arr_len == right_arr_ix:
+            let left_v = left_arr[left_arr_ix].value
             assert sorted_arr[current_ix] = left_arr[left_arr_ix]
             return _merge(
                 left_arr_len,
@@ -156,7 +172,11 @@ namespace Entries:
             )
         end
 
-        if is_le(left_arr[left_arr_ix].value, right_arr[right_arr_ix].value) == 1:
+        let left_val = left_arr[left_arr_ix].value
+        let right_val = right_arr[right_arr_ix].value
+        let (is_left) = is_le(left_val, right_val)
+
+        if is_left == 1:
             assert sorted_arr[current_ix] = left_arr[left_arr_ix]
             return _merge(
                 left_arr_len,
@@ -181,8 +201,6 @@ namespace Entries:
                 right_arr_ix + 1,
             )
         end
-
-        return (sorted_arr)
     end
 
     func bubble_sort_entries_by_value{range_check_ptr}(
