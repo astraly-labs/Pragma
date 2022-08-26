@@ -4,9 +4,6 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math import unsigned_div_rem
 from starkware.cairo.common.math_cmp import is_le
-from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.serialize import serialize_word
-from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from entry.structs import Entry
