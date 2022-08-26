@@ -30,4 +30,3 @@ var/
 # protostar
 !contracts/build/
 contracts/build/*[!_abi].json
-contracts/abi_test/*[!_abi].json
