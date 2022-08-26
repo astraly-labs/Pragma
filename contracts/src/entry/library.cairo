@@ -1,11 +1,9 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math import unsigned_div_rem
-from starkware.cairo.common.signature import verify_ecdsa_signature
+from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from entry.structs import Entry
@@ -81,10 +79,115 @@ namespace Entries:
         sorted_entries : Entry*
     ):
         let (entries_input : Entry*) = alloc()
-        let (sorted_entries) = bubble_sort_entries_by_value(
-            entries_len, entries, 0, 1, entries_input, 0
-        )
+        let (sorted_entries) = mergesort_entries_by_value(entries_len, entries)
         return (sorted_entries)
+    end
+
+    func mergesort_entries_by_value{range_check_ptr}(felt_arr_len : felt, felt_arr : Entry*) -> (
+        sorted_entries_ptr : Entry*
+    ):
+        alloc_locals
+
+        # step 1. if len == 1 => return lst
+        if felt_arr_len == 1:
+            return (felt_arr)
+        end
+
+        # step 2. split list at middle
+        let (left_arr_len, _) = unsigned_div_rem(felt_arr_len, 2)
+        let right_arr_len = felt_arr_len - left_arr_len
+
+        # step 3. create left and right
+        let left_arr = felt_arr
+        let right_arr = felt_arr + left_arr_len * Entry.SIZE
+
+        # step 4. recurse left and right
+        let (sorted_left_arr) = mergesort_entries_by_value(left_arr_len, left_arr)
+        let (sorted_right_arr) = mergesort_entries_by_value(right_arr_len, right_arr)
+        let (result_arr : Entry*) = alloc()
+
+        # step 5. merge left and right
+        let (sorted_arr) = _merge(
+            left_arr_len, sorted_left_arr, right_arr_len, sorted_right_arr, result_arr, 0, 0, 0
+        )
+        return (sorted_arr)
+    end
+
+    func _merge{range_check_ptr}(
+        left_arr_len : felt,
+        left_arr : Entry*,
+        right_arr_len : felt,
+        right_arr : Entry*,
+        sorted_arr : Entry*,
+        current_ix : felt,
+        left_arr_ix : felt,
+        right_arr_ix : felt,
+    ) -> (sorted_arr : Entry*):
+        alloc_locals
+
+        if (current_ix) == (left_arr_len + right_arr_len):
+            return (sorted_arr)
+        end
+
+        if left_arr_len == left_arr_ix:
+            let right_v = right_arr[right_arr_ix].value
+            assert sorted_arr[current_ix] = right_arr[right_arr_ix]
+            return _merge(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix,
+                right_arr_ix + 1,
+            )
+        end
+
+        if right_arr_len == right_arr_ix:
+            let left_v = left_arr[left_arr_ix].value
+            assert sorted_arr[current_ix] = left_arr[left_arr_ix]
+            return _merge(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix + 1,
+                right_arr_ix,
+            )
+        end
+
+        let left_val = left_arr[left_arr_ix].value
+        let right_val = right_arr[right_arr_ix].value
+        let (is_left) = is_le(left_val, right_val)
+
+        if is_left == 1:
+            assert sorted_arr[current_ix] = left_arr[left_arr_ix]
+            return _merge(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix + 1,
+                right_arr_ix,
+            )
+        else:
+            assert sorted_arr[current_ix] = right_arr[right_arr_ix]
+            return _merge(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix,
+                right_arr_ix + 1,
+            )
+        end
     end
 
     func bubble_sort_entries_by_value{range_check_ptr}(
