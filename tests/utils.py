@@ -9,6 +9,8 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
 
+CAIRO_PATH = ["contracts/src"]
+
 
 def construct_path(path):
     return os.path.join(os.path.dirname(__file__), "../", path)
@@ -18,7 +20,7 @@ def get_contract_def(path):
     """Returns the contract definition from the contract path"""
     complete_path = construct_path(path)
     contract_def = compile_starknet_files(
-        files=[complete_path], debug_info=True, cairo_path=["contracts/src"]
+        files=[complete_path], debug_info=True, cairo_path=CAIRO_PATH
     )
     return contract_def
 
