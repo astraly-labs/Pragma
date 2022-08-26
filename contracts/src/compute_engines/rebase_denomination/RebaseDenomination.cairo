@@ -48,7 +48,7 @@ end
 # @return last_updated_timestamp: timestamp the Entries were last updated
 # @return num_sources_aggregated: number of sources used in aggregation
 @view
-func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func get_rebased_value_via_usd{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     quote_currency : felt, base_currency : felt
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     alloc_locals
@@ -160,6 +160,8 @@ end
 
 # @dev divides two felts that represent decimal numbers
 # @dev the result has the higher number of decimals and is not rounded
+# @dev we shift the value first and then divide, which leads to higher accuracy but can lead to overflow
+#      if either x+y or 2y is greater than log(FIELD_PRIME), or about 76.
 # @param a_value: the dividend
 # @param a_decimals: the dividend's number of decimals
 # @param b_value: the divisor
@@ -169,6 +171,7 @@ end
 func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> (
     value : felt, decimals : felt
 ):
+    # TODO: Convert to safe version that explicitly errors if overflow
     # Use that (a * 10^x) / (b * 10^y) = (a / b) * 10^(x - y)
     alloc_locals
     local a_to_shift
@@ -209,7 +212,7 @@ end
 # @param shift_by: the number of places to shift by
 # @return shifted: the shifted felt
 func _shift_left{range_check_ptr}(value : felt, base : felt, shift_by : felt) -> (shifted : felt):
-    # Check for overflow?
+    # TODO: Check for overflow
     let (multiplier) = pow(base, shift_by)
     let shifted = value * multiplier
     return (shifted)

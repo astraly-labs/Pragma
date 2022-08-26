@@ -26,6 +26,7 @@ func test_rebase_mock{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     # We deploy contract and put its address into a local variable. Second argument is calldata array
     %{ ids.contract_address = deploy_contract("./contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo", [1, ids.oracle_controller_address]).contract_address %}
 
+    # TODO: test multiple values by having mock call return two different values
     %{ stop_mock = mock_call(ids.oracle_controller_address, "get_value", [3000000, 6, 10000, 4]) %}
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
@@ -81,6 +82,8 @@ func test_decimal_div{range_check_ptr}():
     return ()
 end
 
+# This test currently expects an overflow and still passes.
+# TODO: Make this test fail
 @external
 func test_todo{range_check_ptr}():
     alloc_locals

@@ -6,7 +6,7 @@ namespace IOracleController:
     # Getters
     #
 
-    func get_rebased_value(quote_currency : felt, base_currency : felt) -> (
+    func get_rebased_value_via_usd(quote_currency : felt, base_currency : felt) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end
