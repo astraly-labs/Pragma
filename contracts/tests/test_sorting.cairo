@@ -58,7 +58,7 @@ func test_bubblesort{syscall_ptr : felt*, range_check_ptr}():
     alloc_locals
 
     let (entry_array) = make_entry_array()
-    let (new_array) = Entries.sort_entries_by_value(20, entry_array)
+    let (sorted_arr) = Entries.sort_entries_by_value(20, entry_array)
 
     assert sorted_arr[0].value = 1
     assert sorted_arr[4].value = 5

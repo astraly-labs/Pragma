@@ -30,7 +30,7 @@ func test_rebase_mock{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     %{ stop_mock = mock_call(ids.oracle_controller_address, "get_value", [3000000, 6, 10000, 4]) %}
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = IOracleRebaser.get_rebased_value(contract_address, ETH, BTC)
+    ) = IOracleRebaser.get_rebased_value_via_usd(contract_address, ETH, BTC)
     %{ stop_mock() %}
     assert_eq(value, 1000000)
     assert_eq(decimals, 6)
