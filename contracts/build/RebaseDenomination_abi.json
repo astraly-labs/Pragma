@@ -40,7 +40,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_rebased_value",
+        "name": "get_rebased_value_via_usd",
         "outputs": [
             {
                 "name": "value",
