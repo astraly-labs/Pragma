@@ -78,7 +78,6 @@ Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public 
 ```bash
 export STARKNET_NETWORK=alpha-goerli
 protostar build
-cp contracts/build/Account_abi.json empiric-package/empiric/core/abi/Account.json 
 cp contracts/build/OracleController_abi.json empiric-ui/src/abi/OracleController.json
 starknet deploy --contract contracts/build/Account.json --inputs <ADMIN_PUBLIC_KEY>
 starknet deploy --contract contracts/build/Account.json --inputs <PUBLISHER_PUBLIC_KEY>
