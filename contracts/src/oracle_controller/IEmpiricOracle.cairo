@@ -19,7 +19,7 @@ namespace IEmpiricOracle:
     # Getters
     #
 
-    func get_decimals(key : felt) -> (decimals : felt):
+    func get_decimals(pair_id : felt) -> (decimals : felt):
     end
 
     func get_entries(key : felt, sources_len : felt, sources : felt*) -> (

@@ -6,7 +6,7 @@ from empiric.core.utils import str_to_felt
 
 
 class Entry:
-    key: int
+    pair_id: int
     value: int
     timestamp: int
     source: int
@@ -14,14 +14,14 @@ class Entry:
 
     def __init__(
         self,
-        key: Union[str, int],
+        pair_id: Union[str, int],
         value: int,
         timestamp: int,
         source: Union[str, int],
         publisher: Union[str, int],
     ) -> None:
-        if type(key) == str:
-            key = str_to_felt(key)
+        if type(pair_id) == str:
+            pair_id = str_to_felt(pair_id)
 
         if type(publisher) == str:
             publisher = str_to_felt(publisher)
@@ -29,7 +29,7 @@ class Entry:
         if type(source) == str:
             source = str_to_felt(source)
 
-        self.key = key
+        self.pair_id = pair_id
         self.value = value
         self.timestamp = timestamp
         self.source = source
@@ -38,7 +38,7 @@ class Entry:
     def __eq__(self, other):
         if isinstance(other, Entry):
             return (
-                self.key == other.key
+                self.pair_id == other.pair_id
                 and self.value == other.value
                 and self.timestamp == other.timestamp
                 and self.source == other.source
@@ -48,7 +48,7 @@ class Entry:
         # which will be namedtuples.
         if isinstance(other, Tuple) and len(other) == 5:
             return (
-                self.key == other[0]
+                self.pair_id == other[0]
                 and self.value == other[1]
                 and self.timestamp == other[2]
                 and self.source == other[3]
@@ -57,7 +57,7 @@ class Entry:
         return False
 
     def serialize(self) -> Tuple[int, int, int, int, int]:
-        return (self.key, self.value, self.timestamp, self.source, self.publisher)
+        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher)
 
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[int]:

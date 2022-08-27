@@ -2,7 +2,7 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "offset": 0,
                 "type": "felt"
             },

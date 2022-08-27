@@ -7,15 +7,10 @@ from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math import assert_not_equal, assert_not_zero
 from starkware.starknet.common.syscalls import get_caller_address
 
-from entry.structs import Entry
+from entry.structs import Entry, Pair, Currency
 from oracle_implementation.IOracleImplementation import IOracleImplementation
-from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
+from oracle_controller.structs import OracleController_OracleImplementationStatus
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
-
-#
-# Consts
-#
-const DEFAULT_DECIMALS = 18
 
 #
 # Storage
@@ -43,7 +38,15 @@ func OracleController_primary_oracle_implementation_address_storage() -> (oracle
 end
 
 @storage_var
-func OracleController_decimals_storage(key : felt) -> (decimals : felt):
+func OracleController_currencies_storage(key : felt) -> (currency : Currency):
+end
+
+@storage_var
+func OracleController_pairs_storage(id : felt) -> (pair : Pair):
+end
+
+@storage_var
+func OracleController_pair_id_storage(quote_currency_id, base_currency_id) -> (pair_id : felt):
 end
 
 #
@@ -76,6 +79,14 @@ end
 func SubmittedEntry(new_entry : Entry):
 end
 
+@event
+func SubmittedCurrency(currency : Currency):
+end
+
+@event
+func SubmittedPair(pair : Pair):
+end
+
 namespace OracleController:
     #
     # Constructor
@@ -85,11 +96,14 @@ namespace OracleController:
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     }(
         publisher_registry_address : felt,
-        keys_decimals_len : felt,
-        keys_decimals : KeyDecimalStruct*,
+        currencies_len : felt,
+        currencies : Currency*,
+        pairs_len : felt,
+        pairs : Pair*,
     ):
         OracleController_publisher_registry_address_storage.write(publisher_registry_address)
-        _set_keys_decimals(keys_decimals_len, keys_decimals, 0)
+        _set_keys_currencies(currencies_len, currencies, 0)
+        _set_keys_pairs(pairs_len, pairs, 0)
         return ()
     end
 
@@ -161,31 +175,46 @@ namespace OracleController:
     end
 
     func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt
+        currency_id : felt
     ) -> (decimals : felt):
-        let (key_decimals) = OracleController_decimals_storage.read(key)
-
-        if key_decimals == 0:
-            return (DEFAULT_DECIMALS)
-        else:
-            return (key_decimals)
+        let (key_currency) = OracleController_currencies_storage.read(currency_id)
+        if key_currency.id == 0:
+            # TODO (rlkelly): should this be 0?
+            return (18)
         end
+
+        let key_decimals = key_currency.decimals
+        return (key_decimals)
     end
 
     #
     # Setters
     #
 
-    func _set_keys_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        keys_decimals_len : felt, keys_decimals : KeyDecimalStruct*, idx : felt
+    func _set_keys_currencies{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        keys_currencies_len : felt, keys_currencies : Currency*, idx : felt
     ):
-        if idx == keys_decimals_len:
+        if idx == keys_currencies_len:
             return ()
         end
 
-        let key_decimal = keys_decimals[idx]
-        OracleController_decimals_storage.write(key_decimal.key, key_decimal.decimal)
-        _set_keys_decimals(keys_decimals_len, keys_decimals, idx + 1)
+        let key_currency = keys_currencies[idx]
+        OracleController_currencies_storage.write(key_currency.id, key_currency)
+        _set_keys_currencies(keys_currencies_len, keys_currencies, idx + 1)
+
+        return ()
+    end
+
+    func _set_keys_pairs{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        keys_pairs_len : felt, keys_pairs : Pair*, idx : felt
+    ):
+        if idx == keys_pairs_len:
+            return ()
+        end
+
+        let key_pair = keys_pairs[idx]
+        OracleController_pairs_storage.write(key_pair.id, key_pair)
+        _set_keys_pairs(keys_pairs_len, keys_pairs, idx + 1)
 
         return ()
     end
@@ -363,33 +392,33 @@ namespace OracleController:
     #
 
     func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, sources_len : felt, sources : felt*
+        pair_id : felt, sources_len : felt, sources : felt*
     ) -> (entries_len : felt, entries : Entry*):
         alloc_locals
 
         let (primary_oracle_implementation_address) = get_primary_oracle_implementation_address()
 
         let (entries_len, entries) = IOracleImplementation.get_entries(
-            primary_oracle_implementation_address, key, sources_len, sources
+            primary_oracle_implementation_address, pair_id, sources_len, sources
         )
         return (entries_len, entries)
     end
 
     func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, source
+        pair_id : felt, source
     ) -> (entry : Entry):
         alloc_locals
 
         let (primary_oracle_implementation_address) = get_primary_oracle_implementation_address()
 
         let (entry) = IOracleImplementation.get_entry(
-            primary_oracle_implementation_address, key, source
+            primary_oracle_implementation_address, pair_id, source
         )
         return (entry)
     end
 
     func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+        pair_id : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
     ) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
@@ -398,11 +427,16 @@ namespace OracleController:
         let (
             primary_oracle_implementation_address
         ) = OracleController_primary_oracle_implementation_address_storage.read()
-        let (decimals) = get_decimals(key)
+        let (decimals) = get_decimals(pair_id)
+
+        with_attr error_message("OracleController: pair_id not found"):
+            assert_not_zero(decimals)
+        end
+
         let (
             value, last_updated_timestamp, num_sources_aggregated
         ) = IOracleImplementation.get_value(
-            primary_oracle_implementation_address, key, aggregation_mode, sources_len, sources
+            primary_oracle_implementation_address, pair_id, aggregation_mode, sources_len, sources
         )
         return (value, decimals, last_updated_timestamp, num_sources_aggregated)
     end

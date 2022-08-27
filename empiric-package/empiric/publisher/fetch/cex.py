@@ -30,13 +30,13 @@ def fetch_cex(assets, publisher) -> List[Entry]:
         timestamp = int(result["timestamp"])
         price = float(result["last"])
         price_int = int(price * (10 ** asset["decimals"]))
-        key = currency_pair_to_key(*pair)
+        pair_id = currency_pair_to_key(*pair)
 
         logger.info(f"Fetched price {price} for {'/'.join(pair)} from CEX")
 
         entries.append(
             Entry(
-                key=key,
+                pair_id=pair_id,
                 value=price_int,
                 timestamp=timestamp,
                 source=source,

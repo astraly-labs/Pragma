@@ -2,7 +2,7 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "offset": 0,
                 "type": "felt"
             },
@@ -34,18 +34,72 @@
     {
         "members": [
             {
+                "name": "id",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "is_abstract_currency",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "starknet_address",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "ethereum_address",
+                "offset": 4,
+                "type": "felt"
+            }
+        ],
+        "name": "Currency",
+        "size": 5,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "id",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "quote_currency_id",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "base_currency_id",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "Pair",
+        "size": 3,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "key",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "decimal",
+                "name": "currency",
                 "offset": 1,
-                "type": "felt"
+                "type": "Currency"
             }
         ],
-        "name": "KeyDecimalStruct",
-        "size": 2,
+        "name": "KeyCurrencyStruct",
+        "size": 6,
         "type": "struct"
     },
     {
@@ -63,6 +117,23 @@
         ],
         "name": "OracleController_OracleImplementationStatus",
         "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "key",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "pair",
+                "offset": 1,
+                "type": "Pair"
+            }
+        ],
+        "name": "KeyPairsStruct",
+        "size": 4,
         "type": "struct"
     },
     {
@@ -139,6 +210,28 @@
     {
         "data": [
             {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "pair",
+                "type": "Pair"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedPair",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
                 "name": "old_admin_address",
                 "type": "felt"
             },
@@ -162,12 +255,12 @@
                 "type": "felt"
             },
             {
-                "name": "keys_decimals_len",
+                "name": "keys_currencies_len",
                 "type": "felt"
             },
             {
-                "name": "keys_decimals",
-                "type": "KeyDecimalStruct*"
+                "name": "keys_currencies",
+                "type": "KeyCurrencyStruct*"
             }
         ],
         "name": "constructor",
@@ -177,7 +270,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -227,7 +320,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -260,7 +353,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -483,6 +576,39 @@
             }
         ],
         "name": "set_primary_oracle_implementation_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key_currency",
+                "type": "KeyCurrencyStruct"
+            }
+        ],
+        "name": "add_currency",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key_currency",
+                "type": "KeyCurrencyStruct"
+            }
+        ],
+        "name": "update_currency",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key_pair",
+                "type": "KeyPairsStruct"
+            }
+        ],
+        "name": "add_pair",
         "outputs": [],
         "type": "function"
     }

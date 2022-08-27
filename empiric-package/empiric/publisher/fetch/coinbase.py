@@ -30,7 +30,7 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
             continue
 
         pair = asset["pair"]
-        key = currency_pair_to_key(*pair)
+        pair_id = currency_pair_to_key(*pair)
 
         if pair[1] != "USD":
             logger.debug(
@@ -72,11 +72,11 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
 
             timestamp = int(result["timestamp"])
 
-            logger.info(f"Fetched price {price} for {key} from Coinbase")
+            logger.info(f"Fetched price {price} for {pair_id} from Coinbase")
 
             entries.append(
                 Entry(
-                    key=key,
+                    pair_id=pair_id,
                     value=price_int,
                     timestamp=timestamp,
                     source=source,
@@ -84,6 +84,6 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
                 )
             )
         else:
-            logger.debug(f"No entry found for {key} from Coinbase")
+            logger.debug(f"No entry found for {pair_id} from Coinbase")
 
     return entries

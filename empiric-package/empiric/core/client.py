@@ -40,12 +40,12 @@ class EmpiricClient:
         await self.fetch_oracle_controller_contract()
 
         if isinstance(key, str):
-            key = str_to_felt(key)
+            pair_id = str_to_felt(key)
         elif not isinstance(key, int):
             raise TypeError("Key must be string (will be converted to felt) or integer")
 
         response = await self.oracle_controller_contract.functions["get_decimals"].call(
-            key
+            pair_id
         )
 
         return response.decimals
@@ -56,17 +56,19 @@ class EmpiricClient:
         await self.fetch_oracle_controller_contract()
 
         if isinstance(key, str):
-            key = str_to_felt(key)
+            pair_id = str_to_felt(key)
         elif not isinstance(key, int):
-            raise TypeError("Key must be string (will be converted to felt) or integer")
+            raise TypeError(
+                "Pair ID must be string (will be converted to felt) or integer"
+            )
         if sources is None:
             response = await self.oracle_controller_contract.functions[
                 "get_value"
-            ].call(key, aggregation_mode)
+            ].call(pair_id, aggregation_mode)
         else:
             response = await self.oracle_controller_contract.functions[
                 "get_value_for_sources"
-            ].call(key, aggregation_mode, sources)
+            ].call(pair_id, aggregation_mode, sources)
 
         return (
             response.value,
@@ -79,19 +81,25 @@ class EmpiricClient:
         await self.fetch_oracle_controller_contract()
 
         if isinstance(key, str):
-            key = str_to_felt(key)
+            pair_id = str_to_felt(key)
         elif not isinstance(key, int):
-            raise TypeError("Key must be string (will be converted to felt) or integer")
+            raise TypeError(
+                "Pair ID must be string (will be converted to felt) or integer"
+            )
         if sources is None:
             sources = []
 
         response = await self.oracle_controller_contract.functions["get_entries"].call(
-            key, sources
+            pair_id, sources
         )
 
         return [
             Entry(
-                entry.key, entry.value, entry.timestamp, entry.source, entry.publisher
+                entry.pair_id,
+                entry.value,
+                entry.timestamp,
+                entry.source,
+                entry.publisher,
             )
             for entry in response.entries
         ]

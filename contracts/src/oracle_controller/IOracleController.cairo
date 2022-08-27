@@ -1,6 +1,6 @@
 %lang starknet
 
-from entry.structs import Entry
+from entry.structs import Entry, Pair, Currency
 from oracle_controller.structs import OracleController_OracleImplementationStatus
 
 namespace EmpiricAggregationModes:
@@ -37,7 +37,7 @@ namespace IOracleController:
     ):
     end
 
-    func get_decimals(key : felt) -> (decimals : felt):
+    func get_decimals(pair_id : felt) -> (decimals : felt):
     end
 
     #
@@ -65,21 +65,36 @@ namespace IOracleController:
     # Oracle Implementation Controller Functions
     #
 
-    func get_entries(key : felt, sources_len : felt, sources : felt*) -> (
+    func get_entries(pair_id : felt, sources_len : felt, sources : felt*) -> (
         entries_len : felt, entries : Entry*
     ):
     end
 
-    func get_entry(key : felt, source : felt) -> (entry : Entry):
+    func get_entry(pair_id : felt, source : felt) -> (entry : Entry):
     end
 
-    func get_value(key : felt, aggregation_mode : felt) -> (
+    func get_value(pair_id : felt, aggregation_mode : felt) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
     end
 
+    # TODO (rlkelly): add adapters for currency conversion
+    # func get_value_with_hops(
+    #     currency_ids_len : felt, currency_ids : felt*, aggregation_mode : felt
+    # ) -> (
+    #     value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+    # ):
+    # end
+
+    # func get_value_with_USD_hop(
+    #     base_currency_id : felt, quote_currency_id : felt, aggregation_mode : felt
+    # ) -> (
+    #     value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
+    # ):
+    # end
+
     func get_value_for_sources(
-        key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+        pair_id : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
     ) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
@@ -93,5 +108,14 @@ namespace IOracleController:
     end
 
     func publish_entries(new_entries_len : felt, new_entries : Entry*):
+    end
+
+    func add_currency(currency : Currency):
+    end
+
+    func update_currency(currency : Currency):
+    end
+
+    func add_pair(pair : Pair):
     end
 end

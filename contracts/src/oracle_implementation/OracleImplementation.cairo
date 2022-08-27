@@ -4,6 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from entry.structs import Entry
+from proxy.library import Proxy
 from oracle_implementation.library import (
     Oracle_set_oracle_controller_address,
     Oracle_get_entries,
@@ -17,17 +18,57 @@ from oracle_implementation.library import (
 # Constructor
 #
 
-@constructor
-func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    oracle_controller_address : felt
+@external
+func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    oracle_controller_address : felt, proxy_admin : felt
 ):
+    Proxy.initializer(proxy_admin)
     Oracle_set_oracle_controller_address(oracle_controller_address)
+    return ()
+end
+
+#
+# Upgrades
+#
+
+@external
+func upgrade{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_implementation : felt
+):
+    Proxy.assert_only_admin()
+    Proxy._set_implementation_hash(new_implementation)
+    return ()
+end
+
+#
+# Setters
+#
+
+@external
+func setAdmin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(new_admin : felt):
+    Proxy.assert_only_admin()
+    Proxy._set_admin(new_admin)
     return ()
 end
 
 #
 # Getters
 #
+
+@view
+func get_implementation_hash{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    ) -> (address : felt):
+    let (address) = Proxy.get_implementation_hash()
+    return (address)
+end
+
+@view
+func get_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    admin : felt
+):
+    let (admin) = Proxy.get_admin()
+    return (admin)
+end
 
 @view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(

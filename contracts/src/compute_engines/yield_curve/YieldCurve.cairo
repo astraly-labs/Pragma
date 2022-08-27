@@ -799,7 +799,7 @@ namespace YieldCurve:
 
         # Check that future key is active
         let future_key = future_keys[future_keys_idx]
-        let (future_key_status) = get_future_key_status(spot_entry.key, future_key)
+        let (future_key_status) = get_future_key_status(spot_entry.pair_id, future_key)
 
         if future_key_status.is_active == FALSE:
             let (

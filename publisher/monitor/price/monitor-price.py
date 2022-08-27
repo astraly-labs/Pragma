@@ -35,7 +35,7 @@ async def main():
     client = EmpiricClient()
 
     coingecko = {
-        entry.key: entry.value for entry in fetch_coingecko(assets, "publisher")
+        entry.pair_id: entry.value for entry in fetch_coingecko(assets, "publisher")
     }
     aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
 

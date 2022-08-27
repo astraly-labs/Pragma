@@ -37,13 +37,13 @@ def fetch_cryptowatch(assets, publisher) -> List[Entry]:
                 continue
 
             pair = asset["pair"]
-            key = currency_pair_to_key(*pair)
+            pair_id = currency_pair_to_key(*pair)
 
             try:
                 price = source_results["".join(pair).lower()]
             except KeyError:
                 logger.debug(
-                    f"No entry found for {key} from Cryptowatch-{cryptowatch_source}"
+                    f"No entry found for {pair_id} from Cryptowatch-{cryptowatch_source}"
                 )
                 continue
 
@@ -56,7 +56,7 @@ def fetch_cryptowatch(assets, publisher) -> List[Entry]:
 
             entries.append(
                 Entry(
-                    key=key,
+                    pair_id=pair_id,
                     value=price_int,
                     timestamp=timestamp,
                     source=source,

@@ -24,48 +24,48 @@ def fetch_coingecko(assets, publisher) -> List[Entry]:
             continue
 
         pair = asset["pair"]
-        key = currency_pair_to_key(*pair)
+        pair_id = currency_pair_to_key(*pair)
 
         if pair[0] == "ETH":
-            pair_id = "ethereum"
+            pair_id_ = "ethereum"
         elif pair[0] == "BTC":
-            pair_id = "bitcoin"
+            pair_id_ = "bitcoin"
         elif pair[0] == "SOL":
-            pair_id = "solana"
+            pair_id_ = "solana"
         elif pair[0] == "AVAX":
-            pair_id = "avalanche-2"
+            pair_id_ = "avalanche-2"
         elif pair[0] == "DOGE":
-            pair_id = "dogecoin"
+            pair_id_ = "dogecoin"
         elif pair[0] == "SHIB":
-            pair_id = "shiba-inu"
+            pair_id_ = "shiba-inu"
         elif pair[0] == "TEMP":
-            pair_id = "tempus"
+            pair_id_ = "tempus"
         elif pair[0] == "DAI":
-            pair_id = "dai"
+            pair_id_ = "dai"
         elif pair[0] == "USDT":
-            pair_id = "tether"
+            pair_id_ = "tether"
         elif pair[0] == "USDC":
-            pair_id = "usd-coin"
+            pair_id_ = "usd-coin"
         elif pair[0] == "TUSD":
-            pair_id = "true-usd"
+            pair_id_ = "true-usd"
         elif pair[0] == "BUSD":
-            pair_id = "binance-usd"
+            pair_id_ = "binance-usd"
         elif pair[0] == "BNB":
-            pair_id = "binancecoin"
+            pair_id_ = "binancecoin"
         elif pair[0] == "ADA":
-            pair_id = "cardano"
+            pair_id_ = "cardano"
         elif pair[0] == "XRP":
-            pair_id = "ripple"
+            pair_id_ = "ripple"
         elif pair[0] == "MATIC":
-            pair_id = "matic-network"
+            pair_id_ = "matic-network"
         elif pair[0] == "AAVE":
-            pair_id = "aave"
+            pair_id_ = "aave"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"
             )
 
-        url = f"https://api.coingecko.com/api/v3/coins/{pair_id}?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
+        url = f"https://api.coingecko.com/api/v3/coins/{pair_id_}?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
 
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
@@ -78,11 +78,11 @@ def fetch_coingecko(assets, publisher) -> List[Entry]:
         )
         price_int = int(price * (10 ** asset["decimals"]))
 
-        logger.info(f"Fetched price {price} for {key} from Coingecko")
+        logger.info(f"Fetched price {price} for {pair_id} from Coingecko")
 
         entries.append(
             Entry(
-                key=key,
+                pair_id=pair_id,
                 value=price_int,
                 timestamp=timestamp,
                 source=source,
