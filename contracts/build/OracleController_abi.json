@@ -88,23 +88,6 @@
     {
         "members": [
             {
-                "name": "key",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "currency",
-                "offset": 1,
-                "type": "Currency"
-            }
-        ],
-        "name": "KeyCurrencyStruct",
-        "size": 6,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "was_registered",
                 "offset": 0,
                 "type": "felt"
@@ -117,23 +100,6 @@
         ],
         "name": "OracleController_OracleImplementationStatus",
         "size": 2,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
-                "name": "key",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "pair",
-                "offset": 1,
-                "type": "Pair"
-            }
-        ],
-        "name": "KeyPairsStruct",
-        "size": 4,
         "type": "struct"
     },
     {
@@ -255,12 +221,20 @@
                 "type": "felt"
             },
             {
-                "name": "keys_currencies_len",
+                "name": "currencies_len",
                 "type": "felt"
             },
             {
-                "name": "keys_currencies",
-                "type": "KeyCurrencyStruct*"
+                "name": "currencies",
+                "type": "Currency*"
+            },
+            {
+                "name": "pairs_len",
+                "type": "felt"
+            },
+            {
+                "name": "pairs",
+                "type": "Pair*"
             }
         ],
         "name": "constructor",
@@ -299,7 +273,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -506,7 +480,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             }
         ],
@@ -582,8 +556,8 @@
     {
         "inputs": [
             {
-                "name": "key_currency",
-                "type": "KeyCurrencyStruct"
+                "name": "currency",
+                "type": "Currency"
             }
         ],
         "name": "add_currency",
@@ -593,8 +567,8 @@
     {
         "inputs": [
             {
-                "name": "key_currency",
-                "type": "KeyCurrencyStruct"
+                "name": "currency",
+                "type": "Currency"
             }
         ],
         "name": "update_currency",
@@ -604,8 +578,8 @@
     {
         "inputs": [
             {
-                "name": "key_pair",
-                "type": "KeyPairsStruct"
+                "name": "pair",
+                "type": "Pair"
             }
         ],
         "name": "add_pair",
