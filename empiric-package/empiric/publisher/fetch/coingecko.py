@@ -27,45 +27,45 @@ def fetch_coingecko(assets, publisher) -> List[Entry]:
         pair_id = currency_pair_to_key(*pair)
 
         if pair[0] == "ETH":
-            pair_id_ = "ethereum"
+            coingecko_quote_currency_name = "ethereum"
         elif pair[0] == "BTC":
-            pair_id_ = "bitcoin"
+            coingecko_quote_currency_name = "bitcoin"
         elif pair[0] == "SOL":
-            pair_id_ = "solana"
+            coingecko_quote_currency_name = "solana"
         elif pair[0] == "AVAX":
-            pair_id_ = "avalanche-2"
+            coingecko_quote_currency_name = "avalanche-2"
         elif pair[0] == "DOGE":
-            pair_id_ = "dogecoin"
+            coingecko_quote_currency_name = "dogecoin"
         elif pair[0] == "SHIB":
-            pair_id_ = "shiba-inu"
+            coingecko_quote_currency_name = "shiba-inu"
         elif pair[0] == "TEMP":
-            pair_id_ = "tempus"
+            coingecko_quote_currency_name = "tempus"
         elif pair[0] == "DAI":
-            pair_id_ = "dai"
+            coingecko_quote_currency_name = "dai"
         elif pair[0] == "USDT":
-            pair_id_ = "tether"
+            coingecko_quote_currency_name = "tether"
         elif pair[0] == "USDC":
-            pair_id_ = "usd-coin"
+            coingecko_quote_currency_name = "usd-coin"
         elif pair[0] == "TUSD":
-            pair_id_ = "true-usd"
+            coingecko_quote_currency_name = "true-usd"
         elif pair[0] == "BUSD":
-            pair_id_ = "binance-usd"
+            coingecko_quote_currency_name = "binance-usd"
         elif pair[0] == "BNB":
-            pair_id_ = "binancecoin"
+            coingecko_quote_currency_name = "binancecoin"
         elif pair[0] == "ADA":
-            pair_id_ = "cardano"
+            coingecko_quote_currency_name = "cardano"
         elif pair[0] == "XRP":
-            pair_id_ = "ripple"
+            coingecko_quote_currency_name = "ripple"
         elif pair[0] == "MATIC":
-            pair_id_ = "matic-network"
+            coingecko_quote_currency_name = "matic-network"
         elif pair[0] == "AAVE":
-            pair_id_ = "aave"
+            coingecko_quote_currency_name = "aave"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"
             )
 
-        url = f"https://api.coingecko.com/api/v3/coins/{pair_id_}?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
+        url = f"https://api.coingecko.com/api/v3/coins/{coingecko_quote_currency_name}?localization=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
 
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()

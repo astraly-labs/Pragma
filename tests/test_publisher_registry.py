@@ -1,13 +1,11 @@
 import pytest
 import pytest_asyncio
-from constants import CAIRO_PATH, PUBLISHER_REGISTRY_CONTRACT_FILE
+from constants import ACCOUNT_CONTRACT_FILE, CAIRO_PATH, PUBLISHER_REGISTRY_CONTRACT_FILE
 from empiric.core.utils import str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import assert_event_emitted, cached_contract, construct_path
-
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 
 
 @pytest_asyncio.fixture(scope="module")
