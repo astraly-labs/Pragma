@@ -187,6 +187,17 @@
     {
         "data": [
             {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
                 "name": "pair",
                 "type": "Pair"
             }

@@ -12,6 +12,7 @@ from oracle_controller.library import (
     OracleController,
     SubmittedCurrency,
     SubmittedPair,
+    UpdatedCurrency,
 )
 from oracle_controller.structs import OracleController_OracleImplementationStatus
 
@@ -290,6 +291,7 @@ func update_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
 ):
     Admin.only_admin()
     OracleController_currencies_storage.write(currency.id, currency)
+    UpdatedCurrency.emit(currency)
     return ()
 end
 

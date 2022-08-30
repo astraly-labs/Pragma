@@ -464,7 +464,9 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         list(entry.serialize()),
     )
 
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
     assert result.result.decimals == DEFAULT_DECIMALS
@@ -499,7 +501,9 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_entry = entry = Entry(
@@ -546,7 +550,9 @@ async def test_re_submit_stale(
         entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     source_result = await oracle_controller.get_value_for_sources(
@@ -576,7 +582,9 @@ async def test_re_submit_stale(
     except StarkException:
         pass
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     source_result = await oracle_controller.get_value_for_sources(
@@ -607,7 +615,9 @@ async def test_submit_second_asset(
         entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_entry = Entry(
@@ -631,7 +641,9 @@ async def test_submit_second_asset(
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     source_result = await oracle_controller.get_value_for_sources(
@@ -694,7 +706,9 @@ async def test_submit_second_publisher(
         second_entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
@@ -743,7 +757,9 @@ async def test_submit_second_source(
         entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_source = str_to_felt("1xdata")
@@ -832,7 +848,9 @@ async def test_median_aggregation(
         result = await oracle_controller.get_entries(pair_id, []).call()
         assert result.result.entries == entries
 
-        result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+        result = await oracle_controller.get_value(
+            pair_id, AggregationMode.MEDIAN.value
+        ).call()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
@@ -875,7 +893,9 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         result = await oracle_controller.get_entries(pair_id, []).call()
         assert result.result.entries == [entries[i]]
 
-        result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+        result = await oracle_controller.get_value(
+            pair_id, AggregationMode.MEDIAN.value
+        ).call()
         assert result.result.value == prices[i]
 
 
@@ -920,7 +940,9 @@ async def test_subset_publishers(
     result = await oracle_controller.get_entries(pair_id, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
 
@@ -961,7 +983,9 @@ async def test_unknown_key(initialized_contracts):
     result = await oracle_controller.get_entries(unknown_pair_id, []).call()
     assert len(result.result.entries) == 0
 
-    result = await oracle_controller.get_value(unknown_pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        unknown_pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == 0
     assert result.result.last_updated_timestamp == 0
 
@@ -1081,7 +1105,9 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(pair_id, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     # Add second oracle implementation address to controller
@@ -1121,7 +1147,9 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(pair_id, []).call()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == (entry.value + second_entry.value) / 2
     assert result.result.num_sources_aggregated == 2
 
@@ -1142,7 +1170,9 @@ async def test_multiple_oracle_implementations(
     result = await oracle_controller.get_entries(pair_id, []).call()
     assert result.result.entries == [second_entry]
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == second_entry.value
 
 
@@ -1248,7 +1278,9 @@ async def test_rotate_primary_oracle_implementation_address(
     result = await oracle_controller.get_entries(pair_id, []).call()
     assert result.result.entries == [entry, second_entry]
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == (entry.value + second_entry.value) / 2
 
     # Add third (fake) oracle implementation address to controller
@@ -1355,7 +1387,9 @@ async def test_ignore_stale_entries(
         second_entry.serialize(),
     )
 
-    result = await oracle_controller.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_controller.get_value(
+        pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == second_entry.value
     assert result.result.last_updated_timestamp == second_entry.timestamp
 

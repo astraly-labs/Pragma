@@ -84,6 +84,10 @@ func SubmittedCurrency(currency : Currency):
 end
 
 @event
+func UpdatedCurrency(currency : Currency):
+end
+
+@event
 func SubmittedPair(pair : Pair):
 end
 
