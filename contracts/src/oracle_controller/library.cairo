@@ -183,8 +183,7 @@ namespace OracleController:
     ) -> (decimals : felt):
         let (key_currency) = OracleController_currencies_storage.read(currency_id)
         if key_currency.id == 0:
-            # TODO (rlkelly): should this be 0?
-            return (18)
+            return (0)
         end
 
         let key_decimals = key_currency.decimals
