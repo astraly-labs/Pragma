@@ -179,9 +179,10 @@ namespace OracleController:
     end
 
     func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        currency_id : felt
+        pair_id : felt
     ) -> (decimals : felt):
-        let (key_currency) = OracleController_currencies_storage.read(currency_id)
+        let (pair) = OracleController_pairs_storage.read(pair_id)
+        let (key_currency) = OracleController_currencies_storage.read(pair.base_currency_id)
         if key_currency.id == 0:
             return (0)
         end

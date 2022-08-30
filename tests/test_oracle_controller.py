@@ -110,12 +110,13 @@ async def contract_init(
         contract_class=publisher_registry_class,
         constructor_calldata=[admin_account.contract_address],
     )
+
     oracle_controller = await starknet.deploy(
         contract_class=oracle_controller_class,
         constructor_calldata=[
             admin_account.contract_address,
             publisher_registry.contract_address,
-            3,
+            9,
             str_to_felt("decimals-test"),
             100,
             1,
@@ -126,14 +127,65 @@ async def contract_init(
             1,
             0,
             0,
+            str_to_felt("btc"),
+            18,
+            1,
+            0,
+            0,
             str_to_felt("usd"),
             8,
             1,
             0,
             0,
+            str_to_felt("doge"),
+            18,
             1,
+            0,
+            0,
+            str_to_felt("luna"),
+            18,
+            1,
+            0,
+            0,
+            str_to_felt("sol"),
+            18,
+            1,
+            0,
+            0,
+            str_to_felt("shib"),
+            18,
+            1,
+            0,
+            0,
+            str_to_felt("avax"),
+            18,
+            1,
+            0,
+            0,
+            8,
+            str_to_felt("usd/decimals-test"),
+            str_to_felt("usd"),
+            str_to_felt("decimals-test"),
             str_to_felt("eth/usd"),
             str_to_felt("eth"),
+            str_to_felt("usd"),
+            str_to_felt("btc/usd"),
+            str_to_felt("btc"),
+            str_to_felt("usd"),
+            str_to_felt("luna/usd"),
+            str_to_felt("luna"),
+            str_to_felt("usd"),
+            str_to_felt("doge/usd"),
+            str_to_felt("doge"),
+            str_to_felt("usd"),
+            str_to_felt("sol/usd"),
+            str_to_felt("sol"),
+            str_to_felt("usd"),
+            str_to_felt("shib/usd"),
+            str_to_felt("shib"),
+            str_to_felt("usd"),
+            str_to_felt("avax/usd"),
+            str_to_felt("avax"),
             str_to_felt("usd"),
         ],
     )
@@ -265,10 +317,10 @@ async def test_deploy(initialized_contracts):
 async def test_decimals(initialized_contracts, admin_signer):
     oracle_controller = initialized_contracts["oracle_controller"]
 
-    result = await oracle_controller.get_decimals(str_to_felt("default")).call()
-    assert result.result.decimals == DEFAULT_DECIMALS
+    result = await oracle_controller.get_decimals(str_to_felt("nonexistant")).call()
+    assert result.result.decimals == 0
 
-    result = await oracle_controller.get_decimals(str_to_felt("decimals-test")).call()
+    result = await oracle_controller.get_decimals(str_to_felt("usd/decimals-test")).call()
     assert result.result.decimals == 100
 
 
@@ -469,7 +521,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     ).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
-    assert result.result.decimals == DEFAULT_DECIMALS
+    assert result.result.decimals == 8
 
     source_result = await oracle_controller.get_value_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
@@ -913,7 +965,7 @@ async def test_subset_publishers(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_controller = initialized_contracts["oracle_controller"]
 
-    pair_id = str_to_felt("luna/usd")
+    pair_id = str_to_felt("doge/usd")
     entry = Entry(
         pair_id=pair_id,
         value=1,
@@ -980,14 +1032,19 @@ async def test_unknown_key(initialized_contracts):
     oracle_controller = initialized_contracts["oracle_controller"]
 
     unknown_pair_id = str_to_felt("answertolife")
+
     result = await oracle_controller.get_entries(unknown_pair_id, []).call()
     assert len(result.result.entries) == 0
 
-    result = await oracle_controller.get_value(
-        unknown_pair_id, AggregationMode.MEDIAN.value
-    ).call()
-    assert result.result.value == 0
-    assert result.result.last_updated_timestamp == 0
+    try:
+        result = await oracle_controller.get_value(
+            unknown_pair_id, AggregationMode.MEDIAN.value
+        ).call()
+        raise Exception('Should raise exception')
+    except StarkException:
+        # assert result.result.value == 0
+        # assert result.result.last_updated_timestamp == 0
+        pass
 
 
 @pytest.mark.asyncio
