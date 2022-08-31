@@ -6,13 +6,17 @@ from constants import (
     ACCOUNT_CONTRACT_FILE,
     CAIRO_PATH,
     ORACLE_CONTRACT_FILE,
+    PROXY_CONTRACT_FILE,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
 )
 from empiric.core.entry import Entry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
-from starkware.starknet.compiler.compile import compile_starknet_files
+from starkware.starknet.compiler.compile import (
+    compile_starknet_files,
+    get_selector_from_name,
+)
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import (
@@ -41,11 +45,17 @@ async def contract_classes():
         debug_info=True,
         cairo_path=CAIRO_PATH,
     )
+    proxy_class = compile_starknet_files(
+        files=[PROXY_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
+    )
 
     return (
         account_class,
         publisher_registry_class,
         oracle_class,
+        proxy_class,
     )
 
 
@@ -61,6 +71,7 @@ async def contract_init(
         account_class,
         publisher_registry_class,
         oracle_class,
+        proxy_class,
     ) = contract_classes
 
     starknet = await Starknet.empty()
@@ -90,9 +101,16 @@ async def contract_init(
         constructor_calldata=[admin_account.contract_address],
     )
 
-    oracle = await starknet.deploy(
+    declared_oracle_class = await starknet.declare(
         contract_class=oracle_class,
+    )
+
+    oracle_proxy = await starknet.deploy(
+        contract_class=proxy_class,
         constructor_calldata=[
+            declared_oracle_class.class_hash,
+            get_selector_from_name("initializer"),
+            73,
             admin_account.contract_address,
             publisher_registry.contract_address,
             9,
@@ -176,17 +194,13 @@ async def contract_init(
         "publisher_account": publisher_account,
         "additional_publisher_accounts": additional_publisher_accounts,
         "publisher_registry": publisher_registry,
-        "oracle": oracle,
+        "oracle_proxy": oracle_proxy,
     }
 
 
 @pytest.fixture
 def contracts(contract_classes, contract_init):
-    (
-        account_class,
-        publisher_registry_class,
-        oracle_class,
-    ) = contract_classes
+    (account_class, publisher_registry_class, proxy_class) = contract_classes
     _state = contract_init["starknet"].state.copy()
     admin_account = cached_contract(
         _state, account_class, contract_init["admin_account"]
@@ -204,7 +218,7 @@ def contracts(contract_classes, contract_init):
     publisher_registry = cached_contract(
         _state, publisher_registry_class, contract_init["publisher_registry"]
     )
-    oracle = cached_contract(_state, oracle_class, contract_init["oracle"])
+    oracle_proxy = cached_contract(_state, proxy_class, contract_init["oracle_proxy"])
     return {
         "starknet": contract_init["starknet"],
         "admin_account": admin_account,
@@ -212,7 +226,7 @@ def contracts(contract_classes, contract_init):
         "publisher_account": publisher_account,
         "additional_publisher_accounts": additional_publisher_accounts,
         "publisher_registry": publisher_registry,
-        "oracle": oracle,
+        "oracle_proxy": oracle_proxy,
     }
 
 
@@ -244,12 +258,12 @@ async def test_deploy(initialized_contracts):
 
 @pytest.mark.asyncio
 async def test_decimals(initialized_contracts):
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    result = await oracle.get_decimals(str_to_felt("nonexistant")).call()
+    result = await oracle_proxy.get_decimals(str_to_felt("nonexistant")).call()
     assert result.result.decimals == 0
 
-    result = await oracle.get_decimals(str_to_felt("usd/decimals-test")).call()
+    result = await oracle_proxy.get_decimals(str_to_felt("usd/decimals-test")).call()
     assert result.result.decimals == 100
 
 
@@ -257,25 +271,25 @@ async def test_decimals(initialized_contracts):
 async def test_rotate_admin_address(initialized_contracts, admin_signer):
     admin_account = initialized_contracts["admin_account"]
     second_admin_account = initialized_contracts["second_admin_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    result = await oracle.get_admin_address().call()
+    result = await oracle_proxy.get_admin_address().call()
     assert result.result.admin_address == admin_account.contract_address
 
     tx_exec_info = await admin_signer.send_transaction(
         admin_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "set_admin_address",
         [second_admin_account.contract_address],
     )
     assert_event_emitted(
         tx_exec_info,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "AdminAddressChanged",
         [admin_account.contract_address, second_admin_account.contract_address],
     )
 
-    result = await oracle.get_admin_address().call()
+    result = await oracle_proxy.get_admin_address().call()
     assert result.result.admin_address == second_admin_account.contract_address
 
 
@@ -283,9 +297,9 @@ async def test_rotate_admin_address(initialized_contracts, admin_signer):
 async def test_update_publisher_registry_address(initialized_contracts, admin_signer):
     admin_account = initialized_contracts["admin_account"]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    result = await oracle.get_publisher_registry_address().call()
+    result = await oracle_proxy.get_publisher_registry_address().call()
     assert (
         result.result.publisher_registry_address == publisher_registry.contract_address
     )
@@ -294,25 +308,25 @@ async def test_update_publisher_registry_address(initialized_contracts, admin_si
 
     tx_exec_info = await admin_signer.send_transaction(
         admin_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "update_publisher_registry_address",
         [new_publisher_registry_address],
     )
     assert_event_emitted(
         tx_exec_info,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "UpdatedPublisherRegistryAddress",
         [publisher_registry.contract_address, new_publisher_registry_address],
     )
 
-    result = await oracle.get_publisher_registry_address().call()
+    result = await oracle_proxy.get_publisher_registry_address().call()
     assert result.result.publisher_registry_address == new_publisher_registry_address
 
 
 @pytest.mark.asyncio
 async def test_submit(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entry = Entry(
         pair_id=str_to_felt("eth/usd"),
@@ -324,35 +338,37 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
 
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
     assert_event_emitted(
         tx_exec_info,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "SubmittedEntry",
         list(entry.serialize()),
     )
 
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
     assert result.result.decimals == 8
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert source_result.result == result.result
 
-    entry_result = await oracle.get_entry(entry.pair_id, source).call()
+    entry_result = await oracle_proxy.get_entry(entry.pair_id, source).call()
     assert entry_result.result.entry == entry
 
 
 @pytest.mark.asyncio
 async def test_re_submit(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -365,12 +381,14 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_entry = entry = Entry(
@@ -383,12 +401,12 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
-    result = await oracle.get_value(
+    result = await oracle_proxy.get_value(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == second_entry.value
@@ -399,7 +417,7 @@ async def test_re_submit_stale(
     initialized_contracts, source, publisher, publisher_signer
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -412,15 +430,17 @@ async def test_re_submit_stale(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -436,7 +456,7 @@ async def test_re_submit_stale(
     try:
         await publisher_signer.send_transaction(
             publisher_account,
-            oracle.contract_address,
+            oracle_proxy.contract_address,
             "publish_entry",
             second_entry.serialize(),
         )
@@ -447,10 +467,10 @@ async def test_re_submit_stale(
     except StarkException:
         pass
 
-    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -461,7 +481,7 @@ async def test_submit_second_asset(
     initialized_contracts, source, publisher, publisher_signer
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entry = Entry(
         pair_id=str_to_felt("eth/usd"),
@@ -473,12 +493,14 @@ async def test_submit_second_asset(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_entry = Entry(
@@ -491,21 +513,23 @@ async def test_submit_second_asset(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
-    result = await oracle.get_value(
+    result = await oracle_proxy.get_value(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -523,7 +547,7 @@ async def test_submit_second_publisher(
     publisher_account = initialized_contracts["publisher_account"]
     second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -535,7 +559,7 @@ async def test_submit_second_publisher(
     )
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
@@ -560,34 +584,34 @@ async def test_submit_second_publisher(
 
     await publisher_signer.send_transaction(
         second_publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
-    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source, second_source]
     ).call()
     assert source_result.result == result.result
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert source_result.result.value == entry.value
     assert source_result.result.last_updated_timestamp == entry.timestamp
 
-    source_result = await oracle.get_value_for_sources(
+    source_result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [second_source]
     ).call()
     assert source_result.result.value == second_entry.value
     assert source_result.result.last_updated_timestamp == second_entry.timestamp
 
-    result = await oracle.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_entries(pair_id, []).call()
     assert result.result.entries == [entry, second_entry]
 
 
@@ -596,7 +620,7 @@ async def test_submit_second_source(
     initialized_contracts, source, publisher, publisher_signer
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -609,12 +633,14 @@ async def test_submit_second_source(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
-    result = await oracle.get_value(entry.pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(
+        entry.pair_id, AggregationMode.MEDIAN.value
+    ).call()
     assert result.result.value == entry.value
 
     second_source = str_to_felt("1xdata")
@@ -628,12 +654,12 @@ async def test_submit_second_source(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
-    result = await oracle.get_value(
+    result = await oracle_proxy.get_value(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
@@ -647,7 +673,7 @@ async def test_mean_aggregation(
     initialized_contracts, source, publisher, publisher_signer
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -660,7 +686,7 @@ async def test_mean_aggregation(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
@@ -676,19 +702,19 @@ async def test_mean_aggregation(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
     # median is equivalent to mean if only 2 values
-    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await oracle.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_entries(pair_id, []).call()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -705,7 +731,7 @@ async def test_median_aggregation(
     admin_account = initialized_contracts["admin_account"]
     publisher_account = initialized_contracts["publisher_account"]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     prices = [1, 3, 10, 5, 12, 2]
@@ -719,7 +745,7 @@ async def test_median_aggregation(
     )
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
@@ -745,17 +771,19 @@ async def test_median_aggregation(
             admin_account,
             publisher_account,
             publisher_registry,
-            oracle,
+            oracle_proxy,
             admin_signer,
             publisher_signer,
             additional_publisher,
             additional_entry,
         )
 
-        result = await oracle.get_entries(pair_id, []).call()
+        result = await oracle_proxy.get_entries(pair_id, []).call()
         assert result.result.entries == entries
 
-        result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+        result = await oracle_proxy.get_value(
+            pair_id, AggregationMode.MEDIAN.value
+        ).call()
         assert result.result.value == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
@@ -764,7 +792,7 @@ async def test_median_aggregation(
 @pytest.mark.asyncio
 async def test_submit_many(initialized_contracts, source, publisher, publisher_signer):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_ids = [str_to_felt("eth/usd"), str_to_felt("btc/usd"), str_to_felt("doge/usd")]
     prices = [1, 3, 10]
@@ -782,23 +810,25 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
 
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entries",
         Entry.serialize_entries(entries),
     )
     for entry in entries:
         assert_event_emitted(
             tx_exec_info,
-            oracle.contract_address,
+            oracle_proxy.contract_address,
             "SubmittedEntry",
             list(entry.serialize()),
         )
 
     for i, pair_id in enumerate(pair_ids):
-        result = await oracle.get_entries(pair_id, []).call()
+        result = await oracle_proxy.get_entries(pair_id, []).call()
         assert result.result.entries == [entries[i]]
 
-        result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+        result = await oracle_proxy.get_value(
+            pair_id, AggregationMode.MEDIAN.value
+        ).call()
         assert result.result.value == prices[i]
 
 
@@ -814,7 +844,7 @@ async def test_subset_publishers(
     publisher_account = initialized_contracts["publisher_account"]
     second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("doge/usd")
     entry = Entry(
@@ -826,7 +856,7 @@ async def test_subset_publishers(
     )
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
@@ -840,10 +870,10 @@ async def test_subset_publishers(
         [additional_publisher, second_publisher_account.contract_address],
     )
 
-    result = await oracle.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_entries(pair_id, []).call()
     assert result.result.entries == [entry]
 
-    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == entry.value
 
 
@@ -852,7 +882,7 @@ async def test_unknown_source(
     initialized_contracts, source, publisher, publisher_signer
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -865,12 +895,12 @@ async def test_unknown_source(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
-    result = await oracle.get_value_for_sources(
+    result = await oracle_proxy.get_value_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [str_to_felt("unknown")]
     ).call()
     assert result.result.num_sources_aggregated == 0
@@ -878,11 +908,11 @@ async def test_unknown_source(
 
 @pytest.mark.asyncio
 async def test_unknown_key(initialized_contracts):
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     unknown_pair_id = str_to_felt("answertolife")
 
-    result = await oracle.get_entries(unknown_pair_id, []).call()
+    result = await oracle_proxy.get_entries(unknown_pair_id, []).call()
     assert len(result.result.entries) == 0
 
 
@@ -895,7 +925,7 @@ async def test_real_data(
 ):
     admin_account = initialized_contracts["admin_account"]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entries = [
         Entry("eth/usd", 29898560234403, 1650590880, "cryptowatch", "cryptowatch"),
@@ -947,13 +977,13 @@ async def test_real_data(
         "shib/usd",
     ]
     for pair_id in pair_ids:
-        result = await oracle.get_value(
+        result = await oracle_proxy.get_value(
             str_to_felt(pair_id), AggregationMode.MEDIAN.value
         ).call()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
-    result = await oracle.get_value_for_sources(
+    result = await oracle_proxy.get_value_for_sources(
         str_to_felt("eth/usd"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("gemini"), str_to_felt("coinbase")],
@@ -961,7 +991,7 @@ async def test_real_data(
     assert result.result.value == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
-    result = await oracle.get_value_for_sources(
+    result = await oracle_proxy.get_value_for_sources(
         str_to_felt("eth/usd"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("gemini"), str_to_felt("unknown")],
@@ -979,7 +1009,7 @@ async def test_ignore_future_entry(
     publisher_signer,
 ):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
     pair_id = str_to_felt("eth/usd")
 
     entry = Entry(
@@ -993,7 +1023,7 @@ async def test_ignore_future_entry(
     try:
         await publisher_signer.send_transaction(
             publisher_account,
-            oracle.contract_address,
+            oracle_proxy.contract_address,
             "publish_entry",
             entry.serialize(),
         )
@@ -1013,7 +1043,7 @@ async def test_ignore_stale_entries(
     publisher_account = initialized_contracts["publisher_account"]
     second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
     publisher_registry = initialized_contracts["publisher_registry"]
-    oracle = initialized_contracts["oracle"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
@@ -1025,7 +1055,7 @@ async def test_ignore_stale_entries(
     )
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         entry.serialize(),
     )
@@ -1055,14 +1085,14 @@ async def test_ignore_stale_entries(
 
     await publisher_signer.send_transaction(
         second_publisher_account,
-        oracle.contract_address,
+        oracle_proxy.contract_address,
         "publish_entry",
         second_entry.serialize(),
     )
 
-    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == second_entry.value
     assert result.result.last_updated_timestamp == second_entry.timestamp
 
-    result = await oracle.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_entries(pair_id, []).call()
     assert result.result.entries == [second_entry]
