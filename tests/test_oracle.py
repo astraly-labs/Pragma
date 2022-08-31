@@ -960,7 +960,7 @@ async def test_real_data(
             admin_account,
             publisher_account,
             publisher_registry,
-            oracle,
+            oracle_proxy,
             admin_signer,
             publisher_signer,
             publisher,
