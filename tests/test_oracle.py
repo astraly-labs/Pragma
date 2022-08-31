@@ -14,7 +14,6 @@ from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
-    get_selector_from_name,
 )
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException

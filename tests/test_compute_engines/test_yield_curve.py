@@ -11,9 +11,7 @@ from constants import (
 from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
-from starkware.starknet.compiler.compile import (
-    compile_starknet_files,
-)
+from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
