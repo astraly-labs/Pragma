@@ -16,8 +16,7 @@ from proxy.library import Proxy
 # @param publisher_registry_address: registry for publishers
 # @param keys_decimals_len: length of array of keys to decimals
 # @param keys_decimals: pointer to first element in an array of structs assigning decimals to each key in Oracle_decimals_storage
-@constructor
-func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     proxy_admin : felt,
     publisher_registry_address : felt,
     currencies_len : felt,

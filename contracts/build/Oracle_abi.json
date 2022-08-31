@@ -173,37 +173,6 @@
     {
         "inputs": [
             {
-                "name": "proxy_admin",
-                "type": "felt"
-            },
-            {
-                "name": "publisher_registry_address",
-                "type": "felt"
-            },
-            {
-                "name": "currencies_len",
-                "type": "felt"
-            },
-            {
-                "name": "currencies",
-                "type": "Currency*"
-            },
-            {
-                "name": "pairs_len",
-                "type": "felt"
-            },
-            {
-                "name": "pairs",
-                "type": "Pair*"
-            }
-        ],
-        "name": "constructor",
-        "outputs": [],
-        "type": "constructor"
-    },
-    {
-        "inputs": [
-            {
                 "name": "pair_id",
                 "type": "felt"
             },
@@ -442,7 +411,7 @@
                 "type": "felt"
             }
         ],
-        "name": "setAdminAddress",
+        "name": "set_admin_address",
         "outputs": [],
         "type": "function"
     },
