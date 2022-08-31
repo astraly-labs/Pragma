@@ -26,13 +26,13 @@ def currency_pair_to_key(quote, base):
 
 def pprint_entry(entry):
     print(
-        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
 
 
 def log_entry(entry, logger=logger):
     logger.info(
-        f"Entry: key={felt_to_str(entry.key)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
 
 

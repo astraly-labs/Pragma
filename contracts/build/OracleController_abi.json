@@ -2,7 +2,7 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "offset": 0,
                 "type": "felt"
             },
@@ -34,18 +34,55 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "id",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "decimal",
+                "name": "decimals",
                 "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "is_abstract_currency",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "starknet_address",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "ethereum_address",
+                "offset": 4,
                 "type": "felt"
             }
         ],
-        "name": "KeyDecimalStruct",
-        "size": 2,
+        "name": "Currency",
+        "size": 5,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "id",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "quote_currency_id",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "base_currency_id",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "Pair",
+        "size": 3,
         "type": "struct"
     },
     {
@@ -139,6 +176,39 @@
     {
         "data": [
             {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "pair",
+                "type": "Pair"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedPair",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
                 "name": "old_admin_address",
                 "type": "felt"
             },
@@ -162,12 +232,20 @@
                 "type": "felt"
             },
             {
-                "name": "keys_decimals_len",
+                "name": "currencies_len",
                 "type": "felt"
             },
             {
-                "name": "keys_decimals",
-                "type": "KeyDecimalStruct*"
+                "name": "currencies",
+                "type": "Currency*"
+            },
+            {
+                "name": "pairs_len",
+                "type": "felt"
+            },
+            {
+                "name": "pairs",
+                "type": "Pair*"
             }
         ],
         "name": "constructor",
@@ -177,7 +255,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -206,7 +284,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -227,7 +305,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -260,7 +338,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -413,7 +491,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             }
         ],
@@ -483,6 +561,39 @@
             }
         ],
         "name": "set_primary_oracle_implementation_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "name": "add_currency",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "name": "update_currency",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair",
+                "type": "Pair"
+            }
+        ],
+        "name": "add_pair",
         "outputs": [],
         "type": "function"
     }

@@ -2,7 +2,7 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "offset": 0,
                 "type": "felt"
             },
@@ -32,15 +32,91 @@
         "type": "struct"
     },
     {
+        "data": [
+            {
+                "name": "implementation",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousAdmin",
+                "type": "felt"
+            },
+            {
+                "name": "newAdmin",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AdminChanged",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "name": "oracle_controller_address",
                 "type": "felt"
+            },
+            {
+                "name": "proxy_admin",
+                "type": "felt"
             }
         ],
-        "name": "constructor",
+        "name": "initializer",
         "outputs": [],
-        "type": "constructor"
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_implementation",
+                "type": "felt"
+            }
+        ],
+        "name": "upgrade",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_admin",
+                "type": "felt"
+            }
+        ],
+        "name": "setAdmin",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_implementation_hash",
+        "outputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin",
+        "outputs": [
+            {
+                "name": "admin",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [

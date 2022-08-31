@@ -22,6 +22,7 @@ const ON_SOURCE_KEY = 28526  # str_to_felt("on")
 const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828  # str_to_felt("future/spot")
 const THEGRAPH_EMPIRIC_SOURCE_KEY = 8388065800952574056  # str_to_felt("thegraph")
 const SECONDS_IN_YEAR = 31536000  # 365 * 24 * 60 * 60
+const DEFAULT_DECIMALS = 18
 
 #
 # Structs
@@ -799,7 +800,7 @@ namespace YieldCurve:
 
         # Check that future key is active
         let future_key = future_keys[future_keys_idx]
-        let (future_key_status) = get_future_key_status(spot_entry.key, future_key)
+        let (future_key_status) = get_future_key_status(spot_entry.pair_id, future_key)
 
         if future_key_status.is_active == FALSE:
             let (
@@ -820,9 +821,17 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
-        let (future_decimals) = IOracleController.get_decimals(
+        let (future_decimals_) = IOracleController.get_decimals(
             oracle_controller_address, future_key
         )
+
+        local future_decimals
+        if future_decimals_ == 0:
+            future_decimals = DEFAULT_DECIMALS
+        else:
+            future_decimals = future_decimals_
+        end
+
         let (future_entry) = IOracleController.get_entry(
             oracle_controller_address, future_key, future_spot_empiric_source_key
         )

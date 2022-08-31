@@ -8,16 +8,16 @@ from empiric.core.utils import currency_pair_to_key, felt_to_str
 
 
 async def main(pair):
-    key = currency_pair_to_key(*pair)
+    pair_id = currency_pair_to_key(*pair)
 
     client = EmpiricClient()
-    decimals = await client.get_decimals(key)
+    decimals = await client.get_decimals(pair_id)
     entries = []
 
     num_reps = 1
     for i in range(num_reps):
         print("awake - fetching")
-        entries.extend(await client.get_entries(key))
+        entries.extend(await client.get_entries(pair_id))
 
         if i < num_reps - 1:
             print("sleeping")

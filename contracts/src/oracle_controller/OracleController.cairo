@@ -2,10 +2,19 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Entry
-from oracle_controller.library import OracleController
-from oracle_controller.structs import OracleController_OracleImplementationStatus, KeyDecimalStruct
+from entry.structs import Currency, Entry, Pair
+from oracle_controller.library import (
+    OracleController_pair_id_storage,
+    OracleController_pairs_storage,
+    OracleController_currencies_storage,
+    OracleController,
+    SubmittedCurrency,
+    SubmittedPair,
+    UpdatedCurrency,
+)
+from oracle_controller.structs import OracleController_OracleImplementationStatus
 
 from admin.library import Admin
 
@@ -21,12 +30,14 @@ from admin.library import Admin
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt,
     publisher_registry_address : felt,
-    keys_decimals_len : felt,
-    keys_decimals : KeyDecimalStruct*,
+    currencies_len : felt,
+    currencies : Currency*,
+    pairs_len : felt,
+    pairs : Pair*,
 ):
     Admin.initialize_admin_address(admin_address)
     OracleController.initialize_oracle_controller(
-        publisher_registry_address, keys_decimals_len, keys_decimals
+        publisher_registry_address, currencies_len, currencies, pairs_len, pairs
     )
     return ()
 end
@@ -42,9 +53,9 @@ end
 # @return entries: pointer to first element in Entry array
 @view
 func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, sources_len : felt, sources : felt*
+    pair_id : felt, sources_len : felt, sources : felt*
 ) -> (entries_len : felt, entries : Entry*):
-    let (entries_len, entries) = OracleController.get_entries(key, sources_len, sources)
+    let (entries_len, entries) = OracleController.get_entries(pair_id, sources_len, sources)
     return (entries_len, entries)
 end
 
@@ -54,9 +65,9 @@ end
 # @return entry: Entry for key and source
 @view
 func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, source : felt
+    pair_id : felt, source : felt
 ) -> (entry : Entry):
-    let (entry) = OracleController.get_entry(key, source)
+    let (entry) = OracleController.get_entry(pair_id, source)
     return (entry)
 end
 
@@ -69,12 +80,12 @@ end
 # @return num_sources_aggregated: number of sources used in aggregation
 @view
 func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, aggregation_mode : felt
+    pair_id : felt, aggregation_mode : felt
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     let (sources) = alloc()
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController.get_value(key, aggregation_mode, 0, sources)
+    ) = OracleController.get_value(pair_id, aggregation_mode, 0, sources)
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
@@ -89,11 +100,11 @@ end
 # @return num_sources_aggregated: number of sources used in aggregation
 @view
 func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+    pair_id : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
 ) -> (value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt):
     let (
         value, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = OracleController.get_value(key, aggregation_mode, sources_len, sources)
+    ) = OracleController.get_value(pair_id, aggregation_mode, sources_len, sources)
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
@@ -199,9 +210,9 @@ end
 # @return decimals: the number of decimals
 @view
 func get_decimals{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt
+    pair_id : felt
 ) -> (decimals : felt):
-    let (decimals) = OracleController.get_decimals(key)
+    let (decimals) = OracleController.get_decimals(pair_id)
     return (decimals)
 end
 
@@ -255,5 +266,45 @@ func set_primary_oracle_implementation_address{
     OracleController.set_primary_oracle_implementation_address(
         primary_oracle_implementation_address
     )
+    return ()
+end
+
+@external
+func add_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    currency : Currency
+):
+    Admin.only_admin()
+
+    with_attr error_message("OracleController: currency with this key already registered"):
+        let (existing_currency) = OracleController_currencies_storage.read(currency.id)
+        assert existing_currency.id = 0
+    end
+
+    SubmittedCurrency.emit(currency)
+    OracleController_currencies_storage.write(currency.id, currency)
+    return ()
+end
+
+@external
+func update_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    currency : Currency
+):
+    Admin.only_admin()
+    OracleController_currencies_storage.write(currency.id, currency)
+    UpdatedCurrency.emit(currency)
+    return ()
+end
+
+@external
+func add_pair{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(pair : Pair):
+    Admin.only_admin()
+    let (pair_) = OracleController_pairs_storage.read(pair.id)
+    with_attr error_message("OracleController: pair with this key already registered"):
+        assert pair_.id = 0
+    end
+
+    SubmittedPair.emit(pair)
+    OracleController_pairs_storage.write(pair.id, pair)
+    OracleController_pair_id_storage.write(pair.quote_currency_id, pair.base_currency_id, pair.id)
     return ()
 end

@@ -116,7 +116,7 @@ func Oracle_publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
 
     Oracle_only_oracle_controller()
 
-    let (entry) = Oracle_entry_storage.read(new_entry.key, new_entry.source)
+    let (entry) = Oracle_entry_storage.read(new_entry.pair_id, new_entry.source)
 
     with_attr error_message("OracleImplementation: Existing entry is more recent"):
         assert_le(entry.timestamp, new_entry.timestamp)
@@ -133,9 +133,9 @@ func Oracle_publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
 
     if entry.timestamp == 0:
         # Source did not exist yet, so add to our list
-        let (sources_len) = Oracle_sources_len_storage.read(new_entry.key)
-        Oracle_sources_storage.write(new_entry.key, sources_len, new_entry.source)
-        Oracle_sources_len_storage.write(new_entry.key, sources_len + 1)
+        let (sources_len) = Oracle_sources_len_storage.read(new_entry.pair_id)
+        Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.source)
+        Oracle_sources_len_storage.write(new_entry.pair_id, sources_len + 1)
         tempvar syscall_ptr = syscall_ptr
         tempvar pedersen_ptr = pedersen_ptr
     else:
@@ -143,7 +143,7 @@ func Oracle_publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
         tempvar pedersen_ptr = pedersen_ptr
     end
 
-    Oracle_entry_storage.write(new_entry.key, new_entry.source, new_entry)
+    Oracle_entry_storage.write(new_entry.pair_id, new_entry.source, new_entry)
 
     return ()
 end
