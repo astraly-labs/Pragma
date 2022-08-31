@@ -271,7 +271,7 @@ async def test_rotate_admin_address(initialized_contracts, admin_signer):
     assert_event_emitted(
         tx_exec_info,
         oracle.contract_address,
-        "UpdatedAdminAddress",
+        "AdminAddressChanged",
         [admin_account.contract_address, second_admin_account.contract_address],
     )
 
@@ -643,7 +643,9 @@ async def test_submit_second_source(
 
 
 @pytest.mark.asyncio
-async def test_mean_aggregation(contract, source, publisher, publisher_signer):
+async def test_mean_aggregation(
+    initialized_contracts, source, publisher, publisher_signer
+):
     publisher_account = initialized_contracts["publisher_account"]
     oracle = initialized_contracts["oracle"]
 
@@ -878,16 +880,6 @@ async def test_unknown_key(initialized_contracts):
 
     result = await oracle.get_entries(unknown_pair_id, []).call()
     assert len(result.result.entries) == 0
-
-    try:
-        result = await oracle.get_value(
-            unknown_pair_id, AggregationMode.MEDIAN.value
-        ).call()
-        raise Exception("Should raise exception")
-    except StarkException:
-        # assert result.result.value == 0
-        # assert result.result.last_updated_timestamp == 0
-        pass
 
 
 @pytest.mark.asyncio
