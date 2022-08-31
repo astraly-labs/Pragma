@@ -678,13 +678,13 @@ async def test_mean_aggregation(
     )
 
     AGGREGATION_MODE = 0  # defaults to median (aka mean if only 2 values)
-    result = await contract.get_value(pair_id, AGGREGATION_MODE, []).call()
+    result = await oracle.get_value(pair_id, AGGREGATION_MODE, []).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await contract.get_entries(pair_id, []).call()
+    result = await oracle.get_entries(pair_id, []).call()
     assert result.result.entries == [entry, second_entry]
 
     return
