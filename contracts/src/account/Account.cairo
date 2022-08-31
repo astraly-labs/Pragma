@@ -7,7 +7,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin,
 
 from account.library import Account, AccountCallArray
 
-from introspection.erc165.library import ERC165
+from openzeppelin.introspection.erc165.library import ERC165
 
 #
 # Constructor

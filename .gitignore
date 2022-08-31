@@ -19,6 +19,7 @@ develop-eggs/
 dist/
 eggs/
 lib/
+!contracts/lib
 lib64/
 parts/
 sdist/
