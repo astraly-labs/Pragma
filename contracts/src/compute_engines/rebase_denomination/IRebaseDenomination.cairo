@@ -22,7 +22,7 @@ namespace IOracleRebaser:
     func get_admin_address() -> (admin_address : felt):
     end
 
-    func get_oracle_controller_address() -> (oracle_controller_address : felt):
+    func get_oracle_address() -> (oracle_address : felt):
     end
 
     #
@@ -32,6 +32,6 @@ namespace IOracleRebaser:
     func set_admin_address(new_address : felt):
     end
 
-    func set_oracle_controller_address(oracle_controller_address : felt) -> ():
+    func set_oracle_address(oracle_address : felt) -> ():
     end
 end

@@ -86,23 +86,6 @@
         "type": "struct"
     },
     {
-        "members": [
-            {
-                "name": "was_registered",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "offset": 1,
-                "type": "felt"
-            }
-        ],
-        "name": "OracleController_OracleImplementationStatus",
-        "size": 2,
-        "type": "struct"
-    },
-    {
         "data": [
             {
                 "name": "old_publisher_registry_address",
@@ -115,51 +98,6 @@
         ],
         "keys": [],
         "name": "UpdatedPublisherRegistryAddress",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "AddedOracleImplementation",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "old_is_active",
-                "type": "felt"
-            },
-            {
-                "name": "new_is_active",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UpdatedOracleImplementation",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "old_primary_oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "new_primary_oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UpdatedPrimaryOracleImplementation",
         "type": "event"
     },
     {
@@ -209,48 +147,28 @@
     {
         "data": [
             {
-                "name": "old_admin_address",
-                "type": "felt"
-            },
-            {
-                "name": "new_admin_address",
+                "name": "implementation",
                 "type": "felt"
             }
         ],
         "keys": [],
-        "name": "UpdatedAdminAddress",
+        "name": "Upgraded",
         "type": "event"
     },
     {
-        "inputs": [
+        "data": [
             {
-                "name": "admin_address",
+                "name": "previousAdminAddress",
                 "type": "felt"
             },
             {
-                "name": "publisher_registry_address",
+                "name": "newAdminAddress",
                 "type": "felt"
-            },
-            {
-                "name": "currencies_len",
-                "type": "felt"
-            },
-            {
-                "name": "currencies",
-                "type": "Currency*"
-            },
-            {
-                "name": "pairs_len",
-                "type": "felt"
-            },
-            {
-                "name": "pairs",
-                "type": "Pair*"
             }
         ],
-        "name": "constructor",
-        "outputs": [],
-        "type": "constructor"
+        "keys": [],
+        "name": "AdminAddressChanged",
+        "type": "event"
     },
     {
         "inputs": [
@@ -404,84 +322,10 @@
     },
     {
         "inputs": [],
-        "name": "get_admin_address",
-        "outputs": [
-            {
-                "name": "admin_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "get_publisher_registry_address",
         "outputs": [
             {
                 "name": "publisher_registry_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_active_oracle_implementation_addresses",
-        "outputs": [
-            {
-                "name": "oracle_addresses_len",
-                "type": "felt"
-            },
-            {
-                "name": "oracle_addresses",
-                "type": "felt*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "name": "get_oracle_implementation_status",
-        "outputs": [
-            {
-                "name": "oracle_implementation_status",
-                "type": "OracleController_OracleImplementationStatus"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "idx",
-                "type": "felt"
-            }
-        ],
-        "name": "get_oracle_implementation_address",
-        "outputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_primary_oracle_implementation_address",
-        "outputs": [
-            {
-                "name": "primary_oracle_implementation_address",
                 "type": "felt"
             }
         ],
@@ -508,59 +352,11 @@
     {
         "inputs": [
             {
-                "name": "new_address",
-                "type": "felt"
-            }
-        ],
-        "name": "set_admin_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "name": "publisher_registry_address",
                 "type": "felt"
             }
         ],
         "name": "update_publisher_registry_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "name": "add_oracle_implementation_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "is_active",
-                "type": "felt"
-            }
-        ],
-        "name": "update_oracle_implementation_active_status",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "primary_oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "name": "set_primary_oracle_implementation_address",
         "outputs": [],
         "type": "function"
     },
@@ -595,6 +391,52 @@
         ],
         "name": "add_pair",
         "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_implementation",
+                "type": "felt"
+            }
+        ],
+        "name": "upgrade",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
+        ],
+        "name": "set_admin_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_implementation_hash",
+        "outputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_address",
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ]

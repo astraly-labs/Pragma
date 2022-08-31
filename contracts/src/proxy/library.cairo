@@ -17,7 +17,7 @@ func Upgraded(implementation : felt):
 end
 
 @event
-func AdminChanged(previousAdmin : felt, newAdmin : felt):
+func AdminAddressChanged(previousAdminAddress : felt, newAdminAddress : felt):
 end
 
 #
@@ -29,7 +29,7 @@ func Proxy_implementation_hash() -> (class_hash : felt):
 end
 
 @storage_var
-func Proxy_admin() -> (proxy_admin : felt):
+func Proxy_admin_address() -> (proxy_admin_address : felt):
 end
 
 @storage_var
@@ -42,7 +42,7 @@ namespace Proxy:
     #
 
     func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        proxy_admin : felt
+        proxy_admin_address : felt
     ):
         let (initialized) = Proxy_initialized.read()
         with_attr error_message("Proxy: contract already initialized"):
@@ -50,7 +50,7 @@ namespace Proxy:
         end
 
         Proxy_initialized.write(TRUE)
-        _set_admin(proxy_admin)
+        _set_admin_address(proxy_admin_address)
         return ()
     end
 
@@ -60,9 +60,9 @@ namespace Proxy:
 
     func assert_only_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
         let (caller) = get_caller_address()
-        let (admin) = Proxy_admin.read()
+        let (admin_address) = Proxy_admin_address.read()
         with_attr error_message("Proxy: caller is not admin"):
-            assert admin = caller
+            assert admin_address = caller
         end
         return ()
     end
@@ -77,23 +77,23 @@ namespace Proxy:
         return (implementation)
     end
 
-    func get_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-        admin : felt
+    func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+        admin_address : felt
     ):
-        let (admin) = Proxy_admin.read()
-        return (admin)
+        let (admin_address) = Proxy_admin_address.read()
+        return (admin_address)
     end
 
     #
     # Unprotected
     #
 
-    func _set_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        new_admin : felt
+    func _set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        new_admin_address : felt
     ):
-        let (previous_admin) = get_admin()
-        Proxy_admin.write(new_admin)
-        AdminChanged.emit(previous_admin, new_admin)
+        let (previous_admin_address) = get_admin_address()
+        Proxy_admin_address.write(new_admin_address)
+        AdminAddressChanged.emit(previous_admin_address, new_admin_address)
         return ()
     end
 
