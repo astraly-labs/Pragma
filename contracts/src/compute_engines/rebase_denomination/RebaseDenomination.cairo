@@ -7,7 +7,7 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 from admin.library import Admin
-from oracle_controller.IOracleController import IOracleController, EmpiricAggregationModes
+from oracle.IOracleController import IOracleController, EmpiricAggregationModes
 
 #
 # Consts
@@ -17,7 +17,7 @@ const SLASH_USD = 796226404  # str_to_felt("/usd")
 const SLASH_USD_BITS = 32
 
 @storage_var
-func oracle_controller_address_storage() -> (oracle_controller_address : felt):
+func oracle_address_storage() -> (oracle_address : felt):
 end
 
 #
@@ -25,13 +25,13 @@ end
 #
 
 # @param admin_address: admin for contract
-# @param oracle_controller_address: address of oracle controller
+# @param oracle_address: address of oracle controller
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    admin_address : felt, oracle_controller_address : felt
+    admin_address : felt, oracle_address : felt
 ):
     Admin.initialize_admin_address(admin_address)
-    oracle_controller_address_storage.write(oracle_controller_address)
+    oracle_address_storage.write(oracle_address)
     return ()
 end
 
@@ -60,16 +60,14 @@ func get_rebased_value_via_usd{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
         assert_not_zero(base_currency)
     end
 
-    let (local oracle_controller_address) = oracle_controller_address_storage.read()
+    let (local oracle_address) = oracle_address_storage.read()
 
     let (quote_asset_key) = _convert_currency_to_asset_key(
         quote_currency, SLASH_USD, SLASH_USD_BITS
     )
     let (
         quote_value, quote_decimals, quote_last_updated_timestamp, quote_num_sources_aggregated
-    ) = IOracleController.get_value(
-        oracle_controller_address, quote_asset_key, EmpiricAggregationModes.MEDIAN
-    )
+    ) = IOracleController.get_value(oracle_address, quote_asset_key, EmpiricAggregationModes.MEDIAN)
     if quote_last_updated_timestamp == 0:
         return (0, 0, 0, 0)
     end
@@ -77,9 +75,7 @@ func get_rebased_value_via_usd{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
     let (base_asset_key) = _convert_currency_to_asset_key(base_currency, SLASH_USD, SLASH_USD_BITS)
     let (
         base_value, base_decimals, base_last_updated_timestamp, base_num_sources_aggregated
-    ) = IOracleController.get_value(
-        oracle_controller_address, base_asset_key, EmpiricAggregationModes.MEDIAN
-    )
+    ) = IOracleController.get_value(oracle_address, base_asset_key, EmpiricAggregationModes.MEDIAN)
     if base_last_updated_timestamp == 0:
         return (0, 0, 0, 0)
     end
@@ -103,13 +99,13 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
 end
 
 # @notice get oracle controller for admin
-# @return oracle_controller_address: address for oracle controller
+# @return oracle_address: address for oracle controller
 @view
-func get_oracle_controller_address{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}() -> (oracle_controller_address : felt):
-    let (oracle_controller_address) = oracle_controller_address_storage.read()
-    return (oracle_controller_address)
+func get_oracle_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    oracle_address : felt
+):
+    let (oracle_address) = oracle_address_storage.read()
+    return (oracle_address)
 end
 
 #
@@ -130,13 +126,13 @@ end
 
 # @notice update oracle controller address
 # @dev only the admin can update this
-# @param oracle_controller_address: new oracle controller address
+# @param oracle_address: new oracle controller address
 @external
-func set_oracle_controller_address{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(oracle_controller_address : felt) -> ():
+func set_oracle_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    oracle_address : felt
+) -> ():
     Admin.only_admin()
-    oracle_controller_address_storage.write(oracle_controller_address)
+    oracle_address_storage.write(oracle_address)
     return ()
 end
 

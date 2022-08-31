@@ -1,7 +1,6 @@
 %lang starknet
 
 from entry.structs import Entry, Pair, Currency
-from oracle_controller.structs import OracleController_OracleImplementationStatus
 
 namespace EmpiricAggregationModes:
     const MEDIAN = 120282243752302  # str_to_felt("median")
@@ -13,57 +12,8 @@ namespace IOracleController:
     # Getters
     #
 
-    func get_admin_address() -> (admin_address : felt):
-    end
-
-    func get_publisher_registry_address() -> (publisher_registry_address : felt):
-    end
-
-    func get_active_oracle_implementation_addresses() -> (
-        oracle_addresses_len : felt, oracle_addresses : felt*
-    ):
-    end
-
-    func get_oracle_implementation_status(oracle_implementation_address : felt) -> (
-        oracle_implementation_status : OracleController_OracleImplementationStatus
-    ):
-    end
-
-    func get_oracle_implementation_address(idx : felt) -> (oracle_implementation_address : felt):
-    end
-
-    func get_primary_oracle_implementation_address() -> (
-        primary_oracle_implementation_address : felt
-    ):
-    end
-
     func get_decimals(pair_id : felt) -> (decimals : felt):
     end
-
-    #
-    # Setters
-    #
-
-    func set_admin_address(new_address : felt):
-    end
-
-    func update_publisher_registry_address(publisher_registry_address : felt):
-    end
-
-    func add_oracle_implementation_address(oracle_implementation_address : felt):
-    end
-
-    func update_oracle_implementation_active_status(
-        oracle_implementation_address : felt, is_active : felt
-    ):
-    end
-
-    func set_primary_oracle_implementation_address(primary_oracle_implementation_address : felt):
-    end
-
-    #
-    # Oracle Implementation Controller Functions
-    #
 
     func get_entries(pair_id : felt, sources_len : felt, sources : felt*) -> (
         entries_len : felt, entries : Entry*
@@ -100,6 +50,12 @@ namespace IOracleController:
     ):
     end
 
+    func get_admin_address() -> (admin_address : felt):
+    end
+
+    func get_publisher_registry_address() -> (publisher_registry_address : felt):
+    end
+
     #
     # Setters
     #
@@ -108,6 +64,12 @@ namespace IOracleController:
     end
 
     func publish_entries(new_entries_len : felt, new_entries : Entry*):
+    end
+
+    func set_admin_address(new_address : felt):
+    end
+
+    func update_publisher_registry_address(publisher_registry_address : felt):
     end
 
     func add_currency(currency : Currency):

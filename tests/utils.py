@@ -90,7 +90,7 @@ async def register_new_publisher_and_publish_entries_1(
     admin_account,
     publisher_account,
     publisher_registry,
-    oracle_controller,
+    oracle,
     admin_signer,
     publisher_signer,
     publisher,
@@ -105,7 +105,7 @@ async def register_new_publisher_and_publish_entries_1(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle_controller.contract_address,
+        oracle.contract_address,
         "publish_entries",
         Entry.serialize_entries(entries),
     )
@@ -117,7 +117,7 @@ async def register_new_publisher_and_publish_entry(
     admin_account,
     publisher_account,
     publisher_registry,
-    oracle_controller,
+    oracle,
     admin_signer,
     publisher_signer,
     publisher,
@@ -132,7 +132,7 @@ async def register_new_publisher_and_publish_entry(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle_controller.contract_address,
+        oracle.contract_address,
         "publish_entry",
         entry.serialize(),
     )

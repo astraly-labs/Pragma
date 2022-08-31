@@ -14,11 +14,8 @@ Admin = [
 CheckEthThreshold = [
     "contracts/src/sample_consumer/CheckEthThreshold.cairo"
 ]
-OracleController = [
-    "contracts/src/oracle_controller/OracleController.cairo"
-]
-OracleImplementation = [
-    "contracts/src/oracle_implementation/OracleImplementation.cairo"
+Oracle = [
+    "contracts/src/oracle/Oracle.cairo"
 ]
 PublisherRegistry = [
     "contracts/src/publisher_registry/PublisherRegistry.cairo"

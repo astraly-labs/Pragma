@@ -3,7 +3,15 @@ import os
 
 from empiric.admin.client import EmpiricAdminClient
 
-publishers = ["empiric", "argent", "cmt", "consensys", "equilibrium", "braavos"]
+publishers = [
+    "empiric",
+    "argent",
+    "cmt",
+    "consensys",
+    "equilibrium",
+    "braavos",
+    "openoracle",
+]
 publisher_address = [
     int(os.environ.get("PUBLISHER_ADDRESS"), 0),
     0x05BD6A92D27E52BF969002B72F263616103E03DA91E8C605AA842BB27C51516C,
@@ -11,6 +19,7 @@ publisher_address = [
     0x076317F7DDCC0B73FAC7BE8950514C0630E40665CF098488E243BDEDA3ABF4B9,
     0x0145A169E0AC417CB99AF4AA5CFAD2820B11D014A7DDB9FD23C6ACC356826EF0,
     0xE5CC6F2B6D34979184B88334EB64173FE4300CAB46ECD3229633FCC45C83D4,
+    0x00BC0106BED3F1DFA7D2BADEC00D11B1C0EE6EE47E0946F52D927DDE6AB079A0,
 ]
 
 

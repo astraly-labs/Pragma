@@ -10,13 +10,13 @@ from starknet_py.net.gateway_client import GatewayClient
 
 
 class EmpiricClient:
-    oracle_controller_address: ADDRESS
-    oracle_controller_contract: Optional[ADDRESS]
+    oracle_address: ADDRESS
+    oracle_contract: Optional[ADDRESS]
 
     def __init__(
         self,
         network: Network = TESTNET,
-        oracle_controller_address: Optional[ADDRESS] = None,
+        oracle_address: Optional[ADDRESS] = None,
     ):
         self.network = network
         try:
@@ -24,36 +24,32 @@ class EmpiricClient:
         except ValueError:
             raise InvalidNetworkError(f"Invalid Network name: {network}")
 
-        self.oracle_controller_address = (
-            oracle_controller_address or self.config.ORACLE_CONTROLLER_ADDRESS
-        )
-        self.oracle_controller_contract = None
+        self.oracle_address = oracle_address or self.config.ORACLE_CONTROLLER_ADDRESS
+        self.oracle_contract = None
 
-    async def fetch_oracle_controller_contract(self):
-        if self.oracle_controller_contract is None:
-            self.oracle_controller_contract = await Contract.from_address(
-                self.oracle_controller_address,
+    async def fetch_oracle_contract(self):
+        if self.oracle_contract is None:
+            self.oracle_contract = await Contract.from_address(
+                self.oracle_address,
                 GatewayClient(self.network, self.config.CHAIN_ID),
             )
 
     async def get_decimals(self, key) -> int:
-        await self.fetch_oracle_controller_contract()
+        await self.fetch_oracle_contract()
 
         if isinstance(key, str):
             pair_id = str_to_felt(key)
         elif not isinstance(key, int):
             raise TypeError("Key must be string (will be converted to felt) or integer")
 
-        response = await self.oracle_controller_contract.functions["get_decimals"].call(
-            pair_id
-        )
+        response = await self.oracle_contract.functions["get_decimals"].call(pair_id)
 
         return response.decimals
 
     async def get_value(
         self, key, aggregation_mode, sources=None
     ) -> Tuple[int, int, int, int]:
-        await self.fetch_oracle_controller_contract()
+        await self.fetch_oracle_contract()
 
         if isinstance(key, str):
             pair_id = str_to_felt(key)
@@ -62,11 +58,11 @@ class EmpiricClient:
                 "Pair ID must be string (will be converted to felt) or integer"
             )
         if sources is None:
-            response = await self.oracle_controller_contract.functions[
-                "get_value"
-            ].call(pair_id, aggregation_mode)
+            response = await self.oracle_contract.functions["get_value"].call(
+                pair_id, aggregation_mode
+            )
         else:
-            response = await self.oracle_controller_contract.functions[
+            response = await self.oracle_contract.functions[
                 "get_value_for_sources"
             ].call(pair_id, aggregation_mode, sources)
 
@@ -78,7 +74,7 @@ class EmpiricClient:
         )
 
     async def get_entries(self, key, sources=None) -> List[Entry]:
-        await self.fetch_oracle_controller_contract()
+        await self.fetch_oracle_contract()
 
         if isinstance(key, str):
             pair_id = str_to_felt(key)
@@ -89,7 +85,7 @@ class EmpiricClient:
         if sources is None:
             sources = []
 
-        response = await self.oracle_controller_contract.functions["get_entries"].call(
+        response = await self.oracle_contract.functions["get_entries"].call(
             pair_id, sources
         )
 
