@@ -153,7 +153,7 @@ async def contract_init(
             str_to_felt("usd"),
             str_to_felt(ON_KEY),
             str_to_felt("aave-on-borrow"),
-            str_to_felt("usd")
+            str_to_felt("usd"),
         ],
     )
     oracle_implementation = await starknet.declare(

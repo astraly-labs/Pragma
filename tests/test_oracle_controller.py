@@ -5,7 +5,6 @@ import pytest_asyncio
 from constants import (
     ACCOUNT_CONTRACT_FILE,
     CAIRO_PATH,
-    DEFAULT_DECIMALS,
     ORACLE_CONTROLLER_CONTRACT_FILE,
     ORACLE_IMPLEMENTATION_CONTRACT_FILE,
     PROXY_CONTRACT_FILE,
@@ -320,7 +319,9 @@ async def test_decimals(initialized_contracts, admin_signer):
     result = await oracle_controller.get_decimals(str_to_felt("nonexistant")).call()
     assert result.result.decimals == 0
 
-    result = await oracle_controller.get_decimals(str_to_felt("usd/decimals-test")).call()
+    result = await oracle_controller.get_decimals(
+        str_to_felt("usd/decimals-test")
+    ).call()
     assert result.result.decimals == 100
 
 
@@ -1040,7 +1041,7 @@ async def test_unknown_key(initialized_contracts):
         result = await oracle_controller.get_value(
             unknown_pair_id, AggregationMode.MEDIAN.value
         ).call()
-        raise Exception('Should raise exception')
+        raise Exception("Should raise exception")
     except StarkException:
         # assert result.result.value == 0
         # assert result.result.last_updated_timestamp == 0
