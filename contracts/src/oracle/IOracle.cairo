@@ -66,7 +66,7 @@ namespace IOracle:
     func publish_entries(new_entries_len : felt, new_entries : Entry*):
     end
 
-    func set_admin_address(new_address : felt):
+    func set_admin_address(new_admin_address : felt):
     end
 
     func update_publisher_registry_address(publisher_registry_address : felt):
