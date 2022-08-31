@@ -21,7 +21,7 @@ from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
     calculate_on_yield_point,
 )
-from utils import assert_event_emitted, cached_contract
+from utils import cached_contract
 
 STARKNET_STARTING_TIMESTAMP = 1650590820
 ON_KEY = "aave-on-borrow"
@@ -221,7 +221,6 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     admin_account = contracts["admin_account"]
     publisher_account = contracts["publisher_account"]
     publisher_registry = contracts["publisher_registry"]
-    oracle = contracts["oracle"]
     yield_curve = contracts["yield_curve"]
 
     # Register publisher

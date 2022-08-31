@@ -11,7 +11,7 @@ from constants import (
 )
 from empiric.core.entry import Entry
 from empiric.core.types import AggregationMode
-from empiric.core.utils import str_to_felt, felt_to_str
+from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
@@ -669,6 +669,52 @@ async def test_submit_second_source(
 
 
 @pytest.mark.asyncio
+async def test_mean_aggregation(contract, source, publisher, publisher_signer):
+    publisher_account = initialized_contracts["publisher_account"]
+    oracle = initialized_contracts["oracle"]
+
+    pair_id = str_to_felt("eth/usd")
+    entry = Entry(
+        pair_id=pair_id, value=3, timestamp=1, source=source, publisher=publisher
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle.contract_address,
+        "publish_entry",
+        entry.serialize(),
+    )
+
+    second_source = str_to_felt("1xdata")
+    second_entry = Entry(
+        pair_id=pair_id,
+        value=5,
+        timestamp=1,
+        source=second_source,
+        publisher=publisher,
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle.contract_address,
+        "publish_entry",
+        second_entry.serialize(),
+    )
+
+    AGGREGATION_MODE = 0  # defaults to median (aka mean if only 2 values)
+    result = await contract.get_value(pair_id, AGGREGATION_MODE, []).call()
+    assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.last_updated_timestamp == max(
+        second_entry.timestamp, entry.timestamp
+    )
+
+    result = await contract.get_entries(pair_id, []).call()
+    assert result.result.entries == [entry, second_entry]
+
+    return
+
+
+@pytest.mark.asyncio
 async def test_median_aggregation(
     initialized_contracts,
     admin_signer,
@@ -1050,113 +1096,3 @@ async def test_ignore_stale_entries(
 
     result = await oracle.get_entries(pair_id, []).call()
     assert result.result.entries == [second_entry]
-
-
-@pytest.mark.asyncio
-async def test_mean_aggregation(contract, source, publisher, publisher_signer):
-    publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
-
-    pair_id = str_to_felt("eth/usd")
-    entry = Entry(
-        pair_id=pair_id, value=3, timestamp=1, source=source, publisher=publisher
-    )
-
-    await publisher_signer.send_transaction(
-        publisher_account,
-        oracle.contract_address,
-        "publish_entry",
-        entry.serialize(),
-    )
-
-    second_source = str_to_felt("1xdata")
-    second_entry = Entry(
-        pair_id=pair_id,
-        value=5,
-        timestamp=1,
-        source=second_source,
-        publisher=publisher,
-    )
-
-    await publisher_signer.send_transaction(
-        publisher_account,
-        oracle.contract_address,
-        "publish_entry",
-        second_entry.serialize(),
-    )
-
-    AGGREGATION_MODE = 0  # defaults to median (aka mean if only 2 values)
-    result = await contract.get_value(pair_id, AGGREGATION_MODE, []).call()
-    assert result.result.value == (second_entry.value + entry.value) / 2
-    assert result.result.last_updated_timestamp == max(
-        second_entry.timestamp, entry.timestamp
-    )
-
-    result = await contract.get_entries(pair_id, []).call()
-    assert result.result.entries == [entry, second_entry]
-
-    return
-
-
-@pytest.mark.asyncio
-async def test_median_aggregation(
-    contract,
-    source,
-    publisher,
-    publisher_signer
-):
-    publisher_account = initialized_contracts["publisher_account"]
-    oracle = initialized_contracts["oracle"]
-
-    pair_id = str_to_felt("eth/usd")
-    prices = [1, 3, 10, 5, 12, 2]
-    sources_str = ["foo", "bar", "baz", "oof", "rab", "zab"]
-    sources = [str_to_felt(p) for p in sources_str]
-    entry = Entry(
-        pair_id=pair_id,
-        value=prices[0],
-        timestamp=1,
-        source=source,
-        publisher=publisher,
-    )
-
-    await publisher_signer.send_transaction(
-        publisher_account,
-        oracle.contract_address,
-        "publish_entry",
-        entry.serialize(),
-    )
-
-    entries = [entry]
-    AGGREGATION_MODE = 0  # defaults to median
-
-    for price, additional_publisher in zip(prices[1:], sources[1:]):
-        additional_source = sources
-        additional_entry = Entry(
-            pair_id=pair_id,
-            value=price,
-            timestamp=1,
-            source=additional_source,
-            publisher=additional_publisher,
-        )
-        entries.append(additional_entry)
-
-        await publisher_signer.send_transaction(
-            publisher_account,
-            oracle.contract_address,
-            "publish_entry",
-            additional_entry.serialize(),
-        )
-
-        result = await contract.get_entries(pair_id, []).call()
-        assert result.result.entries == entries
-
-        result = await contract.get_value(pair_id, AGGREGATION_MODE, []).call()
-        assert result.result.value == int(median(prices[: len(entries)]))
-
-        print(f"Succeeded for {len(entries)} entries")
-
-    result = await contract.get_all_sources(pair_id).call()
-    assert len(result.result.sources) == len(sources)
-
-    return
