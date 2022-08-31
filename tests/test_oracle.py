@@ -681,8 +681,8 @@ async def test_mean_aggregation(
         second_entry.serialize(),
     )
 
-    AGGREGATION_MODE = 0  # defaults to median (aka mean if only 2 values)
-    result = await oracle.get_value(pair_id, AGGREGATION_MODE, []).call()
+    # median is equivalent to mean if only 2 values
+    result = await oracle.get_value(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
