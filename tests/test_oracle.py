@@ -183,7 +183,7 @@ async def contract_init(
     proxy = await starknet.deploy(
         contract_class=proxy_class,
         constructor_calldata=[
-            oracle.class_hash,
+            oracle_class.class_hash,
             get_selector_from_name("initializer"),
             2,
             oracle.contract_address,
