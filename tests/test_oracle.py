@@ -18,7 +18,7 @@ from starkware.starknet.compiler.compile import (
     compile_starknet_files,
     get_selector_from_name,
 )
-from starkware.starknet.testing.starknet import Starknet, StarknetContract
+from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import (
     assert_event_emitted,
@@ -202,7 +202,12 @@ async def contract_init(
 
 @pytest.fixture
 def contracts(contract_classes, contract_init):
-    (account_class, publisher_registry_class, oracle_class, proxy_class) = contract_classes 
+    (
+        account_class,
+        publisher_registry_class,
+        oracle_class,
+        proxy_class,
+    ) = contract_classes
     _state = contract_init["starknet"].state.copy()
     admin_account = cached_contract(
         _state, account_class, contract_init["admin_account"]

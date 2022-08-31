@@ -1,4 +1,5 @@
 import json
+
 from utils import construct_path
 
 AGGREGATION_MODE = 0

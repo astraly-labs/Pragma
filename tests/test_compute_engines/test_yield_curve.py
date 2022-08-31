@@ -4,14 +4,19 @@ from constants import (
     ACCOUNT_CONTRACT_FILE,
     CAIRO_PATH,
     DEFAULT_DECIMALS,
+    ORACLE_ABI,
     ORACLE_CONTRACT_FILE,
+    PROXY_CONTRACT_FILE,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
 from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
-from starkware.starknet.compiler.compile import compile_starknet_files
+from starkware.starknet.compiler.compile import (
+    compile_starknet_files,
+    get_selector_from_name,
+)
 from starkware.starknet.testing.starknet import Starknet
 from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
@@ -107,9 +112,20 @@ async def contract_init(
         contract_class=publisher_registry_class,
         constructor_calldata=[admin_account.contract_address],
     )
-    oracle = await starknet.deploy(
+    declared_oracle_class = await starknet.declare(
         contract_class=oracle_class,
+    )
+    proxy_class = compile_starknet_files(
+        files=[PROXY_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
+    )
+    oracle_proxy = await starknet.deploy(
+        contract_class=proxy_class,
         constructor_calldata=[
+            declared_oracle_class.class_hash,
+            get_selector_from_name("initializer"),
+            25,
             admin_account.contract_address,
             publisher_registry.contract_address,
             3,
@@ -137,6 +153,7 @@ async def contract_init(
             str_to_felt("usd"),
         ],
     )
+    oracle = oracle_proxy.replace_abi(ORACLE_ABI)
 
     yield_curve = await starknet.deploy(
         contract_class=yield_curve_class,
