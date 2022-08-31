@@ -6,7 +6,6 @@ from constants import (
     ACCOUNT_CONTRACT_FILE,
     CAIRO_PATH,
     ORACLE_CONTRACT_FILE,
-    PROXY_CONTRACT_FILE,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
 )
 from empiric.core.entry import Entry
@@ -45,17 +44,11 @@ async def contract_classes():
         debug_info=True,
         cairo_path=CAIRO_PATH,
     )
-    proxy_class = compile_starknet_files(
-        files=[PROXY_CONTRACT_FILE],
-        debug_info=True,
-        cairo_path=CAIRO_PATH,
-    )
 
     return (
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
     )
 
 
@@ -71,7 +64,6 @@ async def contract_init(
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
     ) = contract_classes
 
     starknet = await Starknet.empty()
@@ -180,17 +172,6 @@ async def contract_init(
         ],
     )
 
-    proxy = await starknet.deploy(
-        contract_class=proxy_class,
-        constructor_calldata=[
-            oracle_class.class_hash,
-            get_selector_from_name("initializer"),
-            2,
-            oracle.contract_address,
-            admin_account.contract_address,
-        ],
-    )
-
     return {
         "starknet": starknet,
         "admin_account": admin_account,
@@ -199,7 +180,6 @@ async def contract_init(
         "additional_publisher_accounts": additional_publisher_accounts,
         "publisher_registry": publisher_registry,
         "oracle": oracle,
-        "proxy": proxy,
     }
 
 
@@ -209,7 +189,6 @@ def contracts(contract_classes, contract_init):
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
     ) = contract_classes
     _state = contract_init["starknet"].state.copy()
     admin_account = cached_contract(
@@ -229,7 +208,6 @@ def contracts(contract_classes, contract_init):
         _state, publisher_registry_class, contract_init["publisher_registry"]
     )
     oracle = cached_contract(_state, oracle_class, contract_init["oracle"])
-    proxy = cached_contract(_state, proxy_class, contract_init["proxy"])
     return {
         "starknet": contract_init["starknet"],
         "admin_account": admin_account,
@@ -238,7 +216,6 @@ def contracts(contract_classes, contract_init):
         "additional_publisher_accounts": additional_publisher_accounts,
         "publisher_registry": publisher_registry,
         "oracle": oracle,
-        "proxy": proxy,
     }
 
 

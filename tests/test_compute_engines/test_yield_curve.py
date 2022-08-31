@@ -5,7 +5,6 @@ from constants import (
     CAIRO_PATH,
     DEFAULT_DECIMALS,
     ORACLE_CONTRACT_FILE,
-    PROXY_CONTRACT_FILE,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
@@ -14,7 +13,6 @@ from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
-    get_selector_from_name,
 )
 from starkware.starknet.testing.starknet import Starknet
 from test_compute_engines.yield_curve import (
@@ -70,11 +68,6 @@ async def contract_classes():
         debug_info=True,
         cairo_path=CAIRO_PATH,
     )
-    proxy_class = compile_starknet_files(
-        files=[PROXY_CONTRACT_FILE],
-        debug_info=True,
-        cairo_path=CAIRO_PATH,
-    )
     yield_curve_class = compile_starknet_files(
         files=[YIELD_CURVE_CONTRACT_FILE],
         debug_info=True,
@@ -85,7 +78,6 @@ async def contract_classes():
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
         yield_curve_class,
     )
 
@@ -100,7 +92,6 @@ async def contract_init(
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
         yield_curve_class,
     ) = contract_classes
 
@@ -149,17 +140,6 @@ async def contract_init(
         ],
     )
 
-    proxy = await starknet.deploy(
-        contract_class=proxy_class,
-        constructor_calldata=[
-            oracle_class.class_hash,
-            get_selector_from_name("initializer"),
-            2,
-            oracle.contract_address,
-            admin_account.contract_address,
-        ],
-    )
-
     yield_curve = await starknet.deploy(
         contract_class=yield_curve_class,
         constructor_calldata=[
@@ -174,7 +154,6 @@ async def contract_init(
         "publisher_account": publisher_account,
         "publisher_registry": publisher_registry,
         "oracle": oracle,
-        "proxy": proxy,
         "yield_curve": yield_curve,
     }
 
@@ -185,7 +164,6 @@ def contracts(contract_classes, contract_init):
         account_class,
         publisher_registry_class,
         oracle_class,
-        proxy_class,
         yield_curve_class,
     ) = contract_classes
     _state = contract_init["starknet"].state.copy()
@@ -199,7 +177,6 @@ def contracts(contract_classes, contract_init):
         _state, publisher_registry_class, contract_init["publisher_registry"]
     )
     oracle = cached_contract(_state, oracle_class, contract_init["oracle"])
-    proxy = cached_contract(_state, proxy_class, contract_init["proxy"])
     yield_curve = cached_contract(
         _state,
         yield_curve_class,
@@ -211,7 +188,6 @@ def contracts(contract_classes, contract_init):
         "publisher_account": publisher_account,
         "publisher_registry": publisher_registry,
         "oracle": oracle,
-        "proxy": proxy,
         "yield_curve": yield_curve,
     }
 
