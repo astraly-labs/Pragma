@@ -1,33 +1,24 @@
 # Open Oracle
 
+### Assets
+
 The assets currently listed (as of August 2022) are:
 
-**Coinbase:**
-
-* BTC/USD
-* ETH/USD
-* DAI/USD
-* ZRX/USD
-* BAT/USD
-* KNC/USD
-* LINK/USD
-* COMP/USD
-* XTZ/USD
-* REP/USD
-* UNI/USD
-* GRT/USD
-* SNX/USD
-
-**OKX:**
-
-* BTC/USD
-* ETH/USD
-* DAI/USD
-* ZRX/USD
-* BAT/USD
-* KNC/USD
-* LINK/USD
-* COMP/USD
+| Asset    | Coinbase             | OKX                  |
+| -------- | -------------------- | -------------------- |
+| BTC/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| ETH/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| DAI/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| ZRX/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| BAT/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| KNC/USD  | :white\_check\_mark: | :white\_check\_mark: |
+| LINK/USD | :white\_check\_mark: | :white\_check\_mark: |
+| COMP/USD | :white\_check\_mark: | :white\_check\_mark: |
+| XTZ/USD  | :white\_check\_mark: |                      |
+| REP/USD  | :white\_check\_mark: |                      |
+| UNI/USD  | :white\_check\_mark: |                      |
+| GRT/USD  | :white\_check\_mark: |                      |
+| SNX/USD  | :white\_check\_mark: |                      |
 
 ### Consuming Data
 
