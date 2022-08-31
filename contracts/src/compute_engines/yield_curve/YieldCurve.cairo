@@ -11,7 +11,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 from admin.library import Admin
 
 from entry.structs import Entry
-from oracle.IOracleController import IOracleController
+from oracle.IOracle import IOracle
 from compute_engines.yield_curve.structs import YieldPoint
 
 #
@@ -624,10 +624,8 @@ namespace YieldCurve:
             return (recursed_on_yield_points_len, recursed_on_yield_points)
         end
 
-        let (on_decimals) = IOracleController.get_decimals(oracle_address, on_key)
-        let (on_entry) = IOracleController.get_entry(
-            oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY
-        )
+        let (on_decimals) = IOracle.get_decimals(oracle_address, on_key)
+        let (on_entry) = IOracle.get_entry(oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY)
         if on_entry.timestamp == 0:
             # Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
@@ -710,8 +708,8 @@ namespace YieldCurve:
             return (recursed_spot_yield_points_len, recursed_spot_yield_points)
         end
 
-        let (spot_decimals) = IOracleController.get_decimals(oracle_address, spot_key)
-        let (spot_entry) = IOracleController.get_entry(
+        let (spot_decimals) = IOracle.get_decimals(oracle_address, spot_key)
+        let (spot_entry) = IOracle.get_entry(
             oracle_address, spot_key, future_spot_empiric_source_key
         )
         if spot_entry.timestamp == 0:
@@ -821,7 +819,7 @@ namespace YieldCurve:
             return (recursed_future_yield_points_len, recursed_future_yield_points)
         end
 
-        let (future_decimals_) = IOracleController.get_decimals(oracle_address, future_key)
+        let (future_decimals_) = IOracle.get_decimals(oracle_address, future_key)
 
         local future_decimals
         if future_decimals_ == 0:
@@ -830,7 +828,7 @@ namespace YieldCurve:
             future_decimals = future_decimals_
         end
 
-        let (future_entry) = IOracleController.get_entry(
+        let (future_entry) = IOracle.get_entry(
             oracle_address, future_key, future_spot_empiric_source_key
         )
         if future_entry.timestamp == 0:

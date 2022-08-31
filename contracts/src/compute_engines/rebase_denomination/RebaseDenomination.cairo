@@ -7,7 +7,7 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
 
 from admin.library import Admin
-from oracle.IOracleController import IOracleController, EmpiricAggregationModes
+from oracle.IOracle import IOracle, EmpiricAggregationModes
 
 #
 # Consts
@@ -67,7 +67,7 @@ func get_rebased_value_via_usd{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
     )
     let (
         quote_value, quote_decimals, quote_last_updated_timestamp, quote_num_sources_aggregated
-    ) = IOracleController.get_value(oracle_address, quote_asset_key, EmpiricAggregationModes.MEDIAN)
+    ) = IOracle.get_value(oracle_address, quote_asset_key, EmpiricAggregationModes.MEDIAN)
     if quote_last_updated_timestamp == 0:
         return (0, 0, 0, 0)
     end
@@ -75,7 +75,7 @@ func get_rebased_value_via_usd{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*,
     let (base_asset_key) = _convert_currency_to_asset_key(base_currency, SLASH_USD, SLASH_USD_BITS)
     let (
         base_value, base_decimals, base_last_updated_timestamp, base_num_sources_aggregated
-    ) = IOracleController.get_value(oracle_address, base_asset_key, EmpiricAggregationModes.MEDIAN)
+    ) = IOracle.get_value(oracle_address, base_asset_key, EmpiricAggregationModes.MEDIAN)
     if base_last_updated_timestamp == 0:
         return (0, 0, 0, 0)
     end

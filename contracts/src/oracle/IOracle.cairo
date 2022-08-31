@@ -7,7 +7,7 @@ namespace EmpiricAggregationModes:
 end
 
 @contract_interface
-namespace IOracleController:
+namespace IOracle:
     #
     # Getters
     #

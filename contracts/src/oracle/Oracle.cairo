@@ -15,7 +15,7 @@ from proxy.library import Proxy
 # @param proxy_admin: admin for contract
 # @param publisher_registry_address: registry for publishers
 # @param keys_decimals_len: length of array of keys to decimals
-# @param keys_decimals: pointer to first element in an array of structs assigning decimals to each key in OracleController_decimals_storage
+# @param keys_decimals: pointer to first element in an array of structs assigning decimals to each key in Oracle_decimals_storage
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     proxy_admin : felt,
@@ -162,14 +162,7 @@ func add_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     currency : Currency
 ):
     Proxy.assert_only_admin()
-
-    with_attr error_message("Oracle: currency with this key already registered"):
-        let (existing_currency) = Oracle_currencies_storage.read(currency.id)
-        assert existing_currency.id = 0
-    end
-
-    SubmittedCurrency.emit(currency)
-    Oracle_currencies_storage.write(currency.id, currency)
+    Oracle.add_currency(currency)
     return ()
 end
 
@@ -178,22 +171,14 @@ func update_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
     currency : Currency
 ):
     Proxy.assert_only_admin()
-    Oracle_currencies_storage.write(currency.id, currency)
-    UpdatedCurrency.emit(currency)
+    Oracle.update_currency(currency)
     return ()
 end
 
 @external
 func add_pair{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(pair : Pair):
     Proxy.assert_only_admin()
-    let (pair_) = Oracle_pairs_storage.read(pair.id)
-    with_attr error_message("Oracle: pair with this key already registered"):
-        assert pair_.id = 0
-    end
-
-    SubmittedPair.emit(pair)
-    Oracle_pairs_storage.write(pair.id, pair)
-    Oracle_pair_id_storage.write(pair.quote_currency_id, pair.base_currency_id, pair.id)
+    Oracle.add_pair(pair)
     return ()
 end
 

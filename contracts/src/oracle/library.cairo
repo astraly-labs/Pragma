@@ -4,11 +4,13 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.math import assert_not_equal, assert_not_zero
-from starkware.starknet.common.syscalls import get_caller_address
+from starkware.cairo.common.math import assert_not_equal, assert_not_zero, assert_le
+from starkware.cairo.common.math_cmp import is_not_zero, is_le
+from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
 from entry.structs import Entry, Pair, Currency
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
+from entry.library import Entries
 
 const TIMESTAMP_BUFFER = 3600  # 60 minutes
 
@@ -121,15 +123,16 @@ namespace Oracle:
     ):
         alloc_locals
 
-        let (entries_len, entries) = get_entries(key, sources_len, sources)
+        let (entries_len, entries) = get_entries(pair_id, sources_len, sources)
 
         if entries_len == 0:
-            return (0, 0, 0)
+            return (0, 0, 0, 0)
         end
 
         let (value) = Entries.aggregate_entries(entries_len, entries)
         let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries)
-        return (value, last_updated_timestamp, entries_len)
+        let (decimals) = get_decimals(pair_id)
+        return (value, decimals, last_updated_timestamp, entries_len)
     end
 
     func get_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -137,26 +140,26 @@ namespace Oracle:
     ) -> (entries_len : felt, entries : Entry*):
         alloc_locals
 
-        let (entries_len, entries) = get_all_entries(key, sources_len, sources)
+        let (entries_len, entries) = get_all_entries(pair_id, sources_len, sources)
         return (entries_len, entries)
     end
 
     func get_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         pair_id : felt, source
     ) -> (entry : Entry):
-        let (entry) = Oracle_entry_storage.read(key, source)
+        let (entry) = Oracle_entry_storage.read(pair_id, source)
         return (entry)
     end
 
     func get_all_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt
+        pair_id : felt
     ) -> (sources_len : felt, sources : felt*):
         alloc_locals
 
         let (sources) = alloc()
 
-        let (sources_len) = Oracle_sources_len_storage.read(key)
-        let (sources) = Oracle_build_sources_array(key, sources_len, sources, 0)
+        let (sources_len) = Oracle_sources_len_storage.read(pair_id)
+        let (sources) = build_sources_array(pair_id, sources_len, sources, 0)
         return (sources_len, sources)
     end
 
@@ -264,25 +267,58 @@ namespace Oracle:
         return ()
     end
 
+    func add_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        currency : Currency
+    ):
+        with_attr error_message("Oracle: currency with this key already registered"):
+            let (existing_currency) = Oracle_currencies_storage.read(currency.id)
+            assert existing_currency.id = 0
+        end
+
+        SubmittedCurrency.emit(currency)
+        Oracle_currencies_storage.write(currency.id, currency)
+        return ()
+    end
+
+    func update_currency{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        currency : Currency
+    ):
+        Oracle_currencies_storage.write(currency.id, currency)
+        UpdatedCurrency.emit(currency)
+        return ()
+    end
+
+    func add_pair{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(pair : Pair):
+        let (pair_) = Oracle_pairs_storage.read(pair.id)
+        with_attr error_message("Oracle: pair with this key already registered"):
+            assert pair_.id = 0
+        end
+
+        SubmittedPair.emit(pair)
+        Oracle_pairs_storage.write(pair.id, pair)
+        Oracle_pair_id_storage.write(pair.quote_currency_id, pair.base_currency_id, pair.id)
+        return ()
+    end
+
     #
     # Helpers
     #
 
     func get_all_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, sources_len : felt, sources : felt*
+        pair_id : felt, sources_len : felt, sources : felt*
     ) -> (entries_len : felt, entries : Entry*):
         alloc_locals
 
         let (entries : Entry*) = alloc()
 
         if sources_len == 0:
-            let (all_sources_len, all_sources) = get_all_sources(key)
+            let (all_sources_len, all_sources) = get_all_sources(pair_id)
             let (entries_len, entries) = build_entries_array(
-                key, all_sources_len, all_sources, 0, 0, entries
+                pair_id, all_sources_len, all_sources, 0, 0, entries
             )
         else:
             let (entries_len, entries) = build_entries_array(
-                key, sources_len, sources, 0, 0, entries
+                pair_id, sources_len, sources, 0, 0, entries
             )
         end
 
@@ -290,7 +326,7 @@ namespace Oracle:
     end
 
     func build_entries_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt,
+        pair_id : felt,
         sources_len : felt,
         sources : felt*,
         sources_idx : felt,
@@ -305,7 +341,7 @@ namespace Oracle:
         end
 
         let source = [sources + sources_idx]
-        let (entry) = Oracle_entry_storage.read(key, source)
+        let (entry) = Oracle_entry_storage.read(pair_id, source)
         let (is_entry_initialized) = is_not_zero(entry.timestamp)
         let not_is_entry_initialized = 1 - is_entry_initialized
         let (current_timestamp) = get_block_timestamp()
@@ -314,7 +350,7 @@ namespace Oracle:
 
         if should_skip_entry == TRUE:
             let (entries_len, entries) = build_entries_array(
-                key, sources_len, sources, sources_idx + 1, entries_idx, entries
+                pair_id, sources_len, sources, sources_idx + 1, entries_idx, entries
             )
             return (entries_len, entries)
         end
@@ -322,22 +358,22 @@ namespace Oracle:
         assert [entries + entries_idx * Entry.SIZE] = entry
 
         let (entries_len, entries) = build_entries_array(
-            key, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
+            pair_id, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
         )
         return (entries_len, entries)
     end
 
     func build_sources_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, sources_len : felt, sources : felt*, idx : felt
+        pair_id : felt, sources_len : felt, sources : felt*, idx : felt
     ) -> (sources : felt*):
-        let (new_source) = Oracle_sources_storage.read(key, idx)
+        let (new_source) = Oracle_sources_storage.read(pair_id, idx)
         assert [sources + idx] = new_source
 
         if idx == sources_len:
             return (sources)
         end
 
-        build_sources_array(key, sources_len, sources, idx + 1)
+        build_sources_array(pair_id, sources_len, sources, idx + 1)
 
         return (sources)
     end
