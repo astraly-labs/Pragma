@@ -651,7 +651,11 @@ async def test_mean_aggregation(
 
     pair_id = str_to_felt("eth/usd")
     entry = Entry(
-        pair_id=pair_id, value=3, timestamp=1, source=source, publisher=publisher
+        pair_id=pair_id,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
     )
 
     await publisher_signer.send_transaction(
@@ -665,7 +669,7 @@ async def test_mean_aggregation(
     second_entry = Entry(
         pair_id=pair_id,
         value=5,
-        timestamp=1,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
         source=second_source,
         publisher=publisher,
     )
