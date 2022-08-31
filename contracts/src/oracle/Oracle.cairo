@@ -196,9 +196,11 @@ func upgrade{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
 end
 
 @external
-func setAdmin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(new_admin : felt):
+func setAdminAddress{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_admin_address : felt
+):
     Proxy.assert_only_admin()
-    Proxy._set_admin(new_admin)
+    Proxy._set_admin_address(new_admin_address)
     return ()
 end
 
@@ -212,9 +214,9 @@ end
 # @notice get address for admin
 # @return admin_address: returns admin's address
 @view
-func get_admin{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-    admin : felt
+func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    admin_address : felt
 ):
-    let (admin) = Proxy.get_admin()
-    return (admin)
+    let (admin_address) = Proxy.get_admin_address()
+    return (admin_address)
 end

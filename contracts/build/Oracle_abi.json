@@ -158,16 +158,16 @@
     {
         "data": [
             {
-                "name": "previousAdmin",
+                "name": "previousAdminAddress",
                 "type": "felt"
             },
             {
-                "name": "newAdmin",
+                "name": "newAdminAddress",
                 "type": "felt"
             }
         ],
         "keys": [],
-        "name": "AdminChanged",
+        "name": "AdminAddressChanged",
         "type": "event"
     },
     {
@@ -438,11 +438,11 @@
     {
         "inputs": [
             {
-                "name": "new_admin",
+                "name": "new_admin_address",
                 "type": "felt"
             }
         ],
-        "name": "setAdmin",
+        "name": "setAdminAddress",
         "outputs": [],
         "type": "function"
     },
@@ -460,10 +460,10 @@
     },
     {
         "inputs": [],
-        "name": "get_admin",
+        "name": "get_admin_address",
         "outputs": [
             {
-                "name": "admin",
+                "name": "admin_address",
                 "type": "felt"
             }
         ],
