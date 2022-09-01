@@ -23,7 +23,7 @@ const faqs = [
   {
     question: "What are the differences between off- and on-chain oracles?",
     answer:
-      "Historically, the limited performance of blockchains has meant that oracles gathered all data off-chain and only posted the final answer on-chain, thereby operating as a block box with a trusted output. On-chain oracles use performant new technologies such as zero-knowledge cryptography to bring the core logic on-chain. This makes the on-chain oracle much more secure and trustless.",
+      "Historically, the limited performance of blockchains has meant that oracles gathered all data off-chain and only posted the final answer on-chain, thereby operating as a black box with a trusted output. On-chain oracles use performant new technologies such as zero-knowledge cryptography to bring the core logic on-chain. This makes the on-chain oracle much more secure and trustless.",
   },
   {
     question: "Why do blockchains need oracles? What is the oracle problem?",
