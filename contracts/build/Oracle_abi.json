@@ -173,6 +173,37 @@
     {
         "inputs": [
             {
+                "name": "proxy_admin",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            },
+            {
+                "name": "currencies_len",
+                "type": "felt"
+            },
+            {
+                "name": "currencies",
+                "type": "Currency*"
+            },
+            {
+                "name": "pairs_len",
+                "type": "felt"
+            },
+            {
+                "name": "pairs",
+                "type": "Pair*"
+            }
+        ],
+        "name": "initializer",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "pair_id",
                 "type": "felt"
             },
