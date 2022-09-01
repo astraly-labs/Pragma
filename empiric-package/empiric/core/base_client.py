@@ -14,7 +14,7 @@ from starkware.starknet.public.abi import get_selector_from_name
 
 class EmpiricAccountClient(AccountClient):
     async def _get_nonce(self) -> int:
-        return int(time.time())
+        return time.time_ns()
 
 
 class EmpiricBaseClient(ABC):
