@@ -17,6 +17,9 @@ CheckEthThreshold = [
 Oracle = [
     "contracts/src/oracle/Oracle.cairo"
 ]
+Proxy = [
+    "contracts/src/proxy/Proxy.cairo"
+]
 PublisherRegistry = [
     "contracts/src/publisher_registry/PublisherRegistry.cairo"
 ]

@@ -5,7 +5,7 @@ import typer
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.contract import Contract
 
-from cli.config import COMPILED_CONTRACT_PATH, CONFIG_FILE_PATH
+from cli import config, net
 from cli.utils import coro
 
 app = typer.Typer(help="Deployment commands for Publisher Registry")
@@ -29,10 +29,10 @@ def read():
 
 async def deploy_publisher_registry(client: GatewayClient):
     """ starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS> """
-    compiled = (COMPILED_CONTRACT_PATH / "PublisherRegistry.json").read_text("utf-8")
+    compiled = (config.COMPILED_CONTRACT_PATH / "PublisherRegistry.json").read_text("utf-8")
 
     config_parser = configparser.ConfigParser()
-    config_parser.read(CONFIG_FILE_PATH)
+    config_parser.read(config.CONFIG_FILE_PATH)
 
     admin_address = int(config_parser["USER"]["account-address"])
 
