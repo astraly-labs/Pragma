@@ -7,3 +7,4 @@ isort==5.10.*
 bumpversion==0.6.*
 build==0.7.*
 twine==4.0.*
+typer==0.6.1

@@ -30,3 +30,6 @@ var/
 # protostar
 !contracts/build/
 contracts/build/*[!_abi].json
+
+# cli
+cli-config.ini
