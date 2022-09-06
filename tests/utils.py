@@ -9,7 +9,7 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
 
-CAIRO_PATH = ["contracts/src"]
+CAIRO_PATH = ["contracts/src", "contracts/lib"]
 
 
 def construct_path(path):
