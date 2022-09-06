@@ -2,12 +2,10 @@ import configparser
 import os
 from pathlib import Path
 
-from starknet_py.net.gateway_client import GatewayClient
 import typer
+from starknet_py.net.gateway_client import GatewayClient
 
-from cli import (
-    SUCCESS, __app_name__, net
-)
+from cli import SUCCESS, __app_name__, net
 
 CONFIG_DIR_PATH = Path(os.getcwd())
 COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"
@@ -54,7 +52,7 @@ def _init_config_file() -> int:
 
 def _create_config_file(gateway_url: str, chain_id: int) -> int:
     config_parser = configparser.ConfigParser()
-    config_parser["GENERAL"] = {'gateway-url': gateway_url, 'chain-id': chain_id}
+    config_parser["GENERAL"] = {"gateway-url": gateway_url, "chain-id": chain_id}
 
     try:
         with CONFIG_FILE_PATH.open("w") as file:

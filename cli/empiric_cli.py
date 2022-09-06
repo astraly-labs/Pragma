@@ -2,10 +2,20 @@ from typing import Optional
 
 import typer
 
-from cli import ERRORS, SUCCESS, __app_name__, __version__, account, config, contracts, net
+from cli import (
+    ERRORS,
+    SUCCESS,
+    __app_name__,
+    __version__,
+    account,
+    config,
+    contracts,
+    net,
+)
+
 from .utils import coro
 
-TESTNET_GATEWAY_URL = 'https://alpha4.starknet.io'
+TESTNET_GATEWAY_URL = "https://alpha4.starknet.io"
 app = typer.Typer()
 
 
@@ -16,7 +26,7 @@ def _version_callback(value: bool) -> None:
 
 
 @app.command()
-def init(gateway_url=TESTNET_GATEWAY_URL, chain_id: int=1536727068981429685321):
+def init(gateway_url=TESTNET_GATEWAY_URL, chain_id: int = 1536727068981429685321):
     config.init_app(gateway_url, chain_id)
     return SUCCESS
 
@@ -32,7 +42,7 @@ async def create_account():
 
 
 @app.command()
-def get_block(val: str = 'NONE'):
+def get_block(val: str = "NONE"):
     gateway_url, chain_id = config.validate_config()
 
     client = net.init_client(gateway_url, chain_id)
@@ -52,5 +62,6 @@ def main(
     )
 ) -> None:
     return
+
 
 app.add_typer(contracts.app, name="contracts")
