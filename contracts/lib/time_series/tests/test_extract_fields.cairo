@@ -11,7 +11,7 @@ struct DataPoint:
     member val2 : felt
 end
 
-func get_tick_and_value(d: DataPoint) -> (tick: felt, value: felt):
+func get_tick_and_value(d : DataPoint) -> (tick : felt, value : felt):
     let value = d.val1 + d.val2
     return (tick=d.timestamp, value=value)
 end
@@ -25,17 +25,12 @@ func test_extract_fields():
     assert tick = 100000
     assert value = 40
 
-    let (datapoint_arr: DataPoint*) = alloc()
+    let (datapoint_arr : DataPoint*) = alloc()
     assert datapoint_arr[0] = datapoint1
     assert datapoint_arr[1] = datapoint2
     assert datapoint_arr[2] = datapoint3
 
-    let (result_arr) = transform_arr(
-        get_tick_and_value,
-        3,
-        datapoint_arr,
-        DataPoint.SIZE,
-    )
+    let (result_arr) = transform_arr(get_tick_and_value, 3, datapoint_arr, DataPoint.SIZE)
     assert 100000 = result_arr[0].tick
     assert 100100 = result_arr[1].tick
     assert 100200 = result_arr[2].tick
