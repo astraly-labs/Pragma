@@ -1,11 +1,9 @@
+import datetime
 import os
 import time
-import requests
-import datetime
 
 import pandas as pd
-from starknet_py.contract import Contract
-from starknet_py.net.gateway_client import GatewayClient
+import requests
 
 
 def main():
