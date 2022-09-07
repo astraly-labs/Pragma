@@ -67,7 +67,7 @@ import asyncio
 import os
 import time
 
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 from empiric.publisher.client import EmpiricPublisherClient
 
@@ -77,10 +77,10 @@ async def main():
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
 
     client = EmpiricPublisherClient(publisher_private_key, publisher_address)
-    entry = construct_entry(
+    entry = Entry(
         key=currency_pair_to_key("TEST", "USD"),
         value=10,  # shifted 10 ** decimals; see get_decimals above
-        timestamp=int(time.time()),
+        timestamp=int(time.time()),  # UNIX format, in seconds since epoch
         source="gemini",
         publisher="<your name here>",
     )
