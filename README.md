@@ -48,6 +48,8 @@ Make sure you set the following environment variables to be able to interact wit
 
 ```bash
 STARKNET_NETWORK=alpha-goerli
+PUBLISHER_PRIVATE_KEY=...
+PUBLISHER_ADDRESS=...
 ```
 
 Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `empiric.core.utils`). Then run the following commands, replacing `<ORACLE_CONTROLLER_ADDRESS>` with the address of the Oracle Controller contract (see above):

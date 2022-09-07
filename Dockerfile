@@ -12,6 +12,8 @@ FROM base as test
 COPY empiric-package/ /empiric-package
 RUN pip install empiric-package/
 
+COPY .env ./.env
+
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION
 RUN pip install empiric-network==$EMPIRIC_PACKAGE_VERSION
