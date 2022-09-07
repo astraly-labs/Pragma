@@ -6,7 +6,6 @@ from cli import (
     ERRORS,
     SUCCESS,
     __app_name__,
-    __version__,
     account,
     config,
     contracts,
@@ -21,7 +20,7 @@ app = typer.Typer()
 
 def _version_callback(value: bool) -> None:
     if value:
-        typer.echo(f"{__app_name__} v{__version__}")
+        typer.echo(f"{__app_name__}")
         raise typer.Exit()
 
 
