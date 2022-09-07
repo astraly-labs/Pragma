@@ -1,14 +1,13 @@
 import configparser
 from pathlib import Path
 
-from starknet_py.net import AccountClient, KeyPair
+import typer
+from cli import SUCCESS
+from starknet_py.net import KeyPair
 from starknet_py.net.client import Client
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.address import AddressRepresentation
-from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.transactions.deploy import make_deploy_tx
-
-from cli import SUCCESS
 
 from .compiled_account_contract import COMPILED_ACCOUNT_CONTRACT
 
@@ -35,6 +34,6 @@ async def create_account(client: GatewayClient, config_file: Path):
 
     key_pair = KeyPair.from_private_key(account_private_key)
     address = await deploy_account_contract(client, key_pair.public_key)
-    print("created address:", address)
+    typer.echo("created address:", address)
 
     return SUCCESS

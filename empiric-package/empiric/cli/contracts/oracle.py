@@ -1,18 +1,16 @@
 import configparser
 
 import typer
+from cli import config, net
+from cli.utils import coro
 from empiric.core.utils import str_to_felt
 from starknet_py.common import create_compiled_contract
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.transactions.declare import make_declare_tx
-from starknet_py.transactions.deploy import make_deploy_tx
 from starknet_py.utils.crypto.facade import pedersen_hash
 from starkware.starknet.compiler.compile import get_selector_from_name
 from starkware.starknet.core.os.class_hash import compute_class_hash
-
-from cli import config, net
-from cli.utils import coro
 
 app = typer.Typer(help="Deployment commands for Oracle")
 

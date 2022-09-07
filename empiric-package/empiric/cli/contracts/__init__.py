@@ -1,5 +1,4 @@
 import typer
-
 from cli import config, net
 from cli.contracts import oracle, publisher_registry
 from cli.utils import coro

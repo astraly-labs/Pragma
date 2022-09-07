@@ -3,9 +3,7 @@ import os
 from pathlib import Path
 
 import typer
-from starknet_py.net.gateway_client import GatewayClient
-
-from cli import SUCCESS, __app_name__, net
+from cli import DIR_ERROR, FILE_ERROR, OS_ERROR, SUCCESS, net
 
 CONFIG_DIR_PATH = Path(os.getcwd())
 COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"
@@ -59,6 +57,6 @@ def _create_config_file(gateway_url: str, chain_id: int) -> int:
             config_parser.write(file)
 
     except OSError:
-        return DB_WRITE_ERROR
+        return OS_ERROR
 
     return SUCCESS

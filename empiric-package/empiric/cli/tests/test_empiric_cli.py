@@ -1,6 +1,5 @@
-from typer.testing import CliRunner
-
 from cli import __app_name__, empiric_cli
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
