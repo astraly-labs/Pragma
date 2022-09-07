@@ -7,21 +7,15 @@ from starkware.cairo.common.memcpy import memcpy
 
 from time_series.structs import TickElem
 
-func transform_arr(get_tick_and_value: codeoffset, arr_len: felt, arr: felt*, element_size: felt) -> (mapped_array : TickElem*):
+func transform_arr(
+    get_tick_and_value : codeoffset, arr_len : felt, arr : felt*, element_size : felt
+) -> (mapped_array : TickElem*):
     alloc_locals
     let (local func_pc) = get_label_location(get_tick_and_value)
     let (mapped_array : felt*) = alloc()
 
     let (implicit_args) = alloc()
-    map_loop(
-        func_pc,
-        arr_len,
-        arr,
-        element_size,
-        0,
-        implicit_args,
-        mapped_array,
-    )
+    map_loop(func_pc, arr_len, arr, element_size, 0, implicit_args, mapped_array)
     return (cast(mapped_array, TickElem*))
 end
 
