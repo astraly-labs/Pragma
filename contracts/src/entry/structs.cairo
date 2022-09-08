@@ -24,4 +24,6 @@ struct Currency:
 struct Checkpoint:
     member timestamp : felt
     member value : felt
+    member aggregation_mode : felt
+    member num_sources_aggregated : felt
 end

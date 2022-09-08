@@ -3,7 +3,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
-from entry.structs import Entry
+from entry.structs import Entry, Checkpoint
 from oracle_implementation.library import Oracle
 
 #
@@ -56,6 +56,22 @@ func get_all_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
     return (sources_len, sources)
 end
 
+@view
+func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (latest : Checkpoint):
+    let (latest) = Oracle.get_latest_checkpoint(key)
+    return (latest)
+end
+
+@view
+func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    threshold : felt
+):
+    let (threshold) = Oracle.get_sources_threshold()
+    return (threshold)
+end
+
 #
 # Setters
 #
@@ -73,5 +89,23 @@ func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     new_entry : Entry
 ):
     Oracle.publish_entry(new_entry)
+    return ()
+end
+
+@external
+func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt
+):
+    Oracle.set_checkpoint(key, aggregation_mode)
+    return ()
+end
+
+@external
+func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    threshold : felt
+):
+    Oracle.only_oracle_controller()
+
+    Oracle.set_sources_threshold(threshold)
     return ()
 end

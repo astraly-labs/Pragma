@@ -39,6 +39,10 @@ end
 func Oracle__checkpoint_index(key : felt) -> (index : felt):
 end
 
+@storage_var
+func Oracle__sources_threshold() -> (threshold : felt):
+end
+
 namespace Oracle:
     #
     # Guards
@@ -105,9 +109,55 @@ namespace Oracle:
         return (sources_len, sources)
     end
 
+    func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt
+    ) -> (checkpoint : Checkpoint):
+        let (cur_ix) = Oracle__checkpoint_index.read(key)
+        let (cur_checkpoint) = Oracle__checkpoints.read(key, cur_ix - 1)
+        return (cur_checkpoint)
+    end
+
+    func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        ) -> (threshold : felt):
+        let (threshold) = Oracle__sources_threshold.read()
+        return (threshold)
+    end
+
     #
     # Setters
     #
+
+    func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        threshold : felt
+    ):
+        Oracle__sources_threshold.write(threshold)
+        return ()
+    end
+
+    func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, aggregation_mode : felt
+    ):
+        alloc_locals
+        let (sources) = alloc()
+        let (value, last_updated_timestamp, num_sources_aggregated) = get_value(
+            key, aggregation_mode, 0, sources
+        )
+        let (sources_threshold) = Oracle__sources_threshold.read()
+        let (meets_sources_threshold) = is_le(sources_threshold, num_sources_aggregated)
+        let (cur_checkpoint) = get_latest_checkpoint(key)
+        let (is_new_checkpoint) = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp)
+        # if both are true
+        if meets_sources_threshold + is_new_checkpoint == 2:
+            let checkpoint = Checkpoint(
+                last_updated_timestamp, value, aggregation_mode, num_sources_aggregated
+            )
+            let (cur_ix) = Oracle__checkpoint_index.read(key)
+            Oracle__checkpoints.write(key, cur_ix, checkpoint)
+            Oracle__checkpoint_index.write(key, cur_ix + 1)
+            return ()
+        end
+        return ()
+    end
 
     func set_oracle_controller_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -206,7 +256,7 @@ namespace Oracle:
         let (should_skip_entry) = is_not_zero(is_entry_stale + not_is_entry_initialized)
 
         if should_skip_entry == TRUE:
-            let (entries_len, entries) = Oracle_build_entries_array(
+            let (entries_len, entries) = build_entries_array(
                 key, sources_len, sources, sources_idx + 1, entries_idx, entries
             )
             return (entries_len, entries)
@@ -214,7 +264,7 @@ namespace Oracle:
 
         assert [entries + entries_idx * Entry.SIZE] = entry
 
-        let (entries_len, entries) = Oracle_build_entries_array(
+        let (entries_len, entries) = build_entries_array(
             key, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
         )
         return (entries_len, entries)
