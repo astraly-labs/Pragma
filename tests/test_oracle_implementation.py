@@ -2,15 +2,15 @@ from statistics import median
 
 import pytest
 import pytest_asyncio
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import felt_to_str, str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from utils import cached_contract, construct_path
+from utils import CAIRO_PATH, cached_contract, construct_path
 
 CONTRACT_FILE = construct_path(
-    "contracts/oracle_implementation/OracleImplementation.cairo"
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
 )
 DEFAULT_DECIMALS = 18
 ORACLE_CONTROLLER_ADDRESS = 1771898182094063035988424170791013279488407100660629279080401671638225029234  # random number
@@ -19,7 +19,9 @@ AGGREGATION_MODE = 0
 
 @pytest_asyncio.fixture(scope="module")
 async def contract_class():
-    contract_class = compile_starknet_files(files=[CONTRACT_FILE], debug_info=True)
+    contract_class = compile_starknet_files(
+        files=[CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
+    )
     return contract_class
 
 
@@ -73,20 +75,22 @@ async def test_update_oracle_controller_address(contract):
 
 @pytest.mark.asyncio
 async def test_submit_entries(contract, source, publisher):
-    entry = construct_entry(
+    entry = Entry(
         key="eth/usd", value=2, timestamp=1, source=source, publisher=publisher
     )
 
-    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry.serialize()).invoke(
+        caller_address=ORACLE_CONTROLLER_ADDRESS
+    )
 
     result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key="btc/usd", value=3, timestamp=2, source=source, publisher=publisher
     )
 
-    await contract.publish_entry(second_entry).invoke(
+    await contract.publish_entry(second_entry.serialize()).invoke(
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
@@ -103,21 +107,21 @@ async def test_submit_entries(contract, source, publisher):
 @pytest.mark.asyncio
 async def test_republish_stale(contract, source, publisher):
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
-        key=key, value=2, timestamp=2, source=source, publisher=publisher
-    )
+    entry = Entry(key=key, value=2, timestamp=2, source=source, publisher=publisher)
 
-    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry.serialize()).invoke(
+        caller_address=ORACLE_CONTROLLER_ADDRESS
+    )
 
     result = await contract.get_value(entry.key, AGGREGATION_MODE, []).call()
     assert result.result.value == entry.value
 
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key, value=3, timestamp=1, source=source, publisher=publisher
     )
 
     try:
-        await contract.publish_entry(second_entry).invoke(
+        await contract.publish_entry(second_entry.serialize()).invoke(
             caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 
@@ -140,19 +144,19 @@ async def test_mean_aggregation(
     publisher,
 ):
     key = str_to_felt("eth/usd")
-    entry = construct_entry(
-        key=key, value=3, timestamp=1, source=source, publisher=publisher
-    )
+    entry = Entry(key=key, value=3, timestamp=1, source=source, publisher=publisher)
 
-    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry.serialize()).invoke(
+        caller_address=ORACLE_CONTROLLER_ADDRESS
+    )
 
     second_publisher = str_to_felt("bar")
     second_source = str_to_felt("1xdata")
-    second_entry = construct_entry(
+    second_entry = Entry(
         key=key, value=5, timestamp=1, source=second_source, publisher=second_publisher
     )
 
-    await contract.publish_entry(second_entry).invoke(
+    await contract.publish_entry(second_entry.serialize()).invoke(
         caller_address=ORACLE_CONTROLLER_ADDRESS
     )
 
@@ -177,17 +181,19 @@ async def test_median_aggregation(
     prices = [1, 3, 10, 5, 12, 2]
     publishers_str = ["foo", "bar", "baz", "oof", "rab", "zab"]
     publishers = [str_to_felt(p) for p in publishers_str]
-    entry = construct_entry(
+    entry = Entry(
         key=key, value=prices[0], timestamp=1, source=source, publisher=publishers[0]
     )
 
-    await contract.publish_entry(entry).invoke(caller_address=ORACLE_CONTROLLER_ADDRESS)
+    await contract.publish_entry(entry.serialize()).invoke(
+        caller_address=ORACLE_CONTROLLER_ADDRESS
+    )
 
     entries = [entry]
 
     for price, additional_publisher in zip(prices[1:], publishers[1:]):
         additional_source = str_to_felt(felt_to_str(additional_publisher) + "-source")
-        additional_entry = construct_entry(
+        additional_entry = Entry(
             key=key,
             value=price,
             timestamp=1,
@@ -196,7 +202,7 @@ async def test_median_aggregation(
         )
         entries.append(additional_entry)
 
-        await contract.publish_entry(additional_entry).invoke(
+        await contract.publish_entry(additional_entry.serialize()).invoke(
             caller_address=ORACLE_CONTROLLER_ADDRESS
         )
 

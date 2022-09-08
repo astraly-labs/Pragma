@@ -19,6 +19,7 @@ EMPIRIC_ALL_ASSETS = [
     {"type": "SPOT", "pair": ("ADA", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("XRP", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("MATIC", "USD"), "decimals": 18},
+    {"type": "SPOT", "pair": ("AAVE", "USD"), "decimals": 18},
     {"type": "FUTURE", "pair": ("BTC", "USD"), "decimals": 18},
     {"type": "FUTURE", "pair": ("ETH", "USD"), "decimals": 18},
     {

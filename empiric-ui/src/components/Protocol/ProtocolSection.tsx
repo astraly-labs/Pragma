@@ -4,9 +4,8 @@ import ProtocolSelect from "./ProtocolSelect";
 
 export const protocolCategories = [
   "All",
-  "Money-Market",
-  "Social Wallet",
   "Lending",
+  "Social Wallet",
   "Infrastructure",
 ] as const;
 
@@ -29,7 +28,7 @@ export const protocols: Protocol[] = [
   },
   {
     name: "zkLend",
-    category: "Money-Market",
+    category: "Lending",
     src: "/assets/protocols/zklend.svg",
     description:
       "zkLend is an L2 money-market protocol built on StarkNet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
@@ -74,6 +73,14 @@ export const protocols: Protocol[] = [
     description:
       "Hashstack Finance is a DeFi platform whose Open protocol aims to disrupt the DeFi lending market by offering under-collateralized loans. It addresses the need of lacking under-collateralized lending avenues by enabling loans at up to 3x collateral.",
     href: "https://hashstack.finance/",
+  },
+  {
+    name: "Nostra",
+    category: "Lending",
+    src: "/assets/protocols/nostra.webp",
+    description:
+      " Nostra is a versatile liquidity protocol for lending and borrowing. On top of its basic use-case, Nostra has many innovative features designed to maximize capital efficiency and minimize liquidity risk.",
+    href: "https://nostra.finance/",
   },
 ];
 

@@ -1,0 +1,37 @@
+["protostar.config"]
+protostar_version = "0.3.2"
+
+["protostar.project"]
+libs_path = "contracts/lib"
+
+["protostar.contracts"]
+Account = [
+    "contracts/src/account/Account.cairo"
+]
+Admin = [
+    "contracts/src/admin/Admin.cairo"
+]
+CheckEthThreshold = [
+    "contracts/src/sample_consumer/CheckEthThreshold.cairo"
+]
+OracleController = [
+    "contracts/src/oracle_controller/OracleController.cairo"
+]
+OracleImplementation = [
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
+]
+PublisherRegistry = [
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
+]
+YieldCurve = [
+    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
+]
+RebaseDenomination = [
+    "contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
+]
+
+["protostar.shared_command_configs"]
+cairo-path = ["contracts/src"]
+
+["protostar.build"]
+output = "contracts/build"

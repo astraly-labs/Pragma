@@ -1,11 +1,15 @@
 import datetime
+import logging
+from typing import List
 
 import requests
-from empiric.core.entry import construct_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_key
 
+logger = logging.getLogger(__name__)
 
-def fetch_coingecko(assets, publisher):
+
+def fetch_coingecko(assets, publisher) -> List[Entry]:
     source = "coingecko"
 
     headers = {
@@ -16,7 +20,7 @@ def fetch_coingecko(assets, publisher):
 
     for asset in assets:
         if asset["type"] != "SPOT":
-            print(f"Skipping Coingecko for non-spot asset {asset}")
+            logger.debug(f"Skipping Coingecko for non-spot asset {asset}")
             continue
 
         pair = asset["pair"]
@@ -54,6 +58,8 @@ def fetch_coingecko(assets, publisher):
             pair_id = "ripple"
         elif pair[0] == "MATIC":
             pair_id = "matic-network"
+        elif pair[0] == "AAVE":
+            pair_id = "aave"
         else:
             raise Exception(
                 f"Unknown price pair, do not know how to query coingecko for {pair[0]}"
@@ -72,10 +78,10 @@ def fetch_coingecko(assets, publisher):
         )
         price_int = int(price * (10 ** asset["decimals"]))
 
-        print(f"Fetched price {price} for {key} from Coingecko")
+        logger.info(f"Fetched price {price} for {key} from Coingecko")
 
         entries.append(
-            construct_entry(
+            Entry(
                 key=key,
                 value=price_int,
                 timestamp=timestamp,

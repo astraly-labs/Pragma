@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from empiric.core.entry import construct_entry, serialize_entry
+from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
@@ -9,22 +9,22 @@ from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
     calculate_on_yield_point,
 )
-from utils import assert_event_emitted, cached_contract, construct_path
+from utils import CAIRO_PATH, assert_event_emitted, cached_contract, construct_path
 
 # The path to the contract source code.
 PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
-    "contracts/publisher_registry/PublisherRegistry.cairo"
+    "contracts/src/publisher_registry/PublisherRegistry.cairo"
 )
 ORACLE_CONTROLLER_CONTRACT_FILE = construct_path(
-    "contracts/oracle_controller/OracleController.cairo"
+    "contracts/src/oracle_controller/OracleController.cairo"
 )
 ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
-    "contracts/oracle_implementation/OracleImplementation.cairo"
+    "contracts/src/oracle_implementation/OracleImplementation.cairo"
 )
 YIELD_CURVE_CONTRACT_FILE = construct_path(
-    "contracts/compute_engines/yield_curve/YieldCurve.cairo"
+    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
 )
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/account/Account.cairo")
+ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 DEFAULT_DECIMALS = 18
 AGGREGATION_MODE = 0
 STARKNET_STARTING_TIMESTAMP = 1650590820
@@ -62,24 +62,28 @@ FUTURES_SPOT = {
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
-        files=[ACCOUNT_CONTRACT_FILE], debug_info=True
+        files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
     publisher_registry_class = compile_starknet_files(
         files=[PUBLISHER_REGISTRY_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     oracle_controller_class = compile_starknet_files(
         files=[ORACLE_CONTROLLER_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     oracle_implementation_class = compile_starknet_files(
         files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
         debug_info=True,
+        cairo_path=CAIRO_PATH,
     )
     yield_curve_class = compile_starknet_files(
         files=[YIELD_CURVE_CONTRACT_FILE],
         debug_info=True,
         disable_hint_validation=True,
+        cairo_path=CAIRO_PATH,
     )
     return (
         account_class,
@@ -309,7 +313,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     output_decimals = 10
 
     # Submit data (on, spot, futures)
-    on_entry = construct_entry(
+    on_entry = Entry(
         key=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -320,11 +324,11 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         publisher_account,
         oracle_controller.contract_address,
         "publish_entry",
-        serialize_entry(on_entry),
+        on_entry.serialize(),
     )
 
     for spot_key in FUTURES_SPOT.keys():
-        spot_entry = construct_entry(
+        spot_entry = Entry(
             key=spot_key,
             value=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
@@ -335,7 +339,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             publisher_account,
             oracle_controller.contract_address,
             "publish_entry",
-            serialize_entry(spot_entry),
+            spot_entry.serialize(),
         )
 
         yield_points = [
@@ -346,7 +350,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         futures = FUTURES_SPOT[spot_key]["futures"]
         for future_key, future_data in futures.items():
-            future_entry = construct_entry(
+            future_entry = Entry(
                 key=future_key,
                 value=future_data["value"],
                 timestamp=future_data["timestamp"],
@@ -357,7 +361,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 publisher_account,
                 oracle_controller.contract_address,
                 "publish_entry",
-                serialize_entry(future_entry),
+                future_entry.serialize(),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_entry.value,
