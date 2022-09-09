@@ -93,13 +93,16 @@ func test_twap{range_check_ptr}():
     let (prices_arr) = subsample(time_series_len, cast(my_time_series, felt*) + 1, 2)
     log_array(time_series_len, prices_arr)
 
-    let (differences : felt*) = pairwise_1D(
-        PAIRWISE_OPERATION.SUBTRACTION, time_series_len, my_now_vector, timestamps_vector
+    let (time_differences : felt*) = pairwise_1D(
+        PAIRWISE_OPERATION.SUBTRACTION,
+        time_series_len - 1,
+        timestamps_vector + 1,
+        timestamps_vector,
     )
-    log_array(time_series_len - 1, differences)
-    let (sum_ti) = sum_array(time_series_len - 1, differences)
+    log_array(time_series_len - 1, time_differences)
+    let (sum_ti) = sum_array(time_series_len - 1, time_differences)
 
-    let (sum_pi_ti) = dot_product(time_series_len - 1, differences, prices_arr)
+    let (sum_pi_ti) = dot_product(time_series_len - 1, time_differences, prices_arr)
     let (twap) = safe_div(sum_pi_ti, sum_ti)
     %{ print('twap:', ids.twap) %}
 

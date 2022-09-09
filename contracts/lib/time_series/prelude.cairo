@@ -1,7 +1,5 @@
 %lang starknet
 
-from time_series.stats import sum_array
-
 from time_series.matmul import (
     dot_product,
     pairwise_1D,
@@ -20,6 +18,10 @@ from time_series.reshape import (
     identity,
     subsample,
 )
+from time_series.stats.norm import norm, Float
+from time_series.stats.metrics import sum_array, sum_tick_array, mean
 from time_series.scaler import scale_data
 from time_series.structs import TickElem, Matrix2D, List, PAIRWISE_OPERATION
 from time_series.utils import modulo, is_positive, greater_than, safe_div
+
+from cairo_math_64x61.math64x61 import ONE, E, PI, FixedPoint
