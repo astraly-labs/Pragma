@@ -1,10 +1,11 @@
 import configparser
 
 import typer
-from cli import config, net
-from cli.utils import coro
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
+
+from empiric.cli import config, net
+from empiric.cli.utils import coro
 
 app = typer.Typer(help="Deployment commands for Publisher Registry")
 

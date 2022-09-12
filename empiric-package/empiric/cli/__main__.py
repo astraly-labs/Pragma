@@ -1,4 +1,4 @@
-from cli import __app_name__, empiric_cli
+from empiric.cli import __app_name__, empiric_cli
 
 
 def main():

@@ -1,7 +1,7 @@
 import typer
-from cli import config, net
-from cli.contracts import oracle, publisher_registry
-from cli.utils import coro
+from empiric.cli import config, net
+from empiric.cli.contracts import oracle, publisher_registry
+from empiric.cli.utils import coro
 
 app = typer.Typer(help="contract deployment utilities")
 

@@ -1,8 +1,8 @@
 from typing import Optional
 
 import typer
-from cli import SUCCESS, __app_name__, account, config, contracts, net
 
+from empiric.cli import SUCCESS, __app_name__, account, config, contracts, net
 from .utils import coro
 
 TESTNET_GATEWAY_URL = "https://alpha4.starknet.io"
@@ -37,6 +37,34 @@ def get_block(val: str = "NONE"):
 
     client = net.init_client(gateway_url, chain_id)
     typer.echo(client.get_block_sync())
+    return SUCCESS
+
+
+@app.command()
+def devnet():
+    """ start a local devnet instance """
+    import asyncio
+    from starknet_devnet import server as starknet_devserver
+    from starknet_devnet.server import DevnetConfig, DumpOn, GunicornServer, StarknetWrapper, StarknetDevnetException, parse_args, state
+
+    args = parse_args([])
+    try:
+        state.set_starknet_wrapper(StarknetWrapper(DevnetConfig(args)))
+        state.set_dump_options(args.dump_path, args.dump_on)
+    except StarknetDevnetException as error:
+        sys.exit(error.message)
+
+    asyncio.run(state.starknet_wrapper.initialize())
+    try:
+        typer.echo(f" * Listening on http://{args.host}:{args.port}/ (Press CTRL+C to quit)")
+        GunicornServer(app, args).run()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if args.dump_on == DumpOn.EXIT:
+            state.dumper.dump()
+            sys.exit(0)
+
     return SUCCESS
 
 

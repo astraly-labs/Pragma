@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import typer
-from cli import DIR_ERROR, FILE_ERROR, OS_ERROR, SUCCESS, net
+from empiric.cli import DIR_ERROR, FILE_ERROR, OS_ERROR, SUCCESS, net
 
 CONFIG_DIR_PATH = Path(os.getcwd())
 COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"

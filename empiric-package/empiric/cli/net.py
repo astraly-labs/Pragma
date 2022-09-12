@@ -1,7 +1,7 @@
 import configparser
 from pathlib import Path
 
-from cli import STARKNET_READ_ERROR
+from empiric.cli import STARKNET_READ_ERROR
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.chains import StarknetChainId
 
