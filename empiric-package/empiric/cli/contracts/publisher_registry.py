@@ -1,39 +1,42 @@
 import configparser
+from pathlib import Path
 
 import typer
+from empiric.cli import SUCCESS, config, net
+from empiric.cli.utils import coro
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
-
-from empiric.cli import config, net
-from empiric.cli.utils import coro
 
 app = typer.Typer(help="Deployment commands for Publisher Registry")
 
 
 @app.command()
 @coro
-async def deploy():
+async def deploy(config_path=config.DEFAULT_CONFIG):
     """deploy a new instance of the publisher registry"""
-    gateway_url, chain_id = config.validate_config()
+    gateway_url, chain_id = config.validate_config(config_path)
     client = net.init_client(gateway_url, chain_id)
+    account_client = net.init_account_client(client, config_path)
 
-    await deploy_publisher_registry(client)
+    await deploy_publisher_registry(account_client, config_path)
+
+    return SUCCESS
 
 
 @app.command()
 def read():
     """test command"""
-    print("reading")
+    typer.echo("reading")
 
 
-async def deploy_publisher_registry(client: GatewayClient):
+async def deploy_publisher_registry(client: GatewayClient, config_path: Path):
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     compiled = (config.COMPILED_CONTRACT_PATH / "PublisherRegistry.json").read_text(
         "utf-8"
     )
 
     config_parser = configparser.ConfigParser()
-    config_parser.read(config.CONFIG_FILE_PATH)
+    config_parser.read(config_path)
 
     admin_address = int(config_parser["USER"]["account-address"])
 
@@ -43,4 +46,10 @@ async def deploy_publisher_registry(client: GatewayClient):
         constructor_args={"admin_address": admin_address},
     )
     await deployment_result.wait_for_acceptance()
-    print("address:", deployment_result.deployed_contract.address)
+    typer.echo(f"address: {deployment_result.deployed_contract.address}")
+
+    publisher_registry_address = deployment_result.deployed_contract.address
+    config_parser["CONTRACTS"]["publisher-registry"] = str(publisher_registry_address)
+
+    with open(config_path, "w") as f:
+        config_parser.write(f)

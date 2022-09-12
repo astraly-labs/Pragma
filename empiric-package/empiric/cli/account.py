@@ -2,13 +2,13 @@ import configparser
 from pathlib import Path
 
 import typer
+from empiric.cli import SUCCESS
 from starknet_py.net import KeyPair
 from starknet_py.net.client import Client
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.address import AddressRepresentation
 from starknet_py.transactions.deploy import make_deploy_tx
 
-from empiric.cli import SUCCESS
 from .compiled_account_contract import COMPILED_ACCOUNT_CONTRACT
 
 
@@ -30,10 +30,14 @@ async def create_account(client: GatewayClient, config_file: Path):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 
-    account_private_key = int(config_parser["SECRET"]["admin-private-key"])
+    account_private_key = int(config_parser["SECRET"]["private-key"])
 
     key_pair = KeyPair.from_private_key(account_private_key)
     address = await deploy_account_contract(client, key_pair.public_key)
-    typer.echo("created address:", address)
+    typer.echo(f"created address: {address}")
+
+    config_parser["USER"]["address"] = address
+    with open(config_file, "w") as f:
+        config_parser.write(f)
 
     return SUCCESS

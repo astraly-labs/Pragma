@@ -1,8 +1,9 @@
 from typing import Optional
 
 import typer
+from empiric.cli import SUCCESS, __app_name__, account, config, contracts, entry, net
+from starkware.crypto.signature.signature import get_random_private_key
 
-from empiric.cli import SUCCESS, __app_name__, account, config, contracts, net
 from .utils import coro
 
 TESTNET_GATEWAY_URL = "https://alpha4.starknet.io"
@@ -23,8 +24,8 @@ def init(gateway_url=TESTNET_GATEWAY_URL, chain_id: int = 1536727068981429685321
 
 @app.command()
 @coro
-async def create_account():
-    gateway_url, chain_id = config.validate_config()
+async def create_account(config_path=config.DEFAULT_CONFIG):
+    gateway_url, chain_id = config.validate_config(config_path)
 
     client = net.init_client(gateway_url, chain_id)
     await account.create_account(client, config.CONFIG_FILE_PATH)
@@ -32,8 +33,16 @@ async def create_account():
 
 
 @app.command()
-def get_block(val: str = "NONE"):
-    gateway_url, chain_id = config.validate_config()
+def gen_pvt_key(config_path=config.DEFAULT_CONFIG):
+    key = get_random_private_key()
+    typer.echo(key)
+    # TODO: add to cli-config.ini
+    return SUCCESS
+
+
+@app.command()
+def get_block(config_path=config.DEFAULT_CONFIG):
+    gateway_url, chain_id = config.validate_config(config_path)
 
     client = net.init_client(gateway_url, chain_id)
     typer.echo(client.get_block_sync())
@@ -42,28 +51,16 @@ def get_block(val: str = "NONE"):
 
 @app.command()
 def devnet():
-    """ start a local devnet instance """
-    import asyncio
-    from starknet_devnet import server as starknet_devserver
-    from starknet_devnet.server import DevnetConfig, DumpOn, GunicornServer, StarknetWrapper, StarknetDevnetException, parse_args, state
+    """start a local devnet instance"""
 
-    args = parse_args([])
-    try:
-        state.set_starknet_wrapper(StarknetWrapper(DevnetConfig(args)))
-        state.set_dump_options(args.dump_path, args.dump_on)
-    except StarknetDevnetException as error:
-        sys.exit(error.message)
+    import sys
 
-    asyncio.run(state.starknet_wrapper.initialize())
-    try:
-        typer.echo(f" * Listening on http://{args.host}:{args.port}/ (Press CTRL+C to quit)")
-        GunicornServer(app, args).run()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        if args.dump_on == DumpOn.EXIT:
-            state.dumper.dump()
-            sys.exit(0)
+    from starknet_devnet.server import main
+
+    # import re
+    # sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.argv = ["./.venv/bin/starknet-devnet"]
+    sys.exit(main())
 
     return SUCCESS
 
@@ -83,3 +80,4 @@ def main(
 
 
 app.add_typer(contracts.app, name="contracts")
+app.add_typer(entry.app, name="entry")

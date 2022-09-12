@@ -16,5 +16,5 @@ app.add_typer(oracle.app, name="oracle", help="Oracle contract utils")
 @app.command()
 def list():
     """List all implemented contracts"""
-    print("publisher_registry")
-    print("oracle")
+    typer.echo("publisher_registry")
+    typer.echo("oracle")

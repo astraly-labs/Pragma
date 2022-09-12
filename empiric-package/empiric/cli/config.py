@@ -7,8 +7,10 @@ from empiric.cli import DIR_ERROR, FILE_ERROR, OS_ERROR, SUCCESS, net
 
 CONFIG_DIR_PATH = Path(os.getcwd())
 COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"
-
 CONFIG_FILE_PATH = CONFIG_DIR_PATH / "cli-config.ini"
+DEFAULT_CONFIG = typer.Option(
+    CONFIG_FILE_PATH, "--config-path", "-c", help="optional path to config"
+)
 
 
 def init_app(gateway_url: str, chain_id: int) -> int:
@@ -21,10 +23,12 @@ def init_app(gateway_url: str, chain_id: int) -> int:
     return SUCCESS
 
 
-def validate_config():
-    if CONFIG_FILE_PATH.exists():
-        gateway_url = net.get_gateway_url(CONFIG_FILE_PATH)
-        chain_id = net.get_chain_id(CONFIG_FILE_PATH)
+def validate_config(config_path):
+    if type(config_path) == str:
+        config_path = Path(config_path)
+    if config_path.exists():
+        gateway_url = net.get_gateway_url(config_path)
+        chain_id = net.get_chain_id(config_path)
     else:
         typer.secho(
             'Config file not found. Please, run "python3 -m cli init"',
