@@ -25,7 +25,7 @@ def check_interface(file_path, contract_filename, cairo_path=None):
 
     # 1. Compile Contract.cairo to get the ABI
     compiled = compile_starknet_files(
-        [os.path.join(file_path, contract_filename)], cairo_path=[cairo_path]
+        [os.path.join(file_path, contract_filename)], cairo_path=cairo_path.split(",")
     )
     functions = {d["name"]: d for d in compiled.abi if d["type"] == "function"}
 
@@ -120,16 +120,16 @@ if __name__ == "__main__":
 
     file_paths = []
     contract_filenames = []
-    folders_to_check = os.listdir(args.cairo_path)
-    for folder, _, files in os.walk(args.cairo_path):
-        for file in files:
-            if (
-                file.endswith(".cairo")
-                and not (file.startswith("I") and file[1].isupper())
-                and file[0].isupper()
-            ):
-                file_paths.append(os.path.join(folder))
-                contract_filenames.append(file)
+    for path in args.cairo_path.split(","):
+        for folder, _, files in os.walk(path):
+            for file in files:
+                if (
+                    file.endswith(".cairo")
+                    and not (file.startswith("I") and file[1].isupper())
+                    and file[0].isupper()
+                ):
+                    file_paths.append(os.path.join(folder))
+                    contract_filenames.append(file)
 
     for file_path, contract_filename in zip(file_paths, contract_filenames):
         print(f"Checking file {os.path.join(file_path, contract_filename)}")

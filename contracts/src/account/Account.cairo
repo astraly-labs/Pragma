@@ -1,11 +1,13 @@
 # SPDX-License-Identifier: MIT
-# OpenZeppelin Contracts for Cairo v0.1.0 (account/Account.cairo)
+# OpenZeppelin Contracts for Cairo v0.3.1 (account/presets/Account.cairo)
 
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin
+from starkware.cairo.common.cairo_builtins import HashBuiltin, SignatureBuiltin, BitwiseBuiltin
 
 from account.library import Account, AccountCallArray
+
+from openzeppelin.introspection.erc165.library import ERC165
 
 #
 # Constructor
@@ -37,6 +39,14 @@ func get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     return (res=res)
 end
 
+@view
+func supportsInterface{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    interfaceId : felt
+) -> (success : felt):
+    let (success) = ERC165.supports_interface(interfaceId)
+    return (success)
+end
+
 #
 # Setters
 #
@@ -63,7 +73,11 @@ end
 
 @external
 func __execute__{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+    ecdsa_ptr : SignatureBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
 }(
     call_array_len : felt,
     call_array : AccountCallArray*,

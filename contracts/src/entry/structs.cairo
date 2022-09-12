@@ -21,3 +21,10 @@ struct Currency:
     member starknet_address : felt  # optional, e.g. can have synthetics for non-bridged assets
     member ethereum_address : felt  # optional
 end
+
+struct Checkpoint:
+    member timestamp : felt
+    member value : felt
+    member aggregation_mode : felt
+    member num_sources_aggregated : felt
+end
