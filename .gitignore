@@ -11,6 +11,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.pytest_cache/
 
 # Distribution / packaging
 bin/
@@ -31,4 +32,6 @@ var/
 # protostar
 !contracts/build/
 contracts/build/*[!_abi].json
+
+# cli
 cli-config.ini
