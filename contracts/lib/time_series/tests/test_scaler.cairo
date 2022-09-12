@@ -18,7 +18,7 @@ func test_scaler{range_check_ptr}():
     assert x[1] = second
     assert x[2] = third
 
-    let (output_len, output) = scale_data(0, 300, 3, x, 5)
+    let (output) = scale_data(0, 300, 3, x, 5)
 
     assert output[0].tick = 0
     assert output[0].value = -542

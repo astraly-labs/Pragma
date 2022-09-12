@@ -89,15 +89,12 @@ func test_twap{range_check_ptr}():
     )
     let current_timestamp = my_time_series[time_series_len - 1].tick
     let (my_now_vector : felt*) = fill_1d(time_series_len, current_timestamp)
-    let (timestamps_vector) = subsample(time_series_len, cast(my_time_series, felt*), 2)
+    let (timestamps_arr) = subsample(time_series_len, cast(my_time_series, felt*), 2)
     let (prices_arr) = subsample(time_series_len, cast(my_time_series, felt*) + 1, 2)
     log_array(time_series_len, prices_arr)
 
     let (time_differences : felt*) = pairwise_1D(
-        PAIRWISE_OPERATION.SUBTRACTION,
-        time_series_len - 1,
-        timestamps_vector + 1,
-        timestamps_vector,
+        PAIRWISE_OPERATION.SUBTRACTION, time_series_len - 1, timestamps_arr + 1, timestamps_arr
     )
     log_array(time_series_len - 1, time_differences)
     let (sum_ti) = sum_array(time_series_len - 1, time_differences)

@@ -29,7 +29,7 @@ func scale_data{range_check_ptr}(
     tick_arr_len : felt,
     tick_arr : TickElem**,
     num_intervals : felt,
-) -> (output_len : felt, output : TickElem*):
+) -> (output : TickElem*):
     alloc_locals
     let (interval, _) = unsigned_div_rem(end_tick - start_tick, num_intervals)
     let (output : TickElem*) = alloc()
@@ -37,7 +37,7 @@ func scale_data{range_check_ptr}(
         start_tick, end_tick, tick_arr_len, tick_arr, 0, num_intervals, interval, output, 0
     )
 
-    return (num_intervals, output)
+    return (output)
 end
 
 func scale_data_iter{range_check_ptr}(

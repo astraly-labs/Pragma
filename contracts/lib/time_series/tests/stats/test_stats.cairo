@@ -43,3 +43,11 @@ func test_cdf{range_check_ptr}():
     assert x2 = 1940008856356186113
     return ()
 end
+
+@view
+func test_erfinv{range_check_ptr}():
+    let x = 691752902764108160
+    let (x2) = norm.erfinv(x)
+    assert x2 = 628256246024071477
+    return ()
+end

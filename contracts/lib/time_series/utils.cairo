@@ -21,6 +21,18 @@ func greater_than{range_check_ptr}(num1 : felt, num2 : felt) -> (_is_greater : B
     return (is_greater)
 end
 
+func less_than{range_check_ptr}(num1 : felt, num2 : felt) -> (_is_less : Bool):
+    let (is_less) = is_le(num1 + 1, num2)
+    return (is_less)
+end
+
+func are_equal{range_check_ptr}(num1 : felt, num2 : felt) -> (_are_equal : Bool):
+    let (is_neg1) = is_nn(num1 - num2)
+    let (is_neg2) = is_nn(num2 - num1)
+    let (_are_equal) = is_nn(0 - (is_neg1 + is_neg2))
+    return (_are_equal)
+end
+
 func safe_div{range_check_ptr}(num : felt, denom : felt) -> (quotient_ : felt):
     alloc_locals
     let (num_neg) = is_nn(num)

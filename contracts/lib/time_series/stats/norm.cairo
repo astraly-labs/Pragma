@@ -1,11 +1,16 @@
 %lang starknet
 
 from cairo_math_64x61.math64x61 import ONE, E, PI, FixedPoint
-from starkware.cairo.common.math import abs_value, sign
+from starkware.cairo.common.math import abs_value, sign, assert_not_zero
+
+from time_series.stats.ndtri import ONE_HALF, ndtri
+from time_series.utils import less_than
 
 using Float = felt
 
 const _norm_pdf_C = 5779891283755275264  # sqrt(2 * PI)
+const M_2_SQRTPI = 2601865214189558272  # 2 / sqrt(PI)
+const NPY_SQRT1_2 = 1630477228166597632  # 1 / (2 ** 0.5)
 
 namespace norm:
     func pdf{range_check_ptr}(x : Float) -> (x : Float):
@@ -53,7 +58,45 @@ namespace norm:
         end
     end
 
-    func cdf{range_check_ptr}(x : felt) -> (r : felt):
+    func erfinv{range_check_ptr}(y : Float) -> (res : Float):
+        alloc_locals
+        let thresh = 230584300921
+        let domain_lb = -ONE
+        let domain_ub = ONE
+        let (neg_thresh_is_less) = less_than(-thresh, y)
+        let (y_is_less) = less_than(y, thresh)
+
+        if neg_thresh_is_less + y_is_less == 2:
+            let (res) = FixedPoint.div(y, M_2_SQRTPI)
+            return (res)
+        end
+
+        let (dom_lb_is_less) = less_than(domain_lb, y)
+        let (y_is_less) = less_than(y, domain_ub)
+
+        if dom_lb_is_less + y_is_less == 2:
+            let (_y1) = FixedPoint.add(y, ONE)
+            let (_y2) = FixedPoint.mul(_y1, ONE_HALF)
+            let (_ndtri) = ndtri(_y2)
+            let (_result) = FixedPoint.mul(_ndtri, NPY_SQRT1_2)
+            return (_result)
+        end
+
+        with_attr error_message("-INFINITY"):
+            assert_not_zero(y - domain_lb)
+        end
+        with_attr error_message("INFINITY"):
+            assert_not_zero(y - domain_ub)
+        end
+
+        with_attr error_message("VALUE ERROR"):
+            assert 0 = 1
+        end
+
+        return (0)
+    end
+
+    func cdf{range_check_ptr}(x : Float) -> (r : Float):
         alloc_locals
         let TWO = ONE * 2
         let (half) = FixedPoint.div(ONE, TWO)
@@ -62,5 +105,10 @@ namespace norm:
         let (_erf_output) = erf(erf_input)
         let (output) = FixedPoint.mul(half, ONE + _erf_output)
         return (output)
+    end
+
+    func ppf{range_check_ptr}(x : Float) -> (r : Float):
+        let (_res) = ndtri(x)
+        return (_res)
     end
 end
