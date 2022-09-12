@@ -8,7 +8,7 @@ from starkware.cairo.common.math import assert_not_equal, assert_not_zero, asser
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from entry.structs import Entry, Pair, Currency
+from entry.structs import Checkpoint, Currency, Entry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
@@ -47,6 +47,18 @@ end
 
 @storage_var
 func Oracle_controller_address_storage() -> (oracle_address : felt):
+end
+
+@storage_var
+func Oracle__checkpoints(key : felt, index : felt) -> (res : Checkpoint):
+end
+
+@storage_var
+func Oracle__checkpoint_index(key : felt) -> (index : felt):
+end
+
+@storage_var
+func Oracle__sources_threshold() -> (threshold : felt):
 end
 
 #
@@ -93,6 +105,25 @@ namespace Oracle:
     end
 
     #
+    # Guards
+    #
+
+    func only_oracle_controller{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        ):
+        let (caller_address) = get_caller_address()
+        let (oracle_controller_address) = Oracle_controller_address_storage.read()
+        if oracle_controller_address == 0:
+            # Assume uninitialized
+            return ()
+        end
+        with_attr error_message(
+                "OracleImplementation: This function can only be called by the oracle controller"):
+            assert caller_address = oracle_controller_address
+        end
+        return ()
+    end
+
+    #
     # Getters
     #
 
@@ -117,21 +148,21 @@ namespace Oracle:
     end
 
     func get_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        pair_id : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
+        key : felt, aggregation_mode : felt, sources_len : felt, sources : felt*
     ) -> (
         value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     ):
         alloc_locals
 
-        let (entries_len, entries) = get_entries(pair_id, sources_len, sources)
+        let (entries_len, entries) = get_entries(key, sources_len, sources)
 
         if entries_len == 0:
             return (0, 0, 0, 0)
         end
 
         let (value) = Entries.aggregate_entries(entries_len, entries)
+        let (decimals) = get_decimals(key)
         let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries)
-        let (decimals) = get_decimals(pair_id)
         return (value, decimals, last_updated_timestamp, entries_len)
     end
 
@@ -161,6 +192,34 @@ namespace Oracle:
         let (sources_len) = Oracle_sources_len_storage.read(pair_id)
         let (sources) = build_sources_array(pair_id, sources_len, sources, 0)
         return (sources_len, sources)
+    end
+
+    func get_latest_checkpoint_index{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+    }(key : felt) -> (_idx : felt):
+        let (cur_ix) = Oracle__checkpoint_index.read(key)
+        return (cur_ix)
+    end
+
+    func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt
+    ) -> (checkpoint : Checkpoint):
+        let (cur_ix) = Oracle__checkpoint_index.read(key)
+        let (latest_checkpoint) = Oracle__checkpoints.read(key, cur_ix - 1)
+        return (latest_checkpoint)
+    end
+
+    func get_checkpoint_by_index{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, idx : felt
+    ) -> (checkpoint : Checkpoint):
+        let (cur_checkpoint) = Oracle__checkpoints.read(key, idx)
+        return (cur_checkpoint)
+    end
+
+    func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        ) -> (threshold : felt):
+        let (threshold) = Oracle__sources_threshold.read()
+        return (threshold)
     end
 
     #
@@ -297,6 +356,38 @@ namespace Oracle:
         SubmittedPair.emit(pair)
         Oracle_pairs_storage.write(pair.id, pair)
         Oracle_pair_id_storage.write(pair.quote_currency_id, pair.base_currency_id, pair.id)
+        return ()
+    end
+
+    func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        threshold : felt
+    ):
+        Oracle__sources_threshold.write(threshold)
+        return ()
+    end
+
+    func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, aggregation_mode : felt
+    ):
+        alloc_locals
+        let (sources) = alloc()
+        let (value, _decimals, last_updated_timestamp, num_sources_aggregated) = get_value(
+            key, aggregation_mode, 0, sources
+        )
+        let (sources_threshold) = Oracle__sources_threshold.read()
+        let (meets_sources_threshold) = is_le(sources_threshold, num_sources_aggregated)
+        let (cur_checkpoint) = get_latest_checkpoint(key)
+        let (is_new_checkpoint) = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp)
+        # if both are true
+        if meets_sources_threshold + is_new_checkpoint == 2:
+            let checkpoint = Checkpoint(
+                last_updated_timestamp, value, aggregation_mode, num_sources_aggregated
+            )
+            let (cur_ix) = Oracle__checkpoint_index.read(key)
+            Oracle__checkpoints.write(key, cur_ix, checkpoint)
+            Oracle__checkpoint_index.write(key, cur_ix + 1)
+            return ()
+        end
         return ()
     end
 

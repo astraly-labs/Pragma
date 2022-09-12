@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Currency, Entry, Pair
+from entry.structs import Currency, Entry, Pair, Checkpoint
 from oracle.library import Oracle
 from proxy.library import Proxy
 
@@ -98,31 +98,6 @@ func get_value_for_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     return (value, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
-# @notice publish an Entry
-# @param new_entry: an Entry to publish
-@external
-func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    new_entry : Entry
-):
-    Oracle.publish_entry(new_entry)
-    return ()
-end
-
-# @notice publish an array of entries
-# @param new_entries_len: length of entries array
-# @param new_entries: pointer to first Entry in array
-@external
-func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    new_entries_len : felt, new_entries : Entry*
-):
-    Oracle.publish_entries(new_entries_len, new_entries)
-    return ()
-end
-
-#
-# Getters
-#
-
 # @notice get address of publisher registry
 # @return publisher_registry_address: address of the publisher registry
 @view
@@ -147,6 +122,27 @@ end
 #
 # Setters
 #
+
+# @notice publish an Entry
+# @param new_entry: an Entry to publish
+@external
+func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_entry : Entry
+):
+    Oracle.publish_entry(new_entry)
+    return ()
+end
+
+# @notice publish an array of entries
+# @param new_entries_len: length of entries array
+# @param new_entries: pointer to first Entry in array
+@external
+func publish_entries{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_entries_len : felt, new_entries : Entry*
+):
+    Oracle.publish_entries(new_entries_len, new_entries)
+    return ()
+end
 
 @external
 func update_publisher_registry_address{
@@ -180,6 +176,30 @@ func add_pair{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}
     Proxy.assert_only_admin()
     Oracle.add_pair(pair)
     return ()
+end
+
+@view
+func get_latest_checkpoint_index{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (latest : felt):
+    let (latest) = Oracle.get_latest_checkpoint_index(key)
+    return (latest)
+end
+
+@view
+func get_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, index : felt
+) -> (latest : Checkpoint):
+    let (latest) = Oracle.get_checkpoint_by_index(key, index)
+    return (latest)
+end
+
+@view
+func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    threshold : felt
+):
+    let (threshold) = Oracle.get_sources_threshold()
+    return (threshold)
 end
 
 #
@@ -219,4 +239,22 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
 ):
     let (admin_address) = Proxy.get_admin_address()
     return (admin_address)
+end
+
+@external
+func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt
+):
+    Oracle.set_checkpoint(key, aggregation_mode)
+    return ()
+end
+
+@external
+func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    threshold : felt
+):
+    Oracle.only_oracle_controller()
+
+    Oracle.set_sources_threshold(threshold)
+    return ()
 end

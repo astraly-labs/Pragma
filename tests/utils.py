@@ -5,6 +5,7 @@ from typing import List
 from empiric.core.entry import Entry
 from nile.signer import Signer
 from starkware.starknet.business_logic.execution.objects import Event
+from starkware.starknet.business_logic.state.state import BlockInfo, CarriedState
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
@@ -138,3 +139,10 @@ async def register_new_publisher_and_publish_entry(
     )
 
     return
+
+
+def advance_time(state: CarriedState, buffer: int):
+    state.block_info = BlockInfo.create_for_testing(
+        state.block_info.block_number,
+        state.block_info.block_timestamp + buffer,
+    )

@@ -1,6 +1,6 @@
 %lang starknet
 
-from entry.structs import Entry, Pair, Currency
+from entry.structs import Checkpoint, Entry, Pair, Currency
 
 namespace EmpiricAggregationModes:
     const MEDIAN = 120282243752302  # str_to_felt("median")
@@ -56,6 +56,15 @@ namespace IOracle:
     func get_publisher_registry_address() -> (publisher_registry_address : felt):
     end
 
+    func get_latest_checkpoint_index(key : felt) -> (latest : felt):
+    end
+
+    func get_checkpoint(key : felt, index : felt) -> (latest : Checkpoint):
+    end
+
+    func get_sources_threshold() -> (threshold : felt):
+    end
+
     #
     # Setters
     #
@@ -79,5 +88,11 @@ namespace IOracle:
     end
 
     func add_pair(pair : Pair):
+    end
+
+    func set_checkpoint(key : felt, aggregation_mode : felt):
+    end
+
+    func set_sources_threshold(threshold : felt):
     end
 end

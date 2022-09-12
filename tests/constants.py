@@ -3,7 +3,7 @@ import json
 from utils import construct_path
 
 AGGREGATION_MODE = 0
-CAIRO_PATH = ["contracts/src"]
+CAIRO_PATH = ["contracts/src", "contracts/lib"]
 DEFAULT_DECIMALS = 18
 ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
 ORACLE_CONTRACT_FILE = construct_path("contracts/src/oracle/Oracle.cairo")

@@ -20,6 +20,7 @@ struct Currency:
     member is_abstract_currency : felt  # True (1) if not a specific token but abstract, e.g. USD or ETH as a whole
     member starknet_address : felt  # optional, e.g. can have synthetics for non-bridged assets
     member ethereum_address : felt  # optional
+end
 
 struct Checkpoint:
     member timestamp : felt
