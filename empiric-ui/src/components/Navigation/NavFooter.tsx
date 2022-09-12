@@ -110,6 +110,11 @@ const socials: SocialMedia[] = [
     src: "/assets/social/medium.svg",
     href: "https://medium.com/@EmpiricNetwork",
   },
+  {
+    name: "Discord",
+    src: "/assets/social/discord.svg",
+    href: "https://discord.gg/N7sM7VzfJB",
+  },
 ];
 
 const Footer = () => (
