@@ -86,6 +86,33 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "timestamp",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "Checkpoint",
+        "size": 4,
+        "type": "struct"
+    },
+    {
         "data": [
             {
                 "name": "old_publisher_registry_address",
@@ -326,32 +353,6 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "name": "new_entry",
-                "type": "Entry"
-            }
-        ],
-        "name": "publish_entry",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "new_entries_len",
-                "type": "felt"
-            },
-            {
-                "name": "new_entries",
-                "type": "Entry*"
-            }
-        ],
-        "name": "publish_entries",
-        "outputs": [],
-        "type": "function"
-    },
-    {
         "inputs": [],
         "name": "get_publisher_registry_address",
         "outputs": [
@@ -378,6 +379,32 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "Entry"
+            }
+        ],
+        "name": "publish_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
+                "type": "Entry*"
+            }
+        ],
+        "name": "publish_entries",
+        "outputs": [],
         "type": "function"
     },
     {
@@ -427,6 +454,56 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_latest_checkpoint_index",
+        "outputs": [
+            {
+                "name": "latest",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "index",
+                "type": "felt"
+            }
+        ],
+        "name": "get_checkpoint",
+        "outputs": [
+            {
+                "name": "latest",
+                "type": "Checkpoint"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_sources_threshold",
+        "outputs": [
+            {
+                "name": "threshold",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_implementation",
                 "type": "felt"
             }
@@ -468,6 +545,32 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "set_checkpoint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "threshold",
+                "type": "felt"
+            }
+        ],
+        "name": "set_sources_threshold",
+        "outputs": [],
         "type": "function"
     }
 ]

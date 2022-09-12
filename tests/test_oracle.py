@@ -21,6 +21,7 @@ from starkware.starknet.compiler.compile import (
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
 from utils import (
+    advance_time,
     assert_event_emitted,
     cached_contract,
     register_new_publisher_and_publish_entries_1,
@@ -1104,3 +1105,98 @@ async def test_ignore_stale_entries(
 
     result = await oracle_proxy.get_entries(pair_id, []).call()
     assert result.result.entries == [second_entry]
+
+
+@pytest.mark.asyncio
+async def test_checkpointing(
+    initialized_contracts, admin_signer, source, publisher, publisher_signer
+):
+    admin_account = initialized_contracts["admin_account"]
+    publisher_account = initialized_contracts["publisher_account"]
+    second_publisher_account = initialized_contracts["additional_publisher_accounts"][0]
+    publisher_registry = initialized_contracts["publisher_registry"]
+    oracle_proxy = initialized_contracts["oracle_proxy"]
+
+    second_publisher = str_to_felt("bar")
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "register_publisher",
+        [second_publisher, second_publisher_account.contract_address],
+    )
+
+    pair_id = str_to_felt("eth/usd")
+    entry = Entry(
+        pair_id=pair_id,
+        value=3,
+        timestamp=STARKNET_STARTING_TIMESTAMP,
+        source=source,
+        publisher=publisher,
+    )
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_proxy.contract_address,
+        "publish_entry",
+        entry.serialize(),
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_proxy.contract_address,
+        "set_checkpoint",
+        (pair_id, AggregationMode.MEDIAN.value),
+    )
+
+    result = await oracle_proxy.get_latest_checkpoint_index(pair_id).call()
+    assert result.result.latest == 1
+
+    result = await oracle_proxy.get_checkpoint(pair_id, 0).call()
+    assert result.result.latest.value == 3
+    assert result.result.latest.num_sources_aggregated == 1
+
+    # Advance time by TIMESTAMP_BUFFER
+    advance_time(admin_account.state.state, TIMESTAMP_BUFFER)
+
+    second_entry = Entry(
+        pair_id=pair_id,
+        value=5,
+        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
+        source=source,
+        publisher=publisher,
+    )
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_proxy.contract_address,
+        "publish_entry",
+        second_entry.serialize(),
+    )
+    second_source = str_to_felt("1xdata")
+    third_entry = Entry(
+        pair_id=pair_id,
+        value=7,
+        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
+        source=second_source,
+        publisher=second_publisher,
+    )
+    await publisher_signer.send_transaction(
+        second_publisher_account,
+        oracle_proxy.contract_address,
+        "publish_entry",
+        third_entry.serialize(),
+    )
+
+    await publisher_signer.send_transaction(
+        publisher_account,
+        oracle_proxy.contract_address,
+        "set_checkpoint",
+        (pair_id, AggregationMode.MEDIAN.value),
+    )
+
+    result = await oracle_proxy.get_latest_checkpoint_index(pair_id).call()
+    assert result.result.latest == 2
+
+    result = await oracle_proxy.get_entries(pair_id, []).call()
+
+    result = await oracle_proxy.get_checkpoint(pair_id, 1).call()
+    assert result.result.latest.value == 6
+    assert result.result.latest.num_sources_aggregated == 2
