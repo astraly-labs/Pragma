@@ -2,7 +2,58 @@
 
 from starkware.cairo.common.alloc import alloc
 
-from time_series.structs import Matrix2D
+from time_series.structs import Matrix2D, PAIRWISE_OPERATION
+from time_series.utils import safe_div
+
+using ENUM = felt
+
+func pairwise_1D{range_check_ptr}(operation : ENUM, x_len : felt, x : felt*, y : felt*) -> (
+    _result : felt*
+):
+    alloc_locals
+    let (output : felt*) = alloc()
+    pairwise_1D_iter(operation, 0, x_len, x, y, output)
+    return (output)
+end
+
+func pairwise_1D_iter{range_check_ptr}(
+    operation : ENUM, cur_ix : felt, x_len : felt, x : felt*, y : felt*, output : felt*
+):
+    alloc_locals
+    if cur_ix == x_len:
+        return ()
+    end
+    let x1 = x[cur_ix]
+    let y1 = y[cur_ix]
+    if operation == PAIRWISE_OPERATION.MULTIPLICATION:
+        jmp multiplication
+    end
+    if operation == PAIRWISE_OPERATION.DIVISION:
+        jmp division
+    end
+    if operation == PAIRWISE_OPERATION.SUBTRACTION:
+        jmp subtraction
+    end
+    assert output[cur_ix] = x1 + y1
+    tempvar range_check_ptr = range_check_ptr
+    return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output)
+
+    multiplication:
+    assert output[cur_ix] = x1 * y1
+    tempvar range_check_ptr = range_check_ptr
+    return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output)
+
+    division:
+    let (quotient) = safe_div(x1, y1)
+    assert output[cur_ix] = quotient
+    tempvar range_check_ptr = range_check_ptr
+    return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output)
+
+    subtraction:
+    assert output[cur_ix] = x1 - y1
+    tempvar range_check_ptr = range_check_ptr
+    return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output)
+end
 
 func dot_product(x_len : felt, x : felt*, y : felt*) -> (_product : felt):
     return dot_product_iter(0, 0, x_len, x, y)

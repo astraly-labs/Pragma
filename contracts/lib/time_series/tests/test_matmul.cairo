@@ -1,9 +1,12 @@
 %lang starknet
 
-from time_series.structs import Matrix2D
-from time_series.reshape import range, reshape
-from time_series.matmul import (
+from time_series.prelude import (
+    Matrix2D,
+    PAIRWISE_OPERATION,
+    range,
+    reshape,
     dot_product,
+    pairwise_1D,
     matrix_vector_mult,
     matrix_mult,
     vector_matrix_mult,
@@ -13,9 +16,12 @@ from time_series.matmul import (
 @view
 func test_vector_mult():
     alloc_locals
-    let (r_len, r) = range(0, 15)
-    let (matrix_) = reshape(r_len, r, 3, 5)
-    let (arr_len, arr) = range(10, 15)
+    let arr_len = 15
+    let (r) = range(0, 15)
+    let (matrix_) = reshape(arr_len, r, 3, 5)
+    let arr_len = 5
+
+    let (arr) = range(10, 15)
     let (output_len, output) = matrix_vector_mult(matrix_, arr_len, arr)
     assert output[0] = 130
     assert output[1] = 430
@@ -26,12 +32,13 @@ end
 @view
 func test_matmul():
     alloc_locals
-    let (r_len, r) = range(0, 15)
-    let (matrix_) = reshape(r_len, r, 3, 5)
-    let (arr_len, arr) = range(10, 25)
+    let arr_len = 15
+    let (r) = range(0, 15)
+    let (matrix_) = reshape(arr_len, r, 3, 5)
+    let (arr) = range(10, 25)
     let (r_matrix) = reshape(arr_len, arr, 5, 3)
 
-    let (arr_len, arr) = range(0, 5)
+    let (arr) = range(0, 5)
 
     let (_vec) = get_vec_by_index(0, r_matrix)
     assert _vec[0] = 10
@@ -59,5 +66,20 @@ func test_matmul():
     assert output_matrix.m[2][1] = 1050
     assert output_matrix.m[2][2] = 1110
 
+    return ()
+end
+
+@view
+func test_pairwise_1D{range_check_ptr}():
+    alloc_locals
+    let arr_len = 5
+    let (arr1) = range(0, 5)
+    let (arr2) = range(10, 15)
+    let (output) = pairwise_1D(PAIRWISE_OPERATION.ADDITION, arr_len, arr1, arr2)
+    assert output[0] = 10
+    assert output[1] = 12
+    assert output[2] = 14
+    assert output[3] = 16
+    assert output[4] = 18
     return ()
 end

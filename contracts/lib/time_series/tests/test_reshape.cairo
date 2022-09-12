@@ -1,11 +1,12 @@
 %lang starknet
 
-from time_series.reshape import linspace, range, reshape, transpose, fill_2d, identity
+from time_series.prelude import linspace, range, reshape, transpose, fill_2d, identity
 
 @view
 func test_reshape():
-    let (z_len, z) = range(0, 15)
-    let (matrix_) = reshape(z_len, z, 3, 5)
+    let arr_len = 15
+    let (z) = range(0, 15)
+    let (matrix_) = reshape(arr_len, z, 3, 5)
     assert matrix_.m[0][0] = 0
     assert matrix_.m[1][0] = 5
     assert matrix_.m[2][0] = 10

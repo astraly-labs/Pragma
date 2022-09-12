@@ -3,14 +3,14 @@
 from starkware.cairo.common.alloc import alloc
 
 from time_series.structs import Matrix2D
-from time_series.utils import safe_div
+from time_series.utils import safe_div, modulo
 
 using Matrix2DArray = felt**
 
-func range(start : felt, end_ : felt) -> (arr_len : felt, arr : felt*):
+func range(start : felt, end_ : felt) -> (arr : felt*):
     let (arr) = alloc()
     let (arr) = range_iter(start, end_, arr, 0)
-    return (end_ - start, arr)
+    return (arr)
 end
 
 func range_iter(start : felt, end_ : felt, arr : felt*, cur_ix : felt) -> (arr : felt*):
@@ -101,22 +101,30 @@ func transpose_iter(
     return transpose_iter(cur_x_index, cur_y_index + 1, arr, x_dim, y_dim, output, x_dim_arr)
 end
 
+func fill_1d(arr_len, fill_value : felt) -> (arr : felt*):
+    alloc_locals
+    let (output : felt*) = alloc()
+    fill_1d_iter(0, arr_len, fill_value, output)
+    return (output)
+end
+
+func fill_1d_iter(cur_ix : felt, arr_len : felt, fill_value : felt, output : felt*):
+    if cur_ix == arr_len:
+        return ()
+    end
+    assert output[cur_ix] = fill_value
+    return fill_1d_iter(cur_ix + 1, arr_len, fill_value, output)
+end
+
 func fill_2d(x_dim : felt, y_dim : felt, fill_value : felt) -> (m : Matrix2D):
     alloc_locals
     let (output : Matrix2DArray) = alloc()
-    let (x_dim_arr) = alloc()
-    fill_2d_iter(0, 0, x_dim, y_dim, output, x_dim_arr, fill_value)
+    fill_2d_iter(0, x_dim, y_dim, output, fill_value)
     return (Matrix2D(x_dim, y_dim, output))
 end
 
 func fill_2d_iter(
-    cur_x_index : felt,
-    cur_y_index : felt,
-    x_dim : felt,
-    y_dim : felt,
-    output : Matrix2DArray,
-    x_dim_arr : felt*,
-    fill_value : felt,
+    cur_x_index : felt, x_dim : felt, y_dim : felt, output : Matrix2DArray, fill_value : felt
 ):
     alloc_locals
     if cur_x_index == x_dim:
@@ -157,4 +165,26 @@ func identity_iter(
         assert x_dim_arr[cur_y_index] = 0
     end
     return identity_iter(cur_x_index, cur_y_index + 1, dim_, output, x_dim_arr)
+end
+
+func subsample{range_check_ptr}(arr_len : felt, arr : felt*, skip : felt) -> (output : felt*):
+    alloc_locals
+    # TODO: take size argument?
+    with_attr error_message("Invalid skip size"):
+        let (_m) = modulo(arr_len, skip)
+        assert _m = 0
+    end
+    let (output) = alloc()
+    subsample_iter(0, arr_len, arr, skip, output)
+    return (output)
+end
+
+func subsample_iter{range_check_ptr}(
+    cur_idx : felt, arr_len : felt, arr : felt*, skip : felt, output : felt*
+):
+    if cur_idx == arr_len:
+        return ()
+    end
+    assert output[cur_idx] = arr[cur_idx * skip]
+    return subsample_iter(cur_idx + 1, arr_len, arr, skip, output)
 end
