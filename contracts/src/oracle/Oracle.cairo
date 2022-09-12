@@ -253,7 +253,7 @@ end
 func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     threshold : felt
 ):
-    Oracle.only_oracle_controller()
+    Proxy.assert_only_admin()
 
     Oracle.set_sources_threshold(threshold)
     return ()
