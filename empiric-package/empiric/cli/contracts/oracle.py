@@ -30,7 +30,7 @@ async def deploy_oracle_proxy(client: GatewayClient, config_path: Path):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
 
-    admin_address = int(config_parser["USER"]["account-address"])
+    admin_address = int(config_parser["USER"]["address"])
     publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
 
     declared_oracle_class_hash = await declare_contract(client, "Oracle")

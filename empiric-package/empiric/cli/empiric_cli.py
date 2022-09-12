@@ -1,3 +1,4 @@
+import configparser
 from typing import Optional
 
 import typer
@@ -38,6 +39,22 @@ def gen_pvt_key(config_path=config.DEFAULT_CONFIG):
     typer.echo(key)
     # TODO: add to cli-config.ini
     return SUCCESS
+
+
+@app.command()
+def local_faucet(config_file=config.DEFAULT_CONFIG):
+    """request tokens from the devnet faucet"""
+    import requests
+
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_file)
+    account_address = int(config_parser["USER"]["address"])
+
+    r = requests.post(
+        "http://127.0.0.1:5050/mint",
+        json={"address": hex(account_address), "amount": 1e22},
+    )
+    typer.echo(f"{r.json()}, {r.status_code}")
 
 
 @app.command()

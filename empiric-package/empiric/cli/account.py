@@ -21,9 +21,9 @@ async def deploy_account_contract(
     )
     result = await client.deploy(deploy_tx)
     await client.wait_for_tx(
-        tx_hash=result.hash,
+        tx_hash=result.transaction_hash,
     )
-    return result.address
+    return result.contract_address
 
 
 async def create_account(client: GatewayClient, config_file: Path):
@@ -36,7 +36,7 @@ async def create_account(client: GatewayClient, config_file: Path):
     address = await deploy_account_contract(client, key_pair.public_key)
     typer.echo(f"created address: {address}")
 
-    config_parser["USER"]["address"] = address
+    config_parser["USER"]["address"] = str(address)
     with open(config_file, "w") as f:
         config_parser.write(f)
 

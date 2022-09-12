@@ -2,7 +2,9 @@ import configparser
 from pathlib import Path
 
 from empiric.cli import STARKNET_READ_ERROR
-from starknet_py.net import AccountClient
+
+# from starknet_py.net import AccountClient
+from empiric.core.base_client import EmpiricAccountClient as AccountClient
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
@@ -41,14 +43,15 @@ def init_account_client(client: GatewayClient, config_file: Path) -> AccountClie
     account_contract_address = int(config_parser["USER"]["address"])
     chain_id = int(config_parser["GENERAL"]["chain-id"])
 
+    key_pair = KeyPair.from_private_key(account_private_key)
     signer = StarkCurveSigner(
-        account_contract_address,
-        KeyPair.from_private_key(account_private_key),
-        chain_id,
+        account_address=account_contract_address,
+        key_pair=key_pair,
+        chain_id=StarknetChainId(chain_id),
     )
 
     return AccountClient(
         account_contract_address,
         client,
-        signer,
+        signer=signer,
     )
