@@ -21,7 +21,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
         publisher: Optional[ADDRESS] = None,
         publisher_registry_address: Optional[ADDRESS] = None,
         network: Network = TESTNET,
-        oracle_controller_address: Optional[ADDRESS] = None,
+        oracle_address: Optional[ADDRESS] = None,
     ):
         raw_config = get_config(network)
         self.publisher_registry_address = (
@@ -34,7 +34,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             publisher_private_key,
             publisher_address,
             network,
-            oracle_controller_address,
+            oracle_address,
         )
         # Override default account_client with one that uses timestamp for nonce
         self.account_client = EmpiricAccountClient(
@@ -62,7 +62,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
 
     async def publish(self, entry: Entry) -> HEX_STR:
         result = await self.send_transaction(
-            self.oracle_controller_address,
+            self.oracle_address,
             "publish_entry",
             entry.serialize(),
         )
@@ -76,7 +76,7 @@ class EmpiricPublisherClient(EmpiricBaseClient):
             return
 
         result = await self.send_transaction(
-            self.oracle_controller_address,
+            self.oracle_address,
             "publish_entries",
             Entry.serialize_entries(entries),
         )

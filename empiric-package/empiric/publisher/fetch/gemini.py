@@ -23,11 +23,11 @@ def fetch_gemini(assets, publisher) -> List[Entry]:
             continue
 
         pair = asset["pair"]
-        key = currency_pair_to_key(*pair)
+        pair_id = currency_pair_to_key(*pair)
         timestamp = int(time.time())
         result = [e for e in response.json() if e["pair"] == "".join(pair)]
         if len(result) == 0:
-            logger.debug(f"No entry found for {key} from Gemini")
+            logger.debug(f"No entry found for {pair_id} from Gemini")
             continue
 
         assert (
@@ -36,11 +36,11 @@ def fetch_gemini(assets, publisher) -> List[Entry]:
         price = float(result[0]["price"])
         price_int = int(price * (10 ** asset["decimals"]))
 
-        logger.info(f"Fetched price {price} for {key} from Gemini")
+        logger.info(f"Fetched price {price} for {pair_id} from Gemini")
 
         entries.append(
             Entry(
-                key=key,
+                pair_id=pair_id,
                 value=price_int,
                 timestamp=timestamp,
                 source=source,

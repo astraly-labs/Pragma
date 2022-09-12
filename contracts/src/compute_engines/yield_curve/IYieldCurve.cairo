@@ -22,7 +22,7 @@ namespace IYieldCurve:
     func get_admin_address() -> (admin_address : felt):
     end
 
-    func get_oracle_controller_address() -> (oracle_controller_address : felt):
+    func get_oracle_address() -> (oracle_address : felt):
     end
 
     func get_spot_key(idx : felt) -> (spot_key : felt):
@@ -69,7 +69,7 @@ namespace IYieldCurve:
     func set_admin_address(new_address : felt):
     end
 
-    func set_oracle_controller_address(oracle_controller_address : felt):
+    func set_oracle_address(oracle_address : felt):
     end
 
     func add_spot_key(spot_key : felt, is_active : felt):

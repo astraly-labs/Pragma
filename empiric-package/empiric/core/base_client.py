@@ -22,10 +22,10 @@ class EmpiricBaseClient(ABC):
     client: GatewayClient
     config: IConfig
     account_contract_address: ADDRESS
-    oracle_controller_address: ADDRESS
+    oracle_address: ADDRESS
     account_private_key: int
     signer: StarkCurveSigner
-    oracle_controller_contract: Optional[ADDRESS]
+    oracle_contract: Optional[ADDRESS]
     account_contract: Optional[ADDRESS]
 
     def __init__(
@@ -33,17 +33,15 @@ class EmpiricBaseClient(ABC):
         account_private_key: ADDRESS,
         account_contract_address: ADDRESS,
         network: Network = TESTNET,
-        oracle_controller_address: Optional[ADDRESS] = None,
+        oracle_address: Optional[ADDRESS] = None,
     ):
         raw_config = get_config(network)
         self.config = raw_config()
 
         self.account_contract_address = account_contract_address
-        self.oracle_controller_address = (
-            oracle_controller_address or self.config.ORACLE_CONTROLLER_ADDRESS
-        )
+        self.oracle_address = oracle_address or self.config.ORACLE_CONTROLLER_ADDRESS
 
-        self.oracle_controller_contract = None
+        self.oracle_contract = None
         self.account_contract = None
 
         if not isinstance(account_private_key, int):
@@ -66,9 +64,9 @@ class EmpiricBaseClient(ABC):
         pass
 
     async def _fetch_base_contracts(self):
-        if self.oracle_controller_contract is None:
-            self.oracle_controller_contract = await Contract.from_address(
-                self.oracle_controller_address,
+        if self.oracle_contract is None:
+            self.oracle_contract = await Contract.from_address(
+                self.oracle_address,
                 self.client,
             )
 

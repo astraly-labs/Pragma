@@ -130,9 +130,13 @@ func fill_2d_iter(
     if cur_x_index == x_dim:
         return ()
     end
-    let (x_arr) = fill_1d(y_dim, fill_value)
-    assert output[cur_x_index] = x_arr
-    return fill_2d_iter(cur_x_index + 1, x_dim, y_dim, output, fill_value)
+    if cur_y_index == y_dim:
+        assert output[cur_x_index] = x_dim_arr
+        let (new_x_dim_arr) = alloc()
+        return fill_2d_iter(cur_x_index + 1, 0, x_dim, y_dim, output, new_x_dim_arr, fill_value)
+    end
+    assert x_dim_arr[cur_y_index] = fill_value
+    return fill_2d_iter(cur_x_index, cur_y_index + 1, x_dim, y_dim, output, x_dim_arr, fill_value)
 end
 
 func identity(n : felt) -> (m : Matrix2D):

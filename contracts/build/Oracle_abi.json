@@ -2,7 +2,7 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "offset": 0,
                 "type": "felt"
             },
@@ -34,35 +34,82 @@
     {
         "members": [
             {
-                "name": "key",
+                "name": "id",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "decimal",
+                "name": "decimals",
                 "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "is_abstract_currency",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "starknet_address",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "ethereum_address",
+                "offset": 4,
                 "type": "felt"
             }
         ],
-        "name": "KeyDecimalStruct",
-        "size": 2,
+        "name": "Currency",
+        "size": 5,
         "type": "struct"
     },
     {
         "members": [
             {
-                "name": "was_registered",
+                "name": "id",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "is_active",
+                "name": "quote_currency_id",
                 "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "base_currency_id",
+                "offset": 2,
                 "type": "felt"
             }
         ],
-        "name": "OracleController_OracleImplementationStatus",
-        "size": 2,
+        "name": "Pair",
+        "size": 3,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "timestamp",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "offset": 3,
+                "type": "felt"
+            }
+        ],
+        "name": "Checkpoint",
+        "size": 4,
         "type": "struct"
     },
     {
@@ -83,51 +130,6 @@
     {
         "data": [
             {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "AddedOracleImplementation",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "old_is_active",
-                "type": "felt"
-            },
-            {
-                "name": "new_is_active",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UpdatedOracleImplementation",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
-                "name": "old_primary_oracle_implementation_address",
-                "type": "felt"
-            },
-            {
-                "name": "new_primary_oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "keys": [],
-        "name": "UpdatedPrimaryOracleImplementation",
-        "type": "event"
-    },
-    {
-        "data": [
-            {
                 "name": "new_entry",
                 "type": "Entry"
             }
@@ -139,22 +141,66 @@
     {
         "data": [
             {
-                "name": "old_admin_address",
-                "type": "felt"
-            },
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
             {
-                "name": "new_admin_address",
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "keys": [],
+        "name": "UpdatedCurrency",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "pair",
+                "type": "Pair"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedPair",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "implementation",
                 "type": "felt"
             }
         ],
         "keys": [],
-        "name": "UpdatedAdminAddress",
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousAdminAddress",
+                "type": "felt"
+            },
+            {
+                "name": "newAdminAddress",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AdminAddressChanged",
         "type": "event"
     },
     {
         "inputs": [
             {
-                "name": "admin_address",
+                "name": "proxy_admin",
                 "type": "felt"
             },
             {
@@ -162,22 +208,30 @@
                 "type": "felt"
             },
             {
-                "name": "keys_decimals_len",
+                "name": "currencies_len",
                 "type": "felt"
             },
             {
-                "name": "keys_decimals",
-                "type": "KeyDecimalStruct*"
+                "name": "currencies",
+                "type": "Currency*"
+            },
+            {
+                "name": "pairs_len",
+                "type": "felt"
+            },
+            {
+                "name": "pairs",
+                "type": "Pair*"
             }
         ],
-        "name": "constructor",
+        "name": "initializer",
         "outputs": [],
-        "type": "constructor"
+        "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -206,7 +260,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -227,7 +281,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -260,7 +314,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -299,6 +353,35 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "get_publisher_registry_address",
+        "outputs": [
+            {
+                "name": "publisher_registry_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_decimals",
+        "outputs": [
+            {
+                "name": "decimals",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "new_entry",
@@ -325,120 +408,6 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "get_admin_address",
-        "outputs": [
-            {
-                "name": "admin_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_publisher_registry_address",
-        "outputs": [
-            {
-                "name": "publisher_registry_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_active_oracle_implementation_addresses",
-        "outputs": [
-            {
-                "name": "oracle_addresses_len",
-                "type": "felt"
-            },
-            {
-                "name": "oracle_addresses",
-                "type": "felt*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "name": "get_oracle_implementation_status",
-        "outputs": [
-            {
-                "name": "oracle_implementation_status",
-                "type": "OracleController_OracleImplementationStatus"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "idx",
-                "type": "felt"
-            }
-        ],
-        "name": "get_oracle_implementation_address",
-        "outputs": [
-            {
-                "name": "oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "get_primary_oracle_implementation_address",
-        "outputs": [
-            {
-                "name": "primary_oracle_implementation_address",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            }
-        ],
-        "name": "get_decimals",
-        "outputs": [
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "new_address",
-                "type": "felt"
-            }
-        ],
-        "name": "set_admin_address",
-        "outputs": [],
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "name": "publisher_registry_address",
@@ -452,37 +421,155 @@
     {
         "inputs": [
             {
-                "name": "oracle_implementation_address",
-                "type": "felt"
+                "name": "currency",
+                "type": "Currency"
             }
         ],
-        "name": "add_oracle_implementation_address",
+        "name": "add_currency",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "oracle_implementation_address",
+                "name": "currency",
+                "type": "Currency"
+            }
+        ],
+        "name": "update_currency",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair",
+                "type": "Pair"
+            }
+        ],
+        "name": "add_pair",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_latest_checkpoint_index",
+        "outputs": [
+            {
+                "name": "latest",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
                 "type": "felt"
             },
             {
-                "name": "is_active",
+                "name": "index",
                 "type": "felt"
             }
         ],
-        "name": "update_oracle_implementation_active_status",
+        "name": "get_checkpoint",
+        "outputs": [
+            {
+                "name": "latest",
+                "type": "Checkpoint"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_sources_threshold",
+        "outputs": [
+            {
+                "name": "threshold",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_implementation",
+                "type": "felt"
+            }
+        ],
+        "name": "upgrade",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "primary_oracle_implementation_address",
+                "name": "new_admin_address",
                 "type": "felt"
             }
         ],
-        "name": "set_primary_oracle_implementation_address",
+        "name": "set_admin_address",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_implementation_hash",
+        "outputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_admin_address",
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "set_checkpoint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "threshold",
+                "type": "felt"
+            }
+        ],
+        "name": "set_sources_threshold",
         "outputs": [],
         "type": "function"
     }

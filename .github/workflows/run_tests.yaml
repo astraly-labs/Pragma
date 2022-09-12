@@ -33,7 +33,7 @@ jobs:
 
       - name: Check contract interface consistency
         run: |
-          python -m empiric.test.interface_consistency --cairo-path 'contracts/src'
+          python -m empiric.test.interface_consistency --cairo-path 'contracts/src,contracts/lib'
 
       - name: Run tests suite
         run: |

@@ -1,32 +1,29 @@
 import pytest
 import pytest_asyncio
+from constants import (
+    ACCOUNT_CONTRACT_FILE,
+    CAIRO_PATH,
+    DEFAULT_DECIMALS,
+    ORACLE_ABI,
+    ORACLE_CONTRACT_FILE,
+    PROXY_CONTRACT_FILE,
+    PUBLISHER_REGISTRY_CONTRACT_FILE,
+    YIELD_CURVE_CONTRACT_FILE,
+)
 from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state import BlockInfo
-from starkware.starknet.compiler.compile import compile_starknet_files
+from starkware.starknet.compiler.compile import (
+    compile_starknet_files,
+    get_selector_from_name,
+)
 from starkware.starknet.testing.starknet import Starknet
 from test_compute_engines.yield_curve import (
     calculate_future_spot_yield_point,
     calculate_on_yield_point,
 )
-from utils import CAIRO_PATH, assert_event_emitted, cached_contract, construct_path
+from utils import cached_contract
 
-# The path to the contract source code.
-PUBLISHER_REGISTRY_CONTRACT_FILE = construct_path(
-    "contracts/src/publisher_registry/PublisherRegistry.cairo"
-)
-ORACLE_CONTROLLER_CONTRACT_FILE = construct_path(
-    "contracts/src/oracle_controller/OracleController.cairo"
-)
-ORACLE_IMPLEMENTATION_CONTRACT_FILE = construct_path(
-    "contracts/src/oracle_implementation/OracleImplementation.cairo"
-)
-YIELD_CURVE_CONTRACT_FILE = construct_path(
-    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
-)
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
-DEFAULT_DECIMALS = 18
-AGGREGATION_MODE = 0
 STARKNET_STARTING_TIMESTAMP = 1650590820
 ON_KEY = "aave-on-borrow"
 FUTURES_SPOT = {
@@ -69,13 +66,8 @@ async def contract_classes():
         debug_info=True,
         cairo_path=CAIRO_PATH,
     )
-    oracle_controller_class = compile_starknet_files(
-        files=[ORACLE_CONTROLLER_CONTRACT_FILE],
-        debug_info=True,
-        cairo_path=CAIRO_PATH,
-    )
-    oracle_implementation_class = compile_starknet_files(
-        files=[ORACLE_IMPLEMENTATION_CONTRACT_FILE],
+    oracle_class = compile_starknet_files(
+        files=[ORACLE_CONTRACT_FILE],
         debug_info=True,
         cairo_path=CAIRO_PATH,
     )
@@ -88,8 +80,7 @@ async def contract_classes():
     return (
         account_class,
         publisher_registry_class,
-        oracle_controller_class,
-        oracle_implementation_class,
+        oracle_class,
         yield_curve_class,
     )
 
@@ -103,8 +94,7 @@ async def contract_init(
     (
         account_class,
         publisher_registry_class,
-        oracle_controller_class,
-        oracle_implementation_class,
+        oracle_class,
         yield_curve_class,
     ) = contract_classes
 
@@ -122,23 +112,54 @@ async def contract_init(
         contract_class=publisher_registry_class,
         constructor_calldata=[admin_account.contract_address],
     )
-    oracle_controller = await starknet.deploy(
-        contract_class=oracle_controller_class,
+    declared_oracle_class = await starknet.declare(
+        contract_class=oracle_class,
+    )
+    proxy_class = compile_starknet_files(
+        files=[PROXY_CONTRACT_FILE],
+        debug_info=True,
+        cairo_path=CAIRO_PATH,
+    )
+    oracle_proxy = await starknet.deploy(
+        contract_class=proxy_class,
         constructor_calldata=[
+            declared_oracle_class.class_hash,
+            get_selector_from_name("initializer"),
+            25,
             admin_account.contract_address,
             publisher_registry.contract_address,
+            3,
+            str_to_felt("btc"),
+            18,
+            1,
             0,
+            0,
+            str_to_felt("usd"),
+            18,
+            1,
+            0,
+            0,
+            str_to_felt("aave-on-borrow"),
+            18,
+            1,
+            0,
+            0,
+            2,
+            str_to_felt("btc/usd"),
+            str_to_felt("btc"),
+            str_to_felt("usd"),
+            str_to_felt(ON_KEY),
+            str_to_felt("aave-on-borrow"),
+            str_to_felt("usd"),
         ],
     )
-    oracle_implementation = await starknet.deploy(
-        contract_class=oracle_implementation_class,
-        constructor_calldata=[oracle_controller.contract_address],
-    )
+    oracle = oracle_proxy.replace_abi(ORACLE_ABI)
+
     yield_curve = await starknet.deploy(
         contract_class=yield_curve_class,
         constructor_calldata=[
             admin_account.contract_address,
-            oracle_controller.contract_address,
+            oracle.contract_address,
         ],
     )
 
@@ -147,8 +168,7 @@ async def contract_init(
         "admin_account": admin_account,
         "publisher_account": publisher_account,
         "publisher_registry": publisher_registry,
-        "oracle_controller": oracle_controller,
-        "oracle_implementation": oracle_implementation,
+        "oracle": oracle,
         "yield_curve": yield_curve,
     }
 
@@ -158,8 +178,7 @@ def contracts(contract_classes, contract_init):
     (
         account_class,
         publisher_registry_class,
-        oracle_controller_class,
-        oracle_implementation_class,
+        oracle_class,
         yield_curve_class,
     ) = contract_classes
     _state = contract_init["starknet"].state.copy()
@@ -172,12 +191,7 @@ def contracts(contract_classes, contract_init):
     publisher_registry = cached_contract(
         _state, publisher_registry_class, contract_init["publisher_registry"]
     )
-    oracle_controller = cached_contract(
-        _state, oracle_controller_class, contract_init["oracle_controller"]
-    )
-    oracle_implementation = cached_contract(
-        _state, oracle_implementation_class, contract_init["oracle_implementation"]
-    )
+    oracle = cached_contract(_state, oracle_class, contract_init["oracle"])
     yield_curve = cached_contract(
         _state,
         yield_curve_class,
@@ -188,8 +202,7 @@ def contracts(contract_classes, contract_init):
         "admin_account": admin_account,
         "publisher_account": publisher_account,
         "publisher_registry": publisher_registry,
-        "oracle_controller": oracle_controller,
-        "oracle_implementation": oracle_implementation,
+        "oracle": oracle,
         "yield_curve": yield_curve,
     }
 
@@ -199,8 +212,6 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     admin_account = contracts["admin_account"]
     publisher_account = contracts["publisher_account"]
     publisher_registry = contracts["publisher_registry"]
-    oracle_controller = contracts["oracle_controller"]
-    oracle_implementation = contracts["oracle_implementation"]
     yield_curve = contracts["yield_curve"]
 
     # Register publisher
@@ -209,20 +220,6 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
         publisher_registry.contract_address,
         "register_publisher",
         [publisher, publisher_account.contract_address],
-    )
-
-    # Add oracle implementation address to controller
-    tx_exec_info = await admin_signer.send_transaction(
-        admin_account,
-        oracle_controller.contract_address,
-        "add_oracle_implementation_address",
-        [oracle_implementation.contract_address],
-    )
-    assert_event_emitted(
-        tx_exec_info,
-        oracle_controller.contract_address,
-        "AddedOracleImplementation",
-        [oracle_implementation.contract_address],
     )
 
     await admin_signer.send_transaction(
@@ -290,8 +287,6 @@ async def test_deploy(initialized_contracts):
             str_to_felt(k) for k in FUTURES_SPOT[spot_key]["futures"].keys()
         ] == future_keys.result.future_keys
 
-    return
-
 
 @pytest.mark.asyncio
 async def test_empty_yield_curve(initialized_contracts, publisher_signer, publisher):
@@ -301,20 +296,18 @@ async def test_empty_yield_curve(initialized_contracts, publisher_signer, publis
     result = await yield_curve.get_yield_points(10).call()
     assert len(result.result.yield_points) == 0
 
-    return
-
 
 @pytest.mark.asyncio
 async def test_yield_curve(initialized_contracts, publisher_signer, source, publisher):
     publisher_account = initialized_contracts["publisher_account"]
-    oracle_controller = initialized_contracts["oracle_controller"]
+    oracle = initialized_contracts["oracle"]
     yield_curve = initialized_contracts["yield_curve"]
 
     output_decimals = 10
 
     # Submit data (on, spot, futures)
     on_entry = Entry(
-        key=ON_KEY,
+        pair_id=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=str_to_felt("thegraph"),
@@ -322,14 +315,14 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     )
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle_controller.contract_address,
+        oracle.contract_address,
         "publish_entry",
         on_entry.serialize(),
     )
 
     for spot_key in FUTURES_SPOT.keys():
         spot_entry = Entry(
-            key=spot_key,
+            pair_id=spot_key,
             value=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
             source=source,
@@ -337,7 +330,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         )
         await publisher_signer.send_transaction(
             publisher_account,
-            oracle_controller.contract_address,
+            oracle.contract_address,
             "publish_entry",
             spot_entry.serialize(),
         )
@@ -351,7 +344,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         futures = FUTURES_SPOT[spot_key]["futures"]
         for future_key, future_data in futures.items():
             future_entry = Entry(
-                key=future_key,
+                pair_id=future_key,
                 value=future_data["value"],
                 timestamp=future_data["timestamp"],
                 source=source,
@@ -359,7 +352,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             )
             await publisher_signer.send_transaction(
                 publisher_account,
-                oracle_controller.contract_address,
+                oracle.contract_address,
                 "publish_entry",
                 future_entry.serialize(),
             )
@@ -380,5 +373,3 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     # Call get_yield_curve and check result
     result = await yield_curve.get_yield_points(output_decimals).call()
     assert result.result.yield_points == yield_points
-
-    return

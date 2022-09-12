@@ -5,11 +5,12 @@ from typing import List
 from empiric.core.entry import Entry
 from nile.signer import Signer
 from starkware.starknet.business_logic.execution.objects import Event
+from starkware.starknet.business_logic.state.state import BlockInfo, CarriedState
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
 
-CAIRO_PATH = ["contracts/src"]
+CAIRO_PATH = ["contracts/src", "contracts/lib"]
 
 
 def construct_path(path):
@@ -90,7 +91,7 @@ async def register_new_publisher_and_publish_entries_1(
     admin_account,
     publisher_account,
     publisher_registry,
-    oracle_controller,
+    oracle,
     admin_signer,
     publisher_signer,
     publisher,
@@ -105,7 +106,7 @@ async def register_new_publisher_and_publish_entries_1(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle_controller.contract_address,
+        oracle.contract_address,
         "publish_entries",
         Entry.serialize_entries(entries),
     )
@@ -117,7 +118,7 @@ async def register_new_publisher_and_publish_entry(
     admin_account,
     publisher_account,
     publisher_registry,
-    oracle_controller,
+    oracle,
     admin_signer,
     publisher_signer,
     publisher,
@@ -132,9 +133,16 @@ async def register_new_publisher_and_publish_entry(
 
     await publisher_signer.send_transaction(
         publisher_account,
-        oracle_controller.contract_address,
+        oracle.contract_address,
         "publish_entry",
         entry.serialize(),
     )
 
     return
+
+
+def advance_time(state: CarriedState, buffer: int):
+    state.block_info = BlockInfo.create_for_testing(
+        state.block_info.block_number,
+        state.block_info.block_timestamp + buffer,
+    )

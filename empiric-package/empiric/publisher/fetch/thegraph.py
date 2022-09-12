@@ -22,7 +22,7 @@ def fetch_thegraph(assets, publisher) -> List[Entry]:
 
         if asset["source"] == "AAVE":
             url_slug = "aave/protocol-v2"
-            key = asset["key"]
+            pair_id = asset["key"]
             query = f"query {{reserves(where: {{id: \"{asset['detail']['asset_address']}\"}}) {{name isActive isFrozen {asset['detail']['metric']}}}}}"
             input_decimals = 27
         else:
@@ -41,11 +41,11 @@ def fetch_thegraph(assets, publisher) -> List[Entry]:
         value_int = int(value * (10 ** (asset["decimals"] - input_decimals)))
         timestamp = int(time.time())
 
-        logger.info(f"Fetched data {value_int} for {key} from The Graph")
+        logger.info(f"Fetched data {value_int} for {pair_id} from The Graph")
 
         entries.append(
             Entry(
-                key=key,
+                pair_id=pair_id,
                 value=value_int,
                 timestamp=timestamp,
                 source=source,
