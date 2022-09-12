@@ -28,7 +28,7 @@ RebaseDenomination = [
 ]
 
 ["protostar.shared_command_configs"]
-cairo-path = ["contracts/src"]
+cairo-path = ["contracts/src", "contracts/lib"]
 
 ["protostar.build"]
 output = "contracts/build"
