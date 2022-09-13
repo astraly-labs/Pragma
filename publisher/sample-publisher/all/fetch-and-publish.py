@@ -2,6 +2,7 @@ import asyncio
 import os
 import traceback
 
+from dotenv import load_dotenv
 import requests
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
@@ -22,6 +23,8 @@ logger = get_stream_logger()
 
 
 async def publish_all(assets):
+    # load environment variables from .env
+    load_dotenv()
 
     exit_on_error = os.environ.get("__EMPIRIC_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
 
