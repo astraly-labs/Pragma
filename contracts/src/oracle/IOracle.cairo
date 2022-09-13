@@ -59,7 +59,7 @@ namespace IOracle:
     func get_latest_checkpoint_index(key : felt) -> (latest : felt):
     end
 
-    func get_checkpoint(key : felt, index : felt) -> (latest : Checkpoint):
+    func get_checkpoint(key : felt, index : felt) -> (checkpoint : Checkpoint):
     end
 
     func get_sources_threshold() -> (threshold : felt):

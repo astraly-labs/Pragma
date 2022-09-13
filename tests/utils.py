@@ -1,8 +1,9 @@
 import os
 import time
-from typing import List
+from typing import List, Union
 
 from empiric.core.entry import Entry
+from empiric.core.utils import str_to_felt
 from nile.signer import Signer
 from starkware.starknet.business_logic.execution.objects import Event
 from starkware.starknet.business_logic.state.state import BlockInfo, CarriedState
@@ -146,3 +147,25 @@ def advance_time(state: CarriedState, buffer: int):
         state.block_info.block_number,
         state.block_info.block_timestamp + buffer,
     )
+
+
+def transform_calldata(calldata: List[Union[int, str, List[int]]]):
+    """Transforms a list to a calldata format that can be used in starknet constructor_calldata"""
+    output = []
+
+    def build_cons(calldata):
+        for item in calldata:
+            if type(item) == int:
+                output.append(item)
+            elif type(item) == list:
+                output.append(len(item))
+                output.extend(transform_calldata(item))
+            elif type(item) == str:
+                output.append(str_to_felt(item))
+            elif type(item) == tuple:
+                output.extend(transform_calldata(list(item)))
+            else:
+                raise TypeError("invalid input")
+        return output
+
+    return build_cons(calldata)

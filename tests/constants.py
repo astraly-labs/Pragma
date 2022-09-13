@@ -14,4 +14,7 @@ YIELD_CURVE_CONTRACT_FILE = construct_path(
     "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
 )
 PROXY_CONTRACT_FILE = construct_path("contracts/src/proxy/Proxy.cairo")
+SUMMARY_STATS_FILE = construct_path(
+    "contracts/src/compute_engines/summary_stats/SummaryStats.cairo"
+)
 ORACLE_ABI = json.load(open(construct_path("contracts/build/Oracle_abi.json")))

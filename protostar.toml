@@ -23,6 +23,9 @@ Proxy = [
 PublisherRegistry = [
     "contracts/src/publisher_registry/PublisherRegistry.cairo"
 ]
+SummaryStats = [
+    "contracts/src/compute_engines/summary_stats/SummaryStats.cairo"
+]
 YieldCurve = [
     "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
 ]

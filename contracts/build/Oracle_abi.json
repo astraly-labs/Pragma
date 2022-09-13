@@ -482,7 +482,7 @@
         "name": "get_checkpoint",
         "outputs": [
             {
-                "name": "latest",
+                "name": "checkpoint",
                 "type": "Checkpoint"
             }
         ],

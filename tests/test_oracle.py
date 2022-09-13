@@ -1151,8 +1151,8 @@ async def test_checkpointing(
     assert result.result.latest == 1
 
     result = await oracle_proxy.get_checkpoint(pair_id, 0).call()
-    assert result.result.latest.value == 3
-    assert result.result.latest.num_sources_aggregated == 1
+    assert result.result.checkpoint.value == 3
+    assert result.result.checkpoint.num_sources_aggregated == 1
 
     # Advance time by TIMESTAMP_BUFFER
     advance_time(admin_account.state.state, TIMESTAMP_BUFFER)
@@ -1198,5 +1198,5 @@ async def test_checkpointing(
     result = await oracle_proxy.get_entries(pair_id, []).call()
 
     result = await oracle_proxy.get_checkpoint(pair_id, 1).call()
-    assert result.result.latest.value == 6
-    assert result.result.latest.num_sources_aggregated == 2
+    assert result.result.checkpoint.value == 6
+    assert result.result.checkpoint.num_sources_aggregated == 2

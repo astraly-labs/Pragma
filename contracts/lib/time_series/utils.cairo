@@ -27,9 +27,10 @@ func less_than{range_check_ptr}(num1 : felt, num2 : felt) -> (_is_less : Bool):
 end
 
 func are_equal{range_check_ptr}(num1 : felt, num2 : felt) -> (_are_equal : Bool):
+    alloc_locals
     let (is_neg1) = is_nn(num1 - num2)
     let (is_neg2) = is_nn(num2 - num1)
-    let (_are_equal) = is_nn(0 - (is_neg1 + is_neg2))
+    let (_are_equal) = is_nn(is_neg1 + is_neg2 - 1)
     return (_are_equal)
 end
 
