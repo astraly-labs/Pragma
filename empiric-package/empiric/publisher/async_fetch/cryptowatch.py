@@ -3,8 +3,8 @@ import time
 from typing import List
 
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
-from empiric.core.utils import currency_pair_to_key
+from empiric.core_.entry import Entry
+from empiric.core_.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.base import PublisherInterfaceT
 
@@ -44,13 +44,13 @@ class CryptowatchFetcher(PublisherInterfaceT):
                         continue
 
                     pair = asset["pair"]
-                    key = currency_pair_to_key(*pair)
+                    pair_id = currency_pair_to_pair_id(*pair)
 
                     try:
                         price = source_results["".join(pair).lower()]
                     except KeyError:
                         logger.debug(
-                            f"No entry found for {key} from Cryptowatch-{cryptowatch_source}"
+                            f"No entry found for {pair_id} from Cryptowatch-{cryptowatch_source}"
                         )
                         continue
 
@@ -63,7 +63,7 @@ class CryptowatchFetcher(PublisherInterfaceT):
 
                     entries.append(
                         Entry(
-                            key=key,
+                            pair_id=pair_id,
                             value=price_int,
                             timestamp=timestamp,
                             source=source,

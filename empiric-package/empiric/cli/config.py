@@ -54,7 +54,11 @@ def _init_config_file() -> int:
 
 def _create_config_file(gateway_url: str, chain_id: int) -> int:
     config_parser = configparser.ConfigParser()
-    config_parser["GENERAL"] = {"gateway-url": gateway_url, "chain-id": chain_id}
+    config_parser["GENERAL"] = {
+        "network": "local",
+        "gateway-url": gateway_url,
+        "chain-id": chain_id,
+    }
     config_parser["SECRET"] = {}
     config_parser["USER"] = {}
     config_parser["CONTRACTS"] = {}

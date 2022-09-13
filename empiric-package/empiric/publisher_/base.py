@@ -1,6 +1,7 @@
 import abc
 from typing import List
 
+import aiohttp
 from aiohttp import ClientSession
 
 
@@ -8,6 +9,15 @@ class PublisherInterfaceT(abc.ABC):
     @abc.abstractmethod
     async def fetch(self, session: ClientSession) -> List["Entry"]:
         ...
+
+    @abc.abstractmethod
+    def fetch_sync(self) -> List["Entry"]:
+        ...
+
+    async def _fetch(self):
+        async with aiohttp.ClientSession() as session:
+            data = await self.fetch(session)
+            return data
 
 
 class PublisherFetchError:

@@ -55,7 +55,7 @@ def fetch_coinbase(assets, publisher) -> List[Entry]:
         headers = {
             "Accept": "application/json",
             "CB-ACCESS-KEY": COINBASE_API_KEY,
-            "CB-ACCESS-SIGN": base64.b64encode(signature.digest()),
+            "CB-ACCESS-SIGN": base64.b64encode(signature.digest()).decode("utf8"),
             "CB-ACCESS-TIMESTAMP": request_timestamp,
             "CB-ACCESS-PASSPHRASE": COINBASE_API_PASSPHRASE,
         }

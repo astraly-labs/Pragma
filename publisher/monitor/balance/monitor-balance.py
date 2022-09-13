@@ -3,10 +3,10 @@ import datetime
 import os
 
 import requests
-from empiric.admin.client import EmpiricAdminClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import felt_to_str
-from empiric.publisher.client import EmpiricPublisherClient
+from empiric.core_.client import EmpiricClient
+from empiric.core_.logger import get_stream_logger
+from empiric.core_.utils import felt_to_str
+from empiric.publisher_.client import EmpiricPublisherClient
 
 logger = get_stream_logger()
 
@@ -23,7 +23,7 @@ async def main(publishers=None, threshold_wei=None):
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
 
     # Set admin private key to 1 because we aren't using the client for protected invokes
-    client = EmpiricAdminClient(1)
+    client = EmpiricClient()
 
     if publishers is None:
         publishers = await client.get_all_publishers()
@@ -43,8 +43,8 @@ async def main(publishers=None, threshold_wei=None):
         addresses.add(address)
 
         # Set publisher private key to None because we aren't using the client for protected invokes
-        publisher_client = EmpiricPublisherClient(1, address)
-        balance = await publisher_client.get_balance()
+        publisher_client = EmpiricPublisherClient()
+        balance = await publisher_client.get_balance(address)
 
         if balance < threshold_wei:
             logger.warn(
