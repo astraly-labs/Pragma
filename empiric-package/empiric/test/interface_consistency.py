@@ -35,10 +35,11 @@ def check_interface(file_path, contract_filename, cairo_path=None):
         for i, line in enumerate(contents):
             # Check that namespace name is identical to interface filename
             if line == "@contract_interface":
-                print('ZZZZZ')
+                print("ZZZZZ")
                 print(contents[i + 1])
                 assert (
-                    contents[i + 1] == f"namespace {interface_filename.split('.')[0]} {{"
+                    contents[i + 1]
+                    == f"namespace {interface_filename.split('.')[0]} {{"
                 ), "Wrong namespace name, doesn't match interface filename"
 
             # Check interface is implemented (same functions, same function signatures)
