@@ -4,9 +4,16 @@ from typing import List, Union
 
 from empiric.core.entry import Entry
 from empiric.core.utils import str_to_felt
-from nile.signer import Signer
+from starkware.starknet.core.os.transaction_hash.transaction_hash import TransactionHashPrefix
+from starkware.starknet.services.api.gateway.transaction import InvokeFunction
+from starkware.starknet.business_logic.transaction.objects import InternalTransaction
+from starkware.starknet.services.api.contract_class import ContractClass
+from starkware.starknet.testing.starknet import Starknet
+
+from nile.signer import TRANSACTION_VERSION, Signer, from_call_to_call_array
 from starkware.starknet.business_logic.execution.objects import Event
-from starkware.starknet.business_logic.state.state import BlockInfo, CarriedState
+from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
+from starkware.starknet.business_logic.fact_state.state import CarriedState
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.testing.starknet import StarknetContract
@@ -33,7 +40,7 @@ def cached_contract(state, contract_class, deployed):
         state=state,
         abi=contract_class.abi,
         contract_address=deployed.contract_address,
-        deploy_execution_info=deployed.deploy_execution_info,
+        deploy_call_info=deployed.deploy_call_info,
     )
     return contract
 
@@ -52,28 +59,45 @@ class TestSigner:
         )
 
     async def send_transactions(self, account, calls, nonce=None, max_fee=0):
-        if nonce is None:
-            nonce = int(time.time())
-
-            # Tests are fast enough that sometimes we get race conditions (many tx sub-second)
-            # handle that special case here by auto-incrementing
-            execution_info = await account.get_nonce().call()
-            (on_chain_nonce,) = execution_info.result
-            if nonce <= on_chain_nonce:
-                nonce = on_chain_nonce + 1
-
         build_calls = []
         for call in calls:
             build_call = list(call)
             build_call[0] = hex(build_call[0])
             build_calls.append(build_call)
+        raw_invocation = get_raw_invoke(account, build_calls)
+        state = raw_invocation.state
 
-        (call_array, calldata, sig_r, sig_s) = self.signer.sign_transaction(
-            hex(account.contract_address), build_calls, nonce, max_fee
+        if nonce is None:
+            nonce = await state.state.get_nonce_at(account.contract_address)
+
+        # get signature
+        calldata, sig_r, sig_s = self.signer.sign_transaction(
+            account.contract_address, build_calls, nonce, max_fee
         )
-        return await account.__execute__(call_array, calldata, nonce).invoke(
-            signature=[sig_r, sig_s]
+
+        # craft invoke and execute tx
+        external_tx = InvokeFunction(
+            contract_address=account.contract_address,
+            calldata=calldata,
+            entry_point_selector=None,
+            signature=[sig_r, sig_s],
+            max_fee=max_fee,
+            version=TRANSACTION_VERSION,
+            nonce=nonce,
         )
+
+        tx = InternalTransaction.from_external(
+            external_tx=external_tx, general_config=state.general_config
+        )
+        execution_info = await state.execute_tx(tx=tx)
+        return execution_info
+
+
+def get_raw_invoke(sender, calls):
+    """Construct and return StarkNet's internal raw_invocation."""
+    call_array, calldata = from_call_to_call_array(calls)
+    raw_invocation = sender.__execute__(call_array, calldata)
+    return raw_invocation
 
 
 # From OZ: https://github.com/OpenZeppelin/cairo-contracts/blob/main/tests/utils.py
@@ -84,7 +108,7 @@ def assert_event_emitted(tx_exec_info, from_address: int, name: str, data: List[
             keys=[get_selector_from_name(name)],
             data=data,
         )
-        in tx_exec_info.raw_events
+        in tx_exec_info.get_sorted_events()
     )
 
 

@@ -1,3 +1,3 @@
 %lang starknet
 
-const DEFAULT = 0
+const DEFAULT = 0;
