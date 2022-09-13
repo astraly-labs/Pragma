@@ -2,8 +2,8 @@ import asyncio
 import os
 import traceback
 
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
