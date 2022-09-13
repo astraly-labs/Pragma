@@ -41,7 +41,7 @@ func log_array_iter(cur_idx, arr_len : felt, arr : TickElem**):
     end
 end
 
-# @view
+@view
 func test_scaler{range_check_ptr}():
     alloc_locals
     let (x : TickElem**) = alloc()
