@@ -11,7 +11,7 @@ The current Empiric Network proxy addresses are:
 
 ## Sample Code
 
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/oracle\_controller/IEmpiricOracle.cairo).
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/src/oracle\_controller/IEmpiricOracle.cairo).
 
 ```
 %lang starknet
@@ -19,11 +19,10 @@ If you are just trying to get started with our price feeds, see this self-contai
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 
-from oracle_controller.IEmpiricOracle import IEmpiricOracle
+from contracts.oracle_controller.IEmpiricOracle import IEmpiricOracle, EmpiricAggregationModes
 
 const EMPIRIC_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4
 const KEY = 28556963469423460  # str_to_felt("eth/usd")
-const AGGREGATION_MODE = 0  # default
 
 @view
 func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : felt) -> (
@@ -32,7 +31,7 @@ func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : f
     alloc_locals
 
     let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_value(
-        EMPIRIC_ORACLE_ADDRESS, KEY, AGGREGATION_MODE
+        EMPIRIC_ORACLE_ADDRESS, KEY, EmpiricAggregationModes.MEDIAN
     )
     let (multiplier) = pow(10, decimals)
 
@@ -40,7 +39,6 @@ func check_eth_usd_threshold{syscall_ptr : felt*, range_check_ptr}(threshold : f
     let (is_above_threshold) = is_le(shifted_threshold, eth_price)
     return (is_above_threshold)
 end
-
 ```
 
 ## Technical Specification
@@ -52,7 +50,7 @@ This is the primary function used to read the aggregated value of a specific dat
 Inputs
 
 * `key`: The lowercased utf8-encoded string
-* `aggregation_mode`: The aggregation mode to use for combining the many data sources available in Empiric. Use default of 0 for median
+* `aggregation_mode`: The aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN. Additional options` `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 
 Returns
 
