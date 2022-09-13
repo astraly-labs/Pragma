@@ -21,21 +21,13 @@ def list():
 
 
 @app.command()
-<<<<<<< HEAD
 def deploy(
     ctx: typer.Context,
     config_file: str = config.DEFAULT_CONFIG,
     oracle_config: str = oracle.ORACLE_CONFIG,
 ):
-=======
-def deploy(ctx: typer.Context, config_file=config.DEFAULT_CONFIG):
->>>>>>> 0044c8d (add entity and shortcuts to cli)
     """List all implemented contracts"""
     typer.echo("deploy Publisher Registry")
     ctx.invoke(publisher_registry.deploy, config_file)
     typer.echo("oracle")
-<<<<<<< HEAD
     ctx.invoke(oracle.deploy, config_file, oracle_config)
-=======
-    ctx.invoke(oracle.deploy, config_file)
->>>>>>> 0044c8d (add entity and shortcuts to cli)
