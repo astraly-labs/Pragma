@@ -250,7 +250,7 @@ async def initialized_contracts(
     contracts["oracle_proxy"] = contracts["oracle_proxy"].replace_abi(ORACLE_ABI)
 
     # Register publisher
-    print('admin_signer', admin_signer, type(admin_signer), dir(admin_signer))
+    print("admin_signer", admin_signer, type(admin_signer), dir(admin_signer))
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
