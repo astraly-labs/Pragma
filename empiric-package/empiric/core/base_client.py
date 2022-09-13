@@ -1,10 +1,10 @@
-import time
 from abc import ABC, abstractmethod
 from typing import Optional
 
 from empiric.core.abis import ORACLE_ABI
 from empiric.core.config import IConfig, get_config
 from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
+from empiric.core.utils import build_contract_abi_path
 from starknet_py.contract import Contract
 from starknet_py.net import AccountClient
 from starknet_py.net.client_models import Call
@@ -14,8 +14,7 @@ from starkware.starknet.public.abi import get_selector_from_name
 
 
 class EmpiricAccountClient(AccountClient):
-    async def _get_nonce(self) -> int:
-        return int(time.time())
+    pass
 
 
 class EmpiricBaseClient(ABC):
@@ -69,7 +68,6 @@ class EmpiricBaseClient(ABC):
             self.oracle_contract = Contract(
                 self.oracle_address,
                 ORACLE_ABI,
-                self.client,
             )
 
         if self.account_contract is None:

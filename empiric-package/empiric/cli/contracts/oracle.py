@@ -68,9 +68,7 @@ async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
     return SUCCESS
 
 
-async def deploy_oracle_proxy(
-    client: Client, deploy_config_path: Path, config_path: Path
-):
+async def deploy_oracle_proxy(client: Client, deploy_config_path: Path, config_path: Path):
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
