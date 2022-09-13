@@ -10,92 +10,92 @@ from publisher_registry.library import (
 )
 from admin.library import Admin
 
-#
-# Constructor
-#
+//
+// Constructor
+//
 
-# @notice initialize the publisher registry
-# @dev only the admin can add publisher's or change admin
-# @param admin_address: the administrator's address
+// @notice initialize the publisher registry
+// @dev only the admin can add publisher's or change admin
+// @param admin_address: the administrator's address
 @constructor
-func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    admin_address : felt
-):
-    Admin.initialize_admin_address(admin_address)
-    return ()
-end
+func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    admin_address: felt
+) {
+    Admin.initialize_admin_address(admin_address);
+    return ();
+}
 
-#
-# Getters
-#
+//
+// Getters
+//
 
-# @notice get address for admin
-# @return admin_address: returns admin's address
+// @notice get address for admin
+// @return admin_address: returns admin's address
 @view
-func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-    admin_address : felt
-):
-    let (admin_address) = Admin.get_admin_address()
-    return (admin_address)
-end
+func get_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+    admin_address: felt
+) {
+    let (admin_address) = Admin.get_admin_address();
+    return (admin_address,);
+}
 
-# @notice get address for publisher
-# @param publisher: identifier for publisher
-# @return publisher_address: publisher's address
+// @notice get address for publisher
+// @param publisher: identifier for publisher
+// @return publisher_address: publisher's address
 @view
-func get_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt
-) -> (publisher_address : felt):
-    let (publisher_address) = Publisher_get_publisher_address(publisher)
-    return (publisher_address)
-end
+func get_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher: felt
+) -> (publisher_address: felt) {
+    let (publisher_address) = Publisher_get_publisher_address(publisher);
+    return (publisher_address,);
+}
 
-# @notice get array of all publishers
-# @return publishers_len: length of publisher's array
-# @return publishers: pointer to first publisher in array
+// @notice get array of all publishers
+// @return publishers_len: length of publisher's array
+// @return publishers: pointer to first publisher in array
 @view
-func get_all_publishers{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
-    publishers_len : felt, publishers : felt*
-):
-    let (publishers_len, publishers) = Publisher_get_all_publishers()
-    return (publishers_len, publishers)
-end
+func get_all_publishers{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+    publishers_len: felt, publishers: felt*
+) {
+    let (publishers_len, publishers) = Publisher_get_all_publishers();
+    return (publishers_len, publishers);
+}
 
-#
-# Setters
-#
+//
+// Setters
+//
 
-# @notice set the admin address for the contract
-# @dev only admin can set this
-# @param new_address: new address to set admin to
+// @notice set the admin address for the contract
+// @dev only admin can set this
+// @param new_address: new address to set admin to
 @external
-func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    new_address : felt
-):
-    Admin.only_admin()
-    Admin.set_admin_address(new_address)
-    return ()
-end
+func set_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_address: felt
+) {
+    Admin.only_admin();
+    Admin.set_admin_address(new_address);
+    return ();
+}
 
-# @notice register a new publisher
-# @param publisher: name of publisher
-# @param publisher_address: address of publisher
+// @notice register a new publisher
+// @param publisher: name of publisher
+// @param publisher_address: address of publisher
 @external
-func register_publisher{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, publisher_address : felt
-):
-    Admin.only_admin()
-    Publisher_register_publisher(publisher, publisher_address)
-    return ()
-end
+func register_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher: felt, publisher_address: felt
+) {
+    Admin.only_admin();
+    Publisher_register_publisher(publisher, publisher_address);
+    return ();
+}
 
-# @notice update the address for a publisher
-# @param publisher: the name of the publisher
-# @param new_publisher_address: new address to set publisher to
+// @notice update the address for a publisher
+// @param publisher: the name of the publisher
+// @param new_publisher_address: new address to set publisher to
 @external
-func update_publisher_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    publisher : felt, new_publisher_address : felt
-):
-    Publisher_update_publisher_address(publisher, new_publisher_address)
-    return ()
-end
+func update_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher: felt, new_publisher_address: felt
+) {
+    Publisher_update_publisher_address(publisher, new_publisher_address);
+    return ();
+}

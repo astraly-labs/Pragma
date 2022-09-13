@@ -54,7 +54,7 @@ async def register_publisher(
     )
 
     await invocation.wait_for_acceptance()
-    typer.echo(f"response hash: {invocation.hash}")
+    typer.echo(f"response hash: {invocation.transaction_hash}")
 
 
 @app.command()

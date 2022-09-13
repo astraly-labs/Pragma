@@ -13,7 +13,7 @@ from constants import (
 from empiric.core.entry import Entry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
-from starkware.starknet.business_logic.state.state import BlockInfo
+from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
     get_selector_from_name,
@@ -250,6 +250,7 @@ async def initialized_contracts(
     contracts["oracle_proxy"] = contracts["oracle_proxy"].replace_abi(ORACLE_ABI)
 
     # Register publisher
+    print("admin_signer", admin_signer, type(admin_signer), dir(admin_signer))
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,

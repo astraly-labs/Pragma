@@ -1,30 +1,30 @@
 %lang starknet
 
-struct Entry:
-    member pair_id : felt  # id of the asset pair (e.g. str_to_felt("ETH/USD"))
-    member value : felt
-    member timestamp : felt
-    member source : felt
-    member publisher : felt
-end
+struct Entry {
+    pair_id: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
+    value: felt,
+    timestamp: felt,
+    source: felt,
+    publisher: felt,
+}
 
-struct Pair:
-    member id : felt  # same as key currently (e.g. str_to_felt("ETH/USD") - force uppercase)
-    member quote_currency_id : felt  # currency id - str_to_felt encode the ticker
-    member base_currency_id : felt  # currency id - str_to_felt encode the ticker
-end
+struct Pair {
+    id: felt,  // same as key currently (e.g. str_to_felt("ETH/USD") - force uppercase)
+    quote_currency_id: felt,  // currency id - str_to_felt encode the ticker
+    base_currency_id: felt,  // currency id - str_to_felt encode the ticker
+}
 
-struct Currency:
-    member id : felt
-    member decimals : felt
-    member is_abstract_currency : felt  # True (1) if not a specific token but abstract, e.g. USD or ETH as a whole
-    member starknet_address : felt  # optional, e.g. can have synthetics for non-bridged assets
-    member ethereum_address : felt  # optional
-end
+struct Currency {
+    id: felt,
+    decimals: felt,
+    is_abstract_currency: felt,  // True (1) if not a specific token but abstract, e.g. USD or ETH as a whole
+    starknet_address: felt,  // optional, e.g. can have synthetics for non-bridged assets
+    ethereum_address: felt,  // optional
+}
 
-struct Checkpoint:
-    member timestamp : felt
-    member value : felt
-    member aggregation_mode : felt
-    member num_sources_aggregated : felt
-end
+struct Checkpoint {
+    timestamp: felt,
+    value: felt,
+    aggregation_mode: felt,
+    num_sources_aggregated: felt,
+}

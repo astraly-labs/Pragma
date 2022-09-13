@@ -83,4 +83,8 @@ class EmpiricBaseClient(ABC):
         return await self.send_transactions([Call(to_contract, selector, calldata)])
 
     async def send_transactions(self, calls) -> HEX_STR:
-        return hex((await self.account_client.execute(calls, auto_estimate=True)).hash)
+        return hex(
+            (
+                await self.account_client.execute(calls, auto_estimate=True)
+            ).transaction_hash
+        )
