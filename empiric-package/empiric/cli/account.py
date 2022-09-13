@@ -21,7 +21,7 @@ async def deploy_account_contract(
     )
     result = await client.deploy(deploy_tx)
     await client.wait_for_tx(
-        tx_hash=result.transaction_hash,
+        tx_hash=result.hash,
     )
     return result.contract_address
 

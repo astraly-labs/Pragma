@@ -15,19 +15,22 @@ from starkware.starknet.compiler.compile import get_selector_from_name
 from .utils import declare_contract
 
 app = typer.Typer(help="Deployment commands for Oracle")
+ORACLE_CONFIG = typer.Option(
+    "./oracle_constructor_data.json",
+    "--deploy-config",
+    "-d",
+    help="configuration for currency and pair deployment",
+)
 
 
 @app.command()
 @coro
-async def deploy(
-    cli_config=config.DEFAULT_CONFIG,
-    deploy_config: str = typer.Option('./oracle_constructor_data.json', '--deploy-config', '-d', help="configuration for currency and pair deployment")
-):
+async def deploy(cli_config=config.DEFAULT_CONFIG, deploy_config: str = ORACLE_CONFIG):
     """
-        Deploy a new proxied instance of the publisher registry.
-        This requires a configuration file for the currencies and pairs that the oracle will support.
-        There is a sample config called oracle_constructor_data.json that shows the format.
-    
+    Deploy a new proxied instance of the publisher registry.
+    This requires a configuration file for the currencies and pairs that the oracle will support.
+    There is a sample config called oracle_constructor_data.json that shows the format.
+
     """
     # TODO (rlkelly): allow setting default path for config lookup in cli config
     deploy_config_path = Path(deploy_config)
@@ -65,7 +68,9 @@ async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
     return SUCCESS
 
 
-async def deploy_oracle_proxy(client: Client, deploy_config_path: Path, config_path: Path):
+async def deploy_oracle_proxy(
+    client: Client, deploy_config_path: Path, config_path: Path
+):
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
@@ -155,15 +160,15 @@ def _format_currencies(currencies: Dict[str, str]) -> List[str]:
     # TODO (rlkelly): use marshmallow to format
     output = []
     for row in currencies:
-        if isinstance(row['id'], str):
-            output.append(str_to_felt(row['id']))
+        if isinstance(row["id"], str):
+            output.append(str_to_felt(row["id"]))
         else:
-            output.append(row['id'])
+            output.append(row["id"])
 
-        output.append(row['decimals'])
-        output.append(int(row['is_abstact_currency']))
-        output.append(int(row['starknet_address']))
-        output.append(int(row['ethereum_address']))
+        output.append(row["decimals"])
+        output.append(int(row["is_abstact_currency"]))
+        output.append(int(row["starknet_address"]))
+        output.append(int(row["ethereum_address"]))
     return output
 
 
@@ -171,9 +176,9 @@ def _format_pairs(pairs: Dict[str, Union[int, str]]) -> List[str]:
     # TODO (rlkelly): use marshmallow to format
     output = []
     for row in pairs:
-        for key in ['id', 'quoteCurrencyId', 'baseCurrencyId']:
-            if isinstance(row['id'], str):
-                output.append(str_to_felt(row['id']))
+        for key in ["id", "quoteCurrencyId", "baseCurrencyId"]:
+            if isinstance(row["id"], str):
+                output.append(str_to_felt(row["id"]))
             else:
-                output.append(row['id'])
+                output.append(row["id"])
     return output
