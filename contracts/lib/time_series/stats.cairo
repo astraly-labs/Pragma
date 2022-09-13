@@ -1,7 +1,7 @@
 %lang starknet
 
 from time_series.structs import TickElem
-from utils import safe_div
+from time_series.utils import safe_div
 
 func sum_array{range_check_ptr}(tick_arr_len : felt, tick_arr : TickElem**) -> (sum_ : felt):
     let (sum_) = sum_array_iter(0, 0, tick_arr_len, tick_arr)

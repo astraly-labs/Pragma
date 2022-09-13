@@ -1,0 +1,75 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "oracle_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "start",
+                "type": "felt"
+            },
+            {
+                "name": "stop",
+                "type": "felt"
+            },
+            {
+                "name": "num_datapoints",
+                "type": "felt"
+            }
+        ],
+        "name": "calculate_mean",
+        "outputs": [
+            {
+                "name": "mean_",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "start",
+                "type": "felt"
+            },
+            {
+                "name": "stop",
+                "type": "felt"
+            },
+            {
+                "name": "num_datapoints",
+                "type": "felt"
+            }
+        ],
+        "name": "scaled_arr",
+        "outputs": [
+            {
+                "name": "arr_len",
+                "type": "felt"
+            },
+            {
+                "name": "arr",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

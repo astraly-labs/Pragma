@@ -189,7 +189,7 @@ end
 @view
 func get_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, index : felt
-) -> (latest : Checkpoint):
+) -> (checkpoint : Checkpoint):
     let (latest) = Oracle.get_checkpoint_by_index(key, index)
     return (latest)
 end
