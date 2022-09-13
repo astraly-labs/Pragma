@@ -9,7 +9,7 @@ CONFIG_DIR_PATH = Path(os.getcwd())
 COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"
 CONFIG_FILE_PATH = CONFIG_DIR_PATH / "cli-config.ini"
 DEFAULT_CONFIG = typer.Option(
-    CONFIG_FILE_PATH, "--config-path", "-c", help="optional path to config"
+    CONFIG_FILE_PATH, "--config-path", "-c", help="optional path to cli config"
 )
 
 
@@ -55,6 +55,9 @@ def _init_config_file() -> int:
 def _create_config_file(gateway_url: str, chain_id: int) -> int:
     config_parser = configparser.ConfigParser()
     config_parser["GENERAL"] = {"gateway-url": gateway_url, "chain-id": chain_id}
+    config_parser["SECRET"] = {}
+    config_parser["USER"] = {}
+    config_parser["CONTRACTS"] = {}
 
     try:
         with CONFIG_FILE_PATH.open("w") as file:

@@ -1,5 +1,6 @@
 import logging
 import warnings
+from pathlib import Path, PosixPath
 
 logger = logging.getLogger(__name__)
 
@@ -40,3 +41,9 @@ def key_for_asset(asset):
     key = asset["key"] if "key" in asset else currency_pair_to_key(*asset["pair"])
 
     return key
+
+
+def build_contract_abi_path(filename) -> PosixPath:
+    base_path = Path(__file__)
+    parent = base_path.parents[3]
+    return parent / f"contracts/build/{filename}_abi.json"
