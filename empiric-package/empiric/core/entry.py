@@ -61,7 +61,14 @@ class Entry:
         return False
 
     def serialize(self) -> Tuple[int, int, int, int, int]:
-        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher, self.volume)
+        return (
+            self.pair_id,
+            self.value,
+            self.timestamp,
+            self.source,
+            self.publisher,
+            self.volume,
+        )
 
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[int]:
