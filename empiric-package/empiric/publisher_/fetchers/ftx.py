@@ -6,6 +6,7 @@ import re
 import time
 from typing import Dict, List
 
+import requests
 from aiohttp import ClientSession
 from empiric.core_.entry import Entry
 from empiric.core_.utils import currency_pair_to_pair_id
@@ -33,8 +34,6 @@ class FtxFetcher(PublisherInterfaceT):
         self.FTX_API_SECRET = os.environ.get("FTX_API_SECRET")
 
     async def fetch(self, session: ClientSession) -> List[Entry]:
-        entries = []
-
         market_endpoint = "/markets"
         headers = self.generate_ftx_headers(market_endpoint)
 
@@ -47,30 +46,28 @@ class FtxFetcher(PublisherInterfaceT):
         futures_endpoint = "/futures"
         headers = self.generate_ftx_headers(futures_endpoint)
         async with session.get(
-            self.BASE_URL + market_endpoint, headers=headers
+            self.BASE_URL + futures_endpoint, headers=headers
         ) as resp:
             response_json = await resp.json()
             future_data = response_json["result"]
 
-        timestamp = int(time.time())
+        return self._handle_assets(spot_data, future_data)
 
-        for asset in self.assets:
-            if asset["type"] == "SPOT":
-                entry = self.parse_ftx_spot(
-                    asset, spot_data, self.SOURCE, self.publisher, timestamp
-                )
-                if entry is not None:
-                    entries.append(entry)
-                continue
-            elif asset["type"] == "FUTURE":
-                future_entries = self.parse_ftx_futures(
-                    asset, future_data, self.SOURCE, self.publisher, timestamp
-                )
-                if len(future_entries) is not None:
-                    entries.extend(future_entries)
-                continue
-            else:
-                logger.debug(f"Unable to fetch FTX for un-supported asset type {asset}")
+    def fetch_sync(self) -> List[Entry]:
+        market_endpoint = "/markets"
+        headers = self.generate_ftx_headers(market_endpoint)
+
+        resp = requests.get(self.BASE_URL + market_endpoint, headers=headers)
+        response_json = resp.json()
+        spot_data = response_json["result"]
+
+        futures_endpoint = "/futures"
+        headers = self.generate_ftx_headers(futures_endpoint)
+        resp = requests.get(self.BASE_URL + futures_endpoint, headers=headers)
+        response_json = resp.json()
+        future_data = response_json["result"]
+
+        return self._handle_assets(spot_data, future_data)
 
     def generate_ftx_headers(self, endpoint: str) -> Dict[str, str]:
         timestamp = int(time.time() * 1000)
@@ -153,5 +150,29 @@ class FtxFetcher(PublisherInterfaceT):
                     publisher=publisher,
                 )
             )
+
+        return entries
+
+    def _handle_assets(self, spot_data, future_data):
+        entries = []
+
+        timestamp = int(time.time())
+        for asset in self.assets:
+            if asset["type"] == "SPOT":
+                entry = self.parse_ftx_spot(
+                    asset, spot_data, self.SOURCE, self.publisher, timestamp
+                )
+                if entry is not None:
+                    entries.append(entry)
+                continue
+            elif asset["type"] == "FUTURE":
+                future_entries = self.parse_ftx_futures(
+                    asset, future_data, self.SOURCE, self.publisher, timestamp
+                )
+                if len(future_entries) is not None:
+                    entries.extend(future_entries)
+                continue
+            else:
+                logger.debug(f"Unable to fetch FTX for un-supported asset type {asset}")
 
         return entries

@@ -2,6 +2,7 @@ import asyncio
 import logging
 from typing import List, Union
 
+import requests
 from aiohttp import ClientSession
 from empiric.core_.entry import Entry
 from empiric.core_.utils import currency_pair_to_pair_id
@@ -38,6 +39,23 @@ class CexFetcher(PublisherInterfaceT):
 
             return self._construct(asset, result)
 
+    def _fetch_pair_sync(
+        self, asset: EmpiricSpotAsset
+    ) -> Union[Entry, PublisherFetchError]:
+        pair = asset["pair"]
+        url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
+
+        resp = requests.get(url)
+        if resp.status == 404:
+            logger.info(f"No data found for {'/'.join(pair)} from CEX")
+            return PublisherFetchError(pair)
+        result = resp.json(content_type="text/json")
+        if "error" in result and result["error"] == "Invalid Symbols Pair":
+            logger.info(f"No data found for {'/'.join(pair)} from CEX")
+            return PublisherFetchError(pair)
+
+        return self._construct(asset, result)
+
     async def fetch(
         self, session: ClientSession
     ) -> List[Union[Entry, PublisherFetchError]]:
@@ -48,6 +66,17 @@ class CexFetcher(PublisherInterfaceT):
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
+
+    def fetch_sync(
+        self, session: ClientSession
+    ) -> List[Union[Entry, PublisherFetchError]]:
+        entries = []
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping CEX for non-spot asset {asset}")
+                continue
+            entries.append(self._fetch_pair_sync(asset, session))
+        return entries
 
     def _construct(self, asset, result) -> Entry:
         pair = asset["pair"]

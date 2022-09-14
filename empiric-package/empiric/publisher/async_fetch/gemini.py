@@ -20,6 +20,7 @@ class GeminiFetcher(PublisherInterfaceT):
     def __init__(self, assets: List[EmpiricAsset], publisher):
         self.assets = assets
         self.publisher = publisher
+        print("self.assets", self.assets)
 
     async def fetch(self, session: ClientSession) -> List[Entry]:
         entries = []

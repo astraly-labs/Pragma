@@ -3,6 +3,7 @@ import datetime
 import logging
 from typing import Dict, List
 
+import requests
 from aiohttp import ClientSession
 from empiric.core_.entry import Entry
 from empiric.core_.utils import currency_pair_to_pair_id
@@ -67,6 +68,19 @@ class CoingeckoFetcher(PublisherInterfaceT):
             result = await resp.json()
             return self._construct(asset, result)
 
+    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> Entry:
+        pair = asset["pair"]
+        pair_id = ASSET_MAPPING.get(pair[0])
+        if pair_id is None:
+            raise ValueError(
+                f"Unknown price pair, do not know how to query Coingecko for {pair[0]}"
+            )
+        url = self.BASE_URL.format(pair_id=pair_id)
+
+        resp = requests.get(url, headers=self.headers, raise_for_status=True)
+        result = resp.json()
+        return self._construct(asset, result)
+
     async def fetch(self, session: ClientSession) -> List[Entry]:
         entries = []
         for asset in self.assets:
@@ -75,6 +89,15 @@ class CoingeckoFetcher(PublisherInterfaceT):
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
+
+    def fetch_sync(self) -> List[Entry]:
+        entries = []
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping {self.SOURCE} for non-spot asset {asset}")
+                continue
+            entries.append(self._fetch_pair_sync(asset))
+        return entries
 
     def _construct(self, asset, result) -> Entry:
         pair = asset["pair"]
