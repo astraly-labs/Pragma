@@ -344,6 +344,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
+        volume=1000,
     )
 
     tx_exec_info = await publisher_signer.send_transaction(

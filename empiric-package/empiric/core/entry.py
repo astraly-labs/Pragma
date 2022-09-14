@@ -19,6 +19,7 @@ class Entry:
         timestamp: int,
         source: Union[str, int],
         publisher: Union[str, int],
+        volume: int = 0,
     ) -> None:
         if type(pair_id) == str:
             pair_id = str_to_felt(pair_id)
@@ -34,6 +35,7 @@ class Entry:
         self.timestamp = timestamp
         self.source = source
         self.publisher = publisher
+        self.volume = volume
 
     def __eq__(self, other):
         if isinstance(other, Entry):
@@ -43,21 +45,23 @@ class Entry:
                 and self.timestamp == other.timestamp
                 and self.source == other.source
                 and self.publisher == other.publisher
+                and self.volume == other.volume
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
-        if isinstance(other, Tuple) and len(other) == 5:
+        if isinstance(other, Tuple) and len(other) == 6:
             return (
                 self.pair_id == other[0]
                 and self.value == other[1]
                 and self.timestamp == other[2]
                 and self.source == other[3]
                 and self.publisher == other[4]
+                and self.volume == other[5]
             )
         return False
 
     def serialize(self) -> Tuple[int, int, int, int, int]:
-        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher)
+        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher, self.volume)
 
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[int]:

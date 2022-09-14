@@ -6,6 +6,7 @@ struct Entry {
     timestamp: felt,
     source: felt,
     publisher: felt,
+    volume: felt,
 }
 
 struct Pair {

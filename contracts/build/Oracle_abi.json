@@ -25,10 +25,15 @@
                 "name": "publisher",
                 "offset": 4,
                 "type": "felt"
+            },
+            {
+                "name": "volume",
+                "offset": 5,
+                "type": "felt"
             }
         ],
         "name": "Entry",
-        "size": 5,
+        "size": 6,
         "type": "struct"
     },
     {
