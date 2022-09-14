@@ -35,3 +35,4 @@ contracts/build/*[!_abi].json
 
 # cli
 cli-config.ini
+oracle_constructor_data.json
