@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Tuple, Union
 
-from empiric.publisher_.base import PublisherFetchError
 from empiric.core_.utils import str_to_felt
+from empiric.publisher_.base import PublisherFetchError
 
 
 class Entry:
