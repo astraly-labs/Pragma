@@ -2,12 +2,7 @@ import logging
 from typing import Optional
 
 from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
-from empiric.core.config import (
-    CONTRACT_ADDRESSES,
-    NETWORKS,
-    TESTNET_CONTRACTS,
-    ContractAddresses,
-)
+from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
 from empiric.core.contract import Contract
 from empiric.core.mixins import OracleMixin, PublisherRegistryMixin, TransactionMixin
 from starknet_py.net import AccountClient
@@ -27,8 +22,15 @@ class EmpiricClient(PublisherRegistryMixin, OracleMixin, TransactionMixin):
         account_contract_address: Optional[
             int
         ] = 0x0704CC0F2749637A0345D108AC9CD597BB33CCF7F477978D52E236830812CD98,  # testnet admin address
-        contract_addresses_config: Optional[ContractAddresses] = TESTNET_CONTRACTS,
+        contract_addresses_config: Optional[ContractAddresses] = None,
     ):
+        """
+        Client for interacting with Empiric on Starknet.
+        :param net: Target network for the client. Can be a string with URL, one of ``"mainnet"``, ``"testnet"``, ``"local"`` or ``"integration""``
+        :param account_private_key: Optional private key for requests.  Not necessary if not making network updates
+        :param account_contract_address: Optional account contract address.  Not necessary if not making network updates
+        :pram contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
+        """
         network_config = NETWORKS[network]
 
         if network not in ["mainnet", "testnet"]:

@@ -131,8 +131,6 @@ async def register_new_publisher_and_publish_entries_1(
         Entry.flatten_entries(entries),
     )
 
-    return
-
 
 async def register_new_publisher_and_publish_entry(
     admin_account,
@@ -170,6 +168,7 @@ def transform_calldata(calldata: List[Union[int, str, List[int]]]):
     """Transforms a list to a calldata format that can be used in starknet constructor_calldata"""
     output = []
 
+    # TODO (rlkelly: recursively calculate list length. transform_calldata([1, [2, 3]])) should be [4, 1, 2, 2 3]
     def build_cons(calldata):
         for item in calldata:
             if type(item) == int:
