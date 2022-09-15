@@ -19,7 +19,7 @@ async def main():
     publisher_client.add_fetcher(coinbase_fetcher)
     _entries = await publisher_client.fetch()
 
-    await publisher_client.publish_many(_entries)
+    await publisher_client.publish_many(_entries, pagination=20)
 
 
 if __name__ == "__main__":

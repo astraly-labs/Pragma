@@ -43,6 +43,7 @@ async def register_publisher(
 async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     publisher_address = client.account_address()
+    print('publisher_address', publisher_address)
     invocation = await client.register_publisher(publisher, publisher_address)
 
     await invocation.wait_for_acceptance()
