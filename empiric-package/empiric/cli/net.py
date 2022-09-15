@@ -51,7 +51,9 @@ def init_empiric_client(config_file: Path) -> EmpiricClient:
         network,
         account_private_key=account_private_key,
         account_contract_address=account_contract_address,
-        contract_addresses_config=ContractAddresses(publisher_registry_address, oracle_proxy_address),
+        contract_addresses_config=ContractAddresses(
+            publisher_registry_address, oracle_proxy_address
+        ),
     )
     return client
 

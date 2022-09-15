@@ -5,7 +5,7 @@ import traceback
 from empiric.core_.logger import get_stream_logger
 from empiric.core_.types import INTEGRATION
 from empiric.core_.utils import log_entry
-from empiric.publisher.assets import get_spot_asset_spec_for_key
+from empiric.publisher_.assets import get_spot_asset_spec_for_key
 from empiric.publisher_.client import EmpiricPublisherClient
 from empiric.publisher_.fetchers import BitstampFetcher, GeminiFetcher
 
@@ -20,9 +20,9 @@ async def publish_all(assets):
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
     publisher_client = EmpiricPublisherClient(
-        INTEGRATION,
-        publisher_private_key,
-        publisher_address,
+        network=INTEGRATION,
+        account_private_key=publisher_private_key,
+        account_contract_address=publisher_address,
     )
 
     bitstamp_fetcher = BitstampFetcher(publisher, assets)

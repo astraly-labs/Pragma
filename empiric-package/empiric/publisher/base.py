@@ -1,12 +1,12 @@
 import abc
-from typing import List
+from typing import Any, List
 
 from aiohttp import ClientSession
 
 
 class PublisherInterfaceT(abc.ABC):
     @abc.abstractmethod
-    async def fetch(self, session: ClientSession) -> List["Entry"]:
+    async def fetch(self, session: ClientSession) -> List[Any]:
         ...
 
 

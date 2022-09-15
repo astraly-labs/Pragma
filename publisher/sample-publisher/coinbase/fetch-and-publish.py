@@ -1,8 +1,8 @@
 import asyncio
 import os
 
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.client import EmpiricPublisherClient
+from empiric.publisher_.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher_.client import EmpiricPublisherClient
 from empiric.publisher_.fetchers import CoinbaseFetcher
 
 
