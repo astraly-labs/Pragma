@@ -9,7 +9,7 @@ from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import pair_id_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.fetch import fetch_coingecko
+from empiric.publisher.fetchers import CoingeckoFetcher
 
 logger = get_stream_logger()
 
@@ -32,10 +32,10 @@ async def main():
     assets = EMPIRIC_ALL_ASSETS
 
     client = EmpiricClient()
+    cg = CoingeckoFetcher(assets, "publisher")
+    entries = cg.fetch_sync()
 
-    coingecko = {
-        entry.pair_id: entry.value for entry in fetch_coingecko(assets, "publisher")
-    }
+    coingecko = {entry.pair_id: entry.value for entry in entries}
 
     all_prices_valid = True
     for asset in assets:
