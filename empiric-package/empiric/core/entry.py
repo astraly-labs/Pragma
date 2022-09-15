@@ -57,6 +57,9 @@ class Entry:
             )
         return False
 
+    def to_tuple(self):
+        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher)
+
     def serialize(self) -> Dict[str, str]:
         return {
             "pair_id": self.pair_id,
@@ -85,3 +88,9 @@ class Entry:
             if not isinstance(entry, PublisherFetchError)
         ]
         return list(filter(lambda item: item is not None, serialized_entries))
+
+    @staticmethod
+    def flatten_entries(entries: List[Entry]) -> List[int]:
+        expanded = [entry.to_tuple() for entry in entries]
+        flattened = [x for entry in expanded for x in entry]
+        return [len(entries)] + flattened

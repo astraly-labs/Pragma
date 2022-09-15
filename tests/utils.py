@@ -128,7 +128,7 @@ async def register_new_publisher_and_publish_entries_1(
         publisher_account,
         oracle.contract_address,
         "publish_entries",
-        Entry.serialize_entries(entries),
+        Entry.flatten_entries(entries),
     )
 
     return
@@ -155,10 +155,8 @@ async def register_new_publisher_and_publish_entry(
         publisher_account,
         oracle.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
-
-    return
 
 
 def advance_time(state: CarriedState, buffer: int):
