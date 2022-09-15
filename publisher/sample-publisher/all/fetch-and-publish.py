@@ -47,13 +47,13 @@ async def publish_all(assets):
     _entries = await publisher_client.fetch()
     await publisher_client.publish_many(_entries, pagination=10)
 
-    # logger.info("Publishing the following entries:")
-    # for entry in _entries:
-    #     log_entry(entry, logger=logger)
+    logger.info("Publishing the following entries:")
+    for entry in _entries:
+        log_entry(entry, logger=logger)
 
-    # # Post success to Better Uptime
-    # betteruptime_id = os.environ.get("BETTERUPTIME_ID")
-    # requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
+    # Post success to Better Uptime
+    betteruptime_id = os.environ.get("BETTERUPTIME_ID")
+    requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
 
 if __name__ == "__main__":
