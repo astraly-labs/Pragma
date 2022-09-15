@@ -2,7 +2,6 @@ import configparser
 from pathlib import Path
 
 from empiric.cli import STARKNET_READ_ERROR
-
 from empiric.core import EmpiricClient
 from empiric.core.config import ContractAddresses
 from starknet_py.net import AccountClient

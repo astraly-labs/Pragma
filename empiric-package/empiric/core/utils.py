@@ -42,4 +42,4 @@ def pair_id_for_asset(asset):
 
 
 def key_for_asset(asset):
-    key = asset["key"] if "key" in asset else currency_pair_to_pair_id(*asset["pair"])
+    return asset["key"] if "key" in asset else currency_pair_to_pair_id(*asset["pair"])
