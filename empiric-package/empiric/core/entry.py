@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Dict, List, Tuple, Union
 
 from empiric.core.utils import str_to_felt
-from empiric.publisher.base import PublisherFetchError
 
 
 class Entry:
@@ -81,7 +80,7 @@ class Entry:
 
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[Dict[str, int]]:
-        """ serialize entries to a List of dictionaries """
+        """serialize entries to a List of dictionaries"""
         # TODO (rlkelly): log errors
         serialized_entries = [
             entry.serialize()
@@ -93,7 +92,7 @@ class Entry:
 
     @staticmethod
     def flatten_entries(entries: List[Entry]) -> List[int]:
-        """ This flattens entriees to tuples.  Useful when you need the raw felt array """
+        """This flattens entriees to tuples.  Useful when you need the raw felt array"""
         expanded = [entry.to_tuple() for entry in entries]
         flattened = [x for entry in expanded for x in entry]
         return [len(entries)] + flattened

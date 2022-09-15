@@ -5,7 +5,6 @@ from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
 from empiric.core.config import (
     CONTRACT_ADDRESSES,
     NETWORKS,
-    TESTNET_CONTRACTS,
     ContractAddresses,
 )
 from empiric.core.contract import Contract

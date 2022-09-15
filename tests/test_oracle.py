@@ -13,7 +13,6 @@ from constants import (
 from empiric.core.entry import Entry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
-from utils import transform_calldata
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
@@ -27,6 +26,7 @@ from utils import (
     cached_contract,
     register_new_publisher_and_publish_entries_1,
     register_new_publisher_and_publish_entry,
+    transform_calldata,
 )
 
 TIMESTAMP_BUFFER = 3600
@@ -110,34 +110,36 @@ async def contract_init(
 
     oracle_proxy = await starknet.deploy(
         contract_class=proxy_class,
-        constructor_calldata=transform_calldata((
-            declared_oracle_class.class_hash,
-            get_selector_from_name("initializer"),
-            73,
-            admin_account.contract_address,
-            publisher_registry.contract_address,
-            [
-                ("decimals-test", 100, 1, 0, 0),
-                ("eth", 18, 1, 0, 0),
-                ("btc", 18, 1, 0, 0),
-                ("usd", 8, 1, 0, 0),
-                ("doge", 18, 1, 0, 0),
-                ("luna", 18, 1, 0, 0),
-                ("sol", 18, 1, 0, 0),
-                ("shib", 18, 1, 0, 0),
-                ("avax", 18, 1, 0, 0),
-            ],
-            [
-                ("usd/decimals-test", "usd", "decimals-test"),
-                ("eth/usd", "eth", "usd"),
-                ("btc/usd", "btc", "usd"),
-                ("luna/usd", "luna", "usd"),
-                ("doge/usd", "doge", "usd"),
-                ("sol/usd", "sol", "usd"),
-                ("shib/usd", "shib", "usd"),
-                ("avax/usd", "avax", "usd"),
-            ],
-        )),
+        constructor_calldata=transform_calldata(
+            (
+                declared_oracle_class.class_hash,
+                get_selector_from_name("initializer"),
+                73,
+                admin_account.contract_address,
+                publisher_registry.contract_address,
+                [
+                    ("decimals-test", 100, 1, 0, 0),
+                    ("eth", 18, 1, 0, 0),
+                    ("btc", 18, 1, 0, 0),
+                    ("usd", 8, 1, 0, 0),
+                    ("doge", 18, 1, 0, 0),
+                    ("luna", 18, 1, 0, 0),
+                    ("sol", 18, 1, 0, 0),
+                    ("shib", 18, 1, 0, 0),
+                    ("avax", 18, 1, 0, 0),
+                ],
+                [
+                    ("usd/decimals-test", "usd", "decimals-test"),
+                    ("eth/usd", "eth", "usd"),
+                    ("btc/usd", "btc", "usd"),
+                    ("luna/usd", "luna", "usd"),
+                    ("doge/usd", "doge", "usd"),
+                    ("sol/usd", "sol", "usd"),
+                    ("shib/usd", "shib", "usd"),
+                    ("avax/usd", "avax", "usd"),
+                ],
+            )
+        ),
     )
     oracle_proxy = oracle_proxy.replace_abi(ORACLE_ABI)
 
