@@ -31,9 +31,7 @@ def pprint_entry(entry):
 
 
 def log_entry(entry, logger=logger):
-    logger.info(
-        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
-    )
+    logger.info(f"Entry: {entry.serialize()}")
 
 
 def pair_id_for_asset(asset):
