@@ -7,9 +7,10 @@ import os
 from hashlib import sha256
 from typing import List, Union
 
+import requests
 from aiohttp import ClientSession
-from empiric.core_.entry import Entry
-from empiric.core_.utils import currency_pair_to_pair_id
+from empiric.core.entry import Entry
+from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.base import PublisherFetchError, PublisherInterfaceT
 
@@ -63,7 +64,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
         headers = {
             "Accept": "application/json",
             "CB-ACCESS-KEY": self.COINBASE_API_KEY,
-            "CB-ACCESS-SIGN": base64.b64encode(signature.digest()),
+            "CB-ACCESS-SIGN": base64.b64encode(signature.digest()).decode("utf8"),
             "CB-ACCESS-TIMESTAMP": request_timestamp,
             "CB-ACCESS-PASSPHRASE": self.COINBASE_API_PASSPHRASE,
         }
@@ -73,6 +74,42 @@ class CoinbaseFetcher(PublisherInterfaceT):
         ) as resp:
             result = await resp.json()
             return self._construct(asset, result)
+
+    def _fetch_pair_sync(
+        self, asset: EmpiricSpotAsset
+    ) -> Union[Entry, PublisherFetchError]:
+        pair = asset["pair"]
+        if pair[1] != "USD":
+            logger.debug(
+                f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
+            )
+            return PublisherFetchError(f"NON-USD PAIR: {pair}")
+
+        request_timestamp = str(
+            int(
+                datetime.datetime.now(datetime.timezone.utc)
+                .replace(tzinfo=datetime.timezone.utc)
+                .timestamp()
+            )
+        )
+
+        signature = hmac.new(
+            base64.b64decode(self.COINBASE_API_SECRET),
+            (request_timestamp + self.METHOD + self.REQUEST_PATH).encode("ascii"),
+            sha256,
+        )
+
+        headers = {
+            "Accept": "application/json",
+            "CB-ACCESS-KEY": self.COINBASE_API_KEY,
+            "CB-ACCESS-SIGN": base64.b64encode(signature.digest()),
+            "CB-ACCESS-TIMESTAMP": request_timestamp,
+            "CB-ACCESS-PASSPHRASE": self.COINBASE_API_PASSPHRASE,
+        }
+
+        resp = requests.get(self.BASE_URL + self.REQUEST_PATH, headers=headers)
+        result = resp.json()
+        return self._construct(asset, result)
 
     async def fetch(
         self, session: ClientSession
@@ -85,6 +122,16 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
+
+    def fetch_sync(self) -> List[Union[Entry, PublisherFetchError]]:
+        entries = []
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping Coinbase for non-spot asset {asset}")
+                continue
+
+            entries.append(self._fetch_pair_sync(asset))
+        return entries
 
     def _construct(self, asset, result) -> Union[Entry, PublisherFetchError]:
         pair = asset["pair"]
@@ -102,7 +149,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
                 pair_id=pair_id,
                 value=price_int,
                 timestamp=timestamp,
-                source=self.source,
+                source=self.SOURCE,
                 publisher=self.publisher,
             )
 

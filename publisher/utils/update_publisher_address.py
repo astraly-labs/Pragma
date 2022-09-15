@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from empiric.publisher_.client import EmpiricPublisherClient
+from empiric.publisher.client import EmpiricPublisherClient
 
 
 async def main():

@@ -3,10 +3,10 @@ import datetime
 import os
 
 import requests
-from empiric.core_.client import EmpiricClient
-from empiric.core_.logger import get_stream_logger
-from empiric.core_.utils import felt_to_str
-from empiric.publisher_.client import EmpiricPublisherClient
+from empiric.core.client import EmpiricClient
+from empiric.core.logger import get_stream_logger
+from empiric.core.utils import felt_to_str
+from empiric.publisher.client import EmpiricPublisherClient
 
 logger = get_stream_logger()
 

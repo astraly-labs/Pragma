@@ -2,11 +2,9 @@ import configparser
 from pathlib import Path
 
 from empiric.cli import STARKNET_READ_ERROR
-
-# from starknet_py.net import AccountClient
-from empiric.core.base_client import EmpiricAccountClient as AccountClient
-from empiric.core_ import EmpiricClient
-from empiric.core_.config import ContractAddresses
+from empiric.core import EmpiricClient
+from empiric.core.config import ContractAddresses
+from starknet_py.net import AccountClient
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
@@ -74,7 +72,7 @@ def init_account_client(client: GatewayClient, config_file: Path) -> AccountClie
     )
 
     return AccountClient(
-        account_contract_address,
-        client,
+        address=account_contract_address,
+        client=client,
         signer=signer,
     )
