@@ -31,9 +31,7 @@ def pprint_entry(entry):
 
 
 def log_entry(entry, logger=logger):
-    logger.info(
-        f"Entry: {entry.serialize()}"
-    )
+    logger.info(f"Entry: {entry.serialize()}")
 
 
 def pair_id_for_asset(asset):
