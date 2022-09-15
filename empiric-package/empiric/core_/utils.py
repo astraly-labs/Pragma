@@ -32,7 +32,7 @@ def pprint_entry(entry):
 
 def log_entry(entry, logger=logger):
     logger.info(
-        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+        f"Entry: {entry.serialize()}"
     )
 
 
