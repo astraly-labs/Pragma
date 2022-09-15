@@ -41,22 +41,26 @@ class OracleMixin:
         )
         return invocation
 
-    async def publish_many(self, entries: List[Entry], pagination=0) -> InvokeResult:
+    async def publish_many(self, entries: List[Entry], pagination=0, max_fee=int(1e16)) -> InvokeResult:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
             return
+
+        print('entries:', entries)
+        print('serialized:', Entry.serialize_entries(entries))
 
         if pagination:
             ix = 0
             while ix < len(entries):
                 invocation = await self.oracle.publish_entries.invoke(
-                    Entry.serialize_entries(entries[ix : ix + pagination])
+                    Entry.serialize_entries(entries[ix : ix + pagination], max_fee=max_fee)
                 )
                 await invocation.wait_for_acceptance()
                 ix += pagination
         else:
             invocation = await self.oracle.publish_entries.invoke(
-                Entry.serialize_entries(entries)
+                Entry.serialize_entries(entries),
+                max_fee=max_fee
             )
 
         logger.info(
