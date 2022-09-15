@@ -2,11 +2,7 @@ import logging
 from typing import Optional
 
 from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
-from empiric.core.config import (
-    CONTRACT_ADDRESSES,
-    NETWORKS,
-    ContractAddresses,
-)
+from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
 from empiric.core.contract import Contract
 from empiric.core.mixins import OracleMixin, PublisherRegistryMixin, TransactionMixin
 from starknet_py.net import AccountClient
