@@ -25,8 +25,19 @@ func calculate_mean{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     key: felt, start: felt, stop: felt, num_datapoints: felt
 ) -> (mean_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
-    let (_mean) = SummaryStats.calculate_mean(oracle_address, key, start, stop, num_datapoints);
+    let _mean = SummaryStats.calculate_mean(oracle_address, key, start, stop, num_datapoints);
     return (_mean,);
+}
+
+@view
+func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, start: felt, stop: felt, num_datapoints: felt
+) -> (volatility_: felt) {
+    let (oracle_address) = SummaryStats__oracle_address.read();
+    let _volatility = SummaryStats.calculate_volatility(
+        oracle_address, key, start, stop, num_datapoints
+    );
+    return (_volatility);
 }
 
 @view

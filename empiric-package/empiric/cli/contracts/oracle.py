@@ -166,7 +166,7 @@ def _format_currencies(currencies: Dict[str, str]) -> List[str]:
             output.append(row["id"])
 
         output.append(row["decimals"])
-        output.append(int(row["is_abstact_currency"]))
+        output.append(int(row["is_abstract_currency"]))
         output.append(int(row["starknet_address"]))
         output.append(int(row["ethereum_address"]))
     return output
