@@ -46,16 +46,21 @@ class OracleMixin:
             logger.warn("Skipping publishing as entries array is empty")
             return
 
-        print('entries:', entries)
-        print('serialized:', Entry.serialize_entries(entries))
-
+        invocation = None
         if pagination:
             ix = 0
             while ix < len(entries):
-                invocation = await self.oracle.publish_entries.invoke(
-                    Entry.serialize_entries(entries[ix : ix + pagination], max_fee=max_fee)
-                )
-                await invocation.wait_for_acceptance()
+                print('ix', ix)
+                print(Entry.serialize_entries(entries[ix : ix + pagination]))
+                print('\n\n\n\n\n')
+
+                # invocation = await self.oracle.publish_entries.invoke(
+                #     Entry.serialize_entries(entries[ix : ix + pagination]),
+                #     max_fee=max_fee,
+                # )
+
+                # print('invocation:', await invocation.wait_for_acceptance())
+
                 ix += pagination
         else:
             invocation = await self.oracle.publish_entries.invoke(
@@ -63,9 +68,9 @@ class OracleMixin:
                 max_fee=max_fee
             )
 
-        logger.info(
-            f"Sent {len(entries)} updated entries with transaction {invocation.hash}"
-        )
+        # logger.info(
+        #     f"Sent {len(entries)} updated entries with transaction {invocation.hash}"
+        # )
 
         return invocation
 

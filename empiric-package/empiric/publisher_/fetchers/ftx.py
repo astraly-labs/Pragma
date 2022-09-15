@@ -169,7 +169,7 @@ class FtxFetcher(PublisherInterfaceT):
                 future_entries = self.parse_ftx_futures(
                     asset, future_data, self.SOURCE, self.publisher, timestamp
                 )
-                if len(future_entries) is not None:
+                if len(future_entries) > 0:
                     entries.extend(future_entries)
                 continue
             else:

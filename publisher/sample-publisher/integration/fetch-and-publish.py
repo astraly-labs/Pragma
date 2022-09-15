@@ -33,7 +33,7 @@ async def publish_all(assets):
 
     try:
         _entries = await publisher_client.fetch()
-        await publisher_client.publish_many(_entries)
+        await publisher_client.publish_many(_entries, pagination=20)
     except Exception as e:
         logger.error(f"Error fetching Gemini price: {e}")
         logger.error(traceback.format_exc())
