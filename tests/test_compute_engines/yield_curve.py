@@ -3,7 +3,7 @@ import time
 from collections import namedtuple
 
 from empiric.core.client import EmpiricClient
-from empiric.core.config import BaseConfig
+from empiric.core.types import AggregationMode
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
 
@@ -87,7 +87,7 @@ async def get_yield_points(output_decimals):
     for on_key in on_keys:
         # fetch data from oracle
         on_value, on_decimals, last_updated_timestamp, _ = await client.get_value(
-            on_key, BaseConfig.DEFAULT_AGGREGATION_MODE
+            on_key, AggregationMode.MEDIAN
         )
 
         yield_points.append(

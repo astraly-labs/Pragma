@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from empiric.core_.client import EmpiricClient
+from empiric.core.client import EmpiricClient
 
 publishers = [
     "empiric",

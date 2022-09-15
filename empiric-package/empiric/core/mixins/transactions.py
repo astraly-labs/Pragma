@@ -1,4 +1,4 @@
-from empiric.core_.contract import Contract
+from empiric.core.contract import Contract
 from starknet_py.net.client import Client
 from starknet_py.net.client_models import Call
 from starkware.starknet.public.abi import get_selector_from_name

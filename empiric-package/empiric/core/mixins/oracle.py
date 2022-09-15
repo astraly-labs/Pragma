@@ -1,10 +1,10 @@
 import logging
 from typing import List
 
-from empiric.core_.contract import Contract
-from empiric.core_.entry import Entry
-from empiric.core_.types import AggregationMode
-from empiric.core_.utils import str_to_felt
+from empiric.core.contract import Contract
+from empiric.core.entry import Entry
+from empiric.core.types import AggregationMode
+from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
 from starknet_py.net.client import Client
 

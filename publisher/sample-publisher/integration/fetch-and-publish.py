@@ -2,12 +2,12 @@ import asyncio
 import os
 import traceback
 
-from empiric.core_.logger import get_stream_logger
-from empiric.core_.types import INTEGRATION
-from empiric.core_.utils import log_entry
-from empiric.publisher_.assets import get_spot_asset_spec_for_key
-from empiric.publisher_.client import EmpiricPublisherClient
-from empiric.publisher_.fetchers import BitstampFetcher, GeminiFetcher
+from empiric.core.logger import get_stream_logger
+from empiric.core.types import INTEGRATION
+from empiric.core.utils import log_entry
+from empiric.publisher.assets import get_spot_asset_spec_for_key
+from empiric.publisher.client import EmpiricPublisherClient
+from empiric.publisher.fetchers import BitstampFetcher, GeminiFetcher
 
 logger = get_stream_logger()
 

@@ -3,10 +3,10 @@ from argparse import ArgumentParser
 from datetime import datetime
 
 import typing_extensions
-from empiric.core_ import AggregationMode, EmpiricClient
-from empiric.core_.logger import get_stream_logger
-from empiric.core_.types import TESTNET, Network
-from empiric.core_.utils import currency_pair_to_pair_id
+from empiric.core import AggregationMode, EmpiricClient
+from empiric.core.logger import get_stream_logger
+from empiric.core.types import TESTNET, Network
+from empiric.core.utils import currency_pair_to_pair_id
 
 
 async def main(network: Network, throw_if_no_data: bool):

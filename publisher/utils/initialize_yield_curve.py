@@ -4,7 +4,7 @@ import time
 
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
-from empiric.core_.client import EmpiricClient
+from empiric.core.client import EmpiricClient
 
 logger = get_stream_logger()
 

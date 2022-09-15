@@ -5,9 +5,9 @@ import time
 import traceback
 
 import requests
-from empiric.core_.client import EmpiricClient
-from empiric.core_.logger import get_stream_logger
-from empiric.core_.utils import pair_id_for_asset, str_to_felt
+from empiric.core.client import EmpiricClient
+from empiric.core.logger import get_stream_logger
+from empiric.core.utils import pair_id_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.fetch import fetch_coingecko
 
