@@ -25,7 +25,6 @@ async def publish_all(assets):
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
     publisher_client = EmpiricPublisherClient(
-        network="local",
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
         contract_addresses_config=ContractAddresses(
