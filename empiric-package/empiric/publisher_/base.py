@@ -25,3 +25,7 @@ class PublisherFetchError:
 
     def __init__(self, message: str):
         self.message = message
+    
+    @classmethod
+    def serialize(self):
+        return None

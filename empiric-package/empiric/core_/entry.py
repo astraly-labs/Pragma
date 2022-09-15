@@ -79,8 +79,9 @@ class Entry:
     @staticmethod
     def serialize_entries(entries: List[Entry]) -> List[int]:
         # TODO (rlkelly): log errors
-        return [
+        serialized_entries = [
             entry.serialize()
             for entry in entries
             if not isinstance(entry, PublisherFetchError)
         ]
+        return list(filter(lambda item: item is not None, serialized_entries))

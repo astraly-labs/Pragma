@@ -5,9 +5,9 @@ from typing import List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
-from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
-from empiric.publisher.base import PublisherInterfaceT
+from empiric.core_.entry import Entry
+from empiric.publisher_.assets import EmpiricAsset, EmpiricSpotAsset
+from empiric.publisher_.base import PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
