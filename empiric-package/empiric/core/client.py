@@ -29,7 +29,7 @@ class EmpiricClient(PublisherRegistryMixin, OracleMixin, TransactionMixin):
         :param net: Target network for the client. Can be a string with URL, one of ``"mainnet"``, ``"testnet"``, ``"local"`` or ``"integration""``
         :param account_private_key: Optional private key for requests.  Not necessary if not making network updates
         :param account_contract_address: Optional account contract address.  Not necessary if not making network updates
-        :pram contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
+        :param contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
         """
         network_config = NETWORKS[network]
 
