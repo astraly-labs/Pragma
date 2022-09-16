@@ -58,6 +58,35 @@
                 "type": "felt"
             }
         ],
+        "name": "calculate_volatility",
+        "outputs": [
+            {
+                "name": "volatility_",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "start",
+                "type": "felt"
+            },
+            {
+                "name": "stop",
+                "type": "felt"
+            },
+            {
+                "name": "num_datapoints",
+                "type": "felt"
+            }
+        ],
         "name": "scaled_arr",
         "outputs": [
             {

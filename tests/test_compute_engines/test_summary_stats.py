@@ -315,6 +315,14 @@ async def test_summary_stats(
     ).call()
     assert res.result.mean_ == sum(expected_scaled_arr) // len(expected_scaled_arr)
 
+    res = await summary_stats.calculate_volatility(
+        pair_id,
+        STARKNET_STARTING_TIMESTAMP,
+        STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
+        10,
+    ).call()
+    assert res.result.volatility_ == 7152836655813241402119509
+
     res3 = await summary_stats.arr_values(
         pair_id,
         STARKNET_STARTING_TIMESTAMP,

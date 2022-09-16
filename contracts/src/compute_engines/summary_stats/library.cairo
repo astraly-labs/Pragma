@@ -1,13 +1,15 @@
 %lang starknet
 
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.bool import TRUE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import assert_nn, unsigned_div_rem, assert_not_equal
 from starkware.cairo.common.math_cmp import is_le, is_nn
 
-from time_series.prelude import TickElem, mean, volatility, scale_data
+from time_series.prelude import TickElem, mean, variance, scale_data
 from oracle.IOracle import IOracle, EmpiricAggregationModes
 
-const SCALED_ARR_SIZE = 25;
+const SCALED_ARR_SIZE = 10;
 
 namespace SummaryStats {
     func calculate_mean{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -30,20 +32,82 @@ namespace SummaryStats {
         return _mean;
     }
 
+    func find_startpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        oracle_address: felt, key: felt, start_tick: felt
+    ) -> felt {
+        let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
+            contract_address=oracle_address, key=key
+        );
+
+        let (cp) = IOracle.get_checkpoint(oracle_address, key, latest_checkpoint_index - 1);
+        let (first_cp) = IOracle.get_checkpoint(oracle_address, key, 0);
+        with_attr error_message("start_tick is in future") {
+            assert_nn(cp.timestamp - start_tick);
+        }
+        if (is_le(start_tick, first_cp.timestamp) == TRUE) {
+            return 0;
+        }
+
+        let startpoint = _binary_search(
+            oracle_address, key, 0, latest_checkpoint_index, start_tick
+        );
+        return startpoint;
+    }
+
+    func _binary_search{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        oracle_address, key, low, high, target
+    ) -> felt {
+        alloc_locals;
+        let (midpoint, _) = unsigned_div_rem(low + high - 1, 2);
+
+        if (high + low == 1) {
+            return midpoint;
+        }
+
+        if (midpoint == 0) {
+            return 0;
+        }
+
+        let (cp) = IOracle.get_checkpoint(oracle_address, key, midpoint);
+        let timestamp = cp.timestamp;
+        if (timestamp == target) {
+            return midpoint;
+        }
+
+        if (is_le(target, timestamp) == TRUE) {
+            let (prev_cp) = IOracle.get_checkpoint(oracle_address, key, midpoint - 1);
+            if (is_le(prev_cp.timestamp, target) == TRUE) {
+                return midpoint - 1;
+            }
+            return _binary_search(oracle_address, key, low, midpoint, target);
+        } else {
+            let (next_cp) = IOracle.get_checkpoint(oracle_address, key, midpoint + 1);
+            if (is_le(target, next_cp.timestamp) == TRUE) {
+                return midpoint;
+            }
+            return _binary_search(oracle_address, key, midpoint, high, target);
+        }
+    }
+
     func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        oracle_address: felt, key: felt, start_tick: felt, end_tick: felt, num_datapoints: felt
+        oracle_address: felt, key: felt, start_tick: felt, end_tick: felt
     ) -> felt {
         alloc_locals;
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
-        let _enough_data = is_nn(latest_checkpoint_index - num_datapoints);
+        let start_index = find_startpoint(oracle_address, key, start_tick);
         with_attr error_message("Not enough data") {
-            assert _enough_data = 1;
+            assert_not_equal(start_index, latest_checkpoint_index);
         }
 
         let (_, _scaled_arr) = _make_scaled_array(
-            oracle_address, key, start_tick, end_tick, num_datapoints, latest_checkpoint_index
+            oracle_address,
+            key,
+            start_tick,
+            end_tick,
+            latest_checkpoint_index - start_index,
+            latest_checkpoint_index,
         );
 
         let (_variance) = variance(SCALED_ARR_SIZE, _scaled_arr);
@@ -71,6 +135,8 @@ namespace SummaryStats {
             latest_checkpoint_index - num_datapoints,
             tick_arr,
         );
+        let first = tick_arr[0].value;
+        let first_t = tick_arr[0].tick;
         let (_scaled_arr) = scale_data(
             start_tick, end_tick, num_datapoints, tick_arr, SCALED_ARR_SIZE
         );

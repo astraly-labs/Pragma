@@ -4,6 +4,7 @@ from pathlib import Path
 import typer
 from empiric.cli import SUCCESS, config, net
 from empiric.cli.utils import coro, get_contract
+from empiric.core.utils import str_to_felt, felt_to_str
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 
@@ -50,7 +51,7 @@ async def register_publisher(
 
 @app.command()
 @coro
-async def register_self(publisher: int, config_path=config.DEFAULT_CONFIG):
+async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
     gateway_url, chain_id = config.validate_config(config_path)
     client = net.init_client(gateway_url, chain_id)
     account_client = net.init_account_client(client, config_path)
@@ -66,7 +67,7 @@ async def register_self(publisher: int, config_path=config.DEFAULT_CONFIG):
     )
 
     invocation = await contract.functions["register_publisher"].invoke(
-        int(publisher), publisher_address, max_fee=int(1e16)
+        str_to_felt(publisher), publisher_address, max_fee=int(1e16)
     )
 
     await invocation.wait_for_acceptance()
@@ -88,7 +89,7 @@ async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
     )
 
     publishers = await contract.functions["get_all_publishers"].call()
-    typer.echo(f"publishers: {publishers}")
+    typer.echo(f"publishers: {[felt_to_str(int(p)) for p in publishers[0]]}")
 
 
 async def deploy_publisher_registry(client: GatewayClient, config_path: Path):

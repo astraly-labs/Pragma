@@ -127,11 +127,11 @@ async def _publish_entry(
 
     invocation = await contract.functions["publish_entry"].invoke(
         {
-            "pair_id": int(entry[0]),
+            "pair_id": str_to_felt(entry[0]),
             "value": int(entry[1]),
             "timestamp": int(entry[2]),
-            "source": int(entry[3]),
-            "publisher": int(entry[4]),
+            "source": str_to_felt(entry[3]),
+            "publisher": str_to_felt(entry[4]),
         },
         max_fee=int(1e16),
     )

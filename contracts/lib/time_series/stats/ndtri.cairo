@@ -146,23 +146,23 @@ func ndtri{range_check_ptr}(y0: Float) -> (ans: Float) {
         let (P0) = getP0();
         let (Q0) = getQ0();
         let y = y - ONE_HALF;
-        let (y2) = FixedPoint.mul(y, y);
+        let y2 = FixedPoint.mul(y, y);
 
         let (pol_p0_) = polevl(y2, P0, 4);
         let (p1_q0_) = p1evl(y2, Q0, 8);
 
         let (_quot) = FixedPoint.div(pol_p0_, p1_q0_);
-        let (_quot2) = FixedPoint.mul(y2, _quot);
+        let _quot2 = FixedPoint.mul(y2, _quot);
 
-        let (x_) = FixedPoint.mul(y, _quot2);
+        let x_ = FixedPoint.mul(y, _quot2);
         let (x_) = FixedPoint.add(y, x_);
-        let (x) = FixedPoint.mul(x_, S2PI);
+        let x = FixedPoint.mul(x_, S2PI);
 
         return (x,);
     }
 
     let (lny) = FixedPoint.ln(y);
-    let (_f) = FixedPoint.mul(NEG_TWO, lny);
+    let _f = FixedPoint.mul(NEG_TWO, lny);
 
     // x = sqrt(-2 * log(x))
     let (x) = FixedPoint.sqrt(_f);
@@ -182,7 +182,7 @@ func ndtri{range_check_ptr}(y0: Float) -> (ans: Float) {
         let (_pol) = polevl(z, P1, 8);
         let (_p1) = p1evl(z, Q1, 8);
         let (_quot) = FixedPoint.div(_pol, _p1);
-        let (_x1) = FixedPoint.mul(z, _quot);
+        let _x1 = FixedPoint.mul(z, _quot);
 
         x1 = _x1;
         tempvar range_check_ptr = range_check_ptr;
@@ -192,7 +192,7 @@ func ndtri{range_check_ptr}(y0: Float) -> (ans: Float) {
         let (_pol) = polevl(z, P2, 8);
         let (_p1) = p1evl(z, Q2, 8);
         let (_quot) = FixedPoint.div(_pol, _p1);
-        let (_x1) = FixedPoint.mul(z, _quot);
+        let _x1 = FixedPoint.mul(z, _quot);
 
         x1 = _x1;
         tempvar range_check_ptr = range_check_ptr;

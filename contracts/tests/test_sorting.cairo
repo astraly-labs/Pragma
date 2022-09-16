@@ -6,7 +6,7 @@ from entry.library import Entries
 from entry.structs import Entry
 
 func make_entry(value: felt) -> (entry: Entry) {
-    let entry = Entry(key=0, value=value, timestamp=2, source=3, publisher=4);
+    let entry = Entry(pair_id=0, value=value, timestamp=2, source=3, publisher=4);
     return (entry,);
 }
 

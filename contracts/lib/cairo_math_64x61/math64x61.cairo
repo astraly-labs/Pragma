@@ -107,11 +107,11 @@ namespace FixedPoint {
     }
 
     // Multiples two fixed point values and checks for overflow before returning
-    func mul{range_check_ptr}(x: felt, y: felt) -> (res: felt) {
+    func mul{range_check_ptr}(x: felt, y: felt) -> felt {
         tempvar product = x * y;
         let (res, _) = signed_div_rem(product, FRACT_PART, BOUND);
         assert64x61(res);
-        return (res,);
+        return res;
     }
 
     // Divides two fixed point values and checks for overflow before returning
@@ -140,7 +140,7 @@ namespace FixedPoint {
 
         // x^y = exp(y*ln(x)) for x > 0 (will error for x < 0
         let (ln_x) = ln(x);
-        let (y_ln_x) = mul(y, ln_x);
+        let y_ln_x = mul(y, ln_x);
         let (res) = exp(y_ln_x);
         return (res,);
         // assert64x61(res)
@@ -180,14 +180,14 @@ namespace FixedPoint {
         const a5 = 20620759886412153;
         const a6 = 4372943086487302;
 
-        let (r6) = mul(a6, frac_part);
-        let (r5) = mul(r6 + a5, frac_part);
-        let (r4) = mul(r5 + a4, frac_part);
-        let (r3) = mul(r4 + a3, frac_part);
-        let (r2) = mul(r3 + a2, frac_part);
+        let r6 = mul(a6, frac_part);
+        let r5 = mul(r6 + a5, frac_part);
+        let r4 = mul(r5 + a4, frac_part);
+        let r3 = mul(r4 + a3, frac_part);
+        let r2 = mul(r3 + a2, frac_part);
         tempvar frac_res = r2 + a1;
 
-        let (res_u) = mul(int_res, frac_res);
+        let res_u = mul(int_res, frac_res);
 
         if (exp_sign == -1) {
             let (res_i) = div(ONE, res_u);
@@ -202,7 +202,7 @@ namespace FixedPoint {
     // Calculates the natural exponent of x: e^x
     func exp{range_check_ptr}(x: felt) -> (res: felt) {
         const mod = 3326628274461080623;
-        let (bin_exp) = mul(x, mod);
+        let bin_exp = mul(x, mod);
         let (res) = exp2(bin_exp);
         return (res,);
     }
@@ -241,14 +241,14 @@ namespace FixedPoint {
         const a8 = 285568853383421422;
         const a9 = -20957604075893688;
 
-        let (r9) = mul(a9, norm);
-        let (r8) = mul(r9 + a8, norm);
-        let (r7) = mul(r8 + a7, norm);
-        let (r6) = mul(r7 + a6, norm);
-        let (r5) = mul(r6 + a5, norm);
-        let (r4) = mul(r5 + a4, norm);
-        let (r3) = mul(r4 + a3, norm);
-        let (r2) = mul(r3 + a2, norm);
+        let r9 = mul(a9, norm);
+        let r8 = mul(r9 + a8, norm);
+        let r7 = mul(r8 + a7, norm);
+        let r6 = mul(r7 + a6, norm);
+        let r5 = mul(r6 + a5, norm);
+        let r4 = mul(r5 + a4, norm);
+        let r3 = mul(r4 + a3, norm);
+        let r2 = mul(r3 + a2, norm);
         local norm_res = r2 + a1;
 
         let (int_part) = fromFelt(b);
@@ -262,7 +262,7 @@ namespace FixedPoint {
     func ln{range_check_ptr}(x: felt) -> (res: felt) {
         const ln_2 = 1598288580650331957;
         let (log2_x) = log2(x);
-        let (product) = mul(log2_x, ln_2);
+        let product = mul(log2_x, ln_2);
         return (product,);
     }
 
@@ -271,7 +271,7 @@ namespace FixedPoint {
     func log10{range_check_ptr}(x: felt) -> (res: felt) {
         const log10_2 = 694127911065419642;
         let (log10_x) = log2(x);
-        let (product) = mul(log10_x, log10_2);
+        let product = mul(log10_x, log10_2);
         return (product,);
     }
 
@@ -294,13 +294,13 @@ namespace FixedPoint {
 
         let (half_exp, rem) = unsigned_div_rem(exp_val, 2);
         let (half_pow) = _pow_int(x, half_exp);
-        let (res_p) = mul(half_pow, half_pow);
+        let res_p = mul(half_pow, half_pow);
 
         if (rem == 0) {
             assert64x61(res_p);
             return (res_p,);
         } else {
-            let (res) = mul(res_p, x);
+            let res = mul(res_p, x);
             assert64x61(res);
             return (res,);
         }

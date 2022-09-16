@@ -8,6 +8,15 @@ namespace EmpiricAggregationModes {
 
 @contract_interface
 namespace IOracle {
+    func initializer(
+        proxy_admin: felt,
+        publisher_registry_address: felt,
+        currencies_len: felt,
+        currencies: Currency*,
+        pairs_len: felt,
+        pairs: Pair*,
+    ) {
+    }
     //
     // Getters
     //

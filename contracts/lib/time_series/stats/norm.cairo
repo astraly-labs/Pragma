@@ -32,23 +32,23 @@ namespace norm {
         let p = 755373647815624192;  // 0.3275911
         let exp_sign = sign(x);
         let x = abs_value(x);
-        let (denom) = FixedPoint.mul(p, x);
+        let denom = FixedPoint.mul(p, x);
         let (t) = FixedPoint.div(ONE, ONE + denom);
 
-        let (_y1) = FixedPoint.mul(a5, t);
+        let _y1 = FixedPoint.mul(a5, t);
         let (_y2) = FixedPoint.add(_y1, a4);
-        let (_y3) = FixedPoint.mul(_y2, t);
+        let _y3 = FixedPoint.mul(_y2, t);
         let (_y4) = FixedPoint.add(_y3, a3);
-        let (_y5) = FixedPoint.mul(_y4, t);
+        let _y5 = FixedPoint.mul(_y4, t);
         let (_y6) = FixedPoint.add(_y5, a2);
-        let (_y7) = FixedPoint.mul(_y6, t);
+        let _y7 = FixedPoint.mul(_y6, t);
         let (_y8) = FixedPoint.add(_y7, a1);
-        let (_y9) = FixedPoint.mul(_y8, t);
+        let _y9 = FixedPoint.mul(_y8, t);
 
-        let (x_prod) = FixedPoint.mul(x, 0 - x);
+        let x_prod = FixedPoint.mul(x, 0 - x);
         let (e_x_prod) = FixedPoint.exp(x_prod);
 
-        let (result) = FixedPoint.mul(_y9, e_x_prod);
+        let result = FixedPoint.mul(_y9, e_x_prod);
         let (result) = FixedPoint.sub(ONE, result);
 
         if (exp_sign == -1) {
@@ -76,9 +76,9 @@ namespace norm {
 
         if (dom_lb_is_less + y_is_less == 2) {
             let (_y1) = FixedPoint.add(y, ONE);
-            let (_y2) = FixedPoint.mul(_y1, ONE_HALF);
+            let _y2 = FixedPoint.mul(_y1, ONE_HALF);
             let (_ndtri) = ndtri(_y2);
-            let (_result) = FixedPoint.mul(_ndtri, NPY_SQRT1_2);
+            let _result = FixedPoint.mul(_ndtri, NPY_SQRT1_2);
             return (_result,);
         }
 
@@ -103,7 +103,7 @@ namespace norm {
         let (sqrt_two) = FixedPoint.sqrt(TWO);
         let (erf_input) = FixedPoint.div(x, sqrt_two);
         let (_erf_output) = erf(erf_input);
-        let (output) = FixedPoint.mul(half, ONE + _erf_output);
+        let output = FixedPoint.mul(half, ONE + _erf_output);
         return (output,);
     }
 

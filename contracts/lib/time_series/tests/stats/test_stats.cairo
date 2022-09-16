@@ -19,7 +19,7 @@ func test_sum_tick_array{range_check_ptr}() {
     assert arr[1] = second;
     assert arr[2] = third;
 
-    let (y) = sum_tick_array(3, arr);
+    let y = sum_tick_array(3, arr);
     assert y = 600;
     let (mean_) = mean(3, arr);
     assert mean_ = 200;

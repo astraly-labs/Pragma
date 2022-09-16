@@ -13,6 +13,7 @@ from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
 const TIMESTAMP_BUFFER = 3600;  // 60 minutes
+const BOTH_TRUE = 2;
 
 //
 // Storage
@@ -375,8 +376,8 @@ namespace Oracle {
         let meets_sources_threshold = is_le(sources_threshold, num_sources_aggregated);
         let (cur_checkpoint) = get_latest_checkpoint(key);
         let is_new_checkpoint = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp);
-        // if both are true
-        if (meets_sources_threshold + is_new_checkpoint == 2) {
+
+        if (meets_sources_threshold + is_new_checkpoint == BOTH_TRUE) {
             let checkpoint = Checkpoint(
                 last_updated_timestamp, value, aggregation_mode, num_sources_aggregated
             );
