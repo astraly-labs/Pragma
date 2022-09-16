@@ -131,7 +131,7 @@ namespace SummaryStats {
         alloc_locals;
         let (tick_arr: TickElem**) = alloc();
 
-        // TODO: get datapoints from time since first tick :-(
+        // TODO (rlkelly): get datapoints from time since first tick :-(
         _make_array(
             0,
             oracle_address,

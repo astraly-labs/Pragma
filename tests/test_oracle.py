@@ -26,6 +26,7 @@ from utils import (
     cached_contract,
     register_new_publisher_and_publish_entries_1,
     register_new_publisher_and_publish_entry,
+    transform_calldata,
 )
 
 TIMESTAMP_BUFFER = 3600
@@ -109,84 +110,36 @@ async def contract_init(
 
     oracle_proxy = await starknet.deploy(
         contract_class=proxy_class,
-        constructor_calldata=[
-            declared_oracle_class.class_hash,
-            get_selector_from_name("initializer"),
-            73,
-            admin_account.contract_address,
-            publisher_registry.contract_address,
-            9,
-            str_to_felt("decimals-test"),
-            100,
-            1,
-            0,
-            0,
-            str_to_felt("eth"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("btc"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("usd"),
-            8,
-            1,
-            0,
-            0,
-            str_to_felt("doge"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("luna"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("sol"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("shib"),
-            18,
-            1,
-            0,
-            0,
-            str_to_felt("avax"),
-            18,
-            1,
-            0,
-            0,
-            8,
-            str_to_felt("usd/decimals-test"),
-            str_to_felt("usd"),
-            str_to_felt("decimals-test"),
-            str_to_felt("eth/usd"),
-            str_to_felt("eth"),
-            str_to_felt("usd"),
-            str_to_felt("btc/usd"),
-            str_to_felt("btc"),
-            str_to_felt("usd"),
-            str_to_felt("luna/usd"),
-            str_to_felt("luna"),
-            str_to_felt("usd"),
-            str_to_felt("doge/usd"),
-            str_to_felt("doge"),
-            str_to_felt("usd"),
-            str_to_felt("sol/usd"),
-            str_to_felt("sol"),
-            str_to_felt("usd"),
-            str_to_felt("shib/usd"),
-            str_to_felt("shib"),
-            str_to_felt("usd"),
-            str_to_felt("avax/usd"),
-            str_to_felt("avax"),
-            str_to_felt("usd"),
-        ],
+        constructor_calldata=transform_calldata(
+            (
+                declared_oracle_class.class_hash,
+                get_selector_from_name("initializer"),
+                73,
+                admin_account.contract_address,
+                publisher_registry.contract_address,
+                [
+                    ("decimals-test", 100, 1, 0, 0),
+                    ("eth", 18, 1, 0, 0),
+                    ("btc", 18, 1, 0, 0),
+                    ("usd", 8, 1, 0, 0),
+                    ("doge", 18, 1, 0, 0),
+                    ("luna", 18, 1, 0, 0),
+                    ("sol", 18, 1, 0, 0),
+                    ("shib", 18, 1, 0, 0),
+                    ("avax", 18, 1, 0, 0),
+                ],
+                [
+                    ("usd/decimals-test", "usd", "decimals-test"),
+                    ("eth/usd", "eth", "usd"),
+                    ("btc/usd", "btc", "usd"),
+                    ("luna/usd", "luna", "usd"),
+                    ("doge/usd", "doge", "usd"),
+                    ("sol/usd", "sol", "usd"),
+                    ("shib/usd", "shib", "usd"),
+                    ("avax/usd", "avax", "usd"),
+                ],
+            )
+        ),
     )
     oracle_proxy = oracle_proxy.replace_abi(ORACLE_ABI)
 
@@ -250,7 +203,6 @@ async def initialized_contracts(
     contracts["oracle_proxy"] = contracts["oracle_proxy"].replace_abi(ORACLE_ABI)
 
     # Register publisher
-    print("admin_signer", admin_signer, type(admin_signer), dir(admin_signer))
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
@@ -350,13 +302,13 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
     assert_event_emitted(
         tx_exec_info,
         oracle_proxy.contract_address,
         "SubmittedEntry",
-        list(entry.serialize()),
+        list(entry.to_tuple()),
     )
 
     result = await oracle_proxy.get_value(
@@ -393,7 +345,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -413,7 +365,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -442,7 +394,7 @@ async def test_re_submit_stale(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -468,7 +420,7 @@ async def test_re_submit_stale(
             publisher_account,
             oracle_proxy.contract_address,
             "publish_entry",
-            second_entry.serialize(),
+            second_entry.to_tuple(),
         )
 
         raise Exception(
@@ -505,7 +457,7 @@ async def test_submit_second_asset(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -525,7 +477,7 @@ async def test_submit_second_asset(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -571,7 +523,7 @@ async def test_submit_second_publisher(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     second_source = str_to_felt("1xdata")
@@ -596,7 +548,7 @@ async def test_submit_second_publisher(
         second_publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
@@ -645,7 +597,7 @@ async def test_submit_second_source(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -666,7 +618,7 @@ async def test_submit_second_source(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(
@@ -698,7 +650,7 @@ async def test_mean_aggregation(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     second_source = str_to_felt("1xdata")
@@ -714,7 +666,7 @@ async def test_mean_aggregation(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     # median is equivalent to mean if only 2 values
@@ -757,7 +709,7 @@ async def test_median_aggregation(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     entries = [entry]
@@ -822,14 +774,14 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entries",
-        Entry.serialize_entries(entries),
+        Entry.flatten_entries(entries),
     )
     for entry in entries:
         assert_event_emitted(
             tx_exec_info,
             oracle_proxy.contract_address,
             "SubmittedEntry",
-            list(entry.serialize()),
+            list(entry.to_tuple()),
         )
 
     for i, pair_id in enumerate(pair_ids):
@@ -868,7 +820,7 @@ async def test_subset_publishers(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     additional_publisher = str_to_felt("bar")
@@ -907,7 +859,7 @@ async def test_unknown_source(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value_for_sources(
@@ -1035,7 +987,7 @@ async def test_ignore_future_entry(
             publisher_account,
             oracle_proxy.contract_address,
             "publish_entry",
-            entry.serialize(),
+            entry.to_tuple(),
         )
 
         raise Exception(
@@ -1067,7 +1019,7 @@ async def test_ignore_stale_entries(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     second_publisher = str_to_felt("bar")
@@ -1097,7 +1049,7 @@ async def test_ignore_stale_entries(
         second_publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
 
     result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
@@ -1138,7 +1090,7 @@ async def test_checkpointing(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
 
     await publisher_signer.send_transaction(
@@ -1169,7 +1121,7 @@ async def test_checkpointing(
         publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        second_entry.serialize(),
+        second_entry.to_tuple(),
     )
     second_source = str_to_felt("1xdata")
     third_entry = Entry(
@@ -1183,7 +1135,7 @@ async def test_checkpointing(
         second_publisher_account,
         oracle_proxy.contract_address,
         "publish_entry",
-        third_entry.serialize(),
+        third_entry.to_tuple(),
     )
 
     await publisher_signer.send_transaction(

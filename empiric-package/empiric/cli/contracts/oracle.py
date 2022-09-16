@@ -6,7 +6,12 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import typer
 from empiric.cli import SUCCESS, config, net
-from empiric.cli.utils import coro, get_contract
+from empiric.cli.contracts.utils import (
+    DEFAULT_MAX_FEE,
+    _format_currencies,
+    _format_pairs,
+)
+from empiric.cli.utils import coro
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
@@ -60,17 +65,34 @@ async def deploy(
 @app.command()
 @coro
 async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
     pair_id, value, timestamp, source, publisher = entry.split(",")
     if timestamp == "NOW":
         timestamp = int(time.time())
 
     await _publish_entry(
-        account_client, config_path, (pair_id, value, timestamp, source, publisher)
+        config_path,
+        (
+            str_to_felt(pair_id.lower()),
+            int(value),
+            int(timestamp),
+            str_to_felt(source),
+            str_to_felt(publisher),
+        ),
     )
+
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.oracle.set_checkpoint.invoke(
+        str_to_felt(pair_id),
+        0,
+        max_fee=DEFAULT_MAX_FEE,
+    )
+    print("invocation:", invocation.hash)
 
     return SUCCESS
 
@@ -136,17 +158,7 @@ async def _publish_entry(
         account_client,
     )
 
-    invocation = await contract.functions["publish_entry"].invoke(
-        {
-            "pair_id": str_to_felt(entry[0]),
-            "value": int(entry[1]),
-            "timestamp": int(entry[2]),
-            "source": str_to_felt(entry[3]),
-            "publisher": str_to_felt(entry[4]),
-        },
-        max_fee=int(1e16),
-    )
-
+    invocation = await client.publish_entry(*entry)
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
 
@@ -154,16 +166,8 @@ async def _publish_entry(
 @app.command()
 @coro
 async def get_value(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-    oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])
-    contract = get_contract(oracle_proxy_address, "Oracle", account_client)
-
-    entry = await contract.functions["get_value"].call(pair_id, 0)
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_value.call(str_to_felt(pair_id), 0)
     typer.echo(f"publishers: {entry}")
 
 

@@ -2,9 +2,10 @@ import logging
 import time
 from typing import List
 
+import requests
 from aiohttp import ClientSession
 from empiric.core.entry import Entry
-from empiric.core.utils import currency_pair_to_key
+from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.base import PublisherInterfaceT
 
@@ -31,12 +32,12 @@ class GeminiFetcher(PublisherInterfaceT):
                     continue
 
                 pair = asset["pair"]
-                key = currency_pair_to_key(*pair)
+                pair_id = currency_pair_to_pair_id(*pair)
                 timestamp = int(time.time())
                 result = [e for e in result_json if e["pair"] == "".join(pair)]
 
                 if len(result) == 0:
-                    logger.debug(f"No entry found for {key} from Gemini")
+                    logger.debug(f"No entry found for {pair_id} from Gemini")
                     continue
 
                 if len(result) > 1:
@@ -47,11 +48,11 @@ class GeminiFetcher(PublisherInterfaceT):
                 price = float(result[0]["price"])
                 price_int = int(price * (10 ** asset["decimals"]))
 
-                logger.info(f"Fetched price {price} for {key} from Gemini")
+                logger.info(f"Fetched price {price} for {pair_id} from Gemini")
 
                 entries.append(
                     Entry(
-                        key=key,
+                        pair_id=pair_id,
                         value=price_int,
                         timestamp=timestamp,
                         source=self.SOURCE,
@@ -59,3 +60,42 @@ class GeminiFetcher(PublisherInterfaceT):
                     )
                 )
             return entries
+
+    def fetch_sync(self) -> List[Entry]:
+        entries = []
+        resp = requests.get(self.BASE_URL + "/pricefeed")
+        result_json = resp.json()
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping Gemini for non-spot asset {asset}")
+                continue
+
+            pair = asset["pair"]
+            pair_id = currency_pair_to_pair_id(*pair)
+            timestamp = int(time.time())
+            result = [e for e in result_json if e["pair"] == "".join(pair)]
+
+            if len(result) == 0:
+                logger.debug(f"No entry found for {pair_id} from Gemini")
+                continue
+
+            if len(result) > 1:
+                raise ValueError(
+                    f"Found more than one matching entries for Gemini response and price pair {pair}"
+                )
+
+            price = float(result[0]["price"])
+            price_int = int(price * (10 ** asset["decimals"]))
+
+            logger.info(f"Fetched price {price} for {pair_id} from Gemini")
+
+            entries.append(
+                Entry(
+                    pair_id=pair_id,
+                    value=price_int,
+                    timestamp=timestamp,
+                    source=self.SOURCE,
+                    publisher=self.publisher,
+                )
+            )
+        return entries

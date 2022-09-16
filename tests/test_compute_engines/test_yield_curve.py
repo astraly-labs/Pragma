@@ -317,7 +317,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         publisher_account,
         oracle.contract_address,
         "publish_entry",
-        on_entry.serialize(),
+        on_entry.to_tuple(),
     )
 
     for spot_key in FUTURES_SPOT.keys():
@@ -332,7 +332,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             publisher_account,
             oracle.contract_address,
             "publish_entry",
-            spot_entry.serialize(),
+            spot_entry.to_tuple(),
         )
 
         yield_points = [
@@ -354,7 +354,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 publisher_account,
                 oracle.contract_address,
                 "publish_entry",
-                future_entry.serialize(),
+                future_entry.to_tuple(),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_entry.value,

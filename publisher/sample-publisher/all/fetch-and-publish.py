@@ -1,119 +1,56 @@
 import asyncio
 import os
-import traceback
 
 import requests
+from empiric.core.config import ContractAddresses
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetch import (
-    fetch_bitstamp,
-    fetch_cex,
-    fetch_coinbase,
-    fetch_coingecko,
-    fetch_cryptowatch,
-    fetch_ftx,
-    fetch_gemini,
+from empiric.publisher.fetchers import (  # CoingeckoFetcher,
+    BitstampFetcher,
+    CexFetcher,
+    CoinbaseFetcher,
+    CryptowatchFetcher,
+    FtxFetcher,
+    GeminiFetcher,
+    TheGraphFetcher,
 )
-from empiric.publisher.fetch.thegraph import fetch_thegraph
 
 logger = get_stream_logger()
 
 
 async def publish_all(assets):
-
-    exit_on_error = os.environ.get("__EMPIRIC_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
-
-    entries = []
-
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
-    publisher_client = EmpiricPublisherClient(publisher_private_key, publisher_address)
-
-    try:
-        coingecko_entries = fetch_coingecko(assets, publisher)
-        await publisher_client.publish_many(coingecko_entries)
-        entries.extend(coingecko_entries)
-    except Exception as e:
-        logger.error(f"Error fetching Coingecko price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        coinbase_entries = fetch_coinbase(assets, publisher)
-        await publisher_client.publish_many(coinbase_entries)
-        entries.extend(coinbase_entries)
-    except Exception as e:
-        logger.error(f"Error fetching Coinbase price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        gemini_entries = fetch_gemini(assets, publisher)
-        await publisher_client.publish_many(gemini_entries)
-        entries.extend(gemini_entries)
-    except Exception as e:
-        logger.error(f"Error fetching Gemini price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        ftx_entries = fetch_ftx(assets, publisher)
-        await publisher_client.publish_many(ftx_entries)
-        entries.extend(ftx_entries)
-    except Exception as e:
-        logger.error(f"Error fetching FTX price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        cex_entries = fetch_cex(assets, publisher)
-        await publisher_client.publish_many(cex_entries)
-        entries.extend(cex_entries)
-    except Exception as e:
-        logger.error(f"Error fetching CEX price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        bitstamp_entries = fetch_bitstamp(assets, publisher)
-        await publisher_client.publish_many(bitstamp_entries)
-        entries.extend(bitstamp_entries)
-    except Exception as e:
-        logger.error(f"Error fetching Bitstamp price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        thegraph_entries = fetch_thegraph(assets, publisher)
-        await publisher_client.publish_many(thegraph_entries)
-        entries.extend(thegraph_entries)
-    except Exception as e:
-        logger.error(f"Error fetching The Graph data: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        cryptowatch_entries = fetch_cryptowatch(assets, publisher)
-        await publisher_client.publish_many(cryptowatch_entries)
-        entries.extend(cryptowatch_entries)
-    except Exception as e:
-        logger.error(f"Error fetching Cryptowatch price: {e}")
-        logger.error(traceback.format_exc())
-        if exit_on_error:
-            raise e
+    publisher_client = EmpiricPublisherClient(
+        account_private_key=publisher_private_key,
+        account_contract_address=publisher_address,
+        contract_addresses_config=ContractAddresses(
+            2756386738475413261477141421684344364774760819536870953878747417517432039780,
+            3220625633324589292531790784257888220189966136260732135803227954141242893538,
+        ),
+    )
+    publisher_client.add_fetchers(
+        [
+            fetcher(assets, publisher)
+            for fetcher in (
+                BitstampFetcher,
+                CexFetcher,
+                CoinbaseFetcher,
+                CryptowatchFetcher,
+                FtxFetcher,
+                GeminiFetcher,
+                TheGraphFetcher,
+            )
+        ]
+    )
+    _entries = await publisher_client.fetch()
+    await publisher_client.publish_many(_entries, pagination=10)
 
     logger.info("Publishing the following entries:")
-    for entry in entries:
+    for entry in _entries:
         log_entry(entry, logger=logger)
 
     # Post success to Better Uptime

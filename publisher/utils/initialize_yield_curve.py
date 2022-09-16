@@ -2,7 +2,7 @@ import asyncio
 import os
 import time
 
-from empiric.admin.client import EmpiricAdminClient
+from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import str_to_felt
 
@@ -20,8 +20,8 @@ yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricAdminClient(
-        admin_private_key,
+    admin_client = EmpiricClient(
+        account_private_key=admin_private_key,
     )
     for on_key in on_keys:
         result = await admin_client.send_transaction(

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from empiric.core.utils import str_to_felt
 
@@ -56,11 +56,43 @@ class Entry:
             )
         return False
 
-    def serialize(self) -> Tuple[int, int, int, int, int]:
+    def to_tuple(self):
         return (self.pair_id, self.value, self.timestamp, self.source, self.publisher)
 
+    def serialize(self) -> Dict[str, str]:
+        return {
+            "pair_id": self.pair_id,
+            "value": self.value,
+            "timestamp": self.timestamp,
+            "source": self.source,
+            "publisher": self.publisher,
+        }
+
     @staticmethod
-    def serialize_entries(entries: List[Entry]) -> List[int]:
-        expanded = [entry.serialize() for entry in entries]
+    def from_dict(entry_dict: Dict[str, str]) -> "Entry":
+        return Entry(
+            entry_dict["pair_id"],
+            entry_dict["value"],
+            entry_dict["timestamp"],
+            entry_dict["source"],
+            entry_dict["publisher"],
+        )
+
+    @staticmethod
+    def serialize_entries(entries: List[Entry]) -> List[Dict[str, int]]:
+        """serialize entries to a List of dictionaries"""
+        # TODO (rlkelly): log errors
+        serialized_entries = [
+            entry.serialize()
+            for entry in entries
+            # TODO (rlkelly): This needs to be much more resilient to publish errors
+            if isinstance(entry, Entry)
+        ]
+        return list(filter(lambda item: item is not None, serialized_entries))
+
+    @staticmethod
+    def flatten_entries(entries: List[Entry]) -> List[int]:
+        """This flattens entriees to tuples.  Useful when you need the raw felt array"""
+        expanded = [entry.to_tuple() for entry in entries]
         flattened = [x for entry in expanded for x in entry]
         return [len(entries)] + flattened

@@ -1,14 +1,23 @@
 import abc
-from typing import List
+from typing import Any, List
 
+import aiohttp
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
 
 
 class PublisherInterfaceT(abc.ABC):
     @abc.abstractmethod
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(self, session: ClientSession) -> List[Any]:
         ...
+
+    @abc.abstractmethod
+    def fetch_sync(self) -> List[Any]:
+        ...
+
+    async def _fetch(self):
+        async with aiohttp.ClientSession() as session:
+            data = await self.fetch(session)
+            return data
 
 
 class PublisherFetchError:
@@ -16,3 +25,7 @@ class PublisherFetchError:
 
     def __init__(self, message: str):
         self.message = message
+
+    @classmethod
+    def serialize(self):
+        return None
