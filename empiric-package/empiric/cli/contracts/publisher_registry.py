@@ -19,7 +19,13 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
     client = net.init_client(gateway_url, chain_id)
     account_client = net.init_account_client(client, config_path)
 
-    await deploy_publisher_registry(account_client, config_path)
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_path)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+
+    await deploy_publisher_registry(account_client, compiled_contract_path, config_path)
 
     return SUCCESS
 
@@ -83,6 +89,7 @@ async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
 
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
+
     publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
     contract = get_contract(
         publisher_registry_address, "PublisherRegistry", account_client
@@ -92,11 +99,11 @@ async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
     typer.echo(f"publishers: {[felt_to_str(int(p)) for p in publishers[0]]}")
 
 
-async def deploy_publisher_registry(client: GatewayClient, config_path: Path):
+async def deploy_publisher_registry(
+    client: GatewayClient, compiled_contract_path: Path, config_path: Path
+):
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
-    compiled = (config.COMPILED_CONTRACT_PATH / "PublisherRegistry.json").read_text(
-        "utf-8"
-    )
+    compiled = (compiled_contract_path / "PublisherRegistry.json").read_text("utf-8")
 
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)

@@ -2,7 +2,7 @@ import configparser
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import typer
 from empiric.cli import SUCCESS, config, net
@@ -16,7 +16,7 @@ from .utils import declare_contract
 
 app = typer.Typer(help="Deployment commands for Oracle")
 ORACLE_CONFIG = typer.Option(
-    "./oracle_constructor_data.json",
+    "",
     "--deploy-config",
     "-d",
     help="configuration for currency and pair deployment",
@@ -25,13 +25,20 @@ ORACLE_CONFIG = typer.Option(
 
 @app.command()
 @coro
-async def deploy(cli_config=config.DEFAULT_CONFIG, deploy_config: str = ORACLE_CONFIG):
+async def deploy(
+    cli_config=config.DEFAULT_CONFIG, deploy_config: Optional[str] = ORACLE_CONFIG
+):
     """
     Deploy a new proxied instance of the publisher registry.
     This requires a configuration file for the currencies and pairs that the oracle will support.
     There is a sample config called oracle_constructor_data.json that shows the format.
 
     """
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+
+    deploy_config = deploy_config or config_parser["CONFIG"]["oracle-config-path"]
+
     # TODO (rlkelly): allow setting default path for config lookup in cli config
     deploy_config_path = Path(deploy_config)
     if not deploy_config_path.is_file():
@@ -74,18 +81,22 @@ async def deploy_oracle_proxy(
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
 
     deploy_config = json.loads(deploy_config_path.read_text("utf-8"))
-
     currencies = deploy_config["currencies"]
     pairs = deploy_config["pairs"]
 
     admin_address = int(config_parser["USER"]["address"])
     publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
 
-    declared_oracle_class_hash = await declare_contract(client, "Oracle")
+    declared_oracle_class_hash = await declare_contract(
+        client, compiled_contract_path, "Oracle"
+    )
+    compiled_proxy = (compiled_contract_path / "Proxy.json").read_text("utf-8")
 
-    compiled_proxy = (config.COMPILED_CONTRACT_PATH / "Proxy.json").read_text("utf-8")
     deployment_result = await Contract.deploy(
         client,
         compiled_contract=compiled_proxy,
