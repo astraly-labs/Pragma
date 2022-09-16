@@ -3,7 +3,7 @@ from pathlib import Path
 
 import typer
 from empiric.cli import SUCCESS, config, net
-from empiric.cli.utils import coro, get_contract
+from empiric.cli.utils import coro
 from empiric.core.utils import felt_to_str, str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
@@ -49,7 +49,6 @@ async def register_publisher(
 async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     publisher_address = client.account_address()
-    print("publisher_address", publisher_address)
     invocation = await client.register_publisher(publisher, publisher_address)
 
     await invocation.wait_for_acceptance()

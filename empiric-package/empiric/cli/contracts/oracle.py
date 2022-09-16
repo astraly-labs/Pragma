@@ -2,7 +2,7 @@ import configparser
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import typer
 from empiric.cli import SUCCESS, config, net
@@ -66,7 +66,7 @@ async def deploy(
 @coro
 async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
     pair_id, value, timestamp, source, publisher = entry.split(",")
-    if timestamp == "NOW":
+    if timestamp.lower() == "now":
         timestamp = int(time.time())
 
     await _publish_entry(
@@ -145,20 +145,10 @@ async def deploy_oracle_proxy(
         config_parser.write(f)
 
 
-async def _publish_entry(
-    account_client: Client, config_path: Path, entry: Tuple[int, int, int, int, int]
-):
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-
-    oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])
-    contract = get_contract(
-        oracle_proxy_address,
-        "Oracle",
-        account_client,
-    )
-
+async def _publish_entry(config_path: Path, entry: Tuple[int, int, int, int, int]):
+    client = net.init_empiric_client(config_path)
     invocation = await client.publish_entry(*entry)
+
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
 
@@ -169,31 +159,3 @@ async def get_value(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_value.call(str_to_felt(pair_id), 0)
     typer.echo(f"publishers: {entry}")
-
-
-def _format_currencies(currencies: Dict[str, str]) -> List[str]:
-    # TODO (rlkelly): use marshmallow to format
-    output = []
-    for row in currencies:
-        if isinstance(row["id"], str):
-            output.append(str_to_felt(row["id"]))
-        else:
-            output.append(row["id"])
-
-        output.append(row["decimals"])
-        output.append(int(row["is_abstract_currency"]))
-        output.append(int(row["starknet_address"]))
-        output.append(int(row["ethereum_address"]))
-    return output
-
-
-def _format_pairs(pairs: Dict[str, Union[int, str]]) -> List[str]:
-    # TODO (rlkelly): use marshmallow to format
-    output = []
-    for row in pairs:
-        for key in ["id", "quoteCurrencyId", "baseCurrencyId"]:
-            if isinstance(row["id"], str):
-                output.append(str_to_felt(row["id"]))
-            else:
-                output.append(row["id"])
-    return output
