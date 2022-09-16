@@ -28,23 +28,22 @@ func _extract_values_iter{range_check_ptr}(
     return _extract_values_iter(cur_idx + 1, tick_arr_len, tick_arr, output);
 }
 
-func sum_tick_array{range_check_ptr}(tick_arr_len: felt, tick_arr: TickElem**) -> (sum_: felt) {
-    let (sum_) = sum_tick_array_iter(0, 0, tick_arr_len, tick_arr);
-    return (sum_,);
+func sum_tick_array{range_check_ptr}(tick_arr_len: felt, tick_arr: TickElem**) -> felt {
+    return sum_tick_array_iter(0, 0, tick_arr_len, tick_arr);
 }
 
 func sum_tick_array_iter{range_check_ptr}(
     idx: felt, total: felt, tick_arr_len: felt, tick_arr: TickElem**
-) -> (sum_: felt) {
+) -> felt {
     if (idx == tick_arr_len) {
-        return (total,);
+        return total;
     }
     return sum_tick_array_iter(idx + 1, total + tick_arr[idx].value, tick_arr_len, tick_arr);
 }
 
-func sum_array{range_check_ptr}(tick_arr_len: felt, tick_arr: felt*) -> (sum_: felt) {
+func sum_array{range_check_ptr}(tick_arr_len: felt, tick_arr: felt*) -> felt {
     let (sum_) = sum_array_iter(0, 0, tick_arr_len, tick_arr);
-    return (sum_,);
+    return sum_;
 }
 
 func sum_array_iter{range_check_ptr}(
@@ -57,20 +56,28 @@ func sum_array_iter{range_check_ptr}(
 }
 
 func mean{range_check_ptr}(tick_arr_len: felt, tick_arr: TickElem**) -> (mean: felt) {
-    let (sum_) = sum_tick_array(tick_arr_len, tick_arr);
+    let sum_ = sum_tick_array(tick_arr_len, tick_arr);
     let (mean_) = safe_div(sum_, tick_arr_len);
     return (mean_,);
 }
 
 func variance{range_check_ptr}(arr_len: felt, arr: TickElem**) -> (var: felt) {
     alloc_locals;
+    let (__v) = extract_values(arr_len, arr);
+
     let (mean_) = mean(arr_len, arr);
     let (mean_arr) = fill_1d(arr_len, mean_);
 
     let (arr_) = extract_values(arr_len, arr);
+
     let (diff_arr) = pairwise_1D(PAIRWISE_OPERATION.SUBTRACTION, arr_len, arr_, mean_arr);
-    let (diff_squared) = dot_product(arr_len, diff_arr, diff_arr);
-    let (variance_) = safe_div(diff_squared, arr_len - 1);
+
+    let (diff_squared) = pairwise_1D(
+        PAIRWISE_OPERATION.FIXED_POINT_MULTIPLICATION, arr_len, diff_arr, diff_arr
+    );
+
+    let sum_ = sum_array(arr_len, diff_squared);
+    let (variance_) = safe_div(sum_, arr_len - 1);
 
     return (variance_,);
 }

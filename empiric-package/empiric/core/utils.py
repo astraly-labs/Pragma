@@ -1,6 +1,5 @@
 import logging
 import warnings
-from pathlib import Path, PosixPath
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ def felt_to_str(felt):
     return bytes.decode("utf-8")
 
 
-def currency_pair_to_key(quote, base):
+def currency_pair_to_pair_id(quote, base):
     return f"{quote}/{base}".lower()
 
 
@@ -32,18 +31,15 @@ def pprint_entry(entry):
 
 
 def log_entry(entry, logger=logger):
-    logger.info(
-        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+    logger.info(f"Entry: {entry.serialize()}")
+
+
+def pair_id_for_asset(asset):
+    pair_id = (
+        asset["key"] if "key" in asset else currency_pair_to_pair_id(*asset["pair"])
     )
+    return pair_id
 
 
 def key_for_asset(asset):
-    key = asset["key"] if "key" in asset else currency_pair_to_key(*asset["pair"])
-
-    return key
-
-
-def build_contract_abi_path(filename) -> PosixPath:
-    base_path = Path(__file__)
-    parent = base_path.parents[3]
-    return parent / f"contracts/build/{filename}_abi.json"
+    return asset["key"] if "key" in asset else currency_pair_to_pair_id(*asset["pair"])

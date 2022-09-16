@@ -3,9 +3,10 @@ import datetime
 import logging
 from typing import Dict, List
 
+import requests
 from aiohttp import ClientSession
 from empiric.core.entry import Entry
-from empiric.core.utils import currency_pair_to_key
+from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.base import PublisherInterfaceT
 
@@ -67,6 +68,19 @@ class CoingeckoFetcher(PublisherInterfaceT):
             result = await resp.json()
             return self._construct(asset, result)
 
+    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> Entry:
+        pair = asset["pair"]
+        pair_id = ASSET_MAPPING.get(pair[0])
+        if pair_id is None:
+            raise ValueError(
+                f"Unknown price pair, do not know how to query Coingecko for {pair[0]}"
+            )
+        url = self.BASE_URL.format(pair_id=pair_id)
+
+        resp = requests.get(url, headers=self.headers)
+        result = resp.json()
+        return self._construct(asset, result)
+
     async def fetch(self, session: ClientSession) -> List[Entry]:
         entries = []
         for asset in self.assets:
@@ -76,9 +90,18 @@ class CoingeckoFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
+    def fetch_sync(self) -> List[Entry]:
+        entries = []
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping {self.SOURCE} for non-spot asset {asset}")
+                continue
+            entries.append(self._fetch_pair_sync(asset))
+        return entries
+
     def _construct(self, asset, result) -> Entry:
         pair = asset["pair"]
-        key = currency_pair_to_key(*pair)
+        pair_id = currency_pair_to_pair_id(*pair)
         price = result["market_data"]["current_price"][pair[1].lower()]
         price_int = int(price * (10 ** asset["decimals"]))
         timestamp = int(
@@ -88,10 +111,10 @@ class CoingeckoFetcher(PublisherInterfaceT):
             ).timestamp()
         )
 
-        logger.info(f"Fetched price {price} for {key} from Coingecko")
+        logger.info(f"Fetched price {price} for {pair_id} from Coingecko")
 
         return Entry(
-            key=key,
+            pair_id=pair_id,
             value=price_int,
             timestamp=timestamp,
             source=self.SOURCE,

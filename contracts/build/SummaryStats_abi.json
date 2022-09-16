@@ -23,10 +23,6 @@
             {
                 "name": "stop",
                 "type": "felt"
-            },
-            {
-                "name": "num_datapoints",
-                "type": "felt"
             }
         ],
         "name": "calculate_mean",
@@ -52,54 +48,13 @@
             {
                 "name": "stop",
                 "type": "felt"
-            },
-            {
-                "name": "num_datapoints",
-                "type": "felt"
             }
         ],
-        "name": "scaled_arr",
+        "name": "calculate_volatility",
         "outputs": [
             {
-                "name": "arr_len",
+                "name": "volatility_",
                 "type": "felt"
-            },
-            {
-                "name": "arr",
-                "type": "felt*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "start",
-                "type": "felt"
-            },
-            {
-                "name": "stop",
-                "type": "felt"
-            },
-            {
-                "name": "num_datapoints",
-                "type": "felt"
-            }
-        ],
-        "name": "arr_values",
-        "outputs": [
-            {
-                "name": "arr_len",
-                "type": "felt"
-            },
-            {
-                "name": "arr",
-                "type": "felt*"
             }
         ],
         "stateMutability": "view",

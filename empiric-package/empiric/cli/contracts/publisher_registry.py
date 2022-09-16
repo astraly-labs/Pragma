@@ -3,7 +3,8 @@ from pathlib import Path
 
 import typer
 from empiric.cli import SUCCESS, config, net
-from empiric.cli.utils import coro, get_contract
+from empiric.cli.utils import coro
+from empiric.core.utils import felt_to_str, str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 
@@ -18,7 +19,13 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
     client = net.init_client(gateway_url, chain_id)
     account_client = net.init_account_client(client, config_path)
 
-    await deploy_publisher_registry(account_client, config_path)
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_path)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+
+    await deploy_publisher_registry(account_client, compiled_contract_path, config_path)
 
     return SUCCESS
 
@@ -28,20 +35,9 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
 async def register_publisher(
     publisher, publisher_address, config_path=config.DEFAULT_CONFIG
 ):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-
-    publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
-    contract = get_contract(
-        publisher_registry_address, "PublisherRegistry", account_client
-    )
-
-    invocation = await contract.functions["register_publisher"].invoke(
-        publisher, publisher_address, max_fee=int(1e16)
+    client = net.init_empiric_client(config_path)
+    invocation = await client.publisher_registry.register_publisher.invoke(
+        str_to_felt(publisher), publisher_address, max_fee=int(1e16)
     )
 
     await invocation.wait_for_acceptance()
@@ -50,24 +46,10 @@ async def register_publisher(
 
 @app.command()
 @coro
-async def register_self(publisher: int, config_path=config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-
-    publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
-    publisher_address = int(config_parser["USER"]["address"])
-
-    contract = get_contract(
-        publisher_registry_address, "PublisherRegistry", account_client
-    )
-
-    invocation = await contract.functions["register_publisher"].invoke(
-        int(publisher), publisher_address, max_fee=int(1e16)
-    )
+async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    publisher_address = client.account_address()
+    invocation = await client.register_publisher(publisher, publisher_address)
 
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
@@ -76,26 +58,16 @@ async def register_self(publisher: int, config_path=config.DEFAULT_CONFIG):
 @app.command()
 @coro
 async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-    publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
-    contract = get_contract(
-        publisher_registry_address, "PublisherRegistry", account_client
-    )
-
-    publishers = await contract.functions["get_all_publishers"].call()
-    typer.echo(f"publishers: {publishers}")
+    client = net.init_empiric_client(config_path)
+    publishers = await client.publisher_registry.get_all_publishers.call()
+    typer.echo(f"publishers: {[felt_to_str(p) for p in publishers[0]]}")
 
 
-async def deploy_publisher_registry(client: GatewayClient, config_path: Path):
+async def deploy_publisher_registry(
+    client: GatewayClient, compiled_contract_path: Path, config_path: Path
+):
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
-    compiled = (config.COMPILED_CONTRACT_PATH / "PublisherRegistry.json").read_text(
-        "utf-8"
-    )
+    compiled = (compiled_contract_path / "PublisherRegistry.json").read_text("utf-8")
 
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)

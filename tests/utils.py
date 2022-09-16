@@ -128,10 +128,8 @@ async def register_new_publisher_and_publish_entries_1(
         publisher_account,
         oracle.contract_address,
         "publish_entries",
-        Entry.serialize_entries(entries),
+        Entry.flatten_entries(entries),
     )
-
-    return
 
 
 async def register_new_publisher_and_publish_entry(
@@ -155,10 +153,8 @@ async def register_new_publisher_and_publish_entry(
         publisher_account,
         oracle.contract_address,
         "publish_entry",
-        entry.serialize(),
+        entry.to_tuple(),
     )
-
-    return
 
 
 def advance_time(state: CarriedState, buffer: int):
@@ -172,6 +168,7 @@ def transform_calldata(calldata: List[Union[int, str, List[int]]]):
     """Transforms a list to a calldata format that can be used in starknet constructor_calldata"""
     output = []
 
+    # TODO (rlkelly: recursively calculate list length. transform_calldata([1, [2, 3]])) should be [4, 1, 2, 2 3]
     def build_cons(calldata):
         for item in calldata:
             if type(item) == int:

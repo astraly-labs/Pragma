@@ -6,11 +6,10 @@ import traceback
 
 import requests
 from empiric.core.client import EmpiricClient
-from empiric.core.config import TestnetConfig
 from empiric.core.logger import get_stream_logger
-from empiric.core.utils import key_for_asset, str_to_felt
+from empiric.core.utils import pair_id_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.fetch import fetch_coingecko
+from empiric.publisher.fetchers import CoingeckoFetcher
 
 logger = get_stream_logger()
 
@@ -33,17 +32,16 @@ async def main():
     assets = EMPIRIC_ALL_ASSETS
 
     client = EmpiricClient()
+    cg = CoingeckoFetcher(assets, "publisher")
+    entries = cg.fetch_sync()
 
-    coingecko = {
-        entry.pair_id: entry.value for entry in fetch_coingecko(assets, "publisher")
-    }
-    aggregation_mode = TestnetConfig.DEFAULT_AGGREGATION_MODE
+    coingecko = {entry.pair_id: entry.value for entry in entries}
 
     all_prices_valid = True
     for asset in assets:
-        key = key_for_asset(asset)
-        felt_key = str_to_felt(key)
-        if felt_key not in coingecko or asset["type"] != "SPOT":
+        pair_id = pair_id_for_asset(asset)
+        felt_pair_id = str_to_felt(pair_id)
+        if felt_pair_id not in coingecko or asset["type"] != "SPOT":
             logger.info(
                 f"Skipping checking price for asset {asset} because no reference data"
             )
@@ -54,14 +52,14 @@ async def main():
             _,
             last_updated_timestamp,
             num_sources_aggregated,
-        ) = await client.get_value(key, aggregation_mode)
+        ) = await client.get_value(pair_id)
 
         try:
             assert (
-                coingecko[felt_key] * (1 - PRICE_TOLERANCE)
+                coingecko[felt_pair_id] * (1 - PRICE_TOLERANCE)
                 <= value
-                <= coingecko[felt_key] * (1 + PRICE_TOLERANCE)
-            ), f"Coingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
+                <= coingecko[felt_pair_id] * (1 + PRICE_TOLERANCE)
+            ), f"Coingecko says {coingecko[felt_pair_id]}, Empiric says {value} (ratio {coingecko[felt_pair_id] / value})"
 
             current_timestamp = int(time.time())
 
@@ -71,27 +69,25 @@ async def main():
                 <= current_timestamp + TIME_TOLERANCE
             ), f"Timestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
             logger.info(
-                f"Price {value} checks out for asset {key} (reference: {coingecko[felt_key]})"
+                f"Price {value} checks out for asset {pair_id} (reference: {coingecko[felt_pair_id]})"
             )
 
             assert (
                 num_sources_aggregated >= 3
-            ), f"Aggregated less than 3 sources for asset {key}: {num_sources_aggregated}"
+            ), f"Aggregated less than 3 sources for asset {pair_id}: {num_sources_aggregated}"
         except (AssertionError, ZeroDivisionError) as e:
             logger.warn(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
             logger.warn(e)
             logger.warn(traceback.format_exc())
 
-            if key not in EXPERIMENTAL_ASSET_KEYS:
+            if pair_id not in EXPERIMENTAL_ASSET_KEYS:
                 slack_text = "Error with Empiric price<!channel>"
                 slack_text += f"\nAsset: {asset}"
                 slack_text += f"\nTimestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
                 if value == 0:
-                    slack_text += (
-                        f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value}"
-                    )
+                    slack_text += f"\nCoingecko says {coingecko[felt_pair_id]}, Empiric says {value}"
                 else:
-                    slack_text += f"\nCoingecko says {coingecko[felt_key]}, Empiric says {value} (ratio {coingecko[felt_key]/value})"
+                    slack_text += f"\nCoingecko says {coingecko[felt_pair_id]}, Empiric says {value} (ratio {coingecko[felt_pair_id]/value})"
                 slack_text += f"\n{traceback.format_exc()}"
 
                 requests.post(

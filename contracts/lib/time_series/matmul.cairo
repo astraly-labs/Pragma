@@ -2,6 +2,7 @@
 
 from starkware.cairo.common.alloc import alloc
 
+from cairo_math_64x61.math64x61 import FixedPoint
 from time_series.structs import Matrix2D, PAIRWISE_OPERATION
 from time_series.utils import safe_div
 
@@ -34,6 +35,11 @@ func pairwise_1D_iter{range_check_ptr}(
     if (operation == PAIRWISE_OPERATION.SUBTRACTION) {
         jmp subtraction;
     }
+
+    if (operation == PAIRWISE_OPERATION.FIXED_POINT_MULTIPLICATION) {
+        jmp pairwise_mult;
+    }
+
     assert output[cur_ix] = x1 + y1;
     tempvar range_check_ptr = range_check_ptr;
     return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output);
@@ -51,6 +57,11 @@ func pairwise_1D_iter{range_check_ptr}(
 
     subtraction:
     assert output[cur_ix] = x1 - y1;
+    tempvar range_check_ptr = range_check_ptr;
+    return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output);
+
+    pairwise_mult:
+    assert output[cur_ix] = FixedPoint.mul(x1, y1);
     tempvar range_check_ptr = range_check_ptr;
     return pairwise_1D_iter(operation, cur_ix + 1, x_len, x, y, output);
 }

@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from empiric.admin.client import EmpiricAdminClient
+from empiric.core.client import EmpiricClient
 
 publishers = [
     "empiric",
@@ -27,7 +27,7 @@ publisher_address = [
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricAdminClient(
+    admin_client = EmpiricClient(
         admin_private_key,
     )
     for publisher, address in zip(publishers, publisher_address):

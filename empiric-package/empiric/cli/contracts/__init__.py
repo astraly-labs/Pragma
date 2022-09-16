@@ -10,6 +10,11 @@ app.add_typer(
     name="publisher-registry",
     help="publisher registry contract utils",
 )
+app.add_typer(
+    publisher_registry.app,
+    name="pr",
+    help="publisher registry contract utils",
+)
 app.add_typer(oracle.app, name="oracle", help="Oracle contract utils")
 
 

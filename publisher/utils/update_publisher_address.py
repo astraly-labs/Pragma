@@ -14,7 +14,8 @@ async def main():
         2997231508090948287810421563528272582753036618878708141844804758659373413510
     )
     publisher_client = EmpiricPublisherClient(
-        publisher_private_key, old_publisher_address
+        account_private_key=publisher_private_key,
+        account_addresss=old_publisher_address,
     )
     await publisher_client.update_publisher_address(
         new_publisher_address, publisher=publisher

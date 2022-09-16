@@ -2,11 +2,16 @@ import configparser
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Optional, Tuple
 
 import typer
 from empiric.cli import SUCCESS, config, net
-from empiric.cli.utils import coro, get_contract
+from empiric.cli.contracts.utils import (
+    DEFAULT_MAX_FEE,
+    _format_currencies,
+    _format_pairs,
+)
+from empiric.cli.utils import coro
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
@@ -16,7 +21,7 @@ from .utils import declare_contract
 
 app = typer.Typer(help="Deployment commands for Oracle")
 ORACLE_CONFIG = typer.Option(
-    "./oracle_constructor_data.json",
+    "",
     "--deploy-config",
     "-d",
     help="configuration for currency and pair deployment",
@@ -25,13 +30,20 @@ ORACLE_CONFIG = typer.Option(
 
 @app.command()
 @coro
-async def deploy(cli_config=config.DEFAULT_CONFIG, deploy_config: str = ORACLE_CONFIG):
+async def deploy(
+    cli_config=config.DEFAULT_CONFIG, deploy_config: Optional[str] = ORACLE_CONFIG
+):
     """
     Deploy a new proxied instance of the publisher registry.
     This requires a configuration file for the currencies and pairs that the oracle will support.
     There is a sample config called oracle_constructor_data.json that shows the format.
 
     """
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+
+    deploy_config = deploy_config or config_parser["CONFIG"]["oracle-config-path"]
+
     # TODO (rlkelly): allow setting default path for config lookup in cli config
     deploy_config_path = Path(deploy_config)
     if not deploy_config_path.is_file():
@@ -53,17 +65,34 @@ async def deploy(cli_config=config.DEFAULT_CONFIG, deploy_config: str = ORACLE_C
 @app.command()
 @coro
 async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
     pair_id, value, timestamp, source, publisher = entry.split(",")
-    if timestamp == "NOW":
+    if timestamp.lower() == "now":
         timestamp = int(time.time())
 
     await _publish_entry(
-        account_client, config_path, (pair_id, value, timestamp, source, publisher)
+        config_path,
+        (
+            str_to_felt(pair_id.lower()),
+            int(value),
+            int(timestamp),
+            str_to_felt(source),
+            str_to_felt(publisher),
+        ),
     )
+
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.oracle.set_checkpoint.invoke(
+        str_to_felt(pair_id),
+        0,
+        max_fee=DEFAULT_MAX_FEE,
+    )
+    print("invocation:", invocation.hash)
 
     return SUCCESS
 
@@ -74,18 +103,22 @@ async def deploy_oracle_proxy(
     """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
 
     deploy_config = json.loads(deploy_config_path.read_text("utf-8"))
-
     currencies = deploy_config["currencies"]
     pairs = deploy_config["pairs"]
 
     admin_address = int(config_parser["USER"]["address"])
     publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
 
-    declared_oracle_class_hash = await declare_contract(client, "Oracle")
+    declared_oracle_class_hash = await declare_contract(
+        client, compiled_contract_path, "Oracle"
+    )
+    compiled_proxy = (compiled_contract_path / "Proxy.json").read_text("utf-8")
 
-    compiled_proxy = (config.COMPILED_CONTRACT_PATH / "Proxy.json").read_text("utf-8")
     deployment_result = await Contract.deploy(
         client,
         compiled_contract=compiled_proxy,
@@ -112,29 +145,9 @@ async def deploy_oracle_proxy(
         config_parser.write(f)
 
 
-async def _publish_entry(
-    account_client: Client, config_path: Path, entry: Tuple[int, int, int, int, int]
-):
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-
-    oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])
-    contract = get_contract(
-        oracle_proxy_address,
-        "Oracle",
-        account_client,
-    )
-
-    invocation = await contract.functions["publish_entry"].invoke(
-        {
-            "pair_id": int(entry[0]),
-            "value": int(entry[1]),
-            "timestamp": int(entry[2]),
-            "source": int(entry[3]),
-            "publisher": int(entry[4]),
-        },
-        max_fee=int(1e16),
-    )
+async def _publish_entry(config_path: Path, entry: Tuple[int, int, int, int, int]):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.publish_entry(*entry)
 
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
@@ -143,42 +156,6 @@ async def _publish_entry(
 @app.command()
 @coro
 async def get_value(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
-    gateway_url, chain_id = config.validate_config(config_path)
-    client = net.init_client(gateway_url, chain_id)
-    account_client = net.init_account_client(client, config_path)
-
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_path)
-    oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])
-    contract = get_contract(oracle_proxy_address, "Oracle", account_client)
-
-    entry = await contract.functions["get_value"].call(pair_id, 0)
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_value.call(str_to_felt(pair_id), 0)
     typer.echo(f"publishers: {entry}")
-
-
-def _format_currencies(currencies: Dict[str, str]) -> List[str]:
-    # TODO (rlkelly): use marshmallow to format
-    output = []
-    for row in currencies:
-        if isinstance(row["id"], str):
-            output.append(str_to_felt(row["id"]))
-        else:
-            output.append(row["id"])
-
-        output.append(row["decimals"])
-        output.append(int(row["is_abstact_currency"]))
-        output.append(int(row["starknet_address"]))
-        output.append(int(row["ethereum_address"]))
-    return output
-
-
-def _format_pairs(pairs: Dict[str, Union[int, str]]) -> List[str]:
-    # TODO (rlkelly): use marshmallow to format
-    output = []
-    for row in pairs:
-        for key in ["id", "quoteCurrencyId", "baseCurrencyId"]:
-            if isinstance(row["id"], str):
-                output.append(str_to_felt(row["id"]))
-            else:
-                output.append(row["id"])
-    return output
