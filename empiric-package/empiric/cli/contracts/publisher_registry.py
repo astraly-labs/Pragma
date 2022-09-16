@@ -4,7 +4,7 @@ from pathlib import Path
 import typer
 from empiric.cli import SUCCESS, config, net
 from empiric.cli.utils import coro, get_contract
-from empiric.core.utils import str_to_felt, felt_to_str
+from empiric.core.utils import felt_to_str, str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.gateway_client import GatewayClient
 
