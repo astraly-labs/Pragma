@@ -97,7 +97,7 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 1079775040259012571954;  // 468.27777 | steps=8076
+    assert _volatility = 767009143009058947578;  // 332.6371916666667 | steps=8076
 
     return ();
 }
