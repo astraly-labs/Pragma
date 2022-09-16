@@ -62,6 +62,10 @@ def _create_config_file(gateway_url: str, chain_id: int) -> int:
     config_parser["SECRET"] = {}
     config_parser["USER"] = {}
     config_parser["CONTRACTS"] = {}
+    config_parser["CONFIG"] = {
+        "contract-path": str(COMPILED_CONTRACT_PATH),
+        "oracle-config-path": "./oracle_constructor_data.json",
+    }
 
     try:
         with CONFIG_FILE_PATH.open("w") as file:

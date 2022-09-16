@@ -22,34 +22,18 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 @view
 func calculate_mean{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, start: felt, stop: felt, num_datapoints: felt
+    key: felt, start: felt, stop: felt
 ) -> (mean_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
-    let (_mean) = SummaryStats.calculate_mean(oracle_address, key, start, stop, num_datapoints);
+    let _mean = SummaryStats.calculate_mean(oracle_address, key, start, stop);
     return (_mean,);
 }
 
 @view
-func scaled_arr{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, start: felt, stop: felt, num_datapoints: felt
-) -> (arr_len: felt, arr: felt*) {
-    alloc_locals;
+func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, start: felt, stop: felt
+) -> (volatility_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
-    let (scaled_arr_len, scaled_arr) = SummaryStats._make_scaled_array(
-        oracle_address, key, start, stop, num_datapoints, 10
-    );
-    let (scaled_arr_values_) = extract_values(scaled_arr_len, scaled_arr);
-    return (scaled_arr_len, scaled_arr_values_);
-}
-
-@view
-func arr_values{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, start: felt, stop: felt, num_datapoints: felt
-) -> (arr_len: felt, arr: felt*) {
-    alloc_locals;
-    let (oracle_address) = SummaryStats__oracle_address.read();
-    let (tick_arr: TickElem**) = alloc();
-    SummaryStats._make_array(0, oracle_address, key, 10, 0, tick_arr);
-    let (tick_arr_values_) = extract_values(10, tick_arr);
-    return (10, tick_arr_values_);
+    let _volatility = SummaryStats.calculate_volatility(oracle_address, key, start, stop);
+    return (_volatility,);
 }

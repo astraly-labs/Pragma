@@ -91,7 +91,7 @@ func test_twap{range_check_ptr}() {
         PAIRWISE_OPERATION.SUBTRACTION, time_series_len - 1, timestamps_arr + 1, timestamps_arr
     );
     log_array(time_series_len - 1, time_differences);
-    let (sum_ti) = sum_array(time_series_len - 1, time_differences);
+    let sum_ti = sum_array(time_series_len - 1, time_differences);
 
     let (sum_pi_ti) = dot_product(time_series_len - 1, time_differences, prices_arr);
     let (twap) = safe_div(sum_pi_ti, sum_ti);

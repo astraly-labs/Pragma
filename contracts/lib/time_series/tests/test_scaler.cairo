@@ -3,43 +3,7 @@
 from starkware.cairo.common.alloc import alloc
 
 from time_series.prelude import scale_data, TickElem
-
-func log_array(arr_len: felt, arr: TickElem**) {
-    %{ print('Array(', end='') %}
-    log_array_iter(0, arr_len, arr);
-    %{ print(')') %}
-    return ();
-}
-
-func log_array_iter(cur_idx, arr_len: felt, arr: TickElem**) {
-    let tmp1 = arr[cur_idx].tick;
-    let tmp2 = arr[cur_idx].value;
-    if (cur_idx == arr_len - 1) {
-        %{
-            print('(', end='')
-            if ids.tmp1 > 361850278866613121369732278309507010562310721533:
-                print(3618502788666131213697322783095070105623107215331596699973092056135872020481 - ids.tmp1, end=', ')
-                print(ids.tmp2, end='')
-            else:
-                print(ids.tmp1, end=', ')
-                print(ids.tmp2, end='')
-            print(')', end='')
-        %}
-        return ();
-    } else {
-        %{
-            print('(', end='')
-            if ids.tmp1 > 361850278866613121369732278309507010562310721533:
-                print(3618502788666131213697322783095070105623107215331596699973092056135872020481 - ids.tmp1, end=', ')
-                print(ids.tmp2, end='')
-            else:
-                print(ids.tmp1, end=', ')
-                print(ids.tmp2, end='')
-            print(')', end=', ')
-        %}
-        return log_array_iter(cur_idx + 1, arr_len, arr);
-    }
-}
+from time_series.utils import log_tick_array
 
 @view
 func test_scaler{range_check_ptr}() {
@@ -56,20 +20,16 @@ func test_scaler{range_check_ptr}() {
     assert x[2] = third;
 
     let (output) = scale_data(0, 300, 3, x, 4);
-    log_array(5, output);
+    // log_tick_array(4, output);
 
     assert output[0].tick = 0;
     assert output[0].value = -542;
-    assert output[1].tick = 60;
-    assert output[1].value = 1318;
-    assert output[2].tick = 120;
-    assert output[2].value = 3178;
-    assert output[3].tick = 180;
-    assert output[3].value = 5038;
-    assert output[4].tick = 240;
-    assert output[4].value = 5071;
-    assert output[5].tick = 300;
-    assert output[5].value = 3871;
+    assert output[1].tick = 100;
+    assert output[1].value = 2558;
+    assert output[2].tick = 200;
+    assert output[2].value = 5658;
+    assert output[3].tick = 300;
+    assert output[3].value = 3871;
 
     return ();
 }
@@ -87,8 +47,8 @@ func test_scaler2{range_check_ptr}() {
     assert x[5] = new TickElem(1650591300, 14556);
     assert x[6] = new TickElem(1650591360, 12999);
 
-    let (output) = scale_data(1650590800, 1650591360, 10, x, 30);
-    log_array(30, output);
+    let (output) = scale_data(1650590800, 1650591360, 7, x, 30);
+    // log_tick_array(30, output);
 
     return ();
 }

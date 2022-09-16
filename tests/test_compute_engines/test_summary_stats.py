@@ -239,7 +239,7 @@ async def test_summary_stats(
         cur_time = STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * i
         entry = Entry(
             pair_id=pair_id,
-            value=val,
+            value=val * 2**61,
             timestamp=cur_time,
             source=source,
             publisher=publisher,
@@ -272,64 +272,16 @@ async def test_summary_stats(
         sum_ += cp.result.checkpoint.value
         arr.append((cp.result.checkpoint.timestamp, cp.result.checkpoint.value))
 
-    res = await summary_stats.scaled_arr(
-        pair_id,
-        STARKNET_STARTING_TIMESTAMP,
-        STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
-        10,
-    ).call()
-    expected_scaled_arr = [
-        19413,
-        16289,
-        13165,
-        11134,
-        12080,
-        13026,
-        12972,
-        12048,
-        11124,
-        12466,
-        14358,
-        16071,
-        15543,
-        15015,
-        14665,
-        14709,
-        14753,
-        14538,
-        14142,
-        13746,
-        13983,
-        14291,
-        14456,
-        13906,
-        13056,
-    ]
-    assert res.result.arr == expected_scaled_arr
-
     res = await summary_stats.calculate_mean(
         pair_id,
         STARKNET_STARTING_TIMESTAMP,
         STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
-        10,
     ).call()
-    assert res.result.mean_ == sum(expected_scaled_arr) // len(expected_scaled_arr)
+    assert res.result.mean_ == 32359662761269497727111
 
-    res3 = await summary_stats.arr_values(
+    res = await summary_stats.calculate_volatility(
         pair_id,
         STARKNET_STARTING_TIMESTAMP,
         STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
-        10,
     ).call()
-    assert res3.result.arr == [
-        19413,
-        10876,
-        13476,
-        10918,
-        16119,
-        14649,
-        14790,
-        13703,
-        14556,
-        12999,
-    ]
+    assert res.result.volatility_ == 7180365802289901609350289

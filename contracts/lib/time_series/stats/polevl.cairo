@@ -17,7 +17,7 @@ func polevl_iter{range_check_ptr}(ans: Float, x: Float, coef: felt*, N: felt) ->
     if (N == 0) {
         return (ans,);
     }
-    let (x_) = FixedPoint.mul(ans, x);
+    let x_ = FixedPoint.mul(ans, x);
     let (x2_) = FixedPoint.add(x_, coef[0]);
     return polevl_iter(x2_, x, coef + 1, N - 1);
 }
@@ -32,7 +32,7 @@ func p1evl_iter{range_check_ptr}(ans: Float, x: Float, coef: felt*, N: felt) -> 
     if (N == 0) {
         return (ans,);
     }
-    let (x_) = FixedPoint.mul(ans, x);
+    let x_ = FixedPoint.mul(ans, x);
     let (x2_) = FixedPoint.add(x_, coef[0]);
     return p1evl_iter(x2_, x, coef + 1, N - 1);
 }
