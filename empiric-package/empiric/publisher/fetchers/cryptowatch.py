@@ -32,7 +32,7 @@ class CryptowatchFetcher(PublisherInterfaceT):
             result_json = await resp.json()
             return self._parse_result_json(result_json)
 
-    def fetch_sync(self, session: ClientSession) -> List[Entry]:
+    def fetch_sync(self) -> List[Entry]:
         resp = requests.get(self.BASE_URL)
         result_json = resp.json()
         return self._parse_result_json(result_json)
