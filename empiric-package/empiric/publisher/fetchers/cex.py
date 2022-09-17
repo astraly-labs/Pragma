@@ -67,9 +67,7 @@ class CexFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(
-        self, session: ClientSession
-    ) -> List[Union[Entry, PublisherFetchError]]:
+    def fetch_sync(self) -> List[Union[Entry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
