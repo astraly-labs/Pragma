@@ -32,9 +32,12 @@ YieldCurve = [
 RebaseDenomination = [
     "contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
 ]
+Randomnesss = [
+    "contracts/src/randomness/Randomness.cairo"
+]
 
 ["protostar.shared_command_configs"]
-cairo-path = ["contracts/src", "contracts/lib"]
+cairo-path = ["contracts/src", "contracts/lib", "contracts/lib/cairo_streams/src"]
 
 ["protostar.build"]
 output = "contracts/build"
