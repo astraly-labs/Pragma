@@ -19,7 +19,7 @@ logger = get_stream_logger()
 
 def handler(event, context):
     asyncio.run(_handler())
-    return {'success': True}
+    return {"success": True}
 
 
 async def _handler(publishers=None, threshold_wei=0.1 * 10**18):
