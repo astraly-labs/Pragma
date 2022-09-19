@@ -33,7 +33,7 @@ jobs:
           PUBLISHER_PRIVATE_KEY: ${{ secrets.INTEGRATION_PUBLISHER_PRIVATE_KEY }}
           PUBLISHER_ADDRESS: "3053905924911392281185613487163536321775910383295124523151415438844445678030"
           __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__: "TRUE"
-        run: python publisher/sample-publisher/integration/fetch-and-publish.py
+        run: python stagecoach/jobs/publishers/examples/integration_publisher.py
 
       - name: Wait for transaction to be accepted
         run: sleep 300

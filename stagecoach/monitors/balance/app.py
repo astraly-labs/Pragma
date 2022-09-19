@@ -17,7 +17,12 @@ logger = get_stream_logger()
 # Behavior: Ping betteruptime iff all is good
 
 
-async def main(publishers=None, threshold_wei=None):
+def handler(event, context):
+    asyncio.run(_handler())
+    return {'success': True}
+
+
+async def _handler(publishers=None, threshold_wei=0.1 * 10**18):
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
@@ -27,9 +32,6 @@ async def main(publishers=None, threshold_wei=None):
 
     if publishers is None:
         publishers = await client.get_all_publishers()
-
-    if threshold_wei is None:
-        threshold_wei = 0.1 * 10**18
 
     all_above_threshold = True
     addresses = set()
@@ -72,4 +74,4 @@ async def main(publishers=None, threshold_wei=None):
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    handler(None, None)

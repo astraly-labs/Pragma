@@ -17,12 +17,14 @@ jobs:
       - name: Build docker images locally
         run: |
           docker build . --target test -t 42labs/empiric-publisher:test
-          docker build publisher/monitor/balance -t monitor-balance --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
-          docker build publisher/monitor/price -t monitor-price --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build stagecoach/monitors/balance -t monitor-balance
+          docker build stagecoach/monitors/price -t monitor-price
 
       - name: Run balance and price monitors
         env:
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
         run: |
-          docker run --env-file publisher/monitor/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
-          docker run --env-file publisher/monitor/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
+          docker run -p 9000:8080 --env-file stagecoach/monitors/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
+          curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
+          docker run -p 9001:8080 --env-file stagecoach/monitors/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
+          curl -XPOST "http://localhost:9001/2015-03-31/functions/function/invocations" -d '{}'
