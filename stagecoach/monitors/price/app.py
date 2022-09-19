@@ -27,7 +27,7 @@ EXPERIMENTAL_ASSET_KEYS = {
 def handler(event, context):
     asyncio.run(_main())
     return {
-        'success': True,
+        "success": True,
     }
 
 

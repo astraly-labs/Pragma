@@ -32,7 +32,7 @@ async def main(network: Network, throw_if_no_data: bool):
 
     if throw_if_no_data and last_updated_timestamp == 0:
         logger.error(f"Couldn't find any data for {asset_pair} on network: {network}.")
-        raise ValueError('No data found')
+        raise ValueError("No data found")
 
 
 if __name__ == "__main__":

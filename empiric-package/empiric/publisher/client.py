@@ -74,12 +74,14 @@ async def get_entries():
     the_graph_fetcher = TheGraphFetcher(EMPIRIC_ALL_ASSETS, "test5")
     eapc = EmpiricPublisherClient("testnet")
 
-    eapc.add_fetchers([
-        bitstamp_fetcher,
-        cex_fetcher,
-        cryptowatch_fetcher,
-        gemini_fetcher,
-        the_graph_fetcher,
-    ])
+    eapc.add_fetchers(
+        [
+            bitstamp_fetcher,
+            cex_fetcher,
+            cryptowatch_fetcher,
+            gemini_fetcher,
+            the_graph_fetcher,
+        ]
+    )
 
     return await eapc.fetch()

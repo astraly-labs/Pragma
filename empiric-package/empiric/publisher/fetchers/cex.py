@@ -73,7 +73,7 @@ class CexFetcher(PublisherInterfaceT):
             if asset["type"] != "SPOT":
                 logger.debug(f"Skipping CEX for non-spot asset {asset}")
                 continue
-            entries.append(self._fetch_pair_sync(asset, session))
+            entries.append(self._fetch_pair_sync(asset))
         return entries
 
     def _construct(self, asset, result) -> Entry:
