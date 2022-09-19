@@ -16,7 +16,7 @@ async def main(network: Network, throw_if_no_data: bool):
     pair_id = currency_pair_to_pair_id(*asset_pair)
     aggregation_mode = AggregationMode.MEDIAN
 
-    client = EmpiricClient(network="testnet")
+    client = EmpiricClient(network=network)
     (
         value,
         decimals,
@@ -32,7 +32,7 @@ async def main(network: Network, throw_if_no_data: bool):
 
     if throw_if_no_data and last_updated_timestamp == 0:
         logger.error(f"Couldn't find any data for {asset_pair} on network: {network}.")
-        raise Exception
+        raise ValueError('No data found')
 
 
 if __name__ == "__main__":

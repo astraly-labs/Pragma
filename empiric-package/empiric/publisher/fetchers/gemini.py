@@ -7,7 +7,7 @@ from aiohttp import ClientSession
 from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
-from empiric.publisher.base import PublisherInterfaceT
+from empiric.publisher.types import PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
