@@ -17,8 +17,8 @@ jobs:
       - name: Build publisher images locally
         run: |
           docker build . --target test -t 42labs/empiric-publisher:test
-          docker build stagecoach/integration_tests/publish-all/ -t publish-all --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
-          docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test
+          docker build stagecoach/integration_tests/publish-all/ -t publish-all --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test --platform linux/amd64
+          docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test --platform linux/amd64
 
       - name: Post updated prices
         env:
