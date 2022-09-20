@@ -6,7 +6,7 @@ from starkware.starknet.common.syscalls import get_block_timestamp
 from oracle.IOracle import IOracle
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from compute_engines.summary_stats.ISummaryStats import ISummaryStats
-from entry.structs import Currency, Pair, Entry
+from entry.structs import Currency, Pair, Entry, BaseEntry
 from time_series.prelude import ONE
 
 const ONE_ETH = 10 ** 18;
@@ -48,6 +48,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
 
     return ();
 }
+
 func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
     cur_idx, arr_len, times: felt*, prices: felt*
 ) {

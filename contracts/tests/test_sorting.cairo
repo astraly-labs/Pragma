@@ -3,10 +3,10 @@
 from starkware.cairo.common.alloc import alloc
 
 from entry.library import Entries
-from entry.structs import Entry
+from entry.structs import Entry, BaseEntry
 
 func make_entry(value: felt) -> (entry: Entry) {
-    let entry = Entry(pair_id=0, value=value, timestamp=2, source=3, publisher=4);
+    let entry = Entry(base=BaseEntry(timestamp=2, source=3, publisher=4), pair_id=0, value=value);
     return (entry,);
 }
 
