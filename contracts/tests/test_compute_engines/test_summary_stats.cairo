@@ -89,7 +89,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-@external
+// @external
 func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     tempvar summary_stats_address;
     tempvar now;
@@ -100,7 +100,23 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
 
-    assert _volatility = 17210754473256091413058400;  // 74639.74956007548 | steps=8076
+    assert _volatility = 17210754473256091413058400;  // returns value in fixedpoint
+
+    return ();
+}
+
+@external
+func test_mean{syscall_ptr: felt*, range_check_ptr}() {
+    tempvar summary_stats_address;
+    tempvar now;
+    %{
+        ids.summary_stats_address = context.summary_stats_address
+        ids.now = context.now
+    %}
+
+    let (_mean) = ISummaryStats.calculate_mean(summary_stats_address, 1, 100, 1000);
+
+    assert _mean = 64249666666666644613;  // returns value in wei
 
     return ();
 }

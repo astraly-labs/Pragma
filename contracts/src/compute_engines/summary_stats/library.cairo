@@ -9,7 +9,7 @@ from starkware.cairo.common.math_cmp import is_le, is_nn
 from time_series.prelude import TickElem, mean, variance, volatility, scale_data, FixedPoint
 from oracle.IOracle import IOracle, EmpiricAggregationModes
 
-const SCALED_ARR_SIZE = 25;
+const SCALED_ARR_SIZE = 30;
 
 namespace SummaryStats {
     func calculate_mean{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -33,6 +33,8 @@ namespace SummaryStats {
             latest_checkpoint_index,
         );
         let (_mean) = mean(SCALED_ARR_SIZE, _scaled_arr);
+        let _mean = FixedPoint.to_wei{range_check_ptr=range_check_ptr}(_mean);
+        tempvar range_check_ptr = range_check_ptr;
 
         return _mean;
     }
@@ -51,8 +53,6 @@ namespace SummaryStats {
         let (tick_arr: TickElem**) = alloc();
         _make_array(0, oracle_address, key, latest_checkpoint_index, start_index, tick_arr);
 
-        // let (_variance) = variance(SCALED_ARR_SIZE, _scaled_arr);
-        // return _variance;
         let volatility_ = volatility(latest_checkpoint_index - start_index, tick_arr);
         return volatility_;
     }
@@ -125,7 +125,6 @@ namespace SummaryStats {
         alloc_locals;
         let (tick_arr: TickElem**) = alloc();
 
-        // TODO (rlkelly): get datapoints from time since first tick :-(
         _make_array(
             0,
             oracle_address,

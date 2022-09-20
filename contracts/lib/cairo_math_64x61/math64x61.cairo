@@ -24,16 +24,18 @@ const EIGHTEEN_DECIMAL_CONVERSION_FACTOR = 5316911983139663872;
 
 namespace FixedPoint {
     func from_wei{range_check_ptr}(x: felt) -> felt {
-        let (x, _) = signed_div_rem(x, 100000, BOUND);
+        let (x, remainder) = signed_div_rem(x, 100000, BOUND);
         assert_le(x, INT_PART);
         assert_le(-INT_PART, x);
         tempvar product = x * EIGHTEEN_DECIMAL_CONVERSION_FACTOR;
         let (res, _) = signed_div_rem(product, FRACT_PART, BOUND);
-        return res * 100000;
+        let res_ = res * 100000 + remainder * EIGHTEEN_DECIMAL_CONVERSION_FACTOR;
+        return res_;
     }
 
     func to_wei{range_check_ptr}(x: felt) -> felt {
-        let res = div(x, EIGHTEEN_DECIMAL_CONVERSION_FACTOR);
+        let scale = mul(x, FRACT_PART);
+        let res = div(scale, EIGHTEEN_DECIMAL_CONVERSION_FACTOR);
         return res;
     }
 
