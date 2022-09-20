@@ -8,4 +8,4 @@ pytest-asyncio==0.18.*
 typing_extensions==4.3.0
 
 # Publisher
-starknet.py==0.6.0a0
+starknet.py==0.5.2a0
