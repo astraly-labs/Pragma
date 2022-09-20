@@ -1,11 +1,38 @@
 %lang starknet
 
-struct Entry {
-    pair_id: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
-    value: felt,
+struct BaseEntry {
     timestamp: felt,
     source: felt,
     publisher: felt,
+}
+
+struct Entry {
+    base: BaseEntry,
+    pair_id: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
+    value: felt,
+}
+
+struct SpotEntry {
+    base: BaseEntry,
+    pair_id: felt,
+    price: felt,
+    volume: felt,
+}
+
+struct FutureEntry {
+    base: BaseEntry,
+    pair_id: felt,
+    expiry_timestamp: felt,
+    price: felt,
+}
+
+struct OptionEntry {
+    base: BaseEntry,
+    pair_id: felt,
+    option_type: felt,
+    expiry_timestamp: felt,
+    strike_price: felt,
+    price: felt,
 }
 
 struct Pair {

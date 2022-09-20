@@ -18,10 +18,10 @@ class PublisherRegistryMixin:
         result = await self.publisher_registry.get_publisher_address.call(publisher)
         return result.publisher_address
 
-    async def register_publisher(
+    async def add_publisher(
         self, publisher: str, publisher_address: int, max_fee=int(1e16)
     ) -> InvokeResult:
-        invocation = await self.publisher_registry.register_publisher.invoke(
+        invocation = await self.publisher_registry.add_publisher.invoke(
             str_to_felt(publisher),
             publisher_address,
             max_fee=max_fee,

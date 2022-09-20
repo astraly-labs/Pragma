@@ -622,7 +622,7 @@ namespace YieldCurve {
 
         let (on_decimals) = IOracle.get_decimals(oracle_address, on_key);
         let (on_entry) = IOracle.get_entry(oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY);
-        if (on_entry.timestamp == 0) {
+        if (on_entry.base.timestamp == 0) {
             // Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -640,7 +640,7 @@ namespace YieldCurve {
 
             // Add to on_yield_points and recurse
             // Set expiry to be same as capture timestamp
-            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_entry.timestamp, capture_timestamp=on_entry.timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY);
+            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=on_entry.base.timestamp, capture_timestamp=on_entry.base.timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY);
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
@@ -708,7 +708,7 @@ namespace YieldCurve {
         let (spot_entry) = IOracle.get_entry(
             oracle_address, spot_key, future_spot_empiric_source_key
         );
-        if (spot_entry.timestamp == 0) {
+        if (spot_entry.base.timestamp == 0) {
             // No entry so skip to next one
             let (
                 recursed_spot_yield_points_len, recursed_spot_yield_points
@@ -825,7 +825,7 @@ namespace YieldCurve {
         let (future_entry) = IOracle.get_entry(
             oracle_address, future_key, future_spot_empiric_source_key
         );
-        if (future_entry.timestamp == 0) {
+        if (future_entry.base.timestamp == 0) {
             let (
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
@@ -844,16 +844,16 @@ namespace YieldCurve {
             return (recursed_future_yield_points_len, recursed_future_yield_points);
         }
         // TODO: Replace with
-        // is_not_zero(future_entry.timestamp - spot_entry.timestamp) == FALSE
-        let is_future_more_recent = is_le(spot_entry.timestamp, future_entry.timestamp);
+        // is_not_zero(future_entry.base.timestamp - spot_entry.base.timestamp) == FALSE
+        let is_future_more_recent = is_le(spot_entry.base.timestamp, future_entry.base.timestamp);
         const TIME_TOLERANCE = 10;
         if (is_future_more_recent == TRUE) {
             let are_future_spot_simultaneous = is_le(
-                future_entry.timestamp - spot_entry.timestamp, TIME_TOLERANCE
+                future_entry.base.timestamp - spot_entry.base.timestamp, TIME_TOLERANCE
             );
         } else {
             let are_future_spot_simultaneous = is_le(
-                spot_entry.timestamp - future_entry.timestamp, TIME_TOLERANCE
+                spot_entry.base.timestamp - future_entry.base.timestamp, TIME_TOLERANCE
             );
         }
         if (are_future_spot_simultaneous == FALSE) {
@@ -967,7 +967,7 @@ namespace YieldCurve {
 
         let yield_point = YieldPoint(
             expiry_timestamp=future_expiry_timestamp,
-            capture_timestamp=future_entry.timestamp,
+            capture_timestamp=future_entry.base.timestamp,
             rate=time_scaled_value,
             source=FUTURE_SPOT_SOURCE_KEY,
         );

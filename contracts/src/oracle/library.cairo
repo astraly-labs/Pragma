@@ -231,33 +231,40 @@ namespace Oracle {
 
         let (publisher_registry_address) = get_publisher_registry_address();
         let (publisher_address) = IPublisherRegistry.get_publisher_address(
-            publisher_registry_address, new_entry.publisher
+            publisher_registry_address, new_entry.base.publisher
         );
+        let (_can_publish_source) = IPublisherRegistry.can_publish_source(
+            publisher_registry_address, new_entry.base.publisher, new_entry.base.source
+        );
+
         let (caller_address) = get_caller_address();
 
         with_attr error_message("Oracle: Transaction not from publisher account") {
             assert caller_address = publisher_address;
         }
+        with_attr error_message("Oracle: Publisher not authorized for this source") {
+            assert _can_publish_source = TRUE;
+        }
 
-        let (entry) = Oracle_entry_storage.read(new_entry.pair_id, new_entry.source);
+        let (entry) = Oracle_entry_storage.read(new_entry.pair_id, new_entry.base.source);
 
         with_attr error_message("Oracle: Existing entry is more recent") {
-            assert_le(entry.timestamp, new_entry.timestamp);
+            assert_le(entry.base.timestamp, new_entry.base.timestamp);
         }
 
         let (current_timestamp) = get_block_timestamp();
         with_attr error_message("Oracle: New entry timestamp is too far in the past") {
-            assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.timestamp);
+            assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.base.timestamp);
         }
 
         with_attr error_message("Oracle: New entry timestamp is too far in the future") {
-            assert_le(new_entry.timestamp, current_timestamp + TIMESTAMP_BUFFER);
+            assert_le(new_entry.base.timestamp, current_timestamp + TIMESTAMP_BUFFER);
         }
 
-        if (entry.timestamp == 0) {
+        if (entry.base.timestamp == 0) {
             // Source did not exist yet, so add to our list
             let (sources_len) = Oracle_sources_len_storage.read(new_entry.pair_id);
-            Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.source);
+            Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.base.source);
             Oracle_sources_len_storage.write(new_entry.pair_id, sources_len + 1);
             tempvar syscall_ptr = syscall_ptr;
             tempvar pedersen_ptr = pedersen_ptr;
@@ -267,7 +274,7 @@ namespace Oracle {
         }
 
         SubmittedEntry.emit(new_entry);
-        Oracle_entry_storage.write(new_entry.pair_id, new_entry.source, new_entry);
+        Oracle_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
 
         return ();
     }
@@ -431,10 +438,10 @@ namespace Oracle {
 
         let source = [sources + sources_idx];
         let (entry) = Oracle_entry_storage.read(pair_id, source);
-        let is_entry_initialized = is_not_zero(entry.timestamp);
+        let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
         let (current_timestamp) = get_block_timestamp();
-        let is_entry_stale = is_le(entry.timestamp, current_timestamp - TIMESTAMP_BUFFER);
+        let is_entry_stale = is_le(entry.base.timestamp, current_timestamp - TIMESTAMP_BUFFER);
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
         if (should_skip_entry == TRUE) {

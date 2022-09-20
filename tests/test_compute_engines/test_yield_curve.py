@@ -218,7 +218,7 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
 

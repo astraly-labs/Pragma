@@ -33,7 +33,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     %}
 
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.publisher_registry_address) %}
-    IPublisherRegistry.register_publisher(publisher_registry_address, 1, oracle_admin_address);
+    IPublisherRegistry.add_publisher(publisher_registry_address, 1, oracle_admin_address);
     %{ stop_prank_callable() %}
 
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.oracle_address) %}

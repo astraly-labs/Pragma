@@ -31,7 +31,7 @@ namespace Entries {
     ) {
         alloc_locals;
 
-        let entry_timestamp = [entries].timestamp;
+        let entry_timestamp = [entries].base.timestamp;
         if (entries_len == 1) {
             return (entry_timestamp,);
         }

@@ -206,8 +206,21 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
+    )
+
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("0xdata")],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("1xdata")],
     )
 
     return contracts
@@ -532,8 +545,15 @@ async def test_submit_second_publisher(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, second_source],
     )
 
     second_entry = Entry(
@@ -828,7 +848,7 @@ async def test_subset_publishers(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [additional_publisher, second_publisher_account.contract_address],
     )
 
@@ -1027,8 +1047,14 @@ async def test_ignore_stale_entries(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, source],
     )
 
     # Advance time by TIMESTAMP_BUFFER
@@ -1074,8 +1100,14 @@ async def test_checkpointing(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, source],
     )
 
     pair_id = str_to_felt("eth/usd")
@@ -1123,7 +1155,15 @@ async def test_checkpointing(
         "publish_entry",
         second_entry.to_tuple(),
     )
+
     second_source = str_to_felt("1xdata")
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, second_source],
+    )
+
     third_entry = Entry(
         pair_id=pair_id,
         value=7,

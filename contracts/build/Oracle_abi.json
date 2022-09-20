@@ -2,33 +2,45 @@
     {
         "members": [
             {
-                "name": "pair_id",
+                "name": "base",
                 "offset": 0,
-                "type": "felt"
+                "type": "BaseEntry"
             },
             {
-                "name": "value",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "timestamp",
-                "offset": 2,
-                "type": "felt"
-            },
-            {
-                "name": "source",
+                "name": "pair_id",
                 "offset": 3,
                 "type": "felt"
             },
             {
-                "name": "publisher",
+                "name": "value",
                 "offset": 4,
                 "type": "felt"
             }
         ],
         "name": "Entry",
         "size": 5,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "timestamp",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "publisher",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "BaseEntry",
+        "size": 3,
         "type": "struct"
     },
     {

@@ -216,7 +216,7 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
 
@@ -229,9 +229,17 @@ async def test_summary_stats(
 ):
     admin_account = initialized_contracts["admin_account"]
     publisher_account = initialized_contracts["publisher_account"]
+    publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
     summary_stats = initialized_contracts["summary_stats"]
     pair_id = str_to_felt("eth/usd")
+
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, source],
+    )
 
     for i, val in enumerate(
         [19413, 10876, 13476, 10918, 16119, 14649, 14790, 13703, 14556, 12999]
@@ -244,6 +252,7 @@ async def test_summary_stats(
             source=source,
             publisher=publisher,
         )
+
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_proxy.contract_address,

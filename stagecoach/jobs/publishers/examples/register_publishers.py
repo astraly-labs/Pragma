@@ -31,7 +31,7 @@ async def main():
         admin_private_key,
     )
     for publisher, address in zip(publishers, publisher_address):
-        await admin_client.register_publisher_if_not_registered(publisher, address)
+        await admin_client.add_publisher(publisher, address)
 
 
 if __name__ == "__main__":
