@@ -15,10 +15,10 @@ const NPY_SQRT1_2 = 1630477228166597632;  // 1 / (2 ** 0.5)
 namespace norm {
     func pdf{range_check_ptr}(x: Float) -> (x: Float) {
         let TWO = ONE * 2;
-        let (x2) = FixedPoint.pow(x, TWO);
-        let (_e1) = FixedPoint.div(x2, TWO);
-        let (_e2) = FixedPoint.exp(0 - _e1);
-        let (_e3) = FixedPoint.div(_e2, _norm_pdf_C);
+        let x2 = FixedPoint.pow(x, TWO);
+        let _e1 = FixedPoint.div(x2, TWO);
+        let _e2 = FixedPoint.exp(0 - _e1);
+        let _e3 = FixedPoint.div(_e2, _norm_pdf_C);
         return (_e3,);
     }
 
@@ -33,23 +33,23 @@ namespace norm {
         let exp_sign = sign(x);
         let x = abs_value(x);
         let denom = FixedPoint.mul(p, x);
-        let (t) = FixedPoint.div(ONE, ONE + denom);
+        let t = FixedPoint.div(ONE, ONE + denom);
 
         let _y1 = FixedPoint.mul(a5, t);
-        let (_y2) = FixedPoint.add(_y1, a4);
+        let _y2 = FixedPoint.add(_y1, a4);
         let _y3 = FixedPoint.mul(_y2, t);
-        let (_y4) = FixedPoint.add(_y3, a3);
+        let _y4 = FixedPoint.add(_y3, a3);
         let _y5 = FixedPoint.mul(_y4, t);
-        let (_y6) = FixedPoint.add(_y5, a2);
+        let _y6 = FixedPoint.add(_y5, a2);
         let _y7 = FixedPoint.mul(_y6, t);
-        let (_y8) = FixedPoint.add(_y7, a1);
+        let _y8 = FixedPoint.add(_y7, a1);
         let _y9 = FixedPoint.mul(_y8, t);
 
         let x_prod = FixedPoint.mul(x, 0 - x);
-        let (e_x_prod) = FixedPoint.exp(x_prod);
+        let e_x_prod = FixedPoint.exp(x_prod);
 
         let result = FixedPoint.mul(_y9, e_x_prod);
-        let (result) = FixedPoint.sub(ONE, result);
+        let result = FixedPoint.sub(ONE, result);
 
         if (exp_sign == -1) {
             return (0 - result,);
@@ -67,7 +67,7 @@ namespace norm {
         let (y_is_less) = less_than(y, thresh);
 
         if (neg_thresh_is_less + y_is_less == 2) {
-            let (res) = FixedPoint.div(y, M_2_SQRTPI);
+            let res = FixedPoint.div(y, M_2_SQRTPI);
             return (res,);
         }
 
@@ -75,7 +75,7 @@ namespace norm {
         let (y_is_less) = less_than(y, domain_ub);
 
         if (dom_lb_is_less + y_is_less == 2) {
-            let (_y1) = FixedPoint.add(y, ONE);
+            let _y1 = FixedPoint.add(y, ONE);
             let _y2 = FixedPoint.mul(_y1, ONE_HALF);
             let (_ndtri) = ndtri(_y2);
             let _result = FixedPoint.mul(_ndtri, NPY_SQRT1_2);
@@ -99,9 +99,9 @@ namespace norm {
     func cdf{range_check_ptr}(x: Float) -> (r: Float) {
         alloc_locals;
         let TWO = ONE * 2;
-        let (half) = FixedPoint.div(ONE, TWO);
-        let (sqrt_two) = FixedPoint.sqrt(TWO);
-        let (erf_input) = FixedPoint.div(x, sqrt_two);
+        let half = FixedPoint.div(ONE, TWO);
+        let sqrt_two = FixedPoint.sqrt(TWO);
+        let erf_input = FixedPoint.div(x, sqrt_two);
         let (_erf_output) = erf(erf_input);
         let output = FixedPoint.mul(half, ONE + _erf_output);
         return (output,);

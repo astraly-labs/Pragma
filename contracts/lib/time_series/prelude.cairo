@@ -19,7 +19,7 @@ from time_series.reshape import (
     subsample,
 )
 from time_series.stats.norm import norm, Float
-from time_series.stats.metrics import sum_array, sum_tick_array, mean, variance
+from time_series.stats.metrics import sum_array, sum_tick_array, mean, variance, volatility
 from time_series.scaler import scale_data
 from time_series.structs import TickElem, Matrix2D, List, PAIRWISE_OPERATION
 from time_series.utils import modulo, is_positive, greater_than, less_than, are_equal, safe_div

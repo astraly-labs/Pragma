@@ -9,6 +9,8 @@ from compute_engines.summary_stats.ISummaryStats import ISummaryStats
 from entry.structs import Currency, Pair, Entry
 from time_series.prelude import ONE
 
+const ONE_ETH = 10 ** 18;
+
 @external
 func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
@@ -45,43 +47,43 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     %{ stop_prank_callable %}
 
     %{ stop_warp = warp(100) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 64, 100, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 64, 100, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(200) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 71, 200, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 71, 200, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(300) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 63, 300, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 63, 300, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(400) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 67, 400, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 67, 400, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(500) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 102, 500, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 102, 500, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(600) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 58, 600, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 58, 600, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(700) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 38, 700, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 38, 700, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(800) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 25, 800, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 25, 800, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(900) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 84, 900, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 84, 900, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     %{ stop_warp(); stop_warp = warp(1000) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE * 73, 1000, 123, 1));
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 73, 1000, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     return ();
@@ -97,7 +99,8 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 767009143009058947578;  // 332.6371916666667 | steps=8076
+
+    assert _volatility = 17210754473256091413058400;  // 74639.74956007548 | steps=8076
 
     return ();
 }

@@ -29,7 +29,7 @@ func test_sum_tick_array{range_check_ptr}() {
 
 @view
 func test_norm{range_check_ptr}() {
-    let (two) = FixedPoint.fromFelt(2);
+    let two = FixedPoint.fromFelt(2);
     let (x) = norm.pdf(two);
     assert x = 124494689016914193;
     return ();
