@@ -38,3 +38,8 @@ cli-config.ini
 oracle_constructor_data.json
 
 stagecoach/jobs/publishers/starkex/app.py
+
+# allow example config
+!example-config/oracle_constructor_data.json
+!example-config/cli-config.ini
+!example-config/publisher_config.json

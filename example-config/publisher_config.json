@@ -1,0 +1,41 @@
+{
+    "assets": [
+        {
+            "type": "SPOT",
+            "pair": [
+                "BTC",
+                "USD"
+            ],
+            "decimals": 18
+        },
+        {
+            "type": "SPOT",
+            "pair": [
+                "BTC",
+                "EUR"
+            ],
+            "decimals": 18
+        },
+        {
+            "type": "SPOT",
+            "pair": [
+                "ETH",
+                "USD"
+            ],
+            "decimals": 18
+        },
+        {
+            "type": "SPOT",
+            "pair": [
+                "SOL",
+                "USD"
+            ],
+            "decimals": 18
+        }
+    ],
+    "sources": [
+        "bitstamp",
+        "cex",
+        "coinbase"
+    ]
+}

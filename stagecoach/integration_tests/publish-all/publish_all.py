@@ -21,12 +21,13 @@ logger = get_stream_logger()
 
 
 async def publish_all(assets):
-    publisher = os.environ.get("PUBLISHER")
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
-    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
+    publisher = 'empiric'
+    # publisher = os.environ.get("PUBLISHER")
+    # publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
+    # publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
     publisher_client = EmpiricPublisherClient(
-        account_private_key=publisher_private_key,
-        account_contract_address=publisher_address,
+        # account_private_key=publisher_private_key,
+        # account_contract_address=publisher_address,
         contract_addresses_config=ContractAddresses(
             2756386738475413261477141421684344364774760819536870953878747417517432039780,
             3220625633324589292531790784257888220189966136260732135803227954141242893538,
@@ -36,18 +37,18 @@ async def publish_all(assets):
         [
             fetcher(assets, publisher)
             for fetcher in (
-                BitstampFetcher,
+                # BitstampFetcher,
                 CexFetcher,
-                CoinbaseFetcher,
-                CryptowatchFetcher,
-                FtxFetcher,
-                GeminiFetcher,
-                TheGraphFetcher,
+                # CoinbaseFetcher,
+                # CryptowatchFetcher,
+                # FtxFetcher,
+                # GeminiFetcher,
+                # TheGraphFetcher,
             )
         ]
     )
     _entries = await publisher_client.fetch()
-    await publisher_client.publish_many(_entries, pagination=10)
+    # await publisher_client.publish_many(_entries, pagination=10)
 
     logger.info("Publishing the following entries:")
     for entry in _entries:
