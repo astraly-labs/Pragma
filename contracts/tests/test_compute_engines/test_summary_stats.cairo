@@ -46,66 +46,79 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     IOracle.initializer(oracle_address, 1234, publisher_registry_address, 2, currencies, 1, pairs);
     %{ stop_prank_callable %}
 
-    %{ stop_warp = warp(100) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 64, 100, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(200) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 71, 200, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(300) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 63, 300, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(400) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 67, 400, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(500) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 102, 500, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(600) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 58, 600, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(700) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 38, 700, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(800) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 25, 800, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(900) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 84, 900, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
-    %{ stop_warp(); stop_warp = warp(1000) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * 73, 1000, 123, 1));
-    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
-
     return ();
 }
+func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
+    cur_idx, arr_len, times: felt*, prices: felt*
+) {
+    alloc_locals;
 
-// @external
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+
+    if (cur_idx == arr_len) {
+        return ();
+    }
+    let cur_time = times[cur_idx];
+    let cur_price = prices[cur_idx];
+
+    %{ stop_warp = warp(ids.cur_time) %}
+    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * cur_price, cur_time, 123, 1));
+    IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
+
+    return _iter_prices_and_times(cur_idx + 1, arr_len, times, prices);
+}
+
+@external
 func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 64;
+    assert times_arr[0] = 100;
+
+    assert prices_arr[1] = 71;
+    assert times_arr[1] = 200;
+
+    assert prices_arr[2] = 63;
+    assert times_arr[2] = 300;
+
+    assert prices_arr[3] = 67;
+    assert times_arr[3] = 400;
+
+    assert prices_arr[4] = 102;
+    assert times_arr[4] = 500;
+
+    assert prices_arr[5] = 58;
+    assert times_arr[5] = 600;
+
+    assert prices_arr[6] = 38;
+    assert times_arr[6] = 700;
+
+    assert prices_arr[7] = 25;
+    assert times_arr[7] = 800;
+
+    assert prices_arr[8] = 84;
+    assert times_arr[8] = 900;
+
+    assert prices_arr[9] = 73;
+    assert times_arr[9] = 1000;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+
     tempvar summary_stats_address;
-    tempvar now;
-    %{
-        ids.summary_stats_address = context.summary_stats_address
-        ids.now = context.now
-    %}
+    %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-
     assert _volatility = 17210754473256091413058400;  // returns value in fixedpoint
 
     return ();
 }
 
-@external
+// @external
 func test_mean{syscall_ptr: felt*, range_check_ptr}() {
     tempvar summary_stats_address;
     tempvar now;
@@ -113,6 +126,38 @@ func test_mean{syscall_ptr: felt*, range_check_ptr}() {
         ids.summary_stats_address = context.summary_stats_address
         ids.now = context.now
     %}
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 64;
+    assert times_arr[0] = 100;
+
+    assert prices_arr[1] = 71;
+    assert times_arr[1] = 200;
+
+    assert prices_arr[2] = 63;
+    assert times_arr[2] = 300;
+
+    assert prices_arr[3] = 67;
+    assert times_arr[3] = 400;
+
+    assert prices_arr[4] = 102;
+    assert times_arr[4] = 500;
+
+    assert prices_arr[5] = 58;
+    assert times_arr[5] = 600;
+
+    assert prices_arr[6] = 38;
+    assert times_arr[6] = 700;
+
+    assert prices_arr[7] = 25;
+    assert times_arr[7] = 800;
+
+    assert prices_arr[8] = 84;
+    assert times_arr[8] = 900;
+
+    assert prices_arr[9] = 73;
+    assert times_arr[9] = 1000;
 
     let (_mean) = ISummaryStats.calculate_mean(summary_stats_address, 1, 100, 1000);
 
