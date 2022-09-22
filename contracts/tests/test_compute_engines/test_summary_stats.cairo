@@ -113,7 +113,7 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 17210754473256091413058400;  // returns value in fixedpoint
+    assert _volatility = 62996268093365884921900;  // returns value in fixedpoint
 
     return ();
 }

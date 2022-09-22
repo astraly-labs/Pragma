@@ -11,7 +11,7 @@ from cairo_math_64x61.math64x61 import ONE, FixedPoint
 
 from time_series.stats.polevl import polevl
 
-const ONE_YEAR = 31536000;
+const ONE_YEAR_IN_SECONDS = 31536000;
 
 func extract_values{range_check_ptr}(tick_arr_len: felt, tick_arr: TickElem**) -> (output_: felt*) {
     alloc_locals;
@@ -102,7 +102,7 @@ func volatility{range_check_ptr}(arr_len, arr: TickElem**) -> felt {
 
     let _volatility_sum = _sum_volatility(0, 1, arr_len, arr);
     let _volatility = FixedPoint.div(_volatility_sum, arr_len * ONE);
-    return _volatility * 100;
+    return FixedPoint.sqrt(_volatility) * 100;
 }
 
 func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) -> felt {
@@ -121,7 +121,7 @@ func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) 
 
     let numerator_value = FixedPoint.ln(FixedPoint.div(cur_value, prev_value));
     let numerator = FixedPoint.pow(numerator_value, ONE * 2);
-    let (denominator, _) = unsigned_div_rem((cur_timestamp - prev_timestamp) * ONE, ONE_YEAR);
+    let (denominator, _) = unsigned_div_rem((cur_timestamp - prev_timestamp) * ONE, ONE_YEAR_IN_SECONDS);
     let fraction_ = FixedPoint.div(numerator, denominator);
     let summation = FixedPoint.add(total, fraction_);
 
