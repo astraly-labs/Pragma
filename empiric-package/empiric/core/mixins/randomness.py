@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from empiric.core.abis.randomness import RANDOMNESS_ABI
 from empiric.core.contract import Contract
@@ -36,7 +36,7 @@ class RandomnessMixin:
             raise AttributeError(
                 "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
             )
-        invocation = await self.randomness.functions['request_random'].invoke(
+        invocation = await self.randomness.functions["request_random"].invoke(
             seed,
             callback_address,
             callback_gas_limit,
