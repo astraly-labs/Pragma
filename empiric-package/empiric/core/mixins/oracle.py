@@ -24,6 +24,7 @@ class OracleMixin:
         publisher: int,
         volume: int = 0,
         max_fee: int = int(1e16),
+        auto_estimate: bool = False,
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
@@ -38,11 +39,12 @@ class OracleMixin:
                 "publisher": publisher,
             },
             max_fee=max_fee,
+            auto_estimate=auto_estimate,
         )
         return invocation
 
     async def publish_many(
-        self, entries: List[Entry], pagination=0, max_fee=int(1e16)
+        self, entries: List[Entry], pagination=0, max_fee=int(1e16), auto_estimate: bool = False
     ) -> InvokeResult:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
@@ -54,11 +56,12 @@ class OracleMixin:
                 invocation = await self.oracle.publish_entries.invoke(
                     Entry.serialize_entries(entries[ix : ix + pagination]),
                     max_fee=max_fee,
+                    auto_estimate=auto_estimate,
                 )
                 ix += pagination
         else:
             invocation = await self.oracle.publish_entries.invoke(
-                Entry.serialize_entries(entries), max_fee=max_fee
+                Entry.serialize_entries(entries), max_fee=max_fee, auto_estimate=auto_estimate
             )
 
         logger.info(

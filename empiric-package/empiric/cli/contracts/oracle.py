@@ -85,12 +85,13 @@ async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
-async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
+async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG, auto_estimate: bool = False):
     client = net.init_empiric_client(config_path)
     invocation = await client.oracle.set_checkpoint.invoke(
         str_to_felt(pair_id),
         0,
         max_fee=DEFAULT_MAX_FEE,
+        auto_estimate=auto_estimate,
     )
     print("invocation:", invocation.hash)
 

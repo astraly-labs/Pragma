@@ -33,11 +33,11 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
 @app.command()
 @coro
 async def register_publisher(
-    publisher, publisher_address, config_path=config.DEFAULT_CONFIG
+    publisher, publisher_address, config_path=config.DEFAULT_CONFIG, auto_estimate: bool = False
 ):
     client = net.init_empiric_client(config_path)
     invocation = await client.publisher_registry.register_publisher.invoke(
-        str_to_felt(publisher), publisher_address, max_fee=int(1e16)
+        str_to_felt(publisher), publisher_address, max_fee=int(1e16), auto_estimate=auto_estimate
     )
 
     await invocation.wait_for_acceptance()

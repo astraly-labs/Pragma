@@ -19,21 +19,23 @@ class PublisherRegistryMixin:
         return result.publisher_address
 
     async def register_publisher(
-        self, publisher: str, publisher_address: int, max_fee=int(1e16)
+        self, publisher: str, publisher_address: int, max_fee=int(1e16), auto_estimate: bool = False
     ) -> InvokeResult:
         invocation = await self.publisher_registry.register_publisher.invoke(
             str_to_felt(publisher),
             publisher_address,
             max_fee=max_fee,
+            auto_estimate=auto_estimate,
         )
         return invocation
 
     async def update_publisher_address(
-        self, publisher_address: int, publisher: str, max_fee=int(1e16)
+        self, publisher_address: int, publisher: str, max_fee=int(1e16), auto_estimate: bool = False
     ) -> InvokeResult:
         invocation = await self.publisher_registry.update_publisher_address.invoke(
             str_to_felt(publisher),
             publisher_address,
             max_fee=max_fee,
+            auto_estimate=auto_estimate,
         )
         return invocation

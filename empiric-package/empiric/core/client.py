@@ -90,6 +90,9 @@ class EmpiricClient(PublisherRegistryMixin, OracleMixin, TransactionMixin):
         self.is_user_client = True
         self._setup_contracts()
 
+    async def estimate_fee(self, transaction):
+        return self.client.estimate_fee(transaction)
+
     def _setup_account_client(self, chain_id, private_key, account_contract_address):
         self.signer = StarkCurveSigner(
             account_contract_address,
