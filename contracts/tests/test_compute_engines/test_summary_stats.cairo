@@ -118,14 +118,10 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_mean{syscall_ptr: felt*, range_check_ptr}() {
-    tempvar summary_stats_address;
-    tempvar now;
-    %{
-        ids.summary_stats_address = context.summary_stats_address
-        ids.now = context.now
-    %}
+    alloc_locals;
+
     let (prices_arr) = alloc();
     let (times_arr) = alloc();
 
@@ -158,6 +154,12 @@ func test_mean{syscall_ptr: felt*, range_check_ptr}() {
 
     assert prices_arr[9] = 73;
     assert times_arr[9] = 1000;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+
+    tempvar summary_stats_address;
+    %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_mean) = ISummaryStats.calculate_mean(summary_stats_address, 1, 100, 1000);
 
