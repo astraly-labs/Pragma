@@ -121,7 +121,9 @@ func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) 
 
     let numerator_value = FixedPoint.ln(FixedPoint.div(cur_value, prev_value));
     let numerator = FixedPoint.pow(numerator_value, ONE * 2);
-    let (denominator, _) = unsigned_div_rem((cur_timestamp - prev_timestamp) * ONE, ONE_YEAR_IN_SECONDS);
+    let (denominator, _) = unsigned_div_rem(
+        (cur_timestamp - prev_timestamp) * ONE, ONE_YEAR_IN_SECONDS
+    );
     let fraction_ = FixedPoint.div(numerator, denominator);
     let summation = FixedPoint.add(total, fraction_);
 
