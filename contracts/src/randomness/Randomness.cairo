@@ -4,10 +4,15 @@ from starkware.starknet.common.syscalls import get_caller_address, get_block_num
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.uint256 import Uint256
 
 from proxy.library import Proxy
 from randomness.structs import RequestStatus
 from randomness.IRandomnessReceiver import IRandomnessReceiver
+
+@storage_var
+func Randomness__public_key() -> (pk: Uint256) {
+}
 
 @storage_var
 func Randomness__request_id(caller_address) -> (id_: felt) {
@@ -23,9 +28,11 @@ func Randomness__request_status(caller_address, request_id) -> (status_: felt) {
 
 @event
 func Randomness__request(
-    requestor_address: felt,
     request_id: felt,
+    caller_address: felt,
+    seed: felt,
     minimum_block_number: felt,
+    callback_address: felt,
     callback_gas_limit: felt,
     num_words: felt,
 ) {
@@ -40,8 +47,11 @@ func Randomness__status_change(requestor_address: felt, request_id: felt, status
 //
 
 @external
-func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(proxy_admin) {
+func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    proxy_admin, public_key: Uint256
+) {
     Proxy.initializer(proxy_admin);
+    Randomness__public_key.write(public_key);
 
     return ();
 }
@@ -85,7 +95,13 @@ func request_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     // hash request
     Randomness__request_hash.write(caller_address, request_id, hash_);
     Randomness__request.emit(
-        caller_address, request_id, current_block + publish_delay, callback_gas_limit, num_words
+        request_id,
+        caller_address,
+        seed,
+        current_block + publish_delay,
+        callback_address,
+        callback_gas_limit,
+        num_words,
     );
     Randomness__request_status.write(caller_address, request_id, RequestStatus.RECEIVED);
     Randomness__request_id.write(caller_address, request_id + 1);
@@ -140,6 +156,7 @@ func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     proof: felt*,
 ) {
     alloc_locals;
+    // this will be replaced with a proof in the following release once we are finished with our implementation of an onchain verifier
 
     Proxy.assert_only_admin();
 
@@ -167,6 +184,10 @@ func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     return ();
 }
 
+//
+// Upgrade
+//
+
 @external
 func upgrade{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_implementation: felt
@@ -174,6 +195,14 @@ func upgrade{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     Proxy.assert_only_admin();
     Proxy._set_implementation_hash(new_implementation);
     return ();
+}
+
+@view
+func get_implementation_hash{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+    address: felt
+) {
+    let (address) = Proxy.get_implementation_hash();
+    return (address,);
 }
 
 //
@@ -195,7 +224,7 @@ func get_pending_requests{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 }
 
 @view
-func request_id_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_request_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     requestor_address, request_id
 ) -> (status_: felt) {
     let (request_status) = Randomness__request_status.read(requestor_address, request_id);
@@ -208,6 +237,14 @@ func requestor_current_index{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ran
 ) -> (idx: felt) {
     let (current_index) = Randomness__request_id.read(requestor_address);
     return (idx=current_index);
+}
+
+@view
+func get_public_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    requestor_address
+) -> (pk: Uint256) {
+    let (pub_key_) = Randomness__public_key.read();
+    return (pub_key_,);
 }
 
 //

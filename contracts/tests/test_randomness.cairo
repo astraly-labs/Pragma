@@ -3,6 +3,7 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.starknet.common.syscalls import get_block_timestamp, get_block_number
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.uint256 import Uint256
 
 from randomness.IRandomness import IRandomness
 from randomness.IExampleRandomness import IExampleRandomness
@@ -23,7 +24,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
         context.example_randomness = ids.example_randomness
     %}
 
-    IRandomness.initializer(randomness_address, randomness_admin_address);
+    IRandomness.initializer(randomness_address, randomness_admin_address, Uint256(100, 100));
     return ();
 }
 

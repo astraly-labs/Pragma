@@ -1,7 +1,7 @@
 %lang starknet
 
 struct RequestStatus {
-    EMPTY: felt,
+    UNINITIALIZED: felt,
     RECEIVED: felt,
     FULFILLED: felt,
     CANCELLED: felt,

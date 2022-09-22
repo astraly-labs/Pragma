@@ -44,7 +44,7 @@ namespace IRandomness {
     ) -> (requests_len: felt, requests: felt*) {
     }
 
-    func request_id_status(requestor_address, request_id) -> (status_: felt) {
+    func get_request_status(requestor_address, request_id) -> (status_: felt) {
     }
 
     func requestor_current_index(requestor_address) -> (idx: felt) {

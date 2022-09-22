@@ -1,5 +1,22 @@
 [
     {
+        "members": [
+            {
+                "name": "low",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "high",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Uint256",
+        "size": 2,
+        "type": "struct"
+    },
+    {
         "data": [
             {
                 "name": "implementation",
@@ -28,15 +45,23 @@
     {
         "data": [
             {
-                "name": "requestor_address",
-                "type": "felt"
-            },
-            {
                 "name": "request_id",
                 "type": "felt"
             },
             {
+                "name": "caller_address",
+                "type": "felt"
+            },
+            {
+                "name": "seed",
+                "type": "felt"
+            },
+            {
                 "name": "minimum_block_number",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
                 "type": "felt"
             },
             {
@@ -76,6 +101,10 @@
             {
                 "name": "proxy_admin",
                 "type": "felt"
+            },
+            {
+                "name": "public_key",
+                "type": "Uint256"
             }
         ],
         "name": "initializer",
@@ -231,6 +260,18 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "get_implementation_hash",
+        "outputs": [
+            {
+                "name": "address",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "requestor_address",
@@ -278,7 +319,7 @@
                 "type": "felt"
             }
         ],
-        "name": "request_id_status",
+        "name": "get_request_status",
         "outputs": [
             {
                 "name": "status_",
@@ -300,6 +341,23 @@
             {
                 "name": "idx",
                 "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "requestor_address",
+                "type": "felt"
+            }
+        ],
+        "name": "get_public_key",
+        "outputs": [
+            {
+                "name": "pk",
+                "type": "Uint256"
             }
         ],
         "stateMutability": "view",
