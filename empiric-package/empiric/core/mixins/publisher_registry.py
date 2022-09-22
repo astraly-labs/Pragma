@@ -19,23 +19,42 @@ class PublisherRegistryMixin:
         return result.publisher_address
 
     async def register_publisher(
-        self, publisher: str, publisher_address: int, max_fee=int(1e16), auto_estimate: bool = False
+        self, publisher: str, publisher_address: int, max_fee=int(1e16), estimate_fee: bool = False
     ) -> InvokeResult:
-        invocation = await self.publisher_registry.register_publisher.invoke(
+
+        max_fee_to_use = max_fee
+        prepared_call = self.publisher_registry.register_publisher.prepare(
             str_to_felt(publisher),
             publisher_address,
-            max_fee=max_fee,
-            auto_estimate=auto_estimate,
         )
+
+        if estimate_fee == True:
+            fee =  await prepared_call.estimate_fee()
+            print("estimated overall fee :", fee.overall_fee)
+            print("estimated gas usage :", fee.gas_usage)
+            print("estimated gas price :", fee.gas_price)
+            max_fee_to_use = int(fee.overall_fee * 1.1)
+        
+        invocation = prepared_call.invoke(max_fee=max_fee_to_use)
+
         return invocation
 
     async def update_publisher_address(
-        self, publisher_address: int, publisher: str, max_fee=int(1e16), auto_estimate: bool = False
+        self, publisher_address: int, publisher: str, max_fee=int(1e16), estimate_fee: bool = False
     ) -> InvokeResult:
-        invocation = await self.publisher_registry.update_publisher_address.invoke(
+        
+        max_fee_to_use = max_fee
+        prepared_call = self.publisher_registry.update_publisher_address.prepare(
             str_to_felt(publisher),
             publisher_address,
-            max_fee=max_fee,
-            auto_estimate=auto_estimate,
         )
+        if estimate_fee == True:
+            fee =  await prepared_call.estimate_fee()
+            print("estimated overall fee :", fee.overall_fee)
+            print("estimated gas usage :", fee.gas_usage)
+            print("estimated gas price :", fee.gas_price)
+            max_fee_to_use = int(fee.overall_fee * 1.1)
+        
+        invocation = prepared_call.invoke(max_fee=max_fee_to_use)
+
         return invocation

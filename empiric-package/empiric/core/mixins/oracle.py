@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class OracleMixin:
-    publisher_registry: Contract
+    oracle: Contract
     client: Client
 
     async def publish_entry(
@@ -30,7 +30,6 @@ class OracleMixin:
             raise AttributeError(
                 "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
             )
-        max_fee_to_use = max_fee
         prepared_call = self.oracle.publish_entry.prepare(
             {
                 "pair_id": pair_id,
@@ -41,11 +40,12 @@ class OracleMixin:
             },
         )
 
+        max_fee_to_use = max_fee
         if estimate_fee == True:
             fee =  await prepared_call.estimate_fee()
-            print("estimated overall fee :", fee.overall_fee)
-            print("estimated gas usage :", fee.gas_usage)
-            print("estimated gas price :", fee.gas_price)
+            logger.info("estimated overall fee :", fee.overall_fee)
+            logger.info("estimated gas usage :", fee.gas_usage)
+            logger.info("estimated gas price :", fee.gas_price)
             max_fee_to_use = int(fee.overall_fee * 1.1) 
 
         invocation = await prepared_call.invoke(
@@ -55,25 +55,46 @@ class OracleMixin:
         return invocation
 
     async def publish_many(
-        self, entries: List[Entry], pagination=0, max_fee=int(1e16), auto_estimate: bool = False
+        self, entries: List[Entry], pagination=0, max_fee=int(1e16), estimate_fee: bool = False
     ) -> InvokeResult:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
             return
-
+        max_fee_to_use = max_fee
         if pagination:
             ix = 0
             while ix < len(entries):
-                invocation = await self.oracle.publish_entries.invoke(
+
+                prepared_call = self.oracle.publish_entries.prepare(
                     Entry.serialize_entries(entries[ix : ix + pagination]),
-                    max_fee=max_fee,
-                    auto_estimate=auto_estimate,
                 )
+
+                if estimate_fee == True:
+                    fee =  await prepared_call.estimate_fee()
+                    logger.info("estimated overall fee :", fee.overall_fee, " for page", ix)
+                    logger.info("estimated gas usage :", fee.gas_usage, " for page", ix)
+                    logger.info("estimated gas price :", fee.gas_price, " for page", ix)
+                    max_fee_to_use = int(fee.overall_fee * 1.1) 
+
+                invocation = await prepared_call.invoke(
+                    max_fee= max_fee_to_use,
+                )
+
                 ix += pagination
         else:
-            invocation = await self.oracle.publish_entries.invoke(
-                Entry.serialize_entries(entries), max_fee=max_fee, auto_estimate=auto_estimate
-            )
+            prepared_call = self.oracle.publish_entries.prepare(
+                    Entry.serialize_entries(entries)
+                )
+            if estimate_fee == True:
+                fee =  await prepared_call.estimate_fee()
+                logger.info("estimated overall fee :", fee.overall_fee, )
+                logger.info("estimated gas usage :", fee.gas_usage, )
+                logger.info("estimated gas price :", fee.gas_price, )
+                max_fee_to_use = int(fee.overall_fee * 1.1) 
+    
+            invocation = await prepared_call.invoke(
+                    max_fee= max_fee_to_use,
+                )
 
         logger.info(
             f"Sent {len(entries)} updated entries with transaction {invocation.hash}"
