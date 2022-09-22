@@ -1,14 +1,17 @@
 %lang starknet
 
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.math import sqrt
+from starkware.cairo.common.math import sqrt, unsigned_div_rem
 
 from time_series.matmul import pairwise_1D, dot_product
 from time_series.reshape import fill_1d
 from time_series.structs import TickElem, PAIRWISE_OPERATION
 from time_series.utils import safe_div
+from cairo_math_64x61.math64x61 import ONE, FixedPoint
 
 from time_series.stats.polevl import polevl
+
+const ONE_YEAR_IN_SECONDS = 31536000;
 
 func extract_values{range_check_ptr}(tick_arr_len: felt, tick_arr: TickElem**) -> (output_: felt*) {
     alloc_locals;
@@ -86,4 +89,43 @@ func standard_deviation{range_check}(arr_len, arr: felt*) -> (std: felt) {
     let (variance_) = variance(arr_len, arr);
     let std_ = sqrt(variance_);
     return (std_,);
+}
+
+func volatility{range_check_ptr}(arr_len, arr: TickElem**) -> felt {
+    // def volatility(N: int, S: list[int], T: list[int]):
+    //     summation = 0
+    //     for i in range(1, N):
+    //         numerator = log(S[i] / S[i - 1]) ** 2
+    //         denominator = ((T[i] - T[i - 1]) / (3600 * 24 * 365)
+    //         summation += numerator / denominator
+    //     return (1 / N) * summation * 100
+
+    let _volatility_sum = _sum_volatility(0, 1, arr_len, arr);
+    let _volatility = FixedPoint.div(_volatility_sum, arr_len * ONE);
+    return FixedPoint.sqrt(_volatility) * 100;
+}
+
+func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) -> felt {
+    alloc_locals;
+    if (cur_idx == arr_len) {
+        return total;
+    }
+    let cur_val = arr[cur_idx];
+    let prev_val = arr[cur_idx - 1];
+
+    let cur_value = cur_val.value;
+    let prev_value = prev_val.value;
+
+    let cur_timestamp = cur_val.tick;
+    let prev_timestamp = prev_val.tick;
+
+    let numerator_value = FixedPoint.ln(FixedPoint.div(cur_value, prev_value));
+    let numerator = FixedPoint.pow(numerator_value, ONE * 2);
+    let (denominator, _) = unsigned_div_rem(
+        (cur_timestamp - prev_timestamp) * ONE, ONE_YEAR_IN_SECONDS
+    );
+    let fraction_ = FixedPoint.div(numerator, denominator);
+    let summation = FixedPoint.add(total, fraction_);
+
+    return _sum_volatility(summation, cur_idx + 1, arr_len, arr);
 }
