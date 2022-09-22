@@ -1,5 +1,6 @@
 import configparser
 from pathlib import Path
+from turtle import end_fill
 
 import typer
 from empiric.cli import SUCCESS, config, net
@@ -33,11 +34,23 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
 @app.command()
 @coro
 async def register_publisher(
-    publisher, publisher_address, config_path=config.DEFAULT_CONFIG, auto_estimate: bool = False
+    publisher, publisher_address, config_path=config.DEFAULT_CONFIG, max_fee=int(1e16), estimate_fee: bool = False
 ):
     client = net.init_empiric_client(config_path)
-    invocation = await client.publisher_registry.register_publisher.invoke(
-        str_to_felt(publisher), publisher_address, max_fee=int(1e16), auto_estimate=auto_estimate
+    max_fee_to_use = max_fee
+    prepared_call = client.publisher_registry.register_publisher.prepare(
+            str_to_felt(publisher), publisher_address
+        )
+
+    if estimate_fee == True:
+        fee =  await prepared_call.estimate_fee()
+        print("estimated overall fee :", fee.overall_fee)
+        print("estimated gas usage :", fee.gas_usage)
+        print("estimated gas price :", fee.gas_price)
+        max_fee_to_use = int(fee.overall_fee * 1.1) 
+
+    invocation = await prepared_call.invoke(
+        max_fee= max_fee_to_use,
     )
 
     await invocation.wait_for_acceptance()

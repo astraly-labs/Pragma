@@ -24,13 +24,14 @@ class OracleMixin:
         publisher: int,
         volume: int = 0,
         max_fee: int = int(1e16),
-        auto_estimate: bool = False,
+        estimate_fee: bool = False
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
                 "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
             )
-        invocation = await self.oracle.publish_entry.invoke(
+        max_fee_to_use = max_fee
+        prepared_call = self.oracle.publish_entry.prepare(
             {
                 "pair_id": pair_id,
                 "value": value,
@@ -38,9 +39,19 @@ class OracleMixin:
                 "source": source,
                 "publisher": publisher,
             },
-            max_fee=max_fee,
-            auto_estimate=auto_estimate,
         )
+
+        if estimate_fee == True:
+            fee =  await prepared_call.estimate_fee()
+            print("estimated overall fee :", fee.overall_fee)
+            print("estimated gas usage :", fee.gas_usage)
+            print("estimated gas price :", fee.gas_price)
+            max_fee_to_use = int(fee.overall_fee * 1.1) 
+
+        invocation = await prepared_call.invoke(
+            max_fee= max_fee_to_use,
+        )
+
         return invocation
 
     async def publish_many(

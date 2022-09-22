@@ -85,13 +85,23 @@ async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
-async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG, auto_estimate: bool = False):
+async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG, max_fee = DEFAULT_MAX_FEE, estimate_fee: bool = False):
+
     client = net.init_empiric_client(config_path)
-    invocation = await client.oracle.set_checkpoint.invoke(
-        str_to_felt(pair_id),
-        0,
-        max_fee=DEFAULT_MAX_FEE,
-        auto_estimate=auto_estimate,
+    max_fee_to_use = max_fee
+    prepared_call = client.oracle.set_checkpoint.prepare(str_to_felt(pair_id),
+                    0,
+        )
+ 
+    if estimate_fee == True:
+        fee =  await prepared_call.estimate_fee()
+        print("estimated overall fee :", fee.overall_fee)
+        print("estimated gas usage :", fee.gas_usage)
+        print("estimated gas price :", fee.gas_price)
+        max_fee_to_use = int(fee.overall_fee * 1.1) 
+
+    invocation = await prepared_call.invoke(
+        max_fee= max_fee_to_use,
     )
     print("invocation:", invocation.hash)
 
