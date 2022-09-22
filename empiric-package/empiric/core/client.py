@@ -4,7 +4,7 @@ from typing import Optional
 from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
 from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
 from empiric.core.contract import Contract
-from empiric.core.mixins import OracleMixin, PublisherRegistryMixin, TransactionMixin
+from empiric.core.mixins import OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin
 from starknet_py.net import AccountClient
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
@@ -12,7 +12,7 @@ from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 logger = logging.getLogger(__name__)
 
 
-class EmpiricClient(PublisherRegistryMixin, OracleMixin, TransactionMixin):
+class EmpiricClient(OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin):
     is_user_client: bool = False
 
     def __init__(

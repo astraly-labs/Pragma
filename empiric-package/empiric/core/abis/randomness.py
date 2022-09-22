@@ -1,17 +1,28 @@
-[
+RANDOMNESS_ABI = [
     {
         "data": [
             {
-                "name": "old_admin_address",
-                "type": "felt"
-            },
-            {
-                "name": "new_admin_address",
+                "name": "implementation",
                 "type": "felt"
             }
         ],
         "keys": [],
-        "name": "UpdatedAdminAddress",
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousAdminAddress",
+                "type": "felt"
+            },
+            {
+                "name": "newAdminAddress",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AdminAddressChanged",
         "type": "event"
     },
     {
@@ -63,13 +74,13 @@
     {
         "inputs": [
             {
-                "name": "admin_address",
+                "name": "proxy_admin",
                 "type": "felt"
             }
         ],
-        "name": "constructor",
+        "name": "initializer",
         "outputs": [],
-        "type": "constructor"
+        "type": "function"
     },
     {
         "inputs": [
@@ -97,11 +108,11 @@
                 "type": "felt"
             },
             {
-                "name": "callback_gas_limit",
+                "name": "callback_address",
                 "type": "felt"
             },
             {
-                "name": "callback_address",
+                "name": "callback_gas_limit",
                 "type": "felt"
             },
             {
@@ -125,15 +136,23 @@
     {
         "inputs": [
             {
-                "name": "requestor_address",
-                "type": "felt"
-            },
-            {
                 "name": "request_id",
                 "type": "felt"
             },
             {
+                "name": "requestor_address",
+                "type": "felt"
+            },
+            {
+                "name": "seed",
+                "type": "felt"
+            },
+            {
                 "name": "minimum_block_number",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
                 "type": "felt"
             },
             {
@@ -160,11 +179,19 @@
                 "type": "felt"
             },
             {
-                "name": "minimum_block_number",
+                "name": "seed",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
                 "type": "felt"
             },
             {
                 "name": "callback_gas_limit",
+                "type": "felt"
+            },
+            {
+                "name": "minimum_block_number",
                 "type": "felt"
             },
             {
@@ -173,6 +200,18 @@
             },
             {
                 "name": "random_words",
+                "type": "felt*"
+            },
+            {
+                "name": "block_hash",
+                "type": "felt"
+            },
+            {
+                "name": "proof_len",
+                "type": "felt"
+            },
+            {
+                "name": "proof",
                 "type": "felt*"
             }
         ],

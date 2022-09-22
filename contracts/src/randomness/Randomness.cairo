@@ -5,7 +5,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.alloc import alloc
 
-from admin.library import Admin
+from proxy.library import Proxy
 from randomness.structs import RequestStatus
 from randomness.IRandomnessReceiver import IRandomnessReceiver
 
@@ -36,12 +36,12 @@ func Randomness__status_change(requestor_address: felt, request_id: felt, status
 }
 
 //
-// Constructor
+// initializer
 //
 
-@constructor
-func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(admin_address) {
-    Admin.initialize_admin_address(admin_address);
+@external
+func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(proxy_admin) {
+    Proxy.initializer(proxy_admin);
 
     return ();
 }
@@ -55,7 +55,7 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 func update_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     requestor_address, request_id, status
 ) {
-    Admin.only_admin();
+    Proxy.assert_only_admin();
     Randomness__request_status.write(requestor_address, request_id, status);
     Randomness__status_change.emit(requestor_address, request_id, status);
 
@@ -64,7 +64,7 @@ func update_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 
 @external
 func request_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    seed, callback_gas_limit, callback_address, publish_delay, num_words
+    seed, callback_address, callback_gas_limit, publish_delay, num_words
 ) -> (request_id: felt) {
     alloc_locals;
 
@@ -73,7 +73,13 @@ func request_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     let (request_id) = Randomness__request_id.read(caller_address);
 
     let (hash_) = hash_request(
-        request_id, caller_address, current_block + publish_delay, callback_gas_limit, num_words
+        request_id,
+        caller_address,
+        seed,
+        current_block + publish_delay,
+        callback_address,
+        callback_gas_limit,
+        num_words,
     );
 
     // hash request
@@ -89,13 +95,25 @@ func request_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 
 @external
 func cancel_random_request{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    requestor_address, request_id, minimum_block_number, callback_gas_limit, num_words
+    request_id,
+    requestor_address,
+    seed,
+    minimum_block_number,
+    callback_address,
+    callback_gas_limit,
+    num_words,
 ) {
     alloc_locals;
 
     let (caller_address) = get_caller_address();
     let (_hashed_value) = hash_request(
-        request_id, requestor_address, minimum_block_number, callback_gas_limit, num_words
+        request_id,
+        requestor_address,
+        seed,
+        minimum_block_number,
+        callback_address,
+        callback_gas_limit,
+        num_words,
     );
     let (stored_hash_) = Randomness__request_hash.read(caller_address, request_id);
 
@@ -111,17 +129,28 @@ func cancel_random_request{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     request_id,
     requestor_address,
-    minimum_block_number,
+    seed,
+    callback_address,
     callback_gas_limit,
+    minimum_block_number,
     random_words_len,
     random_words: felt*,
+    block_hash: felt,
+    proof_len,
+    proof: felt*,
 ) {
     alloc_locals;
 
-    Admin.only_admin();
+    Proxy.assert_only_admin();
 
     let (_hashed_value) = hash_request(
-        request_id, requestor_address, minimum_block_number, callback_gas_limit, random_words_len
+        request_id,
+        requestor_address,
+        seed,
+        minimum_block_number,
+        callback_address,
+        callback_gas_limit,
+        random_words_len,
     );
     let (stored_hash_) = Randomness__request_hash.read(requestor_address, request_id);
 
@@ -130,11 +159,20 @@ func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     }
 
     IRandomnessReceiver.receive_random_words(
-        requestor_address, request_id, random_words_len, random_words
+        callback_address, request_id, random_words_len, random_words
     );
     Randomness__request_status.write(requestor_address, request_id, RequestStatus.FULFILLED);
     Randomness__status_change.emit(requestor_address, request_id, RequestStatus.FULFILLED);
 
+    return ();
+}
+
+@external
+func upgrade{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_implementation: felt
+) {
+    Proxy.assert_only_admin();
+    Proxy._set_implementation_hash(new_implementation);
     return ();
 }
 
@@ -177,12 +215,22 @@ func requestor_current_index{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ran
 //
 
 func hash_request{pedersen_ptr: HashBuiltin*}(
-    request_id, requestor_address, minimum_block_number, callback_gas_limit, num_words
+    request_id,
+    requestor_address,
+    seed,
+    minimum_block_number,
+    callback_address,
+    callback_gas_limit,
+    num_words,
 ) -> (hashed_value_: felt) {
-    let (hash_) = hash2{hash_ptr=pedersen_ptr}(request_id, requestor_address);
-    let (hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, minimum_block_number);
-    let (hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, callback_gas_limit);
-    let (hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, num_words);
+    alloc_locals;
+
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(request_id, requestor_address);
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, seed);
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, minimum_block_number);
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, callback_address);
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, callback_gas_limit);
+    let (local hash_) = hash2{hash_ptr=pedersen_ptr}(hash_, num_words);
     return (hashed_value_=hash_);
 }
 

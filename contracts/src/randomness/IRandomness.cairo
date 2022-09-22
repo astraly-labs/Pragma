@@ -2,26 +2,40 @@
 
 @contract_interface
 namespace IRandomness {
+    func initializer(proxy_admin: felt) {
+    }
+
     func update_status(requestor_address, request_id, status) {
     }
 
-    func request_random(seed, callback_gas_limit, callback_address, publish_delay, num_words) -> (
+    func request_random(seed, callback_address, callback_gas_limit, publish_delay, num_words) -> (
         request_id: felt
     ) {
     }
 
     func cancel_random_request(
-        requestor_address, request_id, minimum_block_number, callback_gas_limit, num_words
+        request_id,
+        requestor_address,
+        seed,
+        minimum_block_number,
+        callback_address,
+        callback_gas_limit,
+        num_words,
     ) {
     }
 
     func submit_random(
         request_id,
         requestor_address,
-        minimum_block_number,
+        seed,
+        callback_address,
         callback_gas_limit,
+        minimum_block_number,
         random_words_len,
         random_words: felt*,
+        block_hash,
+        proof_len,
+        proof: felt*,
     ) {
     }
 
