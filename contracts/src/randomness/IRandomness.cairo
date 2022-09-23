@@ -1,8 +1,10 @@
 %lang starknet
 
+from starkware.cairo.common.uint256 import Uint256
+
 @contract_interface
 namespace IRandomness {
-    func initializer(proxy_admin: felt) {
+    func initializer(proxy_admin: felt, public_key: Uint256) {
     }
 
     func update_status(requestor_address, request_id, status) {
