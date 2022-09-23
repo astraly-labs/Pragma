@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Tuple, Union
 
-from empiric.core.utils import str_to_felt
+from empiric.core.utils import felt_to_str, str_to_felt
 
 
 class Entry:
@@ -96,3 +96,6 @@ class Entry:
         expanded = [entry.to_tuple() for entry in entries]
         flattened = [x for entry in expanded for x in entry]
         return [len(entries)] + flattened
+
+    def __repr__(self):
+        return f'Entry(pair_id="{felt_to_str(self.pair_id)}", value={self.value}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'

@@ -7,7 +7,7 @@ from aiohttp import ClientSession
 from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
-from empiric.publisher.base import PublisherFetchError, PublisherInterfaceT
+from empiric.publisher.types import PublisherFetchError, PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
@@ -67,15 +67,13 @@ class CexFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(
-        self, session: ClientSession
-    ) -> List[Union[Entry, PublisherFetchError]]:
+    def fetch_sync(self) -> List[Union[Entry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
                 logger.debug(f"Skipping CEX for non-spot asset {asset}")
                 continue
-            entries.append(self._fetch_pair_sync(asset, session))
+            entries.append(self._fetch_pair_sync(asset))
         return entries
 
     def _construct(self, asset, result) -> Entry:

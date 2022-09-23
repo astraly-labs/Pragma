@@ -7,7 +7,7 @@ from aiohttp import ClientSession
 from empiric.core.entry import Entry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
-from empiric.publisher.base import PublisherInterfaceT
+from empiric.publisher.types import PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class CryptowatchFetcher(PublisherInterfaceT):
             result_json = await resp.json()
             return self._parse_result_json(result_json)
 
-    def fetch_sync(self, session: ClientSession) -> List[Entry]:
+    def fetch_sync(self) -> List[Entry]:
         resp = requests.get(self.BASE_URL)
         result_json = resp.json()
         return self._parse_result_json(result_json)

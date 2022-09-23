@@ -4,7 +4,7 @@ from typing import List
 import aiohttp
 from empiric.core.client import EmpiricClient
 from empiric.core.entry import Entry
-from empiric.publisher.base import PublisherInterfaceT
+from empiric.publisher.types import PublisherInterfaceT
 
 
 class EmpiricPublisherClient(EmpiricClient):
@@ -72,24 +72,16 @@ async def get_entries():
     cryptowatch_fetcher = CryptowatchFetcher(EMPIRIC_ALL_ASSETS, "test3")
     gemini_fetcher = GeminiFetcher(EMPIRIC_ALL_ASSETS, "test4")
     the_graph_fetcher = TheGraphFetcher(EMPIRIC_ALL_ASSETS, "test5")
-    fetchers = [
-        bitstamp_fetcher,
-        cex_fetcher,
-        cryptowatch_fetcher,
-        gemini_fetcher,
-        the_graph_fetcher,
-    ]
     eapc = EmpiricPublisherClient("testnet")
 
-    for fetcher in fetchers:
-        eapc.add_fetcher(fetcher)
+    eapc.add_fetchers(
+        [
+            bitstamp_fetcher,
+            cex_fetcher,
+            cryptowatch_fetcher,
+            gemini_fetcher,
+            the_graph_fetcher,
+        ]
+    )
 
     return await eapc.fetch()
-
-
-if __name__ == "__main__":
-    import time
-
-    start = time.time()
-    z = asyncio.run(get_entries())
-    print(time.time() - start)

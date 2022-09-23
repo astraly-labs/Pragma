@@ -39,3 +39,4 @@ oracle_constructor_data.json
 
 # private files
 private/
+stagecoach/jobs/publishers/starkex/app.py
