@@ -98,4 +98,4 @@ class Entry:
         return [len(entries)] + flattened
 
     def __repr__(self):
-        return f'Entry("{felt_to_str(self.pair_id)}", {self.value}, {self.timestamp}, "{felt_to_str(self.source)}", "{felt_to_str(self.publisher)}")'
+        return f'Entry(pair_id="{felt_to_str(self.pair_id)}", value={self.value}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'
