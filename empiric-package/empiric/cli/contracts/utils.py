@@ -24,8 +24,8 @@ async def declare_contract(
 
     await client.declare(declare_tx)
     compiled_ = create_compiled_contract(None, compiled_contract, None)
-    declared_oracle_class_hash = compute_class_hash(compiled_, hash_func=pedersen_hash)
-    return declared_oracle_class_hash
+    declared_class_hash = compute_class_hash(compiled_, hash_func=pedersen_hash)
+    return declared_class_hash
 
 
 def get_contract(

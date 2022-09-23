@@ -244,9 +244,9 @@ func get_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 
 @external
 func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, aggregation_mode: felt
+    pair_id: felt, aggregation_mode: felt
 ) {
-    Oracle.set_checkpoint(key, aggregation_mode);
+    Oracle.set_checkpoint(pair_id, aggregation_mode);
     return ();
 }
 

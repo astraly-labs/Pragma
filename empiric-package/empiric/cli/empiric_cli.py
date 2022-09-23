@@ -2,7 +2,16 @@ import configparser
 from typing import Optional
 
 import typer
-from empiric.cli import SUCCESS, __app_name__, account, config, contracts, entry, net
+from empiric.cli import (
+    SUCCESS,
+    __app_name__,
+    account,
+    config,
+    contracts,
+    net,
+    publisher,
+    randomness,
+)
 from starkware.crypto.signature.signature import get_random_private_key
 
 from .utils import coro
@@ -125,4 +134,5 @@ def main(
 
 
 app.add_typer(contracts.app, name="contracts")
-app.add_typer(entry.app, name="entry")
+app.add_typer(publisher.app, name="publisher")
+app.add_typer(randomness.app, name="random")

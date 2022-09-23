@@ -34,6 +34,11 @@ class EmpiricPublisherClient(EmpiricClient):
 
     fetchers: List[PublisherInterfaceT] = []
 
+    @staticmethod
+    def convert_to_publisher(client: EmpiricClient):
+        client.__class__ = EmpiricPublisherClient
+        return client
+
     def add_fetchers(self, fetchers: List[PublisherInterfaceT]):
         self.fetchers.extend(fetchers)
 

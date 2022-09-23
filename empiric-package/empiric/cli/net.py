@@ -16,6 +16,11 @@ def get_gateway_url(config_file: Path) -> str:
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 
+    if config_parser["GENERAL"]["network"] == "testnet":
+        return "testnet"
+    if config_parser["GENERAL"]["network"] == "mainnet":
+        return "mainnet"
+
     return config_parser["GENERAL"]["gateway-url"]
 
 
@@ -42,8 +47,10 @@ def init_empiric_client(config_file: Path) -> EmpiricClient:
     account_private_key = int(config_parser["SECRET"]["private-key"])
     network = config_parser["GENERAL"]["network"]
     account_contract_address = int(config_parser["USER"]["address"])
-    publisher_registry_address = int(config_parser["CONTRACTS"]["publisher-registry"])
-    oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])
+    publisher_registry_address = int(
+        config_parser["CONTRACTS"].get("publisher-registry", 0)
+    )
+    oracle_proxy_address = int(config_parser["CONTRACTS"].get("oracle-proxy", 0))
 
     client = EmpiricClient(
         network,

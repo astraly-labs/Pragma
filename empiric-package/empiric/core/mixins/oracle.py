@@ -106,3 +106,19 @@ class OracleMixin:
             response.last_updated_timestamp,
             response.num_sources_aggregated,
         )
+
+    async def set_checkpoint(
+        self,
+        pair_id: int,
+        max_fee=int(1e16),
+    ) -> InvokeResult:
+        if not self.is_user_client:
+            raise AttributeError(
+                "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
+            )
+        invocation = await self.oracle.set_checkpoint.invoke(
+            pair_id,
+            0,
+            max_fee=max_fee,
+        )
+        return invocation
