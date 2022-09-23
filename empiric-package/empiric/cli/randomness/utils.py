@@ -6,11 +6,25 @@ import requests
 from starknet_py.net.full_node_client import FullNodeClient
 from starknet_py.net.networks import TESTNET
 
-from .randomness_utils import get_public_key, ecvrf_prove, ecvrf_proof_to_hash, ecvrf_verify, get_public_key
+from .randomness_utils import (
+    ecvrf_proof_to_hash,
+    ecvrf_prove,
+    ecvrf_verify,
+    get_public_key,
+)
 
 
 class RandomnessRequest:
-    def __init__(self, request_id, caller_address, seed, minimum_block_number, callback_address, callback_gas_limit, num_words):
+    def __init__(
+        self,
+        request_id,
+        caller_address,
+        seed,
+        minimum_block_number,
+        callback_address,
+        callback_gas_limit,
+        num_words,
+    ):
         self.request_id = int(request_id, 16)
         self.caller_address = int(caller_address, 16)
         self.seed = int(seed, 16)
@@ -18,11 +32,11 @@ class RandomnessRequest:
         self.callback_address = int(callback_address, 16)
         self.callback_gas_limit = int(callback_gas_limit, 16)
         self.num_words = int(num_words, 16)
-    
+
     def __repr__(self):
         return (
-            f'Request(caller_address={self.caller_address},request_id={self.request_id},'
-            f'minimum_block_number={self.minimum_block_number}'
+            f"Request(caller_address={self.caller_address},request_id={self.request_id},"
+            f"minimum_block_number={self.minimum_block_number}"
         )
 
 
@@ -32,12 +46,19 @@ async def get_blockhash(block_number, node_url, network=TESTNET):
     return r.block_hash
 
 
-def get_events(contract_address: str, node_url, min_block: int = 0, keys: List[str] = ['0xc285ec4fd3baa2fd5b1dc432a00bd5301d2c84b86a7e6900c13b6634b4e81a']):
+def get_events(
+    contract_address: str,
+    node_url,
+    min_block: int = 0,
+    keys: List[str] = [
+        "0xc285ec4fd3baa2fd5b1dc432a00bd5301d2c84b86a7e6900c13b6634b4e81a"
+    ],
+):
     params = {
-        "jsonrpc":"2.0",
-        "id":"0",
-        "method":"starknet_getEvents",
-        "params":[
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "starknet_getEvents",
+        "params": [
             {
                 "address": contract_address,
                 "page_size": 20,
@@ -45,20 +66,17 @@ def get_events(contract_address: str, node_url, min_block: int = 0, keys: List[s
                 "keys": keys,
                 # "from_block": hex(min_block),
             }
-        ]
+        ],
     }
     r = requests.post(node_url, json=params).json()
-    is_last_page = r['result']['is_last_page']
-    page_number = r['result']['page_number']
+    is_last_page = r["result"]["is_last_page"]  # noqa: F841
+    page_number = r["result"]["page_number"]  # noqa: F841
 
-    return [
-        RandomnessRequest(*r['data'])
-        for r in r['result']['events']
-    ]
+    return [RandomnessRequest(*r["data"]) for r in r["result"]["events"]]
 
 
 def make_secret_key():
-    return secrets.token_bytes(nbytes=32)    
+    return secrets.token_bytes(nbytes=32)
 
 
 def felt_to_secret_key(sk):
@@ -82,7 +100,7 @@ def create_randomness(
 
     p_status, pi_string = ecvrf_prove(secret_key, seed)
     b_status, beta_string = ecvrf_proof_to_hash(pi_string)
-    assert b_status == 'VALID'
+    assert b_status == "VALID"
 
     return beta_string, pi_string, public_key
 

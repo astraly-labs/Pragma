@@ -53,7 +53,7 @@ class RandomnessMixin:
         seed: int,
         callback_address: int,
         callback_gas_limit: int,  # =1000000
-        minimum_block_number : int,
+        minimum_block_number: int,
         random_words: List[int],  # List with 1 item
         block_hash: int,  # block hash of block
         proof: List[int],  # randomness proof

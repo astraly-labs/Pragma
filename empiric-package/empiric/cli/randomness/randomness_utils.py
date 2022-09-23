@@ -5,10 +5,9 @@
 
 
 import hashlib
-import sys
-
 
 # Public API
+
 
 # Section 5.1. ECVRF Proving
 def ecvrf_prove(sk, alpha_string):
@@ -49,12 +48,33 @@ def ecvrf_prove(sk, alpha_string):
     s = (k + c * secret_scalar_x) % ORDER
 
     # 8. pi_string = point_to_string(Gamma) || int_to_string(c, n) || int_to_string(s, qLen)
-    pi_string = _encode_point(gamma) + int.to_bytes(c, 16, 'little') + int.to_bytes(s, 32, 'little')
+    pi_string = (
+        _encode_point(gamma)
+        + int.to_bytes(c, 16, "little")
+        + int.to_bytes(s, 32, "little")
+    )
 
-    if 'test_dict' in globals():
-        _assert_and_sample(['secret_scalar_x', 'public_key_y', 'h', 'gamma', 'k_b', 'k_h', 'pi_string'],
-                           [secret_scalar_x.to_bytes(32, 'little'), public_key_y, h, _encode_point(gamma),
-                            _encode_point(k_b), _encode_point(k_h), pi_string])
+    if "test_dict" in globals():
+        _assert_and_sample(
+            [
+                "secret_scalar_x",
+                "public_key_y",
+                "h",
+                "gamma",
+                "k_b",
+                "k_h",
+                "pi_string",
+            ],
+            [
+                secret_scalar_x.to_bytes(32, "little"),
+                public_key_y,
+                h,
+                _encode_point(gamma),
+                _encode_point(k_b),
+                _encode_point(k_h),
+                pi_string,
+            ],
+        )
 
     # 9. Output pi_string
     return "VALID", pi_string
@@ -84,10 +104,12 @@ def ecvrf_proof_to_hash(pi_string):
 
     # 5. beta_string = Hash(suite_string || three_string || point_to_string(cofactor * Gamma))
     cofactor_gamma = _scalar_multiply(p=gamma, e=COFACTOR)  # Curve cofactor
-    beta_string = _short_hash(SUITE_STRING + three_string + _encode_point(cofactor_gamma))
+    beta_string = _short_hash(
+        SUITE_STRING + three_string + _encode_point(cofactor_gamma)
+    )
 
-    if 'test_dict' in globals():
-        _assert_and_sample(['beta_string'], [beta_string])
+    if "test_dict" in globals():
+        _assert_and_sample(["beta_string"], [beta_string])
 
     # 6. Output beta_string
     return "VALID", beta_string
@@ -143,8 +165,8 @@ def ecvrf_verify(y, pi_string, alpha_string):
     # 7. c’ = ECVRF_hash_points(H, Gamma, U, V)
     cp = _ecvrf_hash_points(h_point, gamma, u, v)
 
-    if 'test_dict' in globals():
-        _assert_and_sample(['h', 'u', 'v'], [h, _encode_point(u), _encode_point(v)])
+    if "test_dict" in globals():
+        _assert_and_sample(["h", "u", "v"], [h, _encode_point(u), _encode_point(v)])
 
     # 8. If c and c’ are equal, output ("VALID", ECVRF_proof_to_hash(pi_string)); else output "INVALID"
     if c == cp:
@@ -154,8 +176,7 @@ def ecvrf_verify(y, pi_string, alpha_string):
 
 
 def get_public_key(sk):
-    """Calculate and return the public_key as an encoded point string (bytes)
-    """
+    """Calculate and return the public_key as an encoded point string (bytes)"""
     secret_int = _get_secret_scalar(sk)
     public_point = _scalar_multiply(p=BASE, e=secret_int)
     public_string = _encode_point(public_point)
@@ -190,19 +211,19 @@ def _ecvrf_hash_to_curve_elligator2_25519(suite_string, y, alpha_string):
     r_string = bytearray(hash_string[0:32])
 
     # 5. oneTwentySeven_string = 0x7F = int_to_string(127, 1) (a single octet with value 127)
-    one_twenty_seven_string = 0x7f  # Note: '&' wants an int, not a byte
+    one_twenty_seven_string = 0x7F  # Note: '&' wants an int, not a byte
 
     # 6. r_string[31] = r_string[31] & oneTwentySeven_string (this step clears the high-order bit of octet 31)
     r_string[31] = int(r_string[31] & one_twenty_seven_string)
 
     # 7. r = string_to_int(truncated_h_string)
-    r = int.from_bytes(r_string, 'little')
+    r = int.from_bytes(r_string, "little")
 
     # 8. u = - A / (1 + 2*(r^2) ) mod p (note: the inverse of (1+2*(r^2)) modulo p is guaranteed to exist)
-    u = (PRIME - A) * _inverse(1 + 2 * (r ** 2)) % PRIME
+    u = (PRIME - A) * _inverse(1 + 2 * (r**2)) % PRIME
 
     # 9. w = u * (u^2 + A*u + 1) mod p (this step evaluates the Montgomery equation for Curve25519)
-    w = u * (u ** 2 + A * u + 1) % PRIME
+    w = u * (u**2 + A * u + 1) % PRIME
 
     # 10. Let e equal the Legendre symbol of w and p (see note after item 16)
     e = pow(w, (PRIME - 1) // 2, PRIME)
@@ -216,7 +237,7 @@ def _ecvrf_hash_to_curve_elligator2_25519(suite_string, y, alpha_string):
     y_coordinate = (final_u - 1) * _inverse(final_u + 1) % PRIME
 
     # 13. y_string = int_to_string (y_coordinate, 32)
-    y_string = int.to_bytes(y_coordinate, 32, 'little')
+    y_string = int.to_bytes(y_coordinate, 32, "little")
 
     # 14. H_prelim = string_to_point(h_string)
     h_prelim = _decode_point(y_string)
@@ -229,9 +250,11 @@ def _ecvrf_hash_to_curve_elligator2_25519(suite_string, y, alpha_string):
     # 16. Output H
     h_point = _encode_point(h)
 
-    if 'test_dict' in globals():
-        _assert_and_sample(['r', 'w', 'e'],
-                           [r_string, int.to_bytes(w, 32, 'little'), int.to_bytes(e, 32, 'little')])
+    if "test_dict" in globals():
+        _assert_and_sample(
+            ["r", "w", "e"],
+            [r_string, int.to_bytes(w, 32, "little"), int.to_bytes(e, 32, "little")],
+        )
 
     return h_point
 
@@ -255,10 +278,10 @@ def _ecvrf_nonce_generation_rfc8032(sk, h_string):
     k_string = _hash(truncated_hashed_sk_string + h_string)
 
     # 4. k = string_to_int(k_string) mod q
-    k = int.from_bytes(k_string, 'little') % ORDER
+    k = int.from_bytes(k_string, "little") % ORDER
 
-    if 'test_dict' in globals():
-        _assert_and_sample(['k'], [k_string])
+    if "test_dict" in globals():
+        _assert_and_sample(["k"], [k_string])
 
     return k
 
@@ -279,7 +302,13 @@ def _ecvrf_hash_points(p1, p2, p3, p4):
 
     # 3. for PJ in [P1, P2, ... PM]:
     #        str = str || point_to_string(PJ)
-    string = string + _encode_point(p1) + _encode_point(p2) + _encode_point(p3) + _encode_point(p4)
+    string = (
+        string
+        + _encode_point(p1)
+        + _encode_point(p2)
+        + _encode_point(p3)
+        + _encode_point(p4)
+    )
 
     # 4. c_string = Hash(str)
     c_string = _hash(string)
@@ -288,7 +317,7 @@ def _ecvrf_hash_points(p1, p2, p3, p4):
     truncated_c_string = c_string[0:16]
 
     # 6. c = string_to_int(truncated_c_string)
-    c = int.from_bytes(truncated_c_string, 'little')
+    c = int.from_bytes(truncated_c_string, "little")
 
     # 7. Output c
     return c
@@ -324,10 +353,10 @@ def _ecvrf_decode_proof(pi_string):
         return "INVALID"
 
     # 6. c = string_to_int(c_string)
-    c = int.from_bytes(c_string, 'little')
+    c = int.from_bytes(c_string, "little")
 
     # 7. s = string_to_int(s_string)
-    s = int.from_bytes(s_string, 'little')
+    s = int.from_bytes(s_string, "little")
 
     # 8. Output Gamma, c, and s
     return gamma, c, s
@@ -346,13 +375,16 @@ def _assert_and_sample(keys, actuals):
     global test_dict
     for key, actual in zip(keys, actuals):
         if key in test_dict and actual:
-            assert actual == test_dict[key], "{}  actual:{} != expected:{}".format(key, actual.hex(), test_dict[key].hex())
-        test_dict[key + '_sample'] = actual
+            assert actual == test_dict[key], "{}  actual:{} != expected:{}".format(
+                key, actual.hex(), test_dict[key].hex()
+            )
+        test_dict[key + "_sample"] = actual
 
 
 # Much of the following code has been adapted from ed25519.py at https://ed25519.cr.yp.to/software.html retrieved 27 Dec 2019
 # While it is gloriously inefficient, it provides an excellent demonstration of the underlying math. For example, production
 # code would likely avoid inversion via Fermat's little theorem as it is extremely expensive with a cost of ~300 field multiplies.
+
 
 def _edwards_add(p, q):
     """Edwards curve point addition"""
@@ -367,12 +399,12 @@ def _edwards_add(p, q):
 
 def _encode_point(p):
     """Encode point to string containing LSB OF X and 254 bits of y"""
-    return ((p[1] & ((1 << 255) - 1)) + ((p[0] & 1) << 255)).to_bytes(32, 'little')
+    return ((p[1] & ((1 << 255) - 1)) + ((p[0] & 1) << 255)).to_bytes(32, "little")
 
 
 def _decode_point(s):
-    """Decode string containing LSB of X and 254 bits of y into point. Checks on-curve. May return \"INVALID\""""
-    y = int.from_bytes(s, 'little') & ((1 << 255) - 1)
+    """Decode string containing LSB of X and 254 bits of y into point. Checks on-curve. May return \"INVALID\" """
+    y = int.from_bytes(s, "little") & ((1 << 255) - 1)
     x = _x_recover(y)
     if x & 1 != _get_bit(s, BITS - 1):
         x = PRIME - x
@@ -384,17 +416,16 @@ def _decode_point(s):
 
 def _get_bit(h, i):
     """Return specified bit from string for subsequent testing"""
-    h1 = int.from_bytes(h, 'little')
+    h1 = int.from_bytes(h, "little")
     return (h1 >> i) & 0x01
 
 
 def _get_secret_scalar(sk):
-    """Calculate and return the secret_scalar integer
-    """
+    """Calculate and return the secret_scalar integer"""
     h = bytearray(_hash(sk)[0:32])
-    h[31] = int((h[31] & 0x7f) | 0x40)
-    h[0] = int(h[0] & 0xf8)
-    secret_int = int.from_bytes(h, 'little')
+    h[31] = int((h[31] & 0x7F) | 0x40)
+    h[0] = int(h[0] & 0xF8)
+    secret_int = int.from_bytes(h, "little")
     return secret_int
 
 
@@ -447,8 +478,8 @@ def _x_recover(y):
 # See https://ed25519.cr.yp.to/python/checkparams.py
 SUITE_STRING = bytes([0x04])
 BITS = 256
-PRIME = 2 ** 255 - 19
-ORDER = 2 ** 252 + 27742317777372353535851937790883648493
+PRIME = 2**255 - 19
+ORDER = 2**252 + 27742317777372353535851937790883648493
 COFACTOR = 8
 TWO_INV = _inverse(2)
 II = pow(2, (PRIME - 1) // 4, PRIME)

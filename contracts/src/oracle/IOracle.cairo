@@ -97,7 +97,7 @@ namespace IOracle {
     func add_pair(pair: Pair) {
     }
 
-    func set_checkpoint(key: felt, aggregation_mode: felt) {
+    func set_checkpoint(pair_id: felt, aggregation_mode: felt) {
     }
 
     func set_sources_threshold(threshold: felt) {

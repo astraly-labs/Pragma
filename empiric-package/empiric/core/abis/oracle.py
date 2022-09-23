@@ -263,7 +263,7 @@ ORACLE_ABI = [
     },
     {
         "inputs": [
-            {"name": "key", "type": "felt"},
+            {"name": "pair_id", "type": "felt"},
             {"name": "aggregation_mode", "type": "felt"},
         ],
         "name": "set_checkpoint",

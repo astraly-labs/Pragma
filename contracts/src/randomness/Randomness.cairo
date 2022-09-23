@@ -283,7 +283,7 @@ func allocate_requests{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 
     let (status_) = Randomness__request_status.read(requestor_address, cur_idx + offset);
 
-    if (status_ == RequestStatus.EMPTY) {
+    if (status_ == RequestStatus.UNINITIALIZED) {
         return (request_len=request_ids_len);
     }
 
