@@ -1,588 +1,287 @@
 ORACLE_ABI = [
     {
         "members": [
-            {
-                "name": "base",
-                "offset": 0,
-                "type": "BaseEntry"
-            },
-            {
-                "name": "pair_id",
-                "offset": 3,
-                "type": "felt"
-            },
-            {
-                "name": "value",
-                "offset": 4,
-                "type": "felt"
-            }
+            {"name": "base", "offset": 0, "type": "BaseEntry"},
+            {"name": "pair_id", "offset": 3, "type": "felt"},
+            {"name": "value", "offset": 4, "type": "felt"},
         ],
         "name": "Entry",
         "size": 5,
-        "type": "struct"
+        "type": "struct",
     },
     {
         "members": [
-            {
-                "name": "timestamp",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "source",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "publisher",
-                "offset": 2,
-                "type": "felt"
-            }
+            {"name": "timestamp", "offset": 0, "type": "felt"},
+            {"name": "source", "offset": 1, "type": "felt"},
+            {"name": "publisher", "offset": 2, "type": "felt"},
         ],
         "name": "BaseEntry",
         "size": 3,
-        "type": "struct"
+        "type": "struct",
     },
     {
         "members": [
-            {
-                "name": "id",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "is_abstract_currency",
-                "offset": 2,
-                "type": "felt"
-            },
-            {
-                "name": "starknet_address",
-                "offset": 3,
-                "type": "felt"
-            },
-            {
-                "name": "ethereum_address",
-                "offset": 4,
-                "type": "felt"
-            }
+            {"name": "id", "offset": 0, "type": "felt"},
+            {"name": "decimals", "offset": 1, "type": "felt"},
+            {"name": "is_abstract_currency", "offset": 2, "type": "felt"},
+            {"name": "starknet_address", "offset": 3, "type": "felt"},
+            {"name": "ethereum_address", "offset": 4, "type": "felt"},
         ],
         "name": "Currency",
         "size": 5,
-        "type": "struct"
+        "type": "struct",
     },
     {
         "members": [
-            {
-                "name": "id",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "quote_currency_id",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "base_currency_id",
-                "offset": 2,
-                "type": "felt"
-            }
+            {"name": "id", "offset": 0, "type": "felt"},
+            {"name": "quote_currency_id", "offset": 1, "type": "felt"},
+            {"name": "base_currency_id", "offset": 2, "type": "felt"},
         ],
         "name": "Pair",
         "size": 3,
-        "type": "struct"
+        "type": "struct",
     },
     {
         "members": [
-            {
-                "name": "timestamp",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "value",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "offset": 2,
-                "type": "felt"
-            },
-            {
-                "name": "num_sources_aggregated",
-                "offset": 3,
-                "type": "felt"
-            }
+            {"name": "timestamp", "offset": 0, "type": "felt"},
+            {"name": "value", "offset": 1, "type": "felt"},
+            {"name": "aggregation_mode", "offset": 2, "type": "felt"},
+            {"name": "num_sources_aggregated", "offset": 3, "type": "felt"},
         ],
         "name": "Checkpoint",
         "size": 4,
-        "type": "struct"
+        "type": "struct",
     },
     {
         "data": [
-            {
-                "name": "old_publisher_registry_address",
-                "type": "felt"
-            },
-            {
-                "name": "new_publisher_registry_address",
-                "type": "felt"
-            }
+            {"name": "old_publisher_registry_address", "type": "felt"},
+            {"name": "new_publisher_registry_address", "type": "felt"},
         ],
         "keys": [],
         "name": "UpdatedPublisherRegistryAddress",
-        "type": "event"
+        "type": "event",
     },
     {
-        "data": [
-            {
-                "name": "new_entry",
-                "type": "Entry"
-            }
-        ],
+        "data": [{"name": "new_entry", "type": "Entry"}],
         "keys": [],
         "name": "SubmittedEntry",
-        "type": "event"
+        "type": "event",
     },
     {
-        "data": [
-            {
-                "name": "currency",
-                "type": "Currency"
-            }
-        ],
+        "data": [{"name": "currency", "type": "Currency"}],
         "keys": [],
         "name": "SubmittedCurrency",
-        "type": "event"
+        "type": "event",
     },
     {
-        "data": [
-            {
-                "name": "currency",
-                "type": "Currency"
-            }
-        ],
+        "data": [{"name": "currency", "type": "Currency"}],
         "keys": [],
         "name": "UpdatedCurrency",
-        "type": "event"
+        "type": "event",
     },
     {
-        "data": [
-            {
-                "name": "pair",
-                "type": "Pair"
-            }
-        ],
+        "data": [{"name": "pair", "type": "Pair"}],
         "keys": [],
         "name": "SubmittedPair",
-        "type": "event"
+        "type": "event",
     },
     {
-        "data": [
-            {
-                "name": "implementation",
-                "type": "felt"
-            }
-        ],
+        "data": [{"name": "implementation", "type": "felt"}],
         "keys": [],
         "name": "Upgraded",
-        "type": "event"
+        "type": "event",
     },
     {
         "data": [
-            {
-                "name": "previousAdminAddress",
-                "type": "felt"
-            },
-            {
-                "name": "newAdminAddress",
-                "type": "felt"
-            }
+            {"name": "previousAdminAddress", "type": "felt"},
+            {"name": "newAdminAddress", "type": "felt"},
         ],
         "keys": [],
         "name": "AdminAddressChanged",
-        "type": "event"
+        "type": "event",
     },
     {
         "inputs": [
-            {
-                "name": "proxy_admin",
-                "type": "felt"
-            },
-            {
-                "name": "publisher_registry_address",
-                "type": "felt"
-            },
-            {
-                "name": "currencies_len",
-                "type": "felt"
-            },
-            {
-                "name": "currencies",
-                "type": "Currency*"
-            },
-            {
-                "name": "pairs_len",
-                "type": "felt"
-            },
-            {
-                "name": "pairs",
-                "type": "Pair*"
-            }
+            {"name": "proxy_admin", "type": "felt"},
+            {"name": "publisher_registry_address", "type": "felt"},
+            {"name": "currencies_len", "type": "felt"},
+            {"name": "currencies", "type": "Currency*"},
+            {"name": "pairs_len", "type": "felt"},
+            {"name": "pairs", "type": "Pair*"},
         ],
         "name": "initializer",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            },
-            {
-                "name": "sources_len",
-                "type": "felt"
-            },
-            {
-                "name": "sources",
-                "type": "felt*"
-            }
+            {"name": "pair_id", "type": "felt"},
+            {"name": "sources_len", "type": "felt"},
+            {"name": "sources", "type": "felt*"},
         ],
         "name": "get_entries",
         "outputs": [
-            {
-                "name": "entries_len",
-                "type": "felt"
-            },
-            {
-                "name": "entries",
-                "type": "Entry*"
-            }
+            {"name": "entries_len", "type": "felt"},
+            {"name": "entries", "type": "Entry*"},
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            },
-            {
-                "name": "source",
-                "type": "felt"
-            }
+            {"name": "pair_id", "type": "felt"},
+            {"name": "source", "type": "felt"},
         ],
         "name": "get_entry",
-        "outputs": [
-            {
-                "name": "entry",
-                "type": "Entry"
-            }
-        ],
+        "outputs": [{"name": "entry", "type": "Entry"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "type": "felt"
-            }
+            {"name": "pair_id", "type": "felt"},
+            {"name": "aggregation_mode", "type": "felt"},
         ],
         "name": "get_value",
         "outputs": [
-            {
-                "name": "value",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            },
-            {
-                "name": "last_updated_timestamp",
-                "type": "felt"
-            },
-            {
-                "name": "num_sources_aggregated",
-                "type": "felt"
-            }
+            {"name": "value", "type": "felt"},
+            {"name": "decimals", "type": "felt"},
+            {"name": "last_updated_timestamp", "type": "felt"},
+            {"name": "num_sources_aggregated", "type": "felt"},
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "type": "felt"
-            },
-            {
-                "name": "sources_len",
-                "type": "felt"
-            },
-            {
-                "name": "sources",
-                "type": "felt*"
-            }
+            {"name": "pair_id", "type": "felt"},
+            {"name": "aggregation_mode", "type": "felt"},
+            {"name": "sources_len", "type": "felt"},
+            {"name": "sources", "type": "felt*"},
         ],
         "name": "get_value_for_sources",
         "outputs": [
-            {
-                "name": "value",
-                "type": "felt"
-            },
-            {
-                "name": "decimals",
-                "type": "felt"
-            },
-            {
-                "name": "last_updated_timestamp",
-                "type": "felt"
-            },
-            {
-                "name": "num_sources_aggregated",
-                "type": "felt"
-            }
+            {"name": "value", "type": "felt"},
+            {"name": "decimals", "type": "felt"},
+            {"name": "last_updated_timestamp", "type": "felt"},
+            {"name": "num_sources_aggregated", "type": "felt"},
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [],
         "name": "get_publisher_registry_address",
-        "outputs": [
-            {
-                "name": "publisher_registry_address",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "publisher_registry_address", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "pair_id", "type": "felt"}],
         "name": "get_decimals",
-        "outputs": [
-            {
-                "name": "decimals",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "decimals", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "new_entry",
-                "type": "Entry"
-            }
-        ],
+        "inputs": [{"name": "new_entry", "type": "Entry"}],
         "name": "publish_entry",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "new_entries_len",
-                "type": "felt"
-            },
-            {
-                "name": "new_entries",
-                "type": "Entry*"
-            }
+            {"name": "new_entries_len", "type": "felt"},
+            {"name": "new_entries", "type": "Entry*"},
         ],
         "name": "publish_entries",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "publisher_registry_address",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "publisher_registry_address", "type": "felt"}],
         "name": "update_publisher_registry_address",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "currency",
-                "type": "Currency"
-            }
-        ],
+        "inputs": [{"name": "currency", "type": "Currency"}],
         "name": "add_currency",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "currency",
-                "type": "Currency"
-            }
-        ],
+        "inputs": [{"name": "currency", "type": "Currency"}],
         "name": "update_currency",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "pair",
-                "type": "Pair"
-            }
-        ],
+        "inputs": [{"name": "pair", "type": "Pair"}],
         "name": "add_pair",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "key", "type": "felt"}],
         "name": "get_latest_checkpoint_index",
-        "outputs": [
-            {
-                "name": "latest",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "latest", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "index",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "key", "type": "felt"}, {"name": "index", "type": "felt"}],
         "name": "get_checkpoint",
-        "outputs": [
-            {
-                "name": "checkpoint",
-                "type": "Checkpoint"
-            }
-        ],
+        "outputs": [{"name": "checkpoint", "type": "Checkpoint"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [],
         "name": "get_sources_threshold",
-        "outputs": [
-            {
-                "name": "threshold",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "threshold", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "new_implementation",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "new_implementation", "type": "felt"}],
         "name": "upgrade",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "new_admin_address",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "new_admin_address", "type": "felt"}],
         "name": "set_admin_address",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [],
         "name": "get_implementation_hash",
-        "outputs": [
-            {
-                "name": "address",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "address", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [],
         "name": "get_admin_address",
-        "outputs": [
-            {
-                "name": "admin_address",
-                "type": "felt"
-            }
-        ],
+        "outputs": [{"name": "admin_address", "type": "felt"}],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
     },
     {
         "inputs": [
-            {
-                "name": "pair_id",
-                "type": "felt"
-            },
-            {
-                "name": "aggregation_mode",
-                "type": "felt"
-            }
+            {"name": "pair_id", "type": "felt"},
+            {"name": "aggregation_mode", "type": "felt"},
         ],
         "name": "set_checkpoint",
         "outputs": [],
-        "type": "function"
+        "type": "function",
     },
     {
-        "inputs": [
-            {
-                "name": "threshold",
-                "type": "felt"
-            }
-        ],
+        "inputs": [{"name": "threshold", "type": "felt"}],
         "name": "set_sources_threshold",
         "outputs": [],
-        "type": "function"
-    }
+        "type": "function",
+    },
 ]
