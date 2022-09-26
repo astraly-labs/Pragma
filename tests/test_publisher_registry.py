@@ -241,7 +241,7 @@ async def test_register_second_publisher(
     second_publisher_account = registered_contracts["second_publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
-    second_publisher = str_to_felt("bar")
+    second_publisher = str_to_felt("BAR")
 
     await admin_signer.send_transaction(
         admin_account,

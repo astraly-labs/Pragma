@@ -23,7 +23,7 @@ def calculate_on_yield_point(
         expiry_timestamp=last_updated_timestamp,
         capture_timestamp=last_updated_timestamp,
         rate=output_value,
-        source=str_to_felt("on"),
+        source=str_to_felt("ON"),
     )
 
 
@@ -70,7 +70,7 @@ def calculate_future_spot_yield_point(
         expiry_timestamp=future_expiry_timestamp,
         capture_timestamp=future_last_updated_timestamp,
         rate=output_value,
-        source=str_to_felt("future/spot"),
+        source=str_to_felt("FUTURE/SPOT"),
     )
 
 

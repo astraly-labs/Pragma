@@ -28,4 +28,4 @@ GATEWAY_URLS = {
 # aggregation mode enum
 @unique
 class AggregationMode(IntEnum):
-    MEDIAN = 120282243752302  # str_to_felt("median")
+    MEDIAN = 84959893733710  # str_to_felt("MEDIAN")

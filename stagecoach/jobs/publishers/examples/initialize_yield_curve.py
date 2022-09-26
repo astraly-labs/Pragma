@@ -32,7 +32,7 @@ async def main():
         time.sleep(1)  # sleep for nonce
 
     result = await admin_client.send_transaction(
-        yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("ftx")]
+        yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("FTX")]
     )
     logger.info(f"Set future/spot empiric source-key with tx: {result}")
     # TODO (rlkelly): let's avoid this

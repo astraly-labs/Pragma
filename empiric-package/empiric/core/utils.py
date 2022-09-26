@@ -5,11 +5,11 @@ logger = logging.getLogger(__name__)
 
 
 def str_to_felt(text):
-    if text.lower() != text:
+    if text.upper() != text:
         warnings.warn(
-            "Converting string to felt that has uppercase characters. Converting to lowercase."
+            "Converting string to felt that has lowercase characters. Converting to uppercase."
         )
-        text = text.lower()
+        text = text.upper()
     b_text = bytes(text, "utf-8")
     return int.from_bytes(b_text, "big")
 
@@ -21,7 +21,7 @@ def felt_to_str(felt):
 
 
 def currency_pair_to_pair_id(quote, base):
-    return f"{quote}/{base}".lower()
+    return f"{quote}/{base}".upper()
 
 
 def pprint_entry(entry):

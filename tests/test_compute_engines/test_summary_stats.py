@@ -231,7 +231,7 @@ async def test_summary_stats(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
     summary_stats = initialized_contracts["summary_stats"]
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
 
     for i, val in enumerate(
         [19413, 10876, 13476, 10918, 16119, 14649, 14790, 13703, 14556, 12999]
