@@ -47,7 +47,7 @@ func test_randomness{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
     let requestor_address = 1234;
     let (block_number) = get_block_number();
 
-    %{ expect_events({"name": "Randomness__request", "data": [1234, 0, 2, 0, 1]}) %}
+    %{ expect_events({"name": "Randomness__request", "data": [0, ids.requestor_address, ids.seed, 2, ids.example_randomness, ids.callback_gas_limit, ids.num_words]}) %}
     %{ stop_prank_callable = start_prank(ids.requestor_address, ids.randomness_address) %}
     %{ stop_roll = roll(1, ids.randomness_address) %}
     IRandomness.request_random(

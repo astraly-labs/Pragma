@@ -230,6 +230,7 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
             for p in [pi_string[:31], pi_string[31:62], pi_string[62:]]
         ]
         random_words = [beta_string]
+        print('beta_string', beta_string)
 
         status = await client.get_request_status(event.caller_address, event.request_id)
         print("status:", status)
@@ -239,12 +240,13 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
                 event.request_id,
                 event.caller_address,
                 event.seed,
+                event.minimum_block_number,
                 event.callback_address,
                 event.callback_gas_limit,
-                event.minimum_block_number,
                 random_words,
                 block_hash,
                 proof,
             )
+
             await invocation.wait_for_acceptance()
             typer.echo(f"response hash: {invocation.hash}")
