@@ -948,9 +948,6 @@ namespace YieldCurve {
             // log of big prime is 75.5. making sure ratio multiplier is within bounds.
             let exponent_limit = 75;
             if (should_shift_net_left == TRUE) {
-                // make sure there's less than 42 decimals
-                assert_nn(42 - (output_decimals + spot_decimals - future_decimals));
-
                 // Shift future/spot to the left by output_decimals + spot_decimals - future_decimals
                 let exponent = output_decimals + spot_decimals - future_decimals;
                 with_attr error_message("YieldCurve: Decimals out of range") {
