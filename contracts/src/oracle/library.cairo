@@ -152,7 +152,7 @@ namespace Oracle {
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
         alloc_locals;
 
-        let (entries_len, entries) = get_entries(key, sources_len, sources);
+        let (entries_len, entries, last_updated_timestamp) = get_entries(key, sources_len, sources);
 
         if (entries_len == 0) {
             return (0, 0, 0, 0);
@@ -160,20 +160,23 @@ namespace Oracle {
 
         let (value) = Entries.aggregate_entries(entries_len, entries);
         let (decimals) = get_decimals(key);
-        let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
+        // let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
         return (value, decimals, last_updated_timestamp, entries_len);
     }
 
     func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
-    ) -> (entries_len: felt, entries: Entry*) {
+    ) -> (entries_len: felt, entries: Entry*, last_updated_timestamp: felt) {
+        // This will return all entries within the TIMESTAMP_BUFFER of the latest entry published for the given list of sources
         alloc_locals;
 
-        let (latest_timestamp) = get_latest_entry_timestamp(pair_id, sources_len, sources, 0, 0);
-        let (entries_len, entries) = get_all_entries(
-            pair_id, sources_len, sources, latest_timestamp
+        let (last_updated_timestamp) = get_latest_entry_timestamp(
+            pair_id, sources_len, sources, 0, 0
         );
-        return (entries_len, entries);
+        let (entries_len, entries) = get_all_entries(
+            pair_id, sources_len, sources, last_updated_timestamp
+        );
+        return (entries_len, entries, last_updated_timestamp);
     }
 
     func get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(

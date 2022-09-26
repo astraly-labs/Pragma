@@ -45,7 +45,7 @@ func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, sources_len: felt, sources: felt*
 ) -> (entries_len: felt, entries: Entry*) {
-    let (entries_len, entries) = Oracle.get_entries(pair_id, sources_len, sources);
+    let (entries_len, entries, _) = Oracle.get_entries(pair_id, sources_len, sources);
     return (entries_len, entries);
 }
 
