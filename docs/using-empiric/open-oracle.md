@@ -66,7 +66,7 @@ func my_func{
     let (eth_price,
         decimals,
         last_updated_timestamp,
-        num_sources_aggregated) = IEmpiricOracle.get_value_for_sources(
+        num_sources_aggregated) = IEmpiricOracle.get_spot_for_sources(
             EMPIRIC_ORACLE_ADDRESS, KEY, AGGREGATION_MODE, 2, sources
         )
     # Your smart contract logic!

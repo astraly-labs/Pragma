@@ -882,7 +882,7 @@ async def test_unknown_source(
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [str_to_felt("UNKNOWN")]
     ).call()
     assert result.result.num_sources_aggregated == 0
@@ -965,7 +965,7 @@ async def test_real_data(
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("COINBASE")],
@@ -973,7 +973,7 @@ async def test_real_data(
     assert result.result.value == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("UNKNOWN")],

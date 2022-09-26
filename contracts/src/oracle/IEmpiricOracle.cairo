@@ -22,20 +22,20 @@ namespace IEmpiricOracle {
     func get_decimals(pair_id: felt) -> (decimals: felt) {
     }
 
-    func get_entries(pair_id: felt, sources_len: felt, sources: felt*) -> (
+    func get_spot_entries(pair_id: felt, sources_len: felt, sources: felt*) -> (
         entries_len: felt, entries: Entry*
     ) {
     }
 
-    func get_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    func get_spot_entry(pair_id: felt, source: felt) -> (entry: Entry) {
     }
 
-    func get_value(pair_id: felt, aggregation_mode: felt) -> (
+    func get_spot(pair_id: felt, aggregation_mode: felt) -> (
         value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
-    func get_value_for_sources(
+    func get_spot_for_sources(
         pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     }
