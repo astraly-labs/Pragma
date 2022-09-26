@@ -45,6 +45,7 @@ func Publisher_get_publisher_address{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(publisher: felt) -> (publisher_address: felt) {
     let (publisher_address) = Publisher_publisher_address_storage.read(publisher);
+    assert_not_zero(publisher_address);
     return (publisher_address,);
 }
 
