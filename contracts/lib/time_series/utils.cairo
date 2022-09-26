@@ -3,6 +3,7 @@
 from starkware.cairo.common.math import unsigned_div_rem, abs_value
 from starkware.cairo.common.math_cmp import is_le, is_nn
 from time_series.structs import TickElem
+from starkware.cairo.common.bool import TRUE, FALSE
 
 using Bool = felt;
 
@@ -28,11 +29,11 @@ func less_than{range_check_ptr}(num1: felt, num2: felt) -> (_is_less: Bool) {
 }
 
 func are_equal{range_check_ptr}(num1: felt, num2: felt) -> (_are_equal: Bool) {
-    alloc_locals;
-    let is_neg1 = is_nn(num1 - num2);
-    let is_neg2 = is_nn(num2 - num1);
-    let _are_equal = is_nn(is_neg1 + is_neg2 - 1);
-    return (_are_equal,);
+    if (num1 == num2) {
+        return (TRUE,);
+    } else {
+        return (FALSE,);
+    }
 }
 
 func safe_div{range_check_ptr}(num: felt, denom: felt) -> (quotient_: felt) {

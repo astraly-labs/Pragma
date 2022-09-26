@@ -2,6 +2,10 @@
     {
         "inputs": [
             {
+                "name": "requestor_address",
+                "type": "felt"
+            },
+            {
                 "name": "request_id",
                 "type": "felt"
             },
