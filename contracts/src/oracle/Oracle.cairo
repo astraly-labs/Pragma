@@ -42,7 +42,7 @@ func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 // @return entries_len: length of array
 // @return entries: pointer to first element in Entry array
 @view
-func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, sources_len: felt, sources: felt*
 ) -> (entries_len: felt, entries: Entry*) {
     let (entries_len, entries, _) = Oracle.get_entries(pair_id, sources_len, sources);
@@ -54,11 +54,31 @@ func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 // @param source: the source to use for Entry
 // @return entry: Entry for key and source
 @view
-func get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, source: felt
 ) -> (entry: Entry) {
     let (entry) = Oracle.get_entry(pair_id, source);
     return (entry,);
+}
+
+// @notice get entry by key and source
+// @param key: the key to fetch Entries for
+// @param source: the source to use for Entry
+// @return entry: Entry for key and source
+@view
+func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_id: felt, source: felt
+) -> (entry: Entry) {
+    let (entry) = Oracle.get_entry(pair_id, source);
+    return (entry,);
+}
+
+@view
+func get_spot_median{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_id: felt
+) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
+    return get_spot(pair_id, MEDIAN);
 }
 
 // @notice get value by key and aggregation mode
@@ -69,7 +89,7 @@ func get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 // @return last_updated_timestamp: timestamp the Entries were last updated
 // @return num_sources_aggregated: number of sources used in aggregation
 @view
-func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt
 ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (sources) = alloc();
@@ -89,7 +109,7 @@ func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 // @return last_updated_timestamp: timestamp the Entries were last updated
 // @return num_sources_aggregated: number of sources used in aggregation
 @view
-func get_value_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
 ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (value, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(

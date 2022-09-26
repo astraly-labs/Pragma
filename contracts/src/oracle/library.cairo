@@ -420,8 +420,9 @@ namespace Oracle {
         let (entries: Entry*) = alloc();
 
         if (sources_len == 0) {
+            let (all_sources_len, all_sources) = get_all_sources(pair_id);
             let (entries_len, entries) = build_entries_array(
-                pair_id, sources_len, sources, 0, 0, entries, latest_timestamp
+                pair_id, all_sources_len, all_sources, 0, 0, entries, latest_timestamp
             );
         } else {
             let (entries_len, entries) = build_entries_array(

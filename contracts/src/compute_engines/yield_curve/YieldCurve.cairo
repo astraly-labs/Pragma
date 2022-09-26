@@ -623,7 +623,9 @@ namespace YieldCurve {
         }
 
         let (on_decimals) = IOracle.get_decimals(oracle_address, on_key);
-        let (on_entry) = IOracle.get_entry(oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY);
+        let (on_entry) = IOracle.get_spot_entry(
+            oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY
+        );
         if (on_entry.base.timestamp == 0) {
             // Entry was empty to skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
@@ -707,7 +709,7 @@ namespace YieldCurve {
         }
 
         let (spot_decimals) = IOracle.get_decimals(oracle_address, spot_key);
-        let (spot_entry) = IOracle.get_entry(
+        let (spot_entry) = IOracle.get_spot_entry(
             oracle_address, spot_key, future_spot_empiric_source_key
         );
         if (spot_entry.base.timestamp == 0) {
@@ -824,7 +826,7 @@ namespace YieldCurve {
             future_decimals = future_decimals_;
         }
 
-        let (future_entry) = IOracle.get_entry(
+        let (future_entry) = IOracle.get_future_entry(
             oracle_address, future_key, future_spot_empiric_source_key
         );
         if (future_entry.base.timestamp == 0) {
