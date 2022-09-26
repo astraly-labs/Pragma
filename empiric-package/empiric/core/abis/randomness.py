@@ -39,6 +39,21 @@ RANDOMNESS_ABI = [
     },
     {
         "data": [
+            {"name": "request_id", "type": "felt"},
+            {"name": "requestor_address", "type": "felt"},
+            {"name": "seed", "type": "felt"},
+            {"name": "minimum_block_number", "type": "felt"},
+            {"name": "random_words_len", "type": "felt"},
+            {"name": "random_words", "type": "felt*"},
+            {"name": "proof_len", "type": "felt"},
+            {"name": "proof", "type": "felt*"},
+        ],
+        "keys": [],
+        "name": "Randomness__proof",
+        "type": "event",
+    },
+    {
+        "data": [
             {"name": "requestor_address", "type": "felt"},
             {"name": "request_id", "type": "felt"},
             {"name": "status", "type": "felt"},

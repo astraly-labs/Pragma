@@ -39,6 +39,19 @@ func Randomness__request(
 }
 
 @event
+func Randomness__proof(
+    request_id: felt,
+    requestor_address: felt,
+    seed: felt,
+    minimum_block_number: felt,
+    random_words_len: felt,
+    random_words: felt*,
+    proof_len: felt,
+    proof: felt*,
+) {
+}
+
+@event
 func Randomness__status_change(requestor_address: felt, request_id: felt, status: felt) {
 }
 
@@ -146,9 +159,9 @@ func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     request_id,
     requestor_address,
     seed,
+    minimum_block_number,
     callback_address,
     callback_gas_limit,
-    minimum_block_number,
     random_words_len,
     random_words: felt*,
     block_hash: felt,
@@ -176,11 +189,21 @@ func submit_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     }
 
     IRandomnessReceiver.receive_random_words(
-        callback_address, request_id, random_words_len, random_words
+        callback_address, requestor_address, request_id, random_words_len, random_words
     );
     Randomness__request_status.write(requestor_address, request_id, RequestStatus.FULFILLED);
     Randomness__status_change.emit(requestor_address, request_id, RequestStatus.FULFILLED);
 
+    Randomness__proof.emit(
+        request_id,
+        requestor_address,
+        seed,
+        minimum_block_number,
+        random_words_len,
+        random_words,
+        proof_len,
+        proof,
+    );
     return ();
 }
 

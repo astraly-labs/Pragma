@@ -3,7 +3,9 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import assert_nn
 from starkware.cairo.common.math_cmp import is_le
+from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
 from starkware.cairo.common.math import unsigned_div_rem
@@ -942,15 +944,26 @@ namespace YieldCurve {
                 SECONDS_IN_YEAR * decimals_multiplier, seconds_to_expiry
             );
             let should_shift_net_left = is_le(future_decimals, output_decimals + spot_decimals);
+
+            // log of big prime is 75.5. making sure ratio multiplier is within bounds.
+            let exponent_limit = 75;
             if (should_shift_net_left == TRUE) {
                 // Shift future/spot to the left by output_decimals + spot_decimals - future_decimals
-                let (ratio_multiplier) = pow(10, output_decimals + spot_decimals - future_decimals);
+                let exponent = output_decimals + spot_decimals - future_decimals;
+                with_attr error_message("YieldCurve: Decimals out of range") {
+                    assert_le(exponent, exponent_limit);
+                }
+                let (ratio_multiplier) = pow(10, exponent);
                 let (shifted_ratio, _) = unsigned_div_rem(
                     future_entry.value * ratio_multiplier, spot_entry.value
                 );
             } else {
                 // Shift future/spot to the right by -1 * (output_decimals + spot_decimals - future_decimals)
-                let (ratio_multiplier) = pow(10, future_decimals - output_decimals - spot_decimals);
+                let exponent = future_decimals - output_decimals - spot_decimals;
+                with_attr error_message("YieldCurve: Decimals out of range") {
+                    assert_le(exponent, exponent_limit);
+                }
+                let (ratio_multiplier) = pow(10, exponent);
                 let (shifted_ratio, _) = unsigned_div_rem(
                     future_entry.value, spot_entry.value * ratio_multiplier
                 );
