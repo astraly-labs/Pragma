@@ -350,7 +350,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 source=source,
                 publisher=publisher,
             )
-            print('entry:', future_entry.source)
+            print("entry:", future_entry.source)
             await publisher_signer.send_transaction(
                 publisher_account,
                 oracle.contract_address,
@@ -368,7 +368,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 output_decimals,
                 current_timestamp=STARKNET_STARTING_TIMESTAMP,
             )
-            print('future:', future_spot_yield_point and future_spot_yield_point.source)
+            print("future:", future_spot_yield_point and future_spot_yield_point.source)
             if future_spot_yield_point is not None:
                 yield_points.append(future_spot_yield_point)
 
