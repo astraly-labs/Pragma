@@ -49,6 +49,14 @@ func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
     return (entries_len, entries);
 }
 
+@view
+func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_id: felt
+) -> (entries_len: felt, entries: Entry*) {
+    let (sources) = alloc();
+    return get_spot_entries_for_sources(pair_id, 0, sources);
+}
+
 // @notice get entry by key and source
 // @param key: the key to fetch Entries for
 // @param source: the source to use for Entry
@@ -146,10 +154,10 @@ func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 // @notice publish an Entry
 // @param new_entry: an Entry to publish
 @external
-func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entry: Entry
 ) {
-    Oracle.publish_entry(new_entry);
+    Oracle.publish_spot_entry(new_entry);
     return ();
 }
 
@@ -157,10 +165,10 @@ func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 // @param new_entries_len: length of entries array
 // @param new_entries: pointer to first Entry in array
 @external
-func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entries_len: felt, new_entries: Entry*
 ) {
-    Oracle.publish_entries(new_entries_len, new_entries);
+    Oracle.publish_spot_entries(new_entries_len, new_entries);
     return ();
 }
 

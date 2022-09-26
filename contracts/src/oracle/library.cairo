@@ -152,7 +152,7 @@ namespace Oracle {
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
         alloc_locals;
 
-        let (entries_len, entries, last_updated_timestamp) = get_entries(key, sources_len, sources);
+        let (entries_len, entries, _) = get_entries(key, sources_len, sources);
 
         if (entries_len == 0) {
             return (0, 0, 0, 0);
@@ -160,7 +160,7 @@ namespace Oracle {
 
         let (value) = Entries.aggregate_entries(entries_len, entries);
         let (decimals) = get_decimals(key);
-        // let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
+        let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
         return (value, decimals, last_updated_timestamp, entries_len);
     }
 
@@ -230,7 +230,7 @@ namespace Oracle {
     // Setters
     //
 
-    func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entry: Entry
     ) {
         alloc_locals;
@@ -291,15 +291,15 @@ namespace Oracle {
         return ();
     }
 
-    func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entries_len: felt, new_entries: Entry*
     ) {
         if (new_entries_len == 0) {
             return ();
         }
 
-        publish_entry([new_entries]);
-        publish_entries(new_entries_len - 1, new_entries + Entry.SIZE);
+        publish_spot_entry([new_entries]);
+        publish_spot_entries(new_entries_len - 1, new_entries + Entry.SIZE);
 
         return ();
     }

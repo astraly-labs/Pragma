@@ -64,7 +64,7 @@ func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
     let cur_price = prices[cur_idx];
 
     %{ stop_warp = warp(ids.cur_time) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * cur_price, cur_time, 123, 1));
+    IOracle.publish_spot_entry(oracle_address, Entry(1, ONE_ETH * cur_price, cur_time, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     return _iter_prices_and_times(cur_idx + 1, arr_len, times, prices);

@@ -274,6 +274,27 @@
             {
                 "name": "pair_id",
                 "type": "felt"
+            }
+        ],
+        "name": "get_spot_entries",
+        "outputs": [
+            {
+                "name": "entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "entries",
+                "type": "Entry*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_id",
+                "type": "felt"
             },
             {
                 "name": "source",
@@ -450,7 +471,7 @@
                 "type": "Entry"
             }
         ],
-        "name": "publish_entry",
+        "name": "publish_spot_entry",
         "outputs": [],
         "type": "function"
     },
@@ -465,7 +486,7 @@
                 "type": "Entry*"
             }
         ],
-        "name": "publish_entries",
+        "name": "publish_spot_entries",
         "outputs": [],
         "type": "function"
     },

@@ -24,9 +24,12 @@ namespace IOracle {
     func get_decimals(pair_id: felt) -> (decimals: felt) {
     }
 
-    func get_spot_entries(pair_id: felt, sources_len: felt, sources: felt*) -> (
+    func get_spot_entries_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
         entries_len: felt, entries: Entry*
     ) {
+    }
+
+    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: Entry*) {
     }
 
     func get_spot_entry(pair_id: felt, source: felt) -> (entry: Entry) {
@@ -84,10 +87,10 @@ namespace IOracle {
     // Setters
     //
 
-    func publish_entry(new_entry: Entry) {
+    func publish_spot_entry(new_entry: Entry) {
     }
 
-    func publish_entries(new_entries_len: felt, new_entries: Entry*) {
+    func publish_spot_entries(new_entries_len: felt, new_entries: Entry*) {
     }
 
     func set_admin_address(new_admin_address: felt) {
