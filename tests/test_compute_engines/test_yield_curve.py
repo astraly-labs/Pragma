@@ -221,6 +221,18 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
         "add_publisher",
         [publisher, publisher_account.contract_address],
     )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("0xdata")],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("thegraph")],
+    )
 
     await admin_signer.send_transaction(
         admin_account,
