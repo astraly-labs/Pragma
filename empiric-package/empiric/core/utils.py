@@ -20,7 +20,7 @@ def felt_to_str(felt):
     return bytes.decode("utf-8")
 
 
-def currency_pair_to_key(quote, base):
+def currency_pair_to_pair_id(quote, base):
     return f"{quote}/{base}".upper()
 
 
