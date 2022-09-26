@@ -3,6 +3,7 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import assert_nn
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 from starkware.starknet.common.syscalls import get_block_timestamp
@@ -943,6 +944,9 @@ namespace YieldCurve {
             );
             let should_shift_net_left = is_le(future_decimals, output_decimals + spot_decimals);
             if (should_shift_net_left == TRUE) {
+                // make sure there's less than 42 decimals
+                assert_nn(42 - (output_decimals + spot_decimals - future_decimals));
+
                 // Shift future/spot to the left by output_decimals + spot_decimals - future_decimals
                 let (ratio_multiplier) = pow(10, output_decimals + spot_decimals - future_decimals);
                 let (shifted_ratio, _) = unsigned_div_rem(
