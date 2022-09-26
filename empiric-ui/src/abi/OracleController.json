@@ -467,7 +467,7 @@
                 "type": "Entry"
             }
         ],
-        "name": "publish_entry",
+        "name": "publish_spot_entry",
         "outputs": [],
         "type": "function"
     },
@@ -482,7 +482,7 @@
                 "type": "Entry*"
             }
         ],
-        "name": "publish_entries",
+        "name": "publish_spot_entries",
         "outputs": [],
         "type": "function"
     }

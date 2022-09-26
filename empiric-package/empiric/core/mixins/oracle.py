@@ -15,7 +15,7 @@ class OracleMixin:
     publisher_registry: Contract
     client: Client
 
-    async def publish_entry(
+    async def publish_spot_entry(
         self,
         pair_id: int,
         value: int,
@@ -29,7 +29,7 @@ class OracleMixin:
             raise AttributeError(
                 "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
             )
-        invocation = await self.oracle.publish_entry.invoke(
+        invocation = await self.oracle.publish_spot_entry.invoke(
             {
                 "pair_id": pair_id,
                 "value": value,
@@ -51,13 +51,13 @@ class OracleMixin:
         if pagination:
             ix = 0
             while ix < len(entries):
-                invocation = await self.oracle.publish_entries.invoke(
+                invocation = await self.oracle.publish_spot_entries.invoke(
                     Entry.serialize_entries(entries[ix : ix + pagination]),
                     max_fee=max_fee,
                 )
                 ix += pagination
         else:
-            invocation = await self.oracle.publish_entries.invoke(
+            invocation = await self.oracle.publish_spot_entries.invoke(
                 Entry.serialize_entries(entries), max_fee=max_fee
             )
 
@@ -78,7 +78,7 @@ class OracleMixin:
 
         return [Entry.from_dict(entry) for entry in response.entries]
 
-    async def get_value(
+    async def get_spot(
         self,
         pair_id,
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
@@ -91,12 +91,12 @@ class OracleMixin:
                 "Pair ID must be string (will be converted to felt) or integer"
             )
         if sources is None:
-            response = await self.oracle.get_value.call(
+            response = await self.oracle.get_spot.call(
                 pair_id,
                 aggregation_mode.value,
             )
         else:
-            response = await self.oracle.get_value_for_sources.call(
+            response = await self.oracle.get_spot_entries_for_sources.call(
                 pair_id, aggregation_mode.value, sources
             )
 

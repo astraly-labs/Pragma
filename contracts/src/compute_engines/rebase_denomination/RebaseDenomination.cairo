@@ -67,7 +67,7 @@ func get_rebased_value_via_usd{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, r
     );
     let (
         quote_value, quote_decimals, quote_last_updated_timestamp, quote_num_sources_aggregated
-    ) = IOracle.get_value(oracle_address, quote_asset_key, EmpiricAggregationModes.MEDIAN);
+    ) = IOracle.get_spot(oracle_address, quote_asset_key, EmpiricAggregationModes.MEDIAN);
     if (quote_last_updated_timestamp == 0) {
         return (0, 0, 0, 0);
     }
@@ -75,7 +75,7 @@ func get_rebased_value_via_usd{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, r
     let (base_asset_key) = _convert_currency_to_asset_key(base_currency, SLASH_USD, SLASH_USD_BITS);
     let (
         base_value, base_decimals, base_last_updated_timestamp, base_num_sources_aggregated
-    ) = IOracle.get_value(oracle_address, base_asset_key, EmpiricAggregationModes.MEDIAN);
+    ) = IOracle.get_spot(oracle_address, base_asset_key, EmpiricAggregationModes.MEDIAN);
     if (base_last_updated_timestamp == 0) {
         return (0, 0, 0, 0);
     }

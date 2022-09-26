@@ -152,7 +152,7 @@ namespace Oracle {
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
         alloc_locals;
 
-        let (entries_len, entries) = get_entries(key, sources_len, sources);
+        let (entries_len, entries, _) = get_entries(key, sources_len, sources);
 
         if (entries_len == 0) {
             return (0, 0, 0, 0);
@@ -166,11 +166,17 @@ namespace Oracle {
 
     func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
-    ) -> (entries_len: felt, entries: Entry*) {
+    ) -> (entries_len: felt, entries: Entry*, last_updated_timestamp: felt) {
+        // This will return all entries within the TIMESTAMP_BUFFER of the latest entry published for the given list of sources
         alloc_locals;
 
-        let (entries_len, entries) = get_all_entries(pair_id, sources_len, sources);
-        return (entries_len, entries);
+        let (last_updated_timestamp) = get_latest_entry_timestamp(
+            pair_id, sources_len, sources, 0, 0
+        );
+        let (entries_len, entries) = get_all_entries(
+            pair_id, sources_len, sources, last_updated_timestamp
+        );
+        return (entries_len, entries, last_updated_timestamp);
     }
 
     func get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -224,7 +230,7 @@ namespace Oracle {
     // Setters
     //
 
-    func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entry: Entry
     ) {
         alloc_locals;
@@ -264,7 +270,7 @@ namespace Oracle {
 
         with_attr error_message("Oracle: New entry timestamp is too far in the future") {
             // TODO (rlkelly): should we allow for an hour into the future?
-            assert_le(new_entry.base.timestamp, current_timestamp + TIMESTAMP_BUFFER);
+            assert_le(new_entry.base.timestamp, current_timestamp + 60 * 15);
         }
 
         if (entry.base.timestamp == 0) {
@@ -285,15 +291,15 @@ namespace Oracle {
         return ();
     }
 
-    func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entries_len: felt, new_entries: Entry*
     ) {
         if (new_entries_len == 0) {
             return ();
         }
 
-        publish_entry([new_entries]);
-        publish_entries(new_entries_len - 1, new_entries + Entry.SIZE);
+        publish_spot_entry([new_entries]);
+        publish_spot_entries(new_entries_len - 1, new_entries + Entry.SIZE);
 
         return ();
     }
@@ -407,7 +413,7 @@ namespace Oracle {
     //
 
     func get_all_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, sources_len: felt, sources: felt*
+        pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp
     ) -> (entries_len: felt, entries: Entry*) {
         alloc_locals;
 
@@ -416,15 +422,33 @@ namespace Oracle {
         if (sources_len == 0) {
             let (all_sources_len, all_sources) = get_all_sources(pair_id);
             let (entries_len, entries) = build_entries_array(
-                pair_id, all_sources_len, all_sources, 0, 0, entries
+                pair_id, all_sources_len, all_sources, 0, 0, entries, latest_timestamp
             );
         } else {
             let (entries_len, entries) = build_entries_array(
-                pair_id, sources_len, sources, 0, 0, entries
+                pair_id, sources_len, sources, 0, 0, entries, latest_timestamp
             );
         }
 
         return (entries_len, entries);
+    }
+
+    func get_latest_entry_timestamp{
+        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+    }(pair_id, sources_len, sources: felt*, cur_idx, latest_timestamp) -> (latest_timestamp: felt) {
+        if (cur_idx == sources_len) {
+            return (latest_timestamp,);
+        }
+        let (entry) = Oracle_entry_storage.read(pair_id, sources[cur_idx]);
+        if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
+            return get_latest_entry_timestamp(
+                pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
+            );
+        } else {
+            return get_latest_entry_timestamp(
+                pair_id, sources_len, sources, cur_idx + 1, latest_timestamp
+            );
+        }
     }
 
     func build_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -434,6 +458,7 @@ namespace Oracle {
         sources_idx: felt,
         entries_idx: felt,
         entries: Entry*,
+        latest_entry_timestamp: felt,
     ) -> (entries_len: felt, entries: Entry*) {
         alloc_locals;
 
@@ -446,14 +471,21 @@ namespace Oracle {
         let (entry) = Oracle_entry_storage.read(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
-        let (current_timestamp) = get_block_timestamp();
 
-        let is_entry_stale = is_le(entry.base.timestamp + 1, current_timestamp - TIMESTAMP_BUFFER);
+        let is_entry_stale = is_le(
+            entry.base.timestamp + 1, latest_entry_timestamp - TIMESTAMP_BUFFER
+        );
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_entries_array(
-                pair_id, sources_len, sources, sources_idx + 1, entries_idx, entries
+                pair_id,
+                sources_len,
+                sources,
+                sources_idx + 1,
+                entries_idx,
+                entries,
+                latest_entry_timestamp,
             );
             return (entries_len, entries);
         }
@@ -461,7 +493,13 @@ namespace Oracle {
         assert [entries + entries_idx * Entry.SIZE] = entry;
 
         let (entries_len, entries) = build_entries_array(
-            pair_id, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
+            pair_id,
+            sources_len,
+            sources,
+            sources_idx + 1,
+            entries_idx + 1,
+            entries,
+            latest_entry_timestamp,
         );
         return (entries_len, entries);
     }

@@ -59,7 +59,7 @@ async def _main():
             _,
             last_updated_timestamp,
             num_sources_aggregated,
-        ) = await client.get_value(pair_id)
+        ) = await client.get_spot(pair_id)
 
         try:
             assert (

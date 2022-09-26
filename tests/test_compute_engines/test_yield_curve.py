@@ -328,7 +328,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     await publisher_signer.send_transaction(
         publisher_account,
         oracle.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         on_entry.to_tuple(),
     )
 
@@ -343,7 +343,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         await publisher_signer.send_transaction(
             publisher_account,
             oracle.contract_address,
-            "publish_entry",
+            "publish_spot_entry",
             spot_entry.to_tuple(),
         )
 
@@ -365,7 +365,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             await publisher_signer.send_transaction(
                 publisher_account,
                 oracle.contract_address,
-                "publish_entry",
+                "publish_spot_entry",
                 future_entry.to_tuple(),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(

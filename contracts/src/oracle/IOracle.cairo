@@ -24,35 +24,46 @@ namespace IOracle {
     func get_decimals(pair_id: felt) -> (decimals: felt) {
     }
 
-    func get_entries(pair_id: felt, sources_len: felt, sources: felt*) -> (
+    func get_spot_entries_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
         entries_len: felt, entries: Entry*
     ) {
     }
 
-    func get_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: Entry*) {
     }
 
-    func get_value(pair_id: felt, aggregation_mode: felt) -> (
+    func get_spot_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    }
+
+    func get_spot_median(pair_id: felt) -> (
         value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
+    func get_spot(pair_id: felt, aggregation_mode: felt) -> (
+        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
+
+    func get_future_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    }
+
     // TODO (rlkelly): add adapters for currency conversion
-    // func get_value_with_hops(
+    // func get_spot_with_hops(
     //     currency_ids_len : felt, currency_ids : felt*, aggregation_mode : felt
     // ) -> (
     //     value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     // ):
     // end
 
-    // func get_value_with_USD_hop(
+    // func get_spot_with_USD_hop(
     //     base_currency_id : felt, quote_currency_id : felt, aggregation_mode : felt
     // ) -> (
     //     value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
     // ):
     // end
 
-    func get_value_for_sources(
+    func get_spot_for_sources(
         pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     }
@@ -76,10 +87,10 @@ namespace IOracle {
     // Setters
     //
 
-    func publish_entry(new_entry: Entry) {
+    func publish_spot_entry(new_entry: Entry) {
     }
 
-    func publish_entries(new_entries_len: felt, new_entries: Entry*) {
+    func publish_spot_entries(new_entries_len: felt, new_entries: Entry*) {
     }
 
     func set_admin_address(new_admin_address: felt) {

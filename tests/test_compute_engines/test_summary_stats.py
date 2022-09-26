@@ -256,7 +256,7 @@ async def test_summary_stats(
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_proxy.contract_address,
-            "publish_entry",
+            "publish_spot_entry",
             entry.to_tuple(),
         )
 

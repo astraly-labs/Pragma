@@ -64,12 +64,12 @@ async def deploy(
 
 @app.command()
 @coro
-async def publish_entry(entry: str, config_path=config.DEFAULT_CONFIG):
+async def publish_spot_entry(entry: str, config_path=config.DEFAULT_CONFIG):
     pair_id, value, timestamp, source, publisher = entry.split(",")
     if timestamp.lower() == "now":
         timestamp = int(time.time())
 
-    await _publish_entry(
+    await _publish_spot_entry(
         config_path,
         (
             str_to_felt(pair_id.lower()),
@@ -145,9 +145,9 @@ async def deploy_oracle_proxy(
         config_parser.write(f)
 
 
-async def _publish_entry(config_path: Path, entry: Tuple[int, int, int, int, int]):
+async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int, int]):
     client = net.init_empiric_client(config_path)
-    invocation = await client.publish_entry(*entry)
+    invocation = await client.publish_spot_entry(*entry)
 
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
@@ -155,7 +155,7 @@ async def _publish_entry(config_path: Path, entry: Tuple[int, int, int, int, int
 
 @app.command()
 @coro
-async def get_value(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
-    entry = await client.oracle.get_value.call(str_to_felt(pair_id), 0)
+    entry = await client.oracle.get_spot.call(str_to_felt(pair_id), 0)
     typer.echo(f"publishers: {entry}")

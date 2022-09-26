@@ -107,7 +107,7 @@ def assert_event_emitted(tx_exec_info, from_address: int, name: str, data: List[
     )
 
 
-async def register_new_publisher_and_publish_entries_1(
+async def register_new_publisher_and_publish_spot_entries_1(
     admin_account,
     publisher_account,
     publisher_registry,
@@ -137,12 +137,12 @@ async def register_new_publisher_and_publish_entries_1(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle.contract_address,
-        "publish_entries",
+        "publish_spot_entries",
         Entry.flatten_entries(entries),
     )
 
 
-async def register_new_publisher_and_publish_entry(
+async def register_new_publisher_and_publish_spot_entry(
     admin_account,
     publisher_account,
     publisher_registry,
@@ -168,7 +168,7 @@ async def register_new_publisher_and_publish_entry(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 

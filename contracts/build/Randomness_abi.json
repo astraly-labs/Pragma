@@ -251,15 +251,15 @@
                 "type": "felt"
             },
             {
+                "name": "minimum_block_number",
+                "type": "felt"
+            },
+            {
                 "name": "callback_address",
                 "type": "felt"
             },
             {
                 "name": "callback_gas_limit",
-                "type": "felt"
-            },
-            {
-                "name": "minimum_block_number",
                 "type": "felt"
             },
             {

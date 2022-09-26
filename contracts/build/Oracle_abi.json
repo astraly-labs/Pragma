@@ -255,7 +255,28 @@
                 "type": "felt*"
             }
         ],
-        "name": "get_entries",
+        "name": "get_spot_entries_for_sources",
+        "outputs": [
+            {
+                "name": "entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "entries",
+                "type": "Entry*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_spot_entries",
         "outputs": [
             {
                 "name": "entries_len",
@@ -280,7 +301,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_entry",
+        "name": "get_spot_entry",
         "outputs": [
             {
                 "name": "entry",
@@ -297,11 +318,61 @@
                 "type": "felt"
             },
             {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "get_future_entry",
+        "outputs": [
+            {
+                "name": "entry",
+                "type": "Entry"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_spot_median",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_id",
+                "type": "felt"
+            },
+            {
                 "name": "aggregation_mode",
                 "type": "felt"
             }
         ],
-        "name": "get_value",
+        "name": "get_spot",
         "outputs": [
             {
                 "name": "value",
@@ -342,7 +413,7 @@
                 "type": "felt*"
             }
         ],
-        "name": "get_value_for_sources",
+        "name": "get_spot_for_sources",
         "outputs": [
             {
                 "name": "value",
@@ -400,7 +471,7 @@
                 "type": "Entry"
             }
         ],
-        "name": "publish_entry",
+        "name": "publish_spot_entry",
         "outputs": [],
         "type": "function"
     },
@@ -415,7 +486,7 @@
                 "type": "Entry*"
             }
         ],
-        "name": "publish_entries",
+        "name": "publish_spot_entries",
         "outputs": [],
         "type": "function"
     },
