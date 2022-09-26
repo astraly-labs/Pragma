@@ -14,7 +14,7 @@ namespace IPublisherRegistry {
     func get_all_publishers() -> (publishers_len: felt, publishers: felt*) {
     }
 
-    func get_publisher_sources() -> (sources_len: felt, sources: felt*) {
+    func get_publisher_sources(publisher) -> (sources_len: felt, sources: felt*) {
     }
 
     func can_publish_source(publisher, source) -> (is_valid: felt) {
