@@ -235,6 +235,11 @@ namespace Oracle {
         );
         let (caller_address) = get_caller_address();
 
+        with_attr error_message("Oracle: Publisher and caller must not be 0 addresses") {
+            assert_not_zero(publisher_address);
+            assert_not_zero(caller_address);
+        }
+
         with_attr error_message("Oracle: Transaction not from publisher account") {
             assert caller_address = publisher_address;
         }
