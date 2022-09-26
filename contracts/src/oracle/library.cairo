@@ -251,6 +251,7 @@ namespace Oracle {
         }
 
         with_attr error_message("Oracle: New entry timestamp is too far in the future") {
+            // TODO (rlkelly): should we allow for an hour into the future?
             assert_le(new_entry.timestamp, current_timestamp + TIMESTAMP_BUFFER);
         }
 
@@ -434,7 +435,8 @@ namespace Oracle {
         let is_entry_initialized = is_not_zero(entry.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
         let (current_timestamp) = get_block_timestamp();
-        let is_entry_stale = is_le(entry.timestamp, current_timestamp - TIMESTAMP_BUFFER);
+
+        let is_entry_stale = is_le(entry.timestamp + 1, current_timestamp - TIMESTAMP_BUFFER);
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
         if (should_skip_entry == TRUE) {
