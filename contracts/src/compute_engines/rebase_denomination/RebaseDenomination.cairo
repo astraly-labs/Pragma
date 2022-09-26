@@ -174,11 +174,6 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
     local result_decimals;
     let b_fewer_dec = is_le(b_decimals, a_decimals);
     if (b_fewer_dec == TRUE) {
-        // x > y
-        a_to_shift = a_value;
-        result_decimals = a_decimals;
-        tempvar range_check_ptr = range_check_ptr;
-    } else {
         // x <= y
         if (a_decimals != b_decimals) {
             // Pad a to have same number of decimals as b
@@ -191,6 +186,11 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
         }
         // x == y
         result_decimals = b_decimals;
+        tempvar range_check_ptr = range_check_ptr;
+    } else {
+        // x > y
+        a_to_shift = a_value;
+        result_decimals = a_decimals;
         tempvar range_check_ptr = range_check_ptr;
     }
 
