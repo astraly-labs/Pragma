@@ -1,84 +1,231 @@
 PUBLISHER_REGISTRY_ABI = [
     {
         "data": [
-            {"name": "publisher", "type": "felt"},
-            {"name": "publisher_address", "type": "felt"},
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_address",
+                "type": "felt"
+            }
         ],
         "keys": [],
         "name": "RegisteredPublisher",
-        "type": "event",
+        "type": "event"
     },
     {
         "data": [
-            {"name": "publisher", "type": "felt"},
-            {"name": "old_publisher_address", "type": "felt"},
-            {"name": "new_publisher_address", "type": "felt"},
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "old_publisher_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_publisher_address",
+                "type": "felt"
+            }
         ],
         "keys": [],
         "name": "UpdatedPublisherAddress",
-        "type": "event",
+        "type": "event"
     },
     {
         "data": [
-            {"name": "old_admin_address", "type": "felt"},
-            {"name": "new_admin_address", "type": "felt"},
+            {
+                "name": "old_admin_address",
+                "type": "felt"
+            },
+            {
+                "name": "new_admin_address",
+                "type": "felt"
+            }
         ],
         "keys": [],
         "name": "UpdatedAdminAddress",
-        "type": "event",
+        "type": "event"
     },
     {
-        "inputs": [{"name": "admin_address", "type": "felt"}],
+        "inputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
         "name": "constructor",
         "outputs": [],
-        "type": "constructor",
+        "type": "constructor"
     },
     {
         "inputs": [],
         "name": "get_admin_address",
-        "outputs": [{"name": "admin_address", "type": "felt"}],
+        "outputs": [
+            {
+                "name": "admin_address",
+                "type": "felt"
+            }
+        ],
         "stateMutability": "view",
-        "type": "function",
+        "type": "function"
     },
     {
-        "inputs": [{"name": "publisher", "type": "felt"}],
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            }
+        ],
         "name": "get_publisher_address",
-        "outputs": [{"name": "publisher_address", "type": "felt"}],
+        "outputs": [
+            {
+                "name": "publisher_address",
+                "type": "felt"
+            }
+        ],
         "stateMutability": "view",
-        "type": "function",
+        "type": "function"
     },
     {
         "inputs": [],
         "name": "get_all_publishers",
         "outputs": [
-            {"name": "publishers_len", "type": "felt"},
-            {"name": "publishers", "type": "felt*"},
+            {
+                "name": "publishers_len",
+                "type": "felt"
+            },
+            {
+                "name": "publishers",
+                "type": "felt*"
+            }
         ],
         "stateMutability": "view",
-        "type": "function",
+        "type": "function"
     },
     {
-        "inputs": [{"name": "new_address", "type": "felt"}],
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            }
+        ],
+        "name": "get_publisher_sources",
+        "outputs": [
+            {
+                "name": "sources_len",
+                "type": "felt"
+            },
+            {
+                "name": "sources",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "can_publish_source",
+        "outputs": [
+            {
+                "name": "is_valid",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_address",
+                "type": "felt"
+            }
+        ],
         "name": "set_admin_address",
         "outputs": [],
-        "type": "function",
+        "type": "function"
     },
     {
         "inputs": [
-            {"name": "publisher", "type": "felt"},
-            {"name": "publisher_address", "type": "felt"},
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "publisher_address",
+                "type": "felt"
+            }
         ],
-        "name": "register_publisher",
+        "name": "add_publisher",
         "outputs": [],
-        "type": "function",
+        "type": "function"
     },
     {
         "inputs": [
-            {"name": "publisher", "type": "felt"},
-            {"name": "new_publisher_address", "type": "felt"},
+            {
+                "name": "publisher",
+                "type": "felt"
+            }
+        ],
+        "name": "remove_publisher",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "new_publisher_address",
+                "type": "felt"
+            }
         ],
         "name": "update_publisher_address",
         "outputs": [],
-        "type": "function",
+        "type": "function"
     },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "add_source_for_publisher",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "publisher",
+                "type": "felt"
+            },
+            {
+                "name": "source",
+                "type": "felt"
+            }
+        ],
+        "name": "remove_source_for_publisher",
+        "outputs": [],
+        "type": "function"
+    }
 ]
