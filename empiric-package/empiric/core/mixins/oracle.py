@@ -78,7 +78,7 @@ class OracleMixin:
 
         return [Entry.from_dict(entry) for entry in response.entries]
 
-    async def get_value(
+    async def get_spot(
         self,
         pair_id,
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,

@@ -41,7 +41,7 @@ async def publish_all(assets):
                 CoinbaseFetcher,
                 CryptowatchFetcher,
                 FtxFetcher,
-                GeminiFetcher,
+                # GeminiFetcher,   # gemini is currently under maintainence
                 TheGraphFetcher,
             )
         ]

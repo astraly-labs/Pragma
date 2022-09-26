@@ -155,7 +155,7 @@ async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int
 
 @app.command()
 @coro
-async def get_value(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_spot.call(str_to_felt(pair_id), 0)
     typer.echo(f"publishers: {entry}")
