@@ -10,7 +10,7 @@ struct Entry {
 }
 
 namespace EmpiricAggregationModes {
-    const MEDIAN = 120282243752302;  // str_to_felt("median")
+    const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
 }
 
 @contract_interface

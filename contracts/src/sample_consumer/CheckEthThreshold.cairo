@@ -6,7 +6,7 @@ from starkware.cairo.common.pow import pow
 from oracle.IEmpiricOracle import IEmpiricOracle, EmpiricAggregationModes
 
 const EMPIRIC_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4;
-const KEY = 28556963469423460;  // str_to_felt("eth/usd")
+const KEY = 19514442401534788;  // str_to_felt("ETH/USD")
 
 @view
 func check_eth_usd_threshold{syscall_ptr: felt*, range_check_ptr}(threshold: felt) -> (

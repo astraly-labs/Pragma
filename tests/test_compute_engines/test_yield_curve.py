@@ -25,7 +25,7 @@ from test_compute_engines.yield_curve import (
 from utils import cached_contract
 
 STARKNET_STARTING_TIMESTAMP = 1650590820
-ON_KEY = "aave-on-borrow"
+ON_KEY = "AAVE-ON-BORROW"
 FUTURES_SPOT = {
     "btc/usd": {
         "value": 100,
@@ -129,28 +129,28 @@ async def contract_init(
             admin_account.contract_address,
             publisher_registry.contract_address,
             3,
-            str_to_felt("btc"),
+            str_to_felt("BTC"),
             18,
             1,
             0,
             0,
-            str_to_felt("usd"),
+            str_to_felt("USD"),
             18,
             1,
             0,
             0,
-            str_to_felt("aave-on-borrow"),
+            str_to_felt("AAVE-ON-BORROW"),
             18,
             1,
             0,
             0,
             2,
-            str_to_felt("btc/usd"),
-            str_to_felt("btc"),
-            str_to_felt("usd"),
+            str_to_felt("BTC/USD"),
+            str_to_felt("BTC"),
+            str_to_felt("USD"),
             str_to_felt(ON_KEY),
-            str_to_felt("aave-on-borrow"),
-            str_to_felt("usd"),
+            str_to_felt("AAVE-ON-BORROW"),
+            str_to_felt("USD"),
         ],
     )
     oracle = oracle_proxy.replace_abi(ORACLE_ABI)
@@ -310,7 +310,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         pair_id=ON_KEY,
         value=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
-        source=str_to_felt("thegraph"),
+        source=str_to_felt("THEGRAPH"),
         publisher=publisher,
     )
     await publisher_signer.send_transaction(
@@ -350,6 +350,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 source=source,
                 publisher=publisher,
             )
+            print('entry:', future_entry.source)
             await publisher_signer.send_transaction(
                 publisher_account,
                 oracle.contract_address,
@@ -367,6 +368,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 output_decimals,
                 current_timestamp=STARKNET_STARTING_TIMESTAMP,
             )
+            print('future:', future_spot_yield_point and future_spot_yield_point.source)
             if future_spot_yield_point is not None:
                 yield_points.append(future_spot_yield_point)
 
