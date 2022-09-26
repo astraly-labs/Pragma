@@ -232,7 +232,7 @@ async def test_summary_stats(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
     summary_stats = initialized_contracts["summary_stats"]
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
 
     await admin_signer.send_transaction(
         admin_account,

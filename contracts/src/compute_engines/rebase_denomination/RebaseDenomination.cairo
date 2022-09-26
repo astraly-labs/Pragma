@@ -13,7 +13,7 @@ from oracle.IOracle import IOracle, EmpiricAggregationModes
 // Consts
 //
 
-const SLASH_USD = 796226404;  // str_to_felt("/usd")
+const SLASH_USD = 794121028;  // str_to_felt("/USD")
 const SLASH_USD_BITS = 32;
 
 @storage_var

@@ -12,9 +12,9 @@ from compute_engines.rebase_denomination.RebaseDenomination import (
 )
 from compute_engines.rebase_denomination.IRebaseDenomination import IOracleRebaser
 
-const ETH = 6648936;  // str_to_felt("eth")
-const BTC = 6452323;  // str_to_felt("btc")
-const AVAX = 1635148152;  // str_to_felt("avax")
+const ETH = 4543560;  // str_to_felt("ETH")
+const BTC = 4346947;  // str_to_felt("BTC")
+const AVAX = 1096171864;  // str_to_felt("AVAX")
 
 @external
 func test_rebase_mock{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
@@ -43,15 +43,15 @@ func test_rebase_mock{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 func test_convert_to_asset_key{range_check_ptr}() {
     // ETH/USD
     let (eth_usd) = _convert_currency_to_asset_key(ETH, SLASH_USD, SLASH_USD_BITS);
-    assert_eq(eth_usd, 28556963469423460);  // str_to_felt("eth/usd")
+    assert_eq(eth_usd, 19514442401534788);  // str_to_felt("ETH/USD")
 
     // BTC/USD
     let (btc_usd) = _convert_currency_to_asset_key(BTC, SLASH_USD, SLASH_USD_BITS);
-    assert_eq(btc_usd, 27712517064455012);  // str_to_felt("btc/usd")
+    assert_eq(btc_usd, 18669995996566340);  // str_to_felt("BTC/USD")
 
     // AVAX/USD
     let (avax_usd) = _convert_currency_to_asset_key(AVAX, SLASH_USD, SLASH_USD_BITS);
-    assert_eq(avax_usd, 7022907837751063396);  // str_to_felt("avax/usd")
+    assert_eq(avax_usd, 4708022307469480772);  // str_to_felt("AVAX/USD")
     return ();
 }
 

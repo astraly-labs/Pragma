@@ -1,16 +1,16 @@
 %lang starknet
 
 struct Entry {
-    pair_id: felt,  // UTF-8 encoded lowercased string, e.g. "eth/usd"
+    pair_id: felt,  // UTF-8 encoded uppercased string, e.g. "ETH/USD"
     value: felt,  // Value shifted to the left by decimals
     timestamp: felt,  // Timestamp of the most recent update, UTC epoch
-    source: felt,  // UTF-8 encoded lowercased string, e.g. "ftx"
-    publisher: felt,  // UTF-8 encoded lowercased string, e.g. "consensys"
+    source: felt,  // UTF-8 encoded uppercased string, e.g. "FTX"
+    publisher: felt,  // UTF-8 encoded uppercased string, e.g. "CONSENSYS"
     // Publisher of the data (usually the source, but occasionally a third party)
 }
 
 namespace EmpiricAggregationModes {
-    const MEDIAN = 120282243752302;  // str_to_felt("median")
+    const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
 }
 
 @contract_interface

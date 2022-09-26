@@ -235,10 +235,10 @@ async def test_deploy(initialized_contracts):
 async def test_decimals(initialized_contracts):
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    result = await oracle_proxy.get_decimals(str_to_felt("nonexistant")).call()
+    result = await oracle_proxy.get_decimals(str_to_felt("NONEXISTANT")).call()
     assert result.result.decimals == 0
 
-    result = await oracle_proxy.get_decimals(str_to_felt("usd/decimals-test")).call()
+    result = await oracle_proxy.get_decimals(str_to_felt("USD/DECIMALS-TEST")).call()
     assert result.result.decimals == 100
 
 
@@ -304,7 +304,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entry = Entry(
-        pair_id=str_to_felt("eth/usd"),
+        pair_id=str_to_felt("ETH/USD"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
@@ -345,7 +345,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=2,
@@ -394,7 +394,7 @@ async def test_re_submit_stale(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=2,
@@ -459,7 +459,7 @@ async def test_submit_second_asset(
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entry = Entry(
-        pair_id=str_to_felt("eth/usd"),
+        pair_id=str_to_felt("ETH/USD"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
@@ -479,7 +479,7 @@ async def test_submit_second_asset(
     assert result.result.value == entry.value
 
     second_entry = Entry(
-        pair_id=str_to_felt("btc/usd"),
+        pair_id=str_to_felt("BTC/USD"),
         value=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
@@ -524,7 +524,7 @@ async def test_submit_second_publisher(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=3,
@@ -539,8 +539,8 @@ async def test_submit_second_publisher(
         entry.to_tuple(),
     )
 
-    second_source = str_to_felt("1xdata")
-    second_publisher = str_to_felt("bar")
+    second_source = str_to_felt("1xDATA")
+    second_publisher = str_to_felt("BAR")
 
     await admin_signer.send_transaction(
         admin_account,
@@ -604,7 +604,7 @@ async def test_submit_second_source(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=2,
@@ -657,7 +657,7 @@ async def test_mean_aggregation(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=3,
@@ -715,7 +715,7 @@ async def test_median_aggregation(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     prices = [1, 3, 10, 5, 12, 2]
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     entry = Entry(
@@ -776,7 +776,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_ids = [str_to_felt("eth/usd"), str_to_felt("btc/usd"), str_to_felt("doge/usd")]
+    pair_ids = [str_to_felt("ETH/USD"), str_to_felt("BTC/USD"), str_to_felt("DOGE/USD")]
     prices = [1, 3, 10]
     publisher = "foo"
     entries = [
@@ -828,7 +828,7 @@ async def test_subset_publishers(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("doge/usd")
+    pair_id = str_to_felt("DOGE/USD")
     entry = Entry(
         pair_id=pair_id,
         value=1,
@@ -843,7 +843,7 @@ async def test_subset_publishers(
         entry.to_tuple(),
     )
 
-    additional_publisher = str_to_felt("bar")
+    additional_publisher = str_to_felt("BAR")
 
     await admin_signer.send_transaction(
         admin_account,
@@ -866,7 +866,7 @@ async def test_unknown_source(
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=2,
@@ -882,8 +882,8 @@ async def test_unknown_source(
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_spot_for_sources(
-        pair_id, AggregationMode.MEDIAN.value, [str_to_felt("unknown")]
+    result = await oracle_proxy.get_value_for_sources(
+        pair_id, AggregationMode.MEDIAN.value, [str_to_felt("UNKNOWN")]
     ).call()
     assert result.result.num_sources_aggregated == 0
 
@@ -892,7 +892,7 @@ async def test_unknown_source(
 async def test_unknown_key(initialized_contracts):
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    unknown_pair_id = str_to_felt("answertolife")
+    unknown_pair_id = str_to_felt("ANSWERTOLIFE")
 
     result = await oracle_proxy.get_spot_entries(unknown_pair_id).call()
     assert len(result.result.entries) == 0
@@ -965,18 +965,18 @@ async def test_real_data(
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
-    result = await oracle_proxy.get_spot_for_sources(
-        str_to_felt("eth/usd"),
+    result = await oracle_proxy.get_value_for_sources(
+        str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
-        [str_to_felt("gemini"), str_to_felt("coinbase")],
+        [str_to_felt("GEMINI"), str_to_felt("COINBASE")],
     ).call()
     assert result.result.value == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
-    result = await oracle_proxy.get_spot_for_sources(
-        str_to_felt("eth/usd"),
+    result = await oracle_proxy.get_value_for_sources(
+        str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
-        [str_to_felt("gemini"), str_to_felt("unknown")],
+        [str_to_felt("GEMINI"), str_to_felt("UNKNOWN")],
     ).call()
     assert result.result.value == 29920000000000
     assert result.result.last_updated_timestamp == 1650590986
@@ -992,7 +992,7 @@ async def test_ignore_future_entry(
 ):
     publisher_account = initialized_contracts["publisher_account"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
 
     entry = Entry(
         pair_id=pair_id,
@@ -1027,7 +1027,7 @@ async def test_ignore_stale_entries(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=3,
@@ -1042,7 +1042,7 @@ async def test_ignore_stale_entries(
         entry.to_tuple(),
     )
 
-    second_publisher = str_to_felt("bar")
+    second_publisher = str_to_felt("BAR")
 
     await admin_signer.send_transaction(
         admin_account,
@@ -1096,7 +1096,7 @@ async def test_checkpointing(
     publisher_registry = initialized_contracts["publisher_registry"]
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    second_publisher = str_to_felt("bar")
+    second_publisher = str_to_felt("BAR")
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
@@ -1110,7 +1110,7 @@ async def test_checkpointing(
         [second_publisher, source],
     )
 
-    pair_id = str_to_felt("eth/usd")
+    pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
         value=3,

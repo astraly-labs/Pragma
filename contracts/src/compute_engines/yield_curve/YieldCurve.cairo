@@ -20,9 +20,9 @@ from compute_engines.yield_curve.structs import YieldPoint
 // Consts
 //
 
-const ON_SOURCE_KEY = 28526;  // str_to_felt("on")
-const FUTURE_SPOT_SOURCE_KEY = 123865098764438378875219828;  // str_to_felt("future/spot")
-const THEGRAPH_EMPIRIC_SOURCE_KEY = 8388065800952574056;  // str_to_felt("thegraph")
+const ON_SOURCE_KEY = 20302;  // str_to_felt("ON")
+const FUTURE_SPOT_SOURCE_KEY = 85027764198622664552632148;  // str_to_felt("FUTURE/SPOT")
+const THEGRAPH_EMPIRIC_SOURCE_KEY = 6073180270134120520;  // str_to_felt("THEGRAPH")
 const SECONDS_IN_YEAR = 31536000;  // 365 * 24 * 60 * 60
 const DEFAULT_DECIMALS = 18;
 
