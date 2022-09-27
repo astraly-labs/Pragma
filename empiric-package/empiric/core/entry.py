@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from empiric.core.utils import felt_to_str, str_to_felt
 
@@ -15,10 +15,11 @@ class Entry:
     def __init__(
         self,
         pair_id: Union[str, int],
-        value: int,
+        price: int,
         timestamp: int,
         source: Union[str, int],
         publisher: Union[str, int],
+        volume: Optional[int] = 0,
     ) -> None:
         if type(pair_id) == str:
             pair_id = str_to_felt(pair_id)
@@ -30,34 +31,44 @@ class Entry:
             source = str_to_felt(source)
 
         self.pair_id = pair_id
-        self.value = value
+        self.price = price
         self.timestamp = timestamp
         self.source = source
         self.publisher = publisher
+        self.volume = volume
 
     def __eq__(self, other):
         if isinstance(other, Entry):
             return (
                 self.pair_id == other.pair_id
-                and self.value == other.value
+                and self.price == other.price
                 and self.timestamp == other.timestamp
                 and self.source == other.source
                 and self.publisher == other.publisher
+                and self.colume == other.volume
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
-        if isinstance(other, Tuple) and len(other) == 3:
+        if isinstance(other, Tuple) and len(other) == 4:
             return (
                 self.pair_id == other.pair_id
-                and self.value == other.value
+                and self.price == other.price
                 and self.timestamp == other.base.timestamp
                 and self.source == other.base.source
                 and self.publisher == other.base.publisher
+                and self.volume == other.volume
             )
         return False
 
     def to_tuple(self):
-        return (self.timestamp, self.source, self.publisher, self.pair_id, self.value)
+        return (
+            self.timestamp,
+            self.source,
+            self.publisher,
+            self.pair_id,
+            self.price,
+            self.volume,
+        )
 
     def serialize(self) -> Dict[str, str]:
         return {
@@ -67,17 +78,18 @@ class Entry:
                 "publisher": self.publisher,
             },
             "pair_id": self.pair_id,
-            "value": self.value,
+            "price": self.price,
+            "volume": self.volume,
         }
 
     @staticmethod
     def from_dict(entry_dict: Dict[str, str]) -> "Entry":
         return Entry(
-            entry_dict["pair_id"],
-            entry_dict["value"],
+            entry_dict["base"]["pair_id"],
+            entry_dict["price"],
             entry_dict["timestamp"],
-            entry_dict["source"],
-            entry_dict["publisher"],
+            entry_dict["base"]["source"],
+            entry_dict["base"]["publisher"],
         )
 
     @staticmethod

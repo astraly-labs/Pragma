@@ -119,6 +119,16 @@ PUBLISHER_REGISTRY_ABI = [
     {
         "inputs": [
             {"name": "publisher", "type": "felt"},
+            {"name": "sources_len", "type": "felt"},
+            {"name": "sources", "type": "felt*"},
+        ],
+        "name": "add_sources_for_publisher",
+        "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "publisher", "type": "felt"},
             {"name": "source", "type": "felt"},
         ],
         "name": "remove_source_for_publisher",

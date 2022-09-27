@@ -42,7 +42,7 @@ async def _main():
     cg = CoingeckoFetcher(assets, "publisher")
     entries = cg.fetch_sync()
 
-    coingecko = {entry.pair_id: entry.value for entry in entries}
+    coingecko = {entry.pair_id: entry.price for entry in entries}
 
     all_prices_valid = True
     for asset in assets:

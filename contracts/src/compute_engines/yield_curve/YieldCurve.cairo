@@ -12,7 +12,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 
 from admin.library import Admin
 
-from entry.structs import Entry
+from entry.structs import SpotEntry
 from oracle.IOracle import IOracle
 from compute_engines.yield_curve.structs import YieldPoint
 
@@ -640,7 +640,7 @@ namespace YieldCurve {
 
             return (recursed_on_yield_points_len, recursed_on_yield_points);
         } else {
-            let (shifted_on_value) = change_decimals(on_entry.value, on_decimals, output_decimals);
+            let (shifted_on_value) = change_decimals(on_entry.price, on_decimals, output_decimals);
 
             // Add to on_yield_points and recurse
             // Set expiry to be same as capture timestamp
@@ -785,7 +785,7 @@ namespace YieldCurve {
         future_keys: felt*,
         yield_points_idx: felt,
         future_keys_idx: felt,
-        spot_entry: Entry,
+        spot_entry: SpotEntry,
         spot_decimals: felt,
     ) -> (yield_points_len: felt, yield_points: YieldPoint*) {
         alloc_locals;
@@ -919,15 +919,15 @@ namespace YieldCurve {
     func calculate_future_spot_yield_point{
         syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     }(
-        future_entry: Entry,
+        future_entry: SpotEntry,
         future_expiry_timestamp: felt,
-        spot_entry: Entry,
+        spot_entry: SpotEntry,
         spot_decimals: felt,
         future_decimals: felt,
         output_decimals: felt,
     ) -> (yield_point: YieldPoint) {
         alloc_locals;
-        let is_backwardation = is_le(future_entry.value, spot_entry.value);
+        let is_backwardation = is_le(future_entry.price, spot_entry.price);
 
         if (is_backwardation == TRUE) {
             tempvar time_scaled_value = 0;
@@ -957,7 +957,7 @@ namespace YieldCurve {
                 }
                 let (ratio_multiplier) = pow(10, exponent);
                 let (shifted_ratio, _) = unsigned_div_rem(
-                    future_entry.value * ratio_multiplier, spot_entry.value
+                    future_entry.price * ratio_multiplier, spot_entry.price
                 );
             } else {
                 // Shift future/spot to the right by -1 * (output_decimals + spot_decimals - future_decimals)
@@ -967,7 +967,7 @@ namespace YieldCurve {
                 }
                 let (ratio_multiplier) = pow(10, exponent);
                 let (shifted_ratio, _) = unsigned_div_rem(
-                    future_entry.value, spot_entry.value * ratio_multiplier
+                    future_entry.price, spot_entry.price * ratio_multiplier
                 );
             }
 

@@ -50,6 +50,7 @@ def get_events(
     contract_address: str,
     node_url,
     min_block: int = 0,
+    page_number: int = 0,
     keys: List[str] = [
         "0xc285ec4fd3baa2fd5b1dc432a00bd5301d2c84b86a7e6900c13b6634b4e81a"
     ],
@@ -62,7 +63,7 @@ def get_events(
             {
                 "address": contract_address,
                 "page_size": 20,
-                "page_number": 0,
+                "page_number": page_number,
                 "keys": keys,
                 # "from_block": hex(min_block),
             }
@@ -72,7 +73,11 @@ def get_events(
     is_last_page = r["result"]["is_last_page"]  # noqa: F841
     page_number = r["result"]["page_number"]  # noqa: F841
 
-    return [RandomnessRequest(*r["data"]) for r in r["result"]["events"]]
+    return {
+        "events": [RandomnessRequest(*r["data"]) for r in r["result"]["events"]],
+        "is_last_page": is_last_page,
+        "page_number": page_number,
+    }
 
 
 def make_secret_key():

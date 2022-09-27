@@ -39,6 +39,9 @@ namespace IPublisherRegistry {
     func add_source_for_publisher(publisher, source) {
     }
 
+    func add_sources_for_publisher(publisher, sources_len, sources: felt*) {
+    }
+
     func remove_source_for_publisher(publisher, source) {
     }
 }

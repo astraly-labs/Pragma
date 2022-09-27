@@ -22,17 +22,17 @@ struct SpotEntry {
 struct FutureEntry {
     base: BaseEntry,
     pair_id: felt,
-    expiry_timestamp: felt,
     price: felt,
+    expiry_timestamp: felt,
 }
 
 struct OptionEntry {
     base: BaseEntry,
     pair_id: felt,
+    price: felt,
     option_type: felt,
     expiry_timestamp: felt,
     strike_price: felt,
-    price: felt,
 }
 
 struct Pair {

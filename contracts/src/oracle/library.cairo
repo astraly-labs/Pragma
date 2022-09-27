@@ -8,7 +8,7 @@ from starkware.cairo.common.math import assert_not_equal, assert_not_zero, asser
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from entry.structs import Checkpoint, Currency, Entry, Pair
+from entry.structs import Checkpoint, Currency, Entry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
@@ -35,7 +35,7 @@ func Oracle_pair_id_storage(quote_currency_id, base_currency_id) -> (pair_id: fe
 }
 
 @storage_var
-func Oracle_entry_storage(key: felt, source: felt) -> (entry: Entry) {
+func Oracle_spot_entry_storage(key: felt, source: felt) -> (entry: SpotEntry) {
 }
 
 @storage_var
@@ -72,7 +72,7 @@ func UpdatedPublisherRegistryAddress(
 }
 
 @event
-func SubmittedEntry(new_entry: Entry) {
+func SubmittedSpotEntry(new_entry: SpotEntry) {
 }
 
 @event
@@ -147,26 +147,26 @@ namespace Oracle {
         return (key_decimals,);
     }
 
-    func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         key: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
-    ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
         alloc_locals;
 
-        let (entries_len, entries, _) = get_entries(key, sources_len, sources);
+        let (entries_len, entries, _) = get_spot_entries(key, sources_len, sources);
 
         if (entries_len == 0) {
             return (0, 0, 0, 0);
         }
 
-        let (value) = Entries.aggregate_entries(entries_len, entries);
+        let (price) = Entries.aggregate_spot_entries(entries_len, entries);
         let (decimals) = get_decimals(key);
         let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
-        return (value, decimals, last_updated_timestamp, entries_len);
+        return (price, decimals, last_updated_timestamp, entries_len);
     }
 
-    func get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
-    ) -> (entries_len: felt, entries: Entry*, last_updated_timestamp: felt) {
+    ) -> (entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt) {
         // This will return all entries within the TIMESTAMP_BUFFER of the latest entry published for the given list of sources
         alloc_locals;
 
@@ -179,10 +179,10 @@ namespace Oracle {
         return (entries_len, entries, last_updated_timestamp);
     }
 
-    func get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, source
-    ) -> (entry: Entry) {
-        let (entry) = Oracle_entry_storage.read(pair_id, source);
+    ) -> (entry: SpotEntry) {
+        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
         return (entry,);
     }
 
@@ -231,7 +231,7 @@ namespace Oracle {
     //
 
     func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entry: Entry
+        new_entry: SpotEntry
     ) {
         alloc_locals;
 
@@ -257,7 +257,7 @@ namespace Oracle {
             assert _can_publish_source = TRUE;
         }
 
-        let (entry) = Oracle_entry_storage.read(new_entry.pair_id, new_entry.base.source);
+        let (entry) = Oracle_spot_entry_storage.read(new_entry.pair_id, new_entry.base.source);
 
         with_attr error_message("Oracle: Existing entry is more recent") {
             assert_le(entry.base.timestamp, new_entry.base.timestamp);
@@ -285,21 +285,21 @@ namespace Oracle {
             tempvar pedersen_ptr = pedersen_ptr;
         }
 
-        SubmittedEntry.emit(new_entry);
-        Oracle_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
+        SubmittedSpotEntry.emit(new_entry);
+        Oracle_spot_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
 
         return ();
     }
 
     func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entries_len: felt, new_entries: Entry*
+        new_entries_len: felt, new_entries: SpotEntry*
     ) {
         if (new_entries_len == 0) {
             return ();
         }
 
         publish_spot_entry([new_entries]);
-        publish_spot_entries(new_entries_len - 1, new_entries + Entry.SIZE);
+        publish_spot_entries(new_entries_len - 1, new_entries + SpotEntry.SIZE);
 
         return ();
     }
@@ -388,7 +388,7 @@ namespace Oracle {
     ) {
         alloc_locals;
         let (sources) = alloc();
-        let (value, _decimals, last_updated_timestamp, num_sources_aggregated) = get_value(
+        let (value, _decimals, last_updated_timestamp, num_sources_aggregated) = get_spot(
             key, aggregation_mode, 0, sources
         );
         let (sources_threshold) = Oracle__sources_threshold.read();
@@ -414,18 +414,18 @@ namespace Oracle {
 
     func get_all_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp
-    ) -> (entries_len: felt, entries: Entry*) {
+    ) -> (entries_len: felt, entries: SpotEntry*) {
         alloc_locals;
 
-        let (entries: Entry*) = alloc();
+        let (entries: SpotEntry*) = alloc();
 
         if (sources_len == 0) {
             let (all_sources_len, all_sources) = get_all_sources(pair_id);
-            let (entries_len, entries) = build_entries_array(
+            let (entries_len, entries) = build_spot_entries_array(
                 pair_id, all_sources_len, all_sources, 0, 0, entries, latest_timestamp
             );
         } else {
-            let (entries_len, entries) = build_entries_array(
+            let (entries_len, entries) = build_spot_entries_array(
                 pair_id, sources_len, sources, 0, 0, entries, latest_timestamp
             );
         }
@@ -439,7 +439,7 @@ namespace Oracle {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = Oracle_entry_storage.read(pair_id, sources[cur_idx]);
+        let (entry) = Oracle_spot_entry_storage.read(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -451,15 +451,15 @@ namespace Oracle {
         }
     }
 
-    func build_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func build_spot_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt,
         sources_len: felt,
         sources: felt*,
         sources_idx: felt,
         entries_idx: felt,
-        entries: Entry*,
+        entries: SpotEntry*,
         latest_entry_timestamp: felt,
-    ) -> (entries_len: felt, entries: Entry*) {
+    ) -> (entries_len: felt, entries: SpotEntry*) {
         alloc_locals;
 
         if (sources_idx == sources_len) {
@@ -468,7 +468,7 @@ namespace Oracle {
         }
 
         let source = [sources + sources_idx];
-        let (entry) = Oracle_entry_storage.read(pair_id, source);
+        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
@@ -478,7 +478,7 @@ namespace Oracle {
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
         if (should_skip_entry == TRUE) {
-            let (entries_len, entries) = build_entries_array(
+            let (entries_len, entries) = build_spot_entries_array(
                 pair_id,
                 sources_len,
                 sources,
@@ -490,9 +490,9 @@ namespace Oracle {
             return (entries_len, entries);
         }
 
-        assert [entries + entries_idx * Entry.SIZE] = entry;
+        assert [entries + entries_idx * SpotEntry.SIZE] = entry;
 
-        let (entries_len, entries) = build_entries_array(
+        let (entries_len, entries) = build_spot_entries_array(
             pair_id,
             sources_len,
             sources,

@@ -93,7 +93,7 @@ class TheGraphFetcher(PublisherInterfaceT):
 
         return Entry(
             pair_id=pair_id,
-            value=value_int,
+            price=value_int,
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,

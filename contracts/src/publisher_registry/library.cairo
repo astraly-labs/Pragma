@@ -193,6 +193,16 @@ namespace Publisher {
         return ();
     }
 
+    func add_sources_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        publisher, sources_len, sources: felt*
+    ) {
+        if (sources_len == 0) {
+            return ();
+        }
+        add_source_for_publisher(publisher, [sources]);
+        return add_sources_for_publisher(publisher, sources_len - 1, sources + 1);
+    }
+
     func get_publisher_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         publisher
     ) -> (sources_len: felt, sources: felt*) {
