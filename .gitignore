@@ -11,6 +11,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.pytest_cache/
 
 # Distribution / packaging
 bin/
@@ -19,6 +20,7 @@ develop-eggs/
 dist/
 eggs/
 lib/
+!contracts/lib
 lib64/
 parts/
 sdist/
@@ -30,3 +32,14 @@ var/
 # protostar
 !contracts/build/
 contracts/build/*[!_abi].json
+
+# cli
+cli-config.ini
+oracle_constructor_data.json
+
+# private files
+private/
+stagecoach/jobs/publishers/starkex/app.py
+
+# misc private stuff
+private/

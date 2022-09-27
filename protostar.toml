@@ -14,14 +14,17 @@ Admin = [
 CheckEthThreshold = [
     "contracts/src/sample_consumer/CheckEthThreshold.cairo"
 ]
-OracleController = [
-    "contracts/src/oracle_controller/OracleController.cairo"
+Oracle = [
+    "contracts/src/oracle/Oracle.cairo"
 ]
-OracleImplementation = [
-    "contracts/src/oracle_implementation/OracleImplementation.cairo"
+Proxy = [
+    "contracts/src/proxy/Proxy.cairo"
 ]
 PublisherRegistry = [
     "contracts/src/publisher_registry/PublisherRegistry.cairo"
+]
+SummaryStats = [
+    "contracts/src/compute_engines/summary_stats/SummaryStats.cairo"
 ]
 YieldCurve = [
     "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
@@ -29,9 +32,17 @@ YieldCurve = [
 RebaseDenomination = [
     "contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
 ]
+Randomness = [
+    "contracts/src/randomness/Randomness.cairo"
+]
+
+ExampleRandomness = [
+    "contracts/src/randomness/ExampleRandomness.cairo"
+]
+
 
 ["protostar.shared_command_configs"]
-cairo-path = ["contracts/src"]
+cairo-path = ["contracts/src", "contracts/lib", "contracts/lib/cairo_streams/src"]
 
 ["protostar.build"]
 output = "contracts/build"

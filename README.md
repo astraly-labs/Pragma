@@ -10,7 +10,7 @@ You can read more about the Empiric Network [here](https://docs.empiric.network)
 
 ![Empiric Network Architecture](/assets/Empiric-Architecture.png)
 
-The Empiric Network consists of three smart contracts. The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because it's state should be permanent (each publisher and their address). The second is the Oracle Controller, which is also designed to be updated only as frequently as absolutely necessary. This is the contract which protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle Implementation(s). The third contract type is Oracle Implementation which contains the logic for storing and aggregating specific key/value data streams. Oracle Implementations can be updated frequently by simply adding them to the Oracle Controller's list of implementation addresses. While there can be many Oracle Implementations to all of which the Oracle Controller write data being published to it, there can be only one primary Oracle Implementation, which is where the Oracle Controller fetches results from when other smart contracts ask it to.
+The Empiric Network consists of three smart contracts. The first is the Proxy contract, which is the most static. This is designed to never be updated because it uses fallback functions to redirect any calls to its implementation contract (standard OpenZeppelin Proxy contract). This is the contract which protocols use, and the one to which publishers publish. The second is the Publisher Registry, which is also designed to be updated extremely infrequently because it's state should be permanent (each publisher and their address). The third is the Oracle which contains the logic for storing and aggregating specific key/value data streams. The Oracle can be updated when necessary, but must be updated in a backward compatible way.
 
 ### Deployed Contracts
 
@@ -18,8 +18,8 @@ On testnet, the contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a) | 0x0743e8140a56d5ee9ed08eb77a92bcbcf8257da34ab2a2ee93110709e61ab11a |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4) | 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4 |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4) | 0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4 |
+| Proxy | [Link](https://goerli.voyager.online/contract/TODO) | TODO |
+| Oracle | [Link](https://goerli.voyager.online/contract/TODO) | TODO |
 
 ## Setup
 
@@ -50,10 +50,10 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `empiric.core.utils`). Then run the following commands, replacing `<ORACLE_CONTROLLER_ADDRESS>` with the address of the Oracle Controller contract (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `empiric.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle Proxy contract (see above):
 
 ```bash
-starknet call --address <ORACLE_CONTROLLER_ADDRESS> --abi contracts/abi/OracleController.json --function get_value --inputs 28556963469423460
+starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/abi/Oracle.json --function get_value --inputs 28556963469423460
 ```
 
 ## Publishing Data to a Feed in a Deployed Contract
@@ -71,9 +71,9 @@ To run tests, simply run `pytest .` from the project root.
 
 ## Deploying Contracts
 
-To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the Oracle Controller (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
+To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the Oracle Proxy (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
 
-Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_CONTROLLER_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
+Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_PROXY_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively.
 
 ```bash
 export STARKNET_NETWORK=alpha-goerli
@@ -83,7 +83,8 @@ starknet deploy --contract contracts/build/Account.json --inputs <ADMIN_PUBLIC_K
 starknet deploy --contract contracts/build/Account.json --inputs <PUBLISHER_PUBLIC_KEY>
 starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>
 starknet deploy --contract contracts/build/OracleController.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
-starknet deploy --contract contracts/build/OracleImplementation.json --inputs <ORACLE_CONTROLLER_ADDRESS>
+starknet deploy --contract contracts/build/OracleImplementation.json --inputs <ORACLE_PROXY_ADDRESS>
+TODO: Update for proxy
 ```
 
 Finally, you must add the Oracle Implementation to the Controller. You can use the `add_oracle_implementation` method of the `EmpiricAdminClient` class in `empiric.admin.client`. For instance, after replacing `<ORACLE_IMPLEMENTATION_ADDRESS>` with the actual address you would run the `add_oracle_implementation.py` script in sample-publisher/utils. After replacing the Publisher Registry, run the `register_all_publishers.py` in the same location.
@@ -139,17 +140,9 @@ On testnet, the staging contracts are deployed at the following addresses:
 | Contract | Voyager | Address |
 | --- | ----------- | --- |
 | PublisherRegistry | [Link](https://goerli.voyager.online/contract/0x051949605ab53fcc2c0adc1d53a72dd0fbcbf83e52399a8b05552f675b1db4e9) | 0x051949605ab53fcc2c0adc1d53a72dd0fbcbf83e52399a8b05552f675b1db4e9 |
-| OracleController | [Link](https://goerli.voyager.online/contract/0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4) | 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4 |
-| OracleImplementation (primary) | [Link](https://goerli.voyager.online/contract/0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4) | 0x05a88457f9292d0596090300713e80724631024e7a92989302d458271c98cad4 |
+| Proxy | [Link](https://goerli.voyager.online/contract/TODO) | TODO |
+| Oracle | [Link](https://goerli.voyager.online/contract/TODO) | TODO |
 
 The admin contract is identical to the one used in production. Staging has a separate Publisher Registry, so accounts registered in production will not be registered there. The Empiric publisher account that is registered is located at 3251373723367219268498787183941698604007480963314075130334762142902855469511.
 
 The main part of our CI setup that uses the staging environment is the update prices GHA.
-
-## Staging in Shadow Mode
-
-Sometimes it is important to test how contracts function in the real world. We can do that for Oracle Implementations, by running them in shadow mode.
-
-In order to run an Oracle Implementation in shadow mode, first deploy the Oracle Implementation contract. Then, run the `add_oracle_implementation.py` script in `publisher/utils` with the address from the new Oracle Implementation. The new contract is now in shadow mode, i.e. it receives updates (writes) from the Oracle Controller, but is not used to answer queries (reads). You can read from the new Oracle Implementation contract directly in order to test the new logic.
-
-If the new Oracle Implementation has passed testing and is ready to be promoted to the primary Oracle Implementation (the one used for answering queries), run the `set_primary_oracle_implementation.py` script in `publisher/utils` with the address from the new Oracle Implementation. Once that is complete and the new system is up and running, you can retire the old Oracle Implementation using the `deactivate_oracle_implementation.py` script located in the same directory.

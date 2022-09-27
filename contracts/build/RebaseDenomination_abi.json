@@ -21,7 +21,7 @@
                 "type": "felt"
             },
             {
-                "name": "oracle_controller_address",
+                "name": "oracle_address",
                 "type": "felt"
             }
         ],
@@ -76,10 +76,10 @@
     },
     {
         "inputs": [],
-        "name": "get_oracle_controller_address",
+        "name": "get_oracle_address",
         "outputs": [
             {
-                "name": "oracle_controller_address",
+                "name": "oracle_address",
                 "type": "felt"
             }
         ],
@@ -100,11 +100,11 @@
     {
         "inputs": [
             {
-                "name": "oracle_controller_address",
+                "name": "oracle_address",
                 "type": "felt"
             }
         ],
-        "name": "set_oracle_controller_address",
+        "name": "set_oracle_address",
         "outputs": [],
         "type": "function"
     }

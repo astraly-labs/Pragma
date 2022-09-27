@@ -1,34 +1,42 @@
-# SPDX-License-Identifier: MIT
-# OpenZeppelin Contracts for Cairo v0.1.0 (account/IAccount.cairo)
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts for Cairo v0.4.0b (account/IAccount.cairo)
 
 %lang starknet
 
-from account.library import AccountCallArray
+from openzeppelin.account.library import AccountCallArray
 
 @contract_interface
-namespace IAccount:
-    #
-    # Getters
-    #
+namespace IAccount {
+    func getPublicKey() -> (publicKey: felt) {
+    }
 
-    func get_nonce() -> (res : felt):
-    end
+    func supportsInterface(interfaceId: felt) -> (success: felt) {
+    }
 
-    #
-    # Business logic
-    #
+    //
+    // Setters
+    //
 
-    func is_valid_signature(hash : felt, signature_len : felt, signature : felt*) -> (
-        is_valid : felt
-    ):
-    end
+    func setPublicKey(newPublicKey: felt) {
+    }
+
+    //
+    // Business logic
+    //
+
+    func isValidSignature(hash: felt, signature_len: felt, signature: felt*) -> (isValid: felt) {
+    }
+
+    func __validate__(
+        call_array_len: felt, call_array: AccountCallArray*, calldata_len: felt, calldata: felt*
+    ) {
+    }
+
+    func __validate_declare__(class_hash: felt) {
+    }
 
     func __execute__(
-        call_array_len : felt,
-        call_array : AccountCallArray*,
-        calldata_len : felt,
-        calldata : felt*,
-        nonce : felt,
-    ) -> (response_len : felt, response : felt*):
-    end
-end
+        call_array_len: felt, call_array: AccountCallArray*, calldata_len: felt, calldata: felt*
+    ) -> (response_len: felt, response: felt*) {
+    }
+}

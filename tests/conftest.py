@@ -23,12 +23,12 @@ def private_and_public_publisher_keys():
 
 @pytest.fixture(scope="module")
 def publisher():
-    return str_to_felt("foo")
+    return str_to_felt("FOO")
 
 
 @pytest.fixture(scope="module")
 def source():
-    return str_to_felt("0xdata")
+    return str_to_felt("0xDATA")
 
 
 @pytest.fixture(scope="module")

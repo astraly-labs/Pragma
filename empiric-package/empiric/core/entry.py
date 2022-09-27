@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
-from empiric.core.utils import str_to_felt
+from empiric.core.utils import felt_to_str, str_to_felt
 
 
 class Entry:
-    key: int
+    pair_id: int
     value: int
     timestamp: int
     source: int
@@ -14,14 +14,14 @@ class Entry:
 
     def __init__(
         self,
-        key: Union[str, int],
+        pair_id: Union[str, int],
         value: int,
         timestamp: int,
         source: Union[str, int],
         publisher: Union[str, int],
     ) -> None:
-        if type(key) == str:
-            key = str_to_felt(key)
+        if type(pair_id) == str:
+            pair_id = str_to_felt(pair_id)
 
         if type(publisher) == str:
             publisher = str_to_felt(publisher)
@@ -29,7 +29,7 @@ class Entry:
         if type(source) == str:
             source = str_to_felt(source)
 
-        self.key = key
+        self.pair_id = pair_id
         self.value = value
         self.timestamp = timestamp
         self.source = source
@@ -38,7 +38,7 @@ class Entry:
     def __eq__(self, other):
         if isinstance(other, Entry):
             return (
-                self.key == other.key
+                self.pair_id == other.pair_id
                 and self.value == other.value
                 and self.timestamp == other.timestamp
                 and self.source == other.source
@@ -46,21 +46,58 @@ class Entry:
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
-        if isinstance(other, Tuple) and len(other) == 5:
+        if isinstance(other, Tuple) and len(other) == 3:
             return (
-                self.key == other[0]
-                and self.value == other[1]
-                and self.timestamp == other[2]
-                and self.source == other[3]
-                and self.publisher == other[4]
+                self.pair_id == other.pair_id
+                and self.value == other.value
+                and self.timestamp == other.base.timestamp
+                and self.source == other.base.source
+                and self.publisher == other.base.publisher
             )
         return False
 
-    def serialize(self) -> Tuple[int, int, int, int, int]:
-        return (self.key, self.value, self.timestamp, self.source, self.publisher)
+    def to_tuple(self):
+        return (self.timestamp, self.source, self.publisher, self.pair_id, self.value)
+
+    def serialize(self) -> Dict[str, str]:
+        return {
+            "base": {
+                "timestamp": self.timestamp,
+                "source": self.source,
+                "publisher": self.publisher,
+            },
+            "pair_id": self.pair_id,
+            "value": self.value,
+        }
 
     @staticmethod
-    def serialize_entries(entries: List[Entry]) -> List[int]:
-        expanded = [entry.serialize() for entry in entries]
+    def from_dict(entry_dict: Dict[str, str]) -> "Entry":
+        return Entry(
+            entry_dict["pair_id"],
+            entry_dict["value"],
+            entry_dict["timestamp"],
+            entry_dict["source"],
+            entry_dict["publisher"],
+        )
+
+    @staticmethod
+    def serialize_entries(entries: List[Entry]) -> List[Dict[str, int]]:
+        """serialize entries to a List of dictionaries"""
+        # TODO (rlkelly): log errors
+        serialized_entries = [
+            entry.serialize()
+            for entry in entries
+            # TODO (rlkelly): This needs to be much more resilient to publish errors
+            if isinstance(entry, Entry)
+        ]
+        return list(filter(lambda item: item is not None, serialized_entries))
+
+    @staticmethod
+    def flatten_entries(entries: List[Entry]) -> List[int]:
+        """This flattens entriees to tuples.  Useful when you need the raw felt array"""
+        expanded = [entry.to_tuple() for entry in entries]
         flattened = [x for entry in expanded for x in entry]
         return [len(entries)] + flattened
+
+    def __repr__(self):
+        return f'Entry(pair_id="{felt_to_str(self.pair_id)}", value={self.value}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'

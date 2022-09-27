@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def parse_ftx_spot(asset, data, source, publisher, timestamp) -> Entry:
     pair = asset["pair"]
-    key = currency_pair_to_key(*pair)
+    pair_id = currency_pair_to_key(*pair)
 
     result = [e for e in data if e["name"] == "/".join(pair)]
     if len(result) == 0:
@@ -31,7 +31,7 @@ def parse_ftx_spot(asset, data, source, publisher, timestamp) -> Entry:
     logger.info(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
     return Entry(
-        key=key,
+        pair_id=pair_id,
         value=price_int,
         timestamp=timestamp,
         source=source,
@@ -62,13 +62,13 @@ def parse_ftx_futures(asset, data, source, publisher, timestamp) -> List[Entry]:
                 "%Y-%m-%dT%H:%M:%S%z",
             ).strftime("%Y%m%d")
         )
-        key = f"{pair[0]}/{pair[1]}-{future_expiration_date}".lower()
+        pair_id = f"{pair[0]}/{pair[1]}-{future_expiration_date}".upper()
 
-        logger.info(f"Fetched futures price {price} for {key} from FTX")
+        logger.info(f"Fetched futures price {price} for {pair_id} from FTX")
 
         entries.append(
             Entry(
-                key=key,
+                pair_id=pair_id,
                 value=price_int,
                 timestamp=timestamp,
                 source=source,

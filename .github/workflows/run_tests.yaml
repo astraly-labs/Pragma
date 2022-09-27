@@ -13,7 +13,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.7"
+          python-version: "3.9"
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Check contract interface consistency
         run: |
-          python -m empiric.test.interface_consistency --cairo-path 'contracts/src'
+          python -m empiric.test.interface_consistency --cairo-path 'contracts/src,contracts/lib'
 
       - name: Run tests suite
         run: |
