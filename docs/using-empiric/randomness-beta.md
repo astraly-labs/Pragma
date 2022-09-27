@@ -4,7 +4,7 @@ Empiric Network offers a verifiable randomness feed that allows protocols to req
 
 This feed is being rolled out in two phases: In the first phase (currently live) the randomness proof is posted as calldata, allowing anyone to verify it off-chain. See below for more details on how to verify the randomness. This first phase is limited to testnet, and there is no charge for randomness.
 
-In the second phase, the proof will be verified directly on-chain (coming soon) and requesters will be required to cover gas costs of their callback function plus a subscription fee to cover the cost of generating randomness.
+In the second phase, the proof will be verified directly on-chain (coming soon) and requesters will be required to cover gas costs of their callback function plus a small fee to cover the cost of generating randomness.
 
 ## Sample Code
 
@@ -94,7 +94,10 @@ When smart contracts request randomness, they specify a random seed. This seed u
 
 As mentioned above, in the first phase of Empiric Network's VRF feed, the randomness proof is posted as calldata, allowing anyone to verify it off-chain.
 
-In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier (coming soon).
+In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier. Follow these simple steps to verify any randomness provided by Empiric Network:
+
+1. Install the Empiric Python package `pip install empiric-network --pre`
+2. Run `python3 -m empiric.cli random verify-random <TRANSACTION_HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
 
 ## Technical Specification
 
