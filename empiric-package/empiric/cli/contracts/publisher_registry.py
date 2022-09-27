@@ -57,9 +57,10 @@ async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
-async def add_source_for_publisher(publisher: str, source: str, config_path=config.DEFAULT_CONFIG):
+async def add_source_for_publisher(
+    publisher: str, source: str, config_path=config.DEFAULT_CONFIG
+):
     client = net.init_empiric_client(config_path)
-    publisher_address = client.account_address()
     invocation = await client.add_source_for_publisher(publisher, source)
 
     await invocation.wait_for_acceptance()
