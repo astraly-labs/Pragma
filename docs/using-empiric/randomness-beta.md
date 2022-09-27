@@ -17,7 +17,7 @@ from starkware.starknet.common.syscalls import get_block_number, get_caller_addr
 from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-const EMPIRIC_RANDOM_ORACLE_ADDRESS = TODO;
+const EMPIRIC_RANDOM_ORACLE_ADDRESS = COMING_SOON;
 
 @storage_var
 func min_block_number_storage() -> (min_block_number: felt) {
@@ -86,7 +86,9 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
 ## How Randomness is Generated
 
-Explanation coming soon!
+Empiric Network's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Randomness Function](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06) using elliptic curves. Their Python implementation is available as open source code [here](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
+
+When smart contracts request randomness, they specify a random seed. This seed uniquely determines the randomness, so the Empiric as the VRF provider is not able to manipulate the randomness. However calculating the randomness requires having access to a private key that is not known, so the smart contract (and any other party observing the randomness request) is not able to predict the randomness. Off-chain, the randomness is calculated using the private key and the seed. That randomness and the proof are then sent on-chain, where the unbiased randomness is then available to the smart contract that requested it.
 
 ## Verifying The Randomness
 
@@ -102,7 +104,7 @@ Allows your smart contract to request randomness. Upon calling the Empiric contr
 
 Inputs
 
-* `seed`: random seed that feeds into the verifiable randomness algorithm, must be different every time. Until it it possible to get the block\_hash on StarkNet, it is recommended to use `keccak(request_address, keccak(nonce, block_timestamp))`
+* `seed`: random seed that feeds into the verifiable randomness algorithm, must be different every time. Until it it possible to get the block\_hash on StarkNet, it is recommended to use `hash(request_address, hash(nonce, block_timestamp))`
 * `callback_address`: address to call `receive_random_words` on with the randomness
 * `callback_gas_limit`: gas limit on the callback function
 * `publish_delay`: minimum number of blocks to wait from the request to fulfillment
