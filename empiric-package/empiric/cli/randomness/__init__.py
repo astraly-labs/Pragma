@@ -7,20 +7,19 @@ import requests
 import typer
 from empiric.cli import SUCCESS, config, net
 from empiric.cli.contracts.utils import declare_contract
-from empiric.cli.utils import coro
-from starknet_py.contract import Contract
-from starknet_py.net.client import Client
-from starkware.starknet.compiler.compile import get_selector_from_name
-
 from empiric.cli.randomness.utils import (
     create_randomness,
+    ecvrf_verify,
     felt_to_secret_key,
     get_blockhash,
     get_events,
     uint256_to_2_128,
     verify_randomness,
-    ecvrf_verify,
 )
+from empiric.cli.utils import coro
+from starknet_py.contract import Contract
+from starknet_py.net.client import Client
+from starkware.starknet.compiler.compile import get_selector_from_name
 
 app = typer.Typer(help="randomness utilities")
 RANDOMNESS_CONFIG = typer.Option(
@@ -214,8 +213,8 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
     sk = felt_to_secret_key(account_private_key)
 
     for event in event_list:
-        # if event.minimum_block_number > block_number:
-        #     continue
+        if event.minimum_block_number > block_number:
+            continue
 
         block_hash = await get_blockhash(event.minimum_block_number, node_url)
 
@@ -255,11 +254,12 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
 @app.command()
 @coro
 async def verify_random(transaction_hash: str, cli_config=config.DEFAULT_CONFIG):
-    """ provide the hex transaction number to verify the proof for that transaction.  If no event is found will alert the user"""
+    """provide the hex transaction number to verify the proof for that transaction.  If no event is found will alert the user"""
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)
     node_url = config_parser["SECRET"]["node-url"]
-    pub_key = b'\xeb\xc1~\xdb\xe9\x00\x9cJ,\xe9\xb1Z`\xee\xe9\xc5\xaf\xb9\xa4\x19+\xd5\x1b6F\x00`\x19\x86\xc3\x1e\xfe'
+    # TODO (rlkelly): fetch public key from vrf
+    pub_key = b"\xeb\xc1~\xdb\xe9\x00\x9cJ,\xe9\xb1Z`\xee\xe9\xc5\xaf\xb9\xa4\x19+\xd5\x1b6F\x00`\x19\x86\xc3\x1e\xfe"
 
     url = "https://starknet-archive.hasura.app/v1/graphql"
     request_json = {
@@ -276,18 +276,20 @@ async def verify_random(transaction_hash: str, cli_config=config.DEFAULT_CONFIG)
                         }
                     }
                 }
-            """.replace('{}', transaction_hash)
+            """.replace(
+                "{}", transaction_hash
+            )
         ),
     }
     r = requests.post(url=url, json=request_json)
-    event = r.json()['data']['event'][0]['arguments']
-    event_dict = {
-        e['name']: e['value'] for e in event
-    }
-    block_hash = await get_blockhash(int(event_dict['minimum_block_number'], 16), node_url)
-    seed = int(event_dict['seed'], 16)
-    request_id = int(event_dict['request_id'], 16)
-    requestor_address = int(event_dict['requestor_address'], 16)
+    event = r.json()["data"]["event"][0]["arguments"]
+    event_dict = {e["name"]: e["value"] for e in event}
+    block_hash = await get_blockhash(
+        int(event_dict["minimum_block_number"], 16), node_url
+    )
+    seed = int(event_dict["seed"], 16)
+    request_id = int(event_dict["request_id"], 16)
+    requestor_address = int(event_dict["requestor_address"], 16)
 
     seed = (
         request_id.to_bytes(8, sys.byteorder)
@@ -295,15 +297,15 @@ async def verify_random(transaction_hash: str, cli_config=config.DEFAULT_CONFIG)
         + seed.to_bytes(32, sys.byteorder)
         + requestor_address.to_bytes(32, sys.byteorder)
     )
-    proof_ = event_dict['proof']
+    proof_ = event_dict["proof"]
     p0 = int(proof_[0], 16).to_bytes(31, sys.byteorder)
     p1 = int(proof_[1], 16).to_bytes(31, sys.byteorder)
     p2 = int(proof_[2], 16).to_bytes(18, sys.byteorder)
     _proof = p0 + p1 + p2
 
     status, val = ecvrf_verify(pub_key, _proof, seed)
-    random_word = int(event_dict['random_words'][0], 16)
+    random_word = int(event_dict["random_words"][0], 16)
 
-    typer.echo(f'status: {status}')
-    typer.echo(f'verified random value: {int.from_bytes(val, sys.byteorder)}')
-    typer.echo(f'onchain random value:  {random_word}')
+    typer.echo(f"status: {status}")
+    typer.echo(f"verified random value: {int.from_bytes(val, sys.byteorder)}")
+    typer.echo(f"onchain random value:  {random_word}")
