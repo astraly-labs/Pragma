@@ -46,6 +46,17 @@ async def get_blockhash(block_number, node_url, network=TESTNET):
     return r.block_hash
 
 
+def get_blocknumber(node_url):
+    params = {
+        "jsonrpc": "2.0",
+        "id": "0",
+        "method": "starknet_blockNumber",
+        "params": [],
+    }
+    r = requests.post(node_url, json=params).json()
+    return r['result']
+
+
 def get_events(
     contract_address: str,
     node_url,

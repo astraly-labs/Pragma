@@ -12,6 +12,7 @@ from empiric.cli.randomness.utils import (
     ecvrf_verify,
     felt_to_secret_key,
     get_blockhash,
+    get_blocknumber,
     get_events,
     uint256_to_2_128,
     verify_randomness,
@@ -231,9 +232,7 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
     client.init_randomness_contract(randomness_contract_address)
 
     full_node_client = FullNodeClient(node_url=node_url, net=network)
-    block_number = (
-        await full_node_client.get_block(block_number="latest")
-    ).block_number
+    block_number = get_blocknumber(node_url)
     sk = felt_to_secret_key(account_private_key)
 
     more_pages = True
@@ -295,7 +294,16 @@ async def verify_random(transaction_hash: str, cli_config=config.DEFAULT_CONFIG)
     """provide the hex transaction number to verify the proof for that transaction.  If no event is found will alert the user"""
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)
-    node_url = config_parser["SECRET"]["node-url"]
+    try:
+        node_url = config_parser["SECRET"]["node-url"]
+    except KeyError:
+        typer.echo(
+            'No cli-config.ini found.  '
+            'Please setup a cli-config.ini with a [SECRET] field with a node-url key '
+            'that has the uri string of a full node.'
+        )
+        return 1
+
     # TODO (rlkelly): fetch public key from vrf
     pub_key = b"\xeb\xc1~\xdb\xe9\x00\x9cJ,\xe9\xb1Z`\xee\xe9\xc5\xaf\xb9\xa4\x19+\xd5\x1b6F\x00`\x19\x86\xc3\x1e\xfe"
 
