@@ -104,6 +104,31 @@ async def deploy_randomness_proxy(client: Client, config_path: Path):
         config_parser.write(f)
 
 
+@app.command()
+@coro
+async def upgrade(cli_config=config.DEFAULT_CONFIG):
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+    client = net.init_empiric_client(cli_config)
+
+    declared_randomness_class_hash = await declare_contract(
+        client.client, compiled_contract_path, "Randomness"
+    )
+
+    randomness_contract_address = int(config_parser["CONTRACTS"]["randomness-proxy"])
+    client.init_randomness_contract(randomness_contract_address)
+
+    invocation = await client.randomness.functions["upgrade"].invoke(
+        declared_randomness_class_hash,
+        max_fee=int(1e16),
+    )
+    await invocation.wait_for_acceptance()
+    typer.echo(f"response hash: {invocation.hash}")
+
+
 async def _deploy_tester(client: Client, config_path: Path):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
@@ -201,7 +226,6 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
     randomness_contract_address = int(config_parser["CONTRACTS"]["randomness-proxy"])
     node_url = config_parser["SECRET"]["node-url"]
     account_private_key = int(config_parser["SECRET"]["private-key"])
-    event_list = get_events(hex(randomness_contract_address), node_url, min_block)
 
     client = net.init_empiric_client(cli_config)
     client.init_randomness_contract(randomness_contract_address)
@@ -212,43 +236,57 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
     ).block_number
     sk = felt_to_secret_key(account_private_key)
 
-    for event in event_list:
-        if event.minimum_block_number > block_number:
-            continue
+    more_pages = True
+    page_number = 0
 
-        block_hash = await get_blockhash(event.minimum_block_number, node_url)
-
-        seed = (
-            event.request_id.to_bytes(8, sys.byteorder)
-            + block_hash.to_bytes(32, sys.byteorder)
-            + event.seed.to_bytes(32, sys.byteorder)
-            + event.caller_address.to_bytes(32, sys.byteorder)
+    while more_pages:
+        event_list = get_events(
+            hex(randomness_contract_address), node_url, min_block, page_number
         )
-        beta_string, pi_string, _pub = create_randomness(sk, seed)
-        beta_string = int.from_bytes(beta_string, sys.byteorder)
-        proof = [
-            int.from_bytes(p, sys.byteorder)
-            for p in [pi_string[:31], pi_string[31:62], pi_string[62:]]
-        ]
-        random_words = [beta_string]
+        page_number += 1
+        more_pages = not event_list["is_last_page"]
 
-        status = await client.get_request_status(event.caller_address, event.request_id)
+        for event in event_list["events"]:
+            if event.minimum_block_number > block_number:
+                continue
 
-        if status.status_ == 1:
-            invocation = await client.submit_random(
-                event.request_id,
-                event.caller_address,
-                event.seed,
-                event.minimum_block_number,
-                event.callback_address,
-                event.callback_gas_limit,
-                random_words,
-                block_hash,
-                proof,
+            typer.echo(f"event {event}")
+
+            block_hash = await get_blockhash(event.minimum_block_number, node_url)
+
+            seed = (
+                event.request_id.to_bytes(8, sys.byteorder)
+                + block_hash.to_bytes(32, sys.byteorder)
+                + event.seed.to_bytes(32, sys.byteorder)
+                + event.caller_address.to_bytes(32, sys.byteorder)
+            )
+            beta_string, pi_string, _pub = create_randomness(sk, seed)
+            beta_string = int.from_bytes(beta_string, sys.byteorder)
+            proof = [
+                int.from_bytes(p, sys.byteorder)
+                for p in [pi_string[:31], pi_string[31:62], pi_string[62:]]
+            ]
+            random_words = [beta_string]
+
+            status = await client.get_request_status(
+                event.caller_address, event.request_id
             )
 
-            await invocation.wait_for_acceptance()
-            typer.echo(f"response hash: {invocation.hash}")
+            if status.status_ == 1:
+                invocation = await client.submit_random(
+                    event.request_id,
+                    event.caller_address,
+                    event.seed,
+                    event.minimum_block_number,
+                    event.callback_address,
+                    event.callback_gas_limit,
+                    random_words,
+                    block_hash,
+                    proof,
+                )
+
+                await invocation.wait_for_acceptance()
+                typer.echo(f"response hash: {invocation.hash}")
 
 
 @app.command()

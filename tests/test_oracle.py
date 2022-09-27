@@ -305,7 +305,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
 
     entry = Entry(
         pair_id=str_to_felt("ETH/USD"),
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -320,14 +320,14 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     assert_event_emitted(
         tx_exec_info,
         oracle_proxy.contract_address,
-        "SubmittedEntry",
+        "SubmittedSpotEntry",
         list(entry.to_tuple()),
     )
 
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
     assert result.result.last_updated_timestamp == entry.timestamp
     assert result.result.decimals == 8
 
@@ -348,7 +348,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -364,11 +364,11 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     second_entry = entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
         source=source,
         publisher=publisher,
@@ -384,7 +384,7 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == second_entry.value
+    assert result.result.price == second_entry.price
 
 
 @pytest.mark.asyncio
@@ -397,7 +397,7 @@ async def test_re_submit_stale(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
         source=source,
         publisher=publisher,
@@ -413,7 +413,7 @@ async def test_re_submit_stale(
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
@@ -422,7 +422,7 @@ async def test_re_submit_stale(
 
     second_entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -443,7 +443,7 @@ async def test_re_submit_stale(
         pass
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
@@ -460,7 +460,7 @@ async def test_submit_second_asset(
 
     entry = Entry(
         pair_id=str_to_felt("ETH/USD"),
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -476,11 +476,11 @@ async def test_submit_second_asset(
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     second_entry = Entry(
         pair_id=str_to_felt("BTC/USD"),
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -496,13 +496,13 @@ async def test_submit_second_asset(
     result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == second_entry.value
+    assert result.result.price == second_entry.price
 
     # Check that first asset is still stored accurately
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     source_result = await oracle_proxy.get_spot_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
@@ -527,7 +527,7 @@ async def test_submit_second_publisher(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -558,7 +558,7 @@ async def test_submit_second_publisher(
 
     second_entry = Entry(
         pair_id=pair_id,
-        value=5,
+        price=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=second_source,
         publisher=second_publisher,
@@ -572,7 +572,7 @@ async def test_submit_second_publisher(
     )
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
-    assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
@@ -584,13 +584,13 @@ async def test_submit_second_publisher(
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
-    assert source_result.result.value == entry.value
+    assert source_result.result.price == entry.price
     assert source_result.result.last_updated_timestamp == entry.timestamp
 
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [second_source]
     ).call()
-    assert source_result.result.value == second_entry.value
+    assert source_result.result.price == second_entry.price
     assert source_result.result.last_updated_timestamp == second_entry.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
@@ -607,7 +607,7 @@ async def test_submit_second_source(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -623,12 +623,12 @@ async def test_submit_second_source(
     result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
     second_source = str_to_felt("1xdata")
     second_entry = Entry(
         pair_id=pair_id,
-        value=4,
+        price=4,
         timestamp=STARKNET_STARTING_TIMESTAMP + 2,
         source=second_source,
         publisher=publisher,
@@ -644,7 +644,7 @@ async def test_submit_second_source(
     result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
-    assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
@@ -660,7 +660,7 @@ async def test_mean_aggregation(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -676,7 +676,7 @@ async def test_mean_aggregation(
     second_source = str_to_felt("1xdata")
     second_entry = Entry(
         pair_id=pair_id,
-        value=5,
+        price=5,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=second_source,
         publisher=publisher,
@@ -691,7 +691,7 @@ async def test_mean_aggregation(
 
     # median is equivalent to mean if only 2 values
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
-    assert result.result.value == (second_entry.value + entry.value) / 2
+    assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
@@ -720,7 +720,7 @@ async def test_median_aggregation(
     publishers = ["foo", "bar", "baz", "oof", "rab", "zab"]
     entry = Entry(
         pair_id=pair_id,
-        value=prices[0],
+        price=prices[0],
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -743,7 +743,7 @@ async def test_median_aggregation(
         additional_source = str_to_felt(additional_publisher_str + "-source")
         additional_entry = Entry(
             pair_id=pair_id,
-            value=price,
+            price=price,
             timestamp=STARKNET_STARTING_TIMESTAMP,
             source=additional_source,
             publisher=additional_publisher,
@@ -766,7 +766,7 @@ async def test_median_aggregation(
         result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
         ).call()
-        assert result.result.value == int(median(prices[: len(entries)]))
+        assert result.result.price == int(median(prices[: len(entries)]))
 
         print(f"Succeeded for {len(entries)} entries")
 
@@ -782,7 +782,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
     entries = [
         Entry(
             pair_id=pair_ids[i],
-            value=prices[i],
+            price=prices[i],
             timestamp=STARKNET_STARTING_TIMESTAMP,
             source=source,
             publisher=publisher,
@@ -800,7 +800,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         assert_event_emitted(
             tx_exec_info,
             oracle_proxy.contract_address,
-            "SubmittedEntry",
+            "SubmittedSpotEntry",
             list(entry.to_tuple()),
         )
 
@@ -811,7 +811,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
         ).call()
-        assert result.result.value == prices[i]
+        assert result.result.price == prices[i]
 
 
 @pytest.mark.asyncio
@@ -831,7 +831,7 @@ async def test_subset_publishers(
     pair_id = str_to_felt("DOGE/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=1,
+        price=1,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -856,7 +856,7 @@ async def test_subset_publishers(
     assert result.result.entries == [entry]
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
-    assert result.result.value == entry.value
+    assert result.result.price == entry.price
 
 
 @pytest.mark.asyncio
@@ -869,7 +869,7 @@ async def test_unknown_source(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=2,
+        price=2,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -962,7 +962,7 @@ async def test_real_data(
         result = await oracle_proxy.get_spot(
             str_to_felt(pair_id), AggregationMode.MEDIAN.value
         ).call()
-        assert result.result.value != 0
+        assert result.result.price != 0
         assert result.result.last_updated_timestamp != 0
 
     result = await oracle_proxy.get_spot_for_sources(
@@ -970,7 +970,7 @@ async def test_real_data(
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("COINBASE")],
     ).call()
-    assert result.result.value == (29920000000000 + 29924650000000) / 2
+    assert result.result.price == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
     result = await oracle_proxy.get_spot_for_sources(
@@ -978,7 +978,7 @@ async def test_real_data(
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("UNKNOWN")],
     ).call()
-    assert result.result.value == 29920000000000
+    assert result.result.price == 29920000000000
     assert result.result.last_updated_timestamp == 1650590986
     assert result.result.num_sources_aggregated == 1
 
@@ -996,7 +996,7 @@ async def test_ignore_future_entry(
 
     entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
         source=source,
         publisher=publisher,
@@ -1030,7 +1030,7 @@ async def test_ignore_stale_entries(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -1065,7 +1065,7 @@ async def test_ignore_stale_entries(
 
     second_entry = Entry(
         pair_id=pair_id,
-        value=5,
+        price=5,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
         source=source,
         publisher=second_publisher,
@@ -1079,7 +1079,7 @@ async def test_ignore_stale_entries(
     )
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
-    assert result.result.value == second_entry.value
+    assert result.result.price == second_entry.price
     assert result.result.last_updated_timestamp == second_entry.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
@@ -1113,7 +1113,7 @@ async def test_checkpointing(
     pair_id = str_to_felt("ETH/USD")
     entry = Entry(
         pair_id=pair_id,
-        value=3,
+        price=3,
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=source,
         publisher=publisher,
@@ -1144,7 +1144,7 @@ async def test_checkpointing(
 
     second_entry = Entry(
         pair_id=pair_id,
-        value=5,
+        price=5,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
         source=source,
         publisher=publisher,
@@ -1166,7 +1166,7 @@ async def test_checkpointing(
 
     third_entry = Entry(
         pair_id=pair_id,
-        value=7,
+        price=7,
         timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER,
         source=second_source,
         publisher=second_publisher,

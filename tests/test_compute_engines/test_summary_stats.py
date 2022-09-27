@@ -247,7 +247,7 @@ async def test_summary_stats(
         cur_time = STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * i
         entry = Entry(
             pair_id=pair_id,
-            value=val * 10**18,
+            price=val * 10**18,
             timestamp=cur_time,
             source=source,
             publisher=publisher,

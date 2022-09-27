@@ -12,13 +12,18 @@
                 "type": "felt"
             },
             {
-                "name": "value",
+                "name": "price",
                 "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "volume",
+                "offset": 5,
                 "type": "felt"
             }
         ],
-        "name": "Entry",
-        "size": 5,
+        "name": "SpotEntry",
+        "size": 6,
         "type": "struct"
     },
     {
@@ -143,11 +148,11 @@
         "data": [
             {
                 "name": "new_entry",
-                "type": "Entry"
+                "type": "SpotEntry"
             }
         ],
         "keys": [],
-        "name": "SubmittedEntry",
+        "name": "SubmittedSpotEntry",
         "type": "event"
     },
     {
@@ -263,7 +268,7 @@
             },
             {
                 "name": "entries",
-                "type": "Entry*"
+                "type": "SpotEntry*"
             }
         ],
         "stateMutability": "view",
@@ -284,7 +289,7 @@
             },
             {
                 "name": "entries",
-                "type": "Entry*"
+                "type": "SpotEntry*"
             }
         ],
         "stateMutability": "view",
@@ -305,7 +310,7 @@
         "outputs": [
             {
                 "name": "entry",
-                "type": "Entry"
+                "type": "SpotEntry"
             }
         ],
         "stateMutability": "view",
@@ -326,7 +331,7 @@
         "outputs": [
             {
                 "name": "entry",
-                "type": "Entry"
+                "type": "SpotEntry"
             }
         ],
         "stateMutability": "view",
@@ -342,7 +347,7 @@
         "name": "get_spot_median",
         "outputs": [
             {
-                "name": "value",
+                "name": "price",
                 "type": "felt"
             },
             {
@@ -375,7 +380,7 @@
         "name": "get_spot",
         "outputs": [
             {
-                "name": "value",
+                "name": "price",
                 "type": "felt"
             },
             {
@@ -416,7 +421,7 @@
         "name": "get_spot_for_sources",
         "outputs": [
             {
-                "name": "value",
+                "name": "price",
                 "type": "felt"
             },
             {
@@ -468,7 +473,7 @@
         "inputs": [
             {
                 "name": "new_entry",
-                "type": "Entry"
+                "type": "SpotEntry"
             }
         ],
         "name": "publish_spot_entry",
@@ -483,7 +488,7 @@
             },
             {
                 "name": "new_entries",
-                "type": "Entry*"
+                "type": "SpotEntry*"
             }
         ],
         "name": "publish_spot_entries",

@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Currency, Entry, Pair, Checkpoint
+from entry.structs import Currency, Entry, SpotEntry, Pair, Checkpoint
 from oracle.library import Oracle
 from proxy.library import Proxy
 
@@ -44,15 +44,15 @@ func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 @view
 func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, sources_len: felt, sources: felt*
-) -> (entries_len: felt, entries: Entry*) {
-    let (entries_len, entries, _) = Oracle.get_entries(pair_id, sources_len, sources);
+) -> (entries_len: felt, entries: SpotEntry*) {
+    let (entries_len, entries, _) = Oracle.get_spot_entries(pair_id, sources_len, sources);
     return (entries_len, entries);
 }
 
 @view
 func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
-) -> (entries_len: felt, entries: Entry*) {
+) -> (entries_len: felt, entries: SpotEntry*) {
     let (sources) = alloc();
     return get_spot_entries_for_sources(pair_id, 0, sources);
 }
@@ -64,8 +64,8 @@ func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 @view
 func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, source: felt
-) -> (entry: Entry) {
-    let (entry) = Oracle.get_entry(pair_id, source);
+) -> (entry: SpotEntry) {
+    let (entry) = Oracle.get_spot_entry(pair_id, source);
     return (entry,);
 }
 
@@ -76,15 +76,15 @@ func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 @view
 func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, source: felt
-) -> (entry: Entry) {
-    let (entry) = Oracle.get_entry(pair_id, source);
+) -> (entry: SpotEntry) {
+    let (entry) = Oracle.get_spot_entry(pair_id, source);
     return (entry,);
 }
 
 @view
 func get_spot_median{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
-) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
     return get_spot(pair_id, MEDIAN);
 }
@@ -99,12 +99,12 @@ func get_spot_median{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
 @view
 func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt
-) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (sources) = alloc();
-    let (value, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
         pair_id, aggregation_mode, 0, sources
     );
-    return (value, decimals, last_updated_timestamp, num_sources_aggregated);
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
 
 // @notice get value for key for a set of sources
@@ -119,11 +119,11 @@ func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 @view
 func get_spot_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
-) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
-    let (value, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
         pair_id, aggregation_mode, sources_len, sources
     );
-    return (value, decimals, last_updated_timestamp, num_sources_aggregated);
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
 
 // @notice get address of publisher registry
@@ -155,7 +155,7 @@ func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 // @param new_entry: an Entry to publish
 @external
 func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    new_entry: Entry
+    new_entry: SpotEntry
 ) {
     Oracle.publish_spot_entry(new_entry);
     return ();
@@ -166,7 +166,7 @@ func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 // @param new_entries: pointer to first Entry in array
 @external
 func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    new_entries_len: felt, new_entries: Entry*
+    new_entries_len: felt, new_entries: SpotEntry*
 ) {
     Oracle.publish_spot_entries(new_entries_len, new_entries);
     return ();

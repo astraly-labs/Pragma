@@ -1,6 +1,6 @@
 %lang starknet
 
-from entry.structs import Checkpoint, Entry, Pair, Currency
+from entry.structs import Checkpoint, SpotEntry, Pair, Currency
 
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
@@ -25,14 +25,14 @@ namespace IOracle {
     }
 
     func get_spot_entries_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
-        entries_len: felt, entries: Entry*
+        entries_len: felt, entries: SpotEntry*
     ) {
     }
 
-    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: Entry*) {
+    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: SpotEntry*) {
     }
 
-    func get_spot_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
     func get_spot_median(pair_id: felt) -> (
@@ -45,7 +45,7 @@ namespace IOracle {
     ) {
     }
 
-    func get_future_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    func get_future_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
     // TODO (rlkelly): add adapters for currency conversion
@@ -87,10 +87,10 @@ namespace IOracle {
     // Setters
     //
 
-    func publish_spot_entry(new_entry: Entry) {
+    func publish_spot_entry(new_entry: SpotEntry) {
     }
 
-    func publish_spot_entries(new_entries_len: felt, new_entries: Entry*) {
+    func publish_spot_entries(new_entries_len: felt, new_entries: SpotEntry*) {
     }
 
     func set_admin_address(new_admin_address: felt) {

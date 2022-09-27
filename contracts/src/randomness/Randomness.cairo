@@ -95,6 +95,10 @@ func request_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     let (current_block) = get_block_number();
     let (request_id) = Randomness__request_id.read(caller_address);
 
+    with_attr error_message("Currently only one random word per request") {
+        assert num_words = 1;
+    }
+
     let (hash_) = hash_request(
         request_id,
         caller_address,

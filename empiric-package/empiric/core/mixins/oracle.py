@@ -101,7 +101,7 @@ class OracleMixin:
             )
 
         return (
-            response.value,
+            response.price,
             response.decimals,
             response.last_updated_timestamp,
             response.num_sources_aggregated,

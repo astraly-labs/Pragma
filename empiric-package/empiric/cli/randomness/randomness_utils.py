@@ -3,6 +3,8 @@
 # This code follows the (IETF) IRTF CFRG Verifiable Random Functions (VRFs) spec *very* closely.
 # Please refer to https://tools.ietf.org/pdf/draft-irtf-cfrg-vrf-06.pdf
 
+# https://github.com/nccgroup/draft-irtf-cfrg-vrf-06
+
 
 import hashlib
 

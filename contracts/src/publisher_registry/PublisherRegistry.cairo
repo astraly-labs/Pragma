@@ -129,6 +129,14 @@ func add_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
 }
 
 @external
+func add_sources_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher, sources_len, sources: felt*
+) {
+    Publisher.add_sources_for_publisher(publisher, sources_len, sources);
+    return ();
+}
+
+@external
 func remove_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher, source
 ) {

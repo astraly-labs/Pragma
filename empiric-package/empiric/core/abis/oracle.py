@@ -3,10 +3,11 @@ ORACLE_ABI = [
         "members": [
             {"name": "base", "offset": 0, "type": "BaseEntry"},
             {"name": "pair_id", "offset": 3, "type": "felt"},
-            {"name": "value", "offset": 4, "type": "felt"},
+            {"name": "price", "offset": 4, "type": "felt"},
+            {"name": "volume", "offset": 5, "type": "felt"},
         ],
-        "name": "Entry",
-        "size": 5,
+        "name": "SpotEntry",
+        "size": 6,
         "type": "struct",
     },
     {
@@ -62,9 +63,9 @@ ORACLE_ABI = [
         "type": "event",
     },
     {
-        "data": [{"name": "new_entry", "type": "Entry"}],
+        "data": [{"name": "new_entry", "type": "SpotEntry"}],
         "keys": [],
-        "name": "SubmittedEntry",
+        "name": "SubmittedSpotEntry",
         "type": "event",
     },
     {
@@ -122,7 +123,7 @@ ORACLE_ABI = [
         "name": "get_spot_entries_for_sources",
         "outputs": [
             {"name": "entries_len", "type": "felt"},
-            {"name": "entries", "type": "Entry*"},
+            {"name": "entries", "type": "SpotEntry*"},
         ],
         "stateMutability": "view",
         "type": "function",
@@ -132,7 +133,7 @@ ORACLE_ABI = [
         "name": "get_spot_entries",
         "outputs": [
             {"name": "entries_len", "type": "felt"},
-            {"name": "entries", "type": "Entry*"},
+            {"name": "entries", "type": "SpotEntry*"},
         ],
         "stateMutability": "view",
         "type": "function",
@@ -143,7 +144,7 @@ ORACLE_ABI = [
             {"name": "source", "type": "felt"},
         ],
         "name": "get_spot_entry",
-        "outputs": [{"name": "entry", "type": "Entry"}],
+        "outputs": [{"name": "entry", "type": "SpotEntry"}],
         "stateMutability": "view",
         "type": "function",
     },
@@ -153,7 +154,7 @@ ORACLE_ABI = [
             {"name": "source", "type": "felt"},
         ],
         "name": "get_future_entry",
-        "outputs": [{"name": "entry", "type": "Entry"}],
+        "outputs": [{"name": "entry", "type": "SpotEntry"}],
         "stateMutability": "view",
         "type": "function",
     },
@@ -161,7 +162,7 @@ ORACLE_ABI = [
         "inputs": [{"name": "pair_id", "type": "felt"}],
         "name": "get_spot_median",
         "outputs": [
-            {"name": "value", "type": "felt"},
+            {"name": "price", "type": "felt"},
             {"name": "decimals", "type": "felt"},
             {"name": "last_updated_timestamp", "type": "felt"},
             {"name": "num_sources_aggregated", "type": "felt"},
@@ -176,7 +177,7 @@ ORACLE_ABI = [
         ],
         "name": "get_spot",
         "outputs": [
-            {"name": "value", "type": "felt"},
+            {"name": "price", "type": "felt"},
             {"name": "decimals", "type": "felt"},
             {"name": "last_updated_timestamp", "type": "felt"},
             {"name": "num_sources_aggregated", "type": "felt"},
@@ -193,7 +194,7 @@ ORACLE_ABI = [
         ],
         "name": "get_spot_for_sources",
         "outputs": [
-            {"name": "value", "type": "felt"},
+            {"name": "price", "type": "felt"},
             {"name": "decimals", "type": "felt"},
             {"name": "last_updated_timestamp", "type": "felt"},
             {"name": "num_sources_aggregated", "type": "felt"},
@@ -216,7 +217,7 @@ ORACLE_ABI = [
         "type": "function",
     },
     {
-        "inputs": [{"name": "new_entry", "type": "Entry"}],
+        "inputs": [{"name": "new_entry", "type": "SpotEntry"}],
         "name": "publish_spot_entry",
         "outputs": [],
         "type": "function",
@@ -224,7 +225,7 @@ ORACLE_ABI = [
     {
         "inputs": [
             {"name": "new_entries_len", "type": "felt"},
-            {"name": "new_entries", "type": "Entry*"},
+            {"name": "new_entries", "type": "SpotEntry*"},
         ],
         "name": "publish_spot_entries",
         "outputs": [],

@@ -320,7 +320,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     # Submit data (on, spot, futures)
     on_entry = Entry(
         pair_id=ON_KEY,
-        value=1 * (10**15),  # 0.1% at 18 decimals (default),
+        price=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=str_to_felt("THEGRAPH"),
         publisher=publisher,
@@ -335,7 +335,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     for spot_key in FUTURES_SPOT.keys():
         spot_entry = Entry(
             pair_id=spot_key,
-            value=FUTURES_SPOT[spot_key]["value"],
+            price=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],
             source=source,
             publisher=publisher,
@@ -349,7 +349,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         yield_points = [
             calculate_on_yield_point(
-                on_entry.value, on_entry.timestamp, DEFAULT_DECIMALS, output_decimals
+                on_entry.price, on_entry.timestamp, DEFAULT_DECIMALS, output_decimals
             ),
         ]
 
@@ -357,12 +357,11 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         for future_key, future_data in futures.items():
             future_entry = Entry(
                 pair_id=future_key,
-                value=future_data["value"],
+                price=future_data["value"],
                 timestamp=future_data["timestamp"],
                 source=source,
                 publisher=publisher,
             )
-            print("entry:", future_entry.source)
             await publisher_signer.send_transaction(
                 publisher_account,
                 oracle.contract_address,
@@ -370,17 +369,16 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
                 future_entry.to_tuple(),
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
-                future_entry.value,
+                future_entry.price,
                 future_entry.timestamp,
                 future_data["expiry_timestamp"],
-                spot_entry.value,
+                spot_entry.price,
                 spot_entry.timestamp,
                 DEFAULT_DECIMALS,
                 DEFAULT_DECIMALS,
                 output_decimals,
                 current_timestamp=STARKNET_STARTING_TIMESTAMP,
             )
-            print("future:", future_spot_yield_point and future_spot_yield_point.source)
             if future_spot_yield_point is not None:
                 yield_points.append(future_spot_yield_point)
 

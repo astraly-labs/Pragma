@@ -75,7 +75,7 @@ class BitstampFetcher(PublisherInterfaceT):
 
         return Entry(
             pair_id=pair_id,
-            value=price_int,
+            price=price_int,
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,
