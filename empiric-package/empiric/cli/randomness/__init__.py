@@ -250,7 +250,7 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
             if event.minimum_block_number > block_number:
                 continue
 
-            typer.echo("event", event)
+            typer.echo(f"event {event}")
 
             block_hash = await get_blockhash(event.minimum_block_number, node_url)
 
