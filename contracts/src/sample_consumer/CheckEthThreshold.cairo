@@ -14,7 +14,7 @@ func check_eth_usd_threshold{syscall_ptr: felt*, range_check_ptr}(threshold: fel
 ) {
     alloc_locals;
 
-    let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_value(
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_spot(
         EMPIRIC_ORACLE_ADDRESS, KEY, EmpiricAggregationModes.MEDIAN
     );
     let (multiplier) = pow(10, decimals);
