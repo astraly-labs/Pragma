@@ -104,7 +104,7 @@ async def registered_contracts(
     tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
     assert_event_emitted(
@@ -143,7 +143,7 @@ async def test_register_non_admin_fail(
         await admin_signer.send_transaction(
             second_admin_account,
             publisher_registry.contract_address,
-            "register_publisher",
+            "add_publisher",
             [publisher, publisher_account.contract_address],
         )
 
@@ -157,7 +157,7 @@ async def test_register_non_admin_fail(
 
 
 @pytest.mark.asyncio
-async def test_register_publisher(registered_contracts, publisher):
+async def test_add_publisher(registered_contracts, publisher):
     publisher_account = registered_contracts["publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
@@ -246,7 +246,7 @@ async def test_register_second_publisher(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
     )
 
@@ -276,7 +276,7 @@ async def test_re_register_fail(
         await admin_signer.send_transaction(
             admin_account,
             publisher_registry.contract_address,
-            "register_publisher",
+            "add_publisher",
             [publisher, publisher_account.contract_address],
         )
 
@@ -309,24 +309,10 @@ async def test_rotate_admin_address(
         [second_admin_account.contract_address],
     )
 
-    try:
-        await admin_signer.send_transaction(
-            admin_account,
-            publisher_registry.contract_address,
-            "register_publisher_admin_address",
-            [publisher],
-        )
-
-        raise Exception(
-            "Transaction to register with old admin account succeeded, but should not have."
-        )
-    except StarkException:
-        pass
-
     await admin_signer.send_transaction(
         second_admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
 

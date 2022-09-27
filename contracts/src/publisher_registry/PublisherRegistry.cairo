@@ -2,12 +2,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-from publisher_registry.library import (
-    Publisher_get_publisher_address,
-    Publisher_get_all_publishers,
-    Publisher_update_publisher_address,
-    Publisher_register_publisher,
-)
+from publisher_registry.library import Publisher
 from admin.library import Admin
 
 //
@@ -46,7 +41,7 @@ func get_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 func get_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher: felt
 ) -> (publisher_address: felt) {
-    let (publisher_address) = Publisher_get_publisher_address(publisher);
+    let (publisher_address) = Publisher.get_publisher_address(publisher);
     return (publisher_address,);
 }
 
@@ -57,8 +52,24 @@ func get_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 func get_all_publishers{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     publishers_len: felt, publishers: felt*
 ) {
-    let (publishers_len, publishers) = Publisher_get_all_publishers();
+    let (publishers_len, publishers) = Publisher.get_all_publishers();
     return (publishers_len, publishers);
+}
+
+@view
+func get_publisher_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher
+) -> (sources_len: felt, sources: felt*) {
+    let (sources_len, sources) = Publisher.get_publisher_sources(publisher);
+    return (sources_len, sources);
+}
+
+@view
+func can_publish_source{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher, source
+) -> (is_valid: felt) {
+    let (is_valid) = Publisher.can_publish_source(publisher, source);
+    return (is_valid,);
 }
 
 //
@@ -77,15 +88,24 @@ func set_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     return ();
 }
 
-// @notice register a new publisher
+// @notice add a new publisher
 // @param publisher: name of publisher
 // @param publisher_address: address of publisher
 @external
-func register_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func add_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher: felt, publisher_address: felt
 ) {
     Admin.only_admin();
-    Publisher_register_publisher(publisher, publisher_address);
+    Publisher.add_publisher(publisher, publisher_address);
+    return ();
+}
+
+@external
+func remove_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher: felt
+) {
+    Admin.only_admin();
+    Publisher.remove_publisher(publisher);
     return ();
 }
 
@@ -96,6 +116,22 @@ func register_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 func update_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher: felt, new_publisher_address: felt
 ) {
-    Publisher_update_publisher_address(publisher, new_publisher_address);
+    Publisher.update_publisher_address(publisher, new_publisher_address);
+    return ();
+}
+
+@external
+func add_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher, source
+) {
+    Publisher.add_source_for_publisher(publisher, source);
+    return ();
+}
+
+@external
+func remove_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    publisher, source
+) {
+    Publisher.remove_source_for_publisher(publisher, source);
     return ();
 }

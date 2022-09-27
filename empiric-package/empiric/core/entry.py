@@ -46,26 +46,28 @@ class Entry:
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
-        if isinstance(other, Tuple) and len(other) == 5:
+        if isinstance(other, Tuple) and len(other) == 3:
             return (
-                self.pair_id == other[0]
-                and self.value == other[1]
-                and self.timestamp == other[2]
-                and self.source == other[3]
-                and self.publisher == other[4]
+                self.pair_id == other.pair_id
+                and self.value == other.value
+                and self.timestamp == other.base.timestamp
+                and self.source == other.base.source
+                and self.publisher == other.base.publisher
             )
         return False
 
     def to_tuple(self):
-        return (self.pair_id, self.value, self.timestamp, self.source, self.publisher)
+        return (self.timestamp, self.source, self.publisher, self.pair_id, self.value)
 
     def serialize(self) -> Dict[str, str]:
         return {
+            "base": {
+                "timestamp": self.timestamp,
+                "source": self.source,
+                "publisher": self.publisher,
+            },
             "pair_id": self.pair_id,
             "value": self.value,
-            "timestamp": self.timestamp,
-            "source": self.source,
-            "publisher": self.publisher,
         }
 
     @staticmethod

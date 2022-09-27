@@ -6,7 +6,7 @@ from starkware.starknet.common.syscalls import get_block_timestamp
 from oracle.IOracle import IOracle
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from compute_engines.summary_stats.ISummaryStats import ISummaryStats
-from entry.structs import Currency, Pair, Entry
+from entry.structs import Currency, Pair, Entry, BaseEntry
 from time_series.prelude import ONE
 
 const ONE_ETH = 10 ** 18;
@@ -33,7 +33,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     %}
 
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.publisher_registry_address) %}
-    IPublisherRegistry.register_publisher(publisher_registry_address, 1, oracle_admin_address);
+    IPublisherRegistry.add_publisher(publisher_registry_address, 1, oracle_admin_address);
     %{ stop_prank_callable() %}
 
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.oracle_address) %}
@@ -48,6 +48,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
 
     return ();
 }
+
 func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
     cur_idx, arr_len, times: felt*, prices: felt*
 ) {
@@ -63,7 +64,7 @@ func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
     let cur_price = prices[cur_idx];
 
     %{ stop_warp = warp(ids.cur_time) %}
-    IOracle.publish_entry(oracle_address, Entry(1, ONE_ETH * cur_price, cur_time, 123, 1));
+    IOracle.publish_spot_entry(oracle_address, Entry(1, ONE_ETH * cur_price, cur_time, 123, 1));
     IOracle.set_checkpoint(oracle_address, 1, 120282243752302);
 
     return _iter_prices_and_times(cur_idx + 1, arr_len, times, prices);

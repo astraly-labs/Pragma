@@ -22,7 +22,7 @@ async def main(network: Network, throw_if_no_data: bool):
         decimals,
         last_updated_timestamp,
         num_sources_aggregated,
-    ) = await client.get_value(pair_id, aggregation_mode)
+    ) = await client.get_spot(pair_id, aggregation_mode)
 
     logger.info(
         f"""Value of asset pair {asset_pair} is: {float(value) / (10**decimals)}, \

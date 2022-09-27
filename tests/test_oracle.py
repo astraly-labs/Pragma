@@ -24,8 +24,8 @@ from utils import (
     advance_time,
     assert_event_emitted,
     cached_contract,
-    register_new_publisher_and_publish_entries_1,
-    register_new_publisher_and_publish_entry,
+    register_new_publisher_and_publish_spot_entries_1,
+    register_new_publisher_and_publish_spot_entry,
     transform_calldata,
 )
 
@@ -206,8 +206,21 @@ async def initialized_contracts(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
+    )
+
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("0xdata")],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [publisher, str_to_felt("1xdata")],
     )
 
     return contracts
@@ -301,7 +314,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
     assert_event_emitted(
@@ -311,19 +324,19 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         list(entry.to_tuple()),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
     assert result.result.last_updated_timestamp == entry.timestamp
     assert result.result.decimals == 8
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert source_result.result == result.result
 
-    entry_result = await oracle_proxy.get_entry(entry.pair_id, source).call()
+    entry_result = await oracle_proxy.get_spot_entry(entry.pair_id, source).call()
     assert entry_result.result.entry == entry
 
 
@@ -344,11 +357,11 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
@@ -364,11 +377,11 @@ async def test_re_submit(initialized_contracts, source, publisher, publisher_sig
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == second_entry.value
@@ -393,16 +406,16 @@ async def test_re_submit_stale(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -419,7 +432,7 @@ async def test_re_submit_stale(
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_proxy.contract_address,
-            "publish_entry",
+            "publish_spot_entry",
             second_entry.to_tuple(),
         )
 
@@ -429,10 +442,10 @@ async def test_re_submit_stale(
     except StarkException:
         pass
 
-    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -456,11 +469,11 @@ async def test_submit_second_asset(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
@@ -476,22 +489,22 @@ async def test_submit_second_asset(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == second_entry.value
 
     # Check that first asset is still stored accurately
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         entry.pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert result.result == source_result.result
@@ -522,7 +535,7 @@ async def test_submit_second_publisher(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -532,8 +545,15 @@ async def test_submit_second_publisher(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, second_source],
     )
 
     second_entry = Entry(
@@ -547,33 +567,33 @@ async def test_submit_second_publisher(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source, second_source]
     ).call()
     assert source_result.result == result.result
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert source_result.result.value == entry.value
     assert source_result.result.last_updated_timestamp == entry.timestamp
 
-    source_result = await oracle_proxy.get_value_for_sources(
+    source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [second_source]
     ).call()
     assert source_result.result.value == second_entry.value
     assert source_result.result.last_updated_timestamp == second_entry.timestamp
 
-    result = await oracle_proxy.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [entry, second_entry]
 
 
@@ -596,11 +616,11 @@ async def test_submit_second_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == entry.value
@@ -617,11 +637,11 @@ async def test_submit_second_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(
+    result = await oracle_proxy.get_spot(
         second_entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
@@ -649,7 +669,7 @@ async def test_mean_aggregation(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -665,18 +685,18 @@ async def test_mean_aggregation(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
     # median is equivalent to mean if only 2 values
-    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == (second_entry.value + entry.value) / 2
     assert result.result.last_updated_timestamp == max(
         second_entry.timestamp, entry.timestamp
     )
 
-    result = await oracle_proxy.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [entry, second_entry]
 
     return
@@ -708,7 +728,7 @@ async def test_median_aggregation(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -729,7 +749,7 @@ async def test_median_aggregation(
             publisher=additional_publisher,
         )
         entries.append(additional_entry)
-        await register_new_publisher_and_publish_entry(
+        await register_new_publisher_and_publish_spot_entry(
             admin_account,
             publisher_account,
             publisher_registry,
@@ -740,10 +760,10 @@ async def test_median_aggregation(
             additional_entry,
         )
 
-        result = await oracle_proxy.get_entries(pair_id, []).call()
+        result = await oracle_proxy.get_spot_entries(pair_id).call()
         assert result.result.entries == entries
 
-        result = await oracle_proxy.get_value(
+        result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
         ).call()
         assert result.result.value == int(median(prices[: len(entries)]))
@@ -773,7 +793,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
     tx_exec_info = await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entries",
+        "publish_spot_entries",
         Entry.flatten_entries(entries),
     )
     for entry in entries:
@@ -785,10 +805,10 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         )
 
     for i, pair_id in enumerate(pair_ids):
-        result = await oracle_proxy.get_entries(pair_id, []).call()
+        result = await oracle_proxy.get_spot_entries(pair_id).call()
         assert result.result.entries == [entries[i]]
 
-        result = await oracle_proxy.get_value(
+        result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
         ).call()
         assert result.result.value == prices[i]
@@ -819,7 +839,7 @@ async def test_subset_publishers(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -828,14 +848,14 @@ async def test_subset_publishers(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [additional_publisher, second_publisher_account.contract_address],
     )
 
-    result = await oracle_proxy.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [entry]
 
-    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == entry.value
 
 
@@ -858,11 +878,11 @@ async def test_unknown_source(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [str_to_felt("UNKNOWN")]
     ).call()
     assert result.result.num_sources_aggregated == 0
@@ -874,7 +894,7 @@ async def test_unknown_key(initialized_contracts):
 
     unknown_pair_id = str_to_felt("ANSWERTOLIFE")
 
-    result = await oracle_proxy.get_entries(unknown_pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(unknown_pair_id).call()
     assert len(result.result.entries) == 0
 
 
@@ -918,7 +938,7 @@ async def test_real_data(
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.publisher == publisher]
         publisher_account = initialized_contracts["additional_publisher_accounts"][i]
-        await register_new_publisher_and_publish_entries_1(
+        await register_new_publisher_and_publish_spot_entries_1(
             admin_account,
             publisher_account,
             publisher_registry,
@@ -939,13 +959,13 @@ async def test_real_data(
         "shib/usd",
     ]
     for pair_id in pair_ids:
-        result = await oracle_proxy.get_value(
+        result = await oracle_proxy.get_spot(
             str_to_felt(pair_id), AggregationMode.MEDIAN.value
         ).call()
         assert result.result.value != 0
         assert result.result.last_updated_timestamp != 0
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("COINBASE")],
@@ -953,7 +973,7 @@ async def test_real_data(
     assert result.result.value == (29920000000000 + 29924650000000) / 2
     assert result.result.last_updated_timestamp == 1650590986
 
-    result = await oracle_proxy.get_value_for_sources(
+    result = await oracle_proxy.get_spot_for_sources(
         str_to_felt("ETH/USD"),
         AggregationMode.MEDIAN.value,
         [str_to_felt("GEMINI"), str_to_felt("UNKNOWN")],
@@ -986,7 +1006,7 @@ async def test_ignore_future_entry(
         await publisher_signer.send_transaction(
             publisher_account,
             oracle_proxy.contract_address,
-            "publish_entry",
+            "publish_spot_entry",
             entry.to_tuple(),
         )
 
@@ -1018,7 +1038,7 @@ async def test_ignore_stale_entries(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -1027,8 +1047,14 @@ async def test_ignore_stale_entries(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, source],
     )
 
     # Advance time by TIMESTAMP_BUFFER
@@ -1048,15 +1074,15 @@ async def test_ignore_stale_entries(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
 
-    result = await oracle_proxy.get_value(pair_id, AggregationMode.MEDIAN.value).call()
+    result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.value == second_entry.value
     assert result.result.last_updated_timestamp == second_entry.timestamp
 
-    result = await oracle_proxy.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [second_entry]
 
 
@@ -1074,8 +1100,14 @@ async def test_checkpointing(
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
+    )
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, source],
     )
 
     pair_id = str_to_felt("ETH/USD")
@@ -1089,7 +1121,7 @@ async def test_checkpointing(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         entry.to_tuple(),
     )
 
@@ -1120,10 +1152,18 @@ async def test_checkpointing(
     await publisher_signer.send_transaction(
         publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         second_entry.to_tuple(),
     )
+
     second_source = str_to_felt("1xdata")
+    await admin_signer.send_transaction(
+        admin_account,
+        publisher_registry.contract_address,
+        "add_source_for_publisher",
+        [second_publisher, second_source],
+    )
+
     third_entry = Entry(
         pair_id=pair_id,
         value=7,
@@ -1134,7 +1174,7 @@ async def test_checkpointing(
     await publisher_signer.send_transaction(
         second_publisher_account,
         oracle_proxy.contract_address,
-        "publish_entry",
+        "publish_spot_entry",
         third_entry.to_tuple(),
     )
 
@@ -1148,7 +1188,7 @@ async def test_checkpointing(
     result = await oracle_proxy.get_latest_checkpoint_index(pair_id).call()
     assert result.result.latest == 2
 
-    result = await oracle_proxy.get_entries(pair_id, []).call()
+    result = await oracle_proxy.get_spot_entries(pair_id).call()
 
     result = await oracle_proxy.get_checkpoint(pair_id, 1).call()
     assert result.result.checkpoint.value == 6
