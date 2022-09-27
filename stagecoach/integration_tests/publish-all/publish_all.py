@@ -8,13 +8,13 @@ from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetchers import (  # CoingeckoFetcher,
-    BitstampFetcher,
-    CexFetcher,
+    # BitstampFetcher,
+    # CexFetcher,
     CoinbaseFetcher,
-    CryptowatchFetcher,
-    FtxFetcher,
-    GeminiFetcher,
-    TheGraphFetcher,
+    # CryptowatchFetcher,
+    # FtxFetcher,
+    # GeminiFetcher,
+    # TheGraphFetcher,
 )
 
 logger = get_stream_logger()
@@ -28,21 +28,21 @@ async def publish_all(assets):
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
         contract_addresses_config=ContractAddresses(
-            2756386738475413261477141421684344364774760819536870953878747417517432039780,
-            3220625633324589292531790784257888220189966136260732135803227954141242893538,
+            2186843614666702706389011384803164466970240427599479843460793554463821901204,
+            1824425265941254823382743057502330811805960016285095529301416203495066694514,
         ),
     )
     publisher_client.add_fetchers(
         [
             fetcher(assets, publisher)
             for fetcher in (
-                BitstampFetcher,
-                CexFetcher,
+                # BitstampFetcher,
+                # CexFetcher,
                 CoinbaseFetcher,
-                CryptowatchFetcher,
-                FtxFetcher,
-                GeminiFetcher,
-                TheGraphFetcher,
+                # CryptowatchFetcher,
+                # FtxFetcher,
+                # GeminiFetcher,
+                # TheGraphFetcher,
             )
         ]
     )

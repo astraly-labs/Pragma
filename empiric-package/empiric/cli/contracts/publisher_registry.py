@@ -33,7 +33,7 @@ async def deploy(config_path=config.DEFAULT_CONFIG):
 @app.command()
 @coro
 async def add_publisher(
-    publisher, publisher_address, config_path=config.DEFAULT_CONFIG
+    publisher, publisher_address: int, config_path=config.DEFAULT_CONFIG
 ):
     client = net.init_empiric_client(config_path)
     invocation = await client.publisher_registry.add_publisher.invoke(
@@ -50,6 +50,17 @@ async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     publisher_address = client.account_address()
     invocation = await client.add_publisher(publisher, publisher_address)
+
+    await invocation.wait_for_acceptance()
+    typer.echo(f"response hash: {invocation.hash}")
+
+
+@app.command()
+@coro
+async def add_source_for_publisher(publisher: str, source: str, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    publisher_address = client.account_address()
+    invocation = await client.add_source_for_publisher(publisher, source)
 
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
