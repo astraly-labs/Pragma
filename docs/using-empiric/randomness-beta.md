@@ -17,7 +17,7 @@ from starkware.starknet.common.syscalls import get_block_number, get_caller_addr
 from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-const EMPIRIC_RANDOM_ORACLE_ADDRESS = COMING_SOON;
+const EMPIRIC_RANDOM_ORACLE_ADDRESS = 0x681a206bfb74aa7436b3c5c20d7c9242bc41bc6471365ca9404e738ca8f1f3b;
 
 @storage_var
 func min_block_number_storage() -> (min_block_number: felt) {
