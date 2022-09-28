@@ -105,6 +105,33 @@
     {
         "members": [
             {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "pair_id",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "price",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "offset": 5,
+                "type": "felt"
+            }
+        ],
+        "name": "FutureEntry",
+        "size": 6,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "timestamp",
                 "offset": 0,
                 "type": "felt"
@@ -331,7 +358,7 @@
         "outputs": [
             {
                 "name": "entry",
-                "type": "SpotEntry"
+                "type": "FutureEntry"
             }
         ],
         "stateMutability": "view",

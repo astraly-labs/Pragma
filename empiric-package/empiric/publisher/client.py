@@ -60,33 +60,3 @@ class EmpiricPublisherClient(EmpiricClient):
             data = fetcher.fetch_sync()
             results.extend(data)
         return results
-
-
-async def get_entries():
-    from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-    from empiric.publisher.fetchers import (
-        BitstampFetcher,
-        CexFetcher,
-        CryptowatchFetcher,
-        GeminiFetcher,
-        TheGraphFetcher,
-    )
-
-    bitstamp_fetcher = BitstampFetcher(EMPIRIC_ALL_ASSETS, "test1")
-    cex_fetcher = CexFetcher(EMPIRIC_ALL_ASSETS, "test2")
-    cryptowatch_fetcher = CryptowatchFetcher(EMPIRIC_ALL_ASSETS, "test3")
-    gemini_fetcher = GeminiFetcher(EMPIRIC_ALL_ASSETS, "test4")
-    the_graph_fetcher = TheGraphFetcher(EMPIRIC_ALL_ASSETS, "test5")
-    eapc = EmpiricPublisherClient("testnet")
-
-    eapc.add_fetchers(
-        [
-            bitstamp_fetcher,
-            cex_fetcher,
-            cryptowatch_fetcher,
-            gemini_fetcher,
-            the_graph_fetcher,
-        ]
-    )
-
-    return await eapc.fetch()

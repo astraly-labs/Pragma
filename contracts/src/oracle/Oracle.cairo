@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Currency, Entry, SpotEntry, Pair, Checkpoint
+from entry.structs import Currency, Entry, FutureEntry, SpotEntry, Pair, Checkpoint
 from oracle.library import Oracle
 from proxy.library import Proxy
 
@@ -76,8 +76,8 @@ func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 @view
 func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, source: felt
-) -> (entry: SpotEntry) {
-    let (entry) = Oracle.get_spot_entry(pair_id, source);
+) -> (entry: FutureEntry) {
+    let (entry) = Oracle.get_future_entry(pair_id, source);
     return (entry,);
 }
 

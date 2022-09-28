@@ -1,5 +1,6 @@
 import configparser
 import sys
+import time
 from pathlib import Path
 from typing import List
 
@@ -12,6 +13,7 @@ from empiric.cli.randomness.utils import (
     ecvrf_verify,
     felt_to_secret_key,
     get_blockhash,
+    get_blocknumber,
     get_events,
     uint256_to_2_128,
     verify_randomness,
@@ -170,6 +172,7 @@ async def request_random(
         seed=seed,
         callback_address=callback_address,
     )
+    typer.echo(f"hash: {invocation.hash}")
 
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")
@@ -218,11 +221,11 @@ async def submit_random(
 @app.command()
 @coro
 async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
+    # TODO (rlkelly): this is hardcoded for testnet currently
     from starknet_py.net.full_node_client import FullNodeClient
 
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)
-    network = config_parser["GENERAL"]["network"]
     randomness_contract_address = int(config_parser["CONTRACTS"]["randomness-proxy"])
     node_url = config_parser["SECRET"]["node-url"]
     account_private_key = int(config_parser["SECRET"]["private-key"])
@@ -230,10 +233,7 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
     client = net.init_empiric_client(cli_config)
     client.init_randomness_contract(randomness_contract_address)
 
-    full_node_client = FullNodeClient(node_url=node_url, net=network)
-    block_number = (
-        await full_node_client.get_block(block_number="latest")
-    ).block_number
+    block_number = await get_blocknumber(node_url)
     sk = felt_to_secret_key(account_private_key)
 
     more_pages = True
@@ -248,6 +248,11 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
 
         for event in event_list["events"]:
             if event.minimum_block_number > block_number:
+                continue
+            status = await client.get_request_status(
+                event.caller_address, event.request_id
+            )
+            if status.status_ != 1:
                 continue
 
             typer.echo(f"event {event}")
@@ -268,25 +273,24 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
             ]
             random_words = [beta_string]
 
-            status = await client.get_request_status(
-                event.caller_address, event.request_id
+            invocation = await client.submit_random(
+                event.request_id,
+                event.caller_address,
+                event.seed,
+                event.minimum_block_number,
+                event.callback_address,
+                event.callback_gas_limit,
+                random_words,
+                block_hash,
+                proof,
             )
-
-            if status.status_ == 1:
-                invocation = await client.submit_random(
-                    event.request_id,
-                    event.caller_address,
-                    event.seed,
-                    event.minimum_block_number,
-                    event.callback_address,
-                    event.callback_gas_limit,
-                    random_words,
-                    block_hash,
-                    proof,
-                )
-
-                await invocation.wait_for_acceptance()
-                typer.echo(f"response hash: {invocation.hash}")
+            typer.echo(f"submitted: {invocation.hash}\n\n")
+        while client.nonce_status:
+            typer.echo(str(client.nonce_status))
+            typer.echo("\n...\n\n")
+            await client.update_nonce_dict()
+            client.cleanup_nonce_dict()
+            time.sleep(5)
 
 
 @app.command()

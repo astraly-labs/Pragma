@@ -5,6 +5,7 @@ from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
 from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
 from empiric.core.contract import Contract
 from empiric.core.mixins import (
+    NonceMixin,
     OracleMixin,
     PublisherRegistryMixin,
     RandomnessMixin,
@@ -18,9 +19,10 @@ logger = logging.getLogger(__name__)
 
 
 class EmpiricClient(
-    OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin
+    NonceMixin, OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin
 ):
     is_user_client: bool = False
+    account_contract_address: Optional[int] = None
 
     def __init__(
         self,
@@ -65,12 +67,12 @@ class EmpiricClient(
         self.oracle = Contract(
             self.contract_addresses_config.oracle_proxy_address,
             ORACLE_ABI,
-            self.client,
+            self,
         )
         self.publisher_registry = Contract(
             self.contract_addresses_config.publisher_registry_address,
             PUBLISHER_REGISTRY_ABI,
-            self.client,
+            self,
         )
 
     async def get_balance(self, account_contract_address):
@@ -82,20 +84,8 @@ class EmpiricClient(
         balance = await client.get_balance()
         return balance
 
-    def set_account(self, private_key, account_contract_address):
-        self.signer = StarkCurveSigner(
-            account_contract_address,
-            KeyPair.from_private_key(private_key),
-            self.client.chain,
-        )
-        self.client = AccountClient(
-            account_contract_address,
-            self.client,
-            self.signer,
-            supported_tx_version=1,
-        )
-        self.is_user_client = True
-        self._setup_contracts()
+    def set_account(self, chain_id, private_key, account_contract_address):
+        self._setup_account_client(chain_id, private_key, account_contract_address)
 
     def _setup_account_client(self, chain_id, private_key, account_contract_address):
         self.signer = StarkCurveSigner(
@@ -109,7 +99,9 @@ class EmpiricClient(
             self.signer,
             supported_tx_version=1,
         )
+        self.client._get_nonce = self._get_nonce
         self.is_user_client = True
+        self.account_contract_address = account_contract_address
 
     def account_address(self):
         return self.client.address

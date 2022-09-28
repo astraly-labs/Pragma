@@ -3,7 +3,6 @@ import sys
 from typing import List
 
 import requests
-from starknet_py.net.full_node_client import FullNodeClient
 from starknet_py.net.networks import TESTNET
 
 from .randomness_utils import (
@@ -41,9 +40,29 @@ class RandomnessRequest:
 
 
 async def get_blockhash(block_number, node_url, network=TESTNET):
-    full_node_client = FullNodeClient(node_url=node_url, net=network)
-    r = await full_node_client.get_block(block_number=block_number)
-    return r.block_hash
+    r = requests.post(
+        node_url,
+        json={
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "starknet_getBlockWithTxs",
+            "params": [{"block_number": block_number}],
+        },
+    )
+    return int(r.json()["result"]["block_hash"], 16)
+
+
+async def get_blocknumber(node_url, network=TESTNET):
+    r = requests.post(
+        node_url,
+        json={
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "starknet_blockNumber",
+            "params": [],
+        },
+    )
+    return r.json()["result"]
 
 
 def get_events(

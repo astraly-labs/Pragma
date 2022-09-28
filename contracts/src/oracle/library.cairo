@@ -8,7 +8,7 @@ from starkware.cairo.common.math import assert_not_equal, assert_not_zero, asser
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from entry.structs import Checkpoint, Currency, Entry, SpotEntry, Pair
+from entry.structs import Checkpoint, Currency, Entry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
@@ -60,6 +60,10 @@ func Oracle__checkpoint_index(key: felt) -> (index: felt) {
 
 @storage_var
 func Oracle__sources_threshold() -> (threshold: felt) {
+}
+
+@storage_var
+func Oracle__future_entry_storage(pair_id, source) -> (res: FutureEntry) {
 }
 
 //
@@ -224,6 +228,13 @@ namespace Oracle {
         ) -> (threshold: felt) {
         let (threshold) = Oracle__sources_threshold.read();
         return (threshold,);
+    }
+
+    func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        pair_id, source
+    ) -> (future_entry: FutureEntry) {
+        let (future_entry) = Oracle__future_entry_storage.read(pair_id, source);
+        return (future_entry,);
     }
 
     //
