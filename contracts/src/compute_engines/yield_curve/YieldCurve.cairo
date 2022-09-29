@@ -12,7 +12,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 
 from admin.library import Admin
 
-from entry.structs import SpotEntry
+from entry.structs import FutureEntry, SpotEntry
 from oracle.IOracle import IOracle
 from compute_engines.yield_curve.structs import YieldPoint
 
@@ -827,7 +827,10 @@ namespace YieldCurve {
         }
 
         let (future_entry) = IOracle.get_future_entry(
-            oracle_address, future_key, future_spot_empiric_source_key
+            oracle_address,
+            spot_entry.pair_id,
+            future_keys[future_keys_idx],
+            future_spot_empiric_source_key,
         );
         if (future_entry.base.timestamp == 0) {
             let (
@@ -919,7 +922,7 @@ namespace YieldCurve {
     func calculate_future_spot_yield_point{
         syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     }(
-        future_entry: SpotEntry,
+        future_entry: FutureEntry,
         future_expiry_timestamp: felt,
         spot_entry: SpotEntry,
         spot_decimals: felt,

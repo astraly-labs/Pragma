@@ -46,7 +46,7 @@ async def create_account(config_path=config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
-async def deploy_contract(contract_name: str, config_path=config.DEFAULT_CONFIG):
+async def deploy_by_name(contract_name: str, config_path=config.DEFAULT_CONFIG):
     contract_address = await deploy_contract(config_path, contract_name)
     typer.echo(f"address: {contract_address}")
     return SUCCESS

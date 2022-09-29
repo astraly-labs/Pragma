@@ -158,4 +158,12 @@ async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int
 async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_spot.call(str_to_felt(pair_id), 0)
-    typer.echo(f"publishers: {entry}")
+    typer.echo(f"spot: {entry}")
+
+
+@app.command()
+@coro
+async def get_decimals(currency_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_decimals.call(str_to_felt(currency_id))
+    typer.echo(f"decimals: {entry}")

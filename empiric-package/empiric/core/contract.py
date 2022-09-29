@@ -1,8 +1,14 @@
+import asyncio
 from typing import Callable, Optional
 
 from starknet_py.contract import Contract as StarknetContract
 from starknet_py.contract import ContractFunction, InvokeResult
-from starknet_py.net.client_models import SentTransactionResponse
+from starknet_py.net.client_models import SentTransactionResponse, TransactionStatus
+from starknet_py.transaction_exceptions import (
+    TransactionFailedError,
+    TransactionNotReceivedError,
+    TransactionRejectedError,
+)
 
 
 class Contract(StarknetContract):
@@ -20,7 +26,7 @@ async def invoke_(
     *args,
     max_fee: Optional[int] = None,
     auto_estimate: bool = False,
-    callback: Optional[Callable[[SentTransactionResponse], None]],
+    callback: Optional[Callable[[SentTransactionResponse], None]] = None,
     **kwargs,
 ) -> InvokeResult:
     """
@@ -50,8 +56,60 @@ async def invoke_(
         contract=self._contract_data,
         invoke_transaction=transaction,
     )
+    await wait_for_received(self._client, invoke_result.hash)
 
     return invoke_result
+
+
+async def wait_for_received(
+    client,
+    tx_hash,
+    check_interval=3,
+) -> (int, TransactionStatus):
+    # pylint: disable=too-many-branches
+    """
+    Awaits for transaction to get accepted or at least pending by polling its status
+
+    :param tx_hash: Transaction's hash
+    :param wait_for_accept: If true waits for at least ACCEPTED_ON_L2 status, otherwise waits for at least PENDING
+    :param check_interval: Defines interval between checks
+    :return: Tuple containing block number and transaction status
+    """
+    if check_interval <= 0:
+        raise ValueError("check_interval has to bigger than 0.")
+
+    first_run = True
+    try:
+        while True:
+            result = await client.get_transaction_receipt(tx_hash=tx_hash)
+            status = result.status
+
+            if status in (
+                TransactionStatus.ACCEPTED_ON_L1,
+                TransactionStatus.ACCEPTED_ON_L2,
+            ):
+                return result.block_number, status
+            if status == TransactionStatus.PENDING:
+                return result.block_number, status
+            elif status == TransactionStatus.REJECTED:
+                raise TransactionRejectedError(
+                    message=result.rejection_reason,
+                )
+            elif status == TransactionStatus.NOT_RECEIVED:
+                if not first_run:
+                    raise TransactionNotReceivedError()
+            elif status != TransactionStatus.RECEIVED:
+                # This will never get executed with current possible transactions statuses
+                raise TransactionFailedError(
+                    message=result.rejection_reason,
+                )
+            elif status == TransactionStatus.RECEIVED:
+                return 0, 0
+
+            first_run = False
+            await asyncio.sleep(check_interval)
+    except asyncio.CancelledError as exc:
+        raise TransactionNotReceivedError from exc
 
 
 ContractFunction.invoke = invoke_

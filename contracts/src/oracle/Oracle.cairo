@@ -75,9 +75,9 @@ func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 // @return entry: Entry for key and source
 @view
 func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    pair_id: felt, source: felt
+    pair_id, expiry_timestamp, source
 ) -> (entry: FutureEntry) {
-    let (entry) = Oracle.get_future_entry(pair_id, source);
+    let (entry) = Oracle.get_future_entry(pair_id, expiry_timestamp, source);
     return (entry,);
 }
 
@@ -150,6 +150,16 @@ func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 //
 // Setters
 //
+
+// @notice publish an Entry
+// @param new_entry: an Entry to publish
+@external
+func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_entry: FutureEntry
+) {
+    Oracle.publish_future_entry(new_entry);
+    return ();
+}
 
 // @notice publish an Entry
 // @param new_entry: an Entry to publish
@@ -275,6 +285,14 @@ func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     pair_id: felt, aggregation_mode: felt
 ) {
     Oracle.set_checkpoint(pair_id, aggregation_mode);
+    return ();
+}
+
+@external
+func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_ids_len, pair_ids: felt*, aggregation_mode: felt
+) {
+    Oracle.set_checkpoints(pair_ids_len, pair_ids, aggregation_mode);
     return ();
 }
 

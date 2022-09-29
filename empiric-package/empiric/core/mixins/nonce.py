@@ -62,16 +62,13 @@ class NonceMixin:
     ):
         for nonce in list(self.nonce_dict):
             self.nonce_status[nonce] = await self.get_status(self.nonce_dict[nonce])
-            print("update", self.nonce_status)
             if self.nonce_dict[nonce] in [
-                # TODO: we should prob confirm received when sending
-                # TransactionStatus.NOT_RECEIVED,
                 TransactionStatus.REJECTED,
             ]:
-                self.pending_nonce = min(self.pending_nonce, nonce)
-                del self.nonce_dict[nonce]
-                if nonce in self.nonce_status:
-                    del self.nonce_status[nonce]
+                # assume all later transaction will fail because this nonce was skipped
+                self.pending_nonce = nonce
+                self.nonce_dict = {}
+                self.nonce_status = {}
 
     async def get_latest_nonce(
         self,

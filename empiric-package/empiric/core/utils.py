@@ -26,7 +26,7 @@ def currency_pair_to_pair_id(quote, base):
 
 def pprint_entry(entry):
     print(
-        f"Entry: pair_id={felt_to_str(entry.pair_id)}, value={entry.value}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+        f"Entry: pair_id={felt_to_str(entry.pair_id)}, price={entry.price}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
 
 

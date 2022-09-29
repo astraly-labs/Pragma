@@ -7,7 +7,7 @@ from empiric.core.utils import felt_to_str, str_to_felt
 
 class Entry:
     pair_id: int
-    value: int
+    price: int
     timestamp: int
     source: int
     publisher: int
@@ -45,7 +45,7 @@ class Entry:
                 and self.timestamp == other.timestamp
                 and self.source == other.source
                 and self.publisher == other.publisher
-                and self.colume == other.volume
+                and self.volume == other.volume
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
@@ -112,4 +112,67 @@ class Entry:
         return [len(entries)] + flattened
 
     def __repr__(self):
-        return f'Entry(pair_id="{felt_to_str(self.pair_id)}", value={self.value}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'
+        return f'Entry(pair_id="{felt_to_str(self.pair_id)}", price={self.price}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'
+
+
+class FutureEntry:
+    timestamp: int
+    source: int
+    publisher: int
+    pair_id: int
+    price: int
+    expiry_timestamp: int
+
+    def __init__(self, timestamp, source, publisher, pair_id, price, expiry_timestamp):
+        if type(pair_id) == str:
+            pair_id = str_to_felt(pair_id)
+
+        if type(publisher) == str:
+            publisher = str_to_felt(publisher)
+
+        if type(source) == str:
+            source = str_to_felt(source)
+
+        if type(expiry_timestamp) == str:
+            expiry_timestamp = str_to_felt(expiry_timestamp)
+
+        self.source = source
+        self.publisher = publisher
+        self.pair_id = pair_id
+
+        self.timestamp = timestamp
+        self.price = price
+        self.expiry_timestamp = expiry_timestamp
+
+    def __eq__(self, other):
+        if isinstance(other, FutureEntry):
+            return (
+                self.pair_id == other.pair_id
+                and self.price == other.price
+                and self.timestamp == other.timestamp
+                and self.source == other.source
+                and self.publisher == other.publisher
+                and self.expiry_timestamp == other.expiry_timestamp
+            )
+        # This supports comparing against entries that are returned by starknet.py,
+        # which will be namedtuples.
+        if isinstance(other, Tuple) and len(other) == 4:
+            return (
+                self.pair_id == other.pair_id
+                and self.price == other.price
+                and self.timestamp == other.base.timestamp
+                and self.source == other.base.source
+                and self.publisher == other.base.publisher
+                and self.expiry_timestamp == other.expiry_timestamp
+            )
+        return False
+
+    def to_tuple(self):
+        return (
+            self.timestamp,
+            self.source,
+            self.publisher,
+            self.pair_id,
+            self.price,
+            self.expiry_timestamp,
+        )

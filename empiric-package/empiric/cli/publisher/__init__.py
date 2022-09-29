@@ -14,17 +14,23 @@ app = typer.Typer(help="contract deployment utilities")
 
 @app.command()
 @coro
-async def run(publisher: str = "empiric", config_path=config.DEFAULT_CONFIG):
+async def run(
+    publisher: str = "empiric", delay: int = 30, config_path=config.DEFAULT_CONFIG
+):
     """run a publisher locally"""
     client = net.init_empiric_client(config_path)
     EmpiricPublisherClient.convert_to_publisher(client)
     client.add_fetcher(CexFetcher(EMPIRIC_ALL_ASSETS, publisher))
     while True:
+        start = time.time()
         _entries = await client.fetch()
-        print(f"publishing {len(_entries)} entries")
-        await client.publish_many(_entries, pagination=10)
-        # TODO (rlkelly): make checkpoint_entries endpoint
-        for entry in _entries:
-            if isinstance(entry, Entry):
-                await client.set_checkpoint(int(entry.pair_id))
-        time.sleep(30)
+        typer.echo(f"publishing {len(_entries)} entries")
+        invocations = await client.publish_many(_entries, pagination=20)
+        typer.echo("responses: " + str(len(invocations)))
+
+        await client.set_checkpoints(
+            [int(entry.pair_id) for entry in _entries if isinstance(entry, Entry)],
+        )
+        now = time.time()
+        if now - start < delay:
+            time.sleep(delay - (now - start))

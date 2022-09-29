@@ -28,9 +28,7 @@ class EmpiricClient(
         self,
         network: str = "testnet",
         account_private_key: Optional[int] = None,
-        account_contract_address: Optional[
-            int
-        ] = 0x0704CC0F2749637A0345D108AC9CD597BB33CCF7F477978D52E236830812CD98,  # testnet admin address
+        account_contract_address: Optional[int] = None,
         contract_addresses_config: Optional[ContractAddresses] = None,
     ):
         """
@@ -67,12 +65,12 @@ class EmpiricClient(
         self.oracle = Contract(
             self.contract_addresses_config.oracle_proxy_address,
             ORACLE_ABI,
-            self,
+            self.client,
         )
         self.publisher_registry = Contract(
             self.contract_addresses_config.publisher_registry_address,
             PUBLISHER_REGISTRY_ABI,
-            self,
+            self.client,
         )
 
     async def get_balance(self, account_contract_address):

@@ -43,29 +43,35 @@ class OracleMixin:
 
     async def publish_many(
         self, entries: List[Entry], pagination=0, max_fee=int(1e16)
-    ) -> InvokeResult:
+    ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
             return
 
+        invocations = []
         if pagination:
             ix = 0
             while ix < len(entries):
                 invocation = await self.oracle.publish_spot_entries.invoke(
                     Entry.serialize_entries(entries[ix : ix + pagination]),
+                    callback=self.track_nonce,
                     max_fee=max_fee,
                 )
+                logger.info(str(invocation))
                 ix += pagination
+                invocations.append(invocation)
         else:
             invocation = await self.oracle.publish_spot_entries.invoke(
                 Entry.serialize_entries(entries), max_fee=max_fee
             )
+            invocations.append(invocation)
+            logger.info(str(invocation))
 
         logger.info(
             f"Sent {len(entries)} updated entries with transaction {invocation.hash}"
         )
 
-        return invocation
+        return invocations
 
     async def get_entries(self, pair_id, sources=[]) -> List[Entry]:
         if isinstance(pair_id, str):
@@ -110,6 +116,7 @@ class OracleMixin:
     async def set_checkpoint(
         self,
         pair_id: int,
+        aggregation_mode: int = str_to_felt("MEDIAN"),
         max_fee=int(1e16),
     ) -> InvokeResult:
         if not self.is_user_client:
@@ -118,7 +125,26 @@ class OracleMixin:
             )
         invocation = await self.oracle.set_checkpoint.invoke(
             pair_id,
-            0,
+            aggregation_mode,
+            callback=self.track_nonce,
+            max_fee=max_fee,
+        )
+        return invocation
+
+    async def set_checkpoints(
+        self,
+        pair_ids: List[int],
+        aggregation_mode: int = str_to_felt("MEDIAN"),
+        max_fee=int(1e16),
+    ) -> InvokeResult:
+        if not self.is_user_client:
+            raise AttributeError(
+                "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
+            )
+        invocation = await self.oracle.set_checkpoints.invoke(
+            pair_ids,
+            aggregation_mode,
+            callback=self.track_nonce,
             max_fee=max_fee,
         )
         return invocation

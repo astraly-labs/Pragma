@@ -64,11 +64,11 @@ def _format_pairs(pairs: Dict[str, Union[int, str]]) -> List[str]:
     # TODO (rlkelly): use marshmallow to format
     output = []
     for row in pairs:
-        for key in ["id", "quoteCurrencyId", "baseCurrencyId"]:
-            if isinstance(row["id"], str):
-                output.append(str_to_felt(row["id"]))
+        for key in ["id", "quote_currency_id", "base_currency_id"]:
+            if isinstance(row[key], str):
+                output.append(str_to_felt(row[key]))
             else:
-                output.append(row["id"])
+                output.append(row[key])
     return output
 
 

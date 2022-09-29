@@ -22,6 +22,17 @@ ORACLE_ABI = [
     },
     {
         "members": [
+            {"name": "base", "offset": 0, "type": "BaseEntry"},
+            {"name": "pair_id", "offset": 3, "type": "felt"},
+            {"name": "price", "offset": 4, "type": "felt"},
+            {"name": "expiry_timestamp", "offset": 5, "type": "felt"},
+        ],
+        "name": "FutureEntry",
+        "size": 6,
+        "type": "struct",
+    },
+    {
+        "members": [
             {"name": "id", "offset": 0, "type": "felt"},
             {"name": "decimals", "offset": 1, "type": "felt"},
             {"name": "is_abstract_currency", "offset": 2, "type": "felt"},
@@ -66,6 +77,12 @@ ORACLE_ABI = [
         "data": [{"name": "new_entry", "type": "SpotEntry"}],
         "keys": [],
         "name": "SubmittedSpotEntry",
+        "type": "event",
+    },
+    {
+        "data": [{"name": "new_entry", "type": "FutureEntry"}],
+        "keys": [],
+        "name": "SubmittedFutureEntry",
         "type": "event",
     },
     {
@@ -151,10 +168,11 @@ ORACLE_ABI = [
     {
         "inputs": [
             {"name": "pair_id", "type": "felt"},
+            {"name": "expiry_timestamp", "type": "felt"},
             {"name": "source", "type": "felt"},
         ],
         "name": "get_future_entry",
-        "outputs": [{"name": "entry", "type": "SpotEntry"}],
+        "outputs": [{"name": "entry", "type": "FutureEntry"}],
         "stateMutability": "view",
         "type": "function",
     },
@@ -214,6 +232,12 @@ ORACLE_ABI = [
         "name": "get_decimals",
         "outputs": [{"name": "decimals", "type": "felt"}],
         "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [{"name": "new_entry", "type": "FutureEntry"}],
+        "name": "publish_future_entry",
+        "outputs": [],
         "type": "function",
     },
     {
@@ -308,6 +332,16 @@ ORACLE_ABI = [
             {"name": "aggregation_mode", "type": "felt"},
         ],
         "name": "set_checkpoint",
+        "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "pair_ids_len", "type": "felt"},
+            {"name": "pair_ids", "type": "felt*"},
+            {"name": "aggregation_mode", "type": "felt"},
+        ],
+        "name": "set_checkpoints",
         "outputs": [],
         "type": "function",
     },

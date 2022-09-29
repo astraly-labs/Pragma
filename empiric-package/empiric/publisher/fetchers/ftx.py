@@ -104,7 +104,7 @@ class FtxFetcher(PublisherInterfaceT):
 
         return Entry(
             pair_id=pair_id,
-            value=price_int,
+            price=price_int,
             timestamp=timestamp,
             source=source,
             publisher=publisher,

@@ -3,9 +3,11 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math import assert_not_equal, assert_not_zero, assert_le
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
+from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
 from entry.structs import Checkpoint, Currency, Entry, FutureEntry, SpotEntry, Pair
@@ -62,8 +64,9 @@ func Oracle__checkpoint_index(key: felt) -> (index: felt) {
 func Oracle__sources_threshold() -> (threshold: felt) {
 }
 
+// TODO (rlkelly): add expiry
 @storage_var
-func Oracle__future_entry_storage(pair_id, source) -> (res: FutureEntry) {
+func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
 }
 
 //
@@ -77,6 +80,10 @@ func UpdatedPublisherRegistryAddress(
 
 @event
 func SubmittedSpotEntry(new_entry: SpotEntry) {
+}
+
+@event
+func SubmittedFutureEntry(new_entry: FutureEntry) {
 }
 
 @event
@@ -106,6 +113,7 @@ namespace Oracle {
         Oracle_publisher_registry_address_storage.write(publisher_registry_address);
         _set_keys_currencies(currencies_len, currencies, 0);
         _set_keys_pairs(pairs_len, pairs, 0);
+
         return ();
     }
 
@@ -231,9 +239,9 @@ namespace Oracle {
     }
 
     func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id, source
+        pair_id, expiry_timestamp, source
     ) -> (future_entry: FutureEntry) {
-        let (future_entry) = Oracle__future_entry_storage.read(pair_id, source);
+        let (future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
         return (future_entry,);
     }
 
@@ -241,60 +249,47 @@ namespace Oracle {
     // Setters
     //
 
+    func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        new_entry: FutureEntry
+    ) {
+        alloc_locals;
+
+        let (new_entry_ptr: FutureEntry*) = alloc();
+        assert new_entry_ptr[0] = new_entry;
+        validate_sender_for_source(cast(new_entry_ptr, felt*));
+
+        let (entry) = Oracle__future_entry_storage.read(
+            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source
+        );
+
+        let (entry_ptr: FutureEntry*) = alloc();
+        assert entry_ptr[0] = entry;
+
+        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+
+        SubmittedFutureEntry.emit(new_entry);
+        Oracle__future_entry_storage.write(
+            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source, new_entry
+        );
+
+        return ();
+    }
+
     func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entry: SpotEntry
     ) {
         alloc_locals;
 
-        let (publisher_registry_address) = get_publisher_registry_address();
-        let (publisher_address) = IPublisherRegistry.get_publisher_address(
-            publisher_registry_address, new_entry.base.publisher
-        );
-        let (_can_publish_source) = IPublisherRegistry.can_publish_source(
-            publisher_registry_address, new_entry.base.publisher, new_entry.base.source
-        );
-
-        let (caller_address) = get_caller_address();
-
-        with_attr error_message("Oracle: Publisher and caller must not be 0 addresses") {
-            assert_not_zero(publisher_address);
-            assert_not_zero(caller_address);
-        }
-
-        with_attr error_message("Oracle: Transaction not from publisher account") {
-            assert caller_address = publisher_address;
-        }
-        with_attr error_message("Oracle: Publisher not authorized for this source") {
-            assert _can_publish_source = TRUE;
-        }
+        let (new_entry_ptr: SpotEntry*) = alloc();
+        assert new_entry_ptr[0] = new_entry;
+        validate_sender_for_source(cast(new_entry_ptr, felt*));
 
         let (entry) = Oracle_spot_entry_storage.read(new_entry.pair_id, new_entry.base.source);
 
-        with_attr error_message("Oracle: Existing entry is more recent") {
-            assert_le(entry.base.timestamp, new_entry.base.timestamp);
-        }
+        let (entry_ptr: SpotEntry*) = alloc();
+        assert entry_ptr[0] = entry;
 
-        let (current_timestamp) = get_block_timestamp();
-        with_attr error_message("Oracle: New entry timestamp is too far in the past") {
-            assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.base.timestamp);
-        }
-
-        with_attr error_message("Oracle: New entry timestamp is too far in the future") {
-            // TODO (rlkelly): should we allow for an hour into the future?
-            assert_le(new_entry.base.timestamp, current_timestamp + 60 * 15);
-        }
-
-        if (entry.base.timestamp == 0) {
-            // Source did not exist yet, so add to our list
-            let (sources_len) = Oracle_sources_len_storage.read(new_entry.pair_id);
-            Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.base.source);
-            Oracle_sources_len_storage.write(new_entry.pair_id, sources_len + 1);
-            tempvar syscall_ptr = syscall_ptr;
-            tempvar pedersen_ptr = pedersen_ptr;
-        } else {
-            tempvar syscall_ptr = syscall_ptr;
-            tempvar pedersen_ptr = pedersen_ptr;
-        }
+        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedSpotEntry.emit(new_entry);
         Oracle_spot_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
@@ -324,6 +319,7 @@ namespace Oracle {
 
         let key_currency = keys_currencies[idx];
         Oracle_currencies_storage.write(key_currency.id, key_currency);
+
         _set_keys_currencies(keys_currencies_len, keys_currencies, idx + 1);
 
         return ();
@@ -417,6 +413,16 @@ namespace Oracle {
             return ();
         }
         return ();
+    }
+
+    func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        pair_ids_len, pair_ids: felt*, aggregation_mode: felt
+    ) {
+        if (pair_ids_len == 0) {
+            return ();
+        }
+        set_checkpoint([pair_ids], aggregation_mode);
+        return set_checkpoints(pair_ids_len - 1, pair_ids + 1, aggregation_mode);
     }
 
     //
@@ -528,5 +534,78 @@ namespace Oracle {
         build_sources_array(pair_id, sources_len, sources, idx + 1);
 
         return (sources,);
+    }
+
+    func validate_sender_for_source{
+        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+    }(_entry: felt*) {
+        alloc_locals;
+
+        let new_entry_ptr = cast(_entry, Entry*);
+        let new_entry = new_entry_ptr[0];
+        let (publisher_registry_address) = get_publisher_registry_address();
+        let (publisher_address) = IPublisherRegistry.get_publisher_address(
+            publisher_registry_address, new_entry.base.publisher
+        );
+        let (_can_publish_source) = IPublisherRegistry.can_publish_source(
+            publisher_registry_address, new_entry.base.publisher, new_entry.base.source
+        );
+
+        let (caller_address) = get_caller_address();
+
+        with_attr error_message("Oracle: Publisher and caller must not be 0 addresses") {
+            assert_not_zero(publisher_address);
+            assert_not_zero(caller_address);
+        }
+
+        with_attr error_message("Oracle: Transaction not from publisher account") {
+            assert caller_address = publisher_address;
+        }
+        with_attr error_message("Oracle: Publisher not authorized for this source") {
+            assert _can_publish_source = TRUE;
+        }
+
+        return ();
+    }
+
+    func validate_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        _new_entry: felt*, _entry: felt*
+    ) {
+        alloc_locals;
+
+        let new_entry_ptr = cast(_new_entry, Entry*);
+        let new_entry = new_entry_ptr[0];
+        let entry_ptr = cast(_entry, Entry*);
+        let entry = entry_ptr[0];
+
+        with_attr error_message("Oracle: Existing entry is more recent") {
+            assert_le(entry.base.timestamp, new_entry.base.timestamp);
+        }
+
+        let (current_timestamp) = get_block_timestamp();
+        with_attr error_message("Oracle: New entry timestamp is too far in the past") {
+            assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.base.timestamp);
+        }
+
+        with_attr error_message("Oracle: New entry timestamp is too far in the future") {
+            // TODO (rlkelly): should we allow for an hour into the future?
+            assert_le(new_entry.base.timestamp, current_timestamp + 60 * 15);
+        }
+
+        if (entry.base.timestamp == 0) {
+            // Source did not exist yet, so add to our list
+            let (sources_len) = Oracle_sources_len_storage.read(new_entry.pair_id);
+            Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.base.source);
+            Oracle_sources_len_storage.write(new_entry.pair_id, sources_len + 1);
+            tempvar syscall_ptr = syscall_ptr;
+            tempvar pedersen_ptr = pedersen_ptr;
+            tempvar range_check_ptr = range_check_ptr;
+        } else {
+            tempvar syscall_ptr = syscall_ptr;
+            tempvar pedersen_ptr = pedersen_ptr;
+            tempvar range_check_ptr = range_check_ptr;
+        }
+
+        return ();
     }
 }

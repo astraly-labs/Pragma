@@ -17,8 +17,8 @@ jobs:
       - name: Build publisher images locally
         run: |
           docker build . --target test -t 42labs/empiric-publisher:test
-          docker build stagecoach/integration_tests/publish-all/ -t publish-all --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test --platform linux/amd64
-          docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --build-arg EMPIRIC_PUBLISHER_BASE_IMAGE_TAG=test --platform linux/amd64
+          docker build stagecoach/integration_tests/publish-all/ -t publish-all --platform linux/amd64
+          docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --platform linux/amd64
 
       - name: Post updated prices
         env:
@@ -33,7 +33,6 @@ jobs:
             --env-file stagecoach/integration_tests/publish-all/.env \
             -e __EMPIRIC_STAGING_ENV__=TRUE\
             -e __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__=TRUE\
-            -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
@@ -44,7 +43,6 @@ jobs:
           docker run \
             --env-file stagecoach/integration_tests/coinbase/.env \
             -e __EMPIRIC_STAGING_ENV__=TRUE\
-            -e PUBLISHER_ADDRESS=2997231508090948287810421563528272582753036618878708141844804758659373413510\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\

@@ -1,4 +1,4 @@
-FROM public.ecr.aws/q6n2p9d3/empiric-lambda:latest
+FROM 42labs/empiric-publisher:test
 
 COPY app.py ${LAMBDA_TASK_ROOT}
 

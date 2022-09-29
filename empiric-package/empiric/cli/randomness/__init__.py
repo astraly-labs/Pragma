@@ -173,9 +173,9 @@ async def request_random(
         callback_address=callback_address,
     )
     typer.echo(f"hash: {invocation.hash}")
+    response = await invocation.wait_for_acceptance()
 
-    await invocation.wait_for_acceptance()
-    typer.echo(f"response hash: {invocation.hash}")
+    typer.echo(f"response hash: {response.hash}")
 
 
 @app.command()
@@ -220,10 +220,8 @@ async def submit_random(
 
 @app.command()
 @coro
-async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
+async def handle_random(min_block: int = 0, cli_config=config.DEFAULT_CONFIG):
     # TODO (rlkelly): this is hardcoded for testnet currently
-    from starknet_py.net.full_node_client import FullNodeClient
-
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)
     randomness_contract_address = int(config_parser["CONTRACTS"]["randomness-proxy"])
@@ -284,10 +282,11 @@ async def handle_random(min_block=0, cli_config=config.DEFAULT_CONFIG):
                 block_hash,
                 proof,
             )
+
             typer.echo(f"submitted: {invocation.hash}\n\n")
         while client.nonce_status:
             typer.echo(str(client.nonce_status))
-            typer.echo("\n...\n\n")
+            typer.echo("...\n\n")
             await client.update_nonce_dict()
             client.cleanup_nonce_dict()
             time.sleep(5)

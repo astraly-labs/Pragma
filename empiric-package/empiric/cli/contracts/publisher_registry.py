@@ -1,5 +1,6 @@
 import configparser
 from pathlib import Path
+from typing import List
 
 import typer
 from empiric.cli import SUCCESS, config, net
@@ -69,6 +70,30 @@ async def add_source_for_publisher(
 
 @app.command()
 @coro
+async def add_sources_for_publisher(
+    publisher: str, sources: List[str], config_path=config.DEFAULT_CONFIG
+):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.add_sources_for_publisher(publisher, sources)
+
+    await invocation.wait_for_acceptance()
+    typer.echo(f"response hash: {invocation.hash}")
+
+
+@app.command()
+@coro
+async def update_publisher_address(
+    publisher: str, new_address: int, config_path=config.DEFAULT_CONFIG
+):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.update_publisher_address(publisher, new_address)
+
+    await invocation.wait_for_acceptance()
+    typer.echo(f"response hash: {invocation.hash}")
+
+
+@app.command()
+@coro
 async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     publishers = await client.publisher_registry.get_all_publishers.call()
@@ -99,3 +124,17 @@ async def deploy_publisher_registry(
 
     with open(config_path, "w") as f:
         config_parser.write(f)
+
+
+@app.command()
+@coro
+async def get_metadata(config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    publishers = await client.publisher_registry.get_publisher_sources.call(
+        str_to_felt("EMPIRIC")
+    )
+    z = await client.publisher_registry.get_publisher_address.call(
+        str_to_felt("EMPIRIC")
+    )
+    typer.echo(f"sources: {[felt_to_str(p) for p in publishers[0]]}")
+    typer.echo(f"publisher_address: {z}")

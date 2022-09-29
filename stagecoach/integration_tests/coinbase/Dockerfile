@@ -1,4 +1,4 @@
-FROM public.ecr.aws/q6n2p9d3/empiric:1.0a1
+FROM 42labs/empiric-publisher:test
 
 COPY coinbase_publisher.py .
 

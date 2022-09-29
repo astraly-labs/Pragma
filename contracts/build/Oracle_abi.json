@@ -51,6 +51,33 @@
     {
         "members": [
             {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "pair_id",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "price",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "offset": 5,
+                "type": "felt"
+            }
+        ],
+        "name": "FutureEntry",
+        "size": 6,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "id",
                 "offset": 0,
                 "type": "felt"
@@ -105,33 +132,6 @@
     {
         "members": [
             {
-                "name": "base",
-                "offset": 0,
-                "type": "BaseEntry"
-            },
-            {
-                "name": "pair_id",
-                "offset": 3,
-                "type": "felt"
-            },
-            {
-                "name": "price",
-                "offset": 4,
-                "type": "felt"
-            },
-            {
-                "name": "expiry_timestamp",
-                "offset": 5,
-                "type": "felt"
-            }
-        ],
-        "name": "FutureEntry",
-        "size": 6,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "timestamp",
                 "offset": 0,
                 "type": "felt"
@@ -180,6 +180,17 @@
         ],
         "keys": [],
         "name": "SubmittedSpotEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
+                "type": "FutureEntry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedFutureEntry",
         "type": "event"
     },
     {
@@ -350,6 +361,10 @@
                 "type": "felt"
             },
             {
+                "name": "expiry_timestamp",
+                "type": "felt"
+            },
+            {
                 "name": "source",
                 "type": "felt"
             }
@@ -494,6 +509,17 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "FutureEntry"
+            }
+        ],
+        "name": "publish_future_entry",
+        "outputs": [],
         "type": "function"
     },
     {
@@ -674,6 +700,25 @@
             }
         ],
         "name": "set_checkpoint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "pair_ids",
+                "type": "felt*"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "set_checkpoints",
         "outputs": [],
         "type": "function"
     },
