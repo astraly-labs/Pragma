@@ -34,10 +34,12 @@ namespace IYieldCurve {
     func get_spot_keys() -> (spot_keys_len: felt, spot_keys: felt*) {
     }
 
-    func get_future_key(spot_key: felt, idx: felt) -> (future_key: felt) {
+    func get_future_expiry_timestamp(spot_key: felt, idx: felt) -> (future_expiry_timestamp: felt) {
     }
 
-    func get_future_keys(spot_key: felt) -> (future_keys_len: felt, future_keys: felt*) {
+    func get_future_expiry_timestamps(spot_key: felt) -> (
+        get_future_expiry_timestamps_len: felt, get_future_expiry_timestamps: felt*
+    ) {
     }
 
     func get_on_key(idx: felt) -> (on_key: felt) {

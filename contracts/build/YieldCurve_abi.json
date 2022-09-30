@@ -208,14 +208,14 @@
                 "type": "felt"
             }
         ],
-        "name": "get_future_keys",
+        "name": "get_future_expiry_timestamps",
         "outputs": [
             {
-                "name": "future_keys_len",
+                "name": "future_expiry_timestamps_len",
                 "type": "felt"
             },
             {
-                "name": "future_keys",
+                "name": "future_expiry_timestamps",
                 "type": "felt*"
             }
         ],

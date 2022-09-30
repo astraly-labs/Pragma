@@ -60,16 +60,16 @@ func spot_key_is_active_storage(spot_key: felt) -> (spot_key_is_active: felt) {
 }
 
 @storage_var
-func future_key_len_storage(spot_key: felt) -> (future_key_len: felt) {
+func future_expiry_timestamp_len_storage(spot_key: felt) -> (future_expiry_timestamp_len: felt) {
 }
 
 @storage_var
-func future_key_storage(spot_key: felt, idx: felt) -> (future_key: felt) {
+func future_expiry_timestamp_storage(spot_key: felt, idx: felt) -> (future_expiry_timestamp: felt) {
 }
 
 @storage_var
-func future_key_status_storage(spot_key: felt, future_key: felt) -> (
-    future_key_status: FutureKeyStatus
+func future_expiry_timestamp_status_storage(spot_key: felt, future_expiry_timestamp: felt) -> (
+    future_expiry_timestamp_status: FutureKeyStatus
 ) {
 }
 
@@ -214,37 +214,39 @@ func get_spot_keys{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
 // @param spot_key: Empiric spot key for which this future key is a quarterly future
-// @param idx: index of the future_key
-// @return future_key: Empiric key for the future asset used to bootstrap the yield curve
+// @param idx: index of the future_expiry_timestamp
+// @return future_expiry_timestamp: Empiric key for the future asset used to bootstrap the yield curve
 @view
-func get_future_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_future_expiry_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     spot_key: felt, idx: felt
-) -> (future_key: felt) {
-    let (future_key) = future_key_storage.read(spot_key, idx);
-    return (future_key,);
+) -> (future_expiry_timestamp: felt) {
+    let (future_expiry_timestamp) = future_expiry_timestamp_storage.read(spot_key, idx);
+    return (future_expiry_timestamp,);
 }
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
 // @param spot_key: Empiric spot key for which this future key is a quarterly future
-// @return future_keys_len: length of Empiric keys for the future assets used to bootstrap the yield curve
-// @return future_keys: pointer to the first Empiric key
+// @return future_expiry_timestamps_len: length of Empiric keys for the future assets used to bootstrap the yield curve
+// @return future_expiry_timestamps: pointer to the first Empiric key
 @view
-func get_future_keys{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_future_expiry_timestamps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     spot_key: felt
-) -> (future_keys_len: felt, future_keys: felt*) {
-    let (future_keys) = alloc();
+) -> (future_expiry_timestamps_len: felt, future_expiry_timestamps: felt*) {
+    let (future_expiry_timestamps) = alloc();
 
-    let (total_future_keys_len) = future_key_len_storage.read(spot_key);
+    let (total_future_expiry_timestamps_len) = future_expiry_timestamp_len_storage.read(spot_key);
 
-    if (total_future_keys_len == 0) {
-        return (0, future_keys);
+    if (total_future_expiry_timestamps_len == 0) {
+        return (0, future_expiry_timestamps);
     }
 
-    let (future_keys_len, future_keys) = _build_future_keys_array(
-        spot_key, total_future_keys_len, future_keys, 0, 0
+    let (
+        future_expiry_timestamps_len, future_expiry_timestamps
+    ) = _build_future_expiry_timestamps_array(
+        spot_key, total_future_expiry_timestamps_len, future_expiry_timestamps, 0, 0
     );
 
-    return (future_keys_len, future_keys);
+    return (future_expiry_timestamps_len, future_expiry_timestamps);
 }
 
 // @notice get the key of the overnight interest rate
@@ -290,40 +292,48 @@ func get_on_keys{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 // @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
 // @param spot_key: Empiric spot key for which this future key is a quarterly future
-// @param future_key: Empiric key for the asset to look up its status
-// @return future_key_status: struct describing the given future key's status
+// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @return future_expiry_timestamp_status: struct describing the given future key's status
 @view
-func get_future_key_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt
-) -> (future_key_status: FutureKeyStatus) {
-    let (future_key_status) = future_key_status_storage.read(spot_key, future_key);
-    return (future_key_status,);
+func get_future_expiry_timestamp_status{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(spot_key: felt, future_expiry_timestamp: felt) -> (
+    future_expiry_timestamp_status: FutureKeyStatus
+) {
+    let (future_expiry_timestamp_status) = future_expiry_timestamp_status_storage.read(
+        spot_key, future_expiry_timestamp
+    );
+    return (future_expiry_timestamp_status,);
 }
 
 // @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
 // @param spot_key: Empiric spot key for which this future key is a quarterly future
-// @param future_key: Empiric key for the asset to look up its status
-// @return future_key_is_active: whether the given future key is active
+// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @return future_expiry_timestamp_is_active: whether the given future key is active
 @view
-func get_future_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt
-) -> (future_key_is_active: felt) {
-    let (future_key_status) = get_future_key_status(spot_key, future_key);
-    let future_key_is_active = future_key_status.is_active;
-    return (future_key_is_active,);
+func get_future_expiry_timestamp_is_active{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(spot_key: felt, future_expiry_timestamp: felt) -> (future_expiry_timestamp_is_active: felt) {
+    let (future_expiry_timestamp_status) = get_future_expiry_timestamp_status(
+        spot_key, future_expiry_timestamp
+    );
+    let future_expiry_timestamp_is_active = future_expiry_timestamp_status.is_active;
+    return (future_expiry_timestamp_is_active,);
 }
 
 // @notice get the expiry of a quarterly future used in the yield curve bootstrapping calculations
 // @param spot_key: Empiric spot key for which this future key is a quarterly future
-// @param future_key: Empiric key for the asset to look up its status
-// @return future_key_status: expiry timestamp of the given future key
+// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @return future_expiry_timestamp_status: expiry timestamp of the given future key
 @view
-func get_future_key_expiry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt
-) -> (future_key_expiry: felt) {
-    let (future_key_status) = get_future_key_status(spot_key, future_key);
-    let future_key_expiry = future_key_status.expiry_timestamp;
-    return (future_key_expiry,);
+func get_future_expiry_timestamp_expiry{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(spot_key: felt, future_expiry_timestamp: felt) -> (future_expiry_timestamp_expiry: felt) {
+    let (future_expiry_timestamp_status) = get_future_expiry_timestamp_status(
+        spot_key, future_expiry_timestamp
+    );
+    let future_expiry_timestamp_expiry = future_expiry_timestamp_status.expiry_timestamp;
+    return (future_expiry_timestamp_expiry,);
 }
 
 //
@@ -399,52 +409,64 @@ func set_spot_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, rang
 // @dev only the admin can update this
 // @dev have to add the spot key first
 // @param spot_key: Empiric spot key for which the future key is a quarterly future
-// @param future_key: new Empiric future key
+// @param future_expiry_timestamp: new Empiric future key
 // @param is_active: status of the new future key
 // @param expiry_timestamp: expiry timestamp of the new future (used to calculate time to maturity)
 @external
-func add_future_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt, is_active: felt, expiry_timestamp: felt
+func add_future_expiry_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    spot_key: felt, future_expiry_timestamp: felt, is_active: felt, expiry_timestamp: felt
 ) -> () {
     Admin.only_admin();
 
-    let (future_key_len) = future_key_len_storage.read(spot_key);
-    future_key_storage.write(spot_key, future_key_len, future_key);
-    let future_key_status = FutureKeyStatus(is_active, expiry_timestamp);
-    future_key_status_storage.write(spot_key, future_key, future_key_status);
-    future_key_len_storage.write(spot_key, future_key_len + 1);
+    let (future_expiry_timestamp_len) = future_expiry_timestamp_len_storage.read(spot_key);
+    future_expiry_timestamp_storage.write(
+        spot_key, future_expiry_timestamp_len, future_expiry_timestamp
+    );
+    let future_expiry_timestamp_status = FutureKeyStatus(is_active, expiry_timestamp);
+    future_expiry_timestamp_status_storage.write(
+        spot_key, future_expiry_timestamp, future_expiry_timestamp_status
+    );
+    future_expiry_timestamp_len_storage.write(spot_key, future_expiry_timestamp_len + 1);
     return ();
 }
 
 // @notice set the status on a future key
 // @dev only the admin can update this
 // @param spot_key: Empiric spot key
-// @param future_key: Empiric future key
-// @param new_future_key_status: new status for the future key
+// @param future_expiry_timestamp: Empiric future key
+// @param new_future_expiry_timestamp_status: new status for the future key
 @external
-func set_future_key_status{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt, new_future_key_status: FutureKeyStatus
+func set_future_expiry_timestamp_status{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    spot_key: felt,
+    future_expiry_timestamp: felt,
+    new_future_expiry_timestamp_status: FutureKeyStatus,
 ) -> () {
     Admin.only_admin();
 
-    future_key_status_storage.write(spot_key, future_key, new_future_key_status);
+    future_expiry_timestamp_status_storage.write(
+        spot_key, future_expiry_timestamp, new_future_expiry_timestamp_status
+    );
     return ();
 }
 
 // @notice set the is_active status on a future key
 // @dev only the admin can update this
 // @param spot_key: Empiric spot key
-// @param future_key: Empiric future key
+// @param future_expiry_timestamp: Empiric future key
 // @param new_is_active: new is_active of the future key
 @external
-func set_future_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_key: felt, new_is_active: felt
-) -> () {
+func set_future_expiry_timestamp_is_active{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(spot_key: felt, future_expiry_timestamp: felt, new_is_active: felt) -> () {
     Admin.only_admin();
 
-    let (old_expiry) = get_future_key_expiry(spot_key, future_key);
-    let new_future_key_status = FutureKeyStatus(new_is_active, old_expiry);
-    set_future_key_status(spot_key, future_key, new_future_key_status);
+    let (old_expiry) = get_future_expiry_timestamp_expiry(spot_key, future_expiry_timestamp);
+    let new_future_expiry_timestamp_status = FutureKeyStatus(new_is_active, old_expiry);
+    set_future_expiry_timestamp_status(
+        spot_key, future_expiry_timestamp, new_future_expiry_timestamp_status
+    );
 
     return ();
 }
@@ -515,33 +537,53 @@ func _build_spot_keys_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, rang
 
 // @notice create an array of the future keys for a given spot key from storage
 // @dev recursive function, set all indices to 0 for external call
-// @param spot_key: spot_key for which the future_keys array should be constructed
-// @param future_keys_len: number of spot keys to iterate over
-// @param future_keys: pointer to the first future_key
-// @param output_idx: offset index in output array (write to array, starts at future_keys pointer)
-// @param storage_idx: index for future_key in storage (read from array)
-// @return future_keys_len: length of the future_keys array
-// @return future_keys: pointer to the first future_key
-func _build_future_keys_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    spot_key: felt, future_keys_len: felt, future_keys: felt*, output_idx: felt, storage_idx: felt
-) -> (future_keys_len: felt, future_keys: felt*) {
-    if (storage_idx == future_keys_len) {
-        return (output_idx, future_keys);
+// @param spot_key: spot_key for which the future_expiry_timestamps array should be constructed
+// @param future_expiry_timestamps_len: number of spot keys to iterate over
+// @param future_expiry_timestamps: pointer to the first future_expiry_timestamp
+// @param output_idx: offset index in output array (write to array, starts at future_expiry_timestamps pointer)
+// @param storage_idx: index for future_expiry_timestamp in storage (read from array)
+// @return future_expiry_timestamps_len: length of the future_expiry_timestamps array
+// @return future_expiry_timestamps: pointer to the first future_expiry_timestamp
+func _build_future_expiry_timestamps_array{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    spot_key: felt,
+    future_expiry_timestamps_len: felt,
+    future_expiry_timestamps: felt*,
+    output_idx: felt,
+    storage_idx: felt,
+) -> (future_expiry_timestamps_len: felt, future_expiry_timestamps: felt*) {
+    if (storage_idx == future_expiry_timestamps_len) {
+        return (output_idx, future_expiry_timestamps);
     }
 
-    let (future_key) = get_future_key(spot_key, storage_idx);
-    let (future_key_is_active) = get_future_key_is_active(spot_key, future_key);
-    if (future_key_is_active == TRUE) {
-        assert future_keys[output_idx] = future_key;
-        let (recursed_future_keys_len, recursed_future_keys) = _build_future_keys_array(
-            spot_key, future_keys_len, future_keys, output_idx + 1, storage_idx + 1
+    let (future_expiry_timestamp) = get_future_expiry_timestamp(spot_key, storage_idx);
+    let (future_expiry_timestamp_is_active) = get_future_expiry_timestamp_is_active(
+        spot_key, future_expiry_timestamp
+    );
+    if (future_expiry_timestamp_is_active == TRUE) {
+        assert future_expiry_timestamps[output_idx] = future_expiry_timestamp;
+        let (
+            recursed_future_expiry_timestamps_len, recursed_future_expiry_timestamps
+        ) = _build_future_expiry_timestamps_array(
+            spot_key,
+            future_expiry_timestamps_len,
+            future_expiry_timestamps,
+            output_idx + 1,
+            storage_idx + 1,
         );
-        return (recursed_future_keys_len, recursed_future_keys);
+        return (recursed_future_expiry_timestamps_len, recursed_future_expiry_timestamps);
     } else {
-        let (recursed_future_keys_len, recursed_future_keys) = _build_future_keys_array(
-            spot_key, future_keys_len, future_keys, output_idx, storage_idx + 1
+        let (
+            recursed_future_expiry_timestamps_len, recursed_future_expiry_timestamps
+        ) = _build_future_expiry_timestamps_array(
+            spot_key,
+            future_expiry_timestamps_len,
+            future_expiry_timestamps,
+            output_idx,
+            storage_idx + 1,
         );
-        return (recursed_future_keys_len, recursed_future_keys);
+        return (recursed_future_expiry_timestamps_len, recursed_future_expiry_timestamps);
     }
 }
 
@@ -730,15 +772,17 @@ namespace YieldCurve {
             return (recursed_spot_yield_points_len, recursed_spot_yield_points);
         } else {
             // Get all futures, and for each, calculate yield point
-            let (future_keys_len, future_keys) = get_future_keys(spot_key);
+            let (
+                future_expiry_timestamps_len, future_expiry_timestamps
+            ) = get_future_expiry_timestamps(spot_key);
 
             let (future_yield_points_len, future_yield_points) = build_future_yield_points(
                 output_decimals,
                 oracle_address,
                 future_spot_empiric_source_key,
                 yield_points,
-                future_keys_len,
-                future_keys,
+                future_expiry_timestamps_len,
+                future_expiry_timestamps,
                 yield_points_idx,
                 0,
                 spot_entry,
@@ -768,10 +812,10 @@ namespace YieldCurve {
     // @param oracle_address: address from which to read overnight dataa
     // @param future_spot_empiric_source_key: source key for future and spot data
     // @param yield_points: pointer to first element in yield_points array to append to
-    // @param future_keys_len: number of future keys to iterate over
-    // @param future_keys: pointer to the first future_key
+    // @param future_expiry_timestamps_len: number of future keys to iterate over
+    // @param future_expiry_timestamps: pointer to the first future_expiry_timestamp
     // @param yield_points_idx: index for current yield_point in yield_points array
-    // @param future_keys_idx: index for future_key in future_keys array
+    // @param future_expiry_timestamps_idx: index for future_expiry_timestamp in future_expiry_timestamps array
     // @param spot_entry: the most recent spot price datapoint
     // @param spot_decimals: number of decimals used in the spot_entry
     // @return yield_points_len: number of yield points in the array
@@ -781,24 +825,26 @@ namespace YieldCurve {
         oracle_address: felt,
         future_spot_empiric_source_key: felt,
         yield_points: YieldPoint*,
-        future_keys_len: felt,
-        future_keys: felt*,
+        future_expiry_timestamps_len: felt,
+        future_expiry_timestamps: felt*,
         yield_points_idx: felt,
-        future_keys_idx: felt,
+        future_expiry_timestamps_idx: felt,
         spot_entry: SpotEntry,
         spot_decimals: felt,
     ) -> (yield_points_len: felt, yield_points: YieldPoint*) {
         alloc_locals;
 
-        if (future_keys_idx == future_keys_len) {
+        if (future_expiry_timestamps_idx == future_expiry_timestamps_len) {
             return (yield_points_idx, yield_points);
         }
 
         // Check that future key is active
-        let future_key = future_keys[future_keys_idx];
-        let (future_key_status) = get_future_key_status(spot_entry.pair_id, future_key);
+        let future_expiry_timestamp = future_expiry_timestamps[future_expiry_timestamps_idx];
+        let (future_expiry_timestamp_status) = get_future_expiry_timestamp_status(
+            spot_entry.pair_id, future_expiry_timestamp
+        );
 
-        if (future_key_status.is_active == FALSE) {
+        if (future_expiry_timestamp_status.is_active == FALSE) {
             let (
                 recursed_future_yield_points_len, recursed_future_yield_points
             ) = build_future_yield_points(
@@ -806,10 +852,10 @@ namespace YieldCurve {
                 oracle_address,
                 future_spot_empiric_source_key,
                 yield_points,
-                future_keys_len,
-                future_keys,
+                future_expiry_timestamps_len,
+                future_expiry_timestamps,
                 yield_points_idx,
-                future_keys_idx + 1,
+                future_expiry_timestamps_idx + 1,
                 spot_entry,
                 spot_decimals,
             );
@@ -817,7 +863,7 @@ namespace YieldCurve {
             return (recursed_future_yield_points_len, recursed_future_yield_points);
         }
 
-        let (future_decimals_) = IOracle.get_decimals(oracle_address, future_key);
+        let (future_decimals_) = IOracle.get_decimals(oracle_address, future_expiry_timestamp);
 
         local future_decimals;
         if (future_decimals_ == 0) {
@@ -829,7 +875,7 @@ namespace YieldCurve {
         let (future_entry) = IOracle.get_future_entry(
             oracle_address,
             spot_entry.pair_id,
-            future_keys[future_keys_idx],
+            future_expiry_timestamps[future_expiry_timestamps_idx],
             future_spot_empiric_source_key,
         );
         if (future_entry.base.timestamp == 0) {
@@ -840,10 +886,10 @@ namespace YieldCurve {
                 oracle_address,
                 future_spot_empiric_source_key,
                 yield_points,
-                future_keys_len,
-                future_keys,
+                future_expiry_timestamps_len,
+                future_expiry_timestamps,
                 yield_points_idx,
-                future_keys_idx + 1,
+                future_expiry_timestamps_idx + 1,
                 spot_entry,
                 spot_decimals,
             );
@@ -871,10 +917,10 @@ namespace YieldCurve {
                 oracle_address,
                 future_spot_empiric_source_key,
                 yield_points,
-                future_keys_len,
-                future_keys,
+                future_expiry_timestamps_len,
+                future_expiry_timestamps,
                 yield_points_idx,
-                future_keys_idx + 1,
+                future_expiry_timestamps_idx + 1,
                 spot_entry,
                 spot_decimals,
             );
@@ -884,7 +930,7 @@ namespace YieldCurve {
 
         let (yield_point) = calculate_future_spot_yield_point(
             future_entry,
-            future_key_status.expiry_timestamp,
+            future_expiry_timestamp_status.expiry_timestamp,
             spot_entry,
             spot_decimals,
             future_decimals,
@@ -900,10 +946,10 @@ namespace YieldCurve {
             oracle_address,
             future_spot_empiric_source_key,
             yield_points,
-            future_keys_len,
-            future_keys,
+            future_expiry_timestamps_len,
+            future_expiry_timestamps,
             yield_points_idx + 1,
-            future_keys_idx + 1,
+            future_expiry_timestamps_idx + 1,
             spot_entry,
             spot_decimals,
         );

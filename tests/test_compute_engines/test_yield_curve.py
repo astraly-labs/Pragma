@@ -257,14 +257,14 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
         )
 
         futures = FUTURES_SPOT[spot_key]["futures"]
-        for future_key, future_data in futures.items():
+        for future_expiry_timestamp, future_data in futures.items():
             await admin_signer.send_transaction(
                 admin_account,
                 yield_curve.contract_address,
-                "add_future_key",
+                "add_future_expiry_timestamp",
                 [
                     str_to_felt(spot_key),
-                    str_to_felt(future_key),
+                    str_to_felt(future_expiry_timestamp),
                     1,
                     future_data["expiry_timestamp"],
                 ],
@@ -294,10 +294,12 @@ async def test_deploy(initialized_contracts):
         ).call()
         assert spot_key_is_active.result.spot_key_is_active == 1
 
-        future_keys = await yield_curve.get_future_keys(str_to_felt(spot_key)).call()
+        future_expiry_timestamps = await yield_curve.get_future_expiry_timestamps(
+            str_to_felt(spot_key)
+        ).call()
         assert [
             str_to_felt(k) for k in FUTURES_SPOT[spot_key]["futures"].keys()
-        ] == future_keys.result.future_keys
+        ] == future_expiry_timestamps.result.future_expiry_timestamps
 
 
 @pytest.mark.asyncio
@@ -354,14 +356,14 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         ]
 
         futures = FUTURES_SPOT[spot_key]["futures"]
-        for future_key, future_data in futures.items():
+        for future_expiry_timestamp, future_data in futures.items():
             future_entry = FutureEntry(
                 pair_id=spot_key,
                 price=future_data["value"],
                 timestamp=future_data["timestamp"],
                 source=source,
                 publisher=publisher,
-                expiry_timestamp=future_key,
+                expiry_timestamp=future_expiry_timestamp,
             )
             await publisher_signer.send_transaction(
                 publisher_account,
