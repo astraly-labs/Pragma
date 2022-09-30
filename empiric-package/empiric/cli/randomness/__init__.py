@@ -125,7 +125,7 @@ async def upgrade(cli_config=config.DEFAULT_CONFIG):
 
     invocation = await client.randomness.functions["upgrade"].invoke(
         declared_randomness_class_hash,
-        max_fee=int(1e16),
+        max_fee=int(1e18),
     )
     await invocation.wait_for_acceptance()
     typer.echo(f"response hash: {invocation.hash}")

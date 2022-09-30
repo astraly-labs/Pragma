@@ -1,7 +1,6 @@
 import configparser
 from pathlib import Path
 
-from empiric.cli import STARKNET_READ_ERROR
 from empiric.core import EmpiricClient
 from empiric.core.config import ContractAddresses
 from starknet_py.net import AccountClient
@@ -34,10 +33,7 @@ def get_chain_id(config_file: Path) -> str:
 
 
 def init_client(gateway_url: str, chain_id: int) -> int:
-    try:
-        return GatewayClient(gateway_url, chain=StarknetChainId(chain_id))
-    except Exception:
-        return STARKNET_READ_ERROR
+    return GatewayClient(gateway_url, chain=StarknetChainId(chain_id))
 
 
 def init_empiric_client(config_file: Path) -> EmpiricClient:

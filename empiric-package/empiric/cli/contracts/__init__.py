@@ -1,6 +1,6 @@
 import typer
 from empiric.cli import config, net
-from empiric.cli.contracts import oracle, publisher_registry
+from empiric.cli.contracts import oracle, publisher_registry, summary_stats
 from empiric.cli.utils import coro
 
 app = typer.Typer(help="contract deployment utilities")
@@ -16,6 +16,9 @@ app.add_typer(
     help="publisher registry contract utils",
 )
 app.add_typer(oracle.app, name="oracle", help="Oracle contract utils")
+app.add_typer(
+    summary_stats.app, name="summary_stats", help="SummaryStats contract utils"
+)
 
 
 @app.command()

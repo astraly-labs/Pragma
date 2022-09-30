@@ -25,6 +25,15 @@ async def publish_all(assets):
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
+    logger.info(
+        "publisher registry: %s",
+        publisher_client.contract_addresses_config.publisher_registry_address,
+    )
+    logger.info(
+        "oracle proxy: %s",
+        publisher_client.contract_addresses_config.oracle_proxy_address,
+    )
+    logger.info(f"publisher: {publisher}")
     logger.info(f"publisher address: {publisher_address}")
 
     publisher_client.add_fetchers(

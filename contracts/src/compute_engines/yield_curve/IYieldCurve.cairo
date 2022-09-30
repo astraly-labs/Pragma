@@ -51,17 +51,19 @@ namespace IYieldCurve {
     func get_on_keys() -> (on_keys_len: felt, on_keys: felt*) {
     }
 
-    func get_future_key_status(spot_key: felt, future_key: felt) -> (
-        future_key_status: FutureKeyStatus
+    func get_future_expiry_timestamp_status(spot_key: felt, future_expiry_timestamp: felt) -> (
+        future_expiry_timestamp_status: FutureExpiryTimestampStatus
     ) {
     }
 
-    func get_future_key_is_active(spot_key: felt, future_key: felt) -> (
-        future_key_is_active: felt
+    func get_future_expiry_timestamp_is_active(spot_key: felt, future_expiry_timestamp: felt) -> (
+        future_expiry_timestamp_is_active: felt
     ) {
     }
 
-    func get_future_key_expiry(spot_key: felt, future_key: felt) -> (future_key_expiry: felt) {
+    func get_future_expiry_timestamp_expiry(spot_key: felt, future_expiry_timestamp: felt) -> (
+        future_expiry_timestamp_expiry: felt
+    ) {
     }
 
     //
@@ -80,15 +82,21 @@ namespace IYieldCurve {
     func set_spot_key_is_active(spot_key: felt, is_active: felt) {
     }
 
-    func add_future_key(spot_key: felt, future_key: felt, is_active: felt, expiry_timestamp: felt) {
-    }
-
-    func set_future_key_status(
-        spot_key: felt, future_key: felt, new_future_key_status: FutureKeyStatus
+    func add_future_expiry_timestamp(
+        spot_key: felt, future_expiry_timestamp: felt, is_active: felt, expiry_timestamp: felt
     ) {
     }
 
-    func set_future_key_is_active(spot_key: felt, future_key: felt, new_is_active: felt) {
+    func set_future_expiry_timestamp_status(
+        spot_key: felt,
+        future_expiry_timestamp: felt,
+        new_future_expiry_timestamp_status: FutureKeyStatus,
+    ) {
+    }
+
+    func set_future_expiry_timestamp_is_active(
+        spot_key: felt, future_expiry_timestamp: felt, new_is_active: felt
+    ) {
     }
 
     func add_on_key(on_key: felt, is_active: felt) {

@@ -12,15 +12,16 @@ class NonceMixin:
     pending_nonce: Optional[int] = None
 
     async def _get_nonce(self) -> int:
+        latest_nonce = await self.get_nonce()
         self.update_nonce_dict()
         self.cleanup_nonce_dict()
 
         if self.pending_nonce:
             return self.pending_nonce
         if self.nonce_status:
-            return max(self.nonce_dict) + 1
+            return max(self.nonce_status) + 1
 
-        return await self.get_latest_nonce()
+        return latest_nonce
 
     def cleanup_nonce_dict(self):
         nonce_seq = [
@@ -41,12 +42,9 @@ class NonceMixin:
 
     async def track_nonce(
         self,
-        transaction,
-        response,
+        nonce,
+        transaction_hash,
     ):
-        nonce = transaction.nonce
-        transaction_hash = response.transaction_hash
-
         self.nonce_dict[nonce] = transaction_hash
         self.nonce_status[nonce] = await self.get_status(transaction_hash)
 
@@ -76,6 +74,7 @@ class NonceMixin:
         if not self.nonce_dict:
             return await self.get_nonce()
         self.update_nonce_dict()
+        return await self.get_nonce()
 
     async def get_nonce(
         self,

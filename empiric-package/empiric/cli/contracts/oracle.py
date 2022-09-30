@@ -92,7 +92,7 @@ async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
         0,
         max_fee=DEFAULT_MAX_FEE,
     )
-    print("invocation:", invocation.hash)
+    typer.echo("invocation:", invocation.hash)
 
     return SUCCESS
 

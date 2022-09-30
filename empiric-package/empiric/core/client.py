@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI
+from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI, SUMMARY_STATS_ABI
 from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
 from empiric.core.contract import Contract
 from empiric.core.mixins import (
@@ -103,3 +103,13 @@ class EmpiricClient(
 
     def account_address(self):
         return self.client.address
+
+    def init_stats_contract(
+        self,
+        stats_contract_address: int,
+    ):
+        self.stats = Contract(
+            stats_contract_address,
+            SUMMARY_STATS_ABI,
+            self.client,
+        )

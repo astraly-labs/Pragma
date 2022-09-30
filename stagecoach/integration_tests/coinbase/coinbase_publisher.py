@@ -12,6 +12,7 @@ logger = get_stream_logger()
 
 async def main():
     publisher = os.environ.get("PUBLISHER")
+
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
 

@@ -4,6 +4,7 @@ import typer
 from empiric.cli import config, net
 from empiric.cli.utils import coro
 from empiric.core import Entry
+from empiric.core.contract import wait_for_received
 from empiric.core.utils import str_to_felt
 from empiric.publisher import EmpiricPublisherClient
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
@@ -25,12 +26,16 @@ async def run(
         start = time.time()
         _entries = await client.fetch()
         typer.echo(f"publishing {len(_entries)} entries")
-        invocations = await client.publish_many(_entries, pagination=20)
-        typer.echo("responses: " + str(len(invocations)))
+        invocations = await client.publish_many(_entries, pagination=100)
+        await invocations[0].wait_for_acceptance()
 
-        await client.set_checkpoints(
+        typer.echo("setting checkpoint")
+        res = await client.set_checkpoints(
             [int(entry.pair_id) for entry in _entries if isinstance(entry, Entry)],
         )
+
+        typer.echo(str(res.hash))
+        typer.echo(str(await res.wait_for_acceptance()))
         now = time.time()
         if now - start < delay:
             time.sleep(delay - (now - start))

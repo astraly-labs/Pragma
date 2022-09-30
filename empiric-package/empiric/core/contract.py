@@ -48,7 +48,7 @@ async def invoke_(
     )
     response = await self._client.send_transaction(transaction)
     if callback:
-        await callback(transaction, response)
+        await callback(transaction.nonce, response.transaction_hash)
 
     invoke_result = InvokeResult(
         hash=response.transaction_hash,
@@ -56,6 +56,8 @@ async def invoke_(
         contract=self._contract_data,
         invoke_transaction=transaction,
     )
+
+    # don't return invoke result until it is received or errors
     await wait_for_received(self._client, invoke_result.hash)
 
     return invoke_result
@@ -70,8 +72,8 @@ async def wait_for_received(
     """
     Awaits for transaction to get accepted or at least pending by polling its status
 
+    :param client: Account client
     :param tx_hash: Transaction's hash
-    :param wait_for_accept: If true waits for at least ACCEPTED_ON_L2 status, otherwise waits for at least PENDING
     :param check_interval: Defines interval between checks
     :return: Tuple containing block number and transaction status
     """
@@ -112,4 +114,5 @@ async def wait_for_received(
         raise TransactionNotReceivedError from exc
 
 
+# patch contract function to use new invoke function
 ContractFunction.invoke = invoke_

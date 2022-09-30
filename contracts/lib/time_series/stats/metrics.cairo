@@ -102,7 +102,8 @@ func volatility{range_check_ptr}(arr_len, arr: TickElem**) -> felt {
 
     let _volatility_sum = _sum_volatility(0, 1, arr_len, arr);
     let _volatility = FixedPoint.div(_volatility_sum, arr_len * ONE);
-    return FixedPoint.sqrt(_volatility) * 100;
+    let sqrt_vol = FixedPoint.sqrt(_volatility);
+    return sqrt_vol;
 }
 
 func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) -> felt {

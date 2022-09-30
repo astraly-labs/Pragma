@@ -589,6 +589,7 @@ namespace Oracle {
 
         with_attr error_message("Oracle: New entry timestamp is too far in the future") {
             // TODO (rlkelly): should we allow for an hour into the future?
+            let new_entry_timestamp = new_entry.base.timestamp;
             assert_le(new_entry.base.timestamp, current_timestamp + 60 * 15);
         }
 

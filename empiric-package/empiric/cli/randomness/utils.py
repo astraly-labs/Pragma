@@ -81,7 +81,7 @@ def get_events(
         "params": [
             {
                 "address": contract_address,
-                "page_size": 20,
+                "page_size": 30,
                 "page_number": page_number,
                 "keys": keys,
                 # "from_block": hex(min_block),

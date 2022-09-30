@@ -128,13 +128,15 @@ async def deploy_publisher_registry(
 
 @app.command()
 @coro
-async def get_metadata(config_path: Path = config.DEFAULT_CONFIG):
+async def get_metadata(
+    publisher: str = "EMPIRIC", config_path: Path = config.DEFAULT_CONFIG
+):
     client = net.init_empiric_client(config_path)
     publishers = await client.publisher_registry.get_publisher_sources.call(
-        str_to_felt("EMPIRIC")
+        str_to_felt(publisher)
     )
     z = await client.publisher_registry.get_publisher_address.call(
-        str_to_felt("EMPIRIC")
+        str_to_felt(publisher)
     )
     typer.echo(f"sources: {[felt_to_str(p) for p in publishers[0]]}")
     typer.echo(f"publisher_address: {z}")

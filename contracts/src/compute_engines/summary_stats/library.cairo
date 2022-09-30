@@ -54,7 +54,8 @@ namespace SummaryStats {
         _make_array(0, oracle_address, key, latest_checkpoint_index, start_index, tick_arr);
 
         let volatility_ = volatility(latest_checkpoint_index - start_index, tick_arr);
-        return volatility_;
+        let _decs = FixedPoint.to_decimals(volatility_);
+        return _decs;
     }
 
     func find_startpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -153,7 +154,8 @@ namespace SummaryStats {
             return ();
         }
         let (cp) = IOracle.get_checkpoint(oracle_address, key, idx + offset);
-        assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_wei(cp.value));
+        // TODO: generalize decimals
+        assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value, 8));
         return _make_array(idx + 1, oracle_address, key, last_idx, offset, tick_arr);
     }
 }

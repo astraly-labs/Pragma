@@ -42,7 +42,7 @@ class OracleMixin:
         return invocation
 
     async def publish_many(
-        self, entries: List[Entry], pagination=0, max_fee=int(1e16)
+        self, entries: List[Entry], pagination=0, max_fee=int(1e18)
     ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
@@ -135,7 +135,7 @@ class OracleMixin:
         self,
         pair_ids: List[int],
         aggregation_mode: int = str_to_felt("MEDIAN"),
-        max_fee=int(1e16),
+        max_fee=int(1e18),
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
