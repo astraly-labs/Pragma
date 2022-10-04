@@ -247,7 +247,7 @@ async def test_summary_stats(
         cur_time = STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * i
         entry = Entry(
             pair_id=pair_id,
-            price=val * 10**18,
+            price=val * 10**6,
             timestamp=cur_time,
             source=source,
             publisher=publisher,
@@ -286,11 +286,11 @@ async def test_summary_stats(
         STARKNET_STARTING_TIMESTAMP,
         STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
     ).call()
-    assert res.result.mean_ == 14013273333333333309006
+    assert res.result.mean_ == 140132733333333326238
 
     res = await summary_stats.calculate_volatility(
         pair_id,
         STARKNET_STARTING_TIMESTAMP,
         STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
     ).call()
-    assert res.result.volatility_ == 41261728712333544599900
+    assert res.result.volatility_ == 17894422364
