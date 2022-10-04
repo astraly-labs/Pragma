@@ -80,9 +80,8 @@ async def get_yield_points(output_decimals):
     yield_points = []
 
     on_keys = ["aave-on-borrow"]
-    spot_keys = ["btc/usd"]
-    future_keys = ["btc/usd-20220624", "btc/usd-20220930"]
-    future_status = {"btc/usd-20220930": 1664506800, "btc/usd-20221230": 1672369200}
+    pair_ids = ["BTC/USD"]
+    future_expiry_timestamps = {"BTC/USD": [1664506800, 1672369200]}
 
     for on_key in on_keys:
         # fetch data from oracle
@@ -96,26 +95,26 @@ async def get_yield_points(output_decimals):
             )
         )
 
-    for spot_key in spot_keys:
+    for pair_id in pair_ids:
         (
             spot_value,
             spot_decimals,
             spot_last_updated_timestamp,
             _,
-        ) = await client.get_spot(spot_key, AggregationMode.MEDIAN)
+        ) = await client.get_spot(pair_id, AggregationMode.MEDIAN)
 
-        for future_key in future_keys:
+        for future_expiry_timestamp in future_expiry_timestamps[pair_id]:
             (
                 future_value,
                 future_decimals,
                 future_last_updated_timestamp,
                 _,
-            ) = await client.get_spot(future_key, AggregationMode.MEDIAN)
+            ) = await client.get_future(pair_id, future_expiry_timestamp, AggregationMode.MEDIAN)
 
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_value,
                 future_last_updated_timestamp,
-                future_status[future_key],
+                future_expiry_timestamp,
                 spot_value,
                 spot_last_updated_timestamp,
                 spot_decimals,

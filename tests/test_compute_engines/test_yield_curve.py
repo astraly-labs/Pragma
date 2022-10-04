@@ -248,22 +248,22 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
         [source],
     )
 
-    for spot_key in FUTURES_SPOT.keys():
+    for pair_id in FUTURES_SPOT.keys():
         await admin_signer.send_transaction(
             admin_account,
             yield_curve.contract_address,
-            "add_spot_key",
-            [str_to_felt(spot_key), 1],
+            "add_pair_id",
+            [str_to_felt(pair_id), 1],
         )
 
-        futures = FUTURES_SPOT[spot_key]["futures"]
+        futures = FUTURES_SPOT[pair_id]["futures"]
         for future_expiry_timestamp, future_data in futures.items():
             await admin_signer.send_transaction(
                 admin_account,
                 yield_curve.contract_address,
                 "add_future_expiry_timestamp",
                 [
-                    str_to_felt(spot_key),
+                    str_to_felt(pair_id),
                     str_to_felt(future_expiry_timestamp),
                     1,
                     future_data["expiry_timestamp"],
@@ -285,20 +285,20 @@ async def test_deploy(initialized_contracts):
     ).call()
     assert on_key_is_active.result.on_key_is_active == 1
 
-    for spot_key in FUTURES_SPOT.keys():
-        spot_keys = await yield_curve.get_spot_keys().call()
-        assert [str_to_felt(spot_key)] == spot_keys.result.spot_keys
+    for pair_id in FUTURES_SPOT.keys():
+        pair_ids = await yield_curve.get_pair_ids().call()
+        assert [str_to_felt(pair_id)] == pair_ids.result.pair_ids
 
-        spot_key_is_active = await yield_curve.get_spot_key_is_active(
-            str_to_felt(spot_key)
+        pair_id_is_active = await yield_curve.get_pair_id_is_active(
+            str_to_felt(pair_id)
         ).call()
-        assert spot_key_is_active.result.spot_key_is_active == 1
+        assert pair_id_is_active.result.pair_id_is_active == 1
 
         future_expiry_timestamps = await yield_curve.get_future_expiry_timestamps(
-            str_to_felt(spot_key)
+            str_to_felt(pair_id)
         ).call()
         assert [
-            str_to_felt(k) for k in FUTURES_SPOT[spot_key]["futures"].keys()
+            str_to_felt(k) for k in FUTURES_SPOT[pair_id]["futures"].keys()
         ] == future_expiry_timestamps.result.future_expiry_timestamps
 
 
@@ -334,11 +334,11 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
         on_entry.to_tuple(),
     )
 
-    for spot_key in FUTURES_SPOT.keys():
+    for pair_id in FUTURES_SPOT.keys():
         spot_entry = Entry(
-            pair_id=spot_key,
-            price=FUTURES_SPOT[spot_key]["value"],
-            timestamp=FUTURES_SPOT[spot_key]["timestamp"],
+            pair_id=pair_id,
+            price=FUTURES_SPOT[pair_id]["value"],
+            timestamp=FUTURES_SPOT[pair_id]["timestamp"],
             source=source,
             publisher=publisher,
         )
@@ -355,10 +355,10 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             ),
         ]
 
-        futures = FUTURES_SPOT[spot_key]["futures"]
+        futures = FUTURES_SPOT[pair_id]["futures"]
         for future_expiry_timestamp, future_data in futures.items():
             future_entry = FutureEntry(
-                pair_id=spot_key,
+                pair_id=pair_id,
                 price=future_data["value"],
                 timestamp=future_data["timestamp"],
                 source=source,

@@ -113,6 +113,34 @@ class OracleMixin:
             response.num_sources_aggregated,
         )
 
+    async def get_future(
+        self,
+        pair_id,
+        expiry_timestamp,
+        aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
+        # TODO Add sources on the oracle contract and then in the client here
+        # sources=None,
+    ) -> Entry:
+        if isinstance(pair_id, str):
+            pair_id = str_to_felt(pair_id)
+        elif not isinstance(pair_id, int):
+            raise TypeError(
+                "Pair ID must be string (will be converted to felt) or integer"
+            )
+
+        response = await self.oracle.get_futures.call(
+            pair_id,
+            expiry_timestamp,
+            aggregation_mode.value,
+        )
+
+        return (
+            response.price,
+            response.decimals,
+            response.last_updated_timestamp,
+            response.num_sources_aggregated,
+        )
+
     async def set_checkpoint(
         self,
         pair_id: int,

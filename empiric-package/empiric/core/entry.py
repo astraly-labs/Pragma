@@ -4,13 +4,19 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from empiric.core.utils import felt_to_str, str_to_felt
 
+class BaseEntry:
+    # Make this the generic
+    type: str
+    def __init__(self):
+        pass
 
-class Entry:
+class SpotEntry:
     pair_id: int
     price: int
     timestamp: int
     source: int
     publisher: int
+    type = "spot"
 
     def __init__(
         self,
@@ -122,6 +128,7 @@ class FutureEntry:
     pair_id: int
     price: int
     expiry_timestamp: int
+    type = "future"
 
     def __init__(self, timestamp, source, publisher, pair_id, price, expiry_timestamp):
         if type(pair_id) == str:
