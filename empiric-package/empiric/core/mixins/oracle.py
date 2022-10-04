@@ -49,6 +49,7 @@ class OracleMixin:
             return
 
         invocations = []
+        # TODO (this PR) filter by entry.type and publish Spot, Future and Generic entries separately
         if pagination:
             ix = 0
             while ix < len(entries):

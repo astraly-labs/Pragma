@@ -10,6 +10,12 @@ class BaseEntry:
     def __init__(self):
         pass
 
+class GenericEntry:
+    type = "generic"
+    # TODO
+    def __init__(self):
+        pass
+
 class SpotEntry:
     pair_id: int
     price: int
