@@ -34,7 +34,7 @@ namespace FixedPoint {
         return res_;
     }
 
-    func from_decimals{range_check_ptr}(x, decimals) -> felt {
+    func from_decimals{range_check_ptr}(x) -> felt {
         assert_le(x, INT_PART);
         assert_le(-INT_PART, x);
         tempvar product = x * EIGHT_DECIMAL_CONVERSION_FACTOR;

@@ -154,8 +154,8 @@ namespace SummaryStats {
             return ();
         }
         let (cp) = IOracle.get_checkpoint(oracle_address, key, idx + offset);
-        // TODO: generalize decimals
-        assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value, 8));
+        // TODO: generalize decimals to use IOracle.get_decimals
+        assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value));
         return _make_array(idx + 1, oracle_address, key, last_idx, offset, tick_arr);
     }
 }

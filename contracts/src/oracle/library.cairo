@@ -64,7 +64,6 @@ func Oracle__checkpoint_index(key: felt) -> (index: felt) {
 func Oracle__sources_threshold() -> (threshold: felt) {
 }
 
-// TODO (rlkelly): add expiry
 @storage_var
 func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
 }

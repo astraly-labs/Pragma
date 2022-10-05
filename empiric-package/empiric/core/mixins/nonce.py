@@ -67,6 +67,7 @@ class NonceMixin:
                 self.pending_nonce = nonce
                 self.nonce_dict = {}
                 self.nonce_status = {}
+                return
 
     async def get_latest_nonce(
         self,
@@ -78,7 +79,7 @@ class NonceMixin:
 
     async def get_nonce(
         self,
-        include_pending=False,
+        include_pending=True,
         block_number: Optional[Union[int, str, Literal["pending", "latest"]]] = None,
     ):
         if not block_number:
