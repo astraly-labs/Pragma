@@ -5,7 +5,7 @@ from typing import List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import GenericEntry, SpotEntry
+from empiric.core.entry import GenericEntry
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.types import PublisherInterfaceT
 

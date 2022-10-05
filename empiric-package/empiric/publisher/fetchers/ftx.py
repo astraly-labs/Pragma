@@ -8,7 +8,7 @@ from typing import Dict, List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry, SpotEntry, FutureEntry
+from empiric.core.entry import FutureEntry, SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.types import PublisherInterfaceT
