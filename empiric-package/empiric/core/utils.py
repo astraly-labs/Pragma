@@ -24,9 +24,9 @@ def currency_pair_to_pair_id(quote, base):
     return f"{quote}/{base}".upper()
 
 
-def pprint_entry(entry):
+def pprint_spot_entry(entry):
     print(
-        f"Entry: pair_id={felt_to_str(entry.pair_id)}, price={entry.price}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
+        f"SpotEntry: pair_id={felt_to_str(entry.pair_id)}, price={entry.price}, timestamp={entry.timestamp}, source={felt_to_str(entry.source)}, publisher={felt_to_str(entry.publisher)}"
     )
 
 
