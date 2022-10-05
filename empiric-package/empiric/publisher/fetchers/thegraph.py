@@ -5,7 +5,7 @@ from typing import List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.types import PublisherInterfaceT
 
@@ -24,7 +24,7 @@ class TheGraphFetcher(PublisherInterfaceT):
 
     async def _fetch_pair(
         self, asset: EmpiricSpotAsset, session: ClientSession
-    ) -> Entry:
+    ) -> SpotEntry:
         if asset["source"] == "AAVE":
             url_slug = "aave/protocol-v2"
             query = f"query {{reserves(where: {{id: \"{asset['detail']['asset_address']}\"}}) {{name isActive isFrozen {asset['detail']['metric']}}}}}"
@@ -42,7 +42,7 @@ class TheGraphFetcher(PublisherInterfaceT):
 
             return self._construct(asset, result, input_decimals=input_decimals)
 
-    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> Entry:
+    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> SpotEntry:
         if asset["source"] == "AAVE":
             url_slug = "aave/protocol-v2"
             query = f"query {{reserves(where: {{id: \"{asset['detail']['asset_address']}\"}}) {{name isActive isFrozen {asset['detail']['metric']}}}}}"
@@ -57,7 +57,7 @@ class TheGraphFetcher(PublisherInterfaceT):
         result = result_json["data"]["reserves"][0]
         return self._construct(asset, result, input_decimals=input_decimals)
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "ONCHAIN":
@@ -66,7 +66,7 @@ class TheGraphFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(self) -> List[Entry]:
+    def fetch_sync(self) -> List[SpotEntry]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "ONCHAIN":
@@ -75,7 +75,7 @@ class TheGraphFetcher(PublisherInterfaceT):
             entries.append(self._fetch_pair_sync(asset))
         return entries
 
-    def _construct(self, asset, result, input_decimals=27) -> Entry:
+    def _construct(self, asset, result, input_decimals=27) -> SpotEntry:
         pair_id = asset["key"]
 
         if result["name"] != asset["detail"]["asset_name"]:
@@ -91,7 +91,7 @@ class TheGraphFetcher(PublisherInterfaceT):
 
         logger.info(f"Fetched data {value_int} for {pair_id} from The Graph")
 
-        return Entry(
+        return SpotEntry(
             pair_id=pair_id,
             price=value_int,
             timestamp=timestamp,

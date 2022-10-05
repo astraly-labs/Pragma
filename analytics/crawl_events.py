@@ -14,7 +14,7 @@ def get_events():
     if not os.path.isfile(JSON_FILE):
         chunk_size = 1_000_000
         print(
-            f"Requesting all SubmittedEntry events from Starknet Indexer. Using chunks of size {chunk_size} This might take a while..."
+            f"Requesting all SubmittedSpotEntry events from Starknet Indexer. Using chunks of size {chunk_size} This might take a while..."
         )
         url = "https://starknet-archive.hasura.app/v1/graphql"
         i = 0
@@ -27,7 +27,7 @@ def get_events():
                 + str(chunk_size)
                 + ", offset: "
                 + str(i * chunk_size)
-                + ', order_by: {id: asc}, where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
+                + ', order_by: {id: asc}, where: {name: {_eq: "SubmittedSpotEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
             }
             r = requests.post(url=url, json=request_json)
             if r.status_code != 200:

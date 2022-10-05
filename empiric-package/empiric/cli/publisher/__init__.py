@@ -3,7 +3,7 @@ import time
 import typer
 from empiric.cli import config, net
 from empiric.cli.utils import coro
-from empiric.core import Entry
+from empiric.core import SpotEntry
 from empiric.core.contract import wait_for_received
 from empiric.core.utils import str_to_felt
 from empiric.publisher import EmpiricPublisherClient
@@ -31,7 +31,7 @@ async def run(
 
         typer.echo("setting checkpoint")
         res = await client.set_checkpoints(
-            [int(entry.pair_id) for entry in _entries if isinstance(entry, Entry)],
+            [int(entry.pair_id) for entry in _entries if isinstance(entry, SpotEntry)],
         )
 
         typer.echo(str(res.hash))

@@ -10,7 +10,7 @@ from constants import (
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
-from empiric.core.entry import Entry, FutureEntry
+from empiric.core.entry import FutureEntry, SpotEntry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
@@ -320,7 +320,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     output_decimals = 10
 
     # Submit data (on, spot, futures)
-    on_entry = Entry(
+    on_entry = SpotEntry(
         pair_id=ON_KEY,
         price=1 * (10**15),  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
@@ -335,7 +335,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     )
 
     for spot_key in FUTURES_SPOT.keys():
-        spot_entry = Entry(
+        spot_entry = SpotEntry(
             pair_id=spot_key,
             price=FUTURES_SPOT[spot_key]["value"],
             timestamp=FUTURES_SPOT[spot_key]["timestamp"],

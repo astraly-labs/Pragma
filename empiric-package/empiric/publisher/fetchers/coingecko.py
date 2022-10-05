@@ -5,7 +5,7 @@ from typing import Dict, List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.types import PublisherInterfaceT
@@ -53,7 +53,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
 
     async def _fetch_pair(
         self, asset: EmpiricSpotAsset, session: ClientSession
-    ) -> Entry:
+    ) -> SpotEntry:
         pair = asset["pair"]
         pair_id = ASSET_MAPPING.get(pair[0])
         if pair_id is None:
@@ -68,7 +68,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
             result = await resp.json()
             return self._construct(asset, result)
 
-    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> Entry:
+    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> SpotEntry:
         pair = asset["pair"]
         pair_id = ASSET_MAPPING.get(pair[0])
         if pair_id is None:
@@ -81,7 +81,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
         result = resp.json()
         return self._construct(asset, result)
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -90,7 +90,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(self) -> List[Entry]:
+    def fetch_sync(self) -> List[SpotEntry]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -99,7 +99,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
             entries.append(self._fetch_pair_sync(asset))
         return entries
 
-    def _construct(self, asset, result) -> Entry:
+    def _construct(self, asset, result) -> SpotEntry:
         pair = asset["pair"]
         pair_id = currency_pair_to_pair_id(*pair)
         price = result["market_data"]["current_price"][pair[1].lower()]
@@ -113,7 +113,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
 
         logger.info(f"Fetched price {price} for {pair_id} from Coingecko")
 
-        return Entry(
+        return SpotEntry(
             pair_id=pair_id,
             price=price_int,
             timestamp=timestamp,

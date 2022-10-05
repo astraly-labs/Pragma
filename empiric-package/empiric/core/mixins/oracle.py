@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from empiric.core.contract import Contract
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
@@ -42,7 +42,7 @@ class OracleMixin:
         return invocation
 
     async def publish_many(
-        self, entries: List[Entry], pagination=0, max_fee=int(1e18)
+        self, entries: List[SpotEntry], pagination=0, max_fee=int(1e18)
     ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")
@@ -53,7 +53,7 @@ class OracleMixin:
             ix = 0
             while ix < len(entries):
                 invocation = await self.oracle.publish_spot_entries.invoke(
-                    Entry.serialize_entries(entries[ix : ix + pagination]),
+                    SpotEntry.serialize_entries(entries[ix : ix + pagination]),
                     callback=self.track_nonce,
                     max_fee=max_fee,
                 )
@@ -62,7 +62,7 @@ class OracleMixin:
                 invocations.append(invocation)
         else:
             invocation = await self.oracle.publish_spot_entries.invoke(
-                Entry.serialize_entries(entries), max_fee=max_fee
+                SpotEntry.serialize_entries(entries), max_fee=max_fee
             )
             invocations.append(invocation)
             logger.info(str(invocation))
@@ -73,7 +73,7 @@ class OracleMixin:
 
         return invocations
 
-    async def get_entries(self, pair_id, sources=[]) -> List[Entry]:
+    async def get_entries(self, pair_id, sources=[]) -> List[SpotEntry]:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
         elif not isinstance(pair_id, int):
@@ -82,14 +82,14 @@ class OracleMixin:
             )
         response = await self.oracle.get_entries.call(pair_id, sources)
 
-        return [Entry.from_dict(entry) for entry in response.entries]
+        return [SpotEntry.from_dict(entry) for entry in response.entries]
 
     async def get_spot(
         self,
         pair_id,
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
         sources=None,
-    ) -> Entry:
+    ) -> SpotEntry:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
         elif not isinstance(pair_id, int):

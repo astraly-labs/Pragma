@@ -4,7 +4,7 @@ from typing import List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.types import PublisherInterfaceT
@@ -22,7 +22,7 @@ class GeminiFetcher(PublisherInterfaceT):
         self.assets = assets
         self.publisher = publisher
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
         entries = []
         async with session.get(self.BASE_URL + "/pricefeed") as resp:
             result_json = await resp.json()
@@ -51,7 +51,7 @@ class GeminiFetcher(PublisherInterfaceT):
                 logger.info(f"Fetched price {price} for {pair_id} from Gemini")
 
                 entries.append(
-                    Entry(
+                    SpotEntry(
                         pair_id=pair_id,
                         price=price_int,
                         timestamp=timestamp,
@@ -61,7 +61,7 @@ class GeminiFetcher(PublisherInterfaceT):
                 )
             return entries
 
-    def fetch_sync(self) -> List[Entry]:
+    def fetch_sync(self) -> List[SpotEntry]:
         entries = []
         resp = requests.get(self.BASE_URL + "/pricefeed")
         result_json = resp.json()
@@ -90,7 +90,7 @@ class GeminiFetcher(PublisherInterfaceT):
             logger.info(f"Fetched price {price} for {pair_id} from Gemini")
 
             entries.append(
-                Entry(
+                SpotEntry(
                     pair_id=pair_id,
                     price=price_int,
                     timestamp=timestamp,
