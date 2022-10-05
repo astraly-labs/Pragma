@@ -96,11 +96,10 @@ class GenericEntry(Entry):
 
 
 class SpotEntry(Entry):
+    base: BaseEntry
     pair_id: int
     price: int
-    timestamp: int
-    source: int
-    publisher: int
+    volume: int
 
     def __init__(
         self,
