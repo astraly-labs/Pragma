@@ -48,7 +48,7 @@ namespace IOracle {
     func get_future_entry(pair_id: felt, expiry_timestamp, source: felt) -> (entry: FutureEntry) {
     }
 
-    func get_value(key, source) -> (
+    func get_value(key) -> (
         value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }

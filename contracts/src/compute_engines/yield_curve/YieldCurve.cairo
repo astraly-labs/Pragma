@@ -665,7 +665,7 @@ namespace YieldCurve {
         }
 
         let (value, decimals, last_updated_timestamp, _) = IOracle.get_value(
-            oracle_address, on_key, THEGRAPH_EMPIRIC_SOURCE_KEY
+            oracle_address, on_key
         );
 
         if (last_updated_timestamp == 0) {

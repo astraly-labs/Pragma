@@ -7,23 +7,18 @@
                 "type": "BaseEntry"
             },
             {
-                "name": "pair_id",
+                "name": "key",
                 "offset": 3,
                 "type": "felt"
             },
             {
-                "name": "price",
+                "name": "value",
                 "offset": 4,
-                "type": "felt"
-            },
-            {
-                "name": "volume",
-                "offset": 5,
                 "type": "felt"
             }
         ],
-        "name": "SpotEntry",
-        "size": 6,
+        "name": "GenericEntry",
+        "size": 5,
         "type": "struct"
     },
     {
@@ -46,6 +41,33 @@
         ],
         "name": "BaseEntry",
         "size": 3,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "pair_id",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "price",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "volume",
+                "offset": 5,
+                "type": "felt"
+            }
+        ],
+        "name": "SpotEntry",
+        "size": 6,
         "type": "struct"
     },
     {
@@ -132,28 +154,6 @@
     {
         "members": [
             {
-                "name": "base",
-                "offset": 0,
-                "type": "BaseEntry"
-            },
-            {
-                "name": "key",
-                "offset": 3,
-                "type": "felt"
-            },
-            {
-                "name": "value",
-                "offset": 4,
-                "type": "felt"
-            }
-        ],
-        "name": "GenericEntry",
-        "size": 5,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "timestamp",
                 "offset": 0,
                 "type": "felt"
@@ -191,6 +191,17 @@
         ],
         "keys": [],
         "name": "UpdatedPublisherRegistryAddress",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
+                "type": "GenericEntry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedEntry",
         "type": "event"
     },
     {
