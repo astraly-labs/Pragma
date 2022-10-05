@@ -10,7 +10,7 @@ from constants import (
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
-from empiric.core.entry import GenericEntry, SpotEntry, FutureEntry
+from empiric.core.entry import FutureEntry, GenericEntry, SpotEntry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
@@ -351,7 +351,10 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         yield_points = [
             calculate_on_yield_point(
-                on_entry.value, on_entry.base.timestamp, DEFAULT_DECIMALS, output_decimals
+                on_entry.value,
+                on_entry.base.timestamp,
+                DEFAULT_DECIMALS,
+                output_decimals,
             ),
         ]
 

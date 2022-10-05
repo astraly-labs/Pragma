@@ -17,9 +17,7 @@ class Entry(abc.ABC):
 
     def serialize_entries(self, entries: List[Entry]):
         serialized_entries = [
-            entry.serialize()
-            for entry in entries
-            if issubclass(entry, Entry)
+            entry.serialize() for entry in entries if issubclass(entry, Entry)
         ]
         return list(filter(lambda item: item is not None, serialized_entries))
 
@@ -33,10 +31,12 @@ class Entry(abc.ABC):
 
 class BaseEntry:
     timestamp: int
-    source: felt
-    publisher: felt
+    source: int
+    publisher: int
 
-    def __init__(self, timestamp: int, source: Union[str, int], publisher: Union[str, int]):
+    def __init__(
+        self, timestamp: int, source: Union[str, int], publisher: Union[str, int]
+    ):
         if type(publisher) == str:
             publisher = str_to_felt(publisher)
 
@@ -53,13 +53,20 @@ class GenericEntry(Entry):
     key: int
     value: int
 
-    def __init__(self, timestamp: int, source: Union[str, int], publisher: Union[str, int], key: Union[str, int], value: int):
+    def __init__(
+        self,
+        timestamp: int,
+        source: Union[str, int],
+        publisher: Union[str, int],
+        key: Union[str, int],
+        value: int,
+    ):
         if type(publisher) == str:
             publisher = str_to_felt(publisher)
 
         if type(source) == str:
             source = str_to_felt(source)
-        
+
         if type(key) == str:
             key = str_to_felt(key)
 
@@ -86,6 +93,7 @@ class GenericEntry(Entry):
             self.key,
             self.value,
         )
+
 
 class SpotEntry(Entry):
     pair_id: int
