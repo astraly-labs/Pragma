@@ -109,7 +109,9 @@ async def get_yield_points(output_decimals):
                 future_decimals,
                 future_last_updated_timestamp,
                 _,
-            ) = await client.get_future(pair_id, future_expiry_timestamp, AggregationMode.MEDIAN)
+            ) = await client.get_future(
+                pair_id, future_expiry_timestamp, AggregationMode.MEDIAN
+            )
 
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_value,

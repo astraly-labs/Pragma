@@ -139,7 +139,9 @@ class FtxFetcher(PublisherInterfaceT):
                 ).timestamp()
             )
 
-            logger.info(f"Fetched futures price {price} for {pair_id}-{expiry_timestamp} from FTX")
+            logger.info(
+                f"Fetched futures price {price} for {pair_id}-{expiry_timestamp} from FTX"
+            )
 
             entries.append(
                 FutureEntry(
@@ -148,7 +150,7 @@ class FtxFetcher(PublisherInterfaceT):
                     timestamp=timestamp,
                     source=source,
                     publisher=publisher,
-                    expiry_timestamp=expiry_timestamp
+                    expiry_timestamp=expiry_timestamp,
                 )
             )
 

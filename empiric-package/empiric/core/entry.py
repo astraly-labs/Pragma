@@ -4,17 +4,22 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from empiric.core.utils import felt_to_str, str_to_felt
 
+
 class BaseEntry:
     # Make this the generic
     type: str
+
     def __init__(self):
         pass
 
+
 class GenericEntry:
     type = "generic"
-    # TODO
+    # TODO fill out
+
     def __init__(self):
         pass
+
 
 class SpotEntry:
     pair_id: int
@@ -50,7 +55,7 @@ class SpotEntry:
         self.volume = volume
 
     def __eq__(self, other):
-        if isinstance(other, Entry):
+        if isinstance(other, SpotEntry):
             return (
                 self.pair_id == other.pair_id
                 and self.price == other.price
@@ -95,8 +100,8 @@ class SpotEntry:
         }
 
     @staticmethod
-    def from_dict(entry_dict: Dict[str, str]) -> "Entry":
-        return Entry(
+    def from_dict(entry_dict: Dict[str, str]) -> "SpotEntry":
+        return SpotEntry(
             entry_dict["base"]["pair_id"],
             entry_dict["price"],
             entry_dict["timestamp"],
@@ -105,19 +110,19 @@ class SpotEntry:
         )
 
     @staticmethod
-    def serialize_entries(entries: List[Entry]) -> List[Dict[str, int]]:
+    def serialize_entries(entries: List[SpotEntry]) -> List[Dict[str, int]]:
         """serialize entries to a List of dictionaries"""
         # TODO (rlkelly): log errors
         serialized_entries = [
             entry.serialize()
             for entry in entries
             # TODO (rlkelly): This needs to be much more resilient to publish errors
-            if isinstance(entry, Entry)
+            if isinstance(entry, SpotEntry)
         ]
         return list(filter(lambda item: item is not None, serialized_entries))
 
     @staticmethod
-    def flatten_entries(entries: List[Entry]) -> List[int]:
+    def flatten_entries(entries: List[SpotEntry]) -> List[int]:
         """This flattens entriees to tuples.  Useful when you need the raw felt array"""
         expanded = [entry.to_tuple() for entry in entries]
         flattened = [x for entry in expanded for x in entry]
