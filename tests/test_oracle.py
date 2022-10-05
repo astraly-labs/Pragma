@@ -910,20 +910,13 @@ async def test_real_data(
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entries = [
-        Entry("eth/usd", 29898560234403, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("btc/usd", 404308601528970, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("luna/usd", 922793061826, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("sol/usd", 1023379113474, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("avax/usd", 759878999010, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("doge/usd", 1365470994, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("shib/usd", 244844, 1650590880, "cryptowatch", "cryptowatch"),
-        Entry("eth/usd", 29902600000000, 1650590935, "coingecko", "coingecko"),
-        Entry("btc/usd", 404070000000000, 1650590889, "coingecko", "coingecko"),
-        Entry("luna/usd", 922099999999, 1650590883, "coingecko", "coingecko"),
-        Entry("sol/usd", 1023600000000, 1650590886, "coingecko", "coingecko"),
-        Entry("avax/usd", 759800000000, 1650590853, "coingecko", "coingecko"),
-        Entry("doge/usd", 1365780000, 1650590845, "coingecko", "coingecko"),
-        Entry("shib/usd", 245100, 1650590865, "coingecko", "coingecko"),
+        Entry("eth/usd", 29902600000000, 1650590935, "cex", "cex"),
+        Entry("btc/usd", 404070000000000, 1650590889, "cex", "cex"),
+        Entry("luna/usd", 922099999999, 1650590883, "cex", "cex"),
+        Entry("sol/usd", 1023600000000, 1650590886, "cex", "cex"),
+        Entry("avax/usd", 759800000000, 1650590853, "cex", "cex"),
+        Entry("doge/usd", 1365780000, 1650590845, "cex", "cex"),
+        Entry("shib/usd", 245100, 1650590865, "cex", "cex"),
         Entry("eth/usd", 29924650000000, 1650590820, "coinbase", "coinbase"),
         Entry("btc/usd", 404057899999999, 1650590820, "coinbase", "coinbase"),
         Entry("eth/usd", 29920000000000, 1650590986, "gemini", "gemini"),
@@ -933,7 +926,7 @@ async def test_real_data(
         Entry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
         Entry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
     ]
-    publishers_str = ["cryptowatch", "coingecko", "coinbase", "gemini"]
+    publishers_str = ["cex", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.publisher == publisher]
