@@ -263,6 +263,6 @@ class FutureEntry(Entry):
                 "publisher": self.base.publisher,
             },
             "pair_id": self.pair_id,
-            "value": self.value,
+            "price": self.price,
             "expiry_timestamp": self.expiry_timestamp,
         }
