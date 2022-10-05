@@ -275,7 +275,7 @@ namespace Oracle {
 
         let (entry) = Oracle__entry_storage.read(new_entry.key, new_entry.base.source);
 
-        let (entry_ptr: FutureEntry*) = alloc();
+        let (entry_ptr: GenericEntry*) = alloc();
         assert entry_ptr[0] = entry;
 
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
