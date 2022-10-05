@@ -132,6 +132,28 @@
     {
         "members": [
             {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "key",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 4,
+                "type": "felt"
+            }
+        ],
+        "name": "GenericEntry",
+        "size": 5,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "timestamp",
                 "offset": 0,
                 "type": "felt"
@@ -514,6 +536,35 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_entry",
                 "type": "FutureEntry"
             }
@@ -530,6 +581,32 @@
             }
         ],
         "name": "publish_spot_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "GenericEntry"
+            }
+        ],
+        "name": "publish_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
+                "type": "GenericEntry*"
+            }
+        ],
+        "name": "publish_entries",
         "outputs": [],
         "type": "function"
     },

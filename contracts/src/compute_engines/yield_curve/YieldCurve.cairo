@@ -22,6 +22,7 @@ from compute_engines.yield_curve.structs import YieldPoint
 
 const ON_SOURCE_KEY = 20302;  // str_to_felt("ON")
 const FUTURE_SPOT_SOURCE_KEY = 85027764198622664552632148;  // str_to_felt("FUTURE/SPOT")
+const THEGRAPH_EMPIRIC_SOURCE_KEY = 6073180270134120520;  // str_to_felt("THEGRAPH")
 const SECONDS_IN_YEAR = 31536000;  // 365 * 24 * 60 * 60
 const DEFAULT_DECIMALS = 18;
 
@@ -666,6 +667,7 @@ namespace YieldCurve {
         let (value, decimals, last_updated_timestamp, _) = IOracle.get_value(
             oracle_address, on_key
         );
+
         if (last_updated_timestamp == 0) {
             // No data so skip to next one
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
@@ -862,6 +864,13 @@ namespace YieldCurve {
         }
 
         let (future_decimals_) = IOracle.get_decimals(oracle_address, future_expiry_timestamp);
+
+        local future_decimals;
+        if (future_decimals_ == 0) {
+            future_decimals = DEFAULT_DECIMALS;
+        } else {
+            future_decimals = future_decimals_;
+        }
 
         let (future_entry) = IOracle.get_future_entry(
             oracle_address,

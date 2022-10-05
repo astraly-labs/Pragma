@@ -10,7 +10,7 @@ from constants import (
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
-from empiric.core.entry import Entry, FutureEntry
+from empiric.core.entry import GenericEntry, SpotEntry, FutureEntry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
@@ -320,9 +320,9 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     output_decimals = 10
 
     # Submit data (on, spot, futures)
-    on_entry = Entry(
-        pair_id=ON_KEY,
-        price=1 * (10**15),  # 0.1% at 18 decimals (default),
+    on_entry = GenericEntry(
+        key=ON_KEY,
+        value=10**15,  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=str_to_felt("THEGRAPH"),
         publisher=publisher,
@@ -330,12 +330,12 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     await publisher_signer.send_transaction(
         publisher_account,
         oracle.contract_address,
-        "publish_spot_entry",
+        "publish_entry",
         on_entry.to_tuple(),
     )
 
     for pair_id in FUTURES_SPOT.keys():
-        spot_entry = Entry(
+        spot_entry = SpotEntry(
             pair_id=pair_id,
             price=FUTURES_SPOT[pair_id]["value"],
             timestamp=FUTURES_SPOT[pair_id]["timestamp"],
@@ -351,7 +351,7 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         yield_points = [
             calculate_on_yield_point(
-                on_entry.price, on_entry.timestamp, DEFAULT_DECIMALS, output_decimals
+                on_entry.value, on_entry.base.timestamp, DEFAULT_DECIMALS, output_decimals
             ),
         ]
 
@@ -373,10 +373,10 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_entry.price,
-                future_entry.timestamp,
+                future_entry.base.timestamp,
                 future_data["expiry_timestamp"],
                 spot_entry.price,
-                spot_entry.timestamp,
+                spot_entry.base.timestamp,
                 DEFAULT_DECIMALS,
                 DEFAULT_DECIMALS,
                 output_decimals,

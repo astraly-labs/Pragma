@@ -6,9 +6,9 @@ struct BaseEntry {
     publisher: felt,
 }
 
-struct Entry {
+struct GenericEntry {
     base: BaseEntry,
-    pair_id: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
+    key: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
     value: felt,
 }
 

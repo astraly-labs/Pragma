@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from empiric.core.contract import Contract
-from empiric.core.entry import Entry
+from empiric.core.entry import Entry, SpotEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
@@ -23,7 +23,7 @@ class OracleMixin:
         source: int,
         publisher: int,
         volume: int = 0,
-        max_fee: int = int(1e16),
+        max_fee: int = int(1e18),
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
@@ -81,9 +81,9 @@ class OracleMixin:
             raise TypeError(
                 "Pair ID must be string (will be converted to felt) or integer"
             )
-        response = await self.oracle.get_entries.call(pair_id, sources)
+        response = await self.oracle.get_spot_entries.call(pair_id, sources)
 
-        return [Entry.from_dict(entry) for entry in response.entries]
+        return [SpotEntry.from_dict(entry) for entry in response.entries]
 
     async def get_spot(
         self,

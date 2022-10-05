@@ -10,7 +10,7 @@ from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 
-from entry.structs import Checkpoint, Currency, Entry, FutureEntry, SpotEntry, Pair
+from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
@@ -66,6 +66,10 @@ func Oracle__sources_threshold() -> (threshold: felt) {
 
 @storage_var
 func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
+}
+
+@storage_var
+func Oracle__generic_entry_storage(key) -> (res: GenericEntry) {
 }
 
 //
@@ -175,6 +179,13 @@ namespace Oracle {
         return (price, decimals, last_updated_timestamp, entries_len);
     }
 
+    func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
+        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+        let (entry_) = Oracle__generic_entry_storage.read(key);
+        return (entry_.value, 18, entry_.base.timestamp, 1);
+    }
+
     func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
     ) -> (entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt) {
@@ -247,6 +258,27 @@ namespace Oracle {
     //
     // Setters
     //
+
+    func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        new_entry: GenericEntry
+    ) {
+        alloc_locals;
+
+        let (new_entry_ptr: GenericEntry*) = alloc();
+        assert new_entry_ptr[0] = new_entry;
+        validate_sender_for_source(cast(new_entry_ptr, felt*));
+
+        // TODO: Should we validate for key?  any publisher could publish this key
+
+        Oracle__generic_entry_storage.write(new_entry.key, new_entry);
+        return ();
+    }
+
+    func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        entries_len: felt, entries: GenericEntry*
+    ) {
+        return ();
+    }
 
     func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entry: FutureEntry
@@ -540,7 +572,7 @@ namespace Oracle {
     }(_entry: felt*) {
         alloc_locals;
 
-        let new_entry_ptr = cast(_entry, Entry*);
+        let new_entry_ptr = cast(_entry, GenericEntry*);
         let new_entry = new_entry_ptr[0];
         let (publisher_registry_address) = get_publisher_registry_address();
         let (publisher_address) = IPublisherRegistry.get_publisher_address(
@@ -572,9 +604,9 @@ namespace Oracle {
     ) {
         alloc_locals;
 
-        let new_entry_ptr = cast(_new_entry, Entry*);
+        let new_entry_ptr = cast(_new_entry, SpotEntry*);
         let new_entry = new_entry_ptr[0];
-        let entry_ptr = cast(_entry, Entry*);
+        let entry_ptr = cast(_entry, SpotEntry*);
         let entry = entry_ptr[0];
 
         with_attr error_message("Oracle: Existing entry is more recent") {
