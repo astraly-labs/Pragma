@@ -42,6 +42,10 @@ func Oracle_spot_entry_storage(key: felt, source: felt) -> (entry: SpotEntry) {
 }
 
 @storage_var
+func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntry) {
+}
+
+@storage_var
 func Oracle_sources_len_storage(key: felt) -> (sources_len: felt) {
 }
 
@@ -69,10 +73,6 @@ func Oracle__sources_threshold() -> (threshold: felt) {
 func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
 }
 
-@storage_var
-func Oracle__generic_entry_storage(key) -> (res: GenericEntry) {
-}
-
 //
 // Events
 //
@@ -80,6 +80,10 @@ func Oracle__generic_entry_storage(key) -> (res: GenericEntry) {
 func UpdatedPublisherRegistryAddress(
     old_publisher_registry_address: felt, new_publisher_registry_address: felt
 ) {
+}
+
+@event
+func SubmittedEntry(new_entry: GenericEntry) {
 }
 
 @event
@@ -180,10 +184,10 @@ namespace Oracle {
         return (price, decimals, last_updated_timestamp, entries_len);
     }
 
-    func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
-        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
-    ) {
-        let (entry_) = Oracle__generic_entry_storage.read(key);
+    func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        key: felt, source: felt
+    ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+        let (entry_) = Oracle__entry_storage.read(key, source);
         return (entry_.value, 18, entry_.base.timestamp, 1);
     }
 
@@ -269,9 +273,16 @@ namespace Oracle {
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        // TODO: Should we validate for key?  any publisher could publish this key
+        let (entry) = Oracle__entry_storage.read(new_entry.key, new_entry.base.source);
 
-        Oracle__generic_entry_storage.write(new_entry.key, new_entry);
+        let (entry_ptr: FutureEntry*) = alloc();
+        assert entry_ptr[0] = entry;
+
+        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+
+        SubmittedEntry.emit(new_entry);
+        Oracle__entry_storage.write(new_entry.key, new_entry.base.source, new_entry);
+
         return ();
     }
 

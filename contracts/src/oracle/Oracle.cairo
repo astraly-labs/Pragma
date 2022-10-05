@@ -148,10 +148,13 @@ func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 }
 
 @view
-func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
-    value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
-) {
-    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(key);
+func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, source: felt
+) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    // TODO: should this always aggregate all values or should we require a source
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(
+        key, source
+    );
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
 
