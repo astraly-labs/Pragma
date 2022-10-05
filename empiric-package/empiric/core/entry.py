@@ -262,7 +262,7 @@ class FutureEntry(Entry):
                 "source": self.base.source,
                 "publisher": self.base.publisher,
             },
-            "key": self.key,
+            "pair_id": self.pair_id,
             "value": self.value,
             "expiry_timestamp": self.expiry_timestamp,
         }
