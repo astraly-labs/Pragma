@@ -14,7 +14,8 @@ from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotE
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
-const TIMESTAMP_BUFFER = 3600;  // 60 minutes
+const BACKWARD_TIMESTAMP_BUFFER = 3600;  // Min difference data timestamp - current block timestamp (60 minutes)
+const FORWARD_TIMESTAMP_BUFFER = 900;  // Max difference data timestamp - current block timestamp (15 minutes)
 const BOTH_TRUE = 2;
 
 //
@@ -189,7 +190,7 @@ namespace Oracle {
     func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
     ) -> (entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt) {
-        // This will return all entries within the TIMESTAMP_BUFFER of the latest entry published for the given list of sources
+        // This will return all entries within the BACKWARD_TIMESTAMP_BUFFER of the latest entry published for the given list of sources
         alloc_locals;
 
         let (last_updated_timestamp) = get_latest_entry_timestamp(
@@ -521,7 +522,7 @@ namespace Oracle {
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
         let is_entry_stale = is_le(
-            entry.base.timestamp + 1, latest_entry_timestamp - TIMESTAMP_BUFFER
+            entry.base.timestamp + 1, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
@@ -615,13 +616,13 @@ namespace Oracle {
 
         let (current_timestamp) = get_block_timestamp();
         with_attr error_message("Oracle: New entry timestamp is too far in the past") {
-            assert_le(current_timestamp - TIMESTAMP_BUFFER, new_entry.base.timestamp);
+            assert_le(current_timestamp - BACKWARD_TIMESTAMP_BUFFER, new_entry.base.timestamp);
         }
 
         with_attr error_message("Oracle: New entry timestamp is too far in the future") {
             // TODO (rlkelly): should we allow for an hour into the future?
             let new_entry_timestamp = new_entry.base.timestamp;
-            assert_le(new_entry.base.timestamp, current_timestamp + 60 * 15);
+            assert_le(new_entry.base.timestamp, current_timestamp + FORWARD_TIMESTAMP_BUFFER);
         }
 
         if (entry.base.timestamp == 0) {

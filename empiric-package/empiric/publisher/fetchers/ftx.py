@@ -8,7 +8,7 @@ from typing import Dict, List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry, FutureEntry
+from empiric.core.entry import Entry, SpotEntry, FutureEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.types import PublisherInterfaceT
@@ -33,7 +33,7 @@ class FtxFetcher(PublisherInterfaceT):
         self.FTX_API_KEY = os.environ.get("FTX_API_KEY")
         self.FTX_API_SECRET = os.environ.get("FTX_API_SECRET")
 
-    async def fetch(self, session: ClientSession) -> List[Entry]:
+    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
         market_endpoint = "/markets"
         headers = self.generate_ftx_headers(market_endpoint)
 
@@ -53,7 +53,7 @@ class FtxFetcher(PublisherInterfaceT):
 
         return self._handle_assets(spot_data, future_data)
 
-    def fetch_sync(self) -> List[Entry]:
+    def fetch_sync(self) -> List[SpotEntry]:
         market_endpoint = "/markets"
         headers = self.generate_ftx_headers(market_endpoint)
 
@@ -83,7 +83,7 @@ class FtxFetcher(PublisherInterfaceT):
         }
         return headers
 
-    def parse_ftx_spot(self, asset, data, source, publisher, timestamp) -> Entry:
+    def parse_ftx_spot(self, asset, data, source, publisher, timestamp) -> SpotEntry:
         pair = asset["pair"]
         pair_id = currency_pair_to_pair_id(*pair)
 
@@ -102,7 +102,7 @@ class FtxFetcher(PublisherInterfaceT):
 
         logger.info(f"Fetched price {price} for {'/'.join(pair)} from FTX")
 
-        return Entry(
+        return SpotEntry(
             pair_id=pair_id,
             price=price_int,
             timestamp=timestamp,

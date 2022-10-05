@@ -794,7 +794,7 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
         publisher_account,
         oracle_proxy.contract_address,
         "publish_spot_entries",
-        Entry.flatten_entries(entries),
+        SpotEntry.flatten_entries(entries),
     )
     for entry in entries:
         assert_event_emitted(
@@ -933,7 +933,7 @@ async def test_real_data(
         SpotEntry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
         SpotEntry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
     ]
-    publishers_str = ["cryptowatch", "coingecko", "coinbase", "gemini"]
+    publishers_str = ["cex", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.base.publisher == publisher]
