@@ -89,16 +89,16 @@ namespace Entries {
 
         if (is_even == FALSE) {
             let median_idx = entries_len - q - 1;  // 0-indexed
-            let median_entry = [sorted_entries + median_idx * SpotEntry.SIZE];
+            let median_entry = sorted_entries[median_idx];
             return (median_entry.price,);
         }
 
         let median_idx_1 = entries_len - q - 1;
-        let median_entry_1 = [sorted_entries + median_idx_1 * SpotEntry.SIZE];
+        let median_entry_1 = sorted_entries[median_idx_1];
         let median_idx_2 = median_idx_1 + 1;
-        let median_entry_2 = [sorted_entries + median_idx_2 * SpotEntry.SIZE];
+        let median_entry_2 = sorted_entries[median_idx_2];
 
-        let (mean_price) = average_spot_entries_value(median_entry_1, median_entry_2);
+        let mean_price = average_values(median_entry_1.price, median_entry_2.price);
         return (mean_price,);
     }
 
@@ -112,14 +112,14 @@ namespace Entries {
 
         if (is_even == FALSE) {
             let median_idx = entries_len - q - 1;  // 0-indexed
-            let median_entry = [sorted_entries + median_idx * GenericEntry.SIZE];
+            let median_entry = sorted_entries[median_idx];
             return (median_entry.value,);
         }
 
         let median_idx_1 = entries_len - q - 1;
-        let median_entry_1 = [sorted_entries + median_idx_1 * GenericEntry.SIZE];
+        let median_entry_1 = sorted_entries[median_idx_1];
         let median_idx_2 = median_idx_1 + 1;
-        let median_entry_2 = [sorted_entries + median_idx_2 * GenericEntry.SIZE];
+        let median_entry_2 = sorted_entries[median_idx_2];
 
         let value = average_values(median_entry_1.value, median_entry_2.value);
         return (value=value);
@@ -372,7 +372,7 @@ namespace Entries {
         local range_check_ptr = range_check_ptr;
 
         if (idx2 == entries_len) {
-            assert [sorted_entries + (idx2 - 1) * SpotEntry.SIZE] = [entries + idx1 * SpotEntry.SIZE];
+            assert sorted_entries[idx2 - 1] = entries[idx1];
             if (sorted_this_iteration == 0) {
                 return (sorted_entries,);
             }
@@ -383,17 +383,15 @@ namespace Entries {
             );
             return (recursive_sorted_ptr,);
         }
-        let is_ordered = is_le(
-            [entries + idx1 * SpotEntry.SIZE].price, [entries + idx2 * SpotEntry.SIZE].price
-        );
+        let is_ordered = is_le(entries[idx1].price, entries[idx2].price);
         if (is_ordered == TRUE) {
-            assert [sorted_entries + (idx2 - 1) * SpotEntry.SIZE] = [entries + idx1 * SpotEntry.SIZE];
+            assert sorted_entries[idx2 - 1] = entries[idx1];
             let (recursive_sorted_ptr) = bubble_sort_spot_entries_by_price(
                 entries_len, entries, idx2, idx2 + 1, sorted_entries, sorted_this_iteration
             );
             return (recursive_sorted_ptr,);
         }
-        assert [sorted_entries + (idx2 - 1) * SpotEntry.SIZE] = [entries + idx2 * SpotEntry.SIZE];
+        assert sorted_entries[idx2 - 1] = entries[idx2];
         let (recursive_sorted_ptr) = bubble_sort_spot_entries_by_price(
             entries_len, entries, idx1, idx2 + 1, sorted_entries, 1
         );
@@ -411,7 +409,7 @@ namespace Entries {
         entries_len: felt, entries: SpotEntry*, idx: felt, remainder: felt
     ) -> (price: felt, remainder: felt) {
         alloc_locals;
-        let running_price = [entries + idx * SpotEntry.SIZE].price;
+        let running_price = entries[idx].price;
         let (local summand, new_remainder) = unsigned_div_rem(
             running_price + remainder, entries_len
         );
@@ -425,27 +423,12 @@ namespace Entries {
         return (price, recursive_remainder);
     }
 
-    // @notice get the mean of two entries
-    // @param entry_1: left entry
-    // @param entry_2: right entry
+    // @notice get the mean of two values
+    // @param entry_1: left value
+    // @param entry_2: right value
     // @return value: mean value
-    func average_spot_entries_value{range_check_ptr}(entry_1: SpotEntry, entry_2: SpotEntry) -> (
-        price: felt
-    ) {
-        let (summand_1, r1) = unsigned_div_rem(entry_1.price, 2);
-        let (summand_2, r2) = unsigned_div_rem(entry_2.price, 2);
-        let (summand_3, r3) = unsigned_div_rem(r1 + r2, 2);
-
-        let price = summand_1 + summand_2 + summand_3;
-        return (price,);
-    }
-
     func average_values{range_check_ptr}(val1: felt, val2: felt) -> felt {
-        let (summand_1, r1) = unsigned_div_rem(val1, 2);
-        let (summand_2, r2) = unsigned_div_rem(val2, 2);
-        let (summand_3, r3) = unsigned_div_rem(r1 + r2, 2);
-
-        let response = summand_1 + summand_2 + summand_3;
-        return response;
+        let (mean_, _) = unsigned_div_rem(val1 + val2, 2);
+        return mean_;
     }
 }
