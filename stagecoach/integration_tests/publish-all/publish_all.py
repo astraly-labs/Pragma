@@ -2,13 +2,16 @@ import asyncio
 import os
 
 import requests
-from empiric.core.config import ContractAddresses
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (  # CoingeckoFetcher,; BitstampFetcher,; CexFetcher,; CryptowatchFetcher,; FtxFetcher,; GeminiFetcher,; TheGraphFetcher,
+from empiric.publisher.fetchers import (
+    BitstampFetcher,
+    CexFetcher,
     CoinbaseFetcher,
+    FtxFetcher,
+    TheGraphFetcher,
 )
 
 logger = get_stream_logger()
@@ -16,32 +19,39 @@ logger = get_stream_logger()
 
 async def publish_all(assets):
     publisher = os.environ.get("PUBLISHER")
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
-    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
-        contract_addresses_config=ContractAddresses(
-            2186843614666702706389011384803164466970240427599479843460793554463821901204,
-            1824425265941254823382743057502330811805960016285095529301416203495066694514,
-        ),
     )
+    logger.info(
+        "publisher registry: %s",
+        publisher_client.contract_addresses_config.publisher_registry_address,
+    )
+    logger.info(
+        "oracle proxy: %s",
+        publisher_client.contract_addresses_config.oracle_proxy_address,
+    )
+    logger.info(f"publisher: {publisher}")
+    logger.info(f"publisher address: {publisher_address}")
+
     publisher_client.add_fetchers(
         [
             fetcher(assets, publisher)
             for fetcher in (
-                # BitstampFetcher,
-                # CexFetcher,
+                BitstampFetcher,
+                CexFetcher,
                 CoinbaseFetcher,
-                # CryptowatchFetcher,
-                # FtxFetcher,
-                # GeminiFetcher,
-                # TheGraphFetcher,
+                FtxFetcher,
+                TheGraphFetcher,
             )
         ]
     )
     _entries = await publisher_client.fetch()
-    await publisher_client.publish_many(_entries, pagination=10)
+    response = await publisher_client.publish_many(_entries, pagination=100)
+    for res in response:
+        await res.wait_for_acceptance()
 
     logger.info("Publishing the following entries:")
     for entry in _entries:

@@ -10,7 +10,7 @@ RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
 
 FROM base as test
 COPY empiric-package/ /empiric-package
-RUN pip install empiric-package/
+RUN pip install -e empiric-package/
 
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION

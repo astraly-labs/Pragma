@@ -7,23 +7,18 @@
                 "type": "BaseEntry"
             },
             {
-                "name": "pair_id",
+                "name": "key",
                 "offset": 3,
                 "type": "felt"
             },
             {
-                "name": "price",
+                "name": "value",
                 "offset": 4,
-                "type": "felt"
-            },
-            {
-                "name": "volume",
-                "offset": 5,
                 "type": "felt"
             }
         ],
-        "name": "SpotEntry",
-        "size": 6,
+        "name": "GenericEntry",
+        "size": 5,
         "type": "struct"
     },
     {
@@ -46,6 +41,60 @@
         ],
         "name": "BaseEntry",
         "size": 3,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "pair_id",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "price",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "volume",
+                "offset": 5,
+                "type": "felt"
+            }
+        ],
+        "name": "SpotEntry",
+        "size": 6,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "base",
+                "offset": 0,
+                "type": "BaseEntry"
+            },
+            {
+                "name": "pair_id",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "price",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "expiry_timestamp",
+                "offset": 5,
+                "type": "felt"
+            }
+        ],
+        "name": "FutureEntry",
+        "size": 6,
         "type": "struct"
     },
     {
@@ -148,11 +197,33 @@
         "data": [
             {
                 "name": "new_entry",
+                "type": "GenericEntry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
                 "type": "SpotEntry"
             }
         ],
         "keys": [],
         "name": "SubmittedSpotEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "new_entry",
+                "type": "FutureEntry"
+            }
+        ],
+        "keys": [],
+        "name": "SubmittedFutureEntry",
         "type": "event"
     },
     {
@@ -323,6 +394,10 @@
                 "type": "felt"
             },
             {
+                "name": "expiry_timestamp",
+                "type": "felt"
+            },
+            {
                 "name": "source",
                 "type": "felt"
             }
@@ -331,7 +406,7 @@
         "outputs": [
             {
                 "name": "entry",
-                "type": "SpotEntry"
+                "type": "FutureEntry"
             }
         ],
         "stateMutability": "view",
@@ -472,11 +547,77 @@
     {
         "inputs": [
             {
+                "name": "key",
+                "type": "felt"
+            }
+        ],
+        "name": "get_value",
+        "outputs": [
+            {
+                "name": "value",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "FutureEntry"
+            }
+        ],
+        "name": "publish_future_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_entry",
                 "type": "SpotEntry"
             }
         ],
         "name": "publish_spot_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entry",
+                "type": "GenericEntry"
+            }
+        ],
+        "name": "publish_entry",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
+                "type": "GenericEntry*"
+            }
+        ],
+        "name": "publish_entries",
         "outputs": [],
         "type": "function"
     },
@@ -647,6 +788,25 @@
             }
         ],
         "name": "set_checkpoint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "pair_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "pair_ids",
+                "type": "felt*"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "set_checkpoints",
         "outputs": [],
         "type": "function"
     },

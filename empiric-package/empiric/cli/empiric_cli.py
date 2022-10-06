@@ -14,6 +14,7 @@ from empiric.cli import (
 )
 from starkware.crypto.signature.signature import get_random_private_key
 
+from .contracts.utils import deploy_contract
 from .utils import coro
 
 # TESTNET_GATEWAY_URL = "https://alpha4.starknet.io"
@@ -40,6 +41,14 @@ async def create_account(config_path=config.DEFAULT_CONFIG):
 
     client = net.init_client(gateway_url, chain_id)
     await account.create_account(client, config.CONFIG_FILE_PATH)
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def deploy_by_name(contract_name: str, config_path=config.DEFAULT_CONFIG):
+    contract_address = await deploy_contract(config_path, contract_name)
+    typer.echo(f"address: {contract_address}")
     return SUCCESS
 
 
@@ -97,6 +106,13 @@ def devnet():
     sys.argv = [starknet_devnet.__file__]
     sys.exit(main())
 
+    return SUCCESS
+
+
+@app.command()
+def account_address(config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    typer.echo(client.account_address())
     return SUCCESS
 
 

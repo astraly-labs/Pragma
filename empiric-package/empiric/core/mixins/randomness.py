@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import Any, Callable, List, Optional
 
 from empiric.core.abis.randomness import RANDOMNESS_ABI
 from empiric.core.contract import Contract
@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 class RandomnessMixin:
     client: Client
     randomness: Optional[Contract] = None
+    track_nonce: Callable[Any, None] = None
 
     def init_randomness_contract(
         self,
@@ -42,6 +43,7 @@ class RandomnessMixin:
             callback_gas_limit,
             publish_delay,
             num_words,
+            callback=self.track_nonce,
             max_fee=max_fee,
         )
         return invocation
@@ -73,6 +75,7 @@ class RandomnessMixin:
             random_words,
             block_hash,
             proof,
+            callback=self.track_nonce,
             max_fee=max_fee,
         )
         return invocation

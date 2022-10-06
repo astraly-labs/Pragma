@@ -3,6 +3,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
+from starkware.cairo.common.math import assert_not_equal
 from starkware.cairo.common.signature import verify_ecdsa_signature
 from starkware.cairo.common.hash import hash2
 from starkware.starknet.common.syscalls import get_caller_address
@@ -102,6 +103,7 @@ namespace Publisher {
     func update_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         publisher: felt, new_publisher_address: felt
     ) {
+        alloc_locals;
         let (existing_publisher_address) = get_publisher_address(publisher);
         let (caller_address) = get_caller_address();
 
@@ -179,6 +181,12 @@ namespace Publisher {
     func add_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         publisher, source
     ) {
+        let (existing_publisher_address) = get_publisher_address(publisher);
+
+        with_attr error_message("PublisherRegistry: Publisher does not exist") {
+            assert_not_equal(existing_publisher_address, 0);
+        }
+
         let (can_publish_) = can_publish_source(publisher, source);
         if (can_publish_ == TRUE) {
             with_attr error_message("Already Registered for publisher") {

@@ -31,9 +31,7 @@ async def deploy(cli_config=config.DEFAULT_CONFIG):
     return SUCCESS
 
 
-async def _deploy_summary_stats(
-    client: Client, deploy_config_path: Path, config_path: Path
-):
+async def _deploy_summary_stats(client: Client, config_path: Path):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
     oracle_proxy_address = int(config_parser["CONTRACTS"]["oracle-proxy"])

@@ -1,7 +1,7 @@
 import os
 from typing import List, Union
 
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.utils import str_to_felt
 from nile.signer import TRANSACTION_VERSION, Signer, from_call_to_call_array
 from starkware.starknet.business_logic.execution.objects import Event
@@ -115,7 +115,7 @@ async def register_new_publisher_and_publish_spot_entries_1(
     admin_signer,
     publisher_signer,
     publisher,
-    entries: List[Entry],
+    entries: List[SpotEntry],
 ):
     await admin_signer.send_transaction(
         admin_account,
@@ -124,7 +124,7 @@ async def register_new_publisher_and_publish_spot_entries_1(
         [publisher, publisher_account.contract_address],
     )
 
-    sources = set([entry.source for entry in entries])
+    sources = set([entry.base.source for entry in entries])
 
     for source in sources:
         await admin_signer.send_transaction(
@@ -138,7 +138,7 @@ async def register_new_publisher_and_publish_spot_entries_1(
         publisher_account,
         oracle.contract_address,
         "publish_spot_entries",
-        Entry.flatten_entries(entries),
+        SpotEntry.flatten_entries(entries),
     )
 
 
@@ -150,7 +150,7 @@ async def register_new_publisher_and_publish_spot_entry(
     admin_signer,
     publisher_signer,
     publisher,
-    entry: Entry,
+    entry: SpotEntry,
 ):
     await admin_signer.send_transaction(
         admin_account,
@@ -162,7 +162,7 @@ async def register_new_publisher_and_publish_spot_entry(
         admin_account,
         publisher_registry.contract_address,
         "add_source_for_publisher",
-        [publisher, entry.source],
+        [publisher, entry.base.source],
     )
 
     await publisher_signer.send_transaction(

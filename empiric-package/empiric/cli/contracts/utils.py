@@ -64,9 +64,39 @@ def _format_pairs(pairs: Dict[str, Union[int, str]]) -> List[str]:
     # TODO (rlkelly): use marshmallow to format
     output = []
     for row in pairs:
-        for key in ["id", "quoteCurrencyId", "baseCurrencyId"]:
-            if isinstance(row["id"], str):
-                output.append(str_to_felt(row["id"]))
+        for key in ["id", "quote_currency_id", "base_currency_id"]:
+            if isinstance(row[key], str):
+                output.append(str_to_felt(row[key]))
             else:
-                output.append(row["id"])
+                output.append(row[key])
     return output
+
+
+async def deploy_contract(cli_config, contract_name):
+    import configparser
+
+    from empiric.cli import net
+
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+
+    gateway_url, chain_id = config.validate_config(cli_config)
+    client = net.init_client(gateway_url, chain_id)
+    account_client = net.init_account_client(client, cli_config)
+
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+    compiled_contract = (compiled_contract_path / f"{contract_name}.json").read_text(
+        "utf-8"
+    )
+
+    deployment_result = await Contract.deploy(
+        account_client,
+        compiled_contract=compiled_contract,
+        constructor_args=[],
+    )
+    await deployment_result.wait_for_acceptance()
+
+    contract_address = deployment_result.deployed_contract.address
+    return contract_address

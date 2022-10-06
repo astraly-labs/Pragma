@@ -1,6 +1,6 @@
 %lang starknet
 
-from entry.structs import Checkpoint, SpotEntry, Pair, Currency
+from entry.structs import Checkpoint, SpotEntry, FutureEntry, GenericEntry, Pair, Currency
 
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
@@ -45,7 +45,12 @@ namespace IOracle {
     ) {
     }
 
-    func get_future_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
+    func get_future_entry(pair_id: felt, expiry_timestamp, source: felt) -> (entry: FutureEntry) {
+    }
+
+    func get_value(key) -> (
+        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
     }
 
     // TODO (rlkelly): add adapters for currency conversion
@@ -86,6 +91,14 @@ namespace IOracle {
     //
     // Setters
     //
+    func publish_entry(new_entry: GenericEntry) {
+    }
+
+    func publish_entries(new_entries_len, new_entries: GenericEntry*) {
+    }
+
+    func publish_future_entry(new_entry: FutureEntry) {
+    }
 
     func publish_spot_entry(new_entry: SpotEntry) {
     }

@@ -21,6 +21,7 @@ const ONE = 1 * FRACT_PART;
 const E = 6267931151224907085;
 const PI = 7244019458077122560;
 const EIGHTEEN_DECIMAL_CONVERSION_FACTOR = 5316911983139663872;
+const EIGHT_DECIMAL_CONVERSION_FACTOR = 53169119831396636028586426368;
 
 namespace FixedPoint {
     func from_wei{range_check_ptr}(x: felt) -> felt {
@@ -33,9 +34,23 @@ namespace FixedPoint {
         return res_;
     }
 
+    func from_decimals{range_check_ptr}(x) -> felt {
+        assert_le(x, INT_PART);
+        assert_le(-INT_PART, x);
+        tempvar product = x * EIGHT_DECIMAL_CONVERSION_FACTOR;
+        let (res, _) = signed_div_rem(product, FRACT_PART, BOUND);
+        return res;
+    }
+
     func to_wei{range_check_ptr}(x: felt) -> felt {
         let scale = mul(x, FRACT_PART);
         let res = div(scale, EIGHTEEN_DECIMAL_CONVERSION_FACTOR);
+        return res;
+    }
+
+    func to_decimals{range_check_ptr}(x: felt) -> felt {
+        let scale = mul(x, FRACT_PART);
+        let res = div(scale, EIGHT_DECIMAL_CONVERSION_FACTOR);
         return res;
     }
 

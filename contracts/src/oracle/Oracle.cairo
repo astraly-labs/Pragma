@@ -4,7 +4,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Currency, Entry, SpotEntry, Pair, Checkpoint
+from entry.structs import Currency, GenericEntry, FutureEntry, SpotEntry, Pair, Checkpoint
 from oracle.library import Oracle
 from proxy.library import Proxy
 
@@ -75,9 +75,9 @@ func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 // @return entry: Entry for key and source
 @view
 func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    pair_id: felt, source: felt
-) -> (entry: SpotEntry) {
-    let (entry) = Oracle.get_spot_entry(pair_id, source);
+    pair_id, expiry_timestamp, source
+) -> (entry: FutureEntry) {
+    let (entry) = Oracle.get_future_entry(pair_id, expiry_timestamp, source);
     return (entry,);
 }
 
@@ -147,9 +147,28 @@ func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     return (decimals,);
 }
 
+@view
+func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
+    value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+) {
+    // TODO: should this always aggregate all values or should we require a source
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_value(key);
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
 //
 // Setters
 //
+
+// @notice publish an Entry
+// @param new_entry: an Entry to publish
+@external
+func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_entry: FutureEntry
+) {
+    Oracle.publish_future_entry(new_entry);
+    return ();
+}
 
 // @notice publish an Entry
 // @param new_entry: an Entry to publish
@@ -158,6 +177,22 @@ func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
     new_entry: SpotEntry
 ) {
     Oracle.publish_spot_entry(new_entry);
+    return ();
+}
+
+@external
+func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_entry: GenericEntry
+) {
+    Oracle.publish_entry(new_entry);
+    return ();
+}
+
+@external
+func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_entries_len, new_entries: GenericEntry*
+) {
+    Oracle.publish_entries(new_entries_len, new_entries);
     return ();
 }
 
@@ -275,6 +310,14 @@ func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     pair_id: felt, aggregation_mode: felt
 ) {
     Oracle.set_checkpoint(pair_id, aggregation_mode);
+    return ();
+}
+
+@external
+func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_ids_len, pair_ids: felt*, aggregation_mode: felt
+) {
+    Oracle.set_checkpoints(pair_ids_len, pair_ids, aggregation_mode);
     return ();
 }
 

@@ -9,7 +9,7 @@ from typing import List, Union
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.types import PublisherFetchError, PublisherInterfaceT
@@ -39,7 +39,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
     async def _fetch_pair(
         self, asset: EmpiricSpotAsset, session: ClientSession
-    ) -> Union[Entry, PublisherFetchError]:
+    ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
             logger.debug(
@@ -77,7 +77,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
     def _fetch_pair_sync(
         self, asset: EmpiricSpotAsset
-    ) -> Union[Entry, PublisherFetchError]:
+    ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
             logger.debug(
@@ -113,7 +113,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
     async def fetch(
         self, session: ClientSession
-    ) -> List[Union[Entry, PublisherFetchError]]:
+    ) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -123,7 +123,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(self) -> List[Union[Entry, PublisherFetchError]]:
+    def fetch_sync(self) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -133,7 +133,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
             entries.append(self._fetch_pair_sync(asset))
         return entries
 
-    def _construct(self, asset, result) -> Union[Entry, PublisherFetchError]:
+    def _construct(self, asset, result) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         pair_id = currency_pair_to_pair_id(*pair)
 
@@ -145,7 +145,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
             logging.info(f"Fetched price {price} for {pair_id} from Coinbase")
 
-            return Entry(
+            return SpotEntry(
                 pair_id=pair_id,
                 price=price_int,
                 timestamp=timestamp,

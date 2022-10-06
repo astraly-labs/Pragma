@@ -4,7 +4,7 @@ from typing import List, Union
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
 from empiric.publisher.types import PublisherFetchError, PublisherInterfaceT
@@ -24,7 +24,7 @@ class CexFetcher(PublisherInterfaceT):
 
     async def _fetch_pair(
         self, asset: EmpiricSpotAsset, session: ClientSession
-    ) -> Union[Entry, PublisherFetchError]:
+    ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
 
@@ -41,7 +41,7 @@ class CexFetcher(PublisherInterfaceT):
 
     def _fetch_pair_sync(
         self, asset: EmpiricSpotAsset
-    ) -> Union[Entry, PublisherFetchError]:
+    ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
 
@@ -58,7 +58,7 @@ class CexFetcher(PublisherInterfaceT):
 
     async def fetch(
         self, session: ClientSession
-    ) -> List[Union[Entry, PublisherFetchError]]:
+    ) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -67,7 +67,7 @@ class CexFetcher(PublisherInterfaceT):
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries)
 
-    def fetch_sync(self) -> List[Union[Entry, PublisherFetchError]]:
+    def fetch_sync(self) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
@@ -76,7 +76,7 @@ class CexFetcher(PublisherInterfaceT):
             entries.append(self._fetch_pair_sync(asset))
         return entries
 
-    def _construct(self, asset, result) -> Entry:
+    def _construct(self, asset, result) -> SpotEntry:
         pair = asset["pair"]
 
         timestamp = int(result["timestamp"])
@@ -86,7 +86,7 @@ class CexFetcher(PublisherInterfaceT):
 
         logger.info(f"Fetched price {price} for {'/'.join(pair)} from CEX")
 
-        return Entry(
+        return SpotEntry(
             pair_id=pair_id,
             price=price_int,
             timestamp=timestamp,

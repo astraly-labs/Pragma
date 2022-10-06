@@ -137,10 +137,10 @@
                 "type": "felt"
             }
         ],
-        "name": "get_spot_key",
+        "name": "get_pair_id",
         "outputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             }
         ],
@@ -150,14 +150,14 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             }
         ],
-        "name": "get_spot_key_is_active",
+        "name": "get_pair_id_is_active",
         "outputs": [
             {
-                "name": "spot_key_is_active",
+                "name": "pair_id_is_active",
                 "type": "felt"
             }
         ],
@@ -166,14 +166,14 @@
     },
     {
         "inputs": [],
-        "name": "get_spot_keys",
+        "name": "get_pair_ids",
         "outputs": [
             {
-                "name": "spot_keys_len",
+                "name": "pair_ids_len",
                 "type": "felt"
             },
             {
-                "name": "spot_keys",
+                "name": "pair_ids",
                 "type": "felt*"
             }
         ],
@@ -183,7 +183,7 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -191,10 +191,10 @@
                 "type": "felt"
             }
         ],
-        "name": "get_future_key",
+        "name": "get_future_expiry_timestamp",
         "outputs": [
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             }
         ],
@@ -204,18 +204,18 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             }
         ],
-        "name": "get_future_keys",
+        "name": "get_future_expiry_timestamps",
         "outputs": [
             {
-                "name": "future_keys_len",
+                "name": "future_expiry_timestamps_len",
                 "type": "felt"
             },
             {
-                "name": "future_keys",
+                "name": "future_expiry_timestamps",
                 "type": "felt*"
             }
         ],
@@ -275,18 +275,18 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             }
         ],
-        "name": "get_future_key_status",
+        "name": "get_future_expiry_timestamp_status",
         "outputs": [
             {
-                "name": "future_key_status",
+                "name": "future_expiry_timestamp_status",
                 "type": "FutureKeyStatus"
             }
         ],
@@ -296,18 +296,18 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             }
         ],
-        "name": "get_future_key_is_active",
+        "name": "get_future_expiry_timestamp_is_active",
         "outputs": [
             {
-                "name": "future_key_is_active",
+                "name": "future_expiry_timestamp_is_active",
                 "type": "felt"
             }
         ],
@@ -317,18 +317,18 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             }
         ],
-        "name": "get_future_key_expiry",
+        "name": "get_future_expiry_timestamp_expiry",
         "outputs": [
             {
-                "name": "future_key_expiry",
+                "name": "future_expiry_timestamp_expiry",
                 "type": "felt"
             }
         ],
@@ -371,7 +371,7 @@
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -379,14 +379,14 @@
                 "type": "felt"
             }
         ],
-        "name": "add_spot_key",
+        "name": "add_pair_id",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -394,18 +394,18 @@
                 "type": "felt"
             }
         ],
-        "name": "set_spot_key_is_active",
+        "name": "set_pair_id_is_active",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             },
             {
@@ -417,37 +417,37 @@
                 "type": "felt"
             }
         ],
-        "name": "add_future_key",
+        "name": "add_future_expiry_timestamp",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             },
             {
-                "name": "new_future_key_status",
+                "name": "new_future_expiry_timestamp_status",
                 "type": "FutureKeyStatus"
             }
         ],
-        "name": "set_future_key_status",
+        "name": "set_future_expiry_timestamp_status",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "spot_key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
-                "name": "future_key",
+                "name": "future_expiry_timestamp",
                 "type": "felt"
             },
             {
@@ -455,7 +455,7 @@
                 "type": "felt"
             }
         ],
-        "name": "set_future_key_is_active",
+        "name": "set_future_expiry_timestamp_is_active",
         "outputs": [],
         "type": "function"
     },

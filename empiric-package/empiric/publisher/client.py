@@ -3,7 +3,7 @@ from typing import List
 
 import aiohttp
 from empiric.core.client import EmpiricClient
-from empiric.core.entry import Entry
+from empiric.core.entry import SpotEntry
 from empiric.publisher.types import PublisherInterfaceT
 
 
@@ -19,10 +19,10 @@ class EmpiricPublisherClient(EmpiricClient):
     The client works by setting up fetchers that are provided the assets to fetch and the publisher name.
 
     ```python
-    cryptowatch_fetcher = CryptowatchFetcher(EMPIRIC_ALL_ASSETS, "empiric_fetcher_test")
+    cex_fetcher = CexFetcher(EMPIRIC_ALL_ASSETS, "empiric_fetcher_test")
     gemini_fetcher = GeminiFetcher(EMPIRIC_ALL_ASSETS, "empiric_fetcher_test")
     fetchers = [
-        cryptowatch_fetcher,
+        cex_fetcher,
         gemini_fetcher,
     ]
     eapc = EmpiricPublisherClient('testnet')
@@ -45,7 +45,7 @@ class EmpiricPublisherClient(EmpiricClient):
     def add_fetcher(self, fetcher: PublisherInterfaceT):
         self.fetchers.append(fetcher)
 
-    async def fetch(self) -> List[Entry]:
+    async def fetch(self) -> List[SpotEntry]:
         tasks = []
         async with aiohttp.ClientSession() as session:
             for fetcher in self.fetchers:
@@ -54,39 +54,9 @@ class EmpiricPublisherClient(EmpiricClient):
             result = await asyncio.gather(*tasks)
             return [val for subl in result for val in subl]
 
-    def fetch_sync(self) -> List[Entry]:
+    def fetch_sync(self) -> List[SpotEntry]:
         results = []
         for fetcher in self.fetchers:
             data = fetcher.fetch_sync()
             results.extend(data)
         return results
-
-
-async def get_entries():
-    from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-    from empiric.publisher.fetchers import (
-        BitstampFetcher,
-        CexFetcher,
-        CryptowatchFetcher,
-        GeminiFetcher,
-        TheGraphFetcher,
-    )
-
-    bitstamp_fetcher = BitstampFetcher(EMPIRIC_ALL_ASSETS, "test1")
-    cex_fetcher = CexFetcher(EMPIRIC_ALL_ASSETS, "test2")
-    cryptowatch_fetcher = CryptowatchFetcher(EMPIRIC_ALL_ASSETS, "test3")
-    gemini_fetcher = GeminiFetcher(EMPIRIC_ALL_ASSETS, "test4")
-    the_graph_fetcher = TheGraphFetcher(EMPIRIC_ALL_ASSETS, "test5")
-    eapc = EmpiricPublisherClient("testnet")
-
-    eapc.add_fetchers(
-        [
-            bitstamp_fetcher,
-            cex_fetcher,
-            cryptowatch_fetcher,
-            gemini_fetcher,
-            the_graph_fetcher,
-        ]
-    )
-
-    return await eapc.fetch()
