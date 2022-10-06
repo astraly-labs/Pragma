@@ -117,9 +117,9 @@ namespace Entries {
         }
 
         let median_idx_1 = entries_len - q - 1;
-        let median_entry_1 = [sorted_entries + median_idx_1 * SpotEntry.SIZE];
+        let median_entry_1 = [sorted_entries + median_idx_1 * GenericEntry.SIZE];
         let median_idx_2 = median_idx_1 + 1;
-        let median_entry_2 = [sorted_entries + median_idx_2 * SpotEntry.SIZE];
+        let median_entry_2 = [sorted_entries + median_idx_2 * GenericEntry.SIZE];
 
         let value = average_values(median_entry_1.value, median_entry_2.value);
         return (value=value);

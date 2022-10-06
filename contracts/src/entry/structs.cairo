@@ -8,7 +8,7 @@ struct BaseEntry {
 
 struct GenericEntry {
     base: BaseEntry,
-    key: felt,  // id of the asset pair (e.g. str_to_felt("ETH/USD"))
+    key: felt,
     value: felt,
 }
 
