@@ -1,14 +1,20 @@
+import collections
 import logging
 from typing import List
 
 from empiric.core.contract import Contract
-from empiric.core.entry import Entry, SpotEntry
+from empiric.core.entry import SpotEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
 from starknet_py.net.client import Client
 
 logger = logging.getLogger(__name__)
+
+OracleResponse = collections.namedtuple(
+    "OracleResponse",
+    ["price", "decimals", "last_updated_timestamp", "num_sources_aggregated"],
+)
 
 
 class OracleMixin:
@@ -90,7 +96,7 @@ class OracleMixin:
         pair_id,
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
         sources=None,
-    ) -> SpotEntry:
+    ) -> OracleResponse:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
         elif not isinstance(pair_id, int):
@@ -107,7 +113,7 @@ class OracleMixin:
                 pair_id, aggregation_mode.value, sources
             )
 
-        return (
+        return OracleResponse(
             response.price,
             response.decimals,
             response.last_updated_timestamp,
@@ -121,7 +127,7 @@ class OracleMixin:
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
         # TODO Add sources on the oracle contract and then in the client here
         # sources=None,
-    ) -> Entry:
+    ) -> OracleResponse:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
         elif not isinstance(pair_id, int):
@@ -135,7 +141,7 @@ class OracleMixin:
             aggregation_mode.value,
         )
 
-        return (
+        return OracleResponse(
             response.price,
             response.decimals,
             response.last_updated_timestamp,
