@@ -57,7 +57,7 @@ func test_set_decimals{syscall_ptr: felt*, range_check_ptr}() {
     local oracle_address;
     %{ ids.oracle_address = context.oracle_address %}
 
-    let (decimals_) = IOracle.get_decimals(oracle_address, 1);
+    let (decimals_) = IOracle.get_spot_decimals(oracle_address, 1);
     assert decimals_ = 18;
 
     return ();

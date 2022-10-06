@@ -163,7 +163,7 @@ async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
-async def get_decimals(currency_id: str, config_path: Path = config.DEFAULT_CONFIG):
+async def get_spot_decimals(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
-    entry = await client.oracle.get_decimals.call(str_to_felt(currency_id))
+    entry = await client.oracle.get_spot_decimals.call(str_to_felt(pair_id))
     typer.echo(f"decimals: {entry}")

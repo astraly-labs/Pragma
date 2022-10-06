@@ -140,10 +140,10 @@ func get_publisher_registry_address{
 // @param key: the key of the asset
 // @return decimals: the number of decimals
 @view
-func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
 ) -> (decimals: felt) {
-    let (decimals) = Oracle.get_decimals(pair_id);
+    let (decimals) = Oracle.get_spot_decimals(pair_id);
     return (decimals,);
 }
 

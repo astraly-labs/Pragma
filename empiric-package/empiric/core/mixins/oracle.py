@@ -135,7 +135,7 @@ class OracleMixin:
                 "Pair ID must be string (will be converted to felt) or integer"
             )
 
-        response = await self.oracle.get_futures.call(
+        response = await self.oracle.get_future.call(
             pair_id,
             expiry_timestamp,
             aggregation_mode.value,
@@ -147,6 +147,20 @@ class OracleMixin:
             response.last_updated_timestamp,
             response.num_sources_aggregated,
         )
+
+    async def get_spot_decimals(self, pair_id) -> int:
+        if isinstance(pair_id, str):
+            pair_id = str_to_felt(pair_id)
+        elif not isinstance(pair_id, int):
+            raise TypeError(
+                "Pair ID must be string (will be converted to felt) or integer"
+            )
+
+        response = await self.oracle.get_spot_decimals.call(
+            pair_id,
+        )
+
+        return response
 
     async def set_checkpoint(
         self,
