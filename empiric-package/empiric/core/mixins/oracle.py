@@ -1,3 +1,4 @@
+import collections
 import logging
 from typing import List
 
@@ -9,6 +10,11 @@ from starknet_py.contract import InvokeResult
 from starknet_py.net.client import Client
 
 logger = logging.getLogger(__name__)
+
+OracleResponse = collections.namedtuple(
+    "OracleResponse",
+    ["price", "decimals", "last_updated_timestamp", "num_sources_aggregated"],
+)
 
 
 class OracleMixin:
@@ -23,7 +29,7 @@ class OracleMixin:
         source: int,
         publisher: int,
         volume: int = 0,
-        max_fee: int = int(1e16),
+        max_fee: int = int(1e18),
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
@@ -49,6 +55,7 @@ class OracleMixin:
             return
 
         invocations = []
+        # TODO (this PR) filter by entry.type and publish Spot, Future and Generic entries separately
         if pagination:
             ix = 0
             while ix < len(entries):
@@ -80,7 +87,7 @@ class OracleMixin:
             raise TypeError(
                 "Pair ID must be string (will be converted to felt) or integer"
             )
-        response = await self.oracle.get_entries.call(pair_id, sources)
+        response = await self.oracle.get_spot_entries.call(pair_id, sources)
 
         return [SpotEntry.from_dict(entry) for entry in response.entries]
 
@@ -89,7 +96,7 @@ class OracleMixin:
         pair_id,
         aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
         sources=None,
-    ) -> SpotEntry:
+    ) -> OracleResponse:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
         elif not isinstance(pair_id, int):
@@ -106,7 +113,35 @@ class OracleMixin:
                 pair_id, aggregation_mode.value, sources
             )
 
-        return (
+        return OracleResponse(
+            response.price,
+            response.decimals,
+            response.last_updated_timestamp,
+            response.num_sources_aggregated,
+        )
+
+    async def get_future(
+        self,
+        pair_id,
+        expiry_timestamp,
+        aggregation_mode: AggregationMode = AggregationMode.MEDIAN,
+        # TODO Add sources on the oracle contract and then in the client here
+        # sources=None,
+    ) -> OracleResponse:
+        if isinstance(pair_id, str):
+            pair_id = str_to_felt(pair_id)
+        elif not isinstance(pair_id, int):
+            raise TypeError(
+                "Pair ID must be string (will be converted to felt) or integer"
+            )
+
+        response = await self.oracle.get_futures.call(
+            pair_id,
+            expiry_timestamp,
+            aggregation_mode.value,
+        )
+
+        return OracleResponse(
             response.price,
             response.decimals,
             response.last_updated_timestamp,

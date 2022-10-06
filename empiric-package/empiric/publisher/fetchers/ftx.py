@@ -8,7 +8,7 @@ from typing import Dict, List
 
 import requests
 from aiohttp import ClientSession
-from empiric.core.entry import SpotEntry
+from empiric.core.entry import FutureEntry, SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset
 from empiric.publisher.types import PublisherInterfaceT
@@ -112,8 +112,9 @@ class FtxFetcher(PublisherInterfaceT):
 
     def parse_ftx_futures(
         self, asset, data, source, publisher, timestamp
-    ) -> List[SpotEntry]:
+    ) -> List[FutureEntry]:
         pair = asset["pair"]
+        pair_id = currency_pair_to_pair_id(*pair)
         if pair[1] != "USD":
             logger.debug(
                 f"Unable to fetch price from FTX for non-USD derivative {pair}"
@@ -131,23 +132,25 @@ class FtxFetcher(PublisherInterfaceT):
             price = float(future["mark"])
             price_int = int(price * (10 ** asset["decimals"]))
 
-            future_expiration_date = int(
+            expiry_timestamp = int(
                 datetime.datetime.strptime(
                     future["expiry"],
                     "%Y-%m-%dT%H:%M:%S%z",
-                ).strftime("%Y%m%d")
+                ).timestamp()
             )
-            pair_id = f"{pair[0]}/{pair[1]}-{future_expiration_date}".lower()
 
-            logger.info(f"Fetched futures price {price} for {pair_id} from FTX")
+            logger.info(
+                f"Fetched futures price {price} for {pair_id}-{expiry_timestamp} from FTX"
+            )
 
             entries.append(
-                SpotEntry(
+                FutureEntry(
                     pair_id=pair_id,
                     price=price_int,
                     timestamp=timestamp,
                     source=source,
                     publisher=publisher,
+                    expiry_timestamp=expiry_timestamp,
                 )
             )
 

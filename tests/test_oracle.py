@@ -328,7 +328,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
         entry.pair_id, AggregationMode.MEDIAN.value
     ).call()
     assert result.result.price == entry.price
-    assert result.result.last_updated_timestamp == entry.timestamp
+    assert result.result.last_updated_timestamp == entry.base.timestamp
     assert result.result.decimals == 8
 
     source_result = await oracle_proxy.get_spot_for_sources(
@@ -574,7 +574,7 @@ async def test_submit_second_publisher(
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
-        second_entry.timestamp, entry.timestamp
+        second_entry.base.timestamp, entry.base.timestamp
     )
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [source, second_source]
@@ -585,13 +585,13 @@ async def test_submit_second_publisher(
         pair_id, AggregationMode.MEDIAN.value, [source]
     ).call()
     assert source_result.result.price == entry.price
-    assert source_result.result.last_updated_timestamp == entry.timestamp
+    assert source_result.result.last_updated_timestamp == entry.base.timestamp
 
     source_result = await oracle_proxy.get_spot_for_sources(
         pair_id, AggregationMode.MEDIAN.value, [second_source]
     ).call()
     assert source_result.result.price == second_entry.price
-    assert source_result.result.last_updated_timestamp == second_entry.timestamp
+    assert source_result.result.last_updated_timestamp == second_entry.base.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [entry, second_entry]
@@ -646,7 +646,7 @@ async def test_submit_second_source(
     ).call()
     assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
-        second_entry.timestamp, entry.timestamp
+        second_entry.base.timestamp, entry.base.timestamp
     )
 
 
@@ -693,7 +693,7 @@ async def test_mean_aggregation(
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.price == (second_entry.price + entry.price) / 2
     assert result.result.last_updated_timestamp == max(
-        second_entry.timestamp, entry.timestamp
+        second_entry.base.timestamp, entry.base.timestamp
     )
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
@@ -929,7 +929,7 @@ async def test_real_data(
     publishers_str = ["cex", "coinbase", "gemini"]
     publishers = [str_to_felt(p) for p in publishers_str]
     for i, publisher in enumerate(publishers):
-        publisher_entries = [e for e in entries if e.publisher == publisher]
+        publisher_entries = [e for e in entries if e.base.publisher == publisher]
         publisher_account = initialized_contracts["additional_publisher_accounts"][i]
         await register_new_publisher_and_publish_spot_entries_1(
             admin_account,
@@ -1073,7 +1073,7 @@ async def test_ignore_stale_entries(
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.price == second_entry.price
-    assert result.result.last_updated_timestamp == second_entry.timestamp
+    assert result.result.last_updated_timestamp == second_entry.base.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert result.result.entries == [second_entry]

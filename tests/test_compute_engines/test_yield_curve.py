@@ -10,7 +10,7 @@ from constants import (
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
-from empiric.core.entry import FutureEntry, SpotEntry
+from empiric.core.entry import FutureEntry, GenericEntry, SpotEntry
 from empiric.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
@@ -248,22 +248,22 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
         [source],
     )
 
-    for spot_key in FUTURES_SPOT.keys():
+    for pair_id in FUTURES_SPOT.keys():
         await admin_signer.send_transaction(
             admin_account,
             yield_curve.contract_address,
-            "add_spot_key",
-            [str_to_felt(spot_key), 1],
+            "add_pair_id",
+            [str_to_felt(pair_id), 1],
         )
 
-        futures = FUTURES_SPOT[spot_key]["futures"]
+        futures = FUTURES_SPOT[pair_id]["futures"]
         for future_expiry_timestamp, future_data in futures.items():
             await admin_signer.send_transaction(
                 admin_account,
                 yield_curve.contract_address,
                 "add_future_expiry_timestamp",
                 [
-                    str_to_felt(spot_key),
+                    str_to_felt(pair_id),
                     str_to_felt(future_expiry_timestamp),
                     1,
                     future_data["expiry_timestamp"],
@@ -285,20 +285,20 @@ async def test_deploy(initialized_contracts):
     ).call()
     assert on_key_is_active.result.on_key_is_active == 1
 
-    for spot_key in FUTURES_SPOT.keys():
-        spot_keys = await yield_curve.get_spot_keys().call()
-        assert [str_to_felt(spot_key)] == spot_keys.result.spot_keys
+    for pair_id in FUTURES_SPOT.keys():
+        pair_ids = await yield_curve.get_pair_ids().call()
+        assert [str_to_felt(pair_id)] == pair_ids.result.pair_ids
 
-        spot_key_is_active = await yield_curve.get_spot_key_is_active(
-            str_to_felt(spot_key)
+        pair_id_is_active = await yield_curve.get_pair_id_is_active(
+            str_to_felt(pair_id)
         ).call()
-        assert spot_key_is_active.result.spot_key_is_active == 1
+        assert pair_id_is_active.result.pair_id_is_active == 1
 
         future_expiry_timestamps = await yield_curve.get_future_expiry_timestamps(
-            str_to_felt(spot_key)
+            str_to_felt(pair_id)
         ).call()
         assert [
-            str_to_felt(k) for k in FUTURES_SPOT[spot_key]["futures"].keys()
+            str_to_felt(k) for k in FUTURES_SPOT[pair_id]["futures"].keys()
         ] == future_expiry_timestamps.result.future_expiry_timestamps
 
 
@@ -320,9 +320,9 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     output_decimals = 10
 
     # Submit data (on, spot, futures)
-    on_entry = SpotEntry(
-        pair_id=ON_KEY,
-        price=1 * (10**15),  # 0.1% at 18 decimals (default),
+    on_entry = GenericEntry(
+        key=ON_KEY,
+        value=10**15,  # 0.1% at 18 decimals (default),
         timestamp=STARKNET_STARTING_TIMESTAMP,
         source=str_to_felt("THEGRAPH"),
         publisher=publisher,
@@ -330,15 +330,15 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
     await publisher_signer.send_transaction(
         publisher_account,
         oracle.contract_address,
-        "publish_spot_entry",
+        "publish_entry",
         on_entry.to_tuple(),
     )
 
-    for spot_key in FUTURES_SPOT.keys():
+    for pair_id in FUTURES_SPOT.keys():
         spot_entry = SpotEntry(
-            pair_id=spot_key,
-            price=FUTURES_SPOT[spot_key]["value"],
-            timestamp=FUTURES_SPOT[spot_key]["timestamp"],
+            pair_id=pair_id,
+            price=FUTURES_SPOT[pair_id]["value"],
+            timestamp=FUTURES_SPOT[pair_id]["timestamp"],
             source=source,
             publisher=publisher,
         )
@@ -351,14 +351,17 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
 
         yield_points = [
             calculate_on_yield_point(
-                on_entry.price, on_entry.timestamp, DEFAULT_DECIMALS, output_decimals
+                on_entry.value,
+                on_entry.base.timestamp,
+                DEFAULT_DECIMALS,
+                output_decimals,
             ),
         ]
 
-        futures = FUTURES_SPOT[spot_key]["futures"]
+        futures = FUTURES_SPOT[pair_id]["futures"]
         for future_expiry_timestamp, future_data in futures.items():
             future_entry = FutureEntry(
-                pair_id=spot_key,
+                pair_id=pair_id,
                 price=future_data["value"],
                 timestamp=future_data["timestamp"],
                 source=source,
@@ -373,10 +376,10 @@ async def test_yield_curve(initialized_contracts, publisher_signer, source, publ
             )
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_entry.price,
-                future_entry.timestamp,
+                future_entry.base.timestamp,
                 future_data["expiry_timestamp"],
                 spot_entry.price,
-                spot_entry.timestamp,
+                spot_entry.base.timestamp,
                 DEFAULT_DECIMALS,
                 DEFAULT_DECIMALS,
                 output_decimals,
