@@ -40,7 +40,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
         "&developer_data=false&sparkline=false"
     )
 
-    SOURCE: str = "coingecko"
+    SOURCE: str = "COINGECKO"
     headers = {
         "Accepts": "application/json",
     }

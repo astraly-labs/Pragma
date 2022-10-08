@@ -52,7 +52,7 @@ STARKNET_NETWORK=alpha-goerli
 Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `28556963469423460` (use `str_to_felt("eth/usd")` util in `empiric.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle Proxy contract (see above):
 
 ```bash
-starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/abi/Oracle.json --function get_value --inputs 28556963469423460
+starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/abi/Oracle.json --function get_value --inputs 19514442401534788
 ```
 
 ## Publishing Data to a Feed in a Deployed Contract

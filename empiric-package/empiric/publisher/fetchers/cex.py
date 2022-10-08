@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class CexFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://cex.io/api/ticker"
-    SOURCE: str = "cex"
+    SOURCE: str = "CEX"
 
     publisher: str
 

@@ -52,7 +52,7 @@ EMPIRIC_ALL_ASSETS: List[EmpiricAsset] = [
     {
         "type": "ONCHAIN",
         "source": "AAVE",
-        "key": "aave-on-borrow",
+        "key": "AAVE-ON-BORROW",
         "detail": {
             "asset_name": "USD Coin",
             "asset_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb480xb53c1a33016b2dc2ff3653530bff1848a515c8c5",

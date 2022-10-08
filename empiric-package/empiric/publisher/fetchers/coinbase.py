@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class CoinbaseFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://api.exchange.coinbase.com"
-    SOURCE: str = "coinbase"
+    SOURCE: str = "COINBASE"
     REQUEST_PATH = "/oracle"
     METHOD = "GET"
 
