@@ -11,7 +11,7 @@ async def main(pair):
     pair_id = currency_pair_to_key(*pair)
 
     client = EmpiricClient()
-    decimals = await client.get_decimals(pair_id)
+    decimals = await client.get_spot_decimals(pair_id)
     entries = []
 
     num_reps = 1

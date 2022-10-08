@@ -229,7 +229,7 @@ ORACLE_ABI = [
     },
     {
         "inputs": [{"name": "pair_id", "type": "felt"}],
-        "name": "get_decimals",
+        "name": "get_spot_decimals",
         "outputs": [{"name": "decimals", "type": "felt"}],
         "stateMutability": "view",
         "type": "function",

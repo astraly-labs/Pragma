@@ -750,7 +750,7 @@ namespace YieldCurve {
             return (recursed_spot_yield_points_len, recursed_spot_yield_points);
         }
 
-        let (spot_decimals) = IOracle.get_decimals(oracle_address, pair_id);
+        let (spot_decimals) = IOracle.get_spot_decimals(oracle_address, pair_id);
         let (spot_entry) = IOracle.get_spot_entry(
             oracle_address, pair_id, future_spot_empiric_source_key
         );
@@ -863,7 +863,7 @@ namespace YieldCurve {
             return (recursed_future_yield_points_len, recursed_future_yield_points);
         }
 
-        let (future_decimals_) = IOracle.get_decimals(oracle_address, future_expiry_timestamp);
+        let (future_decimals_) = IOracle.get_spot_decimals(oracle_address, future_expiry_timestamp);
 
         local future_decimals;
         if (future_decimals_ == 0) {

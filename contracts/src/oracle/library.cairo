@@ -154,7 +154,7 @@ namespace Oracle {
         return (publisher_registry_address,);
     }
 
-    func get_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func get_spot_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt
     ) -> (decimals: felt) {
         let (pair) = Oracle_pairs_storage.read(pair_id);
@@ -179,7 +179,7 @@ namespace Oracle {
         }
 
         let (price) = Entries.aggregate_spot_entries(entries_len, entries);
-        let (decimals) = get_decimals(key);
+        let (decimals) = get_spot_decimals(key);
         let (last_updated_timestamp) = Entries.aggregate_timestamps_max(entries_len, entries);
         return (price, decimals, last_updated_timestamp, entries_len);
     }

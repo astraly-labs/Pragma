@@ -79,7 +79,7 @@ async def main():
     client = EmpiricPublisherClient(publisher_private_key, publisher_address)
     entry = Entry(
         key=currency_pair_to_key("TEST", "USD"),
-        value=10,  # shifted 10 ** decimals; see get_decimals above
+        value=10,  # shifted 10 ** decimals; see get_spot_decimals above
         timestamp=int(time.time()),  # UNIX format, in seconds since epoch
         source="gemini",
         publisher="<your name here>",

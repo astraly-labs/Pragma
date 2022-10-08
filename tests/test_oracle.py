@@ -235,10 +235,12 @@ async def test_deploy(initialized_contracts):
 async def test_decimals(initialized_contracts):
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
-    result = await oracle_proxy.get_decimals(str_to_felt("NONEXISTANT")).call()
+    result = await oracle_proxy.get_spot_decimals(str_to_felt("NONEXISTANT")).call()
     assert result.result.decimals == 0
 
-    result = await oracle_proxy.get_decimals(str_to_felt("USD/DECIMALS-TEST")).call()
+    result = await oracle_proxy.get_spot_decimals(
+        str_to_felt("USD/DECIMALS-TEST")
+    ).call()
     assert result.result.decimals == 100
 
 

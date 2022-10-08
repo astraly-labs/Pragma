@@ -534,7 +534,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_decimals",
+        "name": "get_spot_decimals",
         "outputs": [
             {
                 "name": "decimals",
