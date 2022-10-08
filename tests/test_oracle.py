@@ -118,25 +118,25 @@ async def contract_init(
                 admin_account.contract_address,
                 publisher_registry.contract_address,
                 [
-                    ("decimals-test", 100, 1, 0, 0),
-                    ("eth", 18, 1, 0, 0),
-                    ("btc", 18, 1, 0, 0),
-                    ("usd", 8, 1, 0, 0),
-                    ("doge", 18, 1, 0, 0),
-                    ("luna", 18, 1, 0, 0),
-                    ("sol", 18, 1, 0, 0),
-                    ("shib", 18, 1, 0, 0),
-                    ("avax", 18, 1, 0, 0),
+                    ("DECIMALS-TEST", 100, 1, 0, 0),
+                    ("ETH", 18, 1, 0, 0),
+                    ("BTC", 18, 1, 0, 0),
+                    ("USD", 8, 1, 0, 0),
+                    ("DOGE", 18, 1, 0, 0),
+                    ("LUNA", 18, 1, 0, 0),
+                    ("SOL", 18, 1, 0, 0),
+                    ("SHIB", 18, 1, 0, 0),
+                    ("AVAX", 18, 1, 0, 0),
                 ],
                 [
-                    ("usd/decimals-test", "usd", "decimals-test"),
-                    ("eth/usd", "eth", "usd"),
-                    ("btc/usd", "btc", "usd"),
-                    ("luna/usd", "luna", "usd"),
-                    ("doge/usd", "doge", "usd"),
-                    ("sol/usd", "sol", "usd"),
-                    ("shib/usd", "shib", "usd"),
-                    ("avax/usd", "avax", "usd"),
+                    ("USD/DECIMALS-TEST", "USD", "DECIMALS-TEST"),
+                    ("ETH/USD", "ETH", "USD"),
+                    ("BTC/USD", "BTC", "USD"),
+                    ("LUNA/USD", "LUNA", "USD"),
+                    ("DOGE/USD", "DOGE", "USD"),
+                    ("SOL/USD", "SOL", "USD"),
+                    ("SHIB/USD", "SHIB", "USD"),
+                    ("AVAX/USD", "AVAX", "USD"),
                 ],
             )
         ),
@@ -912,23 +912,23 @@ async def test_real_data(
     oracle_proxy = initialized_contracts["oracle_proxy"]
 
     entries = [
-        SpotEntry("eth/usd", 29902600000000, 1650590935, "cex", "cex"),
-        SpotEntry("btc/usd", 404070000000000, 1650590889, "cex", "cex"),
-        SpotEntry("luna/usd", 922099999999, 1650590883, "cex", "cex"),
-        SpotEntry("sol/usd", 1023600000000, 1650590886, "cex", "cex"),
-        SpotEntry("avax/usd", 759800000000, 1650590853, "cex", "cex"),
-        SpotEntry("doge/usd", 1365780000, 1650590845, "cex", "cex"),
-        SpotEntry("shib/usd", 245100, 1650590865, "cex", "cex"),
-        SpotEntry("eth/usd", 29924650000000, 1650590820, "coinbase", "coinbase"),
-        SpotEntry("btc/usd", 404057899999999, 1650590820, "coinbase", "coinbase"),
-        SpotEntry("eth/usd", 29920000000000, 1650590986, "gemini", "gemini"),
-        SpotEntry("btc/usd", 404047800000000, 1650590986, "gemini", "gemini"),
-        SpotEntry("luna/usd", 924700000000, 1650590986, "gemini", "gemini"),
-        SpotEntry("sol/usd", 1023610000000, 1650590986, "gemini", "gemini"),
-        SpotEntry("doge/usd", 1364400000, 1650590986, "gemini", "gemini"),
-        SpotEntry("shib/usd", 245270, 1650590986, "gemini", "gemini"),
+        SpotEntry("ETH/USD", 29902600000000, 1650590935, "CEX", "CEX"),
+        SpotEntry("BTC/USD", 404070000000000, 1650590889, "CEX", "CEX"),
+        SpotEntry("LUNA/USD", 922099999999, 1650590883, "CEX", "CEX"),
+        SpotEntry("SOL/USD", 1023600000000, 1650590886, "CEX", "CEX"),
+        SpotEntry("AVAX/USD", 759800000000, 1650590853, "CEX", "CEX"),
+        SpotEntry("DOGE/USD", 1365780000, 1650590845, "CEX", "CEX"),
+        SpotEntry("SHIB/USD", 245100, 1650590865, "CEX", "CEX"),
+        SpotEntry("ETH/USD", 29924650000000, 1650590820, "COINBASE", "COINBASE"),
+        SpotEntry("BTC/USD", 404057899999999, 1650590820, "COINBASE", "COINBASE"),
+        SpotEntry("ETH/USD", 29920000000000, 1650590986, "GEMINI", "GEMINI"),
+        SpotEntry("BTC/USD", 404047800000000, 1650590986, "GEMINI", "GEMINI"),
+        SpotEntry("LUNA/USD", 924700000000, 1650590986, "GEMINI", "GEMINI"),
+        SpotEntry("SOL/USD", 1023610000000, 1650590986, "GEMINI", "GEMINI"),
+        SpotEntry("DOGE/USD", 1364400000, 1650590986, "GEMINI", "GEMINI"),
+        SpotEntry("SHIB/USD", 245270, 1650590986, "GEMINI", "GEMINI"),
     ]
-    publishers_str = ["cex", "coinbase", "gemini"]
+    publishers_str = ["CEX", "COINBASE", "GEMINI"]
     publishers = [str_to_felt(p) for p in publishers_str]
     for i, publisher in enumerate(publishers):
         publisher_entries = [e for e in entries if e.base.publisher == publisher]
@@ -945,13 +945,13 @@ async def test_real_data(
         )
 
     pair_ids = [
-        "eth/usd",
-        "btc/usd",
-        "luna/usd",
-        "sol/usd",
-        "avax/usd",
-        "doge/usd",
-        "shib/usd",
+        "ETH/USD",
+        "BTC/USD",
+        "LUNA/USD",
+        "SOL/USD",
+        "AVAX/USD",
+        "DOGE/USD",
+        "SHIB/USD",
     ]
     for pair_id in pair_ids:
         result = await oracle_proxy.get_spot(

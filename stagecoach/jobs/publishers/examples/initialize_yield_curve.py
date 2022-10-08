@@ -8,11 +8,11 @@ from empiric.core.utils import str_to_felt
 
 logger = get_stream_logger()
 
-on_keys = ["aave-on-borrow"]
+on_keys = ["AAVE-ON-BORROW"]
 spot_future_keys = {
-    "btc/usd": {
-        "btc/usd-20220930": 1664506800,
-        "btc/usd-20221230": 1672369200,
+    "BTC/USD": {
+        "BTC/USD-20220930": 1664506800,
+        "BTC/USD-20221230": 1672369200,
     }
 }
 yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E659962EC

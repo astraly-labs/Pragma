@@ -1,14 +1,14 @@
 {
     "currencies": [
         {
-            "id": "btc",
+            "id": "BTC",
             "decimals": 18,
             "is_abstract_currency": true,
             "starknet_address": 0,
             "ethereum_address": 0
         },
         {
-            "id": "usd",
+            "id": "USD",
             "decimals": 8,
             "is_abstract_currency": true,
             "starknet_address": 0,
@@ -17,9 +17,9 @@
     ],
     "pairs": [
         {
-            "id": "btc/usd",
-            "quote_currency_id": "btc",
-            "base_currency_id": "usd"
+            "id": "BTC/USD",
+            "quote_currency_id": "BTC",
+            "base_currency_id": "USD"
         }
     ]
 }
