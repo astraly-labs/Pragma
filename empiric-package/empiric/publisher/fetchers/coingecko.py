@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
-from empiric.publisher.types import PublisherInterfaceT
+from empiric.publisher.types import PublisherFetchError, PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
         pair = asset["pair"]
         pair_id = ASSET_MAPPING.get(pair[0])
         if pair_id is None:
-            raise ValueError(
+            return PublisherFetchError(
                 f"Unknown price pair, do not know how to query Coingecko for {pair[0]}"
             )
         url = self.BASE_URL.format(pair_id=pair_id)
@@ -72,7 +72,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
         pair = asset["pair"]
         pair_id = ASSET_MAPPING.get(pair[0])
         if pair_id is None:
-            raise ValueError(
+            return PublisherFetchError(
                 f"Unknown price pair, do not know how to query Coingecko for {pair[0]}"
             )
         url = self.BASE_URL.format(pair_id=pair_id)
