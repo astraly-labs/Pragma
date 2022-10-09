@@ -141,7 +141,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
             timestamp = int(result["timestamp"])
 
-            logging.info(f"Fetched price {price} for {pair_id} from Coinbase")
+            logger.info(f"Fetched price {price} for {pair_id} from Coinbase")
 
             return SpotEntry(
                 pair_id=pair_id,

@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 def get_stream_logger():
     import sys
 
-    logger.handlers.clear()
     logger.setLevel(logging.DEBUG)
     streamHandler = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter(
@@ -14,6 +13,5 @@ def get_stream_logger():
     )
     streamHandler.setFormatter(formatter)
     logger.addHandler(streamHandler)
-    logger.propagate = False
 
     return logger
