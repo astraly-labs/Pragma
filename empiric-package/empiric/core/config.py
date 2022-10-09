@@ -58,7 +58,7 @@ MAINNET_CONTRACTS = ContractAddresses(
 CONTRACT_ADDRESSES = {
     "testnet": TESTNET_CONTRACTS,
     "integration": INTEGRATION_CONTRACTS,
-    "mainnet": MAINNET_CONTRACTS,
+    # "mainnet": MAINNET_CONTRACTS,
 }
 
 EnvironmentTypes = Literal[
