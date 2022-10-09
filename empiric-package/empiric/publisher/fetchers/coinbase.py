@@ -42,7 +42,9 @@ class CoinbaseFetcher(PublisherInterfaceT):
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
-            return PublisherFetchError(f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}")
+            return PublisherFetchError(
+                f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
+            )
 
         request_timestamp = str(
             int(
@@ -77,7 +79,9 @@ class CoinbaseFetcher(PublisherInterfaceT):
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
-            return PublisherFetchError(f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}")
+            return PublisherFetchError(
+                f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
+            )
 
         request_timestamp = str(
             int(

@@ -59,24 +59,27 @@ class OracleMixin:
         if pagination:
             ix = 0
             while ix < len(entries):
+                entries_subset = entries[ix : ix + pagination]
                 invocation = await self.oracle.publish_spot_entries.invoke(
-                    SpotEntry.serialize_entries(entries[ix : ix + pagination]),
+                    SpotEntry.serialize_entries(entries_subset),
                     callback=self.track_nonce,
                     max_fee=max_fee,
                 )
-                logger.info(str(invocation))
+                logger.debug(str(invocation))
                 ix += pagination
                 invocations.append(invocation)
+                logger.info(
+                    f"Sent {len(entries_subset)} updated entries with transaction {hex(invocation.hash)}"
+                )
         else:
             invocation = await self.oracle.publish_spot_entries.invoke(
                 SpotEntry.serialize_entries(entries), max_fee=max_fee
             )
             invocations.append(invocation)
-            logger.info(str(invocation))
-
-        logger.info(
-            f"Sent {len(entries)} updated entries with transaction {invocation.hash}"
-        )
+            logger.debug(str(invocation))
+            logger.info(
+                f"Sent {len(entries)} updated entries with transaction {hex(invocation.hash)}"
+            )
 
         return invocations
 
