@@ -27,7 +27,6 @@ jobs:
           echo $HOME
           echo "$PATH"
           echo "$GITHUB_PATH"
-          source $HOME/.bashrc
           echo "$HOME/.protostar/dist/protostar" >> $GITHUB_PATH
           echo "$HOME/.protostar/dist/protostar" >> $PATH
           echo $HOME
