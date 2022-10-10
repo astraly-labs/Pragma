@@ -27,7 +27,7 @@ from utils import cached_contract
 STARKNET_STARTING_TIMESTAMP = 1650590820
 ON_KEY = "AAVE-ON-BORROW"
 FUTURES_SPOT = {
-    "btc/usd": {
+    "BTC/USD": {
         "value": 100,
         "timestamp": STARKNET_STARTING_TIMESTAMP,
         "futures": {

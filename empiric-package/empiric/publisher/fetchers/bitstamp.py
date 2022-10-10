@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class BitstampFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://www.bitstamp.net/api/v2/ticker"
-    SOURCE: str = "bitstamp"
+    SOURCE: str = "BITSTAMP"
     publisher: str
 
     def __init__(self, assets: List[EmpiricAsset], publisher):
@@ -28,8 +28,9 @@ class BitstampFetcher(PublisherInterfaceT):
         url = f"{self.BASE_URL}/{pair[0].lower()}{pair[1].lower()}"
         async with session.get(url) as resp:
             if resp.status == 404:
-                logger.debug(f"No data found for {'/'.join(pair)} from Bitstamp")
-                return PublisherFetchError(pair)
+                return PublisherFetchError(
+                    f"No data found for {'/'.join(pair)} from Bitstamp"
+                )
             return self._construct(asset, await resp.json())
 
     def _fetch_pair_sync(
@@ -39,8 +40,9 @@ class BitstampFetcher(PublisherInterfaceT):
         url = f"{self.BASE_URL}/{pair[0].lower()}{pair[1].lower()}"
         resp = requests.get(url)
         if resp.status == 404:
-            logger.debug(f"No data found for {'/'.join(pair)} from Bitstamp")
-            return PublisherFetchError(pair)
+            return PublisherFetchError(
+                f"No data found for {'/'.join(pair)} from Bitstamp"
+            )
         return self._construct(asset, resp.json())
 
     async def fetch(

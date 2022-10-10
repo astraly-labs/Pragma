@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class CexFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://cex.io/api/ticker"
-    SOURCE: str = "cex"
+    SOURCE: str = "CEX"
 
     publisher: str
 
@@ -30,12 +30,14 @@ class CexFetcher(PublisherInterfaceT):
 
         async with session.get(url) as resp:
             if resp.status == 404:
-                logger.info(f"No data found for {'/'.join(pair)} from CEX")
-                return PublisherFetchError(pair)
+                return PublisherFetchError(
+                    f"No data found for {'/'.join(pair)} from CEX"
+                )
             result = await resp.json(content_type="text/json")
             if "error" in result and result["error"] == "Invalid Symbols Pair":
-                logger.info(f"No data found for {'/'.join(pair)} from CEX")
-                return PublisherFetchError(pair)
+                return PublisherFetchError(
+                    f"No data found for {'/'.join(pair)} from CEX"
+                )
 
             return self._construct(asset, result)
 
@@ -47,12 +49,10 @@ class CexFetcher(PublisherInterfaceT):
 
         resp = requests.get(url)
         if resp.status == 404:
-            logger.info(f"No data found for {'/'.join(pair)} from CEX")
-            return PublisherFetchError(pair)
+            return PublisherFetchError(f"No data found for {'/'.join(pair)} from CEX")
         result = resp.json(content_type="text/json")
         if "error" in result and result["error"] == "Invalid Symbols Pair":
-            logger.info(f"No data found for {'/'.join(pair)} from CEX")
-            return PublisherFetchError(pair)
+            return PublisherFetchError(f"No data found for {'/'.join(pair)} from CEX")
 
         return self._construct(asset, result)
 

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class CoinbaseFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://api.exchange.coinbase.com"
-    SOURCE: str = "coinbase"
+    SOURCE: str = "COINBASE"
     REQUEST_PATH = "/oracle"
     METHOD = "GET"
 
@@ -42,10 +42,9 @@ class CoinbaseFetcher(PublisherInterfaceT):
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
-            logger.debug(
+            return PublisherFetchError(
                 f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
             )
-            return PublisherFetchError(f"NON-USD PAIR: {pair}")
 
         request_timestamp = str(
             int(
@@ -80,10 +79,9 @@ class CoinbaseFetcher(PublisherInterfaceT):
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
         if pair[1] != "USD":
-            logger.debug(
+            return PublisherFetchError(
                 f"Unable to fetch Coinbase price for non-USD denomination {pair[1]}"
             )
-            return PublisherFetchError(f"NON-USD PAIR: {pair}")
 
         request_timestamp = str(
             int(
@@ -143,7 +141,7 @@ class CoinbaseFetcher(PublisherInterfaceT):
 
             timestamp = int(result["timestamp"])
 
-            logging.info(f"Fetched price {price} for {pair_id} from Coinbase")
+            logger.info(f"Fetched price {price} for {pair_id} from Coinbase")
 
             return SpotEntry(
                 pair_id=pair_id,

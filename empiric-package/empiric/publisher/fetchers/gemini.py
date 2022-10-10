@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class GeminiFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://api.gemini.com/v1"
-    SOURCE: str = "gemini"
+    SOURCE: str = "GEMINI"
 
     publisher: str
 
