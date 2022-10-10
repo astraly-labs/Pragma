@@ -576,6 +576,43 @@
     {
         "inputs": [
             {
+                "name": "base_currency_id",
+                "type": "felt"
+            },
+            {
+                "name": "quote_currency_id",
+                "type": "felt"
+            },
+            {
+                "name": "aggregation_mode",
+                "type": "felt"
+            }
+        ],
+        "name": "get_spot_with_USD_hop",
+        "outputs": [
+            {
+                "name": "price",
+                "type": "felt"
+            },
+            {
+                "name": "decimals",
+                "type": "felt"
+            },
+            {
+                "name": "last_updated_timestamp",
+                "type": "felt"
+            },
+            {
+                "name": "num_sources_aggregated",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "new_entry",
                 "type": "FutureEntry"
             }
