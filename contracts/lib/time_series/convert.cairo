@@ -9,14 +9,14 @@ from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero, asser
 func convert_via_usd{range_check_ptr}(
     input_price_in_usd, output_price_in_usd, output_decimals
 ) -> felt {
-    let (pow_) = pow(10, output_price_in_usd);
+    let (pow_) = pow(10, output_decimals);
 
     with_attr error_message("Conversion Overflow") {
         assert_le(pow_, 10 ** 36);
         assert_le(input_price_in_usd, 10 ** 36);
     }
 
-    let (output_, _) = unsigned_div_rem(input_price_in_usd * pow_, output_decimals);
+    let (output_, _) = unsigned_div_rem(input_price_in_usd * pow_, output_price_in_usd);
     return (output_);
 }
 
