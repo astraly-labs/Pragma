@@ -749,8 +749,11 @@ namespace Oracle {
 
         let (caller_address) = get_caller_address();
 
-        with_attr error_message("Oracle: Publisher and caller must not be 0 addresses") {
+        with_attr error_message("Oracle: Publisher not registered") {
             assert_not_zero(publisher_address);
+        }
+
+        with_attr error_message("Oracle: Caller must not be 0 address") {
             assert_not_zero(caller_address);
         }
 

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class TheGraphFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://api.thegraph.com/subgraphs/name/"
-    SOURCE: str = "thegraph"
+    SOURCE: str = "THEGRAPH"
 
     publisher: str
 

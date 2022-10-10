@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class FtxFetcher(PublisherInterfaceT):
     BASE_URL: str = "https://ftx.com/api"
-    SOURCE: str = "ftx"
+    SOURCE: str = "FTX"
     endpoint: str = "/markets"
 
     FTX_API_KEY: str
