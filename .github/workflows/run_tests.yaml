@@ -17,18 +17,13 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
-      - name: Install protostar
-        run: |
-          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
-          export PATH="$PATH:/home/runner/.protostar/dist/protostar"
-          protostar --help
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --upgrade --upgrade-strategy eager
           pip install -r dev-requirements.txt --upgrade --upgrade-strategy eager
           pip install -e empiric-package
+          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
 
       - name: Format and lint
         run: |
@@ -47,5 +42,5 @@ jobs:
 
       - name: Run protostar tests
         run: |
-          source $HOME/.bashrc
+          export PATH="$PATH:/home/runner/.protostar/dist/protostar"
           protostar test ./contracts/test
