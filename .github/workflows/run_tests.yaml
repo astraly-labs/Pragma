@@ -25,7 +25,11 @@ jobs:
           pip install -e empiric-package
           curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
           source /home/runner/.bashrc
+          echo "$HOME/.protostar/dist/protostar" >> $GITHUB_PATH
+          echo "$HOME/.protostar/dist/protostar" >> $PATH
           echo $HOME
+          echo "$PATH"
+          echo "$GITHUB_PATH"
           protostar --help
 
       - name: Format and lint
