@@ -9,7 +9,7 @@ from starkware.cairo.common.math import assert_not_equal, assert_not_zero, asser
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
-from time_series.convert import _decimal_div, _max, convert_via_usd
+from time_series.convert import _max, convert_via_usd
 
 from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry

@@ -4,11 +4,19 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.pow import pow
 from starkware.cairo.common.math_cmp import is_le
-from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero
+from starkware.cairo.common.math import unsigned_div_rem, assert_not_zero, assert_le
 
-func convert_via_usd{range_check_ptr}(a_price_in_usd, b_price_in_usd, b_decimals) -> felt {
-    let (pow_) = pow(10, b_decimals);
-    let (output_, _) = unsigned_div_rem(a_price_in_usd * pow_, b_price_in_usd);
+func convert_via_usd{range_check_ptr}(
+    input_price_in_usd, output_price_in_usd, output_decimals
+) -> felt {
+    let (pow_) = pow(10, output_price_in_usd);
+
+    with_attr error_message("Conversion Overflow") {
+        assert_le(pow_, 10 ** 36);
+        assert_le(input_price_in_usd, 10 ** 36);
+    }
+
+    let (output_, _) = unsigned_div_rem(input_price_in_usd * pow_, output_decimals);
     return (output_);
 }
 
