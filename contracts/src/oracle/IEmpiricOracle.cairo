@@ -14,6 +14,10 @@ struct SpotEntry {
     volume: felt,  // Volume aggregated into this market price
 }
 
+namespace EmpiricAggregationModes {
+    const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
+}
+
 @contract_interface
 namespace IEmpiricOracle {
     //
@@ -24,11 +28,11 @@ namespace IEmpiricOracle {
     }
 
     func get_spot_entries(pair_id: felt, sources_len: felt, sources: felt*) -> (
-        entries_len: felt, entries: Entry*
+        entries_len: felt, entries: SpotEntry*
     ) {
     }
 
-    func get_spot_entry(pair_id: felt, source: felt) -> (entry: Entry) {
+    func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
     func get_spot(pair_id: felt, aggregation_mode: felt) -> (
