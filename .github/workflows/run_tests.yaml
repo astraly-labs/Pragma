@@ -24,6 +24,7 @@ jobs:
           pip install -r dev-requirements.txt --upgrade --upgrade-strategy eager
           pip install -e empiric-package
           curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
+          source $HOME/.bashrc
 
       - name: Format and lint
         run: |
