@@ -20,6 +20,10 @@ namespace IOracle {
     //
     // Getters
     //
+    func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
 
     func get_spot_decimals(pair_id: felt) -> (decimals: felt) {
     }
