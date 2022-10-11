@@ -3,7 +3,7 @@ import logging
 from typing import List, Union
 
 import requests
-from aiohttp import ClientSession, client_exceptions
+from aiohttp import ClientSession
 from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
@@ -31,8 +31,7 @@ class BitstampFetcher(PublisherInterfaceT):
                 return PublisherFetchError(
                     f"No data found for {'/'.join(pair)} from Bitstamp"
                 )
-            resp_json = await resp.json()
-            return self._construct(asset, resp_json)
+            return self._construct(asset, await resp.json())
 
     def _fetch_pair_sync(
         self, asset: EmpiricSpotAsset
@@ -44,8 +43,7 @@ class BitstampFetcher(PublisherInterfaceT):
             return PublisherFetchError(
                 f"No data found for {'/'.join(pair)} from Bitstamp"
             )
-        resp_json = resp.json()
-        return self._construct(asset, resp_json)
+        return self._construct(asset, resp.json())
 
     async def fetch(
         self, session: ClientSession
@@ -70,22 +68,17 @@ class BitstampFetcher(PublisherInterfaceT):
     def _construct(self, asset, result) -> SpotEntry:
         pair = asset["pair"]
 
-        try:
-            timestamp = int(result["timestamp"])
-            price = float(result["last"])
-            price_int = int(price * (10 ** asset["decimals"]))
-            pair_id = currency_pair_to_pair_id(*pair)
+        timestamp = int(result["timestamp"])
+        price = float(result["last"])
+        price_int = int(price * (10 ** asset["decimals"]))
+        pair_id = currency_pair_to_pair_id(*pair)
 
-            logger.info(f"Fetched price {price} for {'/'.join(pair)} from Bitstamp")
+        logger.info(f"Fetched price {price} for {'/'.join(pair)} from Bitstamp")
 
-            return SpotEntry(
-                pair_id=pair_id,
-                price=price_int,
-                timestamp=timestamp,
-                source=self.SOURCE,
-                publisher=self.publisher,
-            )
-        except KeyError:
-            return PublisherFetchError(
-                f"Error decoding response for {'/'.join(pair)} from Bitstamp"
-            )
+        return SpotEntry(
+            pair_id=pair_id,
+            price=price_int,
+            timestamp=timestamp,
+            source=self.SOURCE,
+            publisher=self.publisher,
+        )
