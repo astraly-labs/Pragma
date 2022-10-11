@@ -25,18 +25,13 @@ class BitstampFetcher(PublisherInterfaceT):
         self, asset: EmpiricSpotAsset, session: ClientSession
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
-        url = f"{self.BASE_URL}/{pair[0].lower()}{pair[1].lower()}t"
+        url = f"{self.BASE_URL}/{pair[0].lower()}{pair[1].lower()}"
         async with session.get(url) as resp:
             if resp.status == 404:
                 return PublisherFetchError(
                     f"No data found for {'/'.join(pair)} from Bitstamp"
                 )
-            try:
-                resp_json = await resp.json()
-            except client_exceptions.ClientResponseError:
-                return PublisherFetchError(
-                    f"Error decoding response for {'/'.join(pair)} from Bitstamp"
-                )
+            resp_json = await resp.json()
             return self._construct(asset, resp_json)
 
     def _fetch_pair_sync(
@@ -49,12 +44,7 @@ class BitstampFetcher(PublisherInterfaceT):
             return PublisherFetchError(
                 f"No data found for {'/'.join(pair)} from Bitstamp"
             )
-        try:
-            resp_json = resp.json()
-        except client_exceptions.ClientResponseError:
-            return PublisherFetchError(
-                f"Error decoding response for {'/'.join(pair)} from Bitstamp"
-            )
+        resp_json = resp.json()
         return self._construct(asset, resp_json)
 
     async def fetch(
@@ -66,7 +56,7 @@ class BitstampFetcher(PublisherInterfaceT):
                 logger.debug(f"Skipping Bitstamp for non-spot asset {asset}")
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
-        return await asyncio.gather(*entries)
+        return await asyncio.gather(*entries, return_exceptions=True)
 
     async def fetch_sync(self) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []

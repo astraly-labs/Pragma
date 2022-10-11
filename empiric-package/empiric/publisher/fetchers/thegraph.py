@@ -64,7 +64,7 @@ class TheGraphFetcher(PublisherInterfaceT):
                 logger.debug(f"Skipping The Graph for non-on-chain asset {asset}")
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
-        return await asyncio.gather(*entries)
+        return await asyncio.gather(*entries, return_exceptions=True)
 
     def fetch_sync(self) -> List[GenericEntry]:
         entries = []

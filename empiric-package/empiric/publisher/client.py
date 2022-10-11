@@ -45,14 +45,16 @@ class EmpiricPublisherClient(EmpiricClient):
     def add_fetcher(self, fetcher: PublisherInterfaceT):
         self.fetchers.append(fetcher)
 
-    async def fetch(self) -> List[SpotEntry]:
+    async def fetch(self, filter_exceptions=True) -> List[SpotEntry]:
         tasks = []
         timeout = aiohttp.ClientTimeout(total=10)  # 10 seconds per request
         async with aiohttp.ClientSession(timeout=timeout) as session:
             for fetcher in self.fetchers:
                 data = fetcher.fetch(session)
                 tasks.append(data)
-            result = await asyncio.gather(*tasks)
+            result = await asyncio.gather(*tasks, return_exceptions=True)
+            if filter_exceptions:
+                return [val for subl in result for val in subl if not isinstance(result, Exception)]
             return [val for subl in result for val in subl]
 
     def fetch_sync(self) -> List[SpotEntry]:
