@@ -8,6 +8,8 @@ from entry.structs import Currency, GenericEntry, FutureEntry, SpotEntry, Pair, 
 from oracle.library import Oracle
 from proxy.library import Proxy
 
+const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
+
 //
 // Constructor
 //
@@ -85,8 +87,14 @@ func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 func get_spot_median{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
-    const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
     return get_spot(pair_id, MEDIAN);
+}
+
+@view
+func get_spot_median_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_id: felt, sources_len: felt, sources: felt*
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    return get_spot_for_sources(pair_id, MEDIAN, sources_len, sources);
 }
 
 // @notice get value by key and aggregation mode

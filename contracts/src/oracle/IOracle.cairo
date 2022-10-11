@@ -40,12 +40,17 @@ namespace IOracle {
     }
 
     func get_spot_median(pair_id: felt) -> (
-        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
+
+    func get_spot_median_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
     func get_spot(pair_id: felt, aggregation_mode: felt) -> (
-        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
@@ -53,7 +58,7 @@ namespace IOracle {
     }
 
     func get_value(key) -> (
-        value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
