@@ -47,7 +47,8 @@ class EmpiricPublisherClient(EmpiricClient):
 
     async def fetch(self) -> List[SpotEntry]:
         tasks = []
-        async with aiohttp.ClientSession() as session:
+        timeout = aiohttp.ClientTimeout(total=10)  # 10 seconds per request
+        async with aiohttp.ClientSession(timeout=timeout) as session:
             for fetcher in self.fetchers:
                 data = fetcher.fetch(session)
                 tasks.append(data)
