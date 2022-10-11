@@ -23,6 +23,7 @@ jobs:
           pip install -r requirements.txt --upgrade --upgrade-strategy eager
           pip install -r dev-requirements.txt --upgrade --upgrade-strategy eager
           pip install -e empiric-package
+          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
 
       - name: Format and lint
         run: |
@@ -38,3 +39,8 @@ jobs:
       - name: Run tests suite
         run: |
           pytest .
+
+      - name: Run protostar tests
+        run: |
+          export PATH="$PATH:/home/runner/.protostar/dist/protostar"
+          protostar test ./contracts/test

@@ -9,6 +9,7 @@ from starkware.cairo.common.math import assert_not_equal, assert_not_zero, asser
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
+from time_series.convert import _max, convert_via_usd
 
 from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
@@ -17,6 +18,7 @@ from entry.library import Entries
 const BACKWARD_TIMESTAMP_BUFFER = 3600;  // Min difference data timestamp - current block timestamp (60 minutes)
 const FORWARD_TIMESTAMP_BUFFER = 900;  // Max difference data timestamp - current block timestamp (15 minutes)
 const BOTH_TRUE = 2;
+const USD_CURRENCY_ID = 5591876;  // str_to_felt("USD")
 
 //
 // Storage
@@ -146,6 +148,35 @@ namespace Oracle {
     //
     // Getters
     //
+
+    func get_spot_with_USD_hop{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        base_currency_id, quote_currency_id, aggregation_mode
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+        alloc_locals;
+        let (sources) = alloc();
+
+        let (base_pair_id) = Oracle_pair_id_storage.read(base_currency_id, USD_CURRENCY_ID);
+        let (quote_pair_id) = Oracle_pair_id_storage.read(quote_currency_id, USD_CURRENCY_ID);
+        let (base_value, _, base_last_updated_timestamp, base_num_sources_aggregated) = get_spot(
+            base_pair_id, aggregation_mode, 0, sources
+        );
+        let (quote_value, _, quote_last_updated_timestamp, quote_num_sources_aggregated) = get_spot(
+            quote_pair_id, aggregation_mode, 0, sources
+        );
+        let (currency) = Oracle_currencies_storage.read(quote_currency_id);
+        let decimals = currency.decimals;
+
+        let rebased_value = convert_via_usd(base_value, quote_value, decimals);
+
+        let (last_updated_timestamp) = _max(
+            quote_last_updated_timestamp, base_last_updated_timestamp
+        );
+        let (num_sources_aggregated) = _max(
+            quote_num_sources_aggregated, base_num_sources_aggregated
+        );
+
+        return (rebased_value, decimals, last_updated_timestamp, num_sources_aggregated);
+    }
 
     func get_publisher_registry_address{
         syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
@@ -404,6 +435,10 @@ namespace Oracle {
 
         let key_pair = keys_pairs[idx];
         Oracle_pairs_storage.write(key_pair.id, key_pair);
+        Oracle_pair_id_storage.write(
+            key_pair.quote_currency_id, key_pair.base_currency_id, key_pair.id
+        );
+
         _set_keys_pairs(keys_pairs_len, keys_pairs, idx + 1);
 
         return ();
@@ -587,7 +622,6 @@ namespace Oracle {
         latest_entry_timestamp: felt,
     ) -> (entries_len: felt, entries: SpotEntry*) {
         alloc_locals;
-
         if (sources_idx == sources_len) {
             let entries_len = entries_idx;  // 0-indexed
             return (entries_len, entries);

@@ -156,6 +156,16 @@ func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
 
+@view
+func get_spot_with_USD_hop{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    base_currency_id, quote_currency_id, aggregation_mode
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (
+        price, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = Oracle.get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode);
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
 //
 // Setters
 //
