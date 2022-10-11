@@ -54,7 +54,7 @@ class BitstampFetcher(PublisherInterfaceT):
                 logger.debug(f"Skipping Bitstamp for non-spot asset {asset}")
                 continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
-        return await asyncio.gather(*entries)
+        return await asyncio.gather(*entries, return_exceptions=True)
 
     async def fetch_sync(self) -> List[Union[SpotEntry, PublisherFetchError]]:
         entries = []

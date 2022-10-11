@@ -94,6 +94,9 @@ class GenericEntry(Entry):
             self.value,
         )
 
+    def __repr__(self):
+        return f'GenericEntry(key="{felt_to_str(self.key)}", value={self.value}, timestamp={self.base.timestamp}, source="{felt_to_str(self.base.source)}", publisher="{felt_to_str(self.base.publisher)}")'
+
 
 class SpotEntry(Entry):
     base: BaseEntry
@@ -192,7 +195,7 @@ class SpotEntry(Entry):
         return list(filter(lambda item: item is not None, serialized_entries))
 
     def __repr__(self):
-        return f'SpotEntry(pair_id="{felt_to_str(self.pair_id)}", price={self.price}, timestamp={self.timestamp}, source="{felt_to_str(self.source)}", publisher="{felt_to_str(self.publisher)}")'
+        return f'SpotEntry(pair_id="{felt_to_str(self.pair_id)}", price={self.price}, timestamp={self.base.timestamp}, source="{felt_to_str(self.base.source)}", publisher="{felt_to_str(self.base.publisher)}")'
 
 
 class FutureEntry(Entry):
