@@ -54,6 +54,13 @@ class EmpiricPublisherClient(EmpiricClient):
                 tasks.append(data)
             result = await asyncio.gather(*tasks, return_exceptions=True)
             if filter_exceptions:
+                for exception in [
+                    val
+                    for subl in result
+                    for val in subl
+                    if isinstance(val, Exception)
+                ]:
+                    log.warn(f'Fetch Error: {exception}')
                 return [
                     val
                     for subl in result
