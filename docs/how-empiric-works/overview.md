@@ -14,11 +14,11 @@ Additionally, the Empiric oracle is able to flexibly aggregate those data points
 
 ### 2b. Composable Data: Computational Feeds
 
-But Empiric's functionality goes far beyond price feeds. As DeFi matures, we believe important protocols will evolve to run on more advanced computational feeds, as TradFi already does today. Empiric was built to create these computational feeds in a secure and verifiable manner, to unlock the next generation of sophisticated protocols.
+But Empiric's functionality goes far beyond price feeds. As DeFi matures, important protocols will evolve to run on more advanced computational feeds, as TradFi already does today. Empiric was built to create these computational feeds in a secure and verifiable manner, to unlock the next generation of sophisticated protocols.
 
 Our first computational feed is an entirely on-chain, verifiable and transparent yield curve oracle. Our smart contract bootstraps a crypto-native yield curve using Empiric's verified data building blocks such as inputs. This feed is already being used by CurveZero for their money market protocol.
 
-Our second computational feed is a market condition oracle that uses volatility, spread across sources and a number of other factors to derive an entirely on-chain, verifiable and transparent measure of market sentiment. This feed is being integrated into vaults to ensure that trades are only executed during times of market stability.&#x20;
+Our second computational feed is a market volatility feed based off of realized and implied volatility data derived from raw market data using verifiable computation. This feed is being integrated into vaults to ensure that trades are only executed during times of market stability and into leading lending/borrowing protocols to increase capital efficiency.&#x20;
 
 ### Technical Components
 
@@ -28,7 +28,7 @@ First, there are the smart contracts that verify data is submitted and store it 
 
 Second, there is the Python package, which includes general utils (such as felt to string conversion), as well as functionality to make posting data on-chain easier and to query on-chain data feeds from off-chain.
 
-Third, there is the Docker image which comes with all the packages and constants (e.g. contract address) installed so that publishing data is a one-line integration.
+Third, there is the packaging and deploying infrastructures, including the Docker image and the cloud SDK. The Docker image which comes with all the packages and constants (e.g. contract address) installed so that publishing data is a one-line integration.&#x20;
 
 Fourth, there is the frontend which provides more information about Empiric Network and displays data from our feeds in an easy-to-use UI.
 
