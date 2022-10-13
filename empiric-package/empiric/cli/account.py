@@ -27,7 +27,9 @@ async def deploy_account_contract(
     return result.contract_address
 
 
-async def create_account(client: GatewayClient, config_file: Path, save_to_config: bool=True):
+async def create_account(
+    client: GatewayClient, config_file: Path, save_to_config: bool = True
+):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 

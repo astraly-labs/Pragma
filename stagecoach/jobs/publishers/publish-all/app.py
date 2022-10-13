@@ -1,14 +1,18 @@
 import asyncio
+import json
 import os
 
-import requests
+import boto3
 from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
-from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetchers import (
+    BitstampFetcher,
     CexFetcher,
+    CoinbaseFetcher,
+    FtxFetcher,
+    GeminiFetcher,
     TheGraphFetcher,
 )
 
@@ -23,9 +27,25 @@ def handler(event, context):
         "result": serialized_entries_,
     }
 
+
+def _get_pvt_key():
+    secret_name = "publisherPrivateKey"
+    region_name = "us-west-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+    get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    return int(
+        json.loads(get_secret_value_response["SecretString"])["PUBLISHER_PRIVATE_KEY"]
+    )
+
+
 async def _handler(assets):
     publisher = os.environ.get("PUBLISHER")
+
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
         account_private_key=publisher_private_key,
@@ -35,7 +55,11 @@ async def _handler(assets):
         [
             fetcher(assets, publisher)
             for fetcher in (
+                BitstampFetcher,
                 CexFetcher,
+                CoinbaseFetcher,
+                FtxFetcher,
+                GeminiFetcher,
                 TheGraphFetcher,
             )
         ]
@@ -43,9 +67,8 @@ async def _handler(assets):
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=50)
     for res in response:
-        await res.wait_for_acceptance()
+        await res.wait_for_acceptance(wait_for_accept=True)
 
-    logger.info("Publishing the following entries:")
     return _entries
 
 
