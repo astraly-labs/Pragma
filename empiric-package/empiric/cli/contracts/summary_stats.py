@@ -65,8 +65,8 @@ async def _deploy_summary_stats(client: Client, config_path: Path):
 @coro
 async def volatility(
     pair_id: str,
-    start=int(time.time() - 7200),
-    end=int(time.time() - 3600),
+    start: int = int(time.time() - 3600),
+    end: int = int(time.time()),
     config_path: Path = config.DEFAULT_CONFIG,
 ):
     config_parser = configparser.ConfigParser()
