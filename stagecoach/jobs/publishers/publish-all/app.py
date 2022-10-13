@@ -44,7 +44,7 @@ def _get_pvt_key():
 async def _handler(assets):
     publisher = os.environ.get("PUBLISHER")
 
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    publisher_private_key = _get_pvt_key()
 
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
@@ -68,6 +68,11 @@ async def _handler(assets):
     response = await publisher_client.publish_many(_entries, pagination=50)
     for res in response:
         await res.wait_for_acceptance(wait_for_accept=True)
+
+    invocation = await publisher_client.oracle.set_checkpoints.invoke(
+        list(set([int(entry.pair_id) for entry in _entries if isinstance(entry, SpotEntry)]))
+    )
+    await invocation.wait_for_acceptance(wait_for_accept=True)
 
     return _entries
 

@@ -65,6 +65,9 @@ async def deploy(
 @app.command()
 @coro
 async def upgrade(cli_config=config.DEFAULT_CONFIG):
+    valid = input("Are you sure?\nThis will update the contract. (y/n)\n")
+    if (valid != 'y'):
+        return SUCCESS
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)
     compiled_contract_path = Path(
@@ -114,7 +117,8 @@ async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
         0,
         max_fee=DEFAULT_MAX_FEE,
     )
-    typer.echo("invocation:", invocation.hash)
+    await invocation.wait_for_acceptance(wait_for_accept=True)
+    typer.echo(f"invocation: {invocation.hash}")
 
     return SUCCESS
 

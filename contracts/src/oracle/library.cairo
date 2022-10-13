@@ -108,6 +108,10 @@ func UpdatedCurrency(currency: Currency) {
 func SubmittedPair(pair: Pair) {
 }
 
+@event
+func CheckpointSpotEntry(pair_id: felt) {
+}
+
 namespace Oracle {
     //
     // Constructor
@@ -517,6 +521,7 @@ namespace Oracle {
             Oracle__checkpoint_index.write(key, cur_ix + 1);
             return ();
         }
+        CheckpointSpotEntry.emit(key);
         return ();
     }
 
@@ -635,7 +640,6 @@ namespace Oracle {
             entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
-        let ts = entry.base.timestamp;
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_spot_entries_array(
