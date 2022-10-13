@@ -55,8 +55,8 @@ func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
 func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
 ) -> (entries_len: felt, entries: SpotEntry*) {
-    let (sources) = alloc();
-    return get_spot_entries_for_sources(pair_id, 0, sources);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    return get_spot_entries_for_sources(pair_id, all_sources_len, all_sources);
 }
 
 // @notice get entry by key and source
@@ -108,9 +108,9 @@ func get_spot_median_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*,
 func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
-    let (sources) = alloc();
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
     let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
-        pair_id, aggregation_mode, 0, sources
+        pair_id, aggregation_mode, all_sources_len, all_sources
     );
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }

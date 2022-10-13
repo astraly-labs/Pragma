@@ -36,11 +36,11 @@ def init(gateway_url=TESTNET_GATEWAY_URL, chain_id: int = 1536727068981429685321
 
 @app.command()
 @coro
-async def create_account(config_path=config.DEFAULT_CONFIG):
+async def create_account(config_path=config.DEFAULT_CONFIG, save_to_config: bool = True):
     gateway_url, chain_id = config.validate_config(config_path)
 
     client = net.init_client(gateway_url, chain_id)
-    await account.create_account(client, config.CONFIG_FILE_PATH)
+    await account.create_account(client, config.CONFIG_FILE_PATH, save_to_config=save_to_config)
     return SUCCESS
 
 

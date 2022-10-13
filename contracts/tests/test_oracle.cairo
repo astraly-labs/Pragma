@@ -1,6 +1,7 @@
 %lang starknet
 
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import get_block_timestamp
 
 from oracle.IOracle import IOracle
@@ -35,6 +36,7 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.publisher_registry_address) %}
     IPublisherRegistry.add_publisher(publisher_registry_address, 1, oracle_admin_address);
     IPublisherRegistry.add_source_for_publisher(publisher_registry_address, 1, 1);
+    IPublisherRegistry.add_source_for_publisher(publisher_registry_address, 1, 2);
     %{ stop_prank_callable() %}
 
     %{ stop_prank_callable = start_prank(ids.oracle_admin_address, ids.oracle_address) %}
@@ -113,6 +115,72 @@ func test_get_spot_with_USD_hop{syscall_ptr: felt*, range_check_ptr}() {
     assert decimals = 18;
     assert last_updated = 100000;
     assert num_sources = 1;
+
+    return ();
+}
+
+@external
+func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+
+    %{ stop_warp = warp(1665539813, ids.oracle_address) %}
+    IOracle.publish_spot_entry(
+        oracle_address,
+        SpotEntry(
+        BaseEntry(
+            1665539813,
+            1,
+            1,
+            ),
+        2,  // pair_id
+        2 * 10 ** 6,
+        0,
+        ),
+    );
+    let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
+    assert price = 2 * 10 ** 6;
+    assert num_sources = 1;
+    %{ stop_warp() %}
+
+    %{ stop_warp = warp(1665606928, ids.oracle_address) %}
+    IOracle.publish_spot_entry(
+        oracle_address,
+        SpotEntry(
+        BaseEntry(
+            1665606928,
+            1,
+            1,
+            ),
+        2,  // pair_id
+        3 * 10 ** 6,
+        0,
+        ),
+    );
+
+    let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
+    assert price = 3 * 10 ** 6;
+    assert num_sources = 1;
+
+    %{ stop_warp = warp(1665606930, ids.oracle_address) %}
+    IOracle.publish_spot_entry(
+        oracle_address,
+        SpotEntry(
+        BaseEntry(
+            1665606930,
+            2,
+            1,
+            ),
+        2,  // pair_id
+        5 * 10 ** 6,
+        0,
+        ),
+    );
+    let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
+    assert price = 4 * 10 ** 6;
+    assert num_sources = 2;
+    assert last_updated = 1665606930;
 
     return ();
 }

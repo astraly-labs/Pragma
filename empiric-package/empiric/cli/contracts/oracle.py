@@ -12,6 +12,7 @@ from empiric.cli.contracts.utils import (
     _format_pairs,
 )
 from empiric.cli.utils import coro
+from empiric.core.abis import PROXY_ABI
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
@@ -58,6 +59,26 @@ async def deploy(
     account_client = net.init_account_client(client, cli_config)
 
     await deploy_oracle_proxy(account_client, deploy_config_path, cli_config)
+
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def upgrade(cli_config=config.DEFAULT_CONFIG):
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+
+    client = net.init_empiric_client(cli_config)
+    declared_oracle_class_hash = await declare_contract(
+        client.client, compiled_contract_path, "Oracle"
+    )
+    typer.echo(f"DECLARED: {declared_oracle_class_hash}")
+    invocation = await client.oracle.upgrade.invoke(declared_oracle_class_hash, max_fee=DEFAULT_MAX_FEE)
+    await invocation.wait_for_acceptance()
 
     return SUCCESS
 
@@ -145,6 +166,28 @@ async def deploy_oracle_proxy(
         config_parser.write(f)
 
 
+async def upgrade_oracle_proxy(
+    client: Client, deploy_config_path: Path, config_path: Path
+):
+    """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_path)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+
+    declared_oracle_class_hash = await declare_contract(
+        client, compiled_contract_path, "Oracle"
+    )
+    typer.echo(f"proxy address: {deployment_result.deployed_contract.address}")
+
+    oracle_proxy_address = deployment_result.deployed_contract.address
+    config_parser["CONTRACTS"]["oracle-proxy"] = str(oracle_proxy_address)
+
+    with open(config_path, "w") as f:
+        config_parser.write(f)
+
+
 async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int, int]):
     client = net.init_empiric_client(config_path)
     invocation = await client.publish_spot_entry(*entry)
@@ -158,6 +201,30 @@ async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int
 async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_spot.call(str_to_felt(pair_id), 0)
+    typer.echo(f"spot: {entry}")
+
+
+@app.command()
+@coro
+async def get_spot_for_sources(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_spot_for_sources.call(str_to_felt(pair_id), 0, ['CEX'])
+    typer.echo(f"spot: {entry}")
+
+
+@app.command()
+@coro
+async def get_spot_entries(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    entries = await client.oracle.get_spot_entries.call(str_to_felt(pair_id))
+    typer.echo(f"spot: {entries}")
+
+
+@app.command()
+@coro
+async def get_spot_entry(pair_id: str, config_path: Path = config.DEFAULT_CONFIG, publisher: str = 'CEX'):
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_spot_entry.call(str_to_felt(pair_id), str_to_felt(publisher))
     typer.echo(f"spot: {entry}")
 
 
