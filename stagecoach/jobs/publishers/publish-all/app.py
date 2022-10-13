@@ -69,7 +69,7 @@ async def _handler(assets):
     for res in response:
         await res.wait_for_acceptance(wait_for_accept=True)
 
-    invocation = await publisher_client.set_checkpoints.invoke(
+    invocation = await publisher_client.set_checkpoints(
         list(
             set(
                 [

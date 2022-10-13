@@ -83,6 +83,7 @@ async def upgrade(cli_config=config.DEFAULT_CONFIG):
         declared_oracle_class_hash, max_fee=DEFAULT_MAX_FEE
     )
     await invocation.wait_for_acceptance()
+    typer.echo(f"INVOKED: {invocation.hash}")
 
     return SUCCESS
 
@@ -119,6 +120,19 @@ async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
     )
     await invocation.wait_for_acceptance(wait_for_accept=True)
     typer.echo(f"invocation: {invocation.hash}")
+
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def get_cp(pair_id: str, index: int, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.oracle.get_checkpoint.call(
+        str_to_felt(pair_id),
+        index,
+    )
+    typer.echo(f"invocation: {invocation}")
 
     return SUCCESS
 
