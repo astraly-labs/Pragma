@@ -69,8 +69,16 @@ async def _handler(assets):
     for res in response:
         await res.wait_for_acceptance(wait_for_accept=True)
 
-    invocation = await publisher_client.oracle.set_checkpoints.invoke(
-        list(set([int(entry.pair_id) for entry in _entries if isinstance(entry, SpotEntry)]))
+    invocation = await publisher_client.set_checkpoints.invoke(
+        list(
+            set(
+                [
+                    int(entry.pair_id)
+                    for entry in _entries
+                    if isinstance(entry, SpotEntry)
+                ]
+            )
+        )
     )
     await invocation.wait_for_acceptance(wait_for_accept=True)
 

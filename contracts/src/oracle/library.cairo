@@ -519,9 +519,9 @@ namespace Oracle {
             let (cur_ix) = Oracle__checkpoint_index.read(key);
             Oracle__checkpoints.write(key, cur_ix, checkpoint);
             Oracle__checkpoint_index.write(key, cur_ix + 1);
+            CheckpointSpotEntry.emit(key);
             return ();
         }
-        CheckpointSpotEntry.emit(key);
         return ();
     }
 

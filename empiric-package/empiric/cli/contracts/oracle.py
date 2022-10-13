@@ -66,7 +66,7 @@ async def deploy(
 @coro
 async def upgrade(cli_config=config.DEFAULT_CONFIG):
     valid = input("Are you sure?\nThis will update the contract. (y/n)\n")
-    if (valid != 'y'):
+    if valid != "y":
         return SUCCESS
     config_parser = configparser.ConfigParser()
     config_parser.read(cli_config)

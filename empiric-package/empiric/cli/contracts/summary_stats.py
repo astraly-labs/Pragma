@@ -1,6 +1,6 @@
 import configparser
-from pathlib import Path
 import time
+from pathlib import Path
 
 import typer
 from empiric.cli import SUCCESS, config, net
@@ -63,12 +63,17 @@ async def _deploy_summary_stats(client: Client, config_path: Path):
 
 @app.command()
 @coro
-async def volatility(pair_id: str, start=int(time.time() - 7200), end=int(time.time() - 3600), config_path: Path = config.DEFAULT_CONFIG):
+async def volatility(
+    pair_id: str,
+    start=int(time.time() - 7200),
+    end=int(time.time() - 3600),
+    config_path: Path = config.DEFAULT_CONFIG,
+):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
 
     client = net.init_empiric_client(config_path)
-    client.init_stats_contract(int(config_parser['CONTRACTS']['summary-stats']))
+    client.init_stats_contract(int(config_parser["CONTRACTS"]["summary-stats"]))
     response = await client.stats.calculate_volatility.call(pair_id, start, end)
     typer.echo(f"VOLATILITY: {response}")
 
