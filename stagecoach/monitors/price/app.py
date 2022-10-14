@@ -25,7 +25,7 @@ EXPERIMENTAL_ASSET_KEYS = {
 
 
 def handler(event, context):
-    asyncio.run(_main())
+    asyncio.run(_handler())
     return {
         "success": True,
     }
@@ -62,7 +62,7 @@ def check_asset_num_sources_aggregated(
         return f"{pair_id}: too few sources (aggregated: {num_sources_aggregated}, target {MIN_NUM_SOURCES_AGGREGATED})"
 
 
-async def _main():
+async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
@@ -110,7 +110,6 @@ async def _main():
         else:
             logger.info(f"{pair_id}: all good")
 
-    breakpoint()
     if all_errors:
         slack_text = "Error(s) with Empiric price<!channel>"
         slack_text += "\n".join(all_errors)
@@ -130,4 +129,4 @@ async def _main():
 
 
 if __name__ == "__main__":
-    asyncio.run(_main())
+    handler(None, None)
