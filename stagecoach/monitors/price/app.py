@@ -1,8 +1,7 @@
 import asyncio
-import datetime
 import os
 import time
-import traceback
+from typing import Union
 
 import requests
 from empiric.core.client import EmpiricClient
@@ -18,9 +17,10 @@ logger = get_stream_logger()
 
 PRICE_TOLERANCE = 0.1  # in percent
 TIME_TOLERANCE = 1200  # in seconds
+MIN_NUM_SOURCES_AGGREGATED = 3
 EXPERIMENTAL_ASSET_KEYS = {
-    "eth/mxn",
-    "temp/usd",
+    "ETH/MXN",
+    "TEMP/USD",
 }  # do not send slack notifications for these
 
 
@@ -31,6 +31,37 @@ def handler(event, context):
     }
 
 
+def check_asset_price(
+    reference_price: float, actual_price: float, pair_id: str
+) -> Union[str, None]:
+    if reference_price * (
+        1 - PRICE_TOLERANCE
+    ) > actual_price or actual_price > reference_price * (1 + PRICE_TOLERANCE):
+        if actual_price == 0:
+            ratio = "undefined (div by 0)"
+        else:
+            ratio = reference_price / actual_price
+        return f"{pair_id}: price discrepancy (ratio: {ratio}, reference: {reference_price}, Empiric: {actual_price})"
+
+
+def check_asset_timestamp(
+    last_updated_timestamp: int, pair_id: str
+) -> Union[str, None]:
+    current_timestamp = int(time.time())
+    if (
+        current_timestamp - TIME_TOLERANCE > last_updated_timestamp
+        or last_updated_timestamp < current_timestamp + TIME_TOLERANCE
+    ):
+        return f"{pair_id}: stale update (difference {current_timestamp - last_updated_timestamp}, now: {current_timestamp}, last updated: {last_updated_timestamp})"
+
+
+def check_asset_num_sources_aggregated(
+    num_sources_aggregated: int, pair_id: str
+) -> Union[str, None]:
+    if num_sources_aggregated < MIN_NUM_SOURCES_AGGREGATED:
+        return f"{pair_id}: too few sources (aggregated: {num_sources_aggregated}, target {MIN_NUM_SOURCES_AGGREGATED})"
+
+
 async def _main():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
@@ -39,78 +70,64 @@ async def _main():
     assets = EMPIRIC_ALL_ASSETS
 
     client = EmpiricClient()
-    cg = CoingeckoFetcher(assets, "publisher")
+    cg = CoingeckoFetcher(assets, "PUBLISHER")
     entries = cg.fetch_sync()
 
     coingecko = {entry.pair_id: entry.price for entry in entries}
 
-    all_prices_valid = True
+    all_errors = []
     for asset in assets:
+        checks = []
         pair_id = pair_id_for_asset(asset)
         felt_pair_id = str_to_felt(pair_id)
-        if felt_pair_id not in coingecko or asset["type"] != "SPOT":
-            logger.info(
-                f"Skipping checking price for asset {asset} because no reference data"
-            )
-            continue
 
-        (
-            value,
-            _,
-            last_updated_timestamp,
-            num_sources_aggregated,
-        ) = await client.get_spot(pair_id)
-        current_timestamp = int(time.time())
+        if asset["type"] == "SPOT":
+            (
+                value,
+                _,
+                last_updated_timestamp,
+                num_sources_aggregated,
+            ) = await client.get_spot(pair_id)
 
-        try:
-            assert (
-                coingecko[felt_pair_id] * (1 - PRICE_TOLERANCE)
-                <= value
-                <= coingecko[felt_pair_id] * (1 + PRICE_TOLERANCE)
-            ), f"Coingecko says {coingecko[felt_pair_id]}, Empiric says {value} (ratio {coingecko[felt_pair_id] / value})"
-
-            current_timestamp = int(time.time())
-
-            assert (
-                current_timestamp - TIME_TOLERANCE
-                <= last_updated_timestamp
-                <= current_timestamp + TIME_TOLERANCE
-            ), f"Timestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-            logger.info(
-                f"Price {value} checks out for asset {pair_id} (reference: {coingecko[felt_pair_id]})"
-            )
-
-            assert (
-                num_sources_aggregated >= 3
-            ), f"Aggregated less than 3 sources for asset {pair_id}: {num_sources_aggregated}"
-        except (AssertionError, ZeroDivisionError) as e:
-            logger.warn(f"\nWarning: Price inaccurate or stale! Asset: {asset}\n")
-            logger.warn(e)
-            logger.warn(traceback.format_exc())
-
-            if pair_id not in EXPERIMENTAL_ASSET_KEYS:
-                slack_text = "Error with Empiric price<!channel>"
-                slack_text += f"\nAsset: {asset}"
-                slack_text += f"\nTimestamp is {current_timestamp}, Empiric has last updated timestamp of {last_updated_timestamp} (difference {current_timestamp - last_updated_timestamp})"
-                if value == 0:
-                    slack_text += f"\nCoingecko says {coingecko[felt_pair_id]}, Empiric says {value}"
-                else:
-                    slack_text += f"\nCoingecko says {coingecko[felt_pair_id]}, Empiric says {value} (ratio {coingecko[felt_pair_id]/value})"
-                slack_text += f"\n{traceback.format_exc()}"
-
-                requests.post(
-                    slack_url,
-                    headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
-                    data={
-                        "text": slack_text,
-                        "channel": channel_id,
-                    },
+            if felt_pair_id in coingecko:
+                checks.append(
+                    check_asset_price(coingecko[felt_pair_id], value, pair_id)
                 )
-                all_prices_valid = False
 
-    if all_prices_valid:
-        # Ping betteruptime
+            checks.append(check_asset_timestamp(last_updated_timestamp, pair_id))
+            checks.append(
+                check_asset_num_sources_aggregated(num_sources_aggregated, pair_id)
+            )
+        else:
+            logger.info(f"Skipping checking price for asset {asset}")
+
+        if errors := [x for x in checks if x is not None]:
+            for error in errors:
+                logger.error(error)
+            # Always log errors so we have visibility but only alert in Slack for non-experimental assets
+            if pair_id not in EXPERIMENTAL_ASSET_KEYS:
+                all_errors.extend(errors)
+        else:
+            logger.info(f"{pair_id}: all good")
+
+    breakpoint()
+    if all_errors:
+        slack_text = "Error(s) with Empiric price<!channel>"
+        slack_text += "\n".join(all_errors)
+
+        requests.post(
+            slack_url,
+            headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
+            data={
+                "text": slack_text,
+                "channel": channel_id,
+            },
+        )
+    else:
+        # All data passes checks, ping betteruptime (deadman switch)
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
         requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
 
-    logger.info(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%s"))
+
+if __name__ == "__main__":
+    asyncio.run(_main())
