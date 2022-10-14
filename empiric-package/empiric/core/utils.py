@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 def str_to_felt(text):
     if text.upper() != text:
-        logger.warn(f"Converting lower to uppercase for str_to_felt: {text}")
+        logger.warning(f"Converting lower to uppercase for str_to_felt: {text}")
         text = text.upper()
     b_text = bytes(text, "utf-8")
     return int.from_bytes(b_text, "big")
