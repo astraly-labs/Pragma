@@ -111,7 +111,7 @@ async def _handler():
             logger.info(f"{pair_id}: all good")
 
     if all_errors:
-        slack_text = "Error(s) with Empiric price<!channel>"
+        slack_text = "Error(s) with Empiric price<!channel>\n"
         slack_text += "\n".join(all_errors)
 
         requests.post(
