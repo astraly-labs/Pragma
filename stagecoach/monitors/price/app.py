@@ -50,7 +50,7 @@ def check_asset_timestamp(
     current_timestamp = int(time.time())
     if (
         current_timestamp - TIME_TOLERANCE > last_updated_timestamp
-        or last_updated_timestamp < current_timestamp + TIME_TOLERANCE
+        or last_updated_timestamp > current_timestamp + TIME_TOLERANCE
     ):
         return f"{pair_id}: stale update (difference {current_timestamp - last_updated_timestamp}, now: {current_timestamp}, last updated: {last_updated_timestamp})"
 
