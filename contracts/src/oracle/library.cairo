@@ -108,6 +108,10 @@ func UpdatedCurrency(currency: Currency) {
 func SubmittedPair(pair: Pair) {
 }
 
+@event
+func CheckpointSpotEntry(pair_id: felt) {
+}
+
 namespace Oracle {
     //
     // Constructor
@@ -515,6 +519,7 @@ namespace Oracle {
             let (cur_ix) = Oracle__checkpoint_index.read(key);
             Oracle__checkpoints.write(key, cur_ix, checkpoint);
             Oracle__checkpoint_index.write(key, cur_ix + 1);
+            CheckpointSpotEntry.emit(key);
             return ();
         }
         return ();
@@ -623,17 +628,16 @@ namespace Oracle {
     ) -> (entries_len: felt, entries: SpotEntry*) {
         alloc_locals;
         if (sources_idx == sources_len) {
-            let entries_len = entries_idx;  // 0-indexed
-            return (entries_len, entries);
+            return (entries_idx, entries);
         }
 
-        let source = [sources + sources_idx];
+        let source = sources[sources_idx];
         let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
         let is_entry_stale = is_le(
-            entry.base.timestamp + 1, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
+            entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
@@ -650,9 +654,9 @@ namespace Oracle {
             return (entries_len, entries);
         }
 
-        assert [entries + entries_idx * SpotEntry.SIZE] = entry;
+        assert entries[entries_idx] = entry;
 
-        let (entries_len, entries) = build_spot_entries_array(
+        return build_spot_entries_array(
             pair_id,
             sources_len,
             sources,
@@ -661,7 +665,6 @@ namespace Oracle {
             entries,
             latest_entry_timestamp,
         );
-        return (entries_len, entries);
     }
 
     func build_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -676,17 +679,16 @@ namespace Oracle {
         alloc_locals;
 
         if (sources_idx == sources_len) {
-            let entries_len = entries_idx;  // 0-indexed
-            return (entries_len, entries);
+            return (entries_idx, entries);
         }
 
-        let source = [sources + sources_idx];
+        let source = sources[sources_idx];
         let (entry) = Oracle__entry_storage.read(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
         let is_entry_stale = is_le(
-            entry.base.timestamp + 1, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
+            entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
 
@@ -705,7 +707,7 @@ namespace Oracle {
 
         assert [entries + entries_idx * GenericEntry.SIZE] = entry;
 
-        let (entries_len, entries) = build_entries_array(
+        return build_entries_array(
             pair_id,
             sources_len,
             sources,
@@ -714,7 +716,6 @@ namespace Oracle {
             entries,
             latest_entry_timestamp,
         );
-        return (entries_len, entries);
     }
 
     func build_sources_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(

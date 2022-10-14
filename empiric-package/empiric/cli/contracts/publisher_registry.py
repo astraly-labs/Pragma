@@ -47,6 +47,20 @@ async def add_publisher(
 
 @app.command()
 @coro
+async def update_publisher(
+    publisher, publisher_address: int, config_path=config.DEFAULT_CONFIG
+):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.publisher_registry.update_publisher_address.invoke(
+        str_to_felt(publisher), publisher_address, max_fee=int(1e16)
+    )
+
+    await invocation.wait_for_acceptance()
+    typer.echo(f"response hash: {invocation.hash}")
+
+
+@app.command()
+@coro
 async def register_self(publisher: str, config_path=config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     publisher_address = client.account_address()
