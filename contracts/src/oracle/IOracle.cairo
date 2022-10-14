@@ -20,23 +20,8 @@ namespace IOracle {
     //
     // Getters
     //
-    func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
-        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
-    ) {
-    }
 
     func get_spot_decimals(pair_id: felt) -> (decimals: felt) {
-    }
-
-    func get_spot_entries_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
-        entries_len: felt, entries: SpotEntry*
-    ) {
-    }
-
-    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: SpotEntry*) {
-    }
-
-    func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
     func get_spot_median(pair_id: felt) -> (
@@ -52,6 +37,22 @@ namespace IOracle {
     func get_spot(pair_id: felt, aggregation_mode: felt) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
+    }
+
+    func get_spot_for_sources(
+        pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
+    ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    }
+
+    func get_spot_entries_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: SpotEntry*
+    ) {
+    }
+
+    func get_spot_entries(pair_id: felt) -> (entries_len: felt, entries: SpotEntry*) {
+    }
+
+    func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
     func get_future_entry(pair_id: felt, expiry_timestamp, source: felt) -> (entry: FutureEntry) {
@@ -70,16 +71,9 @@ namespace IOracle {
     // ):
     // end
 
-    // func get_spot_with_USD_hop(
-    //     base_currency_id : felt, quote_currency_id : felt, aggregation_mode : felt
-    // ) -> (
-    //     value : felt, decimals : felt, last_updated_timestamp : felt, num_sources_aggregated : felt
-    // ):
-    // end
-
-    func get_spot_for_sources(
-        pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
-    ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
     }
 
     func get_admin_address() -> (admin_address: felt) {
