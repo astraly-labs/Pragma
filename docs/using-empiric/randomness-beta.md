@@ -96,7 +96,7 @@ As mentioned above, in the first phase of Empiric Network's VRF feed, the random
 
 In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier. Follow these simple steps to verify any randomness provided by Empiric Network:
 
-1. Install the Empiric Python package `pip install empiric-network --pre`
+1. Install the Empiric Python package `pip install empiric-network`
 2. Run `python3 -m empiric.cli random verify-random <TRANSACTION_HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
 
 ## Technical Specification
