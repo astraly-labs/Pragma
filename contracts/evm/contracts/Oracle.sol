@@ -11,7 +11,7 @@ import "./EntryUtils.sol";
 contract Oracle is CurrencyManager, EntryUtils, IOracle {
     IPublisherRegistry public publisherRegistry;
 
-    mapping(bytes32 => bytes32[]) oracleSourcesStorage;
+    mapping(bytes32 => bytes32[]) public oracleSourcesStorage;
     mapping(bytes32 => mapping(bytes32 => SpotEntry)) public spotEntryStorage;
     mapping(bytes32 => Checkpoint[]) public checkpoints;
     mapping(bytes32 => uint256) public checkpointIndex;
@@ -71,10 +71,15 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
             "Does not meet threshold for aggreagated sources"
         );
 
-        Checkpoint memory currentCheckpoint = checkpoints[pairId][
-            checkpointIndex[pairId]
-        ];
-        require(currentCheckpoint.timestamp < lastUpdatedTimestamp, "stale");
+        if (checkpointIndex[pairId] > 0) {
+            Checkpoint memory currentCheckpoint = checkpoints[pairId][
+                checkpointIndex[pairId] - 1
+            ];
+            require(
+                currentCheckpoint.timestamp < lastUpdatedTimestamp,
+                "stale"
+            );
+        }
         Checkpoint memory newCheckpoint = Checkpoint(
             lastUpdatedTimestamp,
             value,
@@ -84,6 +89,7 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
 
         checkpointIndex[pairId]++;
         checkpoints[pairId].push(newCheckpoint);
+
         return ();
     }
 
