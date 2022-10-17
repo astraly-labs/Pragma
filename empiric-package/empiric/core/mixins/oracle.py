@@ -48,7 +48,7 @@ class OracleMixin:
         return invocation
 
     async def publish_many(
-        self, entries: List[SpotEntry], pagination=0, max_fee=int(1e18)
+        self, entries: List[SpotEntry], pagination=80, max_fee=int(1e18)
     ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warn("Skipping publishing as entries array is empty")

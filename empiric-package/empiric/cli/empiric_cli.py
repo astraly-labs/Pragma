@@ -121,6 +121,14 @@ def account_address(config_path=config.DEFAULT_CONFIG):
 
 
 @app.command()
+@coro
+async def balance_of(account: int, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    typer.echo(f"BALANCE: {await client.get_balance(account)}")
+    return SUCCESS
+
+
+@app.command()
 def quickstart(
     ctx: typer.Context,
     config_file=config.DEFAULT_CONFIG,
