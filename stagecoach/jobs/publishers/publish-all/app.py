@@ -65,7 +65,7 @@ async def _handler(assets):
         ]
     )
     _entries = await publisher_client.fetch()
-    response = await publisher_client.publish_many(_entries, pagination=70)
+    response = await publisher_client.publish_many(_entries)
     for res in response:
         await res.wait_for_acceptance(wait_for_accept=True)
     return _entries

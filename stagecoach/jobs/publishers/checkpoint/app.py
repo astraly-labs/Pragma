@@ -4,7 +4,7 @@ import os
 
 import boto3
 from empiric.core.logger import get_stream_logger
-from empiric.core.utils import str_to_felt
+from empiric.core.utils import str_to_felt, currency_pair_to_pair_id
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
 
@@ -34,7 +34,7 @@ def _get_pvt_key():
 async def _handler(assets):
     private_key = _get_pvt_key()
     account_address = int(os.environ.get("ACCOUNT_ADDRESS"))
-    pairs = [str_to_felt("/".join(p["pair"])) for p in assets if "pair" in p]
+    pairs = [currency_pair_to_pair_id(p["pair"]) for p in assets if "pair" in p]
 
     publisher_client = EmpiricPublisherClient(
         account_private_key=private_key,
