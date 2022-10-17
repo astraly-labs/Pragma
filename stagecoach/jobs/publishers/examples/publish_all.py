@@ -11,8 +11,6 @@ from empiric.publisher.fetchers import (
     CexFetcher,
     CoinbaseFetcher,
     FtxFetcher,
-    GeminiFetcher,
-    TheGraphFetcher,
 )
 
 logger = get_stream_logger()
@@ -34,8 +32,6 @@ async def publish_all(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 FtxFetcher,
-                GeminiFetcher,
-                TheGraphFetcher,
             )
         ]
     )

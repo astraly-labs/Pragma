@@ -12,7 +12,6 @@ from empiric.publisher.fetchers import (
     CexFetcher,
     CoinbaseFetcher,
     FtxFetcher,
-    GeminiFetcher,
     TheGraphFetcher,
 )
 
@@ -59,7 +58,6 @@ async def _handler(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 FtxFetcher,
-                GeminiFetcher,
                 TheGraphFetcher,
             )
         ]
