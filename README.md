@@ -77,12 +77,12 @@ Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public 
 ```bash
 export STARKNET_NETWORK=alpha-goerli
 protostar build
-cp contracts/build/OracleController_abi.json empiric-ui/src/abi/OracleController.json
-starknet deploy --contract contracts/build/Account.json --inputs <ADMIN_PUBLIC_KEY>
-starknet deploy --contract contracts/build/Account.json --inputs <PUBLISHER_PUBLIC_KEY>
-starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>
-starknet deploy --contract contracts/build/OracleController.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
-starknet deploy --contract contracts/build/OracleImplementation.json --inputs <ORACLE_PROXY_ADDRESS>
+cp contracts/starknet/build/OracleController_abi.json empiric-ui/src/abi/OracleController.json
+starknet deploy --contract contracts/starknet/build/Account.json --inputs <ADMIN_PUBLIC_KEY>
+starknet deploy --contract contracts/starknet/build/Account.json --inputs <PUBLISHER_PUBLIC_KEY>
+starknet deploy --contract contracts/starknet/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>
+starknet deploy --contract contracts/starknet/build/OracleController.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <KEY_DECIMALS>
+starknet deploy --contract contracts/starknet/build/OracleImplementation.json --inputs <ORACLE_PROXY_ADDRESS>
 TODO: Update for proxy
 ```
 

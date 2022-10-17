@@ -29,8 +29,8 @@ print(f'Public Key: {public_key}')
 Use the following commands to compile and deploy the account contract. Make sure to replace `PUBLIC_KEY_FROM_STEP_3` in the second command with your \*public\* key from step 3.
 
 ```
-starknet-compile --account_contract contracts/src/account/Account.cairo --abi contracts/build/Account_abi.json --output contracts/build/Account.json --cairo_path contracts/src:contracts/lib
-starknet deploy --contract contracts/build/Account.json --inputs <PUBLIC_KEY_FROM_STEP_3> --no_wallet --network alpha-goerli
+starknet-compile --account_contract contracts/starknet/src/account/Account.cairo --abi contracts/starknet/build/Account_abi.json --output contracts/starknet/build/Account.json --cairo_path contracts/starknet/src:contracts/starknet/lib
+starknet deploy --contract contracts/starknet/build/Account.json --inputs <PUBLIC_KEY_FROM_STEP_3> --no_wallet --network alpha-goerli
 ```
 
 ### 5. Register your account contract address with Empiric
