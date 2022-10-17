@@ -4,7 +4,7 @@ import os
 
 import boto3
 from empiric.core.logger import get_stream_logger
-from empiric.core.utils import str_to_felt, currency_pair_to_pair_id
+from empiric.core.utils import currency_pair_to_pair_id
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
 
