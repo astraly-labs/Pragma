@@ -339,6 +339,15 @@ func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
     return ();
 }
 
+@view
+func get_last_checkpoint_before{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, timestamp: felt
+) -> (checkpoint: Checkpoint, idx: felt) {
+    let idx = Oracle.find_startpoint(key, timestamp);
+    let (cp) = Oracle.get_checkpoint_by_index(key, idx);
+    return (cp, idx);
+}
+
 @external
 func set_sources_threshold{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     threshold: felt

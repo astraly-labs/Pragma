@@ -5,7 +5,13 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.hash import hash2
-from starkware.cairo.common.math import assert_not_equal, assert_not_zero, assert_le
+from starkware.cairo.common.math import (
+    assert_nn,
+    assert_not_equal,
+    assert_not_zero,
+    assert_le,
+    unsigned_div_rem,
+)
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
@@ -617,6 +623,24 @@ namespace Oracle {
         }
     }
 
+    func find_startpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        key: felt, start_tick: felt
+    ) -> felt {
+        let (latest_checkpoint_index) = get_latest_checkpoint_index(key=key);
+
+        let (cp) = get_checkpoint_by_index(key, latest_checkpoint_index - 1);
+        let (first_cp) = get_checkpoint_by_index(key, 0);
+        with_attr error_message("start_tick is in future") {
+            assert_nn(cp.timestamp - start_tick);
+        }
+        if (is_le(start_tick, first_cp.timestamp) == TRUE) {
+            return 0;
+        }
+
+        let startpoint = _binary_search(key, 0, latest_checkpoint_index, start_tick);
+        return startpoint;
+    }
+
     func build_spot_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt,
         sources_len: felt,
@@ -808,5 +832,40 @@ namespace Oracle {
         }
 
         return ();
+    }
+
+    func _binary_search{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        key, low, high, target
+    ) -> felt {
+        alloc_locals;
+        let (midpoint, _) = unsigned_div_rem(low + high - 1, 2);
+
+        if (high + low == 1) {
+            return midpoint;
+        }
+
+        if (midpoint == 0) {
+            return 0;
+        }
+
+        let (cp) = get_checkpoint_by_index(key, midpoint);
+        let timestamp = cp.timestamp;
+        if (timestamp == target) {
+            return midpoint;
+        }
+
+        if (is_le(target, timestamp) == TRUE) {
+            let (prev_cp) = get_checkpoint_by_index(key, midpoint - 1);
+            if (is_le(prev_cp.timestamp, target) == TRUE) {
+                return midpoint - 1;
+            }
+            return _binary_search(key, low, midpoint, target);
+        } else {
+            let (next_cp) = get_checkpoint_by_index(key, midpoint + 1);
+            if (is_le(target, next_cp.timestamp) == TRUE) {
+                return midpoint;
+            }
+            return _binary_search(key, midpoint, high, target);
+        }
     }
 }
