@@ -90,7 +90,7 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
         checkpointIndex[pairId]++;
         checkpoints[pairId].push(newCheckpoint);
 
-        return ();
+        emit NewCheckpoint(newCheckpoint);
     }
 
     function publishSpotEntries(SpotEntry[] calldata spotEntries) public {
@@ -101,7 +101,7 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
 
     function getSpot(
         bytes32 pairId,
-        AggregationMode aggregationMode,
+        AggregationMode,
         bytes32[] memory sources
     )
         public
@@ -113,38 +113,46 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
             uint256 numSourcesAggregated
         )
     {
-        (SpotEntry[] memory entries, uint256 length, ) = getSpotEntries(
-            pairId,
-            sources
-        );
+        (
+            SpotEntry[] memory entries,
+            uint256 _lastUpdatedTimestamp
+        ) = getSpotEntries(pairId, sources);
         if (entries.length == 0) {
             return (0, 0, 0, 0);
         }
-        uint256 price = _aggregateSpotEntries(entries);
-        uint256 decimals = _getSpotDecimals(pairId);
-        uint256 lastUpdatedTimestamp = _maxSpotTimestamp(entries);
-        return (price, decimals, lastUpdatedTimestamp, length);
+        uint256 _price = _aggregateSpotEntries(entries);
+        uint256 _decimals = _getSpotDecimals(pairId);
+        return (_price, _decimals, _lastUpdatedTimestamp, entries.length);
     }
 
     function getSpotEntries(bytes32 pairId, bytes32[] memory sources)
         public
         view
-        returns (
-            SpotEntry[] memory,
-            uint256,
-            uint256
-        )
+        returns (SpotEntry[] memory entries, uint256 lastUpdatedTimestamp)
     {
-        uint256 lastUpdatedTimestamp = _getLatestSpotEntryTimestamp(
-            pairId,
-            sources
+        (
+            SpotEntry[] memory unfilteredEntries,
+            uint256 _lastUpdatedTimestamp
+        ) = _getSpotEntriesArray(pairId, sources);
+        entries = _filterSpotEntriesByTimestamp(
+            unfilteredEntries,
+            _lastUpdatedTimestamp
         );
-        (SpotEntry[] memory entries, uint256 length) = _getAllSpotEntries(
-            pairId,
-            sources,
-            lastUpdatedTimestamp
-        );
-        return (entries, length, lastUpdatedTimestamp);
+        return (entries, _lastUpdatedTimestamp);
+    }
+
+    function _getSpotEntriesArray(bytes32 pairId, bytes32[] memory sources)
+        internal
+        view
+        returns (SpotEntry[] memory, uint256 latestTimestamp)
+    {
+        SpotEntry[] memory entries = new SpotEntry[](sources.length);
+        for (uint256 i = 0; i < sources.length; i++) {
+            SpotEntry memory entry = spotEntryStorage[pairId][sources[i]];
+            latestTimestamp = Math.max(entry.base.timestamp, latestTimestamp);
+            entries[i] = entry;
+        }
+        return (entries, latestTimestamp);
     }
 
     function _getSpotDecimals(bytes32 pairId) internal view returns (uint256) {
@@ -191,27 +199,36 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
         return median(values, length);
     }
 
-    function _getAllSpotEntries(
-        bytes32 pairId,
-        bytes32[] memory sources,
+    function _filterSpotEntriesByTimestamp(
+        SpotEntry[] memory entries,
         uint256 lastUpdatedTimestamp
-    ) internal view returns (SpotEntry[] memory, uint256 length) {
-        SpotEntry[] memory spotEntries = new SpotEntry[](sources.length);
-        uint256 curIndex = 0;
-        for (uint256 i = 0; i < sources.length; i++) {
-            SpotEntry memory entry = spotEntryStorage[pairId][sources[i]];
+    ) internal pure returns (SpotEntry[] memory) {
+        uint256 resultCount = 0;
+        for (uint256 i = 0; i < entries.length; i++) {
+            SpotEntry memory entry = entries[i];
             if (
                 entry.base.timestamp + BACKWARD_TIMESTAMP_BUFFER <
                 lastUpdatedTimestamp
             ) {
                 continue;
             }
-            if (entry.base.timestamp == 0) {
+            resultCount++;
+        }
+
+        SpotEntry[] memory spotEntries = new SpotEntry[](resultCount);
+        uint256 curIndex = 0;
+        for (uint256 i = 0; i < entries.length; i++) {
+            SpotEntry memory entry = entries[i];
+            if (
+                entry.base.timestamp + BACKWARD_TIMESTAMP_BUFFER <
+                lastUpdatedTimestamp
+            ) {
                 continue;
             }
             spotEntries[curIndex++] = entry;
         }
-        return (spotEntries, curIndex);
+
+        return spotEntries;
     }
 
     function _validateSenderForSource(

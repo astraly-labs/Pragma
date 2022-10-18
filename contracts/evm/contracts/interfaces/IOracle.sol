@@ -26,4 +26,5 @@ interface IOracle {
     }
 
     event SubmittedSpotEntry(SpotEntry newEntry);
+    event NewCheckpoint(Checkpoint cp);
 }
