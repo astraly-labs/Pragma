@@ -6,7 +6,7 @@ from starkware.starknet.common.syscalls import get_block_timestamp
 from oracle.IOracle import IOracle
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from compute_engines.summary_stats.ISummaryStats import ISummaryStats
-from entry.structs import Currency, Pair, SpotEntry, Entry, BaseEntry
+from entry.structs import Currency, Pair, SpotEntry, BaseEntry
 from time_series.prelude import ONE
 
 const ONE_ETH = 10 ** 18;
@@ -117,7 +117,7 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 62996268093365884921900;  // returns value in fixedpoint
+    assert _volatility = 27320276290;  // returns value in fixedpoint
 
     %{ stop_warp() %}
 
@@ -222,7 +222,59 @@ func test_mean{syscall_ptr: felt*, range_check_ptr}() {
 
     let (_mean) = ISummaryStats.calculate_mean(summary_stats_address, 1, 100, 1000);
 
-    assert _mean = 64249666666666644613;  // returns value in wei
+    assert _mean = 642496666668;  // returns value in wei
+
+    return ();
+}
+
+@external
+func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 64;
+    assert times_arr[0] = 100;
+
+    assert prices_arr[1] = 71;
+    assert times_arr[1] = 200;
+
+    assert prices_arr[2] = 63;
+    assert times_arr[2] = 300;
+
+    assert prices_arr[3] = 67;
+    assert times_arr[3] = 400;
+
+    assert prices_arr[4] = 102;
+    assert times_arr[4] = 500;
+
+    assert prices_arr[5] = 58;
+    assert times_arr[5] = 600;
+
+    assert prices_arr[6] = 38;
+    assert times_arr[6] = 700;
+
+    assert prices_arr[7] = 25;
+    assert times_arr[7] = 800;
+
+    assert prices_arr[8] = 84;
+    assert times_arr[8] = 900;
+
+    assert prices_arr[9] = 73;
+    assert times_arr[9] = 1000;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+
+    let (_cp, _idx) = IOracle.get_last_checkpoint_before(oracle_address, 1, 901);
+    assert _idx = 8;
+
+    let (_cp, _idx) = IOracle.get_last_checkpoint_before(oracle_address, 1, 301);
+    assert _idx = 2;
 
     return ();
 }
