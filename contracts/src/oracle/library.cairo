@@ -624,20 +624,20 @@ namespace Oracle {
     }
 
     func find_startpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        key: felt, start_tick: felt
+        key: felt, timestamp: felt
     ) -> felt {
         let (latest_checkpoint_index) = get_latest_checkpoint_index(key=key);
 
         let (cp) = get_checkpoint_by_index(key, latest_checkpoint_index - 1);
         let (first_cp) = get_checkpoint_by_index(key, 0);
-        with_attr error_message("start_tick is in future") {
-            assert_nn(cp.timestamp - start_tick);
+        with_attr error_message("timestamp is in future") {
+            assert_nn(cp.timestamp - timestamp);
         }
-        if (is_le(start_tick, first_cp.timestamp) == TRUE) {
+        if (is_le(timestamp, first_cp.timestamp) == TRUE) {
             return 0;
         }
 
-        let startpoint = _binary_search(key, 0, latest_checkpoint_index, start_tick);
+        let startpoint = _binary_search(key, 0, latest_checkpoint_index, timestamp);
         return startpoint;
     }
 
