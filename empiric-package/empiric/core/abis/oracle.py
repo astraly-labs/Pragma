@@ -2,12 +2,11 @@ ORACLE_ABI = [
     {
         "members": [
             {"name": "base", "offset": 0, "type": "BaseEntry"},
-            {"name": "pair_id", "offset": 3, "type": "felt"},
-            {"name": "price", "offset": 4, "type": "felt"},
-            {"name": "volume", "offset": 5, "type": "felt"},
+            {"name": "key", "offset": 3, "type": "felt"},
+            {"name": "value", "offset": 4, "type": "felt"},
         ],
-        "name": "SpotEntry",
-        "size": 6,
+        "name": "GenericEntry",
+        "size": 5,
         "type": "struct",
     },
     {
@@ -18,6 +17,17 @@ ORACLE_ABI = [
         ],
         "name": "BaseEntry",
         "size": 3,
+        "type": "struct",
+    },
+    {
+        "members": [
+            {"name": "base", "offset": 0, "type": "BaseEntry"},
+            {"name": "pair_id", "offset": 3, "type": "felt"},
+            {"name": "price", "offset": 4, "type": "felt"},
+            {"name": "volume", "offset": 5, "type": "felt"},
+        ],
+        "name": "SpotEntry",
+        "size": 6,
         "type": "struct",
     },
     {
@@ -74,6 +84,12 @@ ORACLE_ABI = [
         "type": "event",
     },
     {
+        "data": [{"name": "new_entry", "type": "GenericEntry"}],
+        "keys": [],
+        "name": "SubmittedEntry",
+        "type": "event",
+    },
+    {
         "data": [{"name": "new_entry", "type": "SpotEntry"}],
         "keys": [],
         "name": "SubmittedSpotEntry",
@@ -101,6 +117,12 @@ ORACLE_ABI = [
         "data": [{"name": "pair", "type": "Pair"}],
         "keys": [],
         "name": "SubmittedPair",
+        "type": "event",
+    },
+    {
+        "data": [{"name": "pair_id", "type": "felt"}],
+        "keys": [],
+        "name": "CheckpointSpotEntry",
         "type": "event",
     },
     {
@@ -191,6 +213,22 @@ ORACLE_ABI = [
     {
         "inputs": [
             {"name": "pair_id", "type": "felt"},
+            {"name": "sources_len", "type": "felt"},
+            {"name": "sources", "type": "felt*"},
+        ],
+        "name": "get_spot_median_for_sources",
+        "outputs": [
+            {"name": "price", "type": "felt"},
+            {"name": "decimals", "type": "felt"},
+            {"name": "last_updated_timestamp", "type": "felt"},
+            {"name": "num_sources_aggregated", "type": "felt"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "pair_id", "type": "felt"},
             {"name": "aggregation_mode", "type": "felt"},
         ],
         "name": "get_spot",
@@ -235,6 +273,34 @@ ORACLE_ABI = [
         "type": "function",
     },
     {
+        "inputs": [{"name": "key", "type": "felt"}],
+        "name": "get_value",
+        "outputs": [
+            {"name": "value", "type": "felt"},
+            {"name": "decimals", "type": "felt"},
+            {"name": "last_updated_timestamp", "type": "felt"},
+            {"name": "num_sources_aggregated", "type": "felt"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "base_currency_id", "type": "felt"},
+            {"name": "quote_currency_id", "type": "felt"},
+            {"name": "aggregation_mode", "type": "felt"},
+        ],
+        "name": "get_spot_with_USD_hop",
+        "outputs": [
+            {"name": "price", "type": "felt"},
+            {"name": "decimals", "type": "felt"},
+            {"name": "last_updated_timestamp", "type": "felt"},
+            {"name": "num_sources_aggregated", "type": "felt"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
         "inputs": [{"name": "new_entry", "type": "FutureEntry"}],
         "name": "publish_future_entry",
         "outputs": [],
@@ -243,6 +309,21 @@ ORACLE_ABI = [
     {
         "inputs": [{"name": "new_entry", "type": "SpotEntry"}],
         "name": "publish_spot_entry",
+        "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [{"name": "new_entry", "type": "GenericEntry"}],
+        "name": "publish_entry",
+        "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "new_entries_len", "type": "felt"},
+            {"name": "new_entries", "type": "GenericEntry*"},
+        ],
+        "name": "publish_entries",
         "outputs": [],
         "type": "function",
     },
@@ -343,6 +424,19 @@ ORACLE_ABI = [
         ],
         "name": "set_checkpoints",
         "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "key", "type": "felt"},
+            {"name": "timestamp", "type": "felt"},
+        ],
+        "name": "get_last_checkpoint_before",
+        "outputs": [
+            {"name": "checkpoint", "type": "Checkpoint"},
+            {"name": "idx", "type": "felt"},
+        ],
+        "stateMutability": "view",
         "type": "function",
     },
     {
