@@ -106,6 +106,8 @@ class CoinbaseFetcher(PublisherInterfaceT):
         }
 
         resp = requests.get(self.BASE_URL + self.REQUEST_PATH, headers=headers)
+        resp.raise_for_status()
+
         result = resp.json()
         return self._construct(asset, result)
 

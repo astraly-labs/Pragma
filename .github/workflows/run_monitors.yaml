@@ -17,12 +17,12 @@ jobs:
       - name: Build docker images locally
         run: |
           docker build . --target test -t 42labs/empiric-publisher:test
-          docker build stagecoach/integration_tests/balance -t monitor-balance --platform linux/amd64
-          docker build stagecoach/integration_tests/price -t monitor-price --platform linux/amd64
+          docker build stagecoach/monitors/balance -f stagecoach/monitors/balance/Integration.Dockerfile -t monitor-balance --platform linux/amd64
+          docker build stagecoach/monitors/price -f stagecoach/monitors/price/Integration.Dockerfile -t monitor-price --platform linux/amd64
 
       - name: Run balance and price monitors
         env:
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
         run: |
-          docker run --env-file stagecoach/integration_tests/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
-          docker run --env-file stagecoach/integration_tests/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
+          docker run --env-file stagecoach/monitors/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
+          docker run --env-file stagecoach/monitors/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price

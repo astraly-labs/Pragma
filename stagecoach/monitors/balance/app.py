@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 import os
 
 import requests
@@ -22,7 +21,7 @@ def handler(event, context):
     return {"success": True}
 
 
-async def _handler(publishers=None, threshold_wei=0.1 * 10**18):
+async def _handler(publishers=None, threshold_wei=0.5 * 10**18):
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
@@ -44,33 +43,30 @@ async def _handler(publishers=None, threshold_wei=0.1 * 10**18):
 
         addresses.add(address)
 
-        # Set publisher private key to None because we aren't using the client for protected invokes
         publisher_client = EmpiricPublisherClient()
         balance = await publisher_client.get_balance(address)
 
         if balance < threshold_wei:
-            logger.warn(
-                f"\nWarning: Balance below threshold! Publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}\n"
+            logger.warning(
+                f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
             )
             all_above_threshold = False
             requests.post(
                 slack_url,
                 headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
                 data={
-                    "text": f"Balance below threshold! Publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}",
+                    "text": f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}",
                     "channel": channel_id,
                 },
             )
         else:
             logger.info(
-                f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {address}, balance in ETH: {balance/(10**18)}"
+                f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
             )
 
     if all_above_threshold:
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
         requests.get(f"https://betteruptime.com/api/v1/heartbeat/{betteruptime_id}")
-
-    logger.info(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
 
 if __name__ == "__main__":

@@ -1,14 +1,11 @@
 import logging
-import warnings
 
 logger = logging.getLogger(__name__)
 
 
 def str_to_felt(text):
     if text.upper() != text:
-        warnings.warn(
-            "Converting string to felt that has lowercase characters. Converting to uppercase."
-        )
+        logger.warning(f"Converting lower to uppercase for str_to_felt: {text}")
         text = text.upper()
     b_text = bytes(text, "utf-8")
     return int.from_bytes(b_text, "big")

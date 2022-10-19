@@ -78,6 +78,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
         url = self.BASE_URL.format(pair_id=pair_id)
 
         resp = requests.get(url, headers=self.headers)
+        resp.raise_for_status()
         result = resp.json()
         return self._construct(asset, result)
 
