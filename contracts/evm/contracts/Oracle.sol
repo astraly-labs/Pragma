@@ -160,19 +160,6 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
         return currencies[baseCurrencyid].decimals;
     }
 
-    function _maxSpotTimestamp(SpotEntry[] memory entries)
-        internal
-        pure
-        returns (uint256 latestTimestamp)
-    {
-        for (uint256 i = 0; i < entries.length; i++) {
-            if (entries[i].base.timestamp > latestTimestamp) {
-                latestTimestamp = entries[i].base.timestamp;
-            }
-        }
-        return latestTimestamp;
-    }
-
     function _getLatestSpotEntryTimestamp(
         bytes32 pairId,
         bytes32[] memory sources
