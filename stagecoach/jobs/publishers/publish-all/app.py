@@ -65,7 +65,7 @@ async def _handler(assets):
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries)
     print(
-        f"Published data with tx hashes: {', ',join([hex(res.hash) for res in response])}"
+        f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
     for res in response:
         await res.wait_for_acceptance(wait_for_accept=True)
