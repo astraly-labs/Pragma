@@ -170,19 +170,35 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
     // TODO: Convert to safe version that explicitly errors if overflow
     // Use that (a * 10^x) / (b * 10^y) = (a / b) * 10^(x - y)
     alloc_locals;
-    local dec_diff;
-    let a_is_less = is_le(a_decimals, b_decimals);
-    if (a_is_less == TRUE) {
-        let z = abs_diff(a_decimals, b_decimals);
-        dec_diff = z;
+    local a_to_shift;
+    local result_decimals;
+    let b_fewer_dec = is_le(b_decimals, a_decimals);
+    if (b_fewer_dec == TRUE) {
+        // x <= y
+        if (a_decimals != b_decimals) {
+            // Pad a to have same number of decimals as b
+            let (a_same_dec) = _shift_left(a_value, 10, b_decimals - a_decimals);
+            a_to_shift = a_same_dec;
+            tempvar range_check_ptr = range_check_ptr;
+        } else {
+            a_to_shift = a_value;
+            tempvar range_check_ptr = range_check_ptr;
+        }
+        // x == y
+        result_decimals = b_decimals;
         tempvar range_check_ptr = range_check_ptr;
     } else {
-        dec_diff = 0;
+        // x > y
+        a_to_shift = a_value;
+        result_decimals = a_decimals;
         tempvar range_check_ptr = range_check_ptr;
     }
-    let (a_shifted) = _shift_left(a_value, 10, dec_diff + b_decimals);
+
+    // If x > y:  (a / b) * 10^((x + y) - y)
+    // Otherwise: (a / b) * 10^(2y - y)
+    let (a_shifted) = _shift_left(a_to_shift, 10, b_decimals);
+
     let (result, _) = unsigned_div_rem(a_shifted, b_value);
-    let (result_decimals) = _max(a_decimals, b_decimals);
     return (result, result_decimals);
 }
 
@@ -207,13 +223,4 @@ func _max{range_check_ptr}(a: felt, b: felt) -> (max_val: felt) {
         return (b,);
     }
     return (a,);
-}
-
-func abs_diff{range_check_ptr}(a: felt, b: felt) -> felt {
-    let a_is_less = is_le(a, b);
-    if (a_is_less == TRUE) {
-        return (b - a);
-    } else {
-        return (a - b);
-    }
 }
