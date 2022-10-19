@@ -224,9 +224,18 @@ func test_volatility_arr_length{syscall_ptr: felt*, range_check_ptr}() {
         summary_stats_address, 1, 1664806064, 1664806095
     );
     assert _volatility = 393800558881;  // returns value in decimals
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 1664806063, 1664806095
+    );
+    assert _volatility = 393800558881;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664806033, 1664806095
+    );
+    assert _volatility = 430411297334;  // returns value in decimals
+
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 1664806032, 1664806095
     );
     assert _volatility = 430411297334;  // returns value in decimals
 
