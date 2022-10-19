@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "./interfaces/ICurrencyManager.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "./interfaces/ICurrencyManager.sol";
 
 contract CurrencyManager is ICurrencyManager, Ownable {
     mapping(bytes32 => Currency) public currencies;

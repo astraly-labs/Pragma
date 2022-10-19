@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "./interfaces/IPublisherRegistry.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "./interfaces/IPublisherRegistry.sol";
 
 contract PublisherRegistry is Ownable, IPublisherRegistry {
     mapping(bytes32 => address) public publisherAddresses;
