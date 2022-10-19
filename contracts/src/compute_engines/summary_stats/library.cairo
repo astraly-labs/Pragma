@@ -47,6 +47,7 @@ namespace SummaryStats {
             contract_address=oracle_address, key=key
         );
         let (cp, start_index) = IOracle.get_last_checkpoint_before(oracle_address, key, start_tick);
+
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, latest_checkpoint_index);
         }
@@ -93,7 +94,7 @@ namespace SummaryStats {
         offset: felt,
         tick_arr: TickElem**,
     ) {
-        if (idx == last_idx) {
+        if (idx + offset == last_idx) {
             return ();
         }
         let (cp) = IOracle.get_checkpoint(oracle_address, key, idx + offset);

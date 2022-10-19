@@ -838,34 +838,27 @@ namespace Oracle {
         key, low, high, target
     ) -> felt {
         alloc_locals;
-        let (midpoint, _) = unsigned_div_rem(low + high - 1, 2);
+        let (midpoint, _) = unsigned_div_rem(low + high, 2);
 
-        if (high + low == 1) {
+        if (high == low) {
             return midpoint;
         }
 
-        if (midpoint == 0) {
-            return 0;
+        if (is_le(high + 1, low) == TRUE) {
+            return low - 1;
         }
 
         let (cp) = get_checkpoint_by_index(key, midpoint);
         let timestamp = cp.timestamp;
+
         if (timestamp == target) {
             return midpoint;
         }
 
         if (is_le(target, timestamp) == TRUE) {
-            let (prev_cp) = get_checkpoint_by_index(key, midpoint - 1);
-            if (is_le(prev_cp.timestamp, target) == TRUE) {
-                return midpoint - 1;
-            }
-            return _binary_search(key, low, midpoint, target);
+            return _binary_search(key, low, midpoint - 1, target);
         } else {
-            let (next_cp) = get_checkpoint_by_index(key, midpoint + 1);
-            if (is_le(target, next_cp.timestamp) == TRUE) {
-                return midpoint;
-            }
-            return _binary_search(key, midpoint, high, target);
+            return _binary_search(key, midpoint + 1, high, target);
         }
     }
 }

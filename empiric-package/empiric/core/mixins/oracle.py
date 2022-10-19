@@ -1,6 +1,6 @@
 import collections
 import logging
-from typing import List
+from typing import List, Optional
 
 from empiric.core.contract import Contract
 from empiric.core.entry import SpotEntry
@@ -48,18 +48,22 @@ class OracleMixin:
         return invocation
 
     async def publish_many(
-        self, entries: List[SpotEntry], pagination=80, max_fee=int(1e18)
+        self,
+        entries: List[SpotEntry],
+        pagination: Optional[int] = 80,
+        max_fee=int(1e18),
     ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warning("Skipping publishing as entries array is empty")
             return
 
         invocations = []
+        serialized_entries = SpotEntry.serialize_entries(entries)
         # TODO (this PR) filter by entry.type and publish Spot, Future and Generic entries separately
         if pagination:
             ix = 0
-            while ix < len(entries):
-                entries_subset = entries[ix : ix + pagination]
+            while ix < len(serialized_entries):
+                entries_subset = serialized_entries[ix : ix + pagination]
                 invocation = await self.oracle.publish_spot_entries.invoke(
                     SpotEntry.serialize_entries(entries_subset),
                     callback=self.track_nonce,
