@@ -64,6 +64,32 @@ async def deploy(
 
 @app.command()
 @coro
+async def upgrade(cli_config=config.DEFAULT_CONFIG):
+    valid = input("Are you sure?\nThis will update the contract. (y/n)\n")
+    if valid != "y":
+        return SUCCESS
+    config_parser = configparser.ConfigParser()
+    config_parser.read(cli_config)
+    compiled_contract_path = Path(
+        config_parser["CONFIG"].get("contract-path", config.COMPILED_CONTRACT_PATH)
+    )
+
+    client = net.init_empiric_client(cli_config)
+    declared_oracle_class_hash = await declare_contract(
+        client.client, compiled_contract_path, "Oracle"
+    )
+    typer.echo(f"DECLARED: {declared_oracle_class_hash}")
+    invocation = await client.oracle.upgrade.invoke(
+        declared_oracle_class_hash, max_fee=DEFAULT_MAX_FEE
+    )
+    await invocation.wait_for_acceptance()
+    typer.echo(f"INVOKED: {invocation.hash}")
+
+    return SUCCESS
+
+
+@app.command()
+@coro
 async def publish_spot_entry(entry: str, config_path=config.DEFAULT_CONFIG):
     pair_id, value, timestamp, source, publisher = entry.split(",")
     if timestamp.lower() == "now":
@@ -92,7 +118,21 @@ async def cp(pair_id: str, config_path=config.DEFAULT_CONFIG):
         0,
         max_fee=DEFAULT_MAX_FEE,
     )
-    typer.echo("invocation:", invocation.hash)
+    await invocation.wait_for_acceptance(wait_for_accept=True)
+    typer.echo(f"invocation: {invocation.hash}")
+
+    return SUCCESS
+
+
+@app.command()
+@coro
+async def get_cp(pair_id: str, index: int, config_path=config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    invocation = await client.oracle.get_checkpoint.call(
+        str_to_felt(pair_id),
+        index,
+    )
+    typer.echo(f"invocation: {invocation}")
 
     return SUCCESS
 
@@ -158,6 +198,36 @@ async def _publish_spot_entry(config_path: Path, entry: Tuple[int, int, int, int
 async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_spot.call(str_to_felt(pair_id), 0)
+    typer.echo(f"spot: {entry}")
+
+
+@app.command()
+@coro
+async def get_spot_for_sources(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_spot_for_sources.call(
+        str_to_felt(pair_id), 0, ["CEX"]
+    )
+    typer.echo(f"spot: {entry}")
+
+
+@app.command()
+@coro
+async def get_spot_entries(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    entries = await client.oracle.get_spot_entries.call(str_to_felt(pair_id))
+    typer.echo(f"spot: {entries}")
+
+
+@app.command()
+@coro
+async def get_spot_entry(
+    pair_id: str, config_path: Path = config.DEFAULT_CONFIG, publisher: str = "CEX"
+):
+    client = net.init_empiric_client(config_path)
+    entry = await client.oracle.get_spot_entry.call(
+        str_to_felt(pair_id), str_to_felt(publisher)
+    )
     typer.echo(f"spot: {entry}")
 
 

@@ -262,6 +262,17 @@
     {
         "data": [
             {
+                "name": "pair_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "CheckpointSpotEntry",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
                 "name": "implementation",
                 "type": "felt"
             }

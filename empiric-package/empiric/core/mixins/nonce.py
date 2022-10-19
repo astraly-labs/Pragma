@@ -12,7 +12,6 @@ class NonceMixin:
     pending_nonce: Optional[int] = None
 
     async def _get_nonce(self) -> int:
-        latest_nonce = await self.get_nonce()
         self.update_nonce_dict()
         self.cleanup_nonce_dict()
 
@@ -21,6 +20,7 @@ class NonceMixin:
         if self.nonce_status:
             return max(self.nonce_status) + 1
 
+        latest_nonce = await self.get_nonce()
         return latest_nonce
 
     def cleanup_nonce_dict(self):
@@ -68,14 +68,6 @@ class NonceMixin:
                 self.nonce_dict = {}
                 self.nonce_status = {}
                 return
-
-    async def get_latest_nonce(
-        self,
-    ):
-        if not self.nonce_dict:
-            return await self.get_nonce()
-        self.update_nonce_dict()
-        return await self.get_nonce()
 
     async def get_nonce(
         self,

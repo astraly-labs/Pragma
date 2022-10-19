@@ -1,4 +1,5 @@
 import configparser
+import time
 from pathlib import Path
 
 import typer
@@ -58,3 +59,22 @@ async def _deploy_summary_stats(client: Client, config_path: Path):
 
     with open(config_path, "w") as f:
         config_parser.write(f)
+
+
+@app.command()
+@coro
+async def volatility(
+    pair_id: str,
+    start: int = int(time.time() - 3600),
+    end: int = int(time.time()),
+    config_path: Path = config.DEFAULT_CONFIG,
+):
+    config_parser = configparser.ConfigParser()
+    config_parser.read(config_path)
+
+    client = net.init_empiric_client(config_path)
+    client.init_stats_contract(int(config_parser["CONTRACTS"]["summary-stats"]))
+    response = await client.stats.calculate_volatility.call(pair_id, start, end)
+    typer.echo(f"VOLATILITY: {response}")
+
+    return SUCCESS

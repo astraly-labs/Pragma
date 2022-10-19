@@ -27,7 +27,9 @@ async def deploy_account_contract(
     return result.contract_address
 
 
-async def create_account(client: GatewayClient, config_file: Path):
+async def create_account(
+    client: GatewayClient, config_file: Path, save_to_config: bool = True
+):
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 
@@ -37,8 +39,9 @@ async def create_account(client: GatewayClient, config_file: Path):
     address = await deploy_account_contract(client, key_pair.public_key)
     typer.echo(f"created address: {address}")
 
-    config_parser["USER"]["address"] = str(address)
-    with open(config_file, "w") as f:
-        config_parser.write(f)
+    if save_to_config:
+        config_parser["USER"]["address"] = str(address)
+        with open(config_file, "w") as f:
+            config_parser.write(f)
 
     return SUCCESS
