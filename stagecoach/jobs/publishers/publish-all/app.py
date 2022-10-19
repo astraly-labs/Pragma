@@ -23,7 +23,7 @@ def handler(event, context):
     serialized_entries_ = SpotEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
-        "result": serialized_entries_,
+        "success": True,
     }
 
 
