@@ -15,7 +15,7 @@ interface ICurrencyManager {
         bytes32 baseCurrencyId;
     }
 
-    event SubmittedCurrency(Currency);
-    event UpdatedCurrency(Currency);
-    event SubmittedPair(Pair);
+    event SubmittedCurrency(Currency currency);
+    event UpdatedCurrency(Currency currency);
+    event SubmittedPair(Pair pair);
 }

@@ -25,6 +25,10 @@ interface IOracle {
         uint256 numSourcesAggregated;
     }
 
+    event UpdatedPublisherRegistryAddress(
+        address oldPublisherRegistryAddress,
+        address newPublisherRegistryAddress
+    );
     event SubmittedSpotEntry(SpotEntry newEntry);
-    event NewCheckpoint(Checkpoint cp);
+    event CheckpointSpotEntry(Checkpoint cp);
 }

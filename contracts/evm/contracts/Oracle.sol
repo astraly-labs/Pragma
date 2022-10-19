@@ -90,7 +90,7 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
         checkpointIndex[pairId]++;
         checkpoints[pairId].push(newCheckpoint);
 
-        emit NewCheckpoint(newCheckpoint);
+        emit CheckpointSpotEntry(newCheckpoint);
     }
 
     function publishSpotEntries(SpotEntry[] calldata spotEntries) public {
