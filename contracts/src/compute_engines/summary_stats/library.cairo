@@ -93,7 +93,7 @@ namespace SummaryStats {
         offset: felt,
         tick_arr: TickElem**,
     ) {
-        if (idx == last_idx) {
+        if (idx + offset == last_idx) {
             return ();
         }
         let (cp) = IOracle.get_checkpoint(oracle_address, key, idx + offset);

@@ -74,6 +74,7 @@ async def volatility(
 
     client = net.init_empiric_client(config_path)
     client.init_stats_contract(int(config_parser["CONTRACTS"]["summary-stats"]))
+
     response = await client.stats.calculate_volatility.call(pair_id, start, end)
     typer.echo(f"VOLATILITY: {response}")
 

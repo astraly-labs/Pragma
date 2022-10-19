@@ -2,6 +2,7 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import unsigned_div_rem
 
 from time_series.prelude import TickElem
 from time_series.stats.metrics import extract_values
@@ -35,5 +36,8 @@ func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 ) -> (volatility_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
     let _volatility = SummaryStats.calculate_volatility(oracle_address, key, start, stop);
-    return (_volatility,);
+    // annualize metric
+    let annual_ = _volatility * 561569;
+    let (annual, _) = unsigned_div_rem(annual_, 100);
+    return (annual,);
 }

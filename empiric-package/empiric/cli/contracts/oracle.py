@@ -203,6 +203,16 @@ async def get_spot(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
 
 @app.command()
 @coro
+async def get_cp(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
+    client = net.init_empiric_client(config_path)
+    latest = await client.oracle.get_latest_checkpoint_index.call(str_to_felt(pair_id))
+    typer.echo(f'latest: {latest}')
+    entry = await client.oracle.get_last_checkpoint_before.call(str_to_felt(pair_id), 1666197238)
+    typer.echo(f"cp: {entry}")
+
+
+@app.command()
+@coro
 async def get_spot_for_sources(pair_id: str, config_path: Path = config.DEFAULT_CONFIG):
     client = net.init_empiric_client(config_path)
     entry = await client.oracle.get_spot_for_sources.call(
