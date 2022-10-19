@@ -23,9 +23,9 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     local summary_stats_address;
 
     %{
-        ids.oracle_address = deploy_contract("./contracts/src/oracle/Oracle.cairo", []).contract_address
-        ids.publisher_registry_address = deploy_contract("./contracts/src/publisher_registry/PublisherRegistry.cairo", [1234]).contract_address
-        ids.summary_stats_address = deploy_contract("./contracts/src/compute_engines/summary_stats/SummaryStats.cairo", [ids.oracle_address]).contract_address
+        ids.oracle_address = deploy_contract("./contracts/starknet/src/oracle/Oracle.cairo", []).contract_address
+        ids.publisher_registry_address = deploy_contract("./contracts/starknet/src/publisher_registry/PublisherRegistry.cairo", [1234]).contract_address
+        ids.summary_stats_address = deploy_contract("./contracts/starknet/src/compute_engines/summary_stats/SummaryStats.cairo", [ids.oracle_address]).contract_address
 
         context.oracle_address = ids.oracle_address
         context.summary_stats_address = ids.summary_stats_address
