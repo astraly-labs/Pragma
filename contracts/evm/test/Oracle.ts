@@ -1,6 +1,8 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Oracle } from "../typechain-types";
+import { OracleInterface } from "../typechain-types/Oracle";
 
 describe("Oracle", function () {
   async function deployContractsFixture() {
@@ -10,11 +12,18 @@ describe("Oracle", function () {
 
     const [owner, otherAccount] = await ethers.getSigners();
 
+    const Admin = await ethers.getContractFactory("ProxyAdmin");
+    const admin = await Admin.deploy();
+
     const PublisherRegistry = await ethers.getContractFactory("PublisherRegistry");
     const publisherRegistry = await PublisherRegistry.deploy();
 
     const Oracle = await ethers.getContractFactory("Oracle");
-    const oracle = await Oracle.deploy(
+    const oracle = await Oracle.deploy();
+    const TransparentUpgradeableProxy = await ethers.getContractFactory("TransparentUpgradeableProxy");
+
+    const fragment = Oracle.interface.getFunction("initialize");
+    const data = Oracle.interface.encodeFunctionData(fragment, [
       publisherRegistry.address,
       [{
         id: ethers.utils.formatBytes32String('USD'),
@@ -27,14 +36,16 @@ describe("Oracle", function () {
         decimals: 18,
         isAbstractCurrency: true,
         ethereumAddress: ethers.constants.AddressZero,
-      }
-      ],
+      }],
       [{
         id: ethers.utils.formatBytes32String('ETH/USD'),
         quoteCurrencyId: ethers.utils.formatBytes32String('ETH'),
         baseCurrencyId: ethers.utils.formatBytes32String('USD'),
-      }],
-    );
+      }]
+    ]);
+
+    const proxy = await TransparentUpgradeableProxy.deploy(oracle.address, admin.address, data);
+    const oracleProxy = await Oracle.attach(proxy.address);
 
     await publisherRegistry.addPublisher(
       ethers.utils.formatBytes32String('EMPIRIC'),
@@ -50,7 +61,7 @@ describe("Oracle", function () {
       ]
     );
 
-    return { publisherRegistry, oracle, owner, otherAccount, timestampBefore };
+    return { publisherRegistry, oracle: oracleProxy, owner, otherAccount, timestampBefore };
   }
 
   describe("Deployment", function () {

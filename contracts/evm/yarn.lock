@@ -563,7 +563,7 @@
     "mcl-wasm" "^0.7.1"
     "rustbn.js" "~0.2.0"
 
-"@nomicfoundation/hardhat-chai-matchers@^1.0.0":
+"@nomicfoundation/hardhat-chai-matchers@^1.0.0", "@nomicfoundation/hardhat-chai-matchers@^1.0.4":
   "integrity" "sha512-n/5UMwGaUK2zM8ALuMChVwB1lEPeDTb5oBjQ1g7hVsUdS8x+XG9JIEp4Ze6Bwy98tghA7Y1+PCH4SNE2P3UQ2g=="
   "resolved" "https://registry.npmjs.org/@nomicfoundation/hardhat-chai-matchers/-/hardhat-chai-matchers-1.0.4.tgz"
   "version" "1.0.4"
@@ -617,7 +617,7 @@
     "fs-extra" "^7.0.1"
     "node-fetch" "^2.6.0"
 
-"@nomiclabs/hardhat-ethers@^2.0.0":
+"@nomiclabs/hardhat-ethers@^2.0.0", "@nomiclabs/hardhat-ethers@^2.2.0":
   "integrity" "sha512-kKCW7xawuD/lw69Yr1yqUUrF0IKmnLNGf+pTVbJ/ctHaRcPrwKI0EPkO1RNXBHlOOZkv6v4DK2PPvq0lL2ykig=="
   "resolved" "https://registry.npmjs.org/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.2.0.tgz"
   "version" "2.2.0"
@@ -637,6 +637,11 @@
     "semver" "^6.3.0"
     "table" "^6.8.0"
     "undici" "^5.4.0"
+
+"@openzeppelin/contracts-upgradeable@^4.8.0-rc.1":
+  "integrity" "sha512-yywl0OC8ZGyRLDf0hQqGt2qtm5DZcDf6CggfE+J0bNw2mF6ySaXW6lovAZwXI/frtevUGog4WKNm6EPXtpoh3A=="
+  "resolved" "https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.0-rc.1.tgz"
+  "version" "4.8.0-rc.1"
 
 "@openzeppelin/contracts@^4.7.3":
   "integrity" "sha512-dGRS0agJzu8ybo44pCIf3xBaPQN/65AIXNgK8+4gzKd5kbvlqyxryUYVLJv7fK98Seyd2hDZzVEHSWAh0Bt1Yw=="
@@ -1429,7 +1434,7 @@
   dependencies:
     "check-error" "^1.0.2"
 
-"chai@^4.2.0", "chai@>= 2.1.2 < 5":
+"chai@^4.2.0", "chai@^4.3.6", "chai@>= 2.1.2 < 5":
   "integrity" "sha512-bbcp3YfHCUzMOvKqsztczerVgBKSsEijCySNlHHbX3VG1nskvqjz5Rfso1gGwD6w6oOV3eI60pKuMOV5MV7p3Q=="
   "resolved" "https://registry.npmjs.org/chai/-/chai-4.3.6.tgz"
   "version" "4.3.6"

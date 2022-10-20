@@ -2,13 +2,14 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "./interfaces/IOracle.sol";
 import "./interfaces/IPublisherRegistry.sol";
 import "./CurrencyManager.sol";
 import "./EntryUtils.sol";
 
-contract Oracle is CurrencyManager, EntryUtils, IOracle {
+contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     IPublisherRegistry public publisherRegistry;
 
     mapping(bytes32 => bytes32[]) public oracleSourcesStorage;
@@ -20,11 +21,15 @@ contract Oracle is CurrencyManager, EntryUtils, IOracle {
     uint256 constant BACKWARD_TIMESTAMP_BUFFER = 3600;
     uint256 constant FORWARD_TIMESTAMP_BUFFER = 900;
 
-    constructor(
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
         address _publisherRegistry,
         Currency[] memory _currencies,
         Pair[] memory _pairs
-    ) {
+    ) public initializer {
         publisherRegistry = IPublisherRegistry(_publisherRegistry);
         for (uint256 i = 0; i < _currencies.length; i++) {
             currencies[_currencies[i].id] = _currencies[i];
