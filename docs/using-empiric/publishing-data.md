@@ -49,74 +49,42 @@ The initial publishing frequency for the oracle is every 3 minutes on Starknet A
 
 See a full sample script [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/publish\_all.py), or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample `.env` file [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/.env) to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).&#x20;
 
-To make fetching data simple, create your own fetcher that implements the `PublisherInterfaceT`, see the fetcher template below or an example fetcher [here](https://github.com/42labs/Empiric/blob/0ad7b9c3eb5554e743bff423d2085d950b97b69f/empiric-package/empiric/publisher/fetchers/bitstamp.py).  You may also implement your own fetching logic however you want as long as it returns a `List[SpotEntry]`.
+To make fetching data simple, implement your own fetching function using whatever libraries you want, as long as it returns a `List[SpotEntry]`.
 
 ```python
 import asyncio
+import logging
 import os
 import time
-from typing import Any, List
+from typing import List
 
-from aiohttp import ClientSession
 from empiric.core.config import TESTNET_CONTRACTS
 from empiric.core.entry import SpotEntry
-from empiric.core.logger import get_stream_logger
 from empiric.core.utils import currency_pair_to_pair_id, log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, EmpiricAsset
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.types import PublisherInterfaceT
 
-logger = get_stream_logger()
+logger = logging.getLogger(__name__)
 
 
-class MyFetcher(PublisherInterfaceT):
-    SOURCE = "SOURCE_NAME"  # the source of the data, identical to your publisher ID for 1st party publishers
-    PUBLISHER = "PUBLISHER_NAME"  # your publisher ID
-
-    def __init__(self, assets: List[EmpiricAsset], publisher):
-        self.assets = assets
-        
-    # Use this if you have synchronous fetching logic, e.g. `requests.get()`
-    def fetch_sync(self, *args, **kwargs): 
-        ...
-
-    # Use this for asynchronous fetching logic, e.g. `with session.get()`
-    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
-        entries = []
-        for asset in self.assets:
-            # Use session to fetch data, here we hardcode for the example
-            price = 10.0
-            price_int = int(price * (10 ** asset["decimals"]))
-
-            entries.append(
-                SpotEntry(
-                    timestamp=int(time.time()),
-                    source=self.SOURCE,
-                    publisher=self.PUBLISHER,
-                    pair_id=currency_pair_to_pair_id("TEST", "USD"),
-                    price=price_int,  # shifted 10 ** decimals; see above,
-                    volume=0,
-                )
+# you can fetch your data using any strategy or libraries you want
+def fetch_entries(assets: List[EmpiricAsset], *args, **kwargs) -> List[SpotEntry]:
+    entries = []
+    for asset in assets:
+        entries.append(
+            SpotEntry(
+                timestamp=int(time.time()),
+                source="MY_SOURCE",
+                publisher="MY_PUBLISHER",
+                pair_id=currency_pair_to_pair_id("TEST", "USD"),
+                price=10 * 10 ** asset["decimals"],  # shifted 10 ** decimals
+                volume=0,
             )
-        return entries
-
-
-# or you can fetch your data using any strategy or libraries you want
-def fetch_entries(*args, **kwargs) -> List[SpotEntry]:
-    return [
-        SpotEntry(
-            timestamp=int(time.time()),
-            source="GEMINI",
-            publisher="GEMINI",
-            pair_id=currency_pair_to_pair_id("TEST", "USD"),
-            price=price_int,  # shifted 10 ** decimals; see above,
-            volume=0,
         )
-    ]
+    return entries
 
 
 async def publish_all(assets):
-    publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
     publisher_client = EmpiricPublisherClient(
@@ -125,13 +93,8 @@ async def publish_all(assets):
         contract_addresses_config=TESTNET_CONTRACTS,
     )
 
-    # you can use a custom fetcher to fetch using requests
-    publisher_client.add_fetcher(MyFetcher(assets, publisher))
-    _entries = await publisher_client.fetch()
-    await publisher_client.publish_many(_entries)
-    
     # or use your own custom logic
-    _entries = await fetch_entries()
+    _entries = fetch_entries(assets)
     await publisher_client.publish_many(_entries)
 
     logger.info("Publishing the following entries:")
@@ -153,7 +116,7 @@ Again, note the `.env` file in that same [folder](https://github.com/42labs/Empi
 Alternatively, you can find an example of how to use the SDK in a serverless deployment (e.g. AWS Lambda).
 
 ```docker
-FROM 42labs/empiric-publisher:1.0.0
+FROM 42labs/empiric-publisher:1.0.1
 
 COPY fetch-and-publish.py ./fetch-and-publish.py
 CMD python fetch-and-publish.py
