@@ -124,6 +124,7 @@ func update_publisher_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
 func add_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher, source
 ) {
+    Admin.only_admin();
     Publisher.add_source_for_publisher(publisher, source);
     return ();
 }
@@ -132,6 +133,7 @@ func add_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
 func add_sources_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher, sources_len, sources: felt*
 ) {
+    Admin.only_admin();
     Publisher.add_sources_for_publisher(publisher, sources_len, sources);
     return ();
 }
@@ -140,6 +142,7 @@ func add_sources_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, r
 func remove_source_for_publisher{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     publisher, source
 ) {
+    Admin.only_admin();
     Publisher.remove_source_for_publisher(publisher, source);
     return ();
 }
