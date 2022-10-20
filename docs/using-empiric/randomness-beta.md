@@ -1,5 +1,16 @@
 # Randomness \[Beta]
 
+Empiric Network has built a verifiable random function (VRF) over a specific elliptic curve, named Curve25519.   Most known blockchain implementations of a VRF are using the so called 'Bitcoin-curve", or secpk256k1.  
+While using one curve or the other for the VRF provide similar security guarantees, we choose to implement on Curve25519 mainly for two reasons :
+
+* Building the tools to perform arithmetic operations on Curve25519 is a premiere for programmable blockchains and theorically enables compatibilty with [all the protocols](https://en.wikipedia.org/wiki/Curve25519#Protocols) that use Curve25519 for digital signatures, shuch as IPFS, Ripple, Monero, Signal, Protonmail, and many others. This is a great step towards interoperability with Starknet and it is only possible by leveraging its computational capabilities.  
+
+
+* One key part of the VRF algorithm implies taking a public input and converting it to an elliptic curve point. This process is called "hashing to the curve", and the standard way of doing it for Curve25519 is using [Elligator2](https://eprint.iacr.org/2013/325). 
+In Cairo, part of the Elligator algorithm can be computed quickly and safely using a hint and allows cheaper verification costs than hashing to the secpk256k1 curve. 
+
+
+
 Empiric Network offers a verifiable randomness feed that allows protocols to request secure randomness on-chain.&#x20;
 
 This feed is being rolled out in two phases: In the first phase (currently live) the randomness proof is posted as calldata, allowing anyone to verify it off-chain. See below for more details on how to verify the randomness. This first phase is limited to testnet, and there is no charge for randomness.
