@@ -106,8 +106,8 @@ def fetch_entries(*args, **kwargs) -> List[SpotEntry]:
     return [
         SpotEntry(
             timestamp=int(time.time()),
-            source=self.SOURCE,
-            publisher=self.PUBLISHER,
+            source="GEMINI",
+            publisher="GEMINI",
             pair_id=currency_pair_to_pair_id("TEST", "USD"),
             price=price_int,  # shifted 10 ** decimals; see above,
             volume=0,
