@@ -75,7 +75,12 @@ class MyFetcher(PublisherInterfaceT):
 
     def __init__(self, assets: List[EmpiricAsset], publisher):
         self.assets = assets
+        
+    # Use this if you have synchronous fetching logic, e.g. `requests.get()`
+    def fetch_sync(self): 
+        pass
 
+    # Use this for asynchronous fetching logic, e.g. `with session.get()`
     async def fetch(self, session: ClientSession) -> List[Any]:
         entries = []
         for asset in self.assets:
