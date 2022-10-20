@@ -1,0 +1,37 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "requestor_address",
+                "type": "felt"
+            },
+            {
+                "name": "request_id",
+                "type": "felt"
+            },
+            {
+                "name": "random_words_len",
+                "type": "felt"
+            },
+            {
+                "name": "random_words",
+                "type": "felt*"
+            }
+        ],
+        "name": "receive_random_words",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "see_random_word",
+        "outputs": [
+            {
+                "name": "word",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

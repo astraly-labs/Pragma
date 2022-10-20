@@ -3,8 +3,8 @@ import time
 from collections import namedtuple
 
 from empiric.core.client import EmpiricClient
-from empiric.core.config import BaseConfig
 from empiric.core.logger import get_stream_logger
+from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 
 logger = get_stream_logger()
@@ -23,7 +23,7 @@ def calculate_on_yield_point(
         expiry_timestamp=last_updated_timestamp,
         capture_timestamp=last_updated_timestamp,
         rate=output_value,
-        source=str_to_felt("on"),
+        source=str_to_felt("ON"),
     )
 
 
@@ -70,7 +70,7 @@ def calculate_future_spot_yield_point(
         expiry_timestamp=future_expiry_timestamp,
         capture_timestamp=future_last_updated_timestamp,
         rate=output_value,
-        source=str_to_felt("future/spot"),
+        source=str_to_felt("FUTURE/SPOT"),
     )
 
 
@@ -80,14 +80,13 @@ async def get_yield_points(output_decimals):
     yield_points = []
 
     on_keys = ["aave-on-borrow"]
-    spot_keys = ["btc/usd"]
-    future_keys = ["btc/usd-20220624", "btc/usd-20220930"]
-    future_status = {"btc/usd-20220930": 1664506800, "btc/usd-20221230": 1672369200}
+    pair_ids = ["BTC/USD"]
+    future_expiry_timestamps = {"BTC/USD": [1664506800, 1672369200]}
 
     for on_key in on_keys:
         # fetch data from oracle
-        on_value, on_decimals, last_updated_timestamp, _ = await client.get_value(
-            on_key, BaseConfig.DEFAULT_AGGREGATION_MODE
+        on_value, on_decimals, last_updated_timestamp, _ = await client.get_spot(
+            on_key, AggregationMode.MEDIAN
         )
 
         yield_points.append(
@@ -96,26 +95,28 @@ async def get_yield_points(output_decimals):
             )
         )
 
-    for spot_key in spot_keys:
+    for pair_id in pair_ids:
         (
             spot_value,
             spot_decimals,
             spot_last_updated_timestamp,
             _,
-        ) = await client.get_value(spot_key, BaseConfig.DEFAULT_AGGREGATION_MODE)
+        ) = await client.get_spot(pair_id, AggregationMode.MEDIAN)
 
-        for future_key in future_keys:
+        for future_expiry_timestamp in future_expiry_timestamps[pair_id]:
             (
                 future_value,
                 future_decimals,
                 future_last_updated_timestamp,
                 _,
-            ) = await client.get_value(future_key, BaseConfig.DEFAULT_AGGREGATION_MODE)
+            ) = await client.get_future(
+                pair_id, future_expiry_timestamp, AggregationMode.MEDIAN
+            )
 
             future_spot_yield_point = calculate_future_spot_yield_point(
                 future_value,
                 future_last_updated_timestamp,
-                future_status[future_key],
+                future_expiry_timestamp,
                 spot_value,
                 spot_last_updated_timestamp,
                 spot_decimals,

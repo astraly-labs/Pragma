@@ -82,6 +82,14 @@ export const protocols: Protocol[] = [
       " Nostra is a versatile liquidity protocol for lending and borrowing. On top of its basic use-case, Nostra has many innovative features designed to maximize capital efficiency and minimize liquidity risk.",
     href: "https://nostra.finance/",
   },
+  {
+    name: "CygnusDAO",
+    category: "Lending",
+    src: "/assets/protocols/cygnus.png",
+    description:
+      "CygnusDAO is a decentralized stablecoin lending and leveraged yield farming protocol. Users simply deposit LP tokens and borrow stablecoins, while CygnusDAO autocompounds their leveraged rewards.",
+    href: "https://cygnusdao.finance/",
+  },
 ];
 
 const ProtocolSection = () => (

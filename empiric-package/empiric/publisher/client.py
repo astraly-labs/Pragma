@@ -1,88 +1,70 @@
-import logging
-from typing import List, Optional
+import asyncio
+from typing import List
 
-from empiric.core.base_client import EmpiricAccountClient, EmpiricBaseClient
-from empiric.core.config import get_config
-from empiric.core.entry import Entry
-from empiric.core.types import ADDRESS, HEX_STR, TESTNET, Network
-
-logger = logging.getLogger(__name__)
+import aiohttp
+from empiric.core.client import EmpiricClient
+from empiric.core.entry import SpotEntry
+from empiric.publisher.types import PublisherInterfaceT
 
 
-class EmpiricPublisherClient(EmpiricBaseClient):
-    publisher: Optional[ADDRESS]
-    publisher_registry_address: ADDRESS
-    account_client: EmpiricAccountClient
+class EmpiricPublisherClient(EmpiricClient):
+    """
+    This client extends the empiric client with functionality for fetching from our third party sources.
+    It can be used to synchronously or asynchronously fetch assets using the Asset format, ie.
 
-    def __init__(
-        self,
-        publisher_private_key,
-        publisher_address,
-        publisher: Optional[ADDRESS] = None,
-        publisher_registry_address: Optional[ADDRESS] = None,
-        network: Network = TESTNET,
-        oracle_controller_address: Optional[ADDRESS] = None,
-    ):
-        raw_config = get_config(network)
-        self.publisher_registry_address = (
-            publisher_registry_address
-            if publisher_registry_address is not None
-            else raw_config.PUBLISHER_REGISTRY_ADDRESS
-        )
-        self.publisher = publisher
-        super().__init__(
-            publisher_private_key,
-            publisher_address,
-            network,
-            oracle_controller_address,
-        )
-        # Override default account_client with one that uses timestamp for nonce
-        self.account_client = EmpiricAccountClient(
-            self.account_contract_address, self.client, self.signer
-        )
+    `{"type": "SPOT", "pair": ("BTC", "USD"), "decimals": 18}`
 
-    async def _fetch_contracts(self):
-        await self._fetch_base_contracts()
+    More to follow on the standardization of this format.
 
-    async def update_publisher_address(self, new_address, publisher=None) -> HEX_STR:
-        publisher = publisher or self.publisher
-        if publisher is None:
-            raise ValueError(
-                "No publisher provided at method call or instantiation, but need publisher ID to update address"
-            )
+    The client works by setting up fetchers that are provided the assets to fetch and the publisher name.
 
-        result = await self.send_transaction(
-            self.publisher_registry_address,
-            "update_publisher_address",
-            [publisher, new_address],
-        )
-        logger.info(f"Updated publisher address with transaction {result}")
+    ```python
+    cex_fetcher = CexFetcher(EMPIRIC_ALL_ASSETS, "empiric_fetcher_test")
+    gemini_fetcher = GeminiFetcher(EMPIRIC_ALL_ASSETS, "empiric_fetcher_test")
+    fetchers = [
+        cex_fetcher,
+        gemini_fetcher,
+    ]
+    eapc = EmpiricPublisherClient('testnet')
+    eapc.add_fetchers(fetchers)
+    await eapc.fetch()
+    eapc.fetch_sync()
+    ```
+    """
 
-        return result
+    fetchers: List[PublisherInterfaceT] = []
 
-    async def publish(self, entry: Entry) -> HEX_STR:
-        result = await self.send_transaction(
-            self.oracle_controller_address,
-            "publish_entry",
-            entry.serialize(),
-        )
-        logger.info(f"Updated entry with transaction {result}")
+    @staticmethod
+    def convert_to_publisher(client: EmpiricClient):
+        client.__class__ = EmpiricPublisherClient
+        return client
 
-        return result
+    def add_fetchers(self, fetchers: List[PublisherInterfaceT]):
+        self.fetchers.extend(fetchers)
 
-    async def publish_many(self, entries: List[Entry]) -> HEX_STR:
-        if len(entries) == 0:
-            logger.warn("Skipping publishing as entries array is empty")
-            return
+    def add_fetcher(self, fetcher: PublisherInterfaceT):
+        self.fetchers.append(fetcher)
 
-        result = await self.send_transaction(
-            self.oracle_controller_address,
-            "publish_entries",
-            Entry.serialize_entries(entries),
-        )
+    async def fetch(self, filter_exceptions=True) -> List[SpotEntry]:
+        tasks = []
+        timeout = aiohttp.ClientTimeout(total=10)  # 10 seconds per request
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            for fetcher in self.fetchers:
+                data = fetcher.fetch(session)
+                tasks.append(data)
+            result = await asyncio.gather(*tasks, return_exceptions=True)
+            if filter_exceptions:
+                return [
+                    val
+                    for subl in result
+                    for val in subl
+                    if not isinstance(val, Exception)
+                ]
+            return [val for subl in result for val in subl]
 
-        logger.info(
-            f"Successfully sent {len(entries)} updated entries with transaction {result}"
-        )
-
-        return result
+    def fetch_sync(self) -> List[SpotEntry]:
+        results = []
+        for fetcher in self.fetchers:
+            data = fetcher.fetch_sync()
+            results.extend(data)
+        return results

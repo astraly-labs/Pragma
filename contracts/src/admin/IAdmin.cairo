@@ -1,18 +1,18 @@
 %lang starknet
 
 @contract_interface
-namespace IAdmin:
-    #
-    # Getters
-    #
+namespace IAdmin {
+    //
+    // Getters
+    //
 
-    func get_admin_address() -> (admin_address : felt):
-    end
+    func get_admin_address() -> (admin_address: felt) {
+    }
 
-    #
-    # Setters
-    #
+    //
+    // Setters
+    //
 
-    func set_admin_address(new_address : felt):
-    end
-end
+    func set_admin_address(new_address: felt) {
+    }
+}

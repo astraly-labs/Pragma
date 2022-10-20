@@ -1,15 +1,15 @@
 import pytest
 import pytest_asyncio
+from constants import (
+    ACCOUNT_CONTRACT_FILE,
+    CAIRO_PATH,
+    PUBLISHER_REGISTRY_CONTRACT_FILE,
+)
 from empiric.core.utils import str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException
-from utils import CAIRO_PATH, assert_event_emitted, cached_contract, construct_path
-
-CONTRACT_FILE = construct_path(
-    "contracts/src/publisher_registry/PublisherRegistry.cairo"
-)
-ACCOUNT_CONTRACT_FILE = construct_path("contracts/src/account/Account.cairo")
+from utils import assert_event_emitted, cached_contract
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -18,7 +18,7 @@ async def contract_classes():
         files=[ACCOUNT_CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
     publisher_registry_class = compile_starknet_files(
-        files=[CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
+        files=[PUBLISHER_REGISTRY_CONTRACT_FILE], debug_info=True, cairo_path=CAIRO_PATH
     )
 
     return account_class, publisher_registry_class
@@ -104,7 +104,7 @@ async def registered_contracts(
     tx_exec_info = await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
     assert_event_emitted(
@@ -143,7 +143,7 @@ async def test_register_non_admin_fail(
         await admin_signer.send_transaction(
             second_admin_account,
             publisher_registry.contract_address,
-            "register_publisher",
+            "add_publisher",
             [publisher, publisher_account.contract_address],
         )
 
@@ -157,7 +157,7 @@ async def test_register_non_admin_fail(
 
 
 @pytest.mark.asyncio
-async def test_register_publisher(registered_contracts, publisher):
+async def test_add_publisher(registered_contracts, publisher):
     publisher_account = registered_contracts["publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
@@ -241,12 +241,12 @@ async def test_register_second_publisher(
     second_publisher_account = registered_contracts["second_publisher_account"]
     publisher_registry = registered_contracts["publisher_registry"]
 
-    second_publisher = str_to_felt("bar")
+    second_publisher = str_to_felt("BAR")
 
     await admin_signer.send_transaction(
         admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [second_publisher, second_publisher_account.contract_address],
     )
 
@@ -276,7 +276,7 @@ async def test_re_register_fail(
         await admin_signer.send_transaction(
             admin_account,
             publisher_registry.contract_address,
-            "register_publisher",
+            "add_publisher",
             [publisher, publisher_account.contract_address],
         )
 
@@ -309,24 +309,10 @@ async def test_rotate_admin_address(
         [second_admin_account.contract_address],
     )
 
-    try:
-        await admin_signer.send_transaction(
-            admin_account,
-            publisher_registry.contract_address,
-            "register_publisher_admin_address",
-            [publisher],
-        )
-
-        raise Exception(
-            "Transaction to register with old admin account succeeded, but should not have."
-        )
-    except StarkException:
-        pass
-
     await admin_signer.send_transaction(
         second_admin_account,
         publisher_registry.contract_address,
-        "register_publisher",
+        "add_publisher",
         [publisher, publisher_account.contract_address],
     )
 
