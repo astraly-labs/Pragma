@@ -13,7 +13,7 @@ from starkware.starknet.public.abi import get_selector_from_name
 from starkware.starknet.services.api.gateway.transaction import InvokeFunction
 from starkware.starknet.testing.starknet import StarknetContract
 
-CAIRO_PATH = ["contracts/src", "contracts/lib"]
+CAIRO_PATH = ["contracts/starknet/src", "contracts/starknet/lib"]
 
 
 def construct_path(path):

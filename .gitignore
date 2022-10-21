@@ -20,7 +20,7 @@ develop-eggs/
 dist/
 eggs/
 lib/
-!contracts/lib
+!contracts/starknet/lib
 lib64/
 parts/
 sdist/
@@ -30,8 +30,8 @@ var/
 *.egg
 
 # protostar
-!contracts/build/
-contracts/build/*[!_abi].json
+!contracts/starknet/build/
+contracts/starknet/build/*[!_abi].json
 
 # cli
 cli-config.ini
@@ -44,3 +44,22 @@ stagecoach/jobs/publishers/starkex/app.py
 
 # misc private files
 private/
+
+# hardhat
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+# Hardhat files
+cache
+artifacts
+
+# zksync-specific hardhat files
+cache-zk
+artifacts-zk
+
+# temporary gitignore during development
+contracts/evm/deploy/
