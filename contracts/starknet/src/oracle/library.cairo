@@ -386,6 +386,19 @@ namespace Oracle {
         return ();
     }
 
+    func publish_future_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        new_entries_len: felt, new_entries: FutureEntry*
+    ) {
+        if (new_entries_len == 0) {
+            return ();
+        }
+
+        publish_future_entry([new_entries]);
+        publish_future_entries(new_entries_len - 1, new_entries + FutureEntry.SIZE);
+
+        return ();
+    }
+
     func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         new_entry: SpotEntry
     ) {

@@ -178,8 +178,8 @@ func get_spot_with_USD_hop{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 // Setters
 //
 
-// @notice publish an Entry
-// @param new_entry: an Entry to publish
+// @notice publish a FutureEntry
+// @param new_entry: a FutureEntry to publish
 @external
 func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entry: FutureEntry
@@ -188,8 +188,8 @@ func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
     return ();
 }
 
-// @notice publish an Entry
-// @param new_entry: an Entry to publish
+// @notice publish a SpotEntry
+// @param new_entry: a SpotEntry to publish
 @external
 func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entry: SpotEntry
@@ -211,6 +211,14 @@ func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
     new_entries_len, new_entries: GenericEntry*
 ) {
     Oracle.publish_entries(new_entries_len, new_entries);
+    return ();
+}
+
+@external
+func publish_future_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    new_entries_len: felt, new_entries: FutureEntry*
+) {
+    Oracle.publish_future_entries(new_entries_len, new_entries);
     return ();
 }
 
