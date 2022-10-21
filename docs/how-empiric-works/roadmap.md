@@ -2,13 +2,17 @@
 
 The Empiric team is constantly working to improve the network's robustness and functionality. Here are a few of the exciting things we are working on and plan to share with you soon. If you are interested in certain projects or have requests you don't see here, let us know on [Twitter](https://twitter.com/EmpiricNetwork).
 
-### Auditing
-
-We will be audited soon by leading security research firms such as Trail of Bits (who are auditing StarkNet as well) and will release the results of those as soon as they are ready.
-
 ### Native Data From The Most Liquid Markets
 
-We are actively working on building out functionality to pull data (e.g. Uniswap TWAP, overnight rates, etc.) directly from L1 to L2. There are a few different approaches we are considering, including L1 state-verification on L2 and L1-L2 messaging.
+We are actively working on building out functionality to pull data (e.g. Uniswap TWAP, overnight rates, DEX liquidity data, etc.) directly from L1 to L2. There are a few different approaches we are considering, including L1 state-verification (storage proofs) on L2 and L1-L2 messaging.
+
+### Off-Chain Computation
+
+Today Empiric leverages the cheap computation available on StarkNet directly. We are working on using zk provers (e.g. PLONKY) to run those computations off-chain and bring the results & proof onto L2 for cheaper data without any additional trust assumptions.
+
+### Further Audits
+
+Empiric Network has already been audited by leading security research firm Zellic (also audited Pyth, LayerZero, 1inch and many more), report to be released soon. Further audits are upcoming by partners such as Trail of Bits (who are auditing StarkNet as well).
 
 ### Expanding to New Data Verticals
 
