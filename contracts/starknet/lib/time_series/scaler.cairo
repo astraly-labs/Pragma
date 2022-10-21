@@ -44,6 +44,10 @@ func get_bounded_tick_idx{range_check_ptr}(
         return (tick_arr_len - 1, FALSE, TRUE);
     }
 
+    if (cur_index == tick_arr_len - 1) {
+        return (tick_arr_len - 1, FALSE, TRUE);
+    }
+
     let _is_before_start = is_le(cur_position, tick_arr[0].tick);
     let (_is_zero) = are_equal(cur_position, 0);
     if (_is_before_start + _is_zero == 2) {
