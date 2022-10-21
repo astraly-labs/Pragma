@@ -268,3 +268,15 @@ class FutureEntry(Entry):
             "price": self.price,
             "expiry_timestamp": self.expiry_timestamp,
         }
+
+    @staticmethod
+    def serialize_entries(entries: List[FutureEntry]) -> List[Dict[str, int]]:
+        """serialize entries to a List of dictionaries"""
+        # TODO (rlkelly): log errors
+        serialized_entries = [
+            entry.serialize()
+            for entry in entries
+            # TODO (rlkelly): This needs to be much more resilient to publish errors
+            if isinstance(entry, FutureEntry)
+        ]
+        return list(filter(lambda item: item is not None, serialized_entries))
