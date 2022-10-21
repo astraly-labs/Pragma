@@ -54,10 +54,10 @@ describe("Oracle", function () {
     await publisherRegistry.addSourcesForPublisher(
       ethers.utils.formatBytes32String('EMPIRIC'),
       [
-        ethers.utils.formatBytes32String('source1'),
-        ethers.utils.formatBytes32String('source2'),
-        ethers.utils.formatBytes32String('source3'),
-        ethers.utils.formatBytes32String('source4'),
+        ethers.utils.formatBytes32String('SOURCE1'),
+        ethers.utils.formatBytes32String('SOURCE2'),
+        ethers.utils.formatBytes32String('SOURCE3'),
+        ethers.utils.formatBytes32String('SOURCE4'),
       ]
     );
 
@@ -71,7 +71,7 @@ describe("Oracle", function () {
         {
           base: {
             timestamp: timestampBefore + 60,
-            source: ethers.utils.formatBytes32String('source1'),
+            source: ethers.utils.formatBytes32String('SOURCE1'),
             publisher: ethers.utils.formatBytes32String('EMPIRIC'),
           },
           pairId: ethers.utils.formatBytes32String('ETH/USD'),
@@ -83,8 +83,8 @@ describe("Oracle", function () {
         ethers.utils.formatBytes32String('ETH/USD'),
         ethers.BigNumber.from("0"),
         [
-          ethers.utils.formatBytes32String('source1'),
-          ethers.utils.formatBytes32String('source2'),
+          ethers.utils.formatBytes32String('SOURCE1'),
+          ethers.utils.formatBytes32String('SOURCE2'),
         ]
       );
       expect(response.numSourcesAggregated).to.equal(1);
@@ -92,7 +92,7 @@ describe("Oracle", function () {
         {
           base: {
             timestamp: timestampBefore + 60,
-            source: ethers.utils.formatBytes32String('source2'),
+            source: ethers.utils.formatBytes32String('SOURCE2'),
             publisher: ethers.utils.formatBytes32String('EMPIRIC'),
           },
           pairId: ethers.utils.formatBytes32String('ETH/USD'),
@@ -104,8 +104,8 @@ describe("Oracle", function () {
         ethers.utils.formatBytes32String('ETH/USD'),
         ethers.BigNumber.from("0"),
         [
-          ethers.utils.formatBytes32String('source1'),
-          ethers.utils.formatBytes32String('source2'),
+          ethers.utils.formatBytes32String('SOURCE1'),
+          ethers.utils.formatBytes32String('SOURCE2'),
         ]
       );
       expect(response2.numSourcesAggregated).to.equal(2);
