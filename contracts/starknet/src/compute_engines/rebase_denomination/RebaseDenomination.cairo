@@ -183,6 +183,7 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
     let (a_shifted) = _shift_left(a_value, 10, dec_diff + b_decimals);
     let (result, _) = unsigned_div_rem(a_shifted, b_value);
     let (result_decimals) = _max(a_decimals, b_decimals);
+
     return (result, result_decimals);
 }
 

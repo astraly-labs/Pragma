@@ -43,4 +43,4 @@ jobs:
       - name: Run protostar tests
         run: |
           export PATH="$PATH:/home/runner/.protostar/dist/protostar"
-          protostar test ./contracts/test
+          protostar test ./contracts/starknet/test
