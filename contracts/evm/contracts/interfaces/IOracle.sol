@@ -18,11 +18,18 @@ interface IOracle {
         uint256 volume;
     }
 
+    struct SpotEntryStorage {
+        uint128 timestamp;
+        bytes16 pairId;
+        uint128 price;
+        uint128 volume;
+    }
+
     struct Checkpoint {
-        uint256 timestamp;
-        uint256 value;
+        uint64 timestamp;
+        uint128 value;
         AggregationMode aggregationMode;
-        uint256 numSourcesAggregated;
+        uint8 numSourcesAggregated;
     }
 
     event UpdatedPublisherRegistryAddress(

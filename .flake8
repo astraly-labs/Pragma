@@ -13,3 +13,4 @@ exclude =
     venv/
     .venv/
     ./contracts/evm/node_modules
+    ./contracts/evm/deploy/

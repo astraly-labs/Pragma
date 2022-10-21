@@ -13,7 +13,8 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     IPublisherRegistry public publisherRegistry;
 
     mapping(bytes32 => bytes32[]) public oracleSourcesStorage;
-    mapping(bytes32 => mapping(bytes32 => SpotEntry)) public spotEntryStorage;
+    mapping(bytes32 => mapping(bytes32 => SpotEntryStorage))
+        public spotEntryStorage;
     mapping(bytes32 => Checkpoint[]) public checkpoints;
     mapping(bytes32 => uint256) public checkpointIndex;
     uint256 sourcesThreshold = 1;
@@ -50,18 +51,26 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     }
 
     function publishSpotEntry(SpotEntry calldata spotEntry) public {
-        _validateSenderForSource(spotEntry.base, msg.sender);
-        SpotEntry memory _latest = spotEntryStorage[spotEntry.pairId][
-            spotEntry.base.source
-        ];
-        _validateTimestamp(_latest, spotEntry);
-        spotEntryStorage[spotEntry.pairId][spotEntry.base.source] = spotEntry;
-
-        emit SubmittedSpotEntry(spotEntry);
+        _publishSpotEntry(spotEntry);
     }
 
     function setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
         public
+    {
+        _setCheckpoint(pairId, aggregationMode);
+    }
+
+    function setCheckpoints(
+        bytes32[] memory pairIds,
+        AggregationMode aggregationMode
+    ) public {
+        for (uint256 i = 0; i < pairIds.length; i++) {
+            _setCheckpoint(pairIds[i], aggregationMode);
+        }
+    }
+
+    function _setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
+        private
     {
         bytes32[] memory sources = oracleSourcesStorage[pairId];
         (
@@ -86,10 +95,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
             );
         }
         Checkpoint memory newCheckpoint = Checkpoint(
-            lastUpdatedTimestamp,
-            value,
+            uint64(lastUpdatedTimestamp),
+            uint128(value),
             aggregationMode,
-            numSourcesAggregated
+            uint8(numSourcesAggregated)
         );
 
         checkpointIndex[pairId]++;
@@ -100,8 +109,26 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
 
     function publishSpotEntries(SpotEntry[] calldata spotEntries) public {
         for (uint256 i = 0; i < spotEntries.length; i++) {
-            publishSpotEntry(spotEntries[i]);
+            _publishSpotEntry(spotEntries[i]);
         }
+    }
+
+    function _publishSpotEntry(SpotEntry calldata spotEntry) internal {
+        _validateSenderForSource(spotEntry.base, msg.sender);
+        SpotEntryStorage memory _latest = spotEntryStorage[spotEntry.pairId][
+            spotEntry.base.source
+        ];
+        _validateTimestamp(_latest, spotEntry);
+        spotEntryStorage[spotEntry.pairId][
+            spotEntry.base.source
+        ] = SpotEntryStorage(
+            uint128(spotEntry.base.timestamp),
+            bytes16(spotEntry.pairId),
+            uint128(spotEntry.price),
+            uint128(spotEntry.volume)
+        );
+
+        emit SubmittedSpotEntry(spotEntry);
     }
 
     function getSpot(
@@ -119,7 +146,7 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         )
     {
         (
-            SpotEntry[] memory entries,
+            SpotEntryStorage[] memory entries,
             uint256 _lastUpdatedTimestamp
         ) = getSpotEntries(pairId, sources);
         if (entries.length == 0) {
@@ -133,10 +160,13 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     function getSpotEntries(bytes32 pairId, bytes32[] memory sources)
         public
         view
-        returns (SpotEntry[] memory entries, uint256 lastUpdatedTimestamp)
+        returns (
+            SpotEntryStorage[] memory entries,
+            uint256 lastUpdatedTimestamp
+        )
     {
         (
-            SpotEntry[] memory unfilteredEntries,
+            SpotEntryStorage[] memory unfilteredEntries,
             uint256 _lastUpdatedTimestamp
         ) = _getSpotEntriesArray(pairId, sources);
         entries = _filterSpotEntriesByTimestamp(
@@ -149,12 +179,16 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     function _getSpotEntriesArray(bytes32 pairId, bytes32[] memory sources)
         internal
         view
-        returns (SpotEntry[] memory, uint256 latestTimestamp)
+        returns (SpotEntryStorage[] memory, uint256 latestTimestamp)
     {
-        SpotEntry[] memory entries = new SpotEntry[](sources.length);
+        SpotEntryStorage[] memory entries = new SpotEntryStorage[](
+            sources.length
+        );
         for (uint256 i = 0; i < sources.length; i++) {
-            SpotEntry memory entry = spotEntryStorage[pairId][sources[i]];
-            latestTimestamp = Math.max(entry.base.timestamp, latestTimestamp);
+            SpotEntryStorage memory entry = spotEntryStorage[pairId][
+                sources[i]
+            ];
+            latestTimestamp = Math.max(entry.timestamp, latestTimestamp);
             entries[i] = entry;
         }
         return (entries, latestTimestamp);
@@ -170,12 +204,14 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         bytes32[] memory sources
     ) internal view returns (uint256 latestTimestamp) {
         for (uint256 i = 0; i < sources.length; i++) {
-            SpotEntry memory entry = spotEntryStorage[pairId][sources[i]];
-            latestTimestamp = Math.max(entry.base.timestamp, latestTimestamp);
+            SpotEntryStorage memory entry = spotEntryStorage[pairId][
+                sources[i]
+            ];
+            latestTimestamp = Math.max(entry.timestamp, latestTimestamp);
         }
     }
 
-    function _aggregateSpotEntries(SpotEntry[] memory entries)
+    function _aggregateSpotEntries(SpotEntryStorage[] memory entries)
         internal
         pure
         returns (uint256)
@@ -192,14 +228,14 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     }
 
     function _filterSpotEntriesByTimestamp(
-        SpotEntry[] memory entries,
+        SpotEntryStorage[] memory entries,
         uint256 lastUpdatedTimestamp
-    ) internal pure returns (SpotEntry[] memory) {
+    ) internal pure returns (SpotEntryStorage[] memory) {
         uint256 resultCount = 0;
         for (uint256 i = 0; i < entries.length; i++) {
-            SpotEntry memory entry = entries[i];
+            SpotEntryStorage memory entry = entries[i];
             if (
-                entry.base.timestamp + BACKWARD_TIMESTAMP_BUFFER <
+                entry.timestamp + BACKWARD_TIMESTAMP_BUFFER <
                 lastUpdatedTimestamp
             ) {
                 continue;
@@ -207,12 +243,14 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
             resultCount++;
         }
 
-        SpotEntry[] memory spotEntries = new SpotEntry[](resultCount);
+        SpotEntryStorage[] memory spotEntries = new SpotEntryStorage[](
+            resultCount
+        );
         uint256 curIndex = 0;
         for (uint256 i = 0; i < entries.length; i++) {
-            SpotEntry memory entry = entries[i];
+            SpotEntryStorage memory entry = entries[i];
             if (
-                entry.base.timestamp + BACKWARD_TIMESTAMP_BUFFER <
+                entry.timestamp + BACKWARD_TIMESTAMP_BUFFER <
                 lastUpdatedTimestamp
             ) {
                 continue;
@@ -241,11 +279,11 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     }
 
     function _validateTimestamp(
-        SpotEntry memory oldEntry,
+        SpotEntryStorage memory oldEntry,
         SpotEntry memory newEntry
     ) internal {
         require(
-            oldEntry.base.timestamp < newEntry.base.timestamp,
+            oldEntry.timestamp < newEntry.base.timestamp,
             "Oracle: Existing entry is more recent"
         );
         require(
@@ -259,9 +297,22 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
             "Oracle: New entry timestamp is too far in the future"
         );
 
-        if (oldEntry.base.timestamp == 0) {
+        if (oldEntry.timestamp == 0) {
             // Source did not exist yet, so add to our list
             oracleSourcesStorage[newEntry.pairId].push(newEntry.base.source);
         }
+    }
+
+    function _splitBytes32(bytes32 source)
+        internal
+        pure
+        returns (bytes16, bytes16)
+    {
+        bytes16[2] memory y = [bytes16(0), 0];
+        assembly {
+            mstore(y, source)
+            mstore(add(y, 16), source)
+        }
+        return (y[0], y[1]);
     }
 }
