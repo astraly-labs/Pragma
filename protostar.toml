@@ -2,47 +2,47 @@
 protostar_version = "0.3.2"
 
 ["protostar.project"]
-libs_path = "contracts/lib"
+libs_path = "contracts/starknet/lib"
 
 ["protostar.contracts"]
 Account = [
-    "contracts/src/account/Account.cairo"
+    "contracts/starknet/src/account/Account.cairo"
 ]
 Admin = [
-    "contracts/src/admin/Admin.cairo"
+    "contracts/starknet/src/admin/Admin.cairo"
 ]
 CheckEthThreshold = [
-    "contracts/src/sample_consumer/CheckEthThreshold.cairo"
+    "contracts/starknet/src/sample_consumer/CheckEthThreshold.cairo"
 ]
 Oracle = [
-    "contracts/src/oracle/Oracle.cairo"
+    "contracts/starknet/src/oracle/Oracle.cairo"
 ]
 Proxy = [
-    "contracts/src/proxy/Proxy.cairo"
+    "contracts/starknet/src/proxy/Proxy.cairo"
 ]
 PublisherRegistry = [
-    "contracts/src/publisher_registry/PublisherRegistry.cairo"
+    "contracts/starknet/src/publisher_registry/PublisherRegistry.cairo"
 ]
 SummaryStats = [
-    "contracts/src/compute_engines/summary_stats/SummaryStats.cairo"
+    "contracts/starknet/src/compute_engines/summary_stats/SummaryStats.cairo"
 ]
 YieldCurve = [
-    "contracts/src/compute_engines/yield_curve/YieldCurve.cairo"
+    "contracts/starknet/src/compute_engines/yield_curve/YieldCurve.cairo"
 ]
 RebaseDenomination = [
-    "contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
+    "contracts/starknet/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"
 ]
 Randomness = [
-    "contracts/src/randomness/Randomness.cairo"
+    "contracts/starknet/src/randomness/Randomness.cairo"
 ]
 
 ExampleRandomness = [
-    "contracts/src/randomness/ExampleRandomness.cairo"
+    "contracts/starknet/src/randomness/ExampleRandomness.cairo"
 ]
 
 
 ["protostar.shared_command_configs"]
-cairo-path = ["contracts/src", "contracts/lib", "contracts/lib/cairo_streams/src"]
+cairo-path = ["contracts/starknet/src", "contracts/starknet/lib", "contracts/starknet/lib/cairo_streams/src"]
 
 ["protostar.build"]
-output = "contracts/build"
+output = "contracts/starknet/build"

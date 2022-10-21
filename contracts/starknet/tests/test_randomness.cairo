@@ -18,8 +18,8 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     local example_randomness;
 
     %{
-        ids.randomness_address = deploy_contract("./contracts/src/randomness/Randomness.cairo", []).contract_address
-        ids.example_randomness = deploy_contract("./contracts/src/randomness/ExampleRandomness.cairo", []).contract_address
+        ids.randomness_address = deploy_contract("./contracts/starknet/src/randomness/Randomness.cairo", []).contract_address
+        ids.example_randomness = deploy_contract("./contracts/starknet/src/randomness/ExampleRandomness.cairo", []).contract_address
         context.randomness_address = ids.randomness_address
         context.example_randomness = ids.example_randomness
     %}

@@ -24,7 +24,7 @@ func test_rebase_mock{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
     const oracle_address = 1234;
     local contract_address: felt;
     // We deploy contract and put its address into a local variable. Second argument is calldata array
-    %{ ids.contract_address = deploy_contract("./contracts/src/compute_engines/rebase_denomination/RebaseDenomination.cairo", [1, ids.oracle_address]).contract_address %}
+    %{ ids.contract_address = deploy_contract("./contracts/starknet/src/compute_engines/rebase_denomination/RebaseDenomination.cairo", [1, ids.oracle_address]).contract_address %}
 
     // TODO: test multiple values by having mock call return two different values
     %{ stop_mock = mock_call(ids.oracle_address, "get_value", [3000000, 6, 10000, 4]) %}
