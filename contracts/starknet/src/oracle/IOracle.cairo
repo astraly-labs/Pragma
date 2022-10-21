@@ -103,7 +103,7 @@ namespace IOracle {
     func publish_future_entry(new_entry: FutureEntry) {
     }
 
-    func publish_futures_entries(new_entries_len: felt, new_entries: FutureEntry*) {
+    func publish_future_entries(new_entries_len: felt, new_entries: FutureEntry*) {
     }
 
     func publish_spot_entry(new_entry: SpotEntry) {
