@@ -1,7 +1,5 @@
 import numpy as np
 
-
-
 vals = np.asarray([1306.296631, 1331.713623, 1310.447021, 1285.744263, 1283.200928, 1294.809814]).reshape(6,1)
 dates = np.asarray([1665925200 + (i * 86400) for i in range(6)]).reshape(6,1)
 data = np.hstack((vals, dates))
@@ -16,9 +14,16 @@ def calculate_volatility(data):
     return (np.sqrt(vol) * 5615.69 * 100) 
 
 
+def test_calculate_volatility():
+    assert np.round(calculate_volatility(data), 2) == 28.05
+    return
+
 def main(): 
-    print(calculate_volatility(data))
+    test_calculate_volatility()
 
 
 if __name__ == "__main__":
     main()
+    
+    
+
