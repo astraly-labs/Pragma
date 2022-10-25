@@ -117,7 +117,46 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 153422202358990;  // returns value in fixedpoint
+    assert _volatility = 2879809979300;  // returns value in fixedpoint
+
+    %{ stop_warp() %}
+
+    return ();
+}
+
+@external
+func test_volatility_order{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 130629663100;
+    assert times_arr[0] = 86400;
+
+    assert prices_arr[1] = 133171362300;
+    assert times_arr[1] = 172800;
+
+    assert prices_arr[2] = 131044702100;
+    assert times_arr[2] = 259200;
+
+    assert prices_arr[3] = 128574426300;
+    assert times_arr[3] = 345600;
+
+    assert prices_arr[4] = 128320092800;
+    assert times_arr[4] = 432000;
+
+    assert prices_arr[5] = 129480981400;
+    assert times_arr[5] = 518400;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 6, times_arr, prices_arr);
+
+    tempvar summary_stats_address;
+    %{ ids.summary_stats_address = context.summary_stats_address %}
+
+    let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 86400, 518400);
+    assert _volatility = 2804846100;  // returns value in fixedpoint
 
     %{ stop_warp() %}
 
@@ -170,7 +209,7 @@ func test_volatility2{syscall_ptr: felt*, range_check_ptr}() {
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664805721, 1664806093
     );
-    assert _volatility = 283158920430;  // returns value in decimals
+    assert _volatility = 5315031800;  // returns value in decimals
 
     %{ stop_warp() %}
 
@@ -223,21 +262,21 @@ func test_volatility_arr_length{syscall_ptr: felt*, range_check_ptr}() {
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664806064, 1664806095
     );
-    assert _volatility = 393800558881;  // returns value in decimals
+    assert _volatility = 9917180100;  // returns value in decimals
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664806063, 1664806095
     );
-    assert _volatility = 393800558881;  // returns value in decimals
+    assert _volatility = 9917180100;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664806033, 1664806095
     );
-    assert _volatility = 430411297334;  // returns value in decimals
+    assert _volatility = 9386985900;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
         summary_stats_address, 1, 1664806032, 1664806095
     );
-    assert _volatility = 430411297334;  // returns value in decimals
+    assert _volatility = 9386985900;  // returns value in decimals
 
     %{ stop_warp() %}
 
