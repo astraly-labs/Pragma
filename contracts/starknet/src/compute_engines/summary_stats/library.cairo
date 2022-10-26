@@ -40,9 +40,15 @@ namespace SummaryStats {
     }
 
     func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        oracle_address: felt, key: felt, start_tick: felt, end_tick: felt
+        oracle_address: felt, key: felt, start_tick: felt, end_tick: felt, num_samples: felt
     ) -> felt {
         alloc_locals;
+        let (is_valid_size) = is_le(num_samples, 300);
+
+        with_attr error_message("num_samples is too large.  Must be <= 300") {
+            assert is_valid_size = True;
+        }
+
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
