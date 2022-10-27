@@ -116,9 +116,7 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     tempvar summary_stats_address;
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
-    let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 100, 1000, 300
-    );
+    let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000, 10);
     assert _volatility = 2879809979300;  // returns value in fixedpoint
 
     %{ stop_warp() %}
@@ -157,7 +155,9 @@ func test_volatility_order{syscall_ptr: felt*, range_check_ptr}() {
     tempvar summary_stats_address;
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
-    let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 86400, 518400);
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 86400, 518400, 6
+    );
     assert _volatility = 2804846100;  // returns value in fixedpoint
 
     %{ stop_warp() %}
@@ -209,7 +209,7 @@ func test_volatility2{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664805721, 1664806093
+        summary_stats_address, 1, 1664805721, 1664806093, 10
     );
     assert _volatility = 5315031800;  // returns value in decimals
 
@@ -262,21 +262,21 @@ func test_volatility_arr_length{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806064, 1664806095
+        summary_stats_address, 1, 1664806064, 1664806095, 200
     );
     assert _volatility = 9917180100;  // returns value in decimals
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806063, 1664806095
+        summary_stats_address, 1, 1664806063, 1664806095, 200
     );
     assert _volatility = 9917180100;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806033, 1664806095
+        summary_stats_address, 1, 1664806033, 1664806095, 200
     );
     assert _volatility = 9386985900;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806032, 1664806095
+        summary_stats_address, 1, 1664806032, 1664806095, 10
     );
     assert _volatility = 9386985900;  // returns value in decimals
 

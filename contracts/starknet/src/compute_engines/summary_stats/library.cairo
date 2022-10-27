@@ -31,6 +31,7 @@ namespace SummaryStats {
             end_tick,
             latest_checkpoint_index - start_index,
             latest_checkpoint_index,
+            1,
         );
         let (_mean) = mean(SCALED_ARR_SIZE, _scaled_arr);
         let _mean = FixedPoint.to_wei{range_check_ptr=range_check_ptr}(_mean);
@@ -39,26 +40,73 @@ namespace SummaryStats {
         return _mean;
     }
 
+    func calculate_skip_frequency{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        max_samples: felt, num_samples: felt
+    ) -> felt {
+        alloc_locals;
+        local skip_frequency;
+        let (q, r) = unsigned_div_rem(max_samples, num_samples);
+
+        let is_valid = is_le(r * 2, num_samples);
+        if (is_valid == 1) {
+            skip_frequency = q;
+        } else {
+            skip_frequency = q + 1;
+        }
+        return skip_frequency;
+    }
+
     func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         oracle_address: felt, key: felt, start_tick: felt, end_tick: felt, num_samples: felt
     ) -> felt {
         alloc_locals;
-        let (is_valid_size) = is_le(num_samples, 300);
+        let is_valid_size = is_le(num_samples, 200);
 
-        with_attr error_message("num_samples is too large.  Must be <= 300") {
-            assert is_valid_size = True;
+        with_attr error_message("num_samples is too large.  Must be <= 200") {
+            assert is_valid_size = 1;
         }
+
+        // # sample CEIL(total / num_samples)
+        // # TODO: if I have 701 total samples, and i'm requesting 300 samples... what do I do?
+        //     - skip 1 in 3
+        // # TODO: if I have 400 total samples, and I'm requesting 300 samples... what do I do?
+        //     - skip 1 in every 4 samples (TTST)
+        // # TODO: if I have 301 total samples, and I'm requesting 300 samples... what do I do?
+        //     - skip 1 sample in every 301 (in the middle) (TTT....S....TTT)
+        // # TODO: if I have 2500 total samples, and I'm requesting 300 samples... what do I do?
+        //     - 2500 / 300 = 8 remainder 100
+        //     - 1 in 9
 
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
-        let (cp, start_index) = IOracle.get_last_checkpoint_before(oracle_address, key, start_tick);
+        let (_start_cp, start_index) = IOracle.get_last_checkpoint_before(
+            oracle_address, key, start_tick
+        );
+        let (_end_cp, _end_index) = IOracle.get_last_checkpoint_before(
+            oracle_address, key, end_tick
+        );
+
+        local end_index;
+        if (end_tick == 0) {
+            end_index = latest_checkpoint_index;
+            tempvar syscall_ptr = syscall_ptr;
+            tempvar pedersen_ptr = pedersen_ptr;
+            tempvar range_check_ptr = range_check_ptr;
+        } else {
+            end_index = _end_index;
+            tempvar syscall_ptr = syscall_ptr;
+            tempvar pedersen_ptr = pedersen_ptr;
+            tempvar range_check_ptr = range_check_ptr;
+        }
 
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, latest_checkpoint_index);
         }
         let (tick_arr: TickElem**) = alloc();
-        _make_array(0, oracle_address, key, latest_checkpoint_index, start_index, tick_arr);
+        // TODO: why is end index first?
+        let skip_frequency = calculate_skip_frequency(200, num_samples);
+        _make_array(0, oracle_address, key, end_index, start_index, tick_arr, skip_frequency);
 
         let volatility_ = volatility(latest_checkpoint_index - start_index, tick_arr);
         let _decs = FixedPoint.to_decimals(volatility_);
@@ -72,6 +120,7 @@ namespace SummaryStats {
         end_tick: felt,
         num_datapoints: felt,
         latest_checkpoint_index: felt,
+        skip_frequency: felt,
     ) -> (scaled_arr_len: felt, scaled_arr: TickElem**) {
         alloc_locals;
         let (tick_arr: TickElem**) = alloc();
@@ -83,6 +132,7 @@ namespace SummaryStats {
             latest_checkpoint_index,
             latest_checkpoint_index - num_datapoints,
             tick_arr,
+            skip_frequency,
         );
         let first = tick_arr[0].value;
         let first_t = tick_arr[0].tick;
@@ -99,13 +149,16 @@ namespace SummaryStats {
         last_idx: felt,
         offset: felt,
         tick_arr: TickElem**,
+        skip_frequency: felt,
     ) {
         if (idx + offset == last_idx) {
             return ();
         }
-        let (cp) = IOracle.get_checkpoint(oracle_address, key, idx + offset);
+        let (cp) = IOracle.get_checkpoint(oracle_address, key, idx * skip_frequency + offset);
         // TODO: generalize decimals to use IOracle.get_decimals
         assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value));
-        return _make_array(idx + 1, oracle_address, key, last_idx, offset, tick_arr);
+        return _make_array(
+            idx + 1, oracle_address, key, last_idx, offset, tick_arr, skip_frequency
+        );
     }
 }
