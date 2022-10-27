@@ -140,7 +140,7 @@ async def get_cp(pair_id: str, index: int, config_path=config.DEFAULT_CONFIG):
 async def deploy_oracle_proxy(
     client: Client, deploy_config_path: Path, config_path: Path
 ):
-    """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
+    """starknet deploy --contract contracts/starknet/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
     compiled_contract_path = Path(

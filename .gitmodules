@@ -1,3 +1,3 @@
 [submodule "cairo_streams"]
 	url = https://github.com/onlydustxyz/cairo-streams
-	path = contracts/lib/cairo_streams
+	path = contracts/starknet/lib/cairo_streams

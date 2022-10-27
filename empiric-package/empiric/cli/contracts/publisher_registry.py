@@ -117,7 +117,7 @@ async def get_all_publishers(config_path: Path = config.DEFAULT_CONFIG):
 async def deploy_publisher_registry(
     client: GatewayClient, compiled_contract_path: Path, config_path: Path
 ):
-    """starknet deploy --contract contracts/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
+    """starknet deploy --contract contracts/starknet/build/PublisherRegistry.json --inputs <ADMIN_ADDRESS>"""
     compiled = (compiled_contract_path / "PublisherRegistry.json").read_text("utf-8")
 
     config_parser = configparser.ConfigParser()

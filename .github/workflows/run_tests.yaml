@@ -34,7 +34,7 @@ jobs:
 
       - name: Check contract interface consistency
         run: |
-          python -m empiric.test.interface_consistency --cairo-path 'contracts/src,contracts/lib'
+          python -m empiric.test.interface_consistency --cairo-path 'contracts/starknet/src,contracts/starknet/lib'
 
       - name: Run tests suite
         run: |
@@ -43,4 +43,4 @@ jobs:
       - name: Run protostar tests
         run: |
           export PATH="$PATH:/home/runner/.protostar/dist/protostar"
-          protostar test ./contracts/test
+          protostar test ./contracts/starknet/test
