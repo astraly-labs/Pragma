@@ -17,8 +17,8 @@ The Empiric Network consists of three smart contracts. The first is the Proxy co
 On testnet, the contracts are deployed at the following addresses:
 | Contract | Starkscan | Address |
 | --- | ----------- | --- |
-| Publisher Registry | [Link](https://testnet.starkscan.co/contract/0x06debea885f954b1090a8b2194b940cceb585d35cd3e8a5ab1874a9360c8c1b8) | 0x6debea885f954b1090a8b2194b940cceb585d35cd3e8a5ab1874a9360c8c1b8 |
-| Oracle (Proxy) | [Link](https://testnet.starkscan.co/contract/0x40749e84da5270ee2ccf3c290b985c678b86f0e97f60910bb027ed97f6b101f) | 0x40749e84da5270ee2ccf3c290b985c678b86f0e97f60910bb027ed97f6b101f |
+| Publisher Registry | [Link](https://testnet.starkscan.co/contract/0x5cb0afa98435de7da6da7fad3b40c9d17e747a57bca28feb1c41f05e391f54e) | 0x5cb0afa98435de7da6da7fad3b40c9d17e747a57bca28feb1c41f05e391f54e |
+| Oracle (Proxy) | [Link](https://testnet.starkscan.co/contract/0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093) | 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093 |
 
 ## Setup
 
