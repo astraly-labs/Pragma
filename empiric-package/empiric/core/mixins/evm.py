@@ -5,7 +5,7 @@ from typing import List
 from empiric.core.entry import SpotEntry
 from web3 import HTTPProvider, Web3
 
-ORACLE_ADDRESS = "0xc09d042ed2f47297d1e8f010aF03d6f094433D65"
+ORACLE_ADDRESS = "0xEE6Cf2A27e79A8466d5a561ABd355bBE968d5fa3"
 ORACLE_ABI = [
     {
         "inputs": [
@@ -87,6 +87,24 @@ ORACLE_ABI = [
         "stateMutability": "nonpayable",
         "type": "function",
     },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "pairIds",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "enum IOracle.AggregationMode",
+          "name": "aggregationMode",
+          "type": "uint8"
+        }
+      ],
+      "name": "setCheckpoints",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
 ]
 
 
@@ -108,6 +126,9 @@ class EvmHelper:
         self.sender = sender_address or os.environ["SENDER_ADDRESS"]
         self.private_key = private_key or os.environ["PRIVATE_KEY"]
 
+    def get_nonce(self) -> int:
+        return self.w3.eth.getTransactionCount(self.sender)
+
     def publish_spot_entry(
         self,
         pair,
@@ -115,8 +136,9 @@ class EvmHelper:
         source,
         volume=0,
         gas_price=int(1e8),
+        nonce=None,
     ):
-        nonce = self.w3.eth.getTransactionCount(self.sender)
+        nonce = nonce or self.get_nonce()
         txn = self.oracle.functions.publishSpotEntry(
             {
                 "base": {
@@ -144,8 +166,8 @@ class EvmHelper:
 
         return signed_txn.hash.hex()
 
-    def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8)):
-        nonce = self.w3.eth.getTransactionCount(self.sender)
+    def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8), nonce=None):
+        nonce = nonce or self.get_nonce()
         txn = self.oracle.functions.publishSpotEntries(spot_entries).buildTransaction(
             {
                 "nonce": nonce,
@@ -154,6 +176,24 @@ class EvmHelper:
                 "from": self.sender,
             }
         )
+        signed_txn = self.w3.eth.account.signTransaction(
+            txn, private_key=self.private_key
+        )
+        self.w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+
+        return signed_txn.hash.hex()
+    
+    def setCheckpoints(self, pairs: List[bytes], nonce=None) -> str:
+        nonce = nonce or self.get_nonce()
+        txn = self.oracle.functions.setCheckpoints(pairs, 0).buildTransaction(
+            {
+                "nonce": nonce,
+                "gasPrice": int(1e8),
+                "chainId": 280,
+                "from": self.sender,
+            }
+        )
+
         signed_txn = self.w3.eth.account.signTransaction(
             txn, private_key=self.private_key
         )
