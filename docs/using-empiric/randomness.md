@@ -1,4 +1,4 @@
-# Randomness \[Beta]
+# Randomness
 
 Empiric Network offers a verifiable randomness feed that allows protocols to request secure randomness on-chain.&#x20;
 
@@ -86,9 +86,14 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
 ## How Randomness is Generated
 
-Empiric Network's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Randomness Function](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06) using elliptic curves. Their Python implementation is available as open source code [here](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
+Empiric Network's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Random Function](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06) using elliptic curves. Their Python implementation is available as open source code [here](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
 
 When smart contracts request randomness, they specify a random seed. This seed uniquely determines the randomness, so the Empiric as the VRF provider is not able to manipulate the randomness. However calculating the randomness requires having access to a private key that is not known, so the smart contract (and any other party observing the randomness request) is not able to predict the randomness. Off-chain, the randomness is calculated using the private key and the seed. That randomness and the proof are then sent on-chain, where the unbiased randomness is then available to the smart contract that requested it.
+
+Empiric Network's verifiable random function (VRF) over a specific elliptic curve, named Curve25519. Most known blockchain implementations of a VRF are using the so-called "Bitcoin curve", or secpk256k1. We chose this algorithm because it is more secure than other commonly used ones (that possibly [have](https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/#thedownside) [backdoors](https://blog.cryptographyengineering.com/2013/09/18/the-many-flaws-of-dualecdrbg/)). We chose this curve in particular for two reasons:
+
+* Building the tools to perform arithmetic operations on Curve25519 is a premiere for programmable blockchains and theoretically enables compatibility with [all the protocols](https://en.wikipedia.org/wiki/Curve25519#Protocols) that use Curve25519 for digital signatures, such as IPFS, Ripple, Monero, Signal, Protonmail, and many others. This is a great step towards interoperability with StarkNet and it is only possible by leveraging its computational capabilities.
+* One key part of the VRF algorithm implies taking a public input and converting it to an elliptic curve point. This process is called "hashing to the curve", and the standard way of doing it for Curve25519 is using [Elligator2](https://eprint.iacr.org/2013/325). In Cairo, part of the Elligator algorithm can be computed quickly and safely using a hint and allows cheaper verification costs than hashing to the secpk256k1 curve.
 
 ## Verifying The Randomness
 
@@ -107,7 +112,7 @@ Allows your smart contract to request randomness. Upon calling the Empiric contr
 
 Inputs
 
-* `seed`: random seed that feeds into the verifiable randomness algorithm, must be different every time. Until it it possible to get the block\_hash on StarkNet, it is recommended to use `hash(request_address, hash(nonce, block_timestamp))`
+* `seed`: random seed that feeds into the verifiable random algorithm, must be different every time. Until it it possible to get the block\_hash on StarkNet, it is recommended to use `hash(request_address, hash(nonce, block_timestamp))`
 * `callback_address`: address to call `receive_random_words` on with the randomness
 * `callback_gas_limit`: gas limit on the callback function
 * `publish_delay`: minimum number of blocks to wait from the request to fulfillment
