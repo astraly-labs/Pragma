@@ -630,9 +630,11 @@ namespace Oracle {
 
         let (cp) = get_checkpoint_by_index(key, latest_checkpoint_index - 1);
         let (first_cp) = get_checkpoint_by_index(key, 0);
-        with_attr error_message("timestamp is in future") {
-            assert_nn(cp.timestamp - timestamp);
+        let is_in_future = is_le(cp.timestamp, timestamp);
+        if (is_in_future == TRUE) {
+            return latest_checkpoint_index;
         }
+
         if (is_le(timestamp, first_cp.timestamp) == TRUE) {
             return 0;
         }

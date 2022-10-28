@@ -41,11 +41,15 @@ namespace SummaryStats {
     }
 
     func calculate_skip_frequency{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        max_samples: felt, num_samples: felt
+        total_samples: felt, num_samples: felt
     ) -> felt {
         alloc_locals;
         local skip_frequency;
-        let (q, r) = unsigned_div_rem(max_samples, num_samples);
+
+        let (q, r) = unsigned_div_rem(total_samples, num_samples);
+        if (q == 0) {
+            return 1;
+        }
 
         let is_valid = is_le(r * 2, num_samples);
         if (is_valid == 1) {
@@ -63,7 +67,7 @@ namespace SummaryStats {
         let is_valid_size = is_le(num_samples, 200);
 
         with_attr error_message("num_samples is too large.  Must be <= 200") {
-            assert is_valid_size = 1;
+            assert is_valid_size = TRUE;
         }
 
         // # sample CEIL(total / num_samples)
@@ -83,9 +87,15 @@ namespace SummaryStats {
         let (_start_cp, start_index) = IOracle.get_last_checkpoint_before(
             oracle_address, key, start_tick
         );
-        let (_end_cp, _end_index) = IOracle.get_last_checkpoint_before(
-            oracle_address, key, end_tick
-        );
+        local _end_index;
+        if (end_tick == 0) {
+            _end_index = latest_checkpoint_index;
+        } else {
+            let (_end_cp, _end_idx) = IOracle.get_last_checkpoint_before(
+                oracle_address, key, end_tick
+            );
+            _end_index = _end_idx;
+        }
 
         local end_index;
         if (end_tick == 0) {
@@ -105,10 +115,11 @@ namespace SummaryStats {
         }
         let (tick_arr: TickElem**) = alloc();
         // TODO: why is end index first?
-        let skip_frequency = calculate_skip_frequency(200, num_samples);
-        _make_array(0, oracle_address, key, end_index, start_index, tick_arr, skip_frequency);
+        let skip_frequency = calculate_skip_frequency(_end_index - start_index, num_samples);
+        let (total_samples, _) = unsigned_div_rem(_end_index - start_index, skip_frequency);
+        let arr_len = _make_array(0, oracle_address, key, end_index, start_index, tick_arr, skip_frequency);
 
-        let volatility_ = volatility(latest_checkpoint_index - start_index, tick_arr);
+        let volatility_ = volatility(arr_len, tick_arr);
         let _decs = FixedPoint.to_decimals(volatility_);
         return _decs;
     }
@@ -150,12 +161,15 @@ namespace SummaryStats {
         offset: felt,
         tick_arr: TickElem**,
         skip_frequency: felt,
-    ) {
-        if (idx + offset == last_idx) {
-            return ();
+    ) -> felt {
+        // returns length
+        let is_final = is_le(last_idx, idx * skip_frequency + offset);
+        if (is_final == TRUE) {
+            return (idx);
         }
         let (cp) = IOracle.get_checkpoint(oracle_address, key, idx * skip_frequency + offset);
         // TODO: generalize decimals to use IOracle.get_decimals
+
         assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value));
         return _make_array(
             idx + 1, oracle_address, key, last_idx, offset, tick_arr, skip_frequency
