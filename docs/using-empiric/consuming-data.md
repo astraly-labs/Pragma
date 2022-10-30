@@ -10,7 +10,8 @@ The current Empiric Network proxy addresses are:
 | Starknet Mainnet      | Coming soon!                                                      | N/A                                                                                                                                                                                                                                                    |
 
 ## Sample Code
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/oracle\_controller/IEmpiricOracle.cairo).
+
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/oracle/IEmpiricOracle.cairo).
 
 ```
 %lang starknet
