@@ -16,18 +16,14 @@ def get_events():
         print(
             f"Requesting all SubmittedSpotEntry events from Starknet Indexer. Using chunks of size {chunk_size} This might take a while..."
         )
-        url = "https://starknet-archive.hasura.app/v1/graphql"
+        url = "https://hasura.prod.summary.dev/v1/graphql"
         i = 0
         data = None
         while True:
             print(f"Fetching chunk {i+1}")
             # Note that the contract address can't have a leading 0 or the GraphQl query won't find the contract.
             request_json = {
-                "query": "query empiric { event(limit: "
-                + str(chunk_size)
-                + ", offset: "
-                + str(i * chunk_size)
-                + ', order_by: {id: asc}, where: {name: {_eq: "SubmittedSpotEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
+                "query":"{starknet_goerli_event(limit: "+ str(chunk_size) + ", offset: "+ str(i * chunk_size)+ ', order_by: {id: asc}, where: {name: {_eq: "SubmittedSpotEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
             }
             r = requests.post(url=url, json=request_json)
             if r.status_code != 200:
@@ -40,8 +36,8 @@ def get_events():
                 raise Exception("Error getting data from starknet indexer")
             elif data is None:
                 data = new_data
-            elif "data" in data and len(new_data["data"]["event"]) > 0:
-                data["data"]["event"].extend(new_data["data"]["event"])
+            elif "data" in data and len(new_data["data"]["starknet_goerli_event"]) > 0:
+                data["data"]["starknet_goerli_event"].extend(new_data["data"]["starknet_goerli_event"])
             else:
                 break
             i += 1
@@ -57,7 +53,7 @@ def get_events():
 
 def format_events(data):
     """Returns a list of Events. Each event's fields are converted to ints."""
-    events = data["data"]["event"]
+    events = data["data"]["starknet_goerli_event"]
     formatted_events = [
         {
             **event["arguments"][0]["value"],
