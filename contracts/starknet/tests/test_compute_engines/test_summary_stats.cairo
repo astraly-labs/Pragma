@@ -73,7 +73,7 @@ func _iter_prices_and_times{syscall_ptr: felt*, range_check_ptr}(
     return _iter_prices_and_times(cur_idx + 1, arr_len, times, prices);
 }
 
-// @external
+@external
 func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
@@ -124,7 +124,7 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_volatility_order{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
@@ -165,7 +165,7 @@ func test_volatility_order{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_volatility2{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
@@ -218,7 +218,7 @@ func test_volatility2{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_volatility_arr_length{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
@@ -342,7 +342,7 @@ func test_skip_elements{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_mean{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
@@ -392,7 +392,7 @@ func test_mean{syscall_ptr: felt*, range_check_ptr}() {
     return ();
 }
 
-// @external
+@external
 func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
     alloc_locals;
 
