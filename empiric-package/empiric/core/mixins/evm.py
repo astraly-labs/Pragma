@@ -5,7 +5,7 @@ from typing import List
 from empiric.core.entry import SpotEntry
 from web3 import HTTPProvider, Web3
 
-ORACLE_ADDRESS = "0xEE6Cf2A27e79A8466d5a561ABd355bBE968d5fa3"
+
 ORACLE_ABI = [
     {
         "inputs": [
@@ -114,12 +114,14 @@ class EvmHelper:
         publisher,
         sender_address,
         private_key,
-        provider_uri="https://zksync2-testnet.zksync.dev",
+        provider_uri,
+        chain_id,
+        oracle_address
     ):
         self.w3 = Web3(HTTPProvider(endpoint_uri=provider_uri))
-        self.chain_id = 280
+        self.chain_id = chain_id
         self.oracle = self.w3.eth.contract(
-            address=ORACLE_ADDRESS,
+            address=oracle_address,
             abi=ORACLE_ABI,
         )
         self.publisher = publisher

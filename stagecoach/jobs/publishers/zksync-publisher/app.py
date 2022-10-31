@@ -26,6 +26,9 @@ ASSETS = [
     {"type": "SPOT", "pair": ("AAVE", "USD"), "decimals": 8},
 ]
 PAIRS = [currency_pair_to_pair_id(*p["pair"]).encode() for p in ASSETS]
+PROVIDER_URI = "https://zksync2-testnet.zksync.dev"
+CHAIN_ID = 280
+ORACLE_ADDRESS = "0xEE6Cf2A27e79A8466d5a561ABd355bBE968d5fa3"
 
 logger = get_stream_logger()
 
@@ -56,6 +59,9 @@ async def _handler(assets):
         publisher,
         sender_address,
         publisher_private_key,
+        provider_uri=PROVIDER_URI,
+        chain_id=CHAIN_ID,
+        oracle_address=ORACLE_ADDRESS,
     )
 
     publisher_client = EmpiricPublisherClient()
