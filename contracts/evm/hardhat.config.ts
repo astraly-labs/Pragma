@@ -22,8 +22,11 @@ const config: HardhatUserConfig = {
     ethNetwork: "goerli", // Can also be the RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
   },
   networks: {
-    hardhat: {
-      zksync: true,
+    goerli: {
+      url: "https://rpc.ankr.com/eth_goerli",
+      chainId: 5,
+      zksync: false,
+      accounts: [process.env.PRIVATE_KEY!],
     },
   },
   solidity: {

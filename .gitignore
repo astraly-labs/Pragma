@@ -62,4 +62,7 @@ cache-zk
 artifacts-zk
 
 # temporary gitignore during development
-contracts/evm/deploy/
+contracts/evm/deploy/*
+!contracts/evm/deploy/deploy.ts
+!contracts/evm/deploy/deployOracle.ts
+!contracts/evm/deploy/README.md
