@@ -35,7 +35,8 @@ const config: HardhatUserConfig = {
     },
     optimismTestnet: {
       url: "https://goerli.optimism.io",
-      chainId: 420
+      chainId: 420,
+      accounts: [process.env.PRIVATE_KEY!],
     }
   },
   solidity: {
