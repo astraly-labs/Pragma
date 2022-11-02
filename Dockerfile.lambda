@@ -1,0 +1,15 @@
+FROM public.ecr.aws/lambda/python:3.9-x86_64
+
+RUN yum install -y gcc python-devel gmp-devel git
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY empiric-package/ /empiric-package
+RUN pip install -e /empiric-package
+
+
+COPY stagecoach/jobs/publishers/evm-publisher/app.py ${LAMBDA_TASK_ROOT}
+COPY stagecoach/jobs/publishers/evm-publisher/.env ${LAMBDA_TASK_ROOT}
+
+CMD [ "app.handler" ]
