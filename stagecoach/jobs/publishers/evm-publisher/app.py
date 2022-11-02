@@ -69,7 +69,7 @@ async def _handler(assets):
     publisher_private_key, sender_address = _get_private_and_public_keys(
         secret_name=SECRET_NAME, region_name=REGION_NAME
     )
-    zksync_publisher_client = EvmHelper(
+    evm_publisher_client = EvmHelper(
         publisher=PUBLISHER.encode(),
         sender_address=sender_address,
         private_key=publisher_private_key,
@@ -103,12 +103,12 @@ async def _handler(assets):
         }
         for e in _entries
     ]
-    nonce = zksync_publisher_client.get_nonce()
+    nonce = evm_publisher_client.get_nonce()
     print(f"nonce: {nonce}")
 
-    response_hash = zksync_publisher_client.publish_spot_entries(_entries, nonce=nonce)
+    response_hash = evm_publisher_client.publish_spot_entries(_entries, nonce=nonce)
     print(f"Published data with tx hash: {response_hash}.")
-    response_hash = zksync_publisher_client.setCheckpoints(PAIRS, nonce=nonce + 1)
+    response_hash = evm_publisher_client.setCheckpoints(PAIRS, nonce=nonce + 1)
     print(f"Checkpointed data with tx hash: {response_hash}.")
 
     return _entries
