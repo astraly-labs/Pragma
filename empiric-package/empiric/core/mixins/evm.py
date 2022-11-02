@@ -4,7 +4,6 @@ from typing import List
 from empiric.core.entry import SpotEntry
 from web3 import HTTPProvider, Web3
 
-
 ORACLE_ABI = [
     {
         "inputs": [

@@ -4,18 +4,12 @@ import os
 
 import boto3
 from dotenv import load_dotenv
-
 from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
 from empiric.core.mixins.evm import EvmHelper
 from empiric.core.utils import currency_pair_to_pair_id, felt_to_str
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
-    BitstampFetcher,
-    CexFetcher,
-    GeminiFetcher,
-)
-
+from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, GeminiFetcher
 
 load_dotenv()
 ASSETS = [
