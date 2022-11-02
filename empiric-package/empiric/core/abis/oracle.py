@@ -431,7 +431,7 @@ ORACLE_ABI = [
             {"name": "key", "type": "felt"},
             {"name": "timestamp", "type": "felt"},
         ],
-        "name": "get_last_checkpoint_before",
+        "name": "get_last_spot_checkpoint_before",
         "outputs": [
             {"name": "checkpoint", "type": "Checkpoint"},
             {"name": "idx", "type": "felt"},

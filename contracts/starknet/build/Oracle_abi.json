@@ -913,7 +913,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -921,7 +921,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_last_checkpoint_before",
+        "name": "get_last_spot_checkpoint_before",
         "outputs": [
             {
                 "name": "checkpoint",
