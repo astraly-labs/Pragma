@@ -29,6 +29,7 @@ def get_events():
                 + str(i * chunk_size)
                 + ', order_by: {id: asc}, where: {name: {_eq: "SubmittedEntry"}, transmitter_contract: {_eq: "0x12fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4"}}) { name arguments { value } transaction_hash }}'
             }
+            # TODO: Update contract address to Empiric 1.0 and change SubmittedEntry to SubmittedSpotEntry
             r = requests.post(url=url, json=request_json)
             if r.status_code != 200:
                 raise Exception(
