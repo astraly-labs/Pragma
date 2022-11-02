@@ -330,6 +330,15 @@ ORACLE_ABI = [
     {
         "inputs": [
             {"name": "new_entries_len", "type": "felt"},
+            {"name": "new_entries", "type": "FutureEntry*"},
+        ],
+        "name": "publish_future_entries",
+        "outputs": [],
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "new_entries_len", "type": "felt"},
             {"name": "new_entries", "type": "SpotEntry*"},
         ],
         "name": "publish_spot_entries",
@@ -428,7 +437,7 @@ ORACLE_ABI = [
     },
     {
         "inputs": [
-            {"name": "key", "type": "felt"},
+            {"name": "pair_id", "type": "felt"},
             {"name": "timestamp", "type": "felt"},
         ],
         "name": "get_last_spot_checkpoint_before",
