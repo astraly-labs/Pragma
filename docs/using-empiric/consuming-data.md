@@ -60,7 +60,7 @@ Returns
 
 ### **Function:** `get_spot`
 
-Similar to `get_spot_median` except it allows for an additional parameter to specify a custom aggregated logic (e.g. volatility-weighted average (VWAP), mean and more).
+Similar to `get_spot_median` except it allows for an additional parameter to specify a custom aggregated logic (e.g. volume-weighted average (VWAP), mean and more).
 
 Inputs
 
