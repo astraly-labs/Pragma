@@ -69,7 +69,7 @@ _EMPIRIC_ASSET_BY_KEY: Dict[str, EmpiricSpotAsset] = {
 }
 
 
-def get_spot_asset_spec_for_key(key: str) -> EmpiricSpotAsset:
-    if key not in _EMPIRIC_ASSET_BY_KEY:
-        raise ValueError(f"key not found: {key}")
-    return _EMPIRIC_ASSET_BY_KEY[key]
+def get_spot_asset_spec_for_pair_id(pair_id: str) -> EmpiricSpotAsset:
+    if pair_id not in _EMPIRIC_ASSET_BY_KEY:
+        raise ValueError(f"Pair ID not found: {pair_id}")
+    return _EMPIRIC_ASSET_BY_KEY[pair_id]
