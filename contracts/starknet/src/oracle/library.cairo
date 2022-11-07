@@ -21,8 +21,8 @@ from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotE
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
-const BACKWARD_TIMESTAMP_BUFFER = 3600;  // Min difference data timestamp - current block timestamp (60 minutes)
-const FORWARD_TIMESTAMP_BUFFER = 900;  // Max difference data timestamp - current block timestamp (15 minutes)
+const BACKWARD_TIMESTAMP_BUFFER = 7800;  // Min difference data timestamp - current block timestamp (2 hours and 10 minutes)
+const FORWARD_TIMESTAMP_BUFFER = 7800;  // Max difference data timestamp - current block timestamp (2 hours and 10 minutes)
 const BOTH_TRUE = 2;
 const USD_CURRENCY_ID = 5591876;  // str_to_felt("USD")
 
