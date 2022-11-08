@@ -15,14 +15,15 @@ from starkware.cairo.common.math import (
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
-from time_series.convert import _max, convert_via_usd
+from time_series.convert import _max, _min, convert_via_usd
 
 from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
-const BACKWARD_TIMESTAMP_BUFFER = 7800;  // Min difference data timestamp - current block timestamp (2 hours and 10 minutes)
-const FORWARD_TIMESTAMP_BUFFER = 7800;  // Max difference data timestamp - current block timestamp (2 hours and 10 minutes)
+const BACKWARD_TIMESTAMP_BUFFER = 7800;  // 2 hours and 10 minutes
+// Max difference between "current" timestamp and entry timestamp
+// where "current" timestamp is a conservative estimate: min(block_timestamp, latest_updated_timestamp)
 const BOTH_TRUE = 2;
 const USD_CURRENCY_ID = 5591876;  // str_to_felt("USD")
 
@@ -248,14 +249,18 @@ namespace Oracle {
     func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*
     ) -> (entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt) {
-        // This will return all entries within the BACKWARD_TIMESTAMP_BUFFER of the latest entry published for the given list of sources
+        // This will return all entries within the BACKWARD_TIMESTAMP_BUFFER
+        // of the conservative estimate of the current timestamp (min(block_timestamp, latest_updated_timestamp))
+        // for the given list of sources
         alloc_locals;
 
         let (last_updated_timestamp) = get_latest_spot_entry_timestamp(
             pair_id, sources_len, sources, 0, 0
         );
+        let (current_timestamp) = get_block_timestamp();
+        let (conservative_current_timestamp) = _min(last_updated_timestamp, current_timestamp);
         let (entries_len, entries) = get_all_spot_entries(
-            pair_id, sources_len, sources, last_updated_timestamp
+            pair_id, sources_len, sources, conservative_current_timestamp
         );
         return (entries_len, entries, last_updated_timestamp);
     }
@@ -817,17 +822,6 @@ namespace Oracle {
 
         with_attr error_message("Oracle: Existing entry is more recent") {
             assert_le(entry.base.timestamp, new_entry.base.timestamp);
-        }
-
-        let (current_timestamp) = get_block_timestamp();
-        with_attr error_message("Oracle: New entry timestamp is too far in the past") {
-            assert_le(current_timestamp - BACKWARD_TIMESTAMP_BUFFER, new_entry.base.timestamp);
-        }
-
-        with_attr error_message("Oracle: New entry timestamp is too far in the future") {
-            // TODO (rlkelly): should we allow for an hour into the future?
-            let new_entry_timestamp = new_entry.base.timestamp;
-            assert_le(new_entry.base.timestamp, current_timestamp + FORWARD_TIMESTAMP_BUFFER);
         }
 
         if (entry.base.timestamp == 0) {

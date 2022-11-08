@@ -1053,10 +1053,7 @@ async def test_ignore_stale_entries(
     )
 
     # Advance time by TIMESTAMP_BUFFER
-    admin_account.state.state.block_info = BlockInfo.create_for_testing(
-        admin_account.state.state.block_info.block_number,
-        admin_account.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
-    )
+    advance_time(admin_account.state.state, TIMESTAMP_BUFFER)
 
     second_entry = SpotEntry(
         pair_id=pair_id,
