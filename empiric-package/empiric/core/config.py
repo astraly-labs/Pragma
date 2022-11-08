@@ -71,6 +71,7 @@ CONTRACT_ADDRESSES = {
 
 EnvironmentTypes = Literal[
     "testnet",
+    "testnet2",
     "integration",
     "mainnet",
 ]
