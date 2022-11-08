@@ -42,7 +42,7 @@ def check_asset_price(
         else:
             ratio = reference_price / actual_price
         return f"{pair_id}: price discrepancy (ratio: {ratio}, reference: {reference_price}, Empiric: {actual_price})"
-    publisher_decimals = get_spot_asset_spec_for_pair_id([pair_id])["decimals"]
+    publisher_decimals = get_spot_asset_spec_for_pair_id(pair_id)["decimals"]
     if oracle_decimals != publisher_decimals:
         return f"{pair_id}: decimals mismatch (oracle: {oracle_decimals}, publisher: {publisher_decimals})"
 
