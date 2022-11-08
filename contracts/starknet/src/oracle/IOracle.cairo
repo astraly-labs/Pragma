@@ -133,7 +133,7 @@ namespace IOracle {
     func set_sources_threshold(threshold: felt) {
     }
 
-    func get_last_checkpoint_before(key: felt, timestamp: felt) -> (
+    func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
     ) {
     }
