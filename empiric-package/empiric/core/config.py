@@ -13,6 +13,7 @@ class Network:
 # network configurations
 LOCAL = Network(StarknetChainId.TESTNET, "http://127.0.0.1:5050")
 TESTNET = Network(StarknetChainId.TESTNET, "https://alpha4.starknet.io")
+TESTNET2 = Network(StarknetChainId.TESTNET, "https://alpha4-2.starknet.io")
 INTEGRATION = Network(
     StarknetChainId.TESTNET, "https://external.integration.starknet.io"
 )
@@ -20,6 +21,7 @@ MAINNET = Network(StarknetChainId.MAINNET, "https://alpha-mainnet.starknet.io")
 
 NETWORKS = {
     "testnet": TESTNET,
+    "testnet2": TESTNET2,
     "integration": INTEGRATION,
     "mainnet": MAINNET,
     "local": LOCAL,
@@ -27,6 +29,7 @@ NETWORKS = {
 
 NetworkType = Literal[
     "testnet",
+    "testnet2",
     "integration",
     "mainnet",
     "local",
