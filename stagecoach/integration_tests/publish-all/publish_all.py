@@ -50,12 +50,15 @@ async def publish_all(assets):
     )
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=100)
-    for res in response:
-        await res.wait_for_acceptance()
 
     logger.info("Publishing the following entries:")
     for entry in _entries:
         log_entry(entry, logger=logger)
+
+    logger.info(f"With transaction hash(es): {' '.join([r.hash for r in response])}")
+
+    for res in response:
+        await res.wait_for_acceptance()
 
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")
