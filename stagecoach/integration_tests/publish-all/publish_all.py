@@ -55,7 +55,9 @@ async def publish_all(assets):
     for entry in _entries:
         log_entry(entry, logger=logger)
 
-    logger.info(f"With transaction hash(es): {' '.join([r.hash for r in response])}")
+    logger.info(
+        f"With transaction hash(es): {' '.join([str(r.hash) for r in response])}"
+    )
 
     for res in response:
         await res.wait_for_acceptance()
