@@ -1,15 +1,26 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@prb/math/contracts/PRBMathSD59x18Typed.sol";
+import "hardhat/console.sol";
 
 import "./interfaces/IOracle.sol";
 import "./interfaces/IPublisherRegistry.sol";
 import "./CurrencyManager.sol";
 import "./EntryUtils.sol";
+import "./MathUtils.sol";
 
-contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
+contract Oracle is
+    Initializable,
+    CurrencyManager,
+    EntryUtils,
+    IOracle,
+    MathUtils
+{
+    using PRBMathSD59x18Typed for PRBMath.SD59x18;
+
     IPublisherRegistry public publisherRegistry;
 
     mapping(bytes32 => bytes32[]) public oracleSourcesStorage;
@@ -20,7 +31,7 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     uint256 sourcesThreshold = 1;
 
     uint256 constant BACKWARD_TIMESTAMP_BUFFER = 3600;
-    uint256 constant FORWARD_TIMESTAMP_BUFFER = 900;
+    uint256 constant FORWARD_TIMESTAMP_BUFFER = 1800;
 
     constructor() {
         _disableInitializers();
@@ -314,5 +325,176 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
             mstore(add(y, 16), source)
         }
         return (y[0], y[1]);
+    }
+
+    function getLastSpotCheckpointBefore(bytes32 pairId, uint256 timestamp)
+        public
+        view
+        returns (Checkpoint memory cp, uint256 index)
+    {
+        index = findStartpoint(pairId, timestamp);
+        cp = checkpoints[pairId][index];
+    }
+
+    function findStartpoint(bytes32 pairId, uint256 timestamp)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 latestCheckpointIndex = checkpointIndex[pairId];
+
+        Checkpoint memory cp = checkpoints[pairId][latestCheckpointIndex - 1];
+        Checkpoint memory firstCp = checkpoints[pairId][0];
+        require(timestamp <= cp.timestamp, "timestamp is in future");
+
+        uint256 startpoint = _binarySearch(
+            pairId,
+            0,
+            latestCheckpointIndex,
+            timestamp
+        );
+        return startpoint;
+    }
+
+    function _binarySearch(
+        bytes32 pairId,
+        uint256 low,
+        uint256 high,
+        uint256 target
+    ) internal view returns (uint256) {
+        uint256 midpoint = (low + high) / 2;
+        if (high == low) {
+            return midpoint;
+        }
+        if (high < low) {
+            return low - 1;
+        }
+
+        Checkpoint memory cp = checkpoints[pairId][midpoint];
+        uint256 timestamp = cp.timestamp;
+
+        if (timestamp == target) {
+            return midpoint;
+        }
+
+        if (target <= timestamp) {
+            return _binarySearch(pairId, low, midpoint - 1, target);
+        } else {
+            return _binarySearch(pairId, midpoint + 1, high, target);
+        }
+    }
+
+    function volatility(
+        bytes32 pairId,
+        uint256 startTick,
+        uint256 endTick,
+        uint256 numSamples
+    ) public view returns (int256) {
+        uint256 latestCheckpointIndex = checkpointIndex[pairId] - 1;
+        (
+            Checkpoint memory cp,
+            uint256 startIndex
+        ) = getLastSpotCheckpointBefore(pairId, startTick);
+        require(startIndex != latestCheckpointIndex, "not enough data");
+
+        uint256 skipFrequency = _calculateSkipFrequency(
+            latestCheckpointIndex - startIndex,
+            numSamples
+        );
+        TickElem[] memory tick_arr = _makeTickArray(
+            pairId,
+            latestCheckpointIndex,
+            startIndex,
+            skipFrequency
+        );
+
+        PRBMath.SD59x18 memory volatility_ = _volatility(tick_arr);
+        return
+            volatility_
+                .mul(PRBMathSD59x18Typed.fromInt(int256(1_000_000)))
+                .toInt();
+    }
+
+    function _calculateSkipFrequency(uint256 totalSamples, uint256 numSamples)
+        internal
+        pure
+        returns (uint256 skipFrequency)
+    {
+        uint256 q = totalSamples / numSamples;
+        uint256 r = totalSamples % numSamples;
+        if (q == 0) {
+            return 1;
+        }
+        if (r * 2 < numSamples) {
+            skipFrequency = q;
+        } else {
+            skipFrequency = q + 1;
+        }
+    }
+
+    function _makeTickArray(
+        bytes32 pairId,
+        uint256 lastIdx,
+        uint256 offset,
+        uint256 skipFrequency
+    ) internal view returns (TickElem[] memory) {
+        uint256 idx = 0;
+        uint256 arrayLen = (lastIdx - offset) / skipFrequency + 1;
+        TickElem[] memory tickArr = new TickElem[](arrayLen);
+        while (idx * skipFrequency + offset <= lastIdx) {
+            Checkpoint memory cp = checkpoints[pairId][
+                idx * skipFrequency + offset
+            ];
+
+            tickArr[idx] = TickElem(cp.timestamp, cp.value);
+            idx += 1;
+        }
+        return (tickArr);
+    }
+
+    function _volatility(TickElem[] memory arr)
+        internal
+        view
+        returns (PRBMath.SD59x18 memory)
+    {
+        PRBMath.SD59x18 memory volatilitySum = _sumVolatility(arr);
+        PRBMath.SD59x18 memory _volatility = volatilitySum.div(
+            PRBMathSD59x18Typed.fromInt(int256(arr.length - 1))
+        );
+        return _volatility.sqrt();
+    }
+
+    function _sumVolatility(TickElem[] memory arr)
+        internal
+        view
+        returns (PRBMath.SD59x18 memory)
+    {
+        PRBMath.SD59x18 memory total = PRBMathSD59x18Typed.fromInt(0);
+        PRBMath.SD59x18 memory ONE_YEAR_IN_SECONDS = PRBMathSD59x18Typed
+            .fromInt(31536000);
+        for (uint256 curIdx = 1; curIdx < arr.length; curIdx++) {
+            PRBMath.SD59x18 memory curValue = PRBMathSD59x18Typed.fromInt(
+                int256(arr[curIdx].value)
+            );
+            PRBMath.SD59x18 memory prevValue = PRBMathSD59x18Typed.fromInt(
+                int256(arr[curIdx - 1].value)
+            );
+            PRBMath.SD59x18 memory timestampDiff = PRBMathSD59x18Typed.fromInt(
+                int256(arr[curIdx].tick - arr[curIdx - 1].tick)
+            );
+
+            PRBMath.SD59x18 memory numeratorValue = curValue
+                .div(prevValue)
+                .ln();
+            PRBMath.SD59x18 memory numerator = numeratorValue.pow(
+                PRBMathSD59x18Typed.fromInt(2)
+            );
+            PRBMath.SD59x18 memory denominator = timestampDiff.div(
+                ONE_YEAR_IN_SECONDS
+            );
+            PRBMath.SD59x18 memory fraction_ = numerator.div(denominator);
+            total = total.add(fraction_);
+        }
+        return total;
     }
 }

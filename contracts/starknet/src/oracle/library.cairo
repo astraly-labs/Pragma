@@ -633,9 +633,6 @@ namespace Oracle {
         with_attr error_message("timestamp is in future") {
             assert_nn(cp.timestamp - timestamp);
         }
-        if (is_le(timestamp, first_cp.timestamp) == TRUE) {
-            return 0;
-        }
 
         let startpoint = _binary_search(key, 0, latest_checkpoint_index, timestamp);
         return startpoint;

@@ -110,6 +110,30 @@ describe("Oracle", function () {
       );
       expect(response2.numSourcesAggregated).to.equal(2);
       expect(response2.price).to.equal(10500000000);
+
+
+      await oracle.connect(owner).setCheckpoint(
+        ethers.utils.formatBytes32String('ETH/USD'),
+        0,
+      );
+      await oracle.connect(owner).publishSpotEntry(
+        {
+          base: {
+            timestamp: timestampBefore + 120,
+            source: ethers.utils.formatBytes32String('SOURCE2'),
+            publisher: ethers.utils.formatBytes32String('EMPIRIC'),
+          },
+          pairId: ethers.utils.formatBytes32String('ETH/USD'),
+          price: 13000000000,
+          volume: 100000,
+        }
+      );
+      await oracle.connect(owner).setCheckpoint(
+        ethers.utils.formatBytes32String('ETH/USD'),
+        0,
+      );
+      expect(await oracle.volatility(
+        ethers.utils.formatBytes32String("ETH/USD"), timestampBefore + 60, timestampBefore + 500, 2)).to.equal(65952970)
     });
   });
 });

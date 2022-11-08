@@ -22,12 +22,12 @@ const config: HardhatUserConfig = {
   //   ethNetwork: "goerli", // Can also be the RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
   // },
   networks: {
-    goerli: {
-      url: "https://rpc.ankr.com/eth_goerli",
-      chainId: 5,
-      // zksync: false,
-      accounts: [process.env.PRIVATE_KEY!],
-    },
+    // goerli: {
+    //   url: "https://rpc.ankr.com/eth_goerli",
+    //   chainId: 5,
+    //   // zksync: false,
+    //   accounts: [process.env.PRIVATE_KEY!],
+    // },
     polygonTestnet: {
       url: "https://rpc-mumbai.maticvigil.com",
       chainId: 80001,
@@ -40,7 +40,13 @@ const config: HardhatUserConfig = {
     }
   },
   solidity: {
-    version: "0.8.17",
+    version: "0.8.16",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
   },
 };
 

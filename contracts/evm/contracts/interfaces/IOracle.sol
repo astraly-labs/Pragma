@@ -32,6 +32,11 @@ interface IOracle {
         uint8 numSourcesAggregated;
     }
 
+    struct TickElem {
+        uint256 tick;
+        uint256 value;
+    }
+
     event UpdatedPublisherRegistryAddress(
         address oldPublisherRegistryAddress,
         address newPublisherRegistryAddress
