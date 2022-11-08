@@ -348,11 +348,11 @@ func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
 }
 
 @view
-func get_last_checkpoint_before{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, timestamp: felt
-) -> (checkpoint: Checkpoint, idx: felt) {
-    let idx = Oracle.find_startpoint(key, timestamp);
-    let (cp) = Oracle.get_checkpoint_by_index(key, idx);
+func get_last_spot_checkpoint_before{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, timestamp: felt) -> (checkpoint: Checkpoint, idx: felt) {
+    let idx = Oracle.find_startpoint(pair_id, timestamp);
+    let (cp) = Oracle.get_checkpoint_by_index(pair_id, idx);
     return (cp, idx);
 }
 

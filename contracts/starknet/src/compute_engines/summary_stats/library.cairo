@@ -19,7 +19,9 @@ namespace SummaryStats {
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
-        let (cp, start_index) = IOracle.get_last_checkpoint_before(oracle_address, key, start_tick);
+        let (cp, start_index) = IOracle.get_last_spot_checkpoint_before(
+            oracle_address, key, start_tick
+        );
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, latest_checkpoint_index);
         }
@@ -46,7 +48,9 @@ namespace SummaryStats {
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
-        let (cp, start_index) = IOracle.get_last_checkpoint_before(oracle_address, key, start_tick);
+        let (cp, start_index) = IOracle.get_last_spot_checkpoint_before(
+            oracle_address, key, start_tick
+        );
 
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, latest_checkpoint_index);
