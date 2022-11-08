@@ -141,7 +141,7 @@ class OracleMixin:
                 aggregation_mode.value,
             )
         else:
-            response = await self.oracle.get_spot_entries_for_sources.call(
+            response = await self.oracle.get_spot_for_sources.call(
                 pair_id, aggregation_mode.value, sources
             )
 
