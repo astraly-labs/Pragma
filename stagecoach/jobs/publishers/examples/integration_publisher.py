@@ -5,7 +5,7 @@ import traceback
 from empiric.core.logger import get_stream_logger
 from empiric.core.types import INTEGRATION
 from empiric.core.utils import log_entry
-from empiric.publisher.assets import get_spot_asset_spec_for_key
+from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetchers import BitstampFetcher, GeminiFetcher
 
@@ -46,4 +46,4 @@ async def publish_all(assets):
 
 
 if __name__ == "__main__":
-    asyncio.run(publish_all([get_spot_asset_spec_for_key("eth/usd")]))
+    asyncio.run(publish_all([get_spot_asset_spec_for_pair_id("eth/usd")]))
