@@ -979,40 +979,6 @@ async def test_real_data(
 
 
 @pytest.mark.asyncio
-async def test_ignore_future_entry(
-    initialized_contracts,
-    source,
-    publisher,
-    publisher_signer,
-):
-    publisher_account = initialized_contracts["publisher_account"]
-    oracle_proxy = initialized_contracts["oracle_proxy"]
-    pair_id = str_to_felt("ETH/USD")
-
-    entry = SpotEntry(
-        pair_id=pair_id,
-        price=3,
-        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
-        source=source,
-        publisher=publisher,
-    )
-
-    try:
-        await publisher_signer.send_transaction(
-            publisher_account,
-            oracle_proxy.contract_address,
-            "publish_spot_entry",
-            entry.to_tuple(),
-        )
-
-        raise Exception(
-            "Transaction to submit price too far in the future succeeded, but should not have."
-        )
-    except StarkException:
-        pass
-
-
-@pytest.mark.asyncio
 async def test_ignore_stale_entries(
     initialized_contracts, admin_signer, source, publisher, publisher_signer
 ):
