@@ -12,9 +12,20 @@ struct GenericEntry {
     value: felt,
 }
 
+struct GenericEntryStorage {
+    timestamp: felt,
+    value: felt,
+}
+
 struct SpotEntry {
     base: BaseEntry,
     pair_id: felt,
+    price: felt,
+    volume: felt,
+}
+
+struct SpotEntryStorage {
+    timestamp: felt,
     price: felt,
     volume: felt,
 }
@@ -24,6 +35,11 @@ struct FutureEntry {
     pair_id: felt,
     price: felt,
     expiry_timestamp: felt,
+}
+
+struct FutureEntryStorage {
+    timestamp: felt,
+    price: felt,
 }
 
 struct OptionEntry {

@@ -17,7 +17,7 @@ from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 from time_series.convert import _max, _min, convert_via_usd
 
-from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
+from entry.structs import Checkpoint, Currency, BaseEntry, GenericEntry, GenericEntryStorage, FutureEntry, FutureEntryStorage, SpotEntry, SpotEntryStorage, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 
@@ -47,11 +47,11 @@ func Oracle_pair_id_storage(quote_currency_id, base_currency_id) -> (pair_id: fe
 }
 
 @storage_var
-func Oracle_spot_entry_storage(key: felt, source: felt) -> (entry: SpotEntry) {
+func Oracle_spot_entry_storage(pair_id: felt, source: felt) -> (entry: SpotEntryStorage) {
 }
 
 @storage_var
-func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntry) {
+func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntryStorage) {
 }
 
 @storage_var
@@ -79,7 +79,7 @@ func Oracle__sources_threshold() -> (threshold: felt) {
 }
 
 @storage_var
-func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
+func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntryStorage) {
 }
 
 //
@@ -282,7 +282,35 @@ namespace Oracle {
     func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, source
     ) -> (entry: SpotEntry) {
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
+        let (_entry) = Oracle_spot_entry_storage.read(pair_id, source);
+        let entry = SpotEntry(
+            base=BaseEntry(
+                timestamp=_entry.timestamp,
+                source=source,
+                publisher=0,
+            ),
+            pair_id=pair_id,
+            price=_entry.price,
+            volume=_entry.volume,
+        );
+
+        return (entry,);
+    }
+
+    func get_generic_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        key: felt, source
+    ) -> (entry: GenericEntry) {
+        let (_entry) = Oracle__entry_storage.read(key, source);
+        let entry = GenericEntry(
+            base=BaseEntry(
+                timestamp=_entry.timestamp,
+                source=source,
+                publisher=0,
+            ),
+            key=key,
+            value=_entry.value,
+        );
+
         return (entry,);
     }
 
@@ -329,7 +357,17 @@ namespace Oracle {
     func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id, expiry_timestamp, source
     ) -> (future_entry: FutureEntry) {
-        let (future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
+        let (_future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
+        let future_entry = FutureEntry(
+            base=BaseEntry(
+                timestamp=_future_entry.timestamp,
+                source=source,
+                publisher=0,
+            ),
+            pair_id=pair_id,
+            price=_future_entry.price,
+            expiry_timestamp=expiry_timestamp,
+        );
         return (future_entry,);
     }
 
@@ -346,7 +384,7 @@ namespace Oracle {
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle__entry_storage.read(new_entry.key, new_entry.base.source);
+        let (entry) = get_generic_entry(new_entry.key, new_entry.base.source);
 
         let (entry_ptr: GenericEntry*) = alloc();
         assert entry_ptr[0] = entry;
@@ -354,7 +392,10 @@ namespace Oracle {
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedEntry.emit(new_entry);
-        Oracle__entry_storage.write(new_entry.key, new_entry.base.source, new_entry);
+        Oracle__entry_storage.write(new_entry.key, new_entry.base.source, GenericEntryStorage(
+            timestamp=new_entry.base.timestamp,
+            value=new_entry.value,
+        ));
 
         return ();
     }
@@ -374,7 +415,7 @@ namespace Oracle {
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle__future_entry_storage.read(
+        let (entry) = get_future_entry(
             new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source
         );
 
@@ -384,8 +425,12 @@ namespace Oracle {
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedFutureEntry.emit(new_entry);
+        let new_entry_storage = FutureEntryStorage(
+            timestamp=new_entry.base.timestamp,
+            price=new_entry.price,
+        );
         Oracle__future_entry_storage.write(
-            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source, new_entry
+            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source, new_entry_storage
         );
 
         return ();
@@ -413,15 +458,20 @@ namespace Oracle {
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle_spot_entry_storage.read(new_entry.pair_id, new_entry.base.source);
+        let (_entry) = get_spot_entry(new_entry.pair_id, new_entry.base.source);
 
         let (entry_ptr: SpotEntry*) = alloc();
-        assert entry_ptr[0] = entry;
+        assert entry_ptr[0] = _entry;
 
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedSpotEntry.emit(new_entry);
-        Oracle_spot_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
+        let new_entry_storage = SpotEntryStorage(
+            timestamp=new_entry.base.timestamp,
+            price=new_entry.price,
+            volume=new_entry.volume,
+        );
+        Oracle_spot_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry_storage);
 
         return ();
     }
@@ -611,7 +661,7 @@ namespace Oracle {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, sources[cur_idx]);
+        let (entry) = get_spot_entry(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_spot_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -629,7 +679,7 @@ namespace Oracle {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = Oracle__entry_storage.read(pair_id, sources[cur_idx]);
+        let (entry) = get_generic_entry(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -674,7 +724,7 @@ namespace Oracle {
         }
 
         let source = sources[sources_idx];
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
+        let (entry) = get_spot_entry(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
@@ -710,7 +760,7 @@ namespace Oracle {
     }
 
     func build_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt,
+        key: felt,
         sources_len: felt,
         sources: felt*,
         sources_idx: felt,
@@ -725,7 +775,7 @@ namespace Oracle {
         }
 
         let source = sources[sources_idx];
-        let (entry) = Oracle__entry_storage.read(pair_id, source);
+        let (entry) = get_generic_entry(key, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
@@ -736,7 +786,7 @@ namespace Oracle {
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_entries_array(
-                pair_id,
+                key,
                 sources_len,
                 sources,
                 sources_idx + 1,
@@ -750,7 +800,7 @@ namespace Oracle {
         assert [entries + entries_idx * GenericEntry.SIZE] = entry;
 
         return build_entries_array(
-            pair_id,
+            key,
             sources_len,
             sources,
             sources_idx + 1,
