@@ -682,7 +682,7 @@ namespace Oracle {
             entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
 
-        # FILTER FTX for all spot entries
+        // FILTER FTX for all spot entries
         let is_ftx = are_equal(source, 4609112);
 
         let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized + is_ftx);
