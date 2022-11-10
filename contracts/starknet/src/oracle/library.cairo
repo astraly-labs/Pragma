@@ -16,6 +16,7 @@ from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 from time_series.convert import _max, _min, convert_via_usd
+from time_series.utils import are_equal
 
 from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
@@ -681,7 +682,11 @@ namespace Oracle {
         let is_entry_stale = is_le(
             entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
-        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
+
+        // FILTER FTX for all spot entries
+        let (is_ftx) = are_equal(source, 4609112);
+
+        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized + is_ftx);
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_spot_entries_array(
