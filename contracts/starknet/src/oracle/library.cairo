@@ -681,7 +681,11 @@ namespace Oracle {
         let is_entry_stale = is_le(
             entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
-        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
+
+        # FILTER FTX for all spot entries
+        let is_ftx = are_equal(source, 4609112);
+
+        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized + is_ftx);
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_spot_entries_array(
