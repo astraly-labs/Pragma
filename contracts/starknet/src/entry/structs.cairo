@@ -25,9 +25,7 @@ struct SpotEntry {
 }
 
 struct SpotEntryStorage {
-    timestamp: felt,
-    price: felt,
-    volume: felt,
+    timestamp__volume__price: felt,
 }
 
 struct FutureEntry {

@@ -1,6 +1,6 @@
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
@@ -44,7 +44,7 @@ func initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 // @return entries_len: length of array
 // @return entries: pointer to first element in Entry array
 @view
-func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_entries_for_sources{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, sources_len: felt, sources: felt*
 ) -> (entries_len: felt, entries: SpotEntry*) {
     let (entries_len, entries, _) = Oracle.get_spot_entries(pair_id, sources_len, sources);
@@ -52,7 +52,7 @@ func get_spot_entries_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
 }
 
 @view
-func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_entries{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
 ) -> (entries_len: felt, entries: SpotEntry*) {
     let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
@@ -64,7 +64,7 @@ func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 // @param source: the source to use for Entry
 // @return entry: Entry for key and source
 @view
-func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_entry{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, source: felt
 ) -> (entry: SpotEntry) {
     let (entry) = Oracle.get_spot_entry(pair_id, source);
@@ -84,17 +84,17 @@ func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 }
 
 @view
-func get_spot_median{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_median{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     return get_spot(pair_id, MEDIAN);
 }
 
 @view
-func get_spot_median_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_median_for_sources{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, sources_len: felt, sources: felt*
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
-    return get_spot_for_sources(pair_id, MEDIAN, sources_len, sources);
+    return get_spot_for_sources{bitwise_ptr=bitwise_ptr}(pair_id, MEDIAN, sources_len, sources);
 }
 
 // @notice get value by key and aggregation mode
@@ -105,7 +105,7 @@ func get_spot_median_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*,
 // @return last_updated_timestamp: timestamp the Entries were last updated
 // @return num_sources_aggregated: number of sources used in aggregation
 @view
-func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
@@ -125,7 +125,7 @@ func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 // @return last_updated_timestamp: timestamp the Entries were last updated
 // @return num_sources_aggregated: number of sources used in aggregation
 @view
-func get_spot_for_sources{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_for_sources{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
@@ -165,7 +165,7 @@ func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 }
 
 @view
-func get_spot_with_USD_hop{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func get_spot_with_USD_hop{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     base_currency_id, quote_currency_id, aggregation_mode
 ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     let (
@@ -191,7 +191,7 @@ func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 // @notice publish a SpotEntry
 // @param new_entry: a SpotEntry to publish
 @external
-func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func publish_spot_entry{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entry: SpotEntry
 ) {
     Oracle.publish_spot_entry(new_entry);
@@ -199,7 +199,7 @@ func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 }
 
 @external
-func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func publish_entry{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entry: GenericEntry
 ) {
     Oracle.publish_entry(new_entry);
@@ -226,7 +226,7 @@ func publish_future_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, rang
 // @param new_entries_len: length of entries array
 // @param new_entries: pointer to first Entry in array
 @external
-func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func publish_spot_entries{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     new_entries_len: felt, new_entries: SpotEntry*
 ) {
     Oracle.publish_spot_entries(new_entries_len, new_entries);
@@ -332,7 +332,7 @@ func get_admin_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 }
 
 @external
-func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func set_checkpoint{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, aggregation_mode: felt
 ) {
     Oracle.set_checkpoint(pair_id, aggregation_mode);
@@ -340,7 +340,7 @@ func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 }
 
 @external
-func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+func set_checkpoints{bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_ids_len, pair_ids: felt*, aggregation_mode: felt
 ) {
     Oracle.set_checkpoints(pair_ids_len, pair_ids, aggregation_mode);
