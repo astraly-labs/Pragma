@@ -597,7 +597,10 @@ async def test_submit_second_publisher(
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert [r.price for r in result.result.entries] == [entry.price, second_entry.price]
-    assert [r.base.timestamp for r in result.result.entries] == [entry.base.timestamp, second_entry.base.timestamp]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        entry.base.timestamp,
+        second_entry.base.timestamp,
+    ]
 
 
 @pytest.mark.asyncio
@@ -701,7 +704,10 @@ async def test_mean_aggregation(
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert [r.price for r in result.result.entries] == [entry.price, second_entry.price]
-    assert [r.base.timestamp for r in result.result.entries] == [entry.base.timestamp, second_entry.base.timestamp]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        entry.base.timestamp,
+        second_entry.base.timestamp,
+    ]
 
     return
 
@@ -765,8 +771,12 @@ async def test_median_aggregation(
         )
 
         result = await oracle_proxy.get_spot_entries(pair_id).call()
-        assert [r.price for r in result.result.entries] == [entry.price for entry in entries]
-        assert [r.base.timestamp for r in result.result.entries] == [entry.base.timestamp for entry in entries]
+        assert [r.price for r in result.result.entries] == [
+            entry.price for entry in entries
+        ]
+        assert [r.base.timestamp for r in result.result.entries] == [
+            entry.base.timestamp for entry in entries
+        ]
 
         result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
@@ -1047,7 +1057,9 @@ async def test_ignore_stale_entries(
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
     assert [r.price for r in result.result.entries] == [second_entry.price]
-    assert [r.base.timestamp for r in result.result.entries] == [second_entry.base.timestamp]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        second_entry.base.timestamp
+    ]
 
 
 @pytest.mark.asyncio

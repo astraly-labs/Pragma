@@ -37,10 +37,7 @@ func actual_set_element_at{
 // @param element: The element that needs to be encoded
 // @return response: The new felt containing the encoded value a the given position on the given number of bits
 func unsafe_set_element_at{
-    bitwise_ptr: BitwiseBuiltin*,
-    syscall_ptr: felt*,
-    pedersen_ptr: HashBuiltin*,
-    range_check_ptr,
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(input: felt, at: felt, element: felt) -> felt {
     let (multiplier) = pow2(at);
     let multiplied_element = element * multiplier;
