@@ -96,7 +96,9 @@ namespace SummaryStats {
         // TODO: why is end index first?
         let skip_frequency = calculate_skip_frequency(end_index - start_index, num_samples);
         let (total_samples, _) = unsigned_div_rem(end_index - start_index, skip_frequency);
-        let arr_len = _make_array(0, oracle_address, key, end_index, start_index, tick_arr, skip_frequency);
+        let arr_len = _make_array(
+            0, oracle_address, key, end_index, start_index, tick_arr, skip_frequency
+        );
 
         let volatility_ = volatility(arr_len, tick_arr);
         let _decs = FixedPoint.to_decimals(volatility_);
