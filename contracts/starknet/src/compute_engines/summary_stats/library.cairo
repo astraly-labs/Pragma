@@ -75,14 +75,14 @@ namespace SummaryStats {
         let (latest_checkpoint_index) = IOracle.get_latest_checkpoint_index(
             contract_address=oracle_address, key=key
         );
-        let (_start_cp, start_index) = IOracle.get_last_checkpoint_before(
+        let (_start_cp, start_index) = IOracle.get_last_spot_checkpoint_before(
             oracle_address, key, start_tick
         );
         local end_index;
         if (end_tick == 0) {
             end_index = latest_checkpoint_index;
         } else {
-            let (_end_cp, _end_idx) = IOracle.get_last_checkpoint_before(
+            let (_end_cp, _end_idx) = IOracle.get_last_spot_checkpoint_before(
                 oracle_address, key, end_tick
             );
             end_index = _end_idx;
