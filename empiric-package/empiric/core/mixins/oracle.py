@@ -3,7 +3,7 @@ import logging
 from typing import List, Optional
 
 from empiric.core.contract import Contract
-from empiric.core.entry import SpotEntry
+from empiric.core.entry import FutureEntry, SpotEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
@@ -58,31 +58,56 @@ class OracleMixin:
             return
 
         invocations = []
-        serialized_entries = SpotEntry.serialize_entries(entries)
-        # TODO (this PR) filter by entry.type and publish Spot, Future and Generic entries separately
+        serialized_spot_entries = SpotEntry.serialize_entries(entries)
         if pagination:
             ix = 0
-            while ix < len(serialized_entries):
-                entries_subset = serialized_entries[ix : ix + pagination]
+            while ix < len(serialized_spot_entries):
+                entries_subset = serialized_spot_entries[ix : ix + pagination]
                 invocation = await self.oracle.publish_spot_entries.invoke(
-                    SpotEntry.serialize_entries(entries_subset),
+                    entries_subset,
                     callback=self.track_nonce,
                     max_fee=max_fee,
                 )
-                logger.debug(str(invocation))
                 ix += pagination
                 invocations.append(invocation)
+                logger.debug(str(invocation))
                 logger.info(
-                    f"Sent {len(entries_subset)} updated entries with transaction {hex(invocation.hash)}"
+                    f"Sent {len(entries_subset)} updated spot entries with transaction {hex(invocation.hash)}"
                 )
         else:
             invocation = await self.oracle.publish_spot_entries.invoke(
-                SpotEntry.serialize_entries(entries), max_fee=max_fee
+                serialized_spot_entries, max_fee=max_fee
             )
             invocations.append(invocation)
             logger.debug(str(invocation))
             logger.info(
-                f"Sent {len(entries)} updated entries with transaction {hex(invocation.hash)}"
+                f"Sent {len(serialized_spot_entries)} updated spot entries with transaction {hex(invocation.hash)}"
+            )
+
+        serialized_future_entries = FutureEntry.serialize_entries(entries)
+        if pagination:
+            ix = 0
+            while ix < len(serialized_future_entries):
+                entries_subset = serialized_future_entries[ix : ix + pagination]
+                invocation = await self.oracle.publish_future_entries.invoke(
+                    entries_subset,
+                    callback=self.track_nonce,
+                    max_fee=max_fee,
+                )
+                ix += pagination
+                invocations.append(invocation)
+                logger.debug(str(invocation))
+                logger.info(
+                    f"Sent {len(entries_subset)} updated future entries with transaction {hex(invocation.hash)}"
+                )
+        else:
+            invocation = await self.oracle.publish_future_entries.invoke(
+                serialized_future_entries, max_fee=max_fee
+            )
+            invocations.append(invocation)
+            logger.debug(str(invocation))
+            logger.info(
+                f"Sent {len(serialized_future_entries)} updated future entries with transaction {hex(invocation.hash)}"
             )
 
         return invocations
@@ -116,7 +141,7 @@ class OracleMixin:
                 aggregation_mode.value,
             )
         else:
-            response = await self.oracle.get_spot_entries_for_sources.call(
+            response = await self.oracle.get_spot_for_sources.call(
                 pair_id, aggregation_mode.value, sources
             )
 

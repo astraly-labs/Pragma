@@ -103,6 +103,9 @@ namespace IOracle {
     func publish_future_entry(new_entry: FutureEntry) {
     }
 
+    func publish_future_entries(new_entries_len: felt, new_entries: FutureEntry*) {
+    }
+
     func publish_spot_entry(new_entry: SpotEntry) {
     }
 
@@ -130,7 +133,7 @@ namespace IOracle {
     func set_sources_threshold(threshold: felt) {
     }
 
-    func get_last_checkpoint_before(key: felt, timestamp: felt) -> (
+    func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
     ) {
     }

@@ -714,6 +714,21 @@
             },
             {
                 "name": "new_entries",
+                "type": "FutureEntry*"
+            }
+        ],
+        "name": "publish_future_entries",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_entries_len",
+                "type": "felt"
+            },
+            {
+                "name": "new_entries",
                 "type": "SpotEntry*"
             }
         ],
@@ -898,7 +913,7 @@
     {
         "inputs": [
             {
-                "name": "key",
+                "name": "pair_id",
                 "type": "felt"
             },
             {
@@ -906,7 +921,7 @@
                 "type": "felt"
             }
         ],
-        "name": "get_last_checkpoint_before",
+        "name": "get_last_spot_checkpoint_before",
         "outputs": [
             {
                 "name": "checkpoint",
