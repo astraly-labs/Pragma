@@ -76,9 +76,9 @@ func get_spot_entry{
 // @param source: the source to use for Entry
 // @return entry: Entry for key and source
 @view
-func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    pair_id, expiry_timestamp, source
-) -> (entry: FutureEntry) {
+func get_future_entry{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id, expiry_timestamp, source) -> (entry: FutureEntry) {
     let (entry) = Oracle.get_future_entry(pair_id, expiry_timestamp, source);
     return (entry,);
 }
@@ -164,7 +164,9 @@ func get_spot_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 }
 
 @view
-func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
+func get_value{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt) -> (
     value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
 ) {
     // TODO: should this always aggregate all values or should we require a source
@@ -191,9 +193,9 @@ func get_spot_with_USD_hop{
 // @notice publish a FutureEntry
 // @param new_entry: a FutureEntry to publish
 @external
-func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    new_entry: FutureEntry
-) {
+func publish_future_entry{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(new_entry: FutureEntry) {
     Oracle.publish_future_entry(new_entry);
     return ();
 }
@@ -225,9 +227,9 @@ func publish_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
 }
 
 @external
-func publish_future_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    new_entries_len: felt, new_entries: FutureEntry*
-) {
+func publish_future_entries{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(new_entries_len: felt, new_entries: FutureEntry*) {
     Oracle.publish_future_entries(new_entries_len, new_entries);
     return ();
 }

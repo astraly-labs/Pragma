@@ -13,8 +13,7 @@ struct GenericEntry {
 }
 
 struct GenericEntryStorage {
-    timestamp: felt,
-    value: felt,
+    timestamp__value: felt,
 }
 
 struct SpotEntry {
@@ -36,8 +35,7 @@ struct FutureEntry {
 }
 
 struct FutureEntryStorage {
-    timestamp: felt,
-    price: felt,
+    timestamp__price: felt,
 }
 
 struct OptionEntry {
