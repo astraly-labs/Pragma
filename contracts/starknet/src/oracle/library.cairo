@@ -2,7 +2,7 @@
 
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
-from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math import (
@@ -16,10 +16,23 @@ from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 from time_series.convert import _max, _min, convert_via_usd
+from time_series.utils import are_equal
 
-from entry.structs import Checkpoint, Currency, GenericEntry, FutureEntry, SpotEntry, Pair
+from entry.structs import (
+    Checkpoint,
+    Currency,
+    BaseEntry,
+    GenericEntry,
+    GenericEntryStorage,
+    FutureEntry,
+    FutureEntryStorage,
+    SpotEntry,
+    SpotEntryStorage,
+    Pair,
+)
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
+from bits_manipulation.bits_manipulation import actual_set_element_at, actual_get_element_at
 
 const BACKWARD_TIMESTAMP_BUFFER = 7800;  // 2 hours and 10 minutes
 // Max difference between "current" timestamp and entry timestamp
@@ -47,11 +60,11 @@ func Oracle_pair_id_storage(quote_currency_id, base_currency_id) -> (pair_id: fe
 }
 
 @storage_var
-func Oracle_spot_entry_storage(key: felt, source: felt) -> (entry: SpotEntry) {
+func Oracle_spot_entry_storage(pair_id: felt, source: felt) -> (entry: SpotEntryStorage) {
 }
 
 @storage_var
-func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntry) {
+func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntryStorage) {
 }
 
 @storage_var
@@ -79,7 +92,7 @@ func Oracle__sources_threshold() -> (threshold: felt) {
 }
 
 @storage_var
-func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntry) {
+func Oracle__future_entry_storage(pair_id, expiry_timestamp, source) -> (res: FutureEntryStorage) {
 }
 
 //
@@ -160,9 +173,14 @@ namespace Oracle {
     // Getters
     //
 
-    func get_spot_with_USD_hop{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        base_currency_id, quote_currency_id, aggregation_mode
-    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    func get_spot_with_USD_hop{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(base_currency_id, quote_currency_id, aggregation_mode) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
         alloc_locals;
         let (sources) = alloc();
 
@@ -209,9 +227,14 @@ namespace Oracle {
         return (key_decimals,);
     }
 
-    func get_spot{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        key: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
-    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    func get_spot{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(key: felt, aggregation_mode: felt, sources_len: felt, sources: felt*) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
         alloc_locals;
 
         let (entries_len, entries, _) = get_spot_entries(key, sources_len, sources);
@@ -226,7 +249,12 @@ namespace Oracle {
         return (price, decimals, last_updated_timestamp, entries_len);
     }
 
-    func get_value{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(key: felt) -> (
+    func get_value{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(key: felt) -> (
         value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
         alloc_locals;
@@ -246,9 +274,14 @@ namespace Oracle {
         return (price, 18, last_updated_timestamp, entries_len);
     }
 
-    func get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, sources_len: felt, sources: felt*
-    ) -> (entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt) {
+    func get_spot_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: SpotEntry*, last_updated_timestamp: felt
+    ) {
         // This will return all entries within the BACKWARD_TIMESTAMP_BUFFER
         // of the conservative estimate of the current timestamp (min(block_timestamp, latest_updated_timestamp))
         // for the given list of sources
@@ -265,9 +298,14 @@ namespace Oracle {
         return (entries_len, entries, last_updated_timestamp);
     }
 
-    func get_generic_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, sources_len: felt, sources: felt*
-    ) -> (entries_len: felt, entries: GenericEntry*, last_updated_timestamp: felt) {
+    func get_generic_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: GenericEntry*, last_updated_timestamp: felt
+    ) {
         alloc_locals;
 
         let (last_updated_timestamp) = get_latest_entry_timestamp(
@@ -279,10 +317,54 @@ namespace Oracle {
         return (entries_len, entries, last_updated_timestamp);
     }
 
-    func get_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, source
-    ) -> (entry: SpotEntry) {
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
+    func get_spot_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, source) -> (entry: SpotEntry) {
+        alloc_locals;
+        let (_entry) = Oracle_spot_entry_storage.read(pair_id, source);
+
+        let timestamp = actual_get_element_at(_entry.timestamp__volume__price, 0, 31);
+        let volume = actual_get_element_at(_entry.timestamp__volume__price, 32, 42);
+        let price = actual_get_element_at(_entry.timestamp__volume__price, 75, 128);
+        let entry = SpotEntry(
+            base=BaseEntry(
+            timestamp=timestamp,
+            source=source,
+            publisher=0,
+            ),
+            pair_id=pair_id,
+            price=price,
+            volume=volume,
+        );
+
+        return (entry,);
+    }
+
+    func get_generic_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(key: felt, source) -> (entry: GenericEntry) {
+        alloc_locals;
+        let (_entry) = Oracle__entry_storage.read(key, source);
+
+        let timestamp = actual_get_element_at(_entry.timestamp__value, 0, 31);
+        let value = actual_get_element_at(_entry.timestamp__value, 32, 128);
+
+        let entry = GenericEntry(
+            base=BaseEntry(
+            timestamp=timestamp,
+            source=source,
+            publisher=0,
+            ),
+            key=key,
+            value=value,
+        );
+
         return (entry,);
     }
 
@@ -326,10 +408,28 @@ namespace Oracle {
         return (threshold,);
     }
 
-    func get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id, expiry_timestamp, source
-    ) -> (future_entry: FutureEntry) {
-        let (future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
+    func get_future_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id, expiry_timestamp, source) -> (future_entry: FutureEntry) {
+        alloc_locals;
+        let (_future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
+
+        let timestamp = actual_get_element_at(_future_entry.timestamp__price, 0, 31);
+        let price = actual_get_element_at(_future_entry.timestamp__price, 32, 128);
+
+        let future_entry = FutureEntry(
+            base=BaseEntry(
+            timestamp=timestamp,
+            source=source,
+            publisher=0,
+            ),
+            pair_id=pair_id,
+            price=price,
+            expiry_timestamp=expiry_timestamp,
+        );
         return (future_entry,);
     }
 
@@ -337,24 +437,36 @@ namespace Oracle {
     // Setters
     //
 
-    func publish_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entry: GenericEntry
-    ) {
+    func publish_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(new_entry: GenericEntry) {
         alloc_locals;
 
         let (new_entry_ptr: GenericEntry*) = alloc();
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle__entry_storage.read(new_entry.key, new_entry.base.source);
+        let (entry) = get_generic_entry(new_entry.key, new_entry.base.source);
 
         let (entry_ptr: GenericEntry*) = alloc();
         assert entry_ptr[0] = entry;
 
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
+        let element = actual_set_element_at(0, 0, 31, new_entry.base.timestamp);
+        let element = actual_set_element_at(element, 32, 128, new_entry.value);
+
         SubmittedEntry.emit(new_entry);
-        Oracle__entry_storage.write(new_entry.key, new_entry.base.source, new_entry);
+        Oracle__entry_storage.write(
+            new_entry.key,
+            new_entry.base.source,
+            GenericEntryStorage(
+            timestamp__value=element,
+            ),
+        );
 
         return ();
     }
@@ -365,16 +477,19 @@ namespace Oracle {
         return ();
     }
 
-    func publish_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entry: FutureEntry
-    ) {
+    func publish_future_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(new_entry: FutureEntry) {
         alloc_locals;
 
         let (new_entry_ptr: FutureEntry*) = alloc();
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle__future_entry_storage.read(
+        let (entry) = get_future_entry(
             new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source
         );
 
@@ -384,16 +499,24 @@ namespace Oracle {
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedFutureEntry.emit(new_entry);
+
+        let element = actual_set_element_at(0, 0, 31, new_entry.base.timestamp);
+        let element = actual_set_element_at(element, 32, 128, new_entry.price);
+
+        let new_entry_storage = FutureEntryStorage(timestamp__price=element);
         Oracle__future_entry_storage.write(
-            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source, new_entry
+            new_entry.pair_id, new_entry.expiry_timestamp, new_entry.base.source, new_entry_storage
         );
 
         return ();
     }
 
-    func publish_future_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entries_len: felt, new_entries: FutureEntry*
-    ) {
+    func publish_future_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(new_entries_len: felt, new_entries: FutureEntry*) {
         if (new_entries_len == 0) {
             return ();
         }
@@ -404,31 +527,43 @@ namespace Oracle {
         return ();
     }
 
-    func publish_spot_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entry: SpotEntry
-    ) {
+    func publish_spot_entry{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(new_entry: SpotEntry) {
         alloc_locals;
 
         let (new_entry_ptr: SpotEntry*) = alloc();
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = Oracle_spot_entry_storage.read(new_entry.pair_id, new_entry.base.source);
+        let (_entry) = get_spot_entry(new_entry.pair_id, new_entry.base.source);
 
         let (entry_ptr: SpotEntry*) = alloc();
-        assert entry_ptr[0] = entry;
+        assert entry_ptr[0] = _entry;
 
         validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
 
         SubmittedSpotEntry.emit(new_entry);
-        Oracle_spot_entry_storage.write(new_entry.pair_id, new_entry.base.source, new_entry);
+        let element = actual_set_element_at(0, 0, 31, new_entry.base.timestamp);
+        let element = actual_set_element_at(element, 32, 42, new_entry.volume);
+        let element = actual_set_element_at(element, 75, 128, new_entry.price);
+        let new_entry_storage = SpotEntryStorage(timestamp__volume__price=element);
+        Oracle_spot_entry_storage.write(
+            new_entry.pair_id, new_entry.base.source, new_entry_storage
+        );
 
         return ();
     }
 
-    func publish_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        new_entries_len: felt, new_entries: SpotEntry*
-    ) {
+    func publish_spot_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(new_entries_len: felt, new_entries: SpotEntry*) {
         if (new_entries_len == 0) {
             return ();
         }
@@ -523,9 +658,12 @@ namespace Oracle {
         return ();
     }
 
-    func set_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        key: felt, aggregation_mode: felt
-    ) {
+    func set_checkpoint{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(key: felt, aggregation_mode: felt) {
         alloc_locals;
         let (sources) = alloc();
         let (value, _decimals, last_updated_timestamp, num_sources_aggregated) = get_spot(
@@ -549,9 +687,12 @@ namespace Oracle {
         return ();
     }
 
-    func set_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_ids_len, pair_ids: felt*, aggregation_mode: felt
-    ) {
+    func set_checkpoints{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_ids_len, pair_ids: felt*, aggregation_mode: felt) {
         if (pair_ids_len == 0) {
             return ();
         }
@@ -563,9 +704,14 @@ namespace Oracle {
     // Helpers
     //
 
-    func get_all_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp
-    ) -> (entries_len: felt, entries: SpotEntry*) {
+    func get_all_spot_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp) -> (
+        entries_len: felt, entries: SpotEntry*
+    ) {
         alloc_locals;
 
         let (entries: SpotEntry*) = alloc();
@@ -584,9 +730,14 @@ namespace Oracle {
         return (entries_len, entries);
     }
 
-    func get_all_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp
-    ) -> (entries_len: felt, entries: GenericEntry*) {
+    func get_all_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, sources_len: felt, sources: felt*, latest_timestamp) -> (
+        entries_len: felt, entries: GenericEntry*
+    ) {
         alloc_locals;
 
         let (entries: GenericEntry*) = alloc();
@@ -606,12 +757,15 @@ namespace Oracle {
     }
 
     func get_latest_spot_entry_timestamp{
-        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
     }(pair_id, sources_len, sources: felt*, cur_idx, latest_timestamp) -> (latest_timestamp: felt) {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, sources[cur_idx]);
+        let (entry) = get_spot_entry(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_spot_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -624,12 +778,15 @@ namespace Oracle {
     }
 
     func get_latest_entry_timestamp{
-        syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
     }(pair_id, sources_len, sources: felt*, cur_idx, latest_timestamp) -> (latest_timestamp: felt) {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = Oracle__entry_storage.read(pair_id, sources[cur_idx]);
+        let (entry) = get_generic_entry(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -648,9 +805,11 @@ namespace Oracle {
 
         let (cp) = get_checkpoint_by_index(key, latest_checkpoint_index - 1);
         let (first_cp) = get_checkpoint_by_index(key, 0);
-        with_attr error_message("timestamp is in future") {
-            assert_nn(cp.timestamp - timestamp);
+        let is_in_future = is_le(cp.timestamp, timestamp);
+        if (is_in_future == TRUE) {
+            return latest_checkpoint_index;
         }
+
         if (is_le(timestamp, first_cp.timestamp) == TRUE) {
             return 0;
         }
@@ -659,7 +818,12 @@ namespace Oracle {
         return startpoint;
     }
 
-    func build_spot_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    func build_spot_entries_array{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
         pair_id: felt,
         sources_len: felt,
         sources: felt*,
@@ -674,14 +838,18 @@ namespace Oracle {
         }
 
         let source = sources[sources_idx];
-        let (entry) = Oracle_spot_entry_storage.read(pair_id, source);
+        let (entry) = get_spot_entry(pair_id, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
         let is_entry_stale = is_le(
             entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
         );
-        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized);
+
+        // FILTER FTX for all spot entries
+        let (is_ftx) = are_equal(source, 4609112);
+
+        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized + is_ftx);
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_spot_entries_array(
@@ -709,8 +877,13 @@ namespace Oracle {
         );
     }
 
-    func build_entries_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-        pair_id: felt,
+    func build_entries_array{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
+        key: felt,
         sources_len: felt,
         sources: felt*,
         sources_idx: felt,
@@ -725,7 +898,7 @@ namespace Oracle {
         }
 
         let source = sources[sources_idx];
-        let (entry) = Oracle__entry_storage.read(pair_id, source);
+        let (entry) = get_generic_entry(key, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 
@@ -736,7 +909,7 @@ namespace Oracle {
 
         if (should_skip_entry == TRUE) {
             let (entries_len, entries) = build_entries_array(
-                pair_id,
+                key,
                 sources_len,
                 sources,
                 sources_idx + 1,
@@ -750,7 +923,7 @@ namespace Oracle {
         assert [entries + entries_idx * GenericEntry.SIZE] = entry;
 
         return build_entries_array(
-            pair_id,
+            key,
             sources_len,
             sources,
             sources_idx + 1,

@@ -1,5 +1,5 @@
 ["protostar.config"]
-protostar_version = "0.3.2"
+protostar_version = "0.7.0"
 
 ["protostar.project"]
 libs_path = "contracts/starknet/lib"

@@ -48,6 +48,10 @@
             {
                 "name": "stop",
                 "type": "felt"
+            },
+            {
+                "name": "num_samples",
+                "type": "felt"
             }
         ],
         "name": "calculate_volatility",

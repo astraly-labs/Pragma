@@ -32,12 +32,13 @@ func calculate_mean{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 
 @view
 func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, start: felt, stop: felt
+    key: felt, start: felt, stop: felt, num_samples: felt
 ) -> (volatility_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
-    let _volatility = SummaryStats.calculate_volatility(oracle_address, key, start, stop);
-    // annualize metric
-    let annual_ = _volatility * 561569;
-    let (annual, _) = unsigned_div_rem(annual_, 100);
-    return (annual,);
+    let _volatility = SummaryStats.calculate_volatility(
+        oracle_address, key, start, stop, num_samples
+    );
+    // Reporting in percentage
+    let percentage_ = _volatility * 100;
+    return (percentage_,);
 }
