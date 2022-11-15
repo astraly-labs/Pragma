@@ -36,11 +36,6 @@ const stats = [
 
 const dataPublishers: Logo[] = [
   {
-    name: "Alameda Research",
-    src: "/assets/publishers/alameda.webp",
-    href: "https://www.alameda-research.com/",
-  },
-  {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.webp",
     href: "https://www.janestreet.com/",
@@ -54,11 +49,6 @@ const dataPublishers: Logo[] = [
     name: "Flow Traders",
     src: "/assets/publishers/flow-traders.webp",
     href: "https://www.flowtraders.com/",
-  },
-  {
-    name: "FTX",
-    src: "/assets/publishers/ftx.svg",
-    href: "https://ftx.us/",
   },
   {
     name: "Gemini",

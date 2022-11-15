@@ -12,7 +12,7 @@ const LogoGrid: React.FC<LogoCloudProps> = ({ title, logos }) => (
     <figcaption className="mb-2 text-sm uppercase tracking-wide text-slate-700 sm:text-base md:mb-5 md:text-lg ">
       {title}
     </figcaption>
-    <ul className="grid grid-cols-2 place-items-center border-y border-slate-300 sm:border-0 md:grid-cols-3">
+    <ul className="grid grid-cols-2 place-items-center border-y border-slate-300 sm:border-0 md:grid-cols-2">
       {logos.map(({ name, src, href }, i) => (
         <li key={i} className="col-span-1 py-4 px-4 lg:py-8">
           <a href={href}>
