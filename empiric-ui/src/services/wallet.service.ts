@@ -9,14 +9,14 @@ export const walletAddress = async (): Promise<string | undefined> => {
   try {
     const [address] = await getStarknet().enable();
     return address;
-  } catch {}
+  } catch { }
 };
 
 export const getExplorerBaseUrl = (): string | undefined => {
   if (networkId() === "mainnet-alpha") {
     return "https://voyager.online";
   } else if (networkId() === "goerli-alpha") {
-    return "https://goerli.voyager.online";
+    return "https://goerli-2.voyager.online";
   }
 };
 
@@ -35,22 +35,22 @@ export const buildExplorerUrlForTransaction = (transaction: string): string => {
 export const networkUrl = (): string | undefined => {
   try {
     return getStarknet().provider.baseUrl;
-  } catch {}
+  } catch { }
 };
 
-export type Network = "mainnet-alpha" | "goerli-alpha" | "localhost";
+export type Network = "mainnet-alpha" | "goerli2-alpha" | "localhost";
 
 export const networkId = (): Network | undefined => {
   try {
     const { baseUrl } = getStarknet().provider;
     if (baseUrl === "https://alpha-mainnet.starknet.io") {
       return "mainnet-alpha";
-    } else if (baseUrl === "https://alpha4.starknet.io") {
-      return "goerli-alpha";
+    } else if (baseUrl === "https://alpha4-2.starknet.io") {
+      return "goerli2-alpha";
     } else if (baseUrl.match(/^https?:\/\/localhost.*/)) {
       return "localhost";
     }
-  } catch {}
+  } catch { }
 };
 
 export const waitForTransaction = async (hash: string) =>

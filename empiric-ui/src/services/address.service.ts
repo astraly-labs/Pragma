@@ -14,12 +14,12 @@ export const truncateAddress = (fullAddress: string) => {
 };
 
 const GOERLI_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS =
-  "0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4";
+  "0xc28f8752abb9ed18f65fed730b8faa69bdf6128bb730411efd916284701938";
 
 export const getOracleControllerAddress = (network: Network): string => {
   if (network == "mainnet-alpha") {
     throw new Error("Not deployed on mainnet yet");
-  } else if (network === "goerli-alpha") {
+  } else if (network === "goerli2-alpha") {
     return GOERLI_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS;
   } else if (network === "localhost") {
     throw new Error(
