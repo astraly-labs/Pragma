@@ -20,7 +20,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
-import { getOracleControllerAddress } from "../../services/address.service";
+import { getOracleProxyAddress } from "../../services/address.service";
 
 interface Resource {
   name: string;
@@ -69,7 +69,7 @@ const additional = [
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
     href: `${buildExplorerUrlForAddress(
-      getOracleControllerAddress(networkId())
+      getOracleProxyAddress(networkId())
     )}#readContract`,
     icon: CursorClickIcon,
   },

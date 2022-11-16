@@ -1,8 +1,8 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
 import { hexToString, strToHexFelt } from "../../utils/felt";
-import { getOracleControllerAddress } from "../services/address.service";
+import { getOracleProxyAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
-import OracleControllerAbi from "../abi/OracleController.json";
+import OracleAbi from "../abi/Oracle.json";
 import { Abi } from "starknet";
 import {
   bigNumberishArrayToDecimalStringArray,
@@ -11,39 +11,35 @@ import {
 
 // List from https://github.com/42labs/Empiric/blob/master/empiric-package/empiric/publisher/assets.py
 export const AssetKeys = [
-  "eth/usd",
-  "btc/usd",
-  "sol/usd",
-  "btc/eur",
-  "avax/usd",
-  "doge/usd",
-  "shib/usd",
-  // "temp/usd",
-  "dai/usd",
-  "usdt/usd",
-  "usdc/usd",
-  "tusd/usd",
-  "busd/usd",
-  // "eth/mxn",
-  "bnb/usd",
-  "ada/usd",
-  "xrp/usd",
-  "matic/usd",
-  "aave/usd",
-  "btc/usd-20220930",
-  "btc/usd-20221230",
-  "eth/usd-20220930",
-  "eth/usd-20221230",
+  "ETH/USD",
+  "BTC/USD",
+  "SOL/USD",
+  "BTC/EUR",
+  "AVAX/USD",
+  "DOGE/USD",
+  "SHIB/USD",
+  // "TEMP/USD",
+  "DAI/USD",
+  "USDT/USD",
+  "USDC/USD",
+  "TUSD/USD",
+  "BUSD/USD",
+  // "ETH/MXN",
+  "BNB/USD",
+  "ADA/USD",
+  "XRP/USD",
+  "MATIC/USD",
+  "AAVE/USD",
 ];
 
 export type AssetKeyT = typeof AssetKeys[number];
 
-export const useOracleControllerContract = () => {
+export const useOracleContract = () => {
   const network = networkId();
-  const oracleControllerContractAddress = getOracleControllerAddress(network);
+  const oracleProxyContractAddress = getOracleProxyAddress(network);
   return useContract({
-    abi: OracleControllerAbi as Abi,
-    address: oracleControllerContractAddress,
+    abi: OracleAbi as Abi,
+    address: oracleProxyContractAddress,
   });
 };
 
@@ -61,13 +57,12 @@ export interface GetValueHookT {
 }
 
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
-  const { contract } = useOracleControllerContract();
+  const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
-  const aggregationMode = 0;
   const { data, loading, error } = useStarknetCall({
     contract,
-    method: "get_value",
-    args: [arg, aggregationMode],
+    method: "get_spot_median",
+    args: [arg],
   });
 
   if (error !== undefined) {
@@ -111,7 +106,7 @@ export interface GetEntriesT {
 }
 
 export const useOracleGetEntries = (assetKey: AssetKeyT) => {
-  const { contract } = useOracleControllerContract();
+  const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
   const sources = [];
   const { data, loading, error } = useStarknetCall({
