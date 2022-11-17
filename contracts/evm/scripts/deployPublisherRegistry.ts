@@ -9,13 +9,14 @@ async function main() {
   const contractAddress = publisherRegistryContract.address;
   console.log(`PublisherRegistry was deployed to ${contractAddress}`);
 
-  await publisherRegistryContract.addPublisher(
+  const tx1 = await publisherRegistryContract.addPublisher(
     ethers.utils.formatBytes32String('EMPIRIC'),
     PUBLISHER_ADDRESS,
   );
+  await tx1.wait();
   console.log('added publisher');
 
-  await publisherRegistryContract.addSourcesForPublisher(
+  const tx2 = await publisherRegistryContract.addSourcesForPublisher(
     ethers.utils.formatBytes32String('EMPIRIC'),
     [
       ethers.utils.formatBytes32String('BITSTAMP'),
@@ -26,6 +27,7 @@ async function main() {
       ethers.utils.formatBytes32String('THEGRAPH'),
     ]
   );
+  await tx2.wait();
 }
 
 main().catch((error) => {
