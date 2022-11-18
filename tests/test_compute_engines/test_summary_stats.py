@@ -293,4 +293,4 @@ async def test_summary_stats(
         STARKNET_STARTING_TIMESTAMP,
         STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER * 9,
     ).call()
-    assert res.result.volatility_ == 100489528725291
+    assert res.result.volatility_ == 178944223
