@@ -59,11 +59,11 @@ func Oracle_sources_len_storage(key: felt) -> (sources_len: felt) {
 }
 
 @storage_var
-func Oracle_sources_storage(key: felt, idx: felt) -> (source: felt) {
+func Oracle__sources_storage(key: felt, idx: felt) -> (source: felt) {
 }
 
 @storage_var
-func Oracle_controller_address_storage() -> (oracle_address: felt) {
+func Oracle__controller_address_storage() -> (oracle_address: felt) {
 }
 
 @storage_var
@@ -144,7 +144,7 @@ namespace Oracle {
 
     func only_oracle_controller{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
         let (caller_address) = get_caller_address();
-        let (oracle_controller_address) = Oracle_controller_address_storage.read();
+        let (oracle_controller_address) = Oracle__controller_address_storage.read();
         if (oracle_controller_address == 0) {
             // Assume uninitialized
             return ();
@@ -763,7 +763,7 @@ namespace Oracle {
     func build_sources_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         pair_id: felt, sources_len: felt, sources: felt*, idx: felt
     ) -> (sources: felt*) {
-        let (new_source) = Oracle_sources_storage.read(pair_id, idx);
+        let (new_source) = Oracle__sources_storage.read(pair_id, idx);
         assert [sources + idx] = new_source;
 
         if (idx == sources_len) {
@@ -827,7 +827,7 @@ namespace Oracle {
         if (entry.base.timestamp == 0) {
             // Source did not exist yet, so add to our list
             let (sources_len) = Oracle_sources_len_storage.read(new_entry.pair_id);
-            Oracle_sources_storage.write(new_entry.pair_id, sources_len, new_entry.base.source);
+            Oracle__sources_storage.write(new_entry.pair_id, sources_len, new_entry.base.source);
             Oracle_sources_len_storage.write(new_entry.pair_id, sources_len + 1);
             tempvar syscall_ptr = syscall_ptr;
             tempvar pedersen_ptr = pedersen_ptr;
