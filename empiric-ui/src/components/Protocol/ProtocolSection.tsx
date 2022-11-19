@@ -24,7 +24,7 @@ export const protocols: Protocol[] = [
     src: "/assets/protocols/magnety.webp",
     description:
       "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
-    href: "https://www.magnety.finance/",
+    href: "https://linktr.ee/Magnety",
   },
   {
     name: "zkLend",
