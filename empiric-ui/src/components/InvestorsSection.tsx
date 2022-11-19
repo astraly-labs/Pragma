@@ -18,19 +18,9 @@ const investors: Logo[] = [
     href: "https://robvc.com/",
   },
   {
-    name: "Alameda Research",
-    src: "/assets/publishers/alameda.webp",
-    href: "https://www.alameda-research.com/",
-  },
-  {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.webp",
     href: "https://www.janestreet.com/",
-  },
-  {
-    name: "FTX",
-    src: "/assets/publishers/ftx.svg",
-    href: "https://ftx.us/",
   },
   {
     name: "StarkWare",

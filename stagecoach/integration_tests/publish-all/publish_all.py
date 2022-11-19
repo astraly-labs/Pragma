@@ -10,7 +10,6 @@ from empiric.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
-    FtxFetcher,
     TheGraphFetcher,
 )
 
@@ -45,7 +44,6 @@ async def publish_all(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                FtxFetcher,
                 TheGraphFetcher,
             )
         ]
