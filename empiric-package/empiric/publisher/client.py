@@ -54,12 +54,7 @@ class EmpiricPublisherClient(EmpiricClient):
                 tasks.append(data)
             result = await asyncio.gather(*tasks, return_exceptions=True)
             if filter_exceptions:
-                return [
-                    val
-                    for subl in result
-                    for val in subl
-                    if not isinstance(val, Exception)
-                ]
+                result = [subl for subl in result if not isinstance(subl, Exception)]
             return [val for subl in result for val in subl]
 
     def fetch_sync(self) -> List[SpotEntry]:
