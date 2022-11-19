@@ -63,7 +63,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
   }, [oracleResponse, loading, error, assetKey]);
 
   return (
-    <Link href={`/details/${assetKeyToUrl(assetKey)}`}>
+    <Link href={`/details/${assetKeyToUrl(assetKey)}`} className="w-full">
       <div className="flex w-full cursor-pointer flex-row overflow-hidden rounded-lg bg-slate-50 shadow-lg hover:shadow-xl">
         <div className="mx-4 grid w-full max-w-full grid-cols-2 grid-rows-2 gap-y-3 py-4 text-slate-900 sm:grid-cols-3 sm:grid-rows-1">
           <div className="col-span-1 row-span-1 place-self-start">
