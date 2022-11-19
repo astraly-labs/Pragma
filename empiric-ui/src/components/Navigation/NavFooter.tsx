@@ -5,7 +5,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
-import { getOracleControllerAddress } from "../../services/address.service";
+import { getOracleProxyAddress } from "../../services/address.service";
 
 interface FooterLink {
   title: string;
@@ -30,7 +30,7 @@ const content: FooterColumn[] = [
       {
         title: "View on Block Explorer",
         href: `${buildExplorerUrlForAddress(
-          getOracleControllerAddress(networkId())
+          getOracleProxyAddress(networkId())
         )}#readContract`,
         external: true,
       },
@@ -123,14 +123,14 @@ const Footer = () => (
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
-            <a className="w-fit">
+            <div className="w-fit">
               <span className="sr-only">Empiric</span>
               <img
                 className="h-12 w-auto sm:h-16 md:h-20"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />
-            </a>
+            </div>
           </Link>
           <p className="prose prose-slate">
             Empiric is the leading oracle on Starknet, built to empower native

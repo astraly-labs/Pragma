@@ -33,9 +33,10 @@ const variantStyles = {
 interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
   color: keyof typeof variantStyles["solid"];
+  children: ReactNode;
   className?: string;
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
-  children: ReactNode;
+  href?: string;
 }
 
 export const Button: React.FC<
@@ -68,21 +69,21 @@ export const Button: React.FC<
 export const ButtonLink: React.FC<
   GeneralButtonProps &
     React.DetailedHTMLProps<
-      React.AnchorHTMLAttributes<HTMLAnchorElement>,
-      HTMLAnchorElement
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
     >
 > = ({
   variant = "solid",
   color = "dark",
+  children,
   href,
   className,
   icon: Icon,
-  children,
   ...props
 }) => (
   // I'm unsure whether we need an external vs internal differentiation
   <Link href={href}>
-    <a
+    <div
       className={classNames(
         baseStyles[variant],
         variantStyles[variant][color],
@@ -92,6 +93,6 @@ export const ButtonLink: React.FC<
     >
       {Icon && <Icon className="mr-2 h-5 w-5" />}
       {children}
-    </a>
+    </div>
   </Link>
 );

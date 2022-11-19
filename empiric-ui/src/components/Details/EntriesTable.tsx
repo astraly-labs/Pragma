@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { Entry } from "../../hooks/oracle";
+import { SpotEntry } from "../../hooks/oracle";
 import { getCurrency } from "../../../utils/mappings";
 import { capitalize, secondsToTime } from "../../../utils/display";
 
@@ -16,7 +16,7 @@ const DECIMALS_TO_SHOW = 10;
 interface EntriesTableProps {
   assetKey: string;
   decimals: number;
-  oracleResponse: Entry[];
+  oracleResponse: SpotEntry[];
   loading: boolean;
   error: string;
 }
@@ -40,23 +40,25 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
 
   const { src: currencySrc, alt: currencyAlt } = getCurrency(assetKey);
 
-  const columns = useMemo<ColumnDef<Entry>[]>(
+  const columns = useMemo<ColumnDef<SpotEntry>[]>(
     () => [
       {
         header: "Source",
         accessorFn: (entry) => capitalize(entry.source),
         cell: (info) => (
           <div className="flex items-center">
-            <span
-              className={classNames(
-                "mr-2 inline-block h-2 w-2 rounded-full",
-                new Date().valueOf() / 1000 - info.row.original.timestamp >
-                  60 * MINUTES_ALLOWED
-                  ? "bg-yellow-500"
-                  : "bg-green-600"
-              )}
-            />
-            {info.getValue()}
+            <>
+              <span
+                className={classNames(
+                  "mr-2 inline-block h-2 w-2 rounded-full",
+                  new Date().valueOf() / 1000 - info.row.original.timestamp >
+                    60 * MINUTES_ALLOWED
+                    ? "bg-yellow-500"
+                    : "bg-green-600"
+                )}
+              />
+              {info.getValue()}
+            </>
           </div>
         ),
       },
@@ -74,7 +76,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
         accessorKey: "value",
         cell: (info) => (
           <span>
-            {(info.row.original.value / 10 ** decimals).toPrecision(
+            {(info.row.original.price / 10 ** decimals).toPrecision(
               DECIMALS_TO_SHOW
             )}
           </span>
