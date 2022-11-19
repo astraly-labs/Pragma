@@ -26,8 +26,6 @@ jobs:
           COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
           COINBASE_API_PASSPHRASE: ${{ secrets.COINBASE_API_PASSPHRASE }}
-          FTX_API_KEY: ${{ secrets.FTX_API_KEY }}
-          FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
         run: |
           docker run \
             --env-file stagecoach/integration_tests/publish-all/.env \
@@ -38,8 +36,6 @@ jobs:
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
             -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
-            -e FTX_API_KEY=${FTX_API_KEY}\
-            -e FTX_API_SECRET=${FTX_API_SECRET}\
             publish-all
           docker run \
             --env-file stagecoach/integration_tests/coinbase/.env \
