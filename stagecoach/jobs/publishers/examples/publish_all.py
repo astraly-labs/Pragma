@@ -6,11 +6,7 @@ from empiric.core.logger import get_stream_logger
 from empiric.core.utils import log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
-    BitstampFetcher,
-    CexFetcher,
-    CoinbaseFetcher,
-)
+from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher
 
 logger = get_stream_logger()
 
