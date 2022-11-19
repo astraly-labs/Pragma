@@ -16,7 +16,7 @@ export const StyledInternalLink: React.FC<
   ExtraLinkProps & React.PropsWithChildren<LinkProps>
 > = ({ underline = true, ...props }) => (
   <Link {...props}>
-    <a className={linkBaseStyles(underline)}>{props.children}</a>
+    <div className={linkBaseStyles(underline)}>{props.children}</div>
   </Link>
 );
 
