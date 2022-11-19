@@ -91,16 +91,16 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   return { oracleResponse, loading, error };
 };
 
-export interface Entry {
-  key: string;
-  value: number;
+export interface SpotEntry {
+  pair_id: string;
+  price: number;
   timestamp: number;
   source: string;
-  publisher: string;
+  publisher?: string;
 }
 
 export interface GetEntriesT {
-  oracleResponse: Entry[] | undefined;
+  oracleResponse: SpotEntry[] | undefined;
   loading: boolean;
   error: string;
 }
@@ -111,7 +111,7 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   const sources = [];
   const { data, loading, error } = useStarknetCall({
     contract,
-    method: "get_entries",
+    method: "get_spot_entries",
     args: [arg, sources],
   });
 
@@ -122,17 +122,16 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
     );
   }
 
-  let oracleResponse: Entry[] | undefined = undefined;
+  let oracleResponse: SpotEntry[] | undefined = undefined;
   if (data !== undefined) {
     const responseArray = data["entries"];
     if (Array.isArray(responseArray)) {
-      oracleResponse = responseArray.map((entry: Object): Entry => {
+      oracleResponse = responseArray.map((entry: Object): SpotEntry => {
         return {
-          key: hexToString(toHex(entry["key"])),
-          value: parseInt(toHex(entry["value"])),
-          timestamp: parseInt(toHex(entry["timestamp"])),
-          source: hexToString(toHex(entry["source"])),
-          publisher: hexToString(toHex(entry["publisher"])),
+          pair_id: hexToString(toHex(entry["pair_id"])),
+          price: parseInt(toHex(entry["price"])),
+          timestamp: parseInt(toHex(entry["base"]["timestamp"])),
+          source: hexToString(toHex(entry["base"]["source"])),
         };
       });
     }

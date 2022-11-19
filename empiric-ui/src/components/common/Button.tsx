@@ -82,7 +82,7 @@ export const ButtonLink: React.FC<
 }) => (
   // I'm unsure whether we need an external vs internal differentiation
   <Link href={href}>
-    <a
+    <div
       className={classNames(
         baseStyles[variant],
         variantStyles[variant][color],
@@ -92,6 +92,6 @@ export const ButtonLink: React.FC<
     >
       {Icon && <Icon className="mr-2 h-5 w-5" />}
       {children}
-    </a>
+    </div>
   </Link>
 );

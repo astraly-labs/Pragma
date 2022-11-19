@@ -64,7 +64,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
 
   return (
     <Link href={`/details/${assetKeyToUrl(assetKey)}`}>
-      <a className="flex w-full cursor-pointer flex-row overflow-hidden rounded-lg bg-slate-50 shadow-lg hover:shadow-xl">
+      <div className="flex w-full cursor-pointer flex-row overflow-hidden rounded-lg bg-slate-50 shadow-lg hover:shadow-xl">
         <div className="mx-4 grid w-full max-w-full grid-cols-2 grid-rows-2 gap-y-3 py-4 text-slate-900 sm:grid-cols-3 sm:grid-rows-1">
           <div className="col-span-1 row-span-1 place-self-start">
             <AssetCardName assetKey={assetKey} />
@@ -74,7 +74,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
         <div className="flex w-12 flex-row items-center justify-center bg-slate-300 sm:w-16 md:w-24">
           <ChevronRightIcon className="w-8 text-slate-900" />
         </div>
-      </a>
+      </div>
     </Link>
   );
 };
