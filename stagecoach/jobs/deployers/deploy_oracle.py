@@ -6,10 +6,10 @@ from empiric.core.client import EmpiricClient
 from starknet_py.contract import Contract, ContractFunction
 
 admin_contract_address = (
-    2144316864105448645362633189487810005691816773195985887895555201695170180022
+    0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77
 )
 publisher_registry_address = (
-    0x02E8EE1E81D57B3625DE73589111EA40A17859D21C860EFB725214C6CD8F4771
+    0x04746485FA57B49DC992C35D7F12054B5A7D24B0E187021CD8F40BC2517700BC
 )
 currencies = [
     Currency("USD", 8, 1, 0, 0),
@@ -61,25 +61,28 @@ pairs = [
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
     admin_client = EmpiricClient(
-        network="testnet2",
+        network="mainnet",
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,
     )
     declared_contract_class_hash = (
-        170911934577855472019575267290692096220579582326214780889276409957919003099
+        2941673184093146268702167922653141142200218741213082327867231946079057827173
     )
     if declared_contract_class_hash is None:
         # Declare implementation
-        with open("contracts/starknet/build/Oracle.json", "r") as f:
+        with open("Oracle.json", "r") as f:
             compiled_contract = f.read()
         declare_transaction = await admin_client.client.sign_declare_transaction(
             compiled_contract=compiled_contract, max_fee=int(1e16)
         )
 
         # To declare a contract, send Declare transaction with AccountClient.declare method
-        resp = await admin_client.client.declare(transaction=declare_transaction)
+        resp = await admin_client.client.client.declare(
+            transaction=declare_transaction, token=token
+        )
         print(hex(resp.transaction_hash))
-        await admin_client.client.wait_for_tx(resp.transaction_hash)
+        breakpoint()
+        await admin_client.client.client.wait_for_tx(resp.transaction_hash)
 
         declared_contract_class_hash = resp.class_hash
 
@@ -99,6 +102,7 @@ async def main():
         admin_client.client,
         compiled_contract=compiled_contract,
         constructor_args=constructor_args,
+        token=token,
     )
     print(hex(deployment_result.hash))
 
