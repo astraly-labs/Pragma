@@ -65,6 +65,7 @@ async def main():
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,
     )
+    token = os.environ.get("STARKNET_DEPLOY_TOKEN")
     declared_contract_class_hash = (
         2941673184093146268702167922653141142200218741213082327867231946079057827173
     )
