@@ -26,24 +26,22 @@ jobs:
           COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
           COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
           COINBASE_API_PASSPHRASE: ${{ secrets.COINBASE_API_PASSPHRASE }}
-          FTX_API_KEY: ${{ secrets.FTX_API_KEY }}
-          FTX_API_SECRET: ${{ secrets.FTX_API_SECRET }}
         run: |
           docker run \
             --env-file stagecoach/integration_tests/publish-all/.env \
             -e __EMPIRIC_STAGING_ENV__=TRUE\
             -e __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__=TRUE\
+            -e NETWORK=testnet2\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
             -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\
-            -e FTX_API_KEY=${FTX_API_KEY}\
-            -e FTX_API_SECRET=${FTX_API_SECRET}\
             publish-all
           docker run \
             --env-file stagecoach/integration_tests/coinbase/.env \
             -e __EMPIRIC_STAGING_ENV__=TRUE\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
+            -e NETWORK=testnet2\
             -e COINBASE_API_SECRET=${COINBASE_API_SECRET}\
             -e COINBASE_API_KEY=${COINBASE_API_KEY}\
             -e COINBASE_API_PASSPHRASE=${COINBASE_API_PASSPHRASE}\

@@ -10,7 +10,6 @@ from empiric.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
-    FtxFetcher,
     TheGraphFetcher,
 )
 
@@ -21,7 +20,9 @@ async def publish_all(assets):
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+    network = os.environ.get("NETWORK")
     publisher_client = EmpiricPublisherClient(
+        network=network,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
@@ -43,7 +44,6 @@ async def publish_all(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                FtxFetcher,
                 TheGraphFetcher,
             )
         ]
