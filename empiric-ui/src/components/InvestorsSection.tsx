@@ -18,19 +18,9 @@ const investors: Logo[] = [
     href: "https://robvc.com/",
   },
   {
-    name: "Alameda Research",
-    src: "/assets/publishers/alameda.webp",
-    href: "https://www.alameda-research.com/",
-  },
-  {
     name: "Jane Street",
     src: "/assets/publishers/jane-street.webp",
     href: "https://www.janestreet.com/",
-  },
-  {
-    name: "FTX",
-    src: "/assets/publishers/ftx.svg",
-    href: "https://ftx.us/",
   },
   {
     name: "StarkWare",
@@ -46,7 +36,7 @@ const investors: Logo[] = [
 
 const InvestorsSection = () => (
   <div className="w-full max-w-7xl">
-    <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 grid-cols-3 gap-1">
       {investors.map(({ name, src, href }) => (
         <div
           key={name}

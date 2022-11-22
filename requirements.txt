@@ -9,3 +9,4 @@ typing_extensions==4.3.0
 
 # Publisher
 starknet.py==0.5.2a0
+boto3==1.26.*

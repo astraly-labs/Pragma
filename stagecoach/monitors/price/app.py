@@ -1,8 +1,10 @@
 import asyncio
+import json
 import os
 import time
 from typing import Union
 
+import boto3
 import requests
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
@@ -15,13 +17,15 @@ logger = get_stream_logger()
 # Behavior: Ping betteruptime iff all is good
 
 
-PRICE_TOLERANCE = 0.1  # in percent
-TIME_TOLERANCE = 1200  # in seconds
-MIN_NUM_SOURCES_AGGREGATED = 3
+PRICE_TOLERANCE = os.environ.get("PRICE_TOLERANCE", 0.1)  # as a fraction
+TIME_TOLERANCE = os.environ.get("TIME_TOLERANCE", 1200)  # in seconds
+MIN_NUM_SOURCES_AGGREGATED = os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3)
 EXPERIMENTAL_ASSET_KEYS = {
     "ETH/MXN",
     "TEMP/USD",
 }  # do not send slack notifications for these
+
+SECRET_NAME = os.environ.get("SECRET_NAME")
 
 
 def handler(event, context):
@@ -65,14 +69,36 @@ def check_asset_num_sources_aggregated(
         return f"{pair_id}: too few sources (aggregated: {num_sources_aggregated}, target {MIN_NUM_SOURCES_AGGREGATED})"
 
 
+def _get_slack_bot_oauth_token_from_aws():
+    region_name = "us-west-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+    get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
+    return json.loads(get_secret_value_response["SecretString"])[
+        "SLACK_BOT_USER_OAUTH_TOKEN"
+    ]
+
+
 async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
+    if slack_bot_oauth_token is None:
+        slack_bot_oauth_token = _get_slack_bot_oauth_token_from_aws()
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    network = os.environ.get("NETWORK")
+    ignore_assets_str = os.environ.get("IGNORE_ASSETS", "")
+    ignore_assets = ignore_assets_str.split(",")
 
-    assets = EMPIRIC_ALL_ASSETS
+    assets = [
+        asset
+        for asset in EMPIRIC_ALL_ASSETS
+        if asset["type"] == "spot"
+        and pair_id_for_asset(asset["pair"]) not in ignore_assets
+    ]
 
-    client = EmpiricClient()
+    client = EmpiricClient(network)
     cg = CoingeckoFetcher(assets, "PUBLISHER")
     entries = cg.fetch_sync()
 
@@ -114,7 +140,9 @@ async def _handler():
             logger.info(f"{pair_id}: all good")
 
     if all_errors:
-        slack_text = "Error(s) with Empiric price<!channel>\n"
+        slack_text = (
+            f"Error(s) with Empiric price on network {client.network} <!channel>\n"
+        )
         slack_text += "\n".join(all_errors)
 
         requests.post(

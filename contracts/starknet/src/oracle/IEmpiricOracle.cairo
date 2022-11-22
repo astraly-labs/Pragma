@@ -2,7 +2,7 @@
 
 struct BaseEntry {
     timestamp: felt,  // Timestamp of the most recent update, UTC epoch
-    source: felt,  // UTF-8 encoded uppercased string, e.g. "FTX"
+    source: felt,  // UTF-8 encoded uppercased string, e.g. "GEMINI"
     publisher: felt,  // UTF-8 encoded uppercased string, e.g. "CONSENSYS"
     // Publisher of the data (usually the source, but occasionally a third party)
 }

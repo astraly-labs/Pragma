@@ -5,23 +5,22 @@ import os
 import boto3
 from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
-    BitstampFetcher,
-    CexFetcher,
-    CoinbaseFetcher,
-    CoingeckoFetcher,
-)
+from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher
 
 logger = get_stream_logger()
 
 NETWORK = os.environ["NETWORK"]
 SECRET_NAME = os.environ["SECRET_NAME"]
+ASSETS = os.environ["ASSETS"]
+PUBLISHER = os.environ.get("PUBLISHER")
+PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
 
 
 def handler(event, context):
-    entries_ = asyncio.run(_handler(EMPIRIC_ALL_ASSETS))
+    assets = [get_spot_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
+    entries_ = asyncio.run(_handler(assets))
     serialized_entries_ = SpotEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
@@ -42,24 +41,19 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher = os.environ.get("PUBLISHER")
-
     publisher_private_key = _get_pvt_key()
-
-    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
-        account_contract_address=publisher_address,
+        account_contract_address=PUBLISHER_ADDRESS,
     )
     publisher_client.add_fetchers(
         [
-            fetcher(assets, publisher)
+            fetcher(assets, PUBLISHER)
             for fetcher in (
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                CoingeckoFetcher,
             )
         ]
     )
