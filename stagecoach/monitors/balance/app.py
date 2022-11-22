@@ -25,9 +25,10 @@ async def _handler(publishers=None, threshold_wei=0.5 * 10**18):
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    network = os.environ.get("NETWORK")
 
     # Set admin private key to 1 because we aren't using the client for protected invokes
-    client = EmpiricClient()
+    client = EmpiricClient(network)
 
     if publishers is None:
         publishers = await client.get_all_publishers()

@@ -69,10 +69,11 @@ async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    network = os.environ.get("NETWORK")
 
     assets = EMPIRIC_ALL_ASSETS
 
-    client = EmpiricClient()
+    client = EmpiricClient(network)
     cg = CoingeckoFetcher(assets, "PUBLISHER")
     entries = cg.fetch_sync()
 
