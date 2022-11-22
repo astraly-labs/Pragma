@@ -5,7 +5,6 @@ import requests
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import felt_to_str
-from empiric.publisher.client import EmpiricPublisherClient
 
 logger = get_stream_logger()
 
@@ -31,7 +30,6 @@ async def _handler():
     threshold_wei = os.environ.get("THRESHOLD_WEI", 0.5 * 10**18)
 
     client = EmpiricClient(network)
-    publisher_client = EmpiricPublisherClient(network)
 
     publishers = [
         publisher
@@ -44,7 +42,12 @@ async def _handler():
     for publisher in publishers:
         address = await client.get_publisher_address(publisher)
 
-        balance = await publisher_client.get_balance(address)
+        token_address = None
+        if network == "testnet2":
+            token_address = (
+                0x049D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7
+            )
+        balance = await client.get_balance(address, token_address)
 
         if balance < threshold_wei:
             error_message = f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
