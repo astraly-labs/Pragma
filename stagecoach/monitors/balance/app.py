@@ -21,42 +21,40 @@ def handler(event, context):
     return {"success": True}
 
 
-async def _handler(publishers=None, threshold_wei=0.5 * 10**18):
+async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
     network = os.environ.get("NETWORK")
+    ignore_publishers_str = os.environ.get("IGNORE_PUBLISHERS", "")
+    ignore_publishers = ignore_publishers_str.split(",")
+    threshold_wei = os.environ.get("THRESHOLD_WEI", 0.5 * 10**18)
 
-    # Set admin private key to 1 because we aren't using the client for protected invokes
     client = EmpiricClient(network)
+    publisher_client = EmpiricPublisherClient(network)
 
-    if publishers is None:
-        publishers = await client.get_all_publishers()
+    publishers = [
+        publisher
+        for publisher in await client.get_all_publishers()
+        if publisher not in ignore_publishers
+    ]
 
     all_above_threshold = True
-    addresses = set()
 
     for publisher in publishers:
         address = await client.get_publisher_address(publisher)
-        if address in addresses:
-            # Already checked this address (different publishers can share the same address)
-            continue
 
-        addresses.add(address)
-
-        publisher_client = EmpiricPublisherClient()
         balance = await publisher_client.get_balance(address)
 
         if balance < threshold_wei:
-            logger.warning(
-                f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
-            )
+            error_message = f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
+            logger.warning(error_message)
             all_above_threshold = False
             requests.post(
                 slack_url,
                 headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
                 data={
-                    "text": f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}",
+                    "text": error_message,
                     "channel": channel_id,
                 },
             )

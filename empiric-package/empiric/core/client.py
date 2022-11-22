@@ -39,6 +39,7 @@ class EmpiricClient(
         :param contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
         """
         network_config = NETWORKS[network]
+        self.network = network
 
         if network not in ["mainnet", "testnet"]:
             if network in NETWORKS:

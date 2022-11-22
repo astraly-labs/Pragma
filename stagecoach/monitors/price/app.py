@@ -70,8 +70,15 @@ async def _handler():
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
     network = os.environ.get("NETWORK")
+    ignore_assets_str = os.environ.get("IGNORE_ASSETS", "")
+    ignore_assets = ignore_assets_str.split(",")
 
-    assets = EMPIRIC_ALL_ASSETS
+    assets = [
+        asset
+        for asset in EMPIRIC_ALL_ASSETS
+        if asset["type"] == "spot"
+        and pair_id_for_asset(asset["pair"]) not in ignore_assets
+    ]
 
     client = EmpiricClient(network)
     cg = CoingeckoFetcher(assets, "PUBLISHER")
@@ -115,7 +122,9 @@ async def _handler():
             logger.info(f"{pair_id}: all good")
 
     if all_errors:
-        slack_text = "Error(s) with Empiric price<!channel>\n"
+        slack_text = (
+            f"Error(s) with Empiric price on network {client.network} <!channel>\n"
+        )
         slack_text += "\n".join(all_errors)
 
         requests.post(
