@@ -74,13 +74,13 @@ class EmpiricClient(
             self.client,
         )
 
-    async def get_balance(self, account_contract_address):
+    async def get_balance(self, account_contract_address, token_address=None):
         client = AccountClient(
             account_contract_address,
             self.client,
             key_pair=KeyPair.from_private_key(1),
         )
-        balance = await client.get_balance()
+        balance = await client.get_balance(token_address)
         return balance
 
     def set_account(self, chain_id, private_key, account_contract_address):
