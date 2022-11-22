@@ -11,7 +11,7 @@ from empiric.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
-    TheGraphFetcher,
+    CoingeckoFetcher,
 )
 
 logger = get_stream_logger()
@@ -59,7 +59,7 @@ async def _handler(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                TheGraphFetcher,
+                CoingeckoFetcher,
             )
         ]
     )
