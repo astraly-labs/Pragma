@@ -31,11 +31,9 @@ def _get_slack_bot_oauth_token_from_aws():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return int(
-        json.loads(get_secret_value_response["SecretString"])[
-            "SLACK_BOT_USER_OAUTH_TOKEN"
-        ]
-    )
+    return json.loads(get_secret_value_response["SecretString"])[
+        "SLACK_BOT_USER_OAUTH_TOKEN"
+    ]
 
 
 async def _handler():
@@ -47,7 +45,7 @@ async def _handler():
     network = os.environ.get("NETWORK")
     ignore_publishers_str = os.environ.get("IGNORE_PUBLISHERS", "")
     ignore_publishers = ignore_publishers_str.split(",")
-    threshold_wei = os.environ.get("THRESHOLD_WEI", 0.5 * 10**18)
+    threshold_wei = int(os.environ.get("THRESHOLD_WEI", 0.5 * 10**18))
 
     client = EmpiricClient(network)
 

@@ -17,7 +17,7 @@ logger = get_stream_logger()
 # Behavior: Ping betteruptime iff all is good
 
 
-PRICE_TOLERANCE = os.environ.get("PRICE_TOLERANCE", 0.1)  # in percent
+PRICE_TOLERANCE = os.environ.get("PRICE_TOLERANCE", 0.1)  # as a fraction
 TIME_TOLERANCE = os.environ.get("TIME_TOLERANCE", 1200)  # in seconds
 MIN_NUM_SOURCES_AGGREGATED = os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3)
 EXPERIMENTAL_ASSET_KEYS = {
@@ -76,11 +76,9 @@ def _get_slack_bot_oauth_token_from_aws():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return int(
-        json.loads(get_secret_value_response["SecretString"])[
-            "SLACK_BOT_USER_OAUTH_TOKEN"
-        ]
-    )
+    return json.loads(get_secret_value_response["SecretString"])[
+        "SLACK_BOT_USER_OAUTH_TOKEN"
+    ]
 
 
 async def _handler():
