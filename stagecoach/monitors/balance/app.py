@@ -1,6 +1,8 @@
 import asyncio
+import json
 import os
 
+import boto3
 import requests
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
@@ -14,15 +16,33 @@ logger = get_stream_logger()
 
 # Behavior: Ping betteruptime iff all is good
 
+SECRET_NAME = os.environ.get("SECRET_NAME")
+
 
 def handler(event, context):
     asyncio.run(_handler())
     return {"success": True}
 
 
+def _get_slack_bot_oauth_token_from_aws():
+    region_name = "us-west-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+    get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
+    return int(
+        json.loads(get_secret_value_response["SecretString"])[
+            "SLACK_BOT_USER_OAUTH_TOKEN"
+        ]
+    )
+
+
 async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
+    if slack_bot_oauth_token is None:
+        slack_bot_oauth_token = _get_slack_bot_oauth_token_from_aws()
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
     network = os.environ.get("NETWORK")
     ignore_publishers_str = os.environ.get("IGNORE_PUBLISHERS", "")
