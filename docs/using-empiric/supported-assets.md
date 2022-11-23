@@ -28,11 +28,11 @@ The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_t
 
 | Ticker   | Pair ID             | Decimals |
 | -------- | ------------------- | -------- |
-| USDT/USD | 8463218574934504292 | 8        |
-| DAI/USD  | 28254602066752356   | 8        |
-| USDC/USD | 8463218501920060260 | 8        |
-| TUSD/USD | 8391740354804937572 | 8        |
-| BUSD/USD | 7094703662122234724 | 8        |
+| USDT/USD | 6148333044652921668 | 8        |
+| DAI/USD  | 19212080998863684   | 8        |
+| USDC/USD | 6148332971638477636 | 8        |
+| TUSD/USD | 6076854824523354948 | 8        |
+| BUSD/USD | 4779818131840652100 | 8        |
 
 ### **Quarterly Futures**
 
