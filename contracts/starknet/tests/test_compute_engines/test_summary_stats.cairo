@@ -116,8 +116,49 @@ func test_volatility{syscall_ptr: felt*, range_check_ptr}() {
     tempvar summary_stats_address;
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
-    let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000);
-    assert _volatility = 153422202358990;  // returns value in fixedpoint
+    let (_volatility) = ISummaryStats.calculate_volatility(summary_stats_address, 1, 100, 1000, 10);
+    assert _volatility = 2879809979300;  // returns value in fixedpoint
+
+    %{ stop_warp() %}
+
+    return ();
+}
+
+@external
+func test_volatility_order{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 130629663100;
+    assert times_arr[0] = 86400;
+
+    assert prices_arr[1] = 133171362300;
+    assert times_arr[1] = 172800;
+
+    assert prices_arr[2] = 131044702100;
+    assert times_arr[2] = 259200;
+
+    assert prices_arr[3] = 128574426300;
+    assert times_arr[3] = 345600;
+
+    assert prices_arr[4] = 128320092800;
+    assert times_arr[4] = 432000;
+
+    assert prices_arr[5] = 129480981400;
+    assert times_arr[5] = 518400;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 6, times_arr, prices_arr);
+
+    tempvar summary_stats_address;
+    %{ ids.summary_stats_address = context.summary_stats_address %}
+
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 86400, 518400, 6
+    );
+    assert _volatility = 2804846100;  // returns value in fixedpoint
 
     %{ stop_warp() %}
 
@@ -168,9 +209,9 @@ func test_volatility2{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664805721, 1664806093
+        summary_stats_address, 1, 1664805721, 1664806093, 10
     );
-    assert _volatility = 283158920430;  // returns value in decimals
+    assert _volatility = 5315031800;  // returns value in decimals
 
     %{ stop_warp() %}
 
@@ -221,23 +262,80 @@ func test_volatility_arr_length{syscall_ptr: felt*, range_check_ptr}() {
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806064, 1664806095
+        summary_stats_address, 1, 1664806064, 1664806095, 200
     );
-    assert _volatility = 393800558881;  // returns value in decimals
+    assert _volatility = 9917180100;  // returns value in decimals
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806063, 1664806095
+        summary_stats_address, 1, 1664806063, 1664806095, 200
     );
-    assert _volatility = 393800558881;  // returns value in decimals
+    assert _volatility = 9917180100;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806033, 1664806095
+        summary_stats_address, 1, 1664806033, 1664806095, 200
     );
-    assert _volatility = 430411297334;  // returns value in decimals
+    assert _volatility = 9386985900;  // returns value in decimals
 
     let (_volatility) = ISummaryStats.calculate_volatility(
-        summary_stats_address, 1, 1664806032, 1664806095
+        summary_stats_address, 1, 1664806032, 1664806095, 10
     );
-    assert _volatility = 430411297334;  // returns value in decimals
+    assert _volatility = 9386985900;  // returns value in decimals
+
+    %{ stop_warp() %}
+
+    return ();
+}
+
+@external
+func test_skip_elements{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+
+    let (prices_arr) = alloc();
+    let (times_arr) = alloc();
+
+    assert prices_arr[0] = 1930620000000;
+    assert times_arr[0] = 1664805721;
+
+    assert prices_arr[1] = 1929640000000;
+    assert times_arr[1] = 1664805749;
+
+    assert prices_arr[2] = 1929640000000;
+    assert times_arr[2] = 1664805780;
+
+    assert prices_arr[3] = 1930950000000;
+    assert times_arr[3] = 1664805810;
+
+    assert prices_arr[4] = 1930740000000;
+    assert times_arr[4] = 1664805880;
+
+    assert prices_arr[5] = 1930709999999;
+    assert times_arr[5] = 1664805911;
+
+    assert prices_arr[6] = 1930709999999;
+    assert times_arr[6] = 1664805977;
+
+    assert prices_arr[7] = 1930709999999;
+    assert times_arr[7] = 1664806032;
+
+    assert prices_arr[8] = 1932400000000;
+    assert times_arr[8] = 1664806063;
+
+    assert prices_arr[9] = 1934270000000;
+    assert times_arr[9] = 1664806093;
+
+    %{ stop_warp = warp(1664805721, context.oracle_address) %}
+    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+
+    tempvar summary_stats_address;
+    %{ ids.summary_stats_address = context.summary_stats_address %}
+
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 1664805721, 1664806093, 5
+    );
+    assert _volatility = 3609195700;  // returns value in decimals
+    let (_volatility) = ISummaryStats.calculate_volatility(
+        summary_stats_address, 1, 1664805720, 1664806094, 3
+    );
+    assert _volatility = 5585384300;  // returns value in decimals
 
     %{ stop_warp() %}
 
@@ -337,10 +435,10 @@ func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
     %{ stop_warp = warp(0) %}
     _iter_prices_and_times(0, 10, times_arr, prices_arr);
 
-    let (_cp, _idx) = IOracle.get_last_checkpoint_before(oracle_address, 1, 901);
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 901);
     assert _idx = 8;
 
-    let (_cp, _idx) = IOracle.get_last_checkpoint_before(oracle_address, 1, 301);
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 301);
     assert _idx = 2;
 
     return ();

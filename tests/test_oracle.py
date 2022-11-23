@@ -339,7 +339,7 @@ async def test_submit(initialized_contracts, source, publisher, publisher_signer
     assert source_result.result == result.result
 
     entry_result = await oracle_proxy.get_spot_entry(entry.pair_id, source).call()
-    assert entry_result.result.entry == entry
+    assert entry_result.result.entry.price == entry.price
 
 
 @pytest.mark.asyncio
@@ -596,7 +596,11 @@ async def test_submit_second_publisher(
     assert source_result.result.last_updated_timestamp == second_entry.base.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
-    assert result.result.entries == [entry, second_entry]
+    assert [r.price for r in result.result.entries] == [entry.price, second_entry.price]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        entry.base.timestamp,
+        second_entry.base.timestamp,
+    ]
 
 
 @pytest.mark.asyncio
@@ -699,7 +703,11 @@ async def test_mean_aggregation(
     )
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
-    assert result.result.entries == [entry, second_entry]
+    assert [r.price for r in result.result.entries] == [entry.price, second_entry.price]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        entry.base.timestamp,
+        second_entry.base.timestamp,
+    ]
 
     return
 
@@ -763,7 +771,12 @@ async def test_median_aggregation(
         )
 
         result = await oracle_proxy.get_spot_entries(pair_id).call()
-        assert result.result.entries == entries
+        assert [r.price for r in result.result.entries] == [
+            entry.price for entry in entries
+        ]
+        assert [r.base.timestamp for r in result.result.entries] == [
+            entry.base.timestamp for entry in entries
+        ]
 
         result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
@@ -808,7 +821,8 @@ async def test_submit_many(initialized_contracts, source, publisher, publisher_s
 
     for i, pair_id in enumerate(pair_ids):
         result = await oracle_proxy.get_spot_entries(pair_id).call()
-        assert result.result.entries == [entries[i]]
+        assert result.result.entries[0].price == entries[i].price
+        assert result.result.entries[0].base.timestamp == entries[i].base.timestamp
 
         result = await oracle_proxy.get_spot(
             pair_id, AggregationMode.MEDIAN.value
@@ -855,7 +869,8 @@ async def test_subset_publishers(
     )
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
-    assert result.result.entries == [entry]
+    assert [r.price for r in result.result.entries] == [entry.price]
+    assert [r.base.timestamp for r in result.result.entries] == [entry.base.timestamp]
 
     result = await oracle_proxy.get_spot(pair_id, AggregationMode.MEDIAN.value).call()
     assert result.result.price == entry.price
@@ -979,40 +994,6 @@ async def test_real_data(
 
 
 @pytest.mark.asyncio
-async def test_ignore_future_entry(
-    initialized_contracts,
-    source,
-    publisher,
-    publisher_signer,
-):
-    publisher_account = initialized_contracts["publisher_account"]
-    oracle_proxy = initialized_contracts["oracle_proxy"]
-    pair_id = str_to_felt("ETH/USD")
-
-    entry = SpotEntry(
-        pair_id=pair_id,
-        price=3,
-        timestamp=STARKNET_STARTING_TIMESTAMP + TIMESTAMP_BUFFER + 1,
-        source=source,
-        publisher=publisher,
-    )
-
-    try:
-        await publisher_signer.send_transaction(
-            publisher_account,
-            oracle_proxy.contract_address,
-            "publish_spot_entry",
-            entry.to_tuple(),
-        )
-
-        raise Exception(
-            "Transaction to submit price too far in the future succeeded, but should not have."
-        )
-    except StarkException:
-        pass
-
-
-@pytest.mark.asyncio
 async def test_ignore_stale_entries(
     initialized_contracts, admin_signer, source, publisher, publisher_signer
 ):
@@ -1053,10 +1034,7 @@ async def test_ignore_stale_entries(
     )
 
     # Advance time by TIMESTAMP_BUFFER
-    admin_account.state.state.block_info = BlockInfo.create_for_testing(
-        admin_account.state.state.block_info.block_number,
-        admin_account.state.state.block_info.block_timestamp + TIMESTAMP_BUFFER,
-    )
+    advance_time(admin_account.state.state, TIMESTAMP_BUFFER)
 
     second_entry = SpotEntry(
         pair_id=pair_id,
@@ -1078,7 +1056,10 @@ async def test_ignore_stale_entries(
     assert result.result.last_updated_timestamp == second_entry.base.timestamp
 
     result = await oracle_proxy.get_spot_entries(pair_id).call()
-    assert result.result.entries == [second_entry]
+    assert [r.price for r in result.result.entries] == [second_entry.price]
+    assert [r.base.timestamp for r in result.result.entries] == [
+        second_entry.base.timestamp
+    ]
 
 
 @pytest.mark.asyncio

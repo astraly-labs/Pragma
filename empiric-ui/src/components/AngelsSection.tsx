@@ -47,6 +47,30 @@ const angels: SimpleLogo[] = [
     name: "Alan Curtis",
     src: "/assets/angels/radar.webp",
   },
+  {
+    name: "Tim Beiko",
+    src: "/assets/angels/ethereum-foundation.webp",
+  },
+  {
+    name: "Anthony Sassano",
+    src: "/assets/angels/ethereum-foundation.webp",
+  },
+  {
+    name: "Julien Niset",
+    src: "/assets/angels/argent.webp",
+  },
+  {
+    name: "Itamar Lesuisse",
+    src: "/assets/angels/argent.webp",
+  },
+  {
+    name: "Eric Wall",
+    src: "/assets/angels/starknet.webp",
+  },
+  {
+    name: "Teemu Paivinen",
+    src: "/assets/angels/equilibrium.webp",
+  },
 ];
 
 const AngelsSection = () => (

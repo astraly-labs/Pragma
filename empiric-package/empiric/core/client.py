@@ -39,6 +39,7 @@ class EmpiricClient(
         :param contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
         """
         network_config = NETWORKS[network]
+        self.network = network
 
         if network not in ["mainnet", "testnet"]:
             if network in NETWORKS:
@@ -73,13 +74,13 @@ class EmpiricClient(
             self.client,
         )
 
-    async def get_balance(self, account_contract_address):
+    async def get_balance(self, account_contract_address, token_address=None):
         client = AccountClient(
             account_contract_address,
             self.client,
             key_pair=KeyPair.from_private_key(1),
         )
-        balance = await client.get_balance()
+        balance = await client.get_balance(token_address)
         return balance
 
     def set_account(self, chain_id, private_key, account_contract_address):

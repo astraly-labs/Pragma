@@ -1,11 +1,12 @@
 import asyncio
+import json
 import os
 
+import boto3
 import requests
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import felt_to_str
-from empiric.publisher.client import EmpiricPublisherClient
 
 logger = get_stream_logger()
 
@@ -15,47 +16,66 @@ logger = get_stream_logger()
 
 # Behavior: Ping betteruptime iff all is good
 
+SECRET_NAME = os.environ.get("SECRET_NAME")
+
 
 def handler(event, context):
     asyncio.run(_handler())
     return {"success": True}
 
 
-async def _handler(publishers=None, threshold_wei=0.5 * 10**18):
+def _get_slack_bot_oauth_token_from_aws():
+    region_name = "us-west-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+    get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
+    return json.loads(get_secret_value_response["SecretString"])[
+        "SLACK_BOT_USER_OAUTH_TOKEN"
+    ]
+
+
+async def _handler():
     slack_url = "https://slack.com/api/chat.postMessage"
     slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
+    if slack_bot_oauth_token is None:
+        slack_bot_oauth_token = _get_slack_bot_oauth_token_from_aws()
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    network = os.environ.get("NETWORK")
+    ignore_publishers_str = os.environ.get("IGNORE_PUBLISHERS", "")
+    ignore_publishers = ignore_publishers_str.split(",")
+    threshold_wei = int(os.environ.get("THRESHOLD_WEI", 0.5 * 10**18))
 
-    # Set admin private key to 1 because we aren't using the client for protected invokes
-    client = EmpiricClient()
+    client = EmpiricClient(network)
 
-    if publishers is None:
-        publishers = await client.get_all_publishers()
+    publishers = [
+        publisher
+        for publisher in await client.get_all_publishers()
+        if publisher not in ignore_publishers
+    ]
 
     all_above_threshold = True
-    addresses = set()
 
     for publisher in publishers:
         address = await client.get_publisher_address(publisher)
-        if address in addresses:
-            # Already checked this address (different publishers can share the same address)
-            continue
 
-        addresses.add(address)
-
-        publisher_client = EmpiricPublisherClient()
-        balance = await publisher_client.get_balance(address)
+        token_address = None
+        if network == "testnet2":
+            token_address = (
+                0x049D36570D4E46F48E99674BD3FCC84644DDD6B96F7C741B1562B82F9E004DC7
+            )
+        balance = await client.get_balance(address, token_address)
 
         if balance < threshold_wei:
-            logger.warning(
-                f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
-            )
+            error_message = f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
+            logger.warning(error_message)
             all_above_threshold = False
             requests.post(
                 slack_url,
                 headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
                 data={
-                    "text": f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}",
+                    "text": error_message,
                     "channel": channel_id,
                 },
             )

@@ -11,11 +11,13 @@ from empiric.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
-    FtxFetcher,
-    TheGraphFetcher,
+    CoingeckoFetcher,
 )
 
 logger = get_stream_logger()
+
+NETWORK = os.environ["NETWORK"]
+SECRET_NAME = os.environ["SECRET_NAME"]
 
 
 def handler(event, context):
@@ -28,13 +30,12 @@ def handler(event, context):
 
 
 def _get_pvt_key():
-    secret_name = "publisherPrivateKey"
     region_name = "us-west-1"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
-    get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
     return int(
         json.loads(get_secret_value_response["SecretString"])["PUBLISHER_PRIVATE_KEY"]
     )
@@ -47,6 +48,7 @@ async def _handler(assets):
 
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
+        network=NETWORK,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
@@ -57,8 +59,7 @@ async def _handler(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                FtxFetcher,
-                TheGraphFetcher,
+                CoingeckoFetcher,
             )
         ]
     )

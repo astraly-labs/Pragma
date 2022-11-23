@@ -10,7 +10,6 @@ from empiric.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
-    FtxFetcher,
     TheGraphFetcher,
 )
 
@@ -21,7 +20,9 @@ async def publish_all(assets):
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
+    network = os.environ.get("NETWORK")
     publisher_client = EmpiricPublisherClient(
+        network=network,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
@@ -43,19 +44,23 @@ async def publish_all(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                FtxFetcher,
                 TheGraphFetcher,
             )
         ]
     )
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=100)
-    for res in response:
-        await res.wait_for_acceptance()
 
     logger.info("Publishing the following entries:")
     for entry in _entries:
         log_entry(entry, logger=logger)
+
+    logger.info(
+        f"With transaction hash(es): {' '.join([str(r.hash) for r in response])}"
+    )
+
+    for res in response:
+        await res.wait_for_acceptance()
 
     # Post success to Better Uptime
     betteruptime_id = os.environ.get("BETTERUPTIME_ID")

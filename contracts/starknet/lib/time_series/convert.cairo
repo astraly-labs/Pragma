@@ -94,3 +94,14 @@ func _max{range_check_ptr}(a: felt, b: felt) -> (max_val: felt) {
     }
     return (a,);
 }
+
+// @param a: the first felt
+// @param b: the second felt
+// @return min_val: the smaller felt
+func _min{range_check_ptr}(a: felt, b: felt) -> (min_val: felt) {
+    let a_is_less = is_le(a, b);
+    if (a_is_less == FALSE) {
+        return (b,);
+    }
+    return (a,);
+}

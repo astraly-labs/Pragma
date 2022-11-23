@@ -2,7 +2,7 @@
 
 ### 1. Data From Many Highly Liquid Market Makers & Exchanges
 
-The journey of an individual data point (e.g. the instantaneous price on a specific exchange) in Empiric begins with one of our sources - entities that have high quality, proprietary data. For financial data, this includes Alameda Research, CMT, Flow Traders, Gemini, Jane Street [and more](https://empiric.network/publishers).
+The journey of an individual data point (e.g. the instantaneous price on a specific exchange) in Empiric begins with one of our sources - entities that have high quality, proprietary data. For financial data, this includes CMT, Flow Traders, Gemini, Jane Street [and more](https://empiric.network/publishers).
 
 These sources sign and timestamp that data, then submit it to the underlying zk-rollup network, just like any other transaction. This makes Empiric more robust because there is no off-chain infrastructure that data has to flow through. It also makes Empiric more transparent because anyone can see exactly what each data publisher reported.
 

@@ -20,7 +20,7 @@ import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
-import { getOracleControllerAddress } from "../../services/address.service";
+import { getOracleProxyAddress } from "../../services/address.service";
 
 interface Resource {
   name: string;
@@ -69,7 +69,7 @@ const additional = [
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
     href: `${buildExplorerUrlForAddress(
-      getOracleControllerAddress(networkId())
+      getOracleProxyAddress(networkId())
     )}#readContract`,
     icon: CursorClickIcon,
   },
@@ -99,14 +99,14 @@ const NavHeader = () => (
       <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10 lg:space-x-0">
         <div className="flex justify-start lg:w-0 lg:flex-1">
           <Link href="/">
-            <a>
+            <div>
               <span className="sr-only">Empiric</span>
               <img
                 className="h-12 w-auto sm:h-16"
                 src="/empiric-logo.svg"
                 alt="Empiric"
               />
-            </a>
+            </div>
           </Link>
         </div>
         <div className="-my-2 -mr-2 md:hidden">

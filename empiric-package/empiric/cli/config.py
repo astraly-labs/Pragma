@@ -6,7 +6,7 @@ import typer
 from empiric.cli import DIR_ERROR, FILE_ERROR, OS_ERROR, SUCCESS, net
 
 CONFIG_DIR_PATH = Path(os.getcwd())
-COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "build"
+COMPILED_CONTRACT_PATH = Path(os.getcwd()) / "contracts" / "starknet" / "build"
 CONFIG_FILE_PATH = CONFIG_DIR_PATH / "cli-config.ini"
 DEFAULT_CONFIG = typer.Option(
     CONFIG_FILE_PATH, "--config-path", "-c", help="optional path to cli config"

@@ -7,15 +7,15 @@ interface Currency {
 
 // Mapping from asset key abbreviation to Currency.
 const currencySymbols = {
-  usd: {
+  USD: {
     src: "dollar.svg",
     alt: "US Dollar",
   },
-  mxn: {
+  MXN: {
     src: "dollar.svg",
     alt: "Mexican Dollar",
   },
-  eur: {
+  EUR: {
     src: "euro.svg",
     alt: "Euro",
   },

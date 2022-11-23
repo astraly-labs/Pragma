@@ -10,13 +10,6 @@ export interface PublisherCardProps {
 
 export const publishers: PublisherCardProps[] = [
   {
-    name: "Alameda Research",
-    src: "/assets/publishers/alameda.webp",
-    description:
-      "Alameda Research is one of the leading cryptocurrency high frequency trading firms and liquidity provider. Alameda Research was founded in 2017 by Sam Bankman-Fried. They manage over $1B+ in assets: all major coins, altcoins, as well as their derivatives. \n\n Alameda Research will use their business operations to provide price feeds to the Empiric Network.",
-    href: "https://www.alameda-research.com/",
-  },
-  {
     name: "CMT Digital",
     src: "/assets/publishers/cmtdigital.webp",
     description:
@@ -29,13 +22,6 @@ export const publishers: PublisherCardProps[] = [
     description:
       "Flow Traders is an established global financial technology-enabled liquidity provider in financial markets. Flow Traders was founded in 2017 and provide liquidity in financial products, historically with a focus on exchange-traded products (ETPs). In recent years, they have diversified the products they trade under virtually all market circumstances.\n\n Flow Traders will contribute its real-time crypto market data directly on-chain to the Empiric Network.",
     href: "https://www.flowtraders.com/",
-  },
-  {
-    name: "FTX",
-    src: "/assets/publishers/ftx.svg",
-    description:
-      "FTX is one of the leading cryptocurrency exchanges built by traders for traders. FTX offers innovative products including industry-first derivates, options, volatility products and leveraged tokens and an OTC desk. They have $10 billion of daily trading volume and over one million active users.\n\n FTX will contribute its 24/7 real-time market data through the custom integration with the Empiric Network.",
-    href: "https://ftx.us/",
   },
   {
     name: "Gemini",

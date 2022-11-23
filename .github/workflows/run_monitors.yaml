@@ -24,5 +24,11 @@ jobs:
         env:
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
         run: |
-          docker run --env-file stagecoach/monitors/balance/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-balance
-          docker run --env-file stagecoach/monitors/price/.env -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} monitor-price
+          docker run --env-file stagecoach/monitors/balance/.env \
+            -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} \
+            -e NETWORK=testnet2 \
+            monitor-balance
+          docker run --env-file stagecoach/monitors/price/.env \
+            -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} \
+            -e NETWORK=testnet2 \
+            monitor-price
