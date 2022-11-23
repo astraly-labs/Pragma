@@ -54,7 +54,7 @@ pairs = [
     Pair("BTC/USD", "BTC", "USD"),
     Pair("USDC/USD", "USDC", "USD"),
     Pair("USDT/USD", "USDT", "USD"),
-    Pair("DAI/USD", "USDC", "USD"),
+    Pair("DAI/USD", "DAI", "USD"),
 ]
 
 
