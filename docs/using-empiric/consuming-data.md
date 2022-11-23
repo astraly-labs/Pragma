@@ -4,15 +4,15 @@ You can find the list of supported assets [here](supported-assets.md).
 
 The current Empiric Network proxy addresses are:
 
-| Network               | Address                                                           | Block Explorer Link                                                                                                                                                                                                                                    |
-| --------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Starknet Alpha-Goerli | 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093 | [Starkscan](https://testnet.starkscan.co/contract/0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093), [Voyager](https://goerli.voyager.online/contract/0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093#transactions) |
-| Starknet Mainnet      | Coming soon!                                                      | N/A                                                                                                                                                                                                                                                    |
+| Network                 | Address                                                            | Block Explorer Link                                                                                                                                                                                                                                      |
+| ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| StarkNet Mainnet        | 0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4 | [Starkscan](https://starkscan.co/contract/0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4#overview), [Voyager](https://voyager.online/contract/0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4)                    |
+| StarkNet Alpha-Goerli   | 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093  | [Starkscan](https://testnet.starkscan.co/contract/0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093), [Voyager](https://goerli.voyager.online/contract/0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093#transactions)   |
+| StarkNet Alpha-Goerli 2 | 0xc28f8752abb9ed18f65fed730b8faa69bdf6128bb730411efd916284701938   | [Starkscan](https://testnet-2.starkscan.co/contract/0xc28f8752abb9ed18f65fed730b8faa69bdf6128bb730411efd916284701938), [Voyager](https://goerli-2.voyager.online/contract/0xc28f8752abb9ed18f65fed730b8faa69bdf6128bb730411efd916284701938#transactions) |
 
 ## Sample Code
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/oracle\_controller/IEmpiricOracle.cairo).
 
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/oracle\_controller/IEmpiricOracle.cairo).
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](../quickstart.md). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/sample\_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/oracle/IEmpiricOracle.cairo).
 
 ```
 %lang starknet
@@ -61,7 +61,7 @@ Returns
 
 ### **Function:** `get_spot`
 
-Similar to `get_spot_median` except it allows for an additional parameter to specify a custom aggregated logic (e.g. volatility-weighted average (VWAP), mean and more).
+Similar to `get_spot_median` except it allows for an additional parameter to specify a custom aggregated logic (e.g. volume-weighted average (VWAP), mean and more).
 
 Inputs
 

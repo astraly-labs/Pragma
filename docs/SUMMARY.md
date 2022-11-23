@@ -10,7 +10,8 @@
 * [Publishing Data](using-empiric/publishing-data.md)
 * [Deploying Empiric on StarkNet Devnet](using-empiric/deploying-empiric-on-starknet-devnet.md)
 * [Open Oracle](using-empiric/open-oracle.md)
-* [Randomness \[Beta\]](using-empiric/randomness-beta.md)
+* [Randomness](using-empiric/randomness.md)
+* [Computational Feeds](using-empiric/computational-feeds.md)
 
 ## How Empiric Works
 
