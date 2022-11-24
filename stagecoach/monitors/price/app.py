@@ -94,8 +94,7 @@ async def _handler():
     assets = [
         asset
         for asset in EMPIRIC_ALL_ASSETS
-        if asset["type"] == "spot"
-        and pair_id_for_asset(asset["pair"]) not in ignore_assets
+        if asset["type"] == "SPOT" and pair_id_for_asset(asset) not in ignore_assets
     ]
 
     client = EmpiricClient(network)
