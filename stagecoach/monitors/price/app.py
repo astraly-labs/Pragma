@@ -19,7 +19,7 @@ logger = get_stream_logger()
 
 PRICE_TOLERANCE = float(os.environ.get("PRICE_TOLERANCE", 0.1))  # as a fraction
 TIME_TOLERANCE = int(os.environ.get("TIME_TOLERANCE", 1200))  # in seconds
-MIN_NUM_SOURCES_AGGREGATED = os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3)
+MIN_NUM_SOURCES_AGGREGATED = int(os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3))
 EXPERIMENTAL_ASSET_KEYS = {
     "ETH/MXN",
     "TEMP/USD",
