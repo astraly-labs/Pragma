@@ -12,11 +12,11 @@ logger = get_stream_logger()
 
 async def main():
     publisher = os.environ.get("PUBLISHER")
-
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
-
+    network = os.environ.get("NETWORK")
     publisher_client = EmpiricPublisherClient(
+        network=network,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
@@ -24,7 +24,7 @@ async def main():
     publisher_client.add_fetcher(coinbase_fetcher)
     _entries = await publisher_client.fetch()
 
-    response = await publisher_client.publish_many(_entries, pagination=20)
+    response = await publisher_client.publish_many(_entries, pagination=50)
     for res in response:
         await res.wait_for_acceptance()
 
