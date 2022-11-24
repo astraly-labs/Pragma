@@ -17,9 +17,9 @@ logger = get_stream_logger()
 # Behavior: Ping betteruptime iff all is good
 
 
-PRICE_TOLERANCE = os.environ.get("PRICE_TOLERANCE", 0.1)  # as a fraction
-TIME_TOLERANCE = os.environ.get("TIME_TOLERANCE", 1200)  # in seconds
-MIN_NUM_SOURCES_AGGREGATED = os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3)
+PRICE_TOLERANCE = float(os.environ.get("PRICE_TOLERANCE", 0.1))  # as a fraction
+TIME_TOLERANCE = int(os.environ.get("TIME_TOLERANCE", 1200))  # in seconds
+MIN_NUM_SOURCES_AGGREGATED = int(os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3))
 EXPERIMENTAL_ASSET_KEYS = {
     "ETH/MXN",
     "TEMP/USD",
@@ -94,8 +94,7 @@ async def _handler():
     assets = [
         asset
         for asset in EMPIRIC_ALL_ASSETS
-        if asset["type"] == "spot"
-        and pair_id_for_asset(asset["pair"]) not in ignore_assets
+        if asset["type"] == "SPOT" and pair_id_for_asset(asset) not in ignore_assets
     ]
 
     client = EmpiricClient(network)
@@ -128,7 +127,7 @@ async def _handler():
                 check_asset_num_sources_aggregated(num_sources_aggregated, pair_id)
             )
         else:
-            logger.info(f"Skipping checking price for asset {asset}")
+            logger.info(f"Skipping checking price for pair {pair_id}")
 
         if errors := [x for x in checks if x is not None]:
             for error in errors:
@@ -137,7 +136,7 @@ async def _handler():
             if pair_id not in EXPERIMENTAL_ASSET_KEYS:
                 all_errors.extend(errors)
         else:
-            logger.info(f"{pair_id}: all good")
+            logger.info(f"All checks passed for pair {pair_id}")
 
     if all_errors:
         slack_text = (
