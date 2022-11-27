@@ -31,4 +31,5 @@ jobs:
           docker run --env-file stagecoach/monitors/price/.env \
             -e SLACK_BOT_USER_OAUTH_TOKEN=${SLACK_BOT_USER_OAUTH_TOKEN} \
             -e NETWORK=testnet2 \
+            -e MIN_NUM_SOURCES_AGGREGATED=1 \
             monitor-price
