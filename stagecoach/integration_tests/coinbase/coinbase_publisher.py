@@ -24,7 +24,7 @@ async def main():
     publisher_client.add_fetcher(coinbase_fetcher)
     _entries = await publisher_client.fetch()
 
-    response = await publisher_client.publish_many(_entries, pagination=50)
+    response = await publisher_client.publish_many(_entries)
     for res in response:
         await res.wait_for_acceptance()
 
