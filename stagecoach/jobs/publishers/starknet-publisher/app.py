@@ -21,6 +21,9 @@ SECRET_NAME = os.environ["SECRET_NAME"]
 ASSETS = os.environ["ASSETS"]
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
+PAGINATION = os.environ.get("PAGINATION")
+if PAGINATION is not None:
+    PAGINATION = int(PAGINATION)
 
 
 def handler(event, context):
@@ -64,7 +67,7 @@ async def _handler(assets):
         ]
     )
     _entries = await publisher_client.fetch()
-    response = await publisher_client.publish_many(_entries)
+    response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
