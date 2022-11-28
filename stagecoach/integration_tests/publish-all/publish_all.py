@@ -49,7 +49,7 @@ async def publish_all(assets):
         ]
     )
     _entries = await publisher_client.fetch()
-    response = await publisher_client.publish_many(_entries, pagination=100)
+    response = await publisher_client.publish_many(_entries)
 
     logger.info("Publishing the following entries:")
     for entry in _entries:

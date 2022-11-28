@@ -50,7 +50,7 @@ class OracleMixin:
     async def publish_many(
         self,
         entries: List[SpotEntry],
-        pagination: Optional[int] = 80,
+        pagination: Optional[int] = 40,
         max_fee=int(1e18),
     ) -> List[InvokeResult]:
         if len(entries) == 0:
