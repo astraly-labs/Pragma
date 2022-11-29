@@ -51,8 +51,8 @@ if network == "testnet2":
         "TEST",
     ]
     publishers_sources = [
-        ["BITSTAMP", "CEX", "COINBASE", "FTX", "GEMINI", "THEGRAPH"],
-        ["BITSTAMP", "CEX", "COINBASE", "FTX", "GEMINI", "THEGRAPH"],
+        ["BITSTAMP", "CEX", "COINBASE", "GEMINI", "THEGRAPH"],
+        ["BITSTAMP", "CEX", "COINBASE", "GEMINI", "THEGRAPH"],
     ]
     publisher_address = [
         0x05B91611369AC8FF0DF129EA3A6874B063E5E4723E85A60F9F6F7477FFF439DD,
