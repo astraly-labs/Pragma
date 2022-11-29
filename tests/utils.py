@@ -57,7 +57,6 @@ class TestSigner:
         build_calls = []
         for call in calls:
             build_call = list(call)
-            build_call[0] = hex(build_call[0])
             build_calls.append(build_call)
         raw_invocation = get_raw_invoke(account, build_calls)
         state = raw_invocation.state
@@ -66,8 +65,8 @@ class TestSigner:
             nonce = await state.state.get_nonce_at(account.contract_address)
 
         # get signature
-        calldata, sig_r, sig_s = self.signer.sign_transaction(
-            account.contract_address, build_calls, nonce, max_fee
+        calldata, sig_r, sig_s = self.signer.sign_invoke(
+            account.contract_address, build_calls, nonce, max_fee, version=1
         )
 
         # craft invoke and execute tx
