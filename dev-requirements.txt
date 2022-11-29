@@ -11,3 +11,4 @@ typer==0.6.1
 
 # testing
 starknet-devnet==0.4.1
+cairo-nile==0.11.0
