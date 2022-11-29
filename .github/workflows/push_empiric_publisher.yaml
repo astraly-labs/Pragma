@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - fix-push-empiric-package
 
 jobs:
   publish:
@@ -19,7 +20,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.9"
+          python-version: "3.9.13"
           cache: "pip"
           cache-dependency-path: "requirements.txt"
 
@@ -30,7 +31,6 @@ jobs:
           python3 -m pip install --upgrade -r dev-requirements.txt
           cd empiric-package
           python3 -m build
-          twine upload dist/* -u __token__ -p $PYPI_API_TOKEN --skip-existing
 
       - name: Build and publish Docker image
         env:
