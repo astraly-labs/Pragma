@@ -7,12 +7,7 @@ from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
 from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
-    BitstampFetcher,
-    CexFetcher,
-    CoinbaseFetcher,
-    GeminiFetcher,
-)
+from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher
 
 logger = get_stream_logger()
 
@@ -62,7 +57,6 @@ async def _handler(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
-                GeminiFetcher,
             )
         ]
     )

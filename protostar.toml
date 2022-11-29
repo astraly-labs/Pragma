@@ -1,5 +1,5 @@
 [project]
-protostar-version = "0.7.0"
+protostar-version = "0.8.1"
 lib-path = "contracts/starknet/lib"
 cairo-path = ["contracts/starknet/src", "contracts/starknet/lib", "contracts/starknet/lib/cairo_streams/src"]
 
@@ -12,7 +12,6 @@ Proxy = ["contracts/starknet/src/proxy/Proxy.cairo"]
 PublisherRegistry = ["contracts/starknet/src/publisher_registry/PublisherRegistry.cairo"]
 SummaryStats = ["contracts/starknet/src/compute_engines/summary_stats/SummaryStats.cairo"]
 YieldCurve = ["contracts/starknet/src/compute_engines/yield_curve/YieldCurve.cairo"]
-RebaseDenomination = ["contracts/starknet/src/compute_engines/rebase_denomination/RebaseDenomination.cairo"]
 Randomness = ["contracts/starknet/src/randomness/Randomness.cairo"]
 ExampleRandomness = ["contracts/starknet/src/randomness/ExampleRandomness.cairo"]
 

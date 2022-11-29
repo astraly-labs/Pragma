@@ -38,23 +38,22 @@ class EmpiricClient(
         :param account_contract_address: Optional account contract address.  Not necessary if not making network updates
         :param contract_addresses_config: Optional Contract Addresses for Empiric.  Will default to the provided network but must be set if using non standard contracts.
         """
-        network_config = NETWORKS[network]
+        self.network_config = NETWORKS[network]
         self.network = network
 
         if network not in ["mainnet", "testnet"]:
             if network in NETWORKS:
-                self.client = GatewayClient(
-                    network_config.gateway_url,
-                    network_config.chain_id,
-                )
+                self.client = GatewayClient(self.network_config.gateway_url)
             else:
-                self.client = GatewayClient(network, network_config.chain_id)
+                raise NotImplementedError(f"Network {network} not recognized")
         else:
             self.client = GatewayClient(network)
 
         if account_contract_address and account_private_key:
             self._setup_account_client(
-                network_config.chain_id, account_private_key, account_contract_address
+                self.network_config.chain_id,
+                account_private_key,
+                account_contract_address,
             )
 
         if not contract_addresses_config:
@@ -79,6 +78,7 @@ class EmpiricClient(
             account_contract_address,
             self.client,
             key_pair=KeyPair.from_private_key(1),
+            chain=self.network_config.chain_id,
         )
         balance = await client.get_balance(token_address)
         return balance

@@ -42,6 +42,24 @@ if network == "testnet":
     ]
     admin_address = 0x21D6F33C00D3657D7EC6F9322399729AFDF21533B77CF0512AC583B4755F011
 
+"""
+TESTNET2
+"""
+if network == "testnet2":
+    publishers = [
+        "EMPIRIC",
+        "TEST",
+    ]
+    publishers_sources = [
+        ["BITSTAMP", "CEX", "COINBASE", "GEMINI", "THEGRAPH"],
+        ["BITSTAMP", "CEX", "COINBASE", "GEMINI", "THEGRAPH"],
+    ]
+    publisher_address = [
+        0x05B91611369AC8FF0DF129EA3A6874B063E5E4723E85A60F9F6F7477FFF439DD,
+        0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77,
+    ]
+    admin_address = 0x5B91611369AC8FF0DF129EA3A6874B063E5E4723E85A60F9F6F7477FFF439DD
+
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
@@ -54,9 +72,14 @@ async def main():
         publishers, publishers_sources, publisher_address
     ):
         existing_address = await admin_client.get_publisher_address(publisher)
-        if existing_address != address:
+        if existing_address == 0:
             res = await admin_client.add_publisher(publisher, address)
             print(f"Registered new publisher {publisher} with tx {hex(res.hash)}")
+        elif existing_address != address:
+            print(
+                f"Publisher {publisher} registered with address {hex(existing_address)} but config has address {hex(address)}. Exiting..."
+            )
+            return
 
         existing_sources = await admin_client.get_publisher_sources(publisher)
         new_sources = [x for x in sources if str_to_felt(x) not in existing_sources]

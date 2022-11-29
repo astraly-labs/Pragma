@@ -74,7 +74,7 @@ class OracleMixin:
                 logger.info(
                     f"Sent {len(entries_subset)} updated spot entries with transaction {hex(invocation.hash)}"
                 )
-        else:
+        elif len(serialized_spot_entries) > 0:
             invocation = await self.oracle.publish_spot_entries.invoke(
                 serialized_spot_entries, max_fee=max_fee
             )
@@ -100,7 +100,7 @@ class OracleMixin:
                 logger.info(
                     f"Sent {len(entries_subset)} updated future entries with transaction {hex(invocation.hash)}"
                 )
-        else:
+        elif len(serialized_future_entries) > 0:
             invocation = await self.oracle.publish_future_entries.invoke(
                 serialized_future_entries, max_fee=max_fee
             )
