@@ -34,7 +34,9 @@ def _get_pvt_key():
 async def _handler(assets):
     private_key = _get_pvt_key()
     account_address = int(os.environ.get("ACCOUNT_ADDRESS"))
-    pairs = [currency_pair_to_pair_id(p["pair"]) for p in assets if "pair" in p]
+    pairs = [
+        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "SPOT"
+    ]
 
     publisher_client = EmpiricPublisherClient(
         account_private_key=private_key,
