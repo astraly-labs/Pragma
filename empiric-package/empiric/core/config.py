@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Literal
 
 from starknet_py.net.models import StarknetChainId
+from starkware.python.utils import from_bytes
 
 
 @dataclass
@@ -10,10 +12,14 @@ class Network:
     gateway_url: str
 
 
+class StarknetChainIdExtension(Enum):
+    TESTNET2 = from_bytes(b"SN_GOERLI2")
+
+
 # network configurations
 LOCAL = Network(StarknetChainId.TESTNET, "http://127.0.0.1:5050")
 TESTNET = Network(StarknetChainId.TESTNET, "https://alpha4.starknet.io")
-TESTNET2 = Network(StarknetChainId.TESTNET, "https://alpha4-2.starknet.io")
+TESTNET2 = Network(StarknetChainIdExtension.TESTNET2, "https://alpha4-2.starknet.io")
 INTEGRATION = Network(
     StarknetChainId.TESTNET, "https://external.integration.starknet.io"
 )
