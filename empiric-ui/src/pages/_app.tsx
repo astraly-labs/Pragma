@@ -19,7 +19,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
   const provider = new Provider({
     sequencer: {
-      baseUrl: "https://alpha4-2.starknet.io",
+      baseUrl: "https://alpha4.starknet.io",
     },
   });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
