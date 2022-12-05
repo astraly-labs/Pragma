@@ -1,5 +1,5 @@
 // TODO: Make this adaptive in the future
-export const networkId = (): Network => "goerli2-alpha";
+export const networkId = (): Network => "goerli-alpha";
 
 export const getExplorerBaseUrl = (): string | undefined => {
   if (networkId() === "mainnet-alpha") {
