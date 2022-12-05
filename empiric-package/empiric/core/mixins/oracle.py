@@ -240,7 +240,7 @@ class OracleMixin:
                 )
         else:
             invocation = await self.oracle.set_checkpoints.invoke(
-                pair_ids_subset,
+                pair_ids,
                 aggregation_mode,
                 callback=self.track_nonce,
                 max_fee=max_fee,
