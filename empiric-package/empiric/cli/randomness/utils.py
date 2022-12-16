@@ -1,6 +1,6 @@
 import secrets
 import sys
-from typing import List
+from typing import List, Union
 
 import requests
 from starknet_py.net.networks import TESTNET
@@ -34,8 +34,10 @@ class RandomnessRequest:
 
     def __repr__(self):
         return (
-            f"Request(caller_address={self.caller_address},request_id={self.request_id},"
-            f"minimum_block_number={self.minimum_block_number}"
+            f"Request(caller_address={self.caller_address}, request_id={self.request_id}, "
+            f"minimum_block_number={self.minimum_block_number}, callback_address={self.callback_address}, "
+            f"seed={self.seed}, minimum_block_number={self.minimum_block_number}, "
+            f"callback_gas_limit={self.callback_gas_limit}, num_words={self.num_words})"
         )
 
 
@@ -69,7 +71,7 @@ def get_events(
     contract_address: str,
     node_url,
     min_block: int = 0,
-    page_number: int = 0,
+    continuation_token: Union[int, None] = None,
     keys: List[str] = [
         "0xc285ec4fd3baa2fd5b1dc432a00bd5301d2c84b86a7e6900c13b6634b4e81a"
     ],
@@ -81,21 +83,20 @@ def get_events(
         "params": [
             {
                 "address": contract_address,
-                "page_size": 30,
-                "page_number": page_number,
+                "chunk_size": 30,
+                "continuation_token": continuation_token,
                 "keys": keys,
-                # "from_block": hex(min_block),
+                "from_block": {"block_number": 352929},
             }
         ],
     }
+
     r = requests.post(node_url, json=params).json()
-    is_last_page = r["result"]["is_last_page"]  # noqa: F841
-    page_number = r["result"]["page_number"]  # noqa: F841
+    continuation_token = r["result"].get("continuation_token")  # noqa: F841
 
     return {
         "events": [RandomnessRequest(*r["data"]) for r in r["result"]["events"]],
-        "is_last_page": is_last_page,
-        "page_number": page_number,
+        "continuation_token": continuation_token,
     }
 
 

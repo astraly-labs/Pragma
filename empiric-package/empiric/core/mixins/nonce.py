@@ -28,7 +28,11 @@ class NonceMixin:
             x
             for x in self.nonce_dict
             if self.nonce_status[x]
-            in [TransactionStatus.ACCEPTED_ON_L1, TransactionStatus.ACCEPTED_ON_L2]
+            in [
+                TransactionStatus.ACCEPTED_ON_L1,
+                TransactionStatus.ACCEPTED_ON_L2,
+                TransactionStatus.REJECTED,
+            ]
         ]
         if nonce_seq:
             max_accepted = max(nonce_seq)
