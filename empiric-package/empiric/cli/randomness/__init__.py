@@ -1,6 +1,7 @@
 import configparser
 import sys
 import time
+import traceback
 from pathlib import Path
 from typing import List
 
@@ -21,6 +22,7 @@ from empiric.cli.randomness.utils import (
 from empiric.cli.utils import coro
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
+from starknet_py.transaction_exceptions import TransactionRejectedError
 from starkware.starknet.compiler.compile import get_selector_from_name
 
 app = typer.Typer(help="randomness utilities")
@@ -234,15 +236,13 @@ async def handle_random(min_block: int = 0, cli_config=config.DEFAULT_CONFIG):
     block_number = await get_blocknumber(node_url)
     sk = felt_to_secret_key(account_private_key)
 
-    more_pages = True
-    page_number = 0
+    continuation_token = "0"
 
-    while more_pages:
+    while continuation_token:
         event_list = get_events(
-            hex(randomness_contract_address), node_url, min_block, page_number
+            hex(randomness_contract_address), node_url, min_block, continuation_token
         )
-        page_number += 1
-        more_pages = not event_list["is_last_page"]
+        continuation_token = event_list["continuation_token"]
 
         for event in event_list["events"]:
             if event.minimum_block_number > block_number:
@@ -271,25 +271,33 @@ async def handle_random(min_block: int = 0, cli_config=config.DEFAULT_CONFIG):
             ]
             random_words = [beta_string]
 
-            invocation = await client.submit_random(
-                event.request_id,
-                event.caller_address,
-                event.seed,
-                event.minimum_block_number,
-                event.callback_address,
-                event.callback_gas_limit,
-                random_words,
-                block_hash,
-                proof,
-            )
+            try:
+                invocation = await client.submit_random(
+                    event.request_id,
+                    event.caller_address,
+                    event.seed,
+                    event.minimum_block_number,
+                    event.callback_address,
+                    event.callback_gas_limit,
+                    random_words,
+                    block_hash,
+                    proof,
+                )
+            except TransactionRejectedError:
+                typer.echo(f"Error submitting randomness for {event}")
+                typer.echo(traceback.format_exc())
+                await client.update_nonce_dict()
+                client.cleanup_nonce_dict()
+                continue
 
-            typer.echo(f"submitted: {invocation.hash}\n\n")
+            typer.echo(f"submitted tx: {hex(invocation.hash)}\n\n")
+
         while client.nonce_status:
             typer.echo(str(client.nonce_status))
             typer.echo("...\n\n")
             await client.update_nonce_dict()
             client.cleanup_nonce_dict()
-            time.sleep(5)
+            time.sleep(10)
 
 
 @app.command()

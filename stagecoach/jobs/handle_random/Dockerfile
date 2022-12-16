@@ -1,7 +1,7 @@
 FROM amazon/aws-lambda-python:3.9
 
 RUN yum install -y gcc python-devel gmp-devel git
-RUN pip install git+https://github.com/42labs/Empiric.git@add_future_entry#egg=empiric-network\&subdirectory=empiric-package
+RUN pip install empiric-network==1.4.2
 
 COPY cli-config.ini /cli-config.ini
 
