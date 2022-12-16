@@ -8,4 +8,9 @@ namespace IExampleRandomness {
     }
     func see_random_word() -> (word: felt) {
     }
+
+    func request_my_randomness(
+        seed, callback_address, callback_gas_limit, publish_delay, num_words
+    ) {
+    }
 }

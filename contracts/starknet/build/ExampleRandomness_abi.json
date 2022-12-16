@@ -1,5 +1,44 @@
 [
     {
+        "inputs": [],
+        "name": "get_last_random",
+        "outputs": [
+            {
+                "name": "last_random",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "seed",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
+                "type": "felt"
+            },
+            {
+                "name": "callback_gas_limit",
+                "type": "felt"
+            },
+            {
+                "name": "publish_delay",
+                "type": "felt"
+            },
+            {
+                "name": "num_words",
+                "type": "felt"
+            }
+        ],
+        "name": "request_my_randomness",
+        "outputs": [],
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "requestor_address",
@@ -20,18 +59,6 @@
         ],
         "name": "receive_random_words",
         "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "see_random_word",
-        "outputs": [
-            {
-                "name": "word",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     }
 ]
