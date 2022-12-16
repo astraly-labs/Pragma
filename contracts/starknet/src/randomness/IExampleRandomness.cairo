@@ -2,7 +2,7 @@
 
 @contract_interface
 namespace IExampleRandomness {
-    func get_last_random() -> (res: felt) {
+    func get_last_random() -> (last_random: felt) {
     }
 
     func request_my_randomness(
