@@ -1,6 +1,6 @@
 # Publishing Data
 
-Empiric makes publishing data easy because there is no off-chain infrastructure, so publishing only requires signing and timestamping data before sending it on-chain. All of this can be done with a simple, stateless node that costs a few dollars a month to run.&#x20;
+Empiric makes publishing data easy because there is no off-chain infrastructure, so publishing only requires signing and timestamping data before sending it on-chain. All of this can be done with a simple, stateless node that costs a few dollars a month to run.
 
 Here is the step-by-step breakdown:
 
@@ -47,7 +47,7 @@ The initial publishing frequency for the oracle is every 3 minutes on Starknet A
 
 #### Using the Empiric Network Python SDK
 
-See a full sample script [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/publish\_all.py), or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample `.env` file [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/.env) to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).&#x20;
+See a full sample script [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/publish\_all.py), or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample `.env` file [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/.env) to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).
 
 To make fetching data simple, implement your own fetching function using whatever libraries you want, as long as it returns a `List[SpotEntry]`.
 
@@ -104,7 +104,6 @@ async def publish_all(assets):
 
 if __name__ == "__main__":
     asyncio.run(publish_all(EMPIRIC_ALL_ASSETS))
-
 ```
 
 **Docker Image**
