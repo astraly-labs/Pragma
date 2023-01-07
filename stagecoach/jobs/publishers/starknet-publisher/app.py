@@ -66,7 +66,7 @@ async def _handler(assets):
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
     for res in response:
-        await res.wait_for_acceptance(wait_for_accept=False)
+        await res.wait_for_acceptance()
     return _entries
 
 
