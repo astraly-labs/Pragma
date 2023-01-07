@@ -10,5 +10,5 @@ twine==4.0.*
 typer==0.6.1
 
 # testing
-starknet-devnet==0.4.1
-cairo-nile==0.11.0
+starknet-devnet==0.4.3
+cairo-nile==0.12.0
