@@ -7,7 +7,7 @@ from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
 from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher
+from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher, CoingeckoFetcher, GeminiFetcher
 
 logger = get_stream_logger()
 
@@ -66,7 +66,7 @@ async def _handler(assets):
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
     for res in response:
-        await res.wait_for_acceptance(wait_for_accept=True)
+        await res.wait_for_acceptance(wait_for_accept=False)
     return _entries
 
 
