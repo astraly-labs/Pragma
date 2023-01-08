@@ -18,12 +18,12 @@ const AboutPage = () => (
           subtitle="Meet our team"
           text="Behind Empiric is a close-knit team of bright people who move fast to build a more transparent and decentralized future."
         />
-        <TeamSection />
+        {/* <TeamSection /> */}
       </SectionContainer>
       <SectionContainer>
         <Heading title="Backed by" subtitle="Meet our investors" />
         <InvestorsSection />
-        <AngelsSection />
+        {/* <AngelsSection /> */}
       </SectionContainer>
       <SectionContainer>
         <CTASection

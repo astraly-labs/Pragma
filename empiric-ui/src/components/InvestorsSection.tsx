@@ -2,36 +2,36 @@ import React from "react";
 import { Logo } from "./LogoClouds/LogoCloud";
 
 const investors: Logo[] = [
-  {
-    name: "Variant Fund",
-    src: "/assets/investors/variant.webp",
-    href: "https://variant.fund/",
-  },
-  {
-    name: "Dao5",
-    src: "/assets/investors/dao5.webp",
-    href: "https://dao5.com/",
-  },
-  {
-    name: "Robot Ventures",
-    src: "/assets/investors/robot-ventures.webp",
-    href: "https://robvc.com/",
-  },
-  {
-    name: "Jane Street",
-    src: "/assets/publishers/jane-street.webp",
-    href: "https://www.janestreet.com/",
-  },
+  // {
+  //   name: "Variant Fund",
+  //   src: "/assets/investors/variant.webp",
+  //   href: "https://variant.fund/",
+  // },
+  // {
+  //   name: "Dao5",
+  //   src: "/assets/investors/dao5.webp",
+  //   href: "https://dao5.com/",
+  // },
+  // {
+  //   name: "Robot Ventures",
+  //   src: "/assets/investors/robot-ventures.webp",
+  //   href: "https://robvc.com/",
+  // },
+  // {
+  //   name: "Jane Street",
+  //   src: "/assets/publishers/jane-street.webp",
+  //   href: "https://www.janestreet.com/",
+  // },
   {
     name: "StarkWare",
     src: "/assets/starkware.svg",
     href: "https://starkware.co/",
   },
-  {
-    name: "Gemini",
-    src: "/assets/publishers/gemini.svg",
-    href: "https://www.gemini.com/",
-  },
+  // {
+  //   name: "Gemini",
+  //   src: "/assets/publishers/gemini.svg",
+  //   href: "https://www.gemini.com/",
+  // },
 ];
 
 const InvestorsSection = () => (
