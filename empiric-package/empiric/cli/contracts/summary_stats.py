@@ -43,10 +43,12 @@ async def _deploy_summary_stats(client: Client, config_path: Path):
     compiled_contract = (compiled_contract_path / "SummaryStats.json").read_text(
         "utf-8"
     )
-
-    deployment_result = await Contract.deploy(
+    declare_result = await Contract.declare(
         client,
         compiled_contract=compiled_contract,
+    )
+    await declare_result.wait_for_acceptance()
+    deployment_result = await declare_result.deploy(
         constructor_args=[
             oracle_proxy_address,
         ],

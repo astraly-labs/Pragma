@@ -125,10 +125,15 @@ async def deploy_publisher_registry(
 
     admin_address = int(config_parser["USER"]["address"])
 
-    deployment_result = await Contract.deploy(
+    declare_result = await Contract.declare(
         client,
         compiled_contract=compiled,
+        max_fee=int(1e16)
+    )
+    await declare_result.wait_for_acceptance()
+    deployment_result = await declare_result.deploy(
         constructor_args={"admin_address": admin_address},
+        max_fee=int(1e16)
     )
     await deployment_result.wait_for_acceptance()
     typer.echo(f"address: {deployment_result.deployed_contract.address}")

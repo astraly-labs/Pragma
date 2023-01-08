@@ -99,9 +99,14 @@ async def main():
     with open("contracts/starknet/build/Proxy.json", "r") as f:
         compiled_contract = f.read()
     breakpoint()
-    deployment_result = await Contract.deploy(
+
+    declare_result = await Contract.declare(
         admin_client.client,
         compiled_contract=compiled_contract,
+    )
+    await declare_result.wait_for_acceptance()
+
+    deployment_result = await declare_result.deploy(
         constructor_args=constructor_args,
         token=token,
     )

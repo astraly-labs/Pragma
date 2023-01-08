@@ -4,6 +4,7 @@ from pathlib import Path
 import typer
 from empiric.cli import SUCCESS
 from starknet_py.net import KeyPair
+from starknet_py.contract import Contract
 from starknet_py.net.client import Client
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.address import AddressRepresentation
@@ -19,12 +20,19 @@ async def deploy_account_contract(
         constructor_calldata=[public_key],
         compiled_contract=COMPILED_ACCOUNT_CONTRACT,
     )
-    result = await client.deploy(deploy_tx)
+    declare_result = await Contract.declare(
+        account=client, compiled_contract=COMPILED_ACCOUNT_CONTRACT, max_fee=int(
+            1e16)
+    )
     await client.wait_for_tx(
-        tx_hash=result.transaction_hash,
         wait_for_accept=True,
     )
-    return result.contract_address
+    deploy_result = await declare_result.deploy(max_fee=int(1e16))
+    await client.wait_for_tx(
+        tx_hash=deploy_result.hash,
+        wait_for_accept=True,
+    )
+    return deploy_result.deployed_contract.address
 
 
 async def create_account(
