@@ -87,7 +87,6 @@ async def deploy_randomness_proxy(client: Client, config_path: Path):
     declare_result = await Contract.declare(
         client,
         compiled_contract=compiled_proxy,
-
     )
     await declare_result.wait_for_acceptance()
     deployment_result = await declare_result.deploy(

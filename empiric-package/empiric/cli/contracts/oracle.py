@@ -158,7 +158,9 @@ async def deploy_oracle_proxy(
         client, compiled_contract_path, "Oracle"
     )
     compiled_proxy = (compiled_contract_path / "Proxy.json").read_text("utf-8")
-    declare_result = await Contract.declare(client, compiled_contract=compiled_proxy, max_fee=int(1e16))
+    declare_result = await Contract.declare(
+        client, compiled_contract=compiled_proxy, max_fee=int(1e16)
+    )
     await declare_result.wait_for_acceptance()
     deployment_result = await declare_result.deploy(
         constructor_args=[
@@ -173,7 +175,7 @@ async def deploy_oracle_proxy(
                 *_format_pairs(pairs),
             ],
         ],
-        max_fee=int(1e16)
+        max_fee=int(1e16),
     )
     await deployment_result.wait_for_acceptance()
     typer.echo(f"proxy address: {deployment_result.deployed_contract.address}")
