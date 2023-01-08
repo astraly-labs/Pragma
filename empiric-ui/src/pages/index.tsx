@@ -144,7 +144,7 @@ const IndexPage = () => (
       <InfoSection />
     </SectionContainer>
     <SectionContainer>
-      <LogoCloud title="Ecosystem Partners" logos={ecosystemPartners} />
+      {/* <LogoCloud title="Ecosystem Partners" logos={ecosystemPartners} /> */}
       <DefaultCTASection />
     </SectionContainer>
   </div>
