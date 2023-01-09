@@ -3,7 +3,7 @@ from pathlib import Path
 
 from empiric.core import EmpiricClient
 from empiric.core.config import ContractAddresses
-from starknet_py.net import AccountClient
+from starknet_py.net.account.account import Account
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
@@ -59,7 +59,7 @@ def init_empiric_client(config_file: Path) -> EmpiricClient:
     return client
 
 
-def init_account_client(client: GatewayClient, config_file: Path) -> AccountClient:
+def init_account_client(client: GatewayClient, config_file: Path) -> Account:
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 
@@ -74,7 +74,7 @@ def init_account_client(client: GatewayClient, config_file: Path) -> AccountClie
         chain_id=StarknetChainId(chain_id),
     )
 
-    return AccountClient(
+    return Account(
         address=account_contract_address,
         client=client,
         signer=signer,

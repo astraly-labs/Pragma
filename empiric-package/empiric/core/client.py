@@ -11,7 +11,7 @@ from empiric.core.mixins import (
     RandomnessMixin,
     TransactionMixin,
 )
-from starknet_py.net import AccountClient
+from starknet_py.net.account.account import Account
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 
@@ -74,9 +74,9 @@ class EmpiricClient(
         )
 
     async def get_balance(self, account_contract_address, token_address=None):
-        client = AccountClient(
-            account_contract_address,
-            self.client,
+        client = Account(
+            address=account_contract_address,
+            client=self.client,
             key_pair=KeyPair.from_private_key(1),
             chain=self.network_config.chain_id,
         )
@@ -92,11 +92,10 @@ class EmpiricClient(
             KeyPair.from_private_key(private_key),
             chain_id,
         )
-        self.client = AccountClient(
-            account_contract_address,
-            self.client,
-            self.signer,
-            supported_tx_version=1,
+        self.client = Account(
+            address=account_contract_address,
+            client=self.client,
+            signer=self.signer,
         )
         self.client._get_nonce = self._get_nonce
         self.is_user_client = True
