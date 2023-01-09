@@ -47,7 +47,7 @@ export const publishers: PublisherCardProps[] = [
 
 const PublishersSection = () => (
   <>
-    <ul className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+    {/* <ul className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
       {publishers.map(({ name, src, description, href }) => (
         <li key={name}>
           <PublisherCard
@@ -58,10 +58,10 @@ const PublishersSection = () => (
           />
         </li>
       ))}
-    </ul>
-    {/* <div className="mb-5 text-3xl font-light tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
+    </ul> */}
+    <div className="mb-5 text-3xl font-light tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
       No Publishers yet
-    </div> */}
+    </div>
   </>
 );
 
