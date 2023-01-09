@@ -6,4 +6,5 @@ typing_extensions==4.3.0
 # Publisher
 starknet.py==0.12.0a0
 boto3==1.26.*
-python-telegram-bot==20.0
+python-telegram-bot==13.0
+
