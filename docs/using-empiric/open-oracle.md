@@ -4,21 +4,21 @@
 
 The assets currently listed (as of August 2022) are:
 
-| Ticker   | Coinbase             | OKX                  |
-| -------- | -------------------- | -------------------- |
-| BTC/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| ETH/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| DAI/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| ZRX/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| BAT/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| KNC/USD  | :white\_check\_mark: | :white\_check\_mark: |
-| LINK/USD | :white\_check\_mark: | :white\_check\_mark: |
-| COMP/USD | :white\_check\_mark: | :white\_check\_mark: |
-| XTZ/USD  | :white\_check\_mark: |                      |
-| REP/USD  | :white\_check\_mark: |                      |
-| UNI/USD  | :white\_check\_mark: |                      |
-| GRT/USD  | :white\_check\_mark: |                      |
-| SNX/USD  | :white\_check\_mark: |                      |
+| Ticker   | Coinbase           | OKX                |
+| -------- | ------------------ | ------------------ |
+| BTC/USD  | :white_check_mark: | :white_check_mark: |
+| ETH/USD  | :white_check_mark: | :white_check_mark: |
+| DAI/USD  | :white_check_mark: | :white_check_mark: |
+| ZRX/USD  | :white_check_mark: | :white_check_mark: |
+| BAT/USD  | :white_check_mark: | :white_check_mark: |
+| KNC/USD  | :white_check_mark: | :white_check_mark: |
+| LINK/USD | :white_check_mark: | :white_check_mark: |
+| COMP/USD | :white_check_mark: | :white_check_mark: |
+| XTZ/USD  | :white_check_mark: |                    |
+| REP/USD  | :white_check_mark: |                    |
+| UNI/USD  | :white_check_mark: |                    |
+| GRT/USD  | :white_check_mark: |                    |
+| SNX/USD  | :white_check_mark: |                    |
 
 ### Consuming Data
 
@@ -67,4 +67,4 @@ func my_func{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() 
 
 One of the benefits of the open oracle is that anyone can publish data permissionlessly, as Coinbase and OKX signatures are verified on-chain. We are working with a number of leading protocols on StarkNet to publish data regularly in order to provide free, transparent and community-driven price feeds for the ecosystem. If you'd like to join the StarkNet Open Oracle Publisher Committee, please reach out on [Twitter](https://twitter.com/EmpiricNetwork)!
 
-In order to publish data, you must call the [Coinbase API](https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi\_getcoinbasepriceoracle-1) or [OKX API](https://www.okx.com/docs-v5/en/#rest-api-market-data-get-oracle) to retrieve the signed and timestamped data. Then, you must prepare that data to be consumed by the on-chain verification contract. You can implement this logic yourself or feel free to use [our SDK](https://github.com/42labs/StarkNet-Open-Oracle/blob/main/client/client\_tools.py). If you use our SDK, simply follow the instructions [in the README](https://github.com/42labs/StarkNet-Open-Oracle#using-the-client-to-publish-signed-prices) to get going.
+In order to publish data, you must call the [Coinbase API](https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getcoinbasepriceoracle-1) or [OKX API](https://www.okx.com/docs-v5/en/#rest-api-market-data-get-oracle) to retrieve the signed and timestamped data. Then, you must prepare that data to be consumed by the on-chain verification contract. You can implement this logic yourself or feel free to use [our SDK](https://github.com/Astraly-Labs/StarkNet-Open-Oracle/blob/main/client/client_tools.py). If you use our SDK, simply follow the instructions [in the README](https://github.com/Astraly-Labs/StarkNet-Open-Oracle#using-the-client-to-publish-signed-prices) to get going.

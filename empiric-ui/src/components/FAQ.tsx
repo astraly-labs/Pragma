@@ -63,7 +63,7 @@ const faqs = [
           Twitter
         </StyledExternalLink>{" "}
         or send us an{" "}
-        <StyledExternalLink href="mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,">
+        <StyledExternalLink href="mailto:support@astraly.xyz?body=Hi%20Empiric-Team,">
           email
         </StyledExternalLink>
         .

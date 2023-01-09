@@ -81,7 +81,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Contact Us",
-        href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
+        href: "mailto:support@astraly.xyz?body=Hi%20Empiric-Team,",
         external: true,
       },
     ],
@@ -98,7 +98,7 @@ const socials: SocialMedia[] = [
   {
     name: "GitHub",
     src: "/assets/social/github.svg",
-    href: "https://github.com/42labs/Empiric",
+    href: "https://github.com/Astraly-Labs/Empiric",
   },
   {
     name: "Twitter",

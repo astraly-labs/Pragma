@@ -38,6 +38,6 @@ jobs:
         run: |
           export $(grep -v '^#' .env | xargs)
           export EMPIRIC_PACKAGE_VERSION=$(grep 'version' empiric-package/setup.cfg | grep -e '[0-9][0-9a-zA-Z]*[-.a-z0-9]*' -o)
-          docker build . --target production --build-arg EMPIRIC_PACKAGE_VERSION=${EMPIRIC_PACKAGE_VERSION} -t 42labs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}
+          docker build . --target production --build-arg EMPIRIC_PACKAGE_VERSION=${EMPIRIC_PACKAGE_VERSION} -t astralylabs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}
           echo $DOCKER_ACCESS_TOKEN | docker login -u ${DOCKER_LOGIN} --password-stdin
-          docker push 42labs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}
+          docker push astralylabs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}

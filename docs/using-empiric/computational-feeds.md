@@ -15,7 +15,7 @@ For any price feed, Empiric offers a realized volatility feed. The realized vola
 
 ### Sample Code
 
-If you are just trying to get started with our realized volatility feed, see this self-contained code snippet here. You can find the full Oracle interface specification is available [here](https://github.com/42labs/Empiric/blob/master/contracts/starknet/src/compute\_engines/summary\_stats/ISummaryStats.cairo).
+If you are just trying to get started with our realized volatility feed, see this self-contained code snippet here. You can find the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/compute_engines/summary_stats/ISummaryStats.cairo).
 
 <pre><code><strong>%lang starknet
 </strong>
@@ -49,7 +49,7 @@ $$
 \sigma^2 =  \frac{1}{N} \sum_{i=1}^N \frac{log(S_i / S_{i-1})^2}{(T_i - T_{i-1})}
 $$
 
-Where $$\sigma$$ is in units of $$1/\sqrt{(T)}$$ .  We then multiply $$\sigma$$ by $$\sqrt{\Delta T_{year}}$$ to get the annualized volatility of the underlying asset. &#x20;
+Where $$\sigma$$ is in units of $$1/\sqrt{(T)}$$ . We then multiply $$\sigma$$ by $$\sqrt{\Delta T_{year}}$$ to get the annualized volatility of the underlying asset. &#x20;
 
 ### **Technical Specification**&#x20;
 
@@ -61,14 +61,14 @@ Currently, Empiric sets a checkpoint every 5 minutes. If you need more granular 
 
 Inputs
 
-* `pair_id`: uppercased utf8-encoded string
-* `start_key`: timestamp at the beginning of the period over which you want to calculate realized volatility
-* `end_key`: timestamp at the end of the period over which you want to calculate realized volatility. If set to 0, it defaults to the timestamp of the last published block&#x20;
-* `num_samples`: number of samples on which you want to calculate volatility. StarkNet currently limits computation, so there is a max of 200 for this input
+- `pair_id`: uppercased utf8-encoded string
+- `start_key`: timestamp at the beginning of the period over which you want to calculate realized volatility
+- `end_key`: timestamp at the end of the period over which you want to calculate realized volatility. If set to 0, it defaults to the timestamp of the last published block&#x20;
+- `num_samples`: number of samples on which you want to calculate volatility. StarkNet currently limits computation, so there is a max of 200 for this input
 
 Returns&#x20;
 
-* `volatility:` annualized realized volatility percentage. Volatility is reported with 8 decimals of precision. To convert it to percentage, divide the output by $$10^{-8}$$ (e.g. 7076538586 means annualized volatility is around 70%)
+- `volatility:` annualized realized volatility percentage. Volatility is reported with 8 decimals of precision. To convert it to percentage, divide the output by $$10^{-8}$$ (e.g. 7076538586 means annualized volatility is around 70%)
 
 ## **Yield Curve**
 
@@ -88,14 +88,14 @@ Where $$t$$ is the current time, $$T$$​ is the time to maturity, $$F(t,T)$$ is
 
 ### **Struct: `YieldPoint`**
 
-This struct represents a point on the yield curve. Each point contains the calculated rate, the timestamp at which it was calculated and what maturity it represents. It also shows the sources we  have used to calculate it (e.g. Aave overnight rate, Deribit future/sport rate).
+This struct represents a point on the yield curve. Each point contains the calculated rate, the timestamp at which it was calculated and what maturity it represents. It also shows the sources we have used to calculate it (e.g. Aave overnight rate, Deribit future/sport rate).
 
 Members&#x20;
 
-* `capture_timestamp`: timestamp of data capture&#x20;
-* `expiry_timestamp`: timestamp of expiry of the instrument (1 day for overnight rates and expiration date for futures)&#x20;
-* `rate`: the calculated yield rate or overnight rate
-* `source`: an indicator for the source (`str_to_felt` encoded lowercase of "on" for Aave overnight rate, "future/spot"  for Deribit future/sport rate, and "other" for future additional data sources)
+- `capture_timestamp`: timestamp of data capture&#x20;
+- `expiry_timestamp`: timestamp of expiry of the instrument (1 day for overnight rates and expiration date for futures)&#x20;
+- `rate`: the calculated yield rate or overnight rate
+- `source`: an indicator for the source (`str_to_felt` encoded lowercase of "on" for Aave overnight rate, "future/spot" for Deribit future/sport rate, and "other" for future additional data sources)
 
 ### **Function: `get_yield_points`**
 
@@ -103,8 +103,8 @@ This function calculates what the yield curve is at any point in time, and retur
 
 Inputs
 
-* `decimals`: the precision at which the rates are calculated&#x20;
+- `decimals`: the precision at which the rates are calculated&#x20;
 
 Returns
 
-* `yield_curve`: an array  of `YieldPoint` structs each representing a different maturity on the curve. Rates are reported up to the requested decimal.&#x20;
+- `yield_curve`: an array of `YieldPoint` structs each representing a different maturity on the curve. Rates are reported up to the requested decimal.&#x20;

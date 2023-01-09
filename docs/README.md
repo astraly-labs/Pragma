@@ -12,7 +12,7 @@ Empiric is also built with a system of failsafes and redundancies, including ind
 
 ### Decentralized: Data From Many Highly Liquid Exchanges & Market Makers
 
-Empiric works with the most liquid exchanges and biggest market makers who sign their proprietary data and send it directly on-chain. In the future, we will implement mechanisms to make data publishing permissionless so that anyone can provide data through the Empiric Network (see [Roadmap](https://github.com/42labs/Empiric/blob/master/how-empiric-works/roadmap.md)).
+Empiric works with the most liquid exchanges and biggest market makers who sign their proprietary data and send it directly on-chain. In the future, we will implement mechanisms to make data publishing permissionless so that anyone can provide data through the Empiric Network (see [Roadmap](https://github.com/Astraly-Labs/Empiric/blob/master/how-empiric-works/roadmap.md)).
 
 ### Transparency: Don't Trust, But Verify
 
