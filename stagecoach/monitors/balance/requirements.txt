@@ -1,2 +1,2 @@
 boto3==1.26.*
-python-telegram-bot==20.0
+python-telegram-bot==13.0
