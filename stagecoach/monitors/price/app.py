@@ -70,7 +70,7 @@ def check_asset_num_sources_aggregated(
 
 
 def _get_slack_bot_oauth_token_from_aws():
-    region_name = "us-west-1"
+    region_name = "eu-west-3"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()

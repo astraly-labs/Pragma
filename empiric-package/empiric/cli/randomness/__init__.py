@@ -84,10 +84,12 @@ async def deploy_randomness_proxy(client: Client, config_path: Path):
     vrf_private_key = felt_to_secret_key(account_private_key)
     vrf_pvt_int = int.from_bytes(vrf_private_key, sys.byteorder)
     vrf_uint256 = uint256_to_2_128(vrf_pvt_int)
-
-    deployment_result = await Contract.deploy(
+    declare_result = await Contract.declare(
         client,
         compiled_contract=compiled_proxy,
+    )
+    await declare_result.wait_for_acceptance()
+    deployment_result = await declare_result.deploy(
         constructor_args=[
             declared_randomness_class_hash,
             get_selector_from_name("initializer"),
@@ -143,9 +145,13 @@ async def _deploy_tester(client: Client, config_path: Path):
         "utf-8"
     )
 
-    deployment_result = await Contract.deploy(
+    declare_result = await Contract.declare(
         client,
         compiled_contract=compiled_example,
+    )
+    await declare_result.wait_for_acceptance()
+
+    deployment_result = await declare_result.deploy(
         constructor_args=[],
     )
     await deployment_result.wait_for_acceptance()

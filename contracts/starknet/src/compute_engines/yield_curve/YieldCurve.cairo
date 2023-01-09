@@ -686,7 +686,12 @@ namespace YieldCurve {
 
             // Add to on_yield_points and recurse
             // Set expiry to be same as capture timestamp
-            assert yield_points[yield_points_idx] = YieldPoint(expiry_timestamp=last_updated_timestamp, capture_timestamp=last_updated_timestamp, rate=shifted_on_value, source=ON_SOURCE_KEY);
+            assert yield_points[yield_points_idx] = YieldPoint(
+                expiry_timestamp=last_updated_timestamp,
+                capture_timestamp=last_updated_timestamp,
+                rate=shifted_on_value,
+                source=ON_SOURCE_KEY,
+            );
 
             let (recursed_on_yield_points_len, recursed_on_yield_points) = build_on_yield_points(
                 output_decimals,
