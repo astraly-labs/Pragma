@@ -6,14 +6,18 @@ from typing import Union
 
 import boto3
 import requests
+import telegram
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import pair_id_for_asset, str_to_felt
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, get_spot_asset_spec_for_pair_id
-from empiric.publisher.fetchers import CoingeckoFetcher
+from empiric.publisher.fetchers import CoinbaseFetcher
+from empiric.publisher.types import PublisherFetchError
+
+from dotenv import load_dotenv
 
 logger = get_stream_logger()
-
+load_dotenv()
 # Behavior: Ping betteruptime iff all is good
 
 
@@ -69,7 +73,7 @@ def check_asset_num_sources_aggregated(
         return f"{pair_id}: too few sources (aggregated: {num_sources_aggregated}, target {MIN_NUM_SOURCES_AGGREGATED})"
 
 
-def _get_slack_bot_oauth_token_from_aws():
+def _get_telegram_bot_token_from_aws():
     region_name = "eu-west-3"
 
     # Create a Secrets Manager client
@@ -77,16 +81,19 @@ def _get_slack_bot_oauth_token_from_aws():
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
     return json.loads(get_secret_value_response["SecretString"])[
-        "SLACK_BOT_USER_OAUTH_TOKEN"
+        "telegram_bot_token"
     ]
 
 
 async def _handler():
-    slack_url = "https://slack.com/api/chat.postMessage"
-    slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
-    if slack_bot_oauth_token is None:
-        slack_bot_oauth_token = _get_slack_bot_oauth_token_from_aws()
-    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    chat_id = os.environ.get("CHAT_ID")
+    telegram_bot_token = os.environ.get("TELEGRAM_BOT_USER_OAUTH_TOKEN")
+    if telegram_bot_token is None:
+        telegram_bot_token = _get_telegram_bot_token_from_aws()
+        
+    bot = telegram.Bot(token=telegram_bot_token)
+    
+    
     network = os.environ.get("NETWORK")
     ignore_assets_str = os.environ.get("IGNORE_ASSETS", "")
     ignore_assets = ignore_assets_str.split(",")
@@ -98,10 +105,9 @@ async def _handler():
     ]
 
     client = EmpiricClient(network)
-    cg = CoingeckoFetcher(assets, "PUBLISHER")
-    entries = cg.fetch_sync()
-
-    coingecko = {entry.pair_id: entry.price for entry in entries}
+    cb = CoinbaseFetcher(assets, "PUBLISHER")
+    entries = cb.fetch_sync()
+    coinbase = {entry.pair_id: entry.price for entry in entries if type(entry) != PublisherFetchError}
 
     all_errors = []
     for asset in assets:
@@ -117,9 +123,9 @@ async def _handler():
                 num_sources_aggregated,
             ) = await client.get_spot(pair_id)
 
-            if felt_pair_id in coingecko:
+            if felt_pair_id in coinbase:
                 checks.append(
-                    check_asset_price(coingecko[felt_pair_id], value, pair_id, decimals)
+                    check_asset_price(coinbase[felt_pair_id], value, pair_id, decimals)
                 )
 
             checks.append(check_asset_timestamp(last_updated_timestamp, pair_id))
@@ -139,19 +145,14 @@ async def _handler():
             logger.info(f"All checks passed for pair {pair_id}")
 
     if all_errors:
-        slack_text = (
-            f"Error(s) with Empiric price on network {client.network} <!channel>\n"
+        telegram_text = (
+            f"Prices monitoring :Error(s) with Empiric price on network {client.network} \n"
         )
-        slack_text += "\n".join(all_errors)
+        telegram_text += "\n".join(all_errors)
 
-        requests.post(
-            slack_url,
-            headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
-            data={
-                "text": slack_text,
-                "channel": channel_id,
-            },
-        )
+        await bot.send_message(chat_id, text= telegram_text)
+
+
     else:
         # All data passes checks, ping betteruptime (deadman switch)
         betteruptime_id = os.environ.get("BETTERUPTIME_ID")
