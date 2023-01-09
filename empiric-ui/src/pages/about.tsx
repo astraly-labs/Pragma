@@ -4,9 +4,9 @@ import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
-import TeamSection from "../components/TeamSection";
+// import TeamSection from "../components/TeamSection";
 import InvestorsSection from "../components/InvestorsSection";
-import AngelsSection from "../components/AngelsSection";
+// import AngelsSection from "../components/AngelsSection";
 
 const AboutPage = () => (
   <>

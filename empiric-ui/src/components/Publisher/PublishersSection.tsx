@@ -1,5 +1,5 @@
 import React from "react";
-import PublisherCard from "./PublisherCard";
+// import PublisherCard from "./PublisherCard";
 
 export interface PublisherCardProps {
   src: string;

@@ -11,9 +11,9 @@ import Banner from "../components/Banner";
 import LogoCloud from "../components/LogoClouds/LogoCloud";
 import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
-import LogoGrid from "../components/LogoClouds/LogoGrid";
+// import LogoGrid from "../components/LogoClouds/LogoGrid";
 import { Logo } from "../components/LogoClouds/LogoCloud";
-import Advisors from "../components/Landing/Advisors";
+// import Advisors from "../components/Landing/Advisors";
 
 const stats = [
   {
@@ -34,28 +34,28 @@ const stats = [
   },
 ];
 
-const dataPublishers: Logo[] = [
-  {
-    name: "Jane Street",
-    src: "/assets/publishers/jane-street.webp",
-    href: "https://www.janestreet.com/",
-  },
-  {
-    name: "CMT Digital",
-    src: "/assets/publishers/cmtdigital.webp",
-    href: "https://cmt.digital/",
-  },
-  {
-    name: "Flow Traders",
-    src: "/assets/publishers/flow-traders.webp",
-    href: "https://www.flowtraders.com/",
-  },
-  {
-    name: "Gemini",
-    src: "/assets/publishers/gemini.svg",
-    href: "https://www.gemini.com/",
-  },
-];
+// const dataPublishers: Logo[] = [
+// {
+//   name: "Jane Street",
+//   src: "/assets/publishers/jane-street.webp",
+//   href: "https://www.janestreet.com/",
+// },
+// {
+//   name: "CMT Digital",
+//   src: "/assets/publishers/cmtdigital.webp",
+//   href: "https://cmt.digital/",
+// },
+// {
+//   name: "Flow Traders",
+//   src: "/assets/publishers/flow-traders.webp",
+//   href: "https://www.flowtraders.com/",
+// },
+// {
+//   name: "Gemini",
+//   src: "/assets/publishers/gemini.svg",
+//   href: "https://www.gemini.com/",
+// },
+// ];
 
 const ecosystemPartners: Logo[] = [
   {
