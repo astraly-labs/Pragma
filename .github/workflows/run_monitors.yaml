@@ -15,7 +15,7 @@ jobs:
 
       - name: Build docker images locally
         run: |
-          docker build . --target test -t 42labs/empiric-publisher:test
+          docker build . --target test -t astralylabs/empiric-publisher:test
           docker build stagecoach/monitors/balance -f stagecoach/monitors/balance/Integration.Dockerfile -t monitor-balance --platform linux/amd64
           docker build stagecoach/monitors/price -f stagecoach/monitors/price/Integration.Dockerfile -t monitor-price --platform linux/amd64
 

@@ -33,7 +33,7 @@ const FeaturesPage = () => (
         <Heading
           title="Frequently asked questions"
           subtitle="Answers to"
-          href="mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,"
+          href="mailto:support@astraly.xyz?body=Hi%20Empiric-Team,"
           hrefText="Send us your question"
         />
         <FAQ />

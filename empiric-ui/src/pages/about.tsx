@@ -30,7 +30,7 @@ const AboutPage = () => (
           title="Looking for a way to get involved?"
           description="If you’re looking for somewhere you can learn quickly and make a meaningful impact in a fast-paced company, you’re in the right place."
           mainAction={{
-            href: "mailto:hello@42labs.xyz?body=Hi%20Empiric-Team,",
+            href: "mailto:support@astraly.xyz?body=Hi%20Empiric-Team,",
             actionText: "Reach out to us",
             icon: ChatIcon,
           }}

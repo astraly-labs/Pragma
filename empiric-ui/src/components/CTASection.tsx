@@ -104,7 +104,7 @@ export const DefaultCTASection = () => (
       icon: CodeIcon,
     }}
     secondaryAction={{
-      href: "mailto:hello@42labs.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
+      href: "mailto:support@astraly.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
       actionText: "Request asset",
       icon: ChatIcon,
     }}
