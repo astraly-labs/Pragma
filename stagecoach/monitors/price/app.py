@@ -25,7 +25,7 @@ MIN_NUM_SOURCES_AGGREGATED = int(os.environ.get("MIN_NUM_SOURCES_AGGREGATED", 3)
 EXPERIMENTAL_ASSET_KEYS = {
     "ETH/MXN",
     "TEMP/USD",
-}  # do not send slack notifications for these
+}  # do not send notifications for these
 
 SECRET_NAME = os.environ.get("SECRET_NAME")
 
@@ -137,7 +137,7 @@ async def _handler():
         if errors := [x for x in checks if x is not None]:
             for error in errors:
                 logger.error(error)
-            # Always log errors so we have visibility but only alert in Slack for non-experimental assets
+            # Always log errors so we have visibility but only alert in Telegram for non-experimental assets
             if pair_id not in EXPERIMENTAL_ASSET_KEYS:
                 all_errors.extend(errors)
         else:
