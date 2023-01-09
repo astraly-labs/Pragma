@@ -3,17 +3,13 @@ import json
 import os
 
 import boto3
-import telegram
 import requests
+import telegram
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import felt_to_str
-from empiric.publisher.types import PublisherFetchError
-from empiric.publisher.fetchers import CoinbaseFetcher
-from dotenv import load_dotenv
 
 logger = get_stream_logger()
-load_dotenv()
 
 # Inputs
 # [Optional]: Publisher names; if empty, query for all
@@ -75,12 +71,8 @@ async def _handler():
             error_message = f"Balance monitoring :Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
             logger.warning(error_message)
             all_above_threshold = False
-            await bot.send_message(chat_id, text= error_message)
+            await bot.send_message(chat_id, text=error_message)
 
-            
-
-
-            
         else:
             logger.info(
                 f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"

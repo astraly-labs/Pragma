@@ -14,11 +14,9 @@ from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, get_spot_asset_spec_for
 from empiric.publisher.fetchers import CoinbaseFetcher
 from empiric.publisher.types import PublisherFetchError
 
-from dotenv import load_dotenv
-
 logger = get_stream_logger()
-load_dotenv()
-# Behavior: Ping betteruptime iff all is good
+
+# Behavior: Ping betteruptime if all is good
 
 
 PRICE_TOLERANCE = float(os.environ.get("PRICE_TOLERANCE", 0.1))  # as a fraction
@@ -80,9 +78,7 @@ def _get_telegram_bot_token_from_aws():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return json.loads(get_secret_value_response["SecretString"])[
-        "telegram_bot_token"
-    ]
+    return json.loads(get_secret_value_response["SecretString"])["telegram_bot_token"]
 
 
 async def _handler():
@@ -90,10 +86,9 @@ async def _handler():
     telegram_bot_token = os.environ.get("TELEGRAM_BOT_USER_OAUTH_TOKEN")
     if telegram_bot_token is None:
         telegram_bot_token = _get_telegram_bot_token_from_aws()
-        
+
     bot = telegram.Bot(token=telegram_bot_token)
-    
-    
+
     network = os.environ.get("NETWORK")
     ignore_assets_str = os.environ.get("IGNORE_ASSETS", "")
     ignore_assets = ignore_assets_str.split(",")
@@ -107,7 +102,11 @@ async def _handler():
     client = EmpiricClient(network)
     cb = CoinbaseFetcher(assets, "PUBLISHER")
     entries = cb.fetch_sync()
-    coinbase = {entry.pair_id: entry.price for entry in entries if type(entry) != PublisherFetchError}
+    coinbase = {
+        entry.pair_id: entry.price
+        for entry in entries
+        if type(entry) != PublisherFetchError
+    }
 
     all_errors = []
     for asset in assets:
@@ -145,13 +144,10 @@ async def _handler():
             logger.info(f"All checks passed for pair {pair_id}")
 
     if all_errors:
-        telegram_text = (
-            f"Prices monitoring :Error(s) with Empiric price on network {client.network} \n"
-        )
+        telegram_text = f"Prices monitoring :Error(s) with Empiric price on network {client.network} \n"
         telegram_text += "\n".join(all_errors)
 
-        await bot.send_message(chat_id, text= telegram_text)
-
+        await bot.send_message(chat_id, text=telegram_text)
 
     else:
         # All data passes checks, ping betteruptime (deadman switch)
