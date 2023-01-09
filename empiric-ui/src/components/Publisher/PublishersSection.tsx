@@ -58,10 +58,10 @@ const PublishersSection = () => (
           />
         </li>
       ))}
-    </ul>
-    {/* <div className="mb-5 text-3xl font-light tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
+    </ul> */}
+    <div className="mb-5 text-3xl font-light tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
       No Publishers yet
-    </div> */}
+    </div>
   </>
 );
 
