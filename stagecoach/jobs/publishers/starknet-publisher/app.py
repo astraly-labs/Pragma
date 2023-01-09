@@ -32,7 +32,7 @@ def handler(event, context):
 
 
 def _get_pvt_key():
-    region_name = "us-west-1"
+    region_name = "eu-west-3"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
@@ -66,7 +66,7 @@ async def _handler(assets):
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
     for res in response:
-        await res.wait_for_acceptance(wait_for_accept=True)
+        await res.wait_for_acceptance()
     return _entries
 
 

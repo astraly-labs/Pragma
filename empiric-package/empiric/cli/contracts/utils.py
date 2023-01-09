@@ -91,9 +91,13 @@ async def deploy_contract(cli_config, contract_name):
         "utf-8"
     )
 
-    deployment_result = await Contract.deploy(
+    declare_result = await Contract.declare(
         account_client,
         compiled_contract=compiled_contract,
+    )
+    await declare_result.wait_for_acceptance()
+
+    deployment_result = await declare_result.deploy(
         constructor_args=[],
     )
     await deployment_result.wait_for_acceptance()

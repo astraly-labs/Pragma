@@ -20,7 +20,7 @@ def handler(event, context):
 
 def _get_pvt_key():
     secret_name = "publisherPrivateKey"
-    region_name = "us-west-1"
+    region_name = "eu-west-3"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
