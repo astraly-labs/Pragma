@@ -4,9 +4,9 @@ import { CodeIcon, ChatIcon } from "@heroicons/react/outline";
 import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
-import TeamSection from "../components/TeamSection";
+// import TeamSection from "../components/TeamSection";
 import InvestorsSection from "../components/InvestorsSection";
-import AngelsSection from "../components/AngelsSection";
+// import AngelsSection from "../components/AngelsSection";
 
 const AboutPage = () => (
   <>
@@ -18,12 +18,12 @@ const AboutPage = () => (
           subtitle="Meet our team"
           text="Behind Empiric is a close-knit team of bright people who move fast to build a more transparent and decentralized future."
         />
-        <TeamSection />
+        {/* <TeamSection /> */}
       </SectionContainer>
       <SectionContainer>
         <Heading title="Backed by" subtitle="Meet our investors" />
         <InvestorsSection />
-        <AngelsSection />
+        {/* <AngelsSection /> */}
       </SectionContainer>
       <SectionContainer>
         <CTASection
