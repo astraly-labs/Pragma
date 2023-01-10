@@ -17,7 +17,6 @@ from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 
 logger = logging.getLogger(__name__)
 
-
 class EmpiricClient(
     NonceMixin, OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin
 ):
