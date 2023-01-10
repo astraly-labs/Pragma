@@ -97,7 +97,7 @@ class EmpiricClient(
             client=self.client,
             signer=self.signer,
         )
-        self.client._get_nonce = self._get_nonce
+        self.client.get_nonce = self._get_nonce
         self.is_user_client = True
         self.account_contract_address = account_contract_address
 
