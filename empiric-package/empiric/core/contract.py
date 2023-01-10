@@ -45,7 +45,7 @@ async def invoke_(
         max_fee=self.max_fee,
         auto_estimate=auto_estimate,
     )
-    response = await self._client.send_transaction(transaction)
+    response = await self._client.client.send_transaction(transaction)
     if callback:
         await callback(transaction.nonce, response.transaction_hash)
 
