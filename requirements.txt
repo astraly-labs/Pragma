@@ -4,6 +4,6 @@ pytest-asyncio==0.18.*
 typing_extensions==4.3.0
 
 # Publisher
-starknet.py==0.12.0a0
+starknet.py==0.13.0a0
 boto3==1.26.*
 python-telegram-bot==13.0
