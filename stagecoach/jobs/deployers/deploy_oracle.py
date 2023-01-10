@@ -78,12 +78,12 @@ async def main():
         )
 
         # To declare a contract, send Declare transaction with AccountClient.declare method
-        resp = await admin_client.client.client.declare(
+        resp = await admin_client.client.declare(
             transaction=declare_transaction, token=token
         )
         print(hex(resp.transaction_hash))
         breakpoint()
-        await admin_client.client.client.wait_for_tx(resp.transaction_hash)
+        await admin_client.client.wait_for_tx(resp.transaction_hash)
 
         declared_contract_class_hash = resp.class_hash
 

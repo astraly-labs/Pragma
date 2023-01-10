@@ -3,11 +3,13 @@ from typing import List
 from empiric.core.contract import Contract
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
+from starknet_py.net.account.account import Account
 from starknet_py.net.client import Client
 
 
 class PublisherRegistryMixin:
     client: Client
+    account: Account
     publisher_registry: Contract
 
     async def get_all_publishers(self) -> List[str]:

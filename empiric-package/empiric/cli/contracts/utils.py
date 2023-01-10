@@ -40,7 +40,7 @@ def get_contract(
     return Contract(
         address=contract_address,
         abi=abi,
-        client=client,
+        provider=client,
     )
 
 

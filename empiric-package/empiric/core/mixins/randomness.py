@@ -4,6 +4,7 @@ from typing import Any, Callable, List, Optional
 from empiric.core.abis.randomness import RANDOMNESS_ABI
 from empiric.core.contract import Contract
 from starknet_py.contract import InvokeResult
+from starknet_py.net.account.account import Account
 from starknet_py.net.client import Client
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 class RandomnessMixin:
     client: Client
+    account: Account
     randomness: Optional[Contract] = None
     track_nonce: Callable[Any, None] = None
 
