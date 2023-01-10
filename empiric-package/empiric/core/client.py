@@ -23,6 +23,7 @@ class EmpiricClient(
 ):
     is_user_client: bool = False
     account_contract_address: Optional[int] = None
+    account: Account = None
 
     def __init__(
         self,
@@ -62,15 +63,16 @@ class EmpiricClient(
         self._setup_contracts()
 
     def _setup_contracts(self):
+        provider = self.account if self.account else self.client
         self.oracle = Contract(
             address=self.contract_addresses_config.oracle_proxy_address,
             abi=ORACLE_ABI,
-            provider=self.account,
+            provider=provider,
         )
         self.publisher_registry = Contract(
             address=self.contract_addresses_config.publisher_registry_address,
             abi=PUBLISHER_REGISTRY_ABI,
-            provider=self.account,
+            provider=provider,
         )
 
     async def get_balance(self, account_contract_address, token_address=None):
@@ -109,8 +111,9 @@ class EmpiricClient(
         self,
         stats_contract_address: int,
     ):
+        provider = self.account if self.account else self.client
         self.stats = Contract(
             address=stats_contract_address,
             abi=SUMMARY_STATS_ABI,
-            provider=self.account,
+            provider=provider,
         )
