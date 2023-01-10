@@ -78,7 +78,9 @@ def _get_telegram_bot_token_from_aws():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return json.loads(get_secret_value_response["SecretString"])["TELEGRAM_BOT_USER_OAUTH_TOKEN"]
+    return json.loads(get_secret_value_response["SecretString"])[
+        "TELEGRAM_BOT_USER_OAUTH_TOKEN"
+    ]
 
 
 async def _handler():

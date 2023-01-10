@@ -92,17 +92,18 @@ class EmpiricClient(
             KeyPair.from_private_key(private_key),
             chain_id,
         )
-        self.client = Account(
+        self.account = Account(
             address=account_contract_address,
             client=self.client,
             signer=self.signer,
         )
-        self.client.get_nonce = self._get_nonce
+        self.client = self.account.client
+        self.client._get_nonce = self._get_nonce
         self.is_user_client = True
         self.account_contract_address = account_contract_address
 
     def account_address(self):
-        return self.client.address
+        return self.account.address
 
     def init_stats_contract(
         self,

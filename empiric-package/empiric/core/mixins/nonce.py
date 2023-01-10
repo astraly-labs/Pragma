@@ -83,7 +83,7 @@ class NonceMixin:
 
         nonce = await self.client.get_contract_nonce(
             self.account_contract_address,
-            block_number,
+            block_number=block_number,
         )
         return nonce
 
