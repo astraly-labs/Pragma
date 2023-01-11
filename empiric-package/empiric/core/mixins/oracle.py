@@ -114,6 +114,31 @@ class OracleMixin:
 
         return invocations
 
+    async def publish_entry(
+        self,
+        key: int,
+        value: int,
+        timestamp: int,
+        source: int,
+        publisher: int,
+        max_fee: int = int(1e18),
+    ) -> InvokeResult:
+        if not self.is_user_client:
+            raise AttributeError(
+                "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
+            )
+        invocation = await self.oracle.publish_entry.invoke(
+            {
+                "key": key,
+                "value": value,
+                "timestamp": timestamp,
+                "source": source,
+                "publisher": publisher,
+            },
+            max_fee=max_fee,
+        )
+        return invocation
+
     async def get_entries(self, pair_id, sources=[]) -> List[SpotEntry]:
         if isinstance(pair_id, str):
             pair_id = str_to_felt(pair_id)
