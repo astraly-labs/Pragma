@@ -61,6 +61,19 @@ struct Currency {
     ethereum_address: felt,  // optional
 }
 
+struct FuturesCurrency {
+    id: felt,
+    decimals: felt,
+    is_abstract_currency: felt,  // True (1) if not a specific token but abstract, e.g. USD or ETH as a whole
+    starknet_address: felt,  // optional, e.g. can have synthetics for non-bridged assets
+    ethereum_address: felt,  // optional
+}
+
+struct GenericEntity {
+    id: felt,
+    decimals: felt,
+    type_of_data: felt,
+}
 struct Checkpoint {
     timestamp: felt,
     value: felt,

@@ -52,6 +52,13 @@ func Oracle_currencies_storage(key: felt) -> (currency: Currency) {
 }
 
 @storage_var
+func Oracle_futures_currencies_storage(key: felt) -> (currency: FuturesCurrency) {
+}
+
+@storage_var
+func Oracle_generic_currencies_storage(key: felt) -> (currency: GenericEntity) {
+}
+@storage_var
 func Oracle_pairs_storage(id: felt) -> (pair: Pair) {
 }
 
@@ -227,6 +234,42 @@ namespace Oracle {
         return (key_decimals,);
     }
 
+    func get_generic_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        key: felt
+    ) -> (decimals: felt) {
+        let (key_currency) = Oracle_generic_currencies_storage.read(key);
+        if (key_currency.id == 0) {
+            return (0,);
+        }
+
+        let key_decimals = key_currency.decimals;
+        return (key_decimals,);
+    }
+
+    func get_future_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        pair_id: felt, expiry_timestamp: felt
+    ) -> (decimals: felt) {
+        let (pair) = Oracle_pairs_storage.read(pair_id);
+        let (key_currency) = Oracle_futures_currencies_storage.read(pair.base_currency_id);
+        if (key_currency.id == 0) {
+            return (0,);
+        }
+
+        let key_decimals = key_currency.decimals;
+        return (key_decimals,);
+    }
+
+    func get_decimals_for_currency{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        currency_id: felt
+    ) -> (decimals: felt) {
+        let (key_currency) = Oracle_currencies_storage.read(currency_id);
+        if (key_currency.id == 0) {
+            return (0,);
+        }
+
+        let key_decimals = key_currency.decimals;
+        return (key_decimals,);
+    }
     func get_spot{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
@@ -417,6 +460,20 @@ namespace Oracle {
             expiry_timestamp=expiry_timestamp,
         );
         return (future_entry,);
+    }
+
+    func get_currency{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        currency_id: felt
+    ) -> (currency: Currency) {
+        let (key_currency) = Oracle_currencies_storage.read(currency_id);
+        return (key_currency);
+    }
+
+    func get_pair{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        pair_id: felt
+    ) -> (pair: Pair) {
+        let (pair) = Oracle_pairs_storage.read(pair_id);
+        return (pair);
     }
 
     //
