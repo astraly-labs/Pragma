@@ -55,6 +55,9 @@ namespace IOracle {
     func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
+    func get_generic_entry(key: felt, source) -> (entry: GenericEntry) {
+    }
+
     func get_future_entry(pair_id: felt, expiry_timestamp, source: felt) -> (entry: FutureEntry) {
     }
 

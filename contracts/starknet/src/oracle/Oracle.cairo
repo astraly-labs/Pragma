@@ -76,6 +76,18 @@ func get_spot_entry{
 // @param source: the source to use for Entry
 // @return entry: Entry for key and source
 @view
+func get_generic_entry{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt, source) -> (entry: GenericEntry) {
+    let (entry) = Oracle.get_generic_entry(key, source);
+    return (entry,);
+}
+
+// @notice get entry by key and source
+// @param key: the key to fetch Entries for
+// @param source: the source to use for Entry
+// @return entry: Entry for key and source
+@view
 func get_future_entry{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(pair_id, expiry_timestamp, source) -> (entry: FutureEntry) {
