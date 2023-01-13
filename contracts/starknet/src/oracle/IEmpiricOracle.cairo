@@ -7,6 +7,12 @@ struct BaseEntry {
     // Publisher of the data (usually the source, but occasionally a third party)
 }
 
+struct GenericEntry {
+    base: BaseEntry,
+    key: felt,
+    value: felt,
+}
+
 struct SpotEntry {
     base: BaseEntry,
     pair_id: felt,  // UTF-8 encoded uppercased string, e.g. "ETH/USD"
@@ -76,6 +82,9 @@ namespace IEmpiricOracle {
     }
 
     func get_spot_decimals(pair_id: felt) -> (decimals: felt) {
+    }
+
+    func get_generic_entry(key: felt, source) -> (entry: GenericEntry) {
     }
 
     // func get_future_entry
