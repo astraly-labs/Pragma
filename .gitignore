@@ -63,3 +63,5 @@ artifacts-zk
 
 # temporary gitignore during development
 contracts/evm/deploy/
+
+.env.local
