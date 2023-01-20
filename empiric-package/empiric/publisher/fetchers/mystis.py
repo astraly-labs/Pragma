@@ -12,8 +12,7 @@ logger = logging.getLogger(__name__)
 
 class MystisFetcher(PublisherInterfaceT):
     BASE_URL: str = (
-        "https://firestore.googleapis.com/v1/mystis-58531"
-        "/databases/(default)/documents/users"
+        "http://185.216.26.144:3002/player/token"
         "/{address}"
     )
     
@@ -35,7 +34,6 @@ class MystisFetcher(PublisherInterfaceT):
             return PublisherFetchError(
                 f"Unknown wallet address on Mystis API, do not know how to query Mystis API for {address}"
             )
-
         url = self.BASE_URL.format(address=address)
 
         async with session.get(
@@ -44,7 +42,7 @@ class MystisFetcher(PublisherInterfaceT):
             result = await resp.json()
             return self._construct(address, result)
 
-    async def _fetch_amount_token_sync(
+    def _fetch_amount_token_sync(
         self, address: str
     ) -> GenericEntry:
         if address is None:
@@ -60,19 +58,23 @@ class MystisFetcher(PublisherInterfaceT):
         return self._construct(address, result)
 
     async def fetch(self, session: ClientSession) -> GenericEntry:
-        entry = entry.append(asyncio.ensure_future(self._fetch_amount_token(self.wallet_address, session)))
-        return await asyncio.gather(*entry, return_exceptions=True)
+        # entry = asyncio.ensure_future(self._fetch_amount_token(self.address, session))
+        # entry = await self._fetch_amount_token(self.address, session)
+        entry = await self._fetch_amount_token(self.address, session)
+        print(f"GenericEntry", entry)
+        # return await asyncio.gather(*entry, return_exceptions=True)
+        return entry
 
-    async def fetch_sync(self) -> GenericEntry:
-        entry = entry.append(self._fetch_amount_token_sync(self.wallet_address))
+    def fetch_sync(self) -> GenericEntry:
+        entry = self._fetch_amount_token_sync(self.address)
         return entry
 
     def _construct(self, address, result) -> GenericEntry:
-        value = result["amountToken"]
-        value_int = int(value)
+        value_int = int(result)
         timestamp = int(time.time())
 
         logger.info(f"Fetched claimable amount {value_int} for {address} from Mystis")
+        print(f"Fetched claimable amount {value_int} for {address} from Mystis")
 
         return GenericEntry(
             key=address,
