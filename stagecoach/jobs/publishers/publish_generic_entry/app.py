@@ -11,32 +11,18 @@ from empiric.publisher.fetchers import MystisFetcher
 logger = get_stream_logger()
 
 NETWORK = os.environ["NETWORK"]
-SECRET_NAME = os.environ["SECRET_NAME"]
 
 def handler(event, context):
-    entry_ = asyncio.run(_handler("0x04d36F93A1Ce6ee095Ab9FE6D5F516C8c316810f51FA29A18E92b6EC77Cf1687"))
+    entry_ = asyncio.run(_handler("0x1474c8a6f3e24c25e64f2b11de7077d57a69ee4fff9f17204c4e2af80587a18"))
     serialized_entries_ = GenericEntry.serialize(entry_)
     print(serialized_entries_)
     return {
         "success": len(serialized_entries_),
     }
 
-def _get_pvt_key():
-    region_name = "eu-west-3"
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=region_name)
-    get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return int(
-        json.loads(get_secret_value_response["SecretString"])["PUBLISHER_PRIVATE_KEY"]
-    )
-
 async def _handler(address):
     publisher = os.environ.get("PUBLISHER")
-
-    publisher_private_key = _get_pvt_key()
-
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
@@ -44,11 +30,12 @@ async def _handler(address):
         account_contract_address=publisher_address,
     )
 
-    mystis_fetcher = MystisFetcher(publisher, address)
+    mystis_fetcher = MystisFetcher(address, publisher)
     publisher_client.add_fetcher(mystis_fetcher)
 
-    _entry = await publisher_client.fetch()
-    response = await publisher_client.publish_many(_entry)
+    _entry = await publisher_client.fetch_generic()  
+    response = await publisher_client.publish_entry(_entry) # Check error here
+    print(f"response", response)
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
