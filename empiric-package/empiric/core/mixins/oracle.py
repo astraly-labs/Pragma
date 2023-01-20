@@ -3,7 +3,7 @@ import logging
 from typing import List, Optional
 
 from empiric.core.contract import Contract
-from empiric.core.entry import FutureEntry, SpotEntry
+from empiric.core.entry import FutureEntry, SpotEntry, GenericEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
@@ -116,24 +116,21 @@ class OracleMixin:
 
     async def publish_entry(
         self,
-        key: int,
-        value: int,
-        timestamp: int,
-        source: int,
-        publisher: int,
+        entry: GenericEntry,
         max_fee: int = int(1e18),
     ) -> InvokeResult:
         if not self.is_user_client:
             raise AttributeError(
                 "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
             )
+        print(f"entry", entry)
         invocation = await self.oracle.publish_entry.invoke(
             {
-                "key": key,
-                "value": value,
-                "timestamp": timestamp,
-                "source": source,
-                "publisher": publisher,
+                "key": entry.key,
+                "value": entry.value,
+                "timestamp": entry.base.timestamp,
+                "source": entry.base.source,
+                "publisher": entry.base.publisher,
             },
             max_fee=max_fee,
         )
