@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 ASSET_MAPPING: Dict[str, str] = {
     "ETH": "ethereum",
     "BTC": "bitcoin",
+    "WBTC": "wrapped-bitcoin",
     "SOL": "solana",
     "AVAX": "avalanche-2",
     "DOGE": "dogecoin",

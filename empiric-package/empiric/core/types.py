@@ -75,6 +75,15 @@ class Currency:
             self.ethereum_address,
         ]
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "decimals": self.decimals,
+            "is_abstract_currency": self.is_abstract_currency,
+            "starknet_address": self.starknet_address,
+            "ethereum_address": self.ethereum_address,
+        }
+
 
 class Pair:
     id: int
@@ -96,3 +105,10 @@ class Pair:
 
     def serialize(self) -> List[str]:
         return [self.id, self.quote_currency_id, self.base_currency_id]
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "quote_currency_id": self.quote_currency_id,
+            "base_currency_id": self.base_currency_id,
+        }
