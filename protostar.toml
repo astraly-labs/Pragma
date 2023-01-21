@@ -1,5 +1,5 @@
 [project]
-protostar-version = "0.8.1"
+protostar-version = "0.9.0"
 lib-path = "contracts/starknet/lib"
 cairo-path = ["contracts/starknet/src", "contracts/starknet/lib", "contracts/starknet/lib/cairo_streams/src"]
 
