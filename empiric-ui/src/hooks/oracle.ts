@@ -9,7 +9,7 @@ import {
   toHex,
 } from "starknet/utils/number";
 
-// List from https://github.com/42labs/Empiric/blob/master/empiric-package/empiric/publisher/assets.py
+// List from https://github.com/Astraly-Labs/Empiric/blob/master/empiric-package/empiric/publisher/assets.py
 export const AssetKeys = [
   "ETH/USD",
   "BTC/USD",

@@ -24,7 +24,7 @@ const features: FeatureGridProps[] = [
         description: (
           <>
             Check out Empiric&apos;s source code on{" "}
-            <StyledExternalLink href="https://github.com/42labs/Empiric">
+            <StyledExternalLink href="https://github.com/Astraly-Labs/Empiric">
               Github
             </StyledExternalLink>
             .

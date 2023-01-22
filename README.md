@@ -33,7 +33,7 @@ To ensure your IDE settings and contracts compile correctly, make sure to run an
 
 Then add this line of code to your shell profile:
 
-```code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}```
+`code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}`
 
 After doing so, open all subsequent windows of the repo from the CLI, using the `code .` command, for correct formatting.
 
@@ -105,8 +105,8 @@ Netlify will automatically deploy previews on push if a pull request is open and
 Run the following commands to build a new base image for empiric-publisher locally. Use the `latest` tag for testing:
 
 ```bash
-docker build . -t 42labs/empiric-publisher
-docker push 42labs/empiric-publisher:latest
+docker build . -t astralylabs/empiric-publisher
+docker push astralylabs/empiric-publisher:latest
 ```
 
 empiric-publisher base images are versioned together with the Empiric Python package because when the Empiric package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Empiric package release, the release flow will overwrite the Empiric package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.

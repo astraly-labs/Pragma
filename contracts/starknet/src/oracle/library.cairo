@@ -330,11 +330,7 @@ namespace Oracle {
         let volume = actual_get_element_at(_entry.timestamp__volume__price, 32, 42);
         let price = actual_get_element_at(_entry.timestamp__volume__price, 75, 128);
         let entry = SpotEntry(
-            base=BaseEntry(
-            timestamp=timestamp,
-            source=source,
-            publisher=0,
-            ),
+            base=BaseEntry(timestamp=timestamp, source=source, publisher=0),
             pair_id=pair_id,
             price=price,
             volume=volume,
@@ -356,13 +352,7 @@ namespace Oracle {
         let value = actual_get_element_at(_entry.timestamp__value, 32, 128);
 
         let entry = GenericEntry(
-            base=BaseEntry(
-            timestamp=timestamp,
-            source=source,
-            publisher=0,
-            ),
-            key=key,
-            value=value,
+            base=BaseEntry(timestamp=timestamp, source=source, publisher=0), key=key, value=value
         );
 
         return (entry,);
@@ -421,11 +411,7 @@ namespace Oracle {
         let price = actual_get_element_at(_future_entry.timestamp__price, 32, 128);
 
         let future_entry = FutureEntry(
-            base=BaseEntry(
-            timestamp=timestamp,
-            source=source,
-            publisher=0,
-            ),
+            base=BaseEntry(timestamp=timestamp, source=source, publisher=0),
             pair_id=pair_id,
             price=price,
             expiry_timestamp=expiry_timestamp,
@@ -461,11 +447,7 @@ namespace Oracle {
 
         SubmittedEntry.emit(new_entry);
         Oracle__entry_storage.write(
-            new_entry.key,
-            new_entry.base.source,
-            GenericEntryStorage(
-            timestamp__value=element,
-            ),
+            new_entry.key, new_entry.base.source, GenericEntryStorage(timestamp__value=element)
         );
 
         return ();

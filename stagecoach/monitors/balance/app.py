@@ -4,6 +4,7 @@ import os
 
 import boto3
 import requests
+import telegram
 from empiric.core.client import EmpiricClient
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import felt_to_str
@@ -24,29 +25,28 @@ def handler(event, context):
     return {"success": True}
 
 
-def _get_slack_bot_oauth_token_from_aws():
-    region_name = "us-west-1"
+def _get_telegram_bot_oauth_token_from_aws():
+    region_name = "eu-west-3"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
     return json.loads(get_secret_value_response["SecretString"])[
-        "SLACK_BOT_USER_OAUTH_TOKEN"
+        "TELEGRAM_BOT_USER_OAUTH_TOKEN"
     ]
 
 
 async def _handler():
-    slack_url = "https://slack.com/api/chat.postMessage"
-    slack_bot_oauth_token = os.environ.get("SLACK_BOT_USER_OAUTH_TOKEN")
-    if slack_bot_oauth_token is None:
-        slack_bot_oauth_token = _get_slack_bot_oauth_token_from_aws()
-    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    chat_id = os.environ.get("CHAT_ID")
+    telegram_bot_token = os.environ.get("TELEGRAM_BOT_USER_OAUTH_TOKEN")
+    if telegram_bot_token is None:
+        telegram_bot_token = _get_telegram_bot_oauth_token_from_aws()
     network = os.environ.get("NETWORK")
     ignore_publishers_str = os.environ.get("IGNORE_PUBLISHERS", "")
     ignore_publishers = ignore_publishers_str.split(",")
     threshold_wei = int(os.environ.get("THRESHOLD_WEI", 0.5 * 10**18))
-
+    bot = telegram.Bot(token=telegram_bot_token)
     client = EmpiricClient(network)
 
     publishers = [
@@ -71,14 +71,8 @@ async def _handler():
             error_message = f"Balance below threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"
             logger.warning(error_message)
             all_above_threshold = False
-            requests.post(
-                slack_url,
-                headers={"Authorization": f"Bearer {slack_bot_oauth_token}"},
-                data={
-                    "text": error_message,
-                    "channel": channel_id,
-                },
-            )
+            await bot.send_message(chat_id, text=error_message)
+
         else:
             logger.info(
                 f"Balance above threshold for publisher: {felt_to_str(publisher)}, address: {hex(address)}, balance in ETH: {balance/(10**18)}"

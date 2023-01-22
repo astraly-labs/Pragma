@@ -51,32 +51,8 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     assert pairs[2] = Pair(3, 222, USD_CURRENCY_ID);
 
     IOracle.initializer(oracle_address, 1234, publisher_registry_address, 3, currencies, 3, pairs);
-    IOracle.publish_spot_entry(
-        oracle_address,
-        SpotEntry(
-        BaseEntry(
-            now,
-            1,
-            1,
-            ),
-        2,
-        2 * 10 ** 6,
-        0,
-        ),
-    );
-    IOracle.publish_spot_entry(
-        oracle_address,
-        SpotEntry(
-        BaseEntry(
-            now,
-            1,
-            1,
-            ),
-        3,
-        8 * 10 ** 6,
-        0,
-        ),
-    );
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 0));
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 3, 8 * 10 ** 6, 0));
 
     return ();
 }
@@ -127,17 +103,7 @@ func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
     %{ stop_warp = warp(1665539813, ids.oracle_address) %}
     IOracle.publish_spot_entry(
-        oracle_address,
-        SpotEntry(
-        BaseEntry(
-            1665539813,
-            1,
-            1,
-            ),
-        2,  // pair_id
-        2 * 10 ** 6,
-        0,
-        ),
+        oracle_address, SpotEntry(BaseEntry(1665539813, 1, 1), 2, 2 * 10 ** 6, 0)
     );
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
     assert price = 2 * 10 ** 6;
@@ -146,17 +112,7 @@ func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
     %{ stop_warp = warp(1665606928, ids.oracle_address) %}
     IOracle.publish_spot_entry(
-        oracle_address,
-        SpotEntry(
-        BaseEntry(
-            1665606928,
-            1,
-            1,
-            ),
-        2,  // pair_id
-        3 * 10 ** 6,
-        0,
-        ),
+        oracle_address, SpotEntry(BaseEntry(1665606928, 1, 1), 2, 3 * 10 ** 6, 0)
     );
 
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
@@ -165,17 +121,7 @@ func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
     %{ stop_warp = warp(1665606930, ids.oracle_address) %}
     IOracle.publish_spot_entry(
-        oracle_address,
-        SpotEntry(
-        BaseEntry(
-            1665606930,
-            2,
-            1,
-            ),
-        2,  // pair_id
-        5 * 10 ** 6,
-        0,
-        ),
+        oracle_address, SpotEntry(BaseEntry(1665606930, 2, 1), 2, 5 * 10 ** 6, 0)
     );
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
     assert price = 4 * 10 ** 6;

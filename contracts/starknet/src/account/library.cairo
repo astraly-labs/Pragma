@@ -237,8 +237,8 @@ namespace Account {
             to=[call_array].to,
             selector=[call_array].selector,
             calldata_len=[call_array].data_len,
-            calldata=calldata + [call_array].data_offset
-            );
+            calldata=calldata + [call_array].data_offset,
+        );
         // parse the remaining calls recursively
         _from_call_array_to_call(
             call_array_len - 1, call_array + AccountCallArray.SIZE, calldata, calls + Call.SIZE

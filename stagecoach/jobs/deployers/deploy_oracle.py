@@ -78,12 +78,12 @@ async def main():
         )
 
         # To declare a contract, send Declare transaction with AccountClient.declare method
-        resp = await admin_client.client.client.declare(
+        resp = await admin_client.client.declare(
             transaction=declare_transaction, token=token
         )
         print(hex(resp.transaction_hash))
         breakpoint()
-        await admin_client.client.client.wait_for_tx(resp.transaction_hash)
+        await admin_client.client.wait_for_tx(resp.transaction_hash)
 
         declared_contract_class_hash = resp.class_hash
 
@@ -99,9 +99,14 @@ async def main():
     with open("contracts/starknet/build/Proxy.json", "r") as f:
         compiled_contract = f.read()
     breakpoint()
-    deployment_result = await Contract.deploy(
+
+    declare_result = await Contract.declare(
         admin_client.client,
         compiled_contract=compiled_contract,
+    )
+    await declare_result.wait_for_acceptance()
+
+    deployment_result = await declare_result.deploy(
         constructor_args=constructor_args,
         token=token,
     )

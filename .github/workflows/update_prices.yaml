@@ -1,6 +1,5 @@
 name: Update Prices
-on:
-  push
+on: push
 
 jobs:
   update_prices:
@@ -16,13 +15,13 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          docker build . --target test -t 42labs/empiric-publisher:test
+          docker build . --target test -t astralylabs/empiric-publisher:test
           docker build stagecoach/integration_tests/publish-all/ -t publish-all --platform linux/amd64
           docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --platform linux/amd64
 
       - name: Post updated prices
         env:
-          PUBLISHER_PRIVATE_KEY : ${{ secrets.PUBLISHER_PRIVATE_KEY }}
+          PUBLISHER_PRIVATE_KEY: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
         run: |
           docker run \
             --env-file stagecoach/integration_tests/publish-all/.env \
