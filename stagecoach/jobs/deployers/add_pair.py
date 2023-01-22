@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import asyncio
 import os
 
@@ -959,10 +958,6 @@ ORACLE_ABI = [
     }
 ]
 
-# load .env
-
-load_dotenv()
-
 admin_contract_address = (
     # 0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77 mainnet
     0x021d6f33c00d3657d7ec6f9322399729afdf21533b77cf0512ac583b4755f011  # goerli
@@ -973,17 +968,27 @@ oracle_proxy_address = (
 )
 
 currencies_to_add = [
-    Currency(
-        "WBTC",
-        8,
-        0,
-        0x12d537dc323c439dc65c976fad242d5610d27cfb5f31689a0a319b8be7f3d56,
-        0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05,
-    ),
+    # Currency(
+    #     "WBTC",
+    #     8,
+    #     0,
+    #     0x12d537dc323c439dc65c976fad242d5610d27cfb5f31689a0a319b8be7f3d56,
+    #     0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05,
+    # ),
 ]
 pairs_to_add = [
-    Pair("WBTC/BTC", "WBTC", "BTC"),
-    Pair("WBTC/USD", "WBTC", "USD"),
+    # Pair("WBTC/BTC", "WBTC", "BTC"),
+    # Pair("WBTC/USD", "WBTC", "USD"),
+]
+
+currencies_to_update = [ 
+    Currency(
+        "BTC",
+        8,
+        1,
+        0,
+        0,
+    ),
 ]
 
 NETWORK = "testnet"
@@ -1020,8 +1025,19 @@ async def main():
 
     # Add Pairs
     for pair in pairs_to_add:
+        print(pair.to_dict())
         invocation = await contract.functions['add_pair'].invoke(
             pair.to_dict(),
+            max_fee=int(1e16)
+        )
+        print(hex(invocation.hash))
+        await invocation.wait_for_acceptance()
+
+    # Update Currencies
+    for currency in currencies_to_update:
+        print(currency.to_dict())
+        invocation = await contract.functions['update_currency'].invoke(
+            currency.to_dict(),
             max_fee=int(1e16)
         )
         print(hex(invocation.hash))
