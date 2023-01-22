@@ -13,6 +13,8 @@ The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_t
 | Ticker    | Pair ID                | Decimals |
 | --------- | ---------------------- | -------- |
 | BTC/USD   | 18669995996566340      | 8        |
+| WBTC/USD  | 6287680677296296772    | 8        |
+| WBTC/BTC  | 6287680677295051843    | 8        |
 | BTC/EUR   | 18669995995518290      | 8        |
 | ETH/USD   | 19514442401534788      | 8        |
 | SOL/USD   | 23449611697214276      | 8        |
@@ -36,10 +38,10 @@ The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_t
 
 ### **Quarterly Futures**
 
-| Ticker  | Pair ID           | Decimals | Expiry                                                                               |
-| ------- | ----------------- | -------- | ------------------------------------------------------------------------------------ |
-| BTC/USD | 18669995996566340 | 8        | See [FTX.com](https://help.ftx.com/hc/en-us/articles/360024780791-What-Are-Futures-) |
-| ETH/USD | 19514442401534788 | 8        | See [FTX.com](https://help.ftx.com/hc/en-us/articles/360024780791-What-Are-Futures-) |
+| Ticker  | Pair ID           | Decimals | Expiry                                                       |
+| ------- | ----------------- | -------- | ------------------------------------------------------------ |
+| BTC/USD | 18669995996566340 | 8        | See [More](https://www.investopedia.com/terms/f/futures.asp) |
+| ETH/USD | 19514442401534788 | 8        | See [More](https://www.investopedia.com/terms/f/futures.asp) |
 
 ### **Options**
 
@@ -65,6 +67,7 @@ Abstract currencies are not tracking a specific token but rather a broader conce
 | Currency | Currency ID | Decimals |
 | -------- | ----------- | -------- |
 | USD      | 5591876     | 8        |
+| BTC      | 4346947     | 8        |
 | EUR      | 4543826     | 8        |
 
 ### **Concrete Currencies**
