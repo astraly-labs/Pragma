@@ -49,11 +49,11 @@ const content: FooterColumn[] = [
         href: "/features",
         external: false,
       },
-      {
-        title: "Publishers",
-        href: "/publishers",
-        external: false,
-      },
+      // {
+      //   title: "Publishers",
+      //   href: "/publishers",
+      //   external: false,
+      // },
       {
         title: "Protocols",
         href: "/protocols",
@@ -64,11 +64,11 @@ const content: FooterColumn[] = [
   {
     heading: "Company",
     links: [
-      {
-        title: "About Us",
-        href: "/about",
-        external: false,
-      },
+      // {
+      //   title: "About Us",
+      //   href: "/about",
+      //   external: false,
+      // },
       {
         title: "Blog",
         href: "https://medium.com/@EmpiricNetwork",
@@ -174,7 +174,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
-        © 42 Labs Inc. - {new Date().getFullYear()}. All rights reserved.
+        © Astraly Labs Inc. - {new Date().getFullYear()}. All rights reserved.
       </div>
     </div>
   </div>
