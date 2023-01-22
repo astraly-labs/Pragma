@@ -8,8 +8,6 @@ import {
   HomeIcon,
   MenuIcon,
   PuzzleIcon,
-  SpeakerphoneIcon,
-  UserGroupIcon,
   ViewListIcon,
   XIcon,
 } from "@heroicons/react/outline";
@@ -43,12 +41,12 @@ const resources: Resource[] = [
     href: "/features",
     icon: PuzzleIcon,
   },
-  {
-    name: "Publishers",
-    description: "Meet our data publishers.",
-    href: "/publishers",
-    icon: SpeakerphoneIcon,
-  },
+  // {
+  //   name: "Publishers",
+  //   description: "Meet our data publishers.",
+  //   href: "/publishers",
+  //   icon: SpeakerphoneIcon,
+  // },
   {
     name: "Protocols",
     description: "Take a look at who is already using Empiric.",
@@ -59,12 +57,12 @@ const resources: Resource[] = [
 
 // List of resources displayed in the more tab
 const additional = [
-  {
-    name: "About Us",
-    description: "Get to know the team behind Empiric.",
-    href: "/about",
-    icon: UserGroupIcon,
-  },
+  // {
+  //   name: "About Us",
+  //   description: "Get to know the team behind Empiric.",
+  //   href: "/about",
+  //   icon: UserGroupIcon,
+  // },
   {
     name: "View on Block Explorer",
     description: "Take a closer look at our Starknet contract.",
@@ -79,7 +77,7 @@ const additional = [
 const callsToAction = [
   {
     name: "Request Asset",
-    href: "mailto:hello@42labs.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
+    href: "mailto:support@astraly.xyz?body=Hi%20Empiric%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
     icon: ChatIcon,
   },
 ];
