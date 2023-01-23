@@ -53,10 +53,9 @@ jobs:
         run: |
           make check-contracts # check that the contracts are consistent with the interface
 
-      - name: Compile all the cairo files
+      - name: Check formatting
         run: |
           make format-check
-          make build
 
       - name: Run tests suite
         run: |
