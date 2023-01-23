@@ -1,29 +1,23 @@
-#
-# Build image
-#
+# Dockerfile for publisher
+FROM python:3.9.13-slim-buster AS base
 
-FROM python:3.9-slim-bullseye AS builder
+# Needed for fastecdsa
+RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
+RUN python -m pip install --upgrade pip
 
-WORKDIR /app
-COPY . .
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="${PATH}:/root/.local/bin"
+# Install grade
+RUN mkdir /app/
+COPY . /app/
 
-RUN apt update -y && apt upgrade -y && apt install curl -y
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-RUN $HOME/.poetry/bin/poetry config virtualenvs.create false 
-RUN $HOME/.poetry/bin/poetry install --no-dev 
-RUN $HOME/.poetry/bin/poetry export -f requirements.txt >> requirements.txt
+# Defaults
+WORKDIR /app/
+RUN poetry install
 
-#
-# Prod image
-#
-
-FROM python:3.9-slim-bullseye AS runtime
-
-RUN mkdir /app
-COPY src /app
-COPY --from=builder /app/requirements.txt /app
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
+FROM base as test
+COPY empiric-package/ /empiric-package
+RUN pip install -e empiric-package/
 
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION
