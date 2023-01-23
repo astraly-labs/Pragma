@@ -26,7 +26,7 @@ class AscendexFetcher(PublisherInterfaceT):
         self, asset: EmpiricSpotAsset, session: ClientSession
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
-        url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
+        url = f"{self.BASE_URL}?symbol={pair[0]}/{pair[1]}"
 
         async with session.get(url) as resp:
             if resp.status == 404:
@@ -45,7 +45,7 @@ class AscendexFetcher(PublisherInterfaceT):
         self, asset: EmpiricSpotAsset
     ) -> Union[SpotEntry, PublisherFetchError]:
         pair = asset["pair"]
-        url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
+        url = f"{self.BASE_URL}?symbol={pair[0]}/{pair[1]}"
 
         resp = requests.get(url)
         if resp.status == 404:
