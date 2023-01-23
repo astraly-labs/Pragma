@@ -1,5 +1,8 @@
 name: Update Prices
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   update_prices:
