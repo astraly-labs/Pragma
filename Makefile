@@ -75,3 +75,6 @@ get-blockhashes:
 
 build-sol:
 	forge build --names --force
+
+check-contracts:
+	poetry run python3 -m empiric.test.interface_consistency --cairo-path 'contracts/starknet/src,contracts/starknet/lib'
