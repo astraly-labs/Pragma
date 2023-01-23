@@ -1,5 +1,5 @@
 .PHONY: build test coverage
-cairo_files = $(shell find . -name "*.cairo")
+cairo_files = $(shell find contracts -name "*.cairo")
 
 build: check
 	$(MAKE) clean
