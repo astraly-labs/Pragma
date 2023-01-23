@@ -27,6 +27,9 @@ cairo-nile = "0.12.0"
 vulture = "2.7"
 empiric-network = {path="./empiric-package", develop = true}
 
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.0.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
