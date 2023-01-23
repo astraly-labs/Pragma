@@ -1,12 +1,19 @@
 # Dockerfile for publisher
-FROM python:3.9.14-slim-buster AS base
+FROM python:3.9.13-slim-buster AS base
 
 # Needed for fastecdsa
-RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev
+RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
 RUN python -m pip install --upgrade pip
 
-COPY requirements.txt /requirements.txt
-RUN pip install -r requirements.txt --upgrade --upgrade-strategy eager
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="${PATH}:/root/.local/bin"
+# Install grade
+RUN mkdir /app/
+COPY . /app/
+
+# Defaults
+WORKDIR /app/
+RUN poetry install
 
 FROM base as test
 COPY empiric-package/ /empiric-package

@@ -1,5 +1,8 @@
 name: Run Monitors
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   run_monitors:

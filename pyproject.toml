@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "empiric"
+version = "1.4.7"
+description = "Empiric, the leading Oracle on zkRollups."
+authors = ["0xevolve <support@astraly.xyz>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "3.9.13"
+cairo-lang = "0.10.3"
+pytest = "^7.0"
+pytest-asyncio = "^0.19"
+typing_extensions = "4.3.0"
+"starknet.py" = "0.13.0a0"
+boto3 = "^1.26"
+pytest-xdist = "^3.1.0"
+
+[tool.poetry.dev-dependencies]
+black = "^22.12.0"
+flake8 = "^6.0.0"
+isort = "^5.11.4"
+bumpversion = "^0.6.0"
+build = "^0.10.0"
+twine = "^4.0.2"
+typer = "0.6.1"
+starknet-devnet = "0.4.3"
+cairo-nile = "0.12.0"
+vulture = "2.7"
+empiric-network = {path="./empiric-package", develop = true}
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
