@@ -40,7 +40,9 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: make setup
+        run: |
+          make setup
+          export PATH="$PATH:/home/runner/.protostar/dist/protostar"
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
