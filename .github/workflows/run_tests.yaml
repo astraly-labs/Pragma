@@ -49,7 +49,7 @@ jobs:
 
       - name: Check contract interface consistency
         run: |
-          python -m empiric.test.interface_consistency --cairo-path 'contracts/starknet/src,contracts/starknet/lib'
+          python3 -m empiric.test.interface_consistency --cairo-path 'contracts/starknet/src,contracts/starknet/lib'
 
       - name: Compile all the cairo files
         run: |
