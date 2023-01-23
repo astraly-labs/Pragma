@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
 RUN python -m pip install --upgrade pip
 
 RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="${PATH}:/root/.local/bin"
 RUN poetry install
 
 FROM base as test
