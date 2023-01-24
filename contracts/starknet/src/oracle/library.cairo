@@ -34,7 +34,7 @@ from entry.structs import (
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 from bits_manipulation.bits_manipulation import actual_set_element_at, actual_get_element_at
-
+from starkware.cairo.common.pow import pow
 const BACKWARD_TIMESTAMP_BUFFER = 7800;  // 2 hours and 10 minutes
 // Max difference between "current" timestamp and entry timestamp
 // where "current" timestamp is a conservative estimate: min(block_timestamp, latest_updated_timestamp)
@@ -252,7 +252,7 @@ namespace Oracle {
 
         let (currency_1) = Oracle_currencies_storage.read(base_currency_id);
         let (currency_2) = Oracle_currencies_storage.read(quote_currency_id);
-        let new_decimals = _max(currency_1.decimals, currency_2.decimals);
+        let (new_decimals) = _max(currency_1.decimals, currency_2.decimals);
         %{ print(ids.new_decimals) %}
         let (new_last_updated_timestamp) = _max(
             last_updated_timestamp, base_last_updated_timestamp
@@ -278,7 +278,7 @@ namespace Oracle {
             );
         } else {
             if (currency_ids[idx - 1] == base_currency_id) {
-                let rebase_value = mult_decimals(price, base_value, new_decimals);
+                let rebase_value = price * base_value;
                 let (
                     rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
                 ) = get_spot_with_hop(
@@ -291,27 +291,64 @@ namespace Oracle {
                     new_last_updated_timestamp,
                     new_num_sources_aggregated,
                 );
+                let final_price = mult_decimals(price, 1, new_decimals);
                 return (
-                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+                    final_price,
+                    rec_decimals,
+                    rec_last_updated_timestamp,
+                    rec_num_sources_aggregated,
                 );
             } else {
                 let rebase_value = div_decimals(price, base_value, new_decimals);
-                let (
-                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
-                ) = get_spot_with_hop(
-                    currency_ids_len,
-                    currency_ids,
-                    aggregation_mode,
-                    idx + 2,
-                    rebase_value,
-                    new_decimals,
-                    new_last_updated_timestamp,
-                    new_num_sources_aggregated,
-                );
-                %{ print(ids.rec_price) %}
-                return (
-                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
-                );
+                let (pow_) = pow(10, new_decimals);
+                let (normalised_value, _) = unsigned_div_rem(rebase_value, pow_);
+                if (normalised_value != 0) {
+                    let (
+                        rec_price,
+                        rec_decimals,
+                        rec_last_updated_timestamp,
+                        rec_num_sources_aggregated,
+                    ) = get_spot_with_hop(
+                        currency_ids_len,
+                        currency_ids,
+                        aggregation_mode,
+                        idx + 2,
+                        normalised_value,
+                        new_decimals,
+                        new_last_updated_timestamp,
+                        new_num_sources_aggregated,
+                    );
+
+                    return (
+                        rec_price,
+                        rec_decimals,
+                        rec_last_updated_timestamp,
+                        rec_num_sources_aggregated,
+                    );
+                } else {
+                    let (
+                        rec_price,
+                        rec_decimals,
+                        rec_last_updated_timestamp,
+                        rec_num_sources_aggregated,
+                    ) = get_spot_with_hop(
+                        currency_ids_len,
+                        currency_ids,
+                        aggregation_mode,
+                        idx + 2,
+                        rebase_value,
+                        new_decimals,
+                        new_last_updated_timestamp,
+                        new_num_sources_aggregated,
+                    );
+
+                    return (
+                        rec_price,
+                        rec_decimals,
+                        rec_last_updated_timestamp,
+                        rec_num_sources_aggregated,
+                    );
+                }
             }
         }
     }
