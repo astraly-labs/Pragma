@@ -57,6 +57,7 @@ async def _handler(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
+                AscendexFetcher,
             )
         ]
     )
@@ -67,6 +68,7 @@ async def _handler(assets):
     )
     for res in response:
         await res.wait_for_acceptance()
+
     return _entries
 
 

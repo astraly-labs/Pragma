@@ -25,11 +25,10 @@ async def main():
     _entries = await publisher_client.fetch()
 
     response = await publisher_client.publish_many(_entries)
-    for res in response:
-        await res.wait_for_acceptance()
 
-    for entry in _entries:
-        log_entry(entry, logger=logger)
+    for (i, res) in enumerate(response):
+        print(f"Published data with tx_hash: {hex(res.hash)}")
+        await res.wait_for_acceptance()
 
 
 if __name__ == "__main__":

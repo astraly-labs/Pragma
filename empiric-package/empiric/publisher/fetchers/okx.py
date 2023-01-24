@@ -33,10 +33,10 @@ class OkxFetcher(PublisherInterfaceT):
                 return PublisherFetchError(
                     f"No data found for {'/'.join(pair)} from OKX"
                 )
-            result = await resp.json(content_type="text/json")
+            result = await resp.json(content_type="application/json")
             if (
-                result["code"] == 51001
-                and result["msg"] == "Instrument ID does not exist"
+                result["code"] == "51001"
+                or result["msg"] == "Instrument ID does not exist"
             ):
                 return PublisherFetchError(
                     f"No data found for {'/'.join(pair)} from OKX"
@@ -53,8 +53,8 @@ class OkxFetcher(PublisherInterfaceT):
         resp = requests.get(url)
         if resp.status == 404:
             return PublisherFetchError(f"No data found for {'/'.join(pair)} from OKX")
-        result = resp.json(content_type="text/json")
-        if result["code"] == 51001 and result["msg"] == "Instrument ID does not exist":
+        result = resp.json(content_type="application/json")
+        if result["code"] == "51001" or result["msg"] == "Instrument ID does not exist":
             return PublisherFetchError(f"No data found for {'/'.join(pair)} from OKX")
 
         return self._construct(asset, result)
@@ -81,18 +81,21 @@ class OkxFetcher(PublisherInterfaceT):
 
     def _construct(self, asset, result) -> SpotEntry:
         pair = asset["pair"]
-        data = result["data"]
+        data = result["data"][0]
 
         timestamp = int(data["ts"])
         price = float(data["last"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
+        volume = float(data["volCcy24h"])
+        volume_int = int(volume)
 
         logger.info(f"Fetched price {price} for {'/'.join(pair)} from OKX")
 
         return SpotEntry(
             pair_id=pair_id,
             price=price_int,
+            volume=volume_int,
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,
