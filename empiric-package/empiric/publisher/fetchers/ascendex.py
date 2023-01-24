@@ -49,7 +49,7 @@ class AscendexFetcher(PublisherInterfaceT):
         url = f"{self.BASE_URL}?symbol={pair[0]}/{pair[1]}"
 
         resp = requests.get(url)
-        if resp.status == 404:
+        if resp.status_code == 404:
             return PublisherFetchError(
                 f"No data found for {'/'.join(pair)} from Ascendex"
             )

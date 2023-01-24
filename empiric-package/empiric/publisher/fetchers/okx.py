@@ -51,7 +51,7 @@ class OkxFetcher(PublisherInterfaceT):
         url = f"{self.BASE_URL}?instId={pair[0]}-{pair[1]}-SWAP"
 
         resp = requests.get(url)
-        if resp.status == 404:
+        if resp.status_code == 404:
             return PublisherFetchError(f"No data found for {'/'.join(pair)} from OKX")
         result = resp.json(content_type="application/json")
         if result["code"] == "51001" or result["msg"] == "Instrument ID does not exist":

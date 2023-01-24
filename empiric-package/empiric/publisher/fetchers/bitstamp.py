@@ -39,7 +39,7 @@ class BitstampFetcher(PublisherInterfaceT):
         pair = asset["pair"]
         url = f"{self.BASE_URL}/{pair[0].lower()}{pair[1].lower()}"
         resp = requests.get(url)
-        if resp.status == 404:
+        if resp.status_code == 404:
             return PublisherFetchError(
                 f"No data found for {'/'.join(pair)} from Bitstamp"
             )

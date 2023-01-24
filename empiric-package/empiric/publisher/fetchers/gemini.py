@@ -1,13 +1,14 @@
+import asyncio
 import logging
 import time
-from typing import List
+from typing import List, Union
 
 import requests
 from aiohttp import ClientSession
 from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id
-from empiric.publisher.assets import EmpiricAsset
-from empiric.publisher.types import PublisherInterfaceT
+from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
+from empiric.publisher.types import PublisherInterfaceT, PublisherFetchError
 
 logger = logging.getLogger(__name__)
 
@@ -22,80 +23,91 @@ class GeminiFetcher(PublisherInterfaceT):
         self.assets = assets
         self.publisher = publisher
 
-    async def fetch(self, session: ClientSession) -> List[SpotEntry]:
-        entries = []
-        async with session.get(self.BASE_URL + "/pricefeed") as resp:
-            result_json = await resp.json()
-            for asset in self.assets:
-                if asset["type"] != "SPOT":
-                    logger.debug(f"Skipping Gemini for non-spot asset {asset}")
-                    continue
+    async def _fetch_pair(
+        self, asset: EmpiricAsset, session: ClientSession
+    ) -> Union[SpotEntry, PublisherFetchError]:
+        pair = asset["pair"]
+        url = self.BASE_URL + "/pricefeed"
 
-                pair = asset["pair"]
-                pair_id = currency_pair_to_pair_id(*pair)
-                timestamp = int(time.time())
-                result = [e for e in result_json if e["pair"] == "".join(pair)]
-
-                if len(result) == 0:
-                    logger.debug(f"No entry found for {pair_id} from Gemini")
-                    continue
-
-                if len(result) > 1:
-                    raise ValueError(
-                        f"Found more than one matching entries for Gemini response and price pair {pair}"
-                    )
-
-                price = float(result[0]["price"])
-                price_int = int(price * (10 ** asset["decimals"]))
-
-                logger.info(f"Fetched price {price} for {pair_id} from Gemini")
-
-                entries.append(
-                    SpotEntry(
-                        pair_id=pair_id,
-                        price=price_int,
-                        timestamp=timestamp,
-                        source=self.SOURCE,
-                        publisher=self.publisher,
-                    )
+        async with session.get(url) as resp:
+            if resp.status == 404:
+                return PublisherFetchError(
+                    f"No data found for {'/'.join(pair)} from CEX"
                 )
-            return entries
+            result_json = await resp.json()
+            result = [e for e in result_json if e["pair"] == "".join(pair)]
 
-    def fetch_sync(self) -> List[SpotEntry]:
-        entries = []
-        resp = requests.get(self.BASE_URL + "/pricefeed")
+            if len(result) == 0:
+                return PublisherFetchError(
+                    f"No entry found for {'/'.join(pair)} from Gemini"
+                )
+
+            if len(result) > 1:
+                return PublisherFetchError(
+                    f"Found more than one matching entries for Gemini response and price pair {pair}"
+                )
+
+            return self._construct(asset, result[0])
+
+    def _fetch_pair_sync(
+        self, asset: EmpiricSpotAsset
+    ) -> Union[SpotEntry, PublisherFetchError]:
+        pair = asset["pair"]
+        url = self.BASE_URL + "/pricefeed"
+
+        resp = requests.get(url)
+        if resp.status_code == 404:
+            return PublisherFetchError(f"No data found for {'/'.join(pair)} from CEX")
+
         result_json = resp.json()
+        result = [e for e in result_json if e["pair"] == "".join(pair)]
+
+        if len(result) == 0:
+            return PublisherFetchError(
+                f"No entry found for {'/'.join(pair)} from Gemini"
+            )
+
+        if len(result) > 1:
+            return PublisherFetchError(
+                f"Found more than one matching entries for Gemini response and price pair {pair}"
+            )
+
+        return self._construct(asset, result[0])
+
+    async def fetch(
+        self, session: ClientSession
+    ) -> List[Union[SpotEntry, PublisherFetchError]]:
+        entries = []
         for asset in self.assets:
             if asset["type"] != "SPOT":
                 logger.debug(f"Skipping Gemini for non-spot asset {asset}")
                 continue
+            entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
+        return await asyncio.gather(*entries, return_exceptions=True)
 
-            pair = asset["pair"]
-            pair_id = currency_pair_to_pair_id(*pair)
-            timestamp = int(time.time())
-            result = [e for e in result_json if e["pair"] == "".join(pair)]
-
-            if len(result) == 0:
-                logger.debug(f"No entry found for {pair_id} from Gemini")
+    def fetch_sync(self) -> List[Union[SpotEntry, PublisherFetchError]]:
+        entries = []
+        for asset in self.assets:
+            if asset["type"] != "SPOT":
+                logger.debug(f"Skipping Gemini for non-spot asset {asset}")
                 continue
-
-            if len(result) > 1:
-                raise ValueError(
-                    f"Found more than one matching entries for Gemini response and price pair {pair}"
-                )
-
-            price = float(result[0]["price"])
-            price_int = int(price * (10 ** asset["decimals"]))
-
-            logger.info(f"Fetched price {price} for {pair_id} from Gemini")
-
-            entries.append(
-                SpotEntry(
-                    pair_id=pair_id,
-                    price=price_int,
-                    timestamp=timestamp,
-                    source=self.SOURCE,
-                    publisher=self.publisher,
-                )
-            )
+            entries.append(self._fetch_pair_sync(asset))
         return entries
+
+    def _construct(self, asset, result) -> SpotEntry:
+        pair = asset["pair"]
+
+        timestamp = int(time.time())
+        price = float(result["price"])
+        price_int = int(price * (10 ** asset["decimals"]))
+        pair_id = currency_pair_to_pair_id(*pair)
+
+        logger.info(f"Fetched price {price} for {'/'.join(pair)} from CEX")
+
+        return SpotEntry(
+            pair_id=pair_id,
+            price=price_int,
+            timestamp=timestamp,
+            source=self.SOURCE,
+            publisher=self.publisher,
+        )
