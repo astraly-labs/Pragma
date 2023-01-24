@@ -26,12 +26,12 @@ async def main():
         )
         print(hex(result.hash))
 
-        # TODO: Create wait_for_accepted instead of wait_for_recevied
-        # For now, manually check tx status and wait until continuing
-        breakpoint()
+        await result.wait_for_acceptance()
 
         result = await admin_client.add_sources_for_publisher(publisher, sources)
         print(hex(result.hash))
+
+        await result.wait_for_acceptance()
 
 
 if __name__ == "__main__":
