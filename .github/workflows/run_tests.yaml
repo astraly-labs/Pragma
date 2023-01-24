@@ -42,6 +42,10 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
           make setup
+
+      - name: Install protostar
+        run: |
+          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
           export PATH="$PATH:/home/runner/.protostar/dist/protostar"
 
       - name: Install Foundry
@@ -51,7 +55,7 @@ jobs:
 
       - name: Check contracts' interface consistency
         run: |
-          make check-contracts # check that the contracts are consistent with the interface
+          make check-contracts
 
       - name: Check formatting
         run: |
