@@ -46,14 +46,18 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     assert currencies[0] = Currency(111, 18, 0, 0, 0);
     assert currencies[1] = Currency(222, 18, 0, 0, 0);
     assert currencies[2] = Currency(USD_CURRENCY_ID, 6, 0, 0, 0);
+    assert currencies[3] = Currency(333, 18, 0, 0, 0);
     assert pairs[0] = Pair(1, 111, 222);
     assert pairs[1] = Pair(2, 111, USD_CURRENCY_ID);
     assert pairs[2] = Pair(3, 222, USD_CURRENCY_ID);
+    assert pairs[3] = Pair(4, 111, 333);
+    assert pairs[4] = Pair(5, 333, 222);
 
-    IOracle.initializer(oracle_address, 1234, publisher_registry_address, 3, currencies, 3, pairs);
+    IOracle.initializer(oracle_address, 1234, publisher_registry_address, 4, currencies, 5, pairs);
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 0));
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 3, 8 * 10 ** 6, 0));
-
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 4, 3 * 10 ** 6, 0));
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 5, 6 * 10 ** 6, 0));
     return ();
 }
 
@@ -93,6 +97,38 @@ func test_get_spot_with_USD_hop{syscall_ptr: felt*, range_check_ptr}() {
     assert num_sources = 1;
 
     return ();
+}
+
+@external
+func test_get_spot_with_hop{syscall_ptr: felt*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+
+    %{ stop_warp = warp(1665539813, ids.oracle_address) %}
+    let price = 0;
+    let decimals = 0;
+    let last_updated = 0;
+    let num_sources = 0;
+    let (currency_ids: felt*) = alloc();
+    assert currency_ids[0] = 111;  // first pair
+    assert currency_ids[1] = USD_CURRENCY_ID;  // first pair
+    assert currency_ids[2] = 222;  // second pair
+    assert currency_ids[3] = USD_CURRENCY_ID;  // second pair
+    let (new_price, new_decimals, new_last_updated, new_num_sources) = IOracle.get_spot_with_hop(
+        oracle_address, 4, currency_ids, 0, 0, 0, 0, 0, 0
+    );
+
+    assert new_price = 250000000000000000;
+    assert new_decimals = 18;
+    assert new_last_updated = 100000;
+    assert new_num_sources = 1;
+    return ();
+    // assert price = 250000000000000000;
+    // assert decimals = 18;
+    // assert last_updated = 100000;
+    // assert num_sources = 1;
+    // return ();
 }
 
 @external

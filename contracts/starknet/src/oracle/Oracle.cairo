@@ -186,6 +186,34 @@ func get_spot_with_USD_hop{
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
 
+@view
+func get_spot_with_hop{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    currency_ids_len: felt,
+    currency_ids: felt*,
+    aggregation_mode,
+    idx: felt,
+    price: felt,
+    decimals: felt,
+    last_updated_timestamp: felt,
+    num_sources_aggregated: felt,
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (
+        price, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = Oracle.get_spot_with_hop(
+        currency_ids_len,
+        currency_ids,
+        aggregation_mode,
+        idx,
+        price,
+        decimals,
+        last_updated_timestamp,
+        num_sources_aggregated,
+    );
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
 //
 // Setters
 //

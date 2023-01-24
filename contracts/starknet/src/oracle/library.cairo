@@ -15,7 +15,7 @@ from starkware.cairo.common.math import (
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
-from time_series.convert import _max, _min, convert_via_usd
+from time_series.convert import _max, _min, convert_via_usd, div_decimals, mult_decimals
 from time_series.utils import are_equal
 
 from entry.structs import (
@@ -29,6 +29,7 @@ from entry.structs import (
     SpotEntry,
     SpotEntryStorage,
     Pair,
+    GenericEntity,
 )
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
@@ -214,6 +215,106 @@ namespace Oracle {
         return (rebased_value, decimals, last_updated_timestamp, num_sources_aggregated);
     }
 
+    func get_spot_with_hop{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
+        currency_ids_len: felt,
+        currency_ids: felt*,
+        aggregation_mode,
+        idx: felt,
+        price: felt,
+        decimals: felt,
+        last_updated_timestamp: felt,
+        num_sources_aggregated: felt,
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+        // idx needs to be set to 0
+        // This function enables you to get the price of one currency in terms of an other.
+        // You need to specify the path in the currency_ids array. For example if you want ETH/EUR:
+        // [id_eth, id_usd, id_btc, id_usd, id_btc, id_eur] > ETH/USD - BTC/USD - BTC/EUR
+        alloc_locals;
+        let (sources) = alloc();
+        let (_, r) = unsigned_div_rem(currency_ids_len, 2);
+        with_attr error_message("The currency path is not valid") {
+            assert_not_equal(r, 1);
+        }
+        if (idx == currency_ids_len) {
+            return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+        }
+        let base_currency_id = currency_ids[idx];
+        let quote_currency_id = currency_ids[idx + 1];
+        let (base_pair_id) = Oracle_pair_id_storage.read(base_currency_id, quote_currency_id);
+        let (base_value, _, base_last_updated_timestamp, base_num_sources_aggregated) = get_spot(
+            base_pair_id, aggregation_mode, 0, sources
+        );
+
+        let (currency_1) = Oracle_currencies_storage.read(base_currency_id);
+        let (currency_2) = Oracle_currencies_storage.read(quote_currency_id);
+        let new_decimals = _max(currency_1.decimals, currency_2.decimals);
+        %{ print(ids.new_decimals) %}
+        let (new_last_updated_timestamp) = _max(
+            last_updated_timestamp, base_last_updated_timestamp
+        );
+        let (new_num_sources_aggregated) = _max(
+            num_sources_aggregated, base_num_sources_aggregated
+        );
+        if (price == 0) {
+            let (
+                rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+            ) = get_spot_with_hop(
+                currency_ids_len,
+                currency_ids,
+                aggregation_mode,
+                idx + 2,
+                base_value,
+                new_decimals,
+                new_last_updated_timestamp,
+                new_num_sources_aggregated,
+            );
+            return (
+                rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+            );
+        } else {
+            if (currency_ids[idx - 1] == base_currency_id) {
+                let rebase_value = mult_decimals(price, base_value, new_decimals);
+                let (
+                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+                ) = get_spot_with_hop(
+                    currency_ids_len,
+                    currency_ids,
+                    aggregation_mode,
+                    idx + 2,
+                    rebase_value,
+                    new_decimals,
+                    new_last_updated_timestamp,
+                    new_num_sources_aggregated,
+                );
+                return (
+                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+                );
+            } else {
+                let rebase_value = div_decimals(price, base_value, new_decimals);
+                let (
+                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+                ) = get_spot_with_hop(
+                    currency_ids_len,
+                    currency_ids,
+                    aggregation_mode,
+                    idx + 2,
+                    rebase_value,
+                    new_decimals,
+                    new_last_updated_timestamp,
+                    new_num_sources_aggregated,
+                );
+                %{ print(ids.rec_price) %}
+                return (
+                    rec_price, rec_decimals, rec_last_updated_timestamp, rec_num_sources_aggregated
+                );
+            }
+        }
+    }
     func get_publisher_registry_address{
         syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     }() -> (publisher_registry_address: felt) {

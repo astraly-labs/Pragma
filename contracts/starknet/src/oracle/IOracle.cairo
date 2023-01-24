@@ -75,6 +75,17 @@ namespace IOracle {
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
+    func get_spot_with_hop(
+        currency_ids_len: felt,
+        currency_ids: felt*,
+        aggregation_mode,
+        idx: felt,
+        price: felt,
+        decimals: felt,
+        last_updated_timestamp: felt,
+        num_sources_aggregated: felt,
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    }
 
     func get_admin_address() -> (admin_address: felt) {
     }

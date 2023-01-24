@@ -48,7 +48,10 @@ namespace IEmpiricOracle {
     ) {
     }
 
-    // func get_spot_with_hops
+    func get_spot_with_hop(currency_ids_len: felt, currency_ids: felt*, aggregation_mode) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
 
     func get_spot_median_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
