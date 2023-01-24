@@ -6,6 +6,7 @@ Try running some of the following tasks :
 yarn
 
 HARDHAT :
+    yarn build:unit
     yarn test
     npx hardhat help
     npx hardhat test

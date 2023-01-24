@@ -13,7 +13,7 @@
   },
   "files": {
     "contracts/Admin.sol": {
-      "lastModificationDate": 1674553809410,
+      "lastModificationDate": 1674582688940,
       "contentHash": "247b0bd6c9baa5d73ca50e589f84cbfd",
       "sourceName": "contracts/Admin.sol",
       "solcConfig": {
@@ -65,7 +65,7 @@
       }
     },
     "contracts/CurrencyManager.sol": {
-      "lastModificationDate": 1674553809410,
+      "lastModificationDate": 1674582688940,
       "contentHash": "c8af2ff608948542acef64a9a4ef5458",
       "sourceName": "contracts/CurrencyManager.sol",
       "solcConfig": {
@@ -109,7 +109,7 @@
       }
     },
     "contracts/EntryUtils.sol": {
-      "lastModificationDate": 1674553809410,
+      "lastModificationDate": 1674582688940,
       "contentHash": "31414c67e9f7fbd618652f4bec83fa6f",
       "sourceName": "contracts/EntryUtils.sol",
       "solcConfig": {
@@ -151,7 +151,7 @@
       }
     },
     "contracts/Oracle.sol": {
-      "lastModificationDate": 1674553809410,
+      "lastModificationDate": 1674582688940,
       "contentHash": "3360a20c4406867be67d33b7fbc0544c",
       "sourceName": "contracts/Oracle.sol",
       "solcConfig": {
@@ -202,7 +202,7 @@
       }
     },
     "contracts/Proxy.sol": {
-      "lastModificationDate": 1674553809411,
+      "lastModificationDate": 1674582688940,
       "contentHash": "e7229a6c8692e9ba6a838027b393a0a6",
       "sourceName": "contracts/Proxy.sol",
       "solcConfig": {
@@ -251,7 +251,7 @@
       }
     },
     "contracts/PublisherRegistry.sol": {
-      "lastModificationDate": 1674553809411,
+      "lastModificationDate": 1674582688940,
       "contentHash": "d098f4940c92d4c27762ffd5b8ef8a19",
       "sourceName": "contracts/PublisherRegistry.sol",
       "solcConfig": {
@@ -295,7 +295,7 @@
       }
     },
     "contracts/interfaces/ICurrencyManager.sol": {
-      "lastModificationDate": 1674553809411,
+      "lastModificationDate": 1674582688941,
       "contentHash": "4ed92d8f53ab66ceed64ee60741d957f",
       "sourceName": "contracts/interfaces/ICurrencyManager.sol",
       "solcConfig": {
@@ -335,7 +335,7 @@
       }
     },
     "contracts/interfaces/IOracle.sol": {
-      "lastModificationDate": 1674553809411,
+      "lastModificationDate": 1674582688941,
       "contentHash": "1f0da0cef22f9594889aabbe0e1f6580",
       "sourceName": "contracts/interfaces/IOracle.sol",
       "solcConfig": {
@@ -375,7 +375,7 @@
       }
     },
     "contracts/interfaces/IPublisherRegistry.sol": {
-      "lastModificationDate": 1674553809411,
+      "lastModificationDate": 1674582688941,
       "contentHash": "99946e6b016222bfd6c86542d7a8da83",
       "sourceName": "contracts/interfaces/IPublisherRegistry.sol",
       "solcConfig": {
