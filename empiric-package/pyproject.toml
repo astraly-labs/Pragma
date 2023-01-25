@@ -1,6 +1,40 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 profile = "black"
+
+[tool.poetry]
+name = "empiric-network"
+version = "1.4.8"
+authors = ["Astraly Labs <contact@astraly.xyz>"]
+description = "Core package for rollup-native Empiric Network"
+readme = "README.md"
+homepage = "https://empiric.network"
+repository = "https://github.com/Astraly-Labs/Empiric"
+documentation = "https://docs.empiric.network"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+packages = [
+  {include = "cli", from = "empiric"},
+  {include = "core", from = "empiric"},
+  {include = "publisher", from = "empiric"},
+  {include = "test", from = "empiric"},
+]
+
+[tool.poetry.dependencies]
+python = "3.9.13"
+"starknet.py" = "0.13.0a0"
+cairo-lang = "0.10.3"
+typer = "0.6.1"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+flake8 = "*"
+
+[tool.poetry.scripts]
+empiric = "empiric.cli:main"

@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local # the path depends on the OS
-          key: poetry-0 # increment to reset cache
+          key: poetry-1 # increment to reset cache
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -41,15 +41,15 @@ jobs:
         run: |
           poetry install --only dev
           cd empiric-package
-          python3 -m build
-          twine upload dist/* -u __token__ -p $PYPI_API_TOKEN --skip-existing
+          poetry config pypi-token.pypi $PYPI_API_TOKEN
+          poetry publish --build --skip-existing
 
       - name: Build and publish Docker image
         env:
           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
         run: |
           export $(grep -v '^#' .env | xargs)
-          export EMPIRIC_PACKAGE_VERSION=$(grep 'version' empiric-package/setup.cfg | grep -e '[0-9][0-9a-zA-Z]*[-.a-z0-9]*' -o)
+          export EMPIRIC_PACKAGE_VERSION=$(grep 'version' empiric-package/pyproject.toml | grep -e '[0-9][0-9a-zA-Z]*[-.a-z0-9]*' -o)
           docker build . --target production --build-arg EMPIRIC_PACKAGE_VERSION=${EMPIRIC_PACKAGE_VERSION} -t astralylabs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}
           echo $DOCKER_ACCESS_TOKEN | docker login -u ${DOCKER_LOGIN} --password-stdin
           docker push astralylabs/empiric-publisher:${EMPIRIC_PACKAGE_VERSION}
