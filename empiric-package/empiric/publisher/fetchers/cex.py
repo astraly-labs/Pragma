@@ -48,7 +48,7 @@ class CexFetcher(PublisherInterfaceT):
         url = f"{self.BASE_URL}/{pair[0]}/{pair[1]}"
 
         resp = requests.get(url)
-        if resp.status == 404:
+        if resp.status_code == 404:
             return PublisherFetchError(f"No data found for {'/'.join(pair)} from CEX")
         result = resp.json(content_type="text/json")
         if "error" in result and result["error"] == "Invalid Symbols Pair":

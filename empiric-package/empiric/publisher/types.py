@@ -5,6 +5,7 @@ import aiohttp
 from aiohttp import ClientSession
 
 
+# Abstract base class for all publishers
 class PublisherInterfaceT(abc.ABC):
     @abc.abstractmethod
     async def fetch(self, session: ClientSession) -> List[Any]:

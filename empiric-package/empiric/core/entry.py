@@ -195,7 +195,7 @@ class SpotEntry(Entry):
         return list(filter(lambda item: item is not None, serialized_entries))
 
     def __repr__(self):
-        return f'SpotEntry(pair_id="{felt_to_str(self.pair_id)}", price={self.price}, timestamp={self.base.timestamp}, source="{felt_to_str(self.base.source)}", publisher="{felt_to_str(self.base.publisher)}")'
+        return f'SpotEntry(pair_id="{felt_to_str(self.pair_id)}", price={self.price}, timestamp={self.base.timestamp}, source="{felt_to_str(self.base.source)}", publisher="{felt_to_str(self.base.publisher)}, volume={self.volume})")'
 
 
 class FutureEntry(Entry):

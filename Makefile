@@ -14,7 +14,6 @@ check:
 
 setup:
 	poetry install --no-root
-	curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
 
 test: 
 	poetry run pytest tests --log-cli-level=INFO -n logical
