@@ -42,7 +42,7 @@ jobs:
           poetry install --only dev
           cd empiric-package
           poetry config pypi-token.pypi $PYPI_API_TOKEN
-          poetry publish --build
+          poetry publish --build --skip-existing
 
       - name: Build and publish Docker image
         env:
