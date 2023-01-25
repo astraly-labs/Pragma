@@ -34,6 +34,12 @@ struct FutureEntry {
     expiry_timestamp: felt,
 }
 
+struct GenericEntry {
+    base: BaseEntry,
+    key: felt,
+    value: felt,
+}
+
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
 }
@@ -120,6 +126,19 @@ namespace IEmpiricOracle {
 
     func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
+    ) {
+    }
+
+    func get_entry(key: felt, source: felt) -> (entry: GenericEntry) {
+    }
+
+    func get_entries(key: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: GenericEntry*
+    ) {
+    }
+
+    func get_entries_for_sources(key: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: GenericEntry*
     ) {
     }
 }

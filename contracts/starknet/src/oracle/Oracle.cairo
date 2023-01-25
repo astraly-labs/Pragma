@@ -282,6 +282,27 @@ func get_futures{
     );
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
+@view
+func get_entry{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt, source: felt) -> (entry: GenericEntry) {
+    let (entry) = Oracle.get_entry(key, source);
+    return (entry,);
+}
+
+func get_entries{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt) -> (entries_len: felt, entries: GenericEntry*) {
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(key);
+    return get_entries_for_sources(key, all_sources_len, all_sources);
+}
+
+func get_entries_for_sources{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt, sources_len: felt, sources: felt*) -> (entries_len: felt, entries: GenericEntry*) {
+    let (entries_len, entries, _) = Oracle.get_entries(key, sources_len, sources);
+    return (entries_len, entries);
+}
 
 //
 // Setters

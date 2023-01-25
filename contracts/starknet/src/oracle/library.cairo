@@ -441,7 +441,7 @@ namespace Oracle {
         let sources_len = 0;
         let (sources) = alloc();
 
-        let (entries_len, entries, _) = get_generic_entries(key, sources_len, sources);
+        let (entries_len, entries, _) = get_entries(key, sources_len, sources);
 
         if (entries_len == 0) {
             return (0, 0, 0, 0);
@@ -499,7 +499,7 @@ namespace Oracle {
         return (entries_len, entries, last_updated_timestamp);
     }
 
-    func get_generic_entries{
+    func get_entries{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
         pedersen_ptr: HashBuiltin*,
@@ -540,7 +540,7 @@ namespace Oracle {
         return (entry,);
     }
 
-    func get_generic_entry{
+    func get_entry{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
         pedersen_ptr: HashBuiltin*,
@@ -678,7 +678,7 @@ namespace Oracle {
         assert new_entry_ptr[0] = new_entry;
         validate_sender_for_source(cast(new_entry_ptr, felt*));
 
-        let (entry) = get_generic_entry(new_entry.key, new_entry.base.source);
+        let (entry) = get_entry(new_entry.key, new_entry.base.source);
 
         let (entry_ptr: GenericEntry*) = alloc();
         assert entry_ptr[0] = entry;
@@ -1066,7 +1066,7 @@ namespace Oracle {
         if (cur_idx == sources_len) {
             return (latest_timestamp,);
         }
-        let (entry) = get_generic_entry(pair_id, sources[cur_idx]);
+        let (entry) = get_entry(pair_id, sources[cur_idx]);
         if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
             return get_latest_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, entry.base.timestamp
@@ -1239,7 +1239,7 @@ namespace Oracle {
         }
 
         let source = sources[sources_idx];
-        let (entry) = get_generic_entry(key, source);
+        let (entry) = get_entry(key, source);
         let is_entry_initialized = is_not_zero(entry.base.timestamp);
         let not_is_entry_initialized = 1 - is_entry_initialized;
 

@@ -70,6 +70,18 @@ namespace IOracle {
     func get_future_entry(pair_id: felt, expiry_timestamp, source: felt) -> (entry: FutureEntry) {
     }
 
+    func get_entry(key: felt, source: felt) -> (entry: GenericEntry) {
+    }
+
+    func get_entries(key: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: GenericEntry*
+    ) {
+    }
+
+    func get_entries_for_sources(key: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: GenericEntry*
+    ) {
+    }
     func get_future_entries(pair_id: felt, expiry_timestamp: felt) -> (
         entries_len: felt, entries: FutureEntry*
     ) {
