@@ -17,3 +17,9 @@ FOUNDRY :
     forge build
     forge test
 ```
+
+To deploy on the Consensus ZkEVM goerli testnet, run the following command after completing the .env file:
+
+```shell
+    forge script script/depl.s.sol:depl --rpc-url $ConsensysZKevm_GOERLI_RPC_URL --broadcast --verify -vvvv
+```

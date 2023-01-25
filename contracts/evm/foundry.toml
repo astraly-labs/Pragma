@@ -9,11 +9,7 @@ cache_path  = 'forge-cache'
 
 [rpc_endpoints]
 # The RPC URLs are modified versions of the default for testing initialization.
-mainnet = "https://mainnet.infura.io/v3/7a8769b798b642f6933f2ed52042bd70" # Different API key.
-optimism_goerli = "https://goerli.optimism.io/" # Adds a trailing slash.
-arbitrum_one_goerli = "https://goerli-rollup.arbitrum.io/rpc/" # Adds a trailing slash.
-needs_undefined_env_var = "${UNDEFINED_RPC_URL_PLACEHOLDER}"
-
+ConsensysZkEVM_goerli = "${ConsensysZKevm_GOERLI_RPC_URL}"
 [fmt]
 # These are all the `forge fmt` defaults.
 line_length = 120
