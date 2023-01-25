@@ -27,6 +27,12 @@ struct EmpiricPricesResponse {
     last_updated_timestamp: felt,
     num_sources_aggregated: felt,
 }
+struct FutureEntry {
+    base: BaseEntry,
+    pair_id: felt,
+    price: felt,
+    expiry_timestamp: felt,
+}
 
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
@@ -73,8 +79,14 @@ namespace IEmpiricOracle {
     ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
     }
 
-    // func get_futures
-
+    func get_futures(
+        pair_id: felt,
+        expiry_timestamp: felt,
+        aggregation_mode: felt,
+        sources_len: felt,
+        sources: felt*,
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    }
     func get_spot_entry(pair_id: felt, source: felt) -> (entry: SpotEntry) {
     }
 
@@ -91,11 +103,20 @@ namespace IEmpiricOracle {
     func get_spot_decimals(pair_id: felt) -> (decimals: felt) {
     }
 
-    // func get_future_entry
+    func get_future_entry(pair_id: felt, expiry_timestamp: felt, source: felt) -> (
+        entry: FutureEntry
+    ) {
+    }
 
-    // func get_future_entries
+    func get_future_entries(
+        pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*
+    ) -> (entries_len: felt, entries: FutureEntry*) {
+    }
 
-    // func get_future_entries_for_sources
+    func get_future_entries_for_sources(
+        pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*
+    ) -> (entries_len: felt, entries: FutureEntry*) {
+    }
 
     func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt

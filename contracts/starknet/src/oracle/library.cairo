@@ -478,6 +478,27 @@ namespace Oracle {
         return (entries_len, entries, last_updated_timestamp);
     }
 
+    func get_future_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*) -> (
+        entries_len: felt, entries: FutureEntry*, last_updated_timestamp: felt
+    ) {
+        alloc_locals;
+
+        let (last_updated_timestamp) = get_latest_future_entry_timestamp(
+            pair_id, expiry_timestamp, sources_len, sources, 0, 0
+        );
+        let (current_timestamp) = get_block_timestamp();
+        let (conservative_current_timestamp) = _min(last_updated_timestamp, current_timestamp);
+        let (entries_len, entries) = get_all_future_entries(
+            pair_id, expiry_timestamp, sources_len, sources, conservative_current_timestamp
+        );
+        return (entries_len, entries, last_updated_timestamp);
+    }
+
     func get_generic_entries{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
@@ -577,7 +598,35 @@ namespace Oracle {
         let (threshold) = Oracle__sources_threshold.read();
         return (threshold,);
     }
+    func get_futures{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
+        pair_id: felt,
+        expiry_timestamp: felt,
+        aggregation_mode: felt,
+        sources_len: felt,
+        sources: felt*,
+    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+        alloc_locals;
 
+        let (entries_len, entries, _) = get_future_entries(
+            pair_id, expiry_timestamp, sources_len, sources
+        );
+
+        if (entries_len == 0) {
+            return (0, 0, 0, 0);
+        }
+
+        let (price) = Entries.aggregate_future_entries(entries_len, entries);
+        let (decimals) = get_future_decimals(pair_id);
+        let (last_updated_timestamp) = Entries.aggregate_future_timestamps_max(
+            entries_len, entries
+        );
+        return (price, decimals, last_updated_timestamp, entries_len);
+    }
     func get_future_entry{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
@@ -906,6 +955,39 @@ namespace Oracle {
         return (entries_len, entries);
     }
 
+    func get_all_future_entries{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
+        pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*, latest_timestamp
+    ) -> (entries_len: felt, entries: FutureEntry*) {
+        alloc_locals;
+
+        let (entries: FutureEntry*) = alloc();
+
+        if (sources_len == 0) {
+            let (all_sources_len, all_sources) = get_all_sources(pair_id);
+            let (entries_len, entries) = build_future_entries_array(
+                pair_id,
+                expiry_timestamp,
+                all_sources_len,
+                all_sources,
+                0,
+                0,
+                entries,
+                latest_timestamp,
+            );
+        } else {
+            let (entries_len, entries) = build_future_entries_array(
+                pair_id, expiry_timestamp, sources_len, sources, 0, 0, entries, latest_timestamp
+            );
+        }
+
+        return (entries_len, entries);
+    }
+
     func get_all_entries{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
@@ -949,6 +1031,28 @@ namespace Oracle {
         } else {
             return get_latest_spot_entry_timestamp(
                 pair_id, sources_len, sources, cur_idx + 1, latest_timestamp
+            );
+        }
+    }
+    func get_latest_future_entry_timestamp{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pair_id, expiry_timestamp, sources_len, sources: felt*, cur_idx, latest_timestamp) -> (
+        latest_timestamp: felt
+    ) {
+        if (cur_idx == sources_len) {
+            return (latest_timestamp,);
+        }
+        let (entry) = get_future_entry(pair_id, expiry_timestamp, sources[cur_idx]);
+        if (is_le(latest_timestamp, entry.base.timestamp) == TRUE) {
+            return get_latest_future_entry_timestamp(
+                pair_id, expiry_timestamp, sources_len, sources, cur_idx + 1, entry.base.timestamp
+            );
+        } else {
+            return get_latest_future_entry_timestamp(
+                pair_id, expiry_timestamp, sources_len, sources, cur_idx + 1, latest_timestamp
             );
         }
     }
@@ -1053,6 +1157,67 @@ namespace Oracle {
         );
     }
 
+    func build_future_entries_array{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(
+        pair_id: felt,
+        expiry_timestamp: felt,
+        sources_len: felt,
+        sources: felt*,
+        sources_idx: felt,
+        entries_idx: felt,
+        entries: FutureEntry*,
+        latest_entry_timestamp: felt,
+    ) -> (entries_len: felt, entries: FutureEntry*) {
+        alloc_locals;
+        if (sources_idx == sources_len) {
+            return (entries_idx, entries);
+        }
+
+        let source = sources[sources_idx];
+        let (entry) = get_future_entry(pair_id, expiry_timestamp, source);
+        let is_entry_initialized = is_not_zero(entry.base.timestamp);
+        let not_is_entry_initialized = 1 - is_entry_initialized;
+
+        let is_entry_stale = is_le(
+            entry.base.timestamp, latest_entry_timestamp - BACKWARD_TIMESTAMP_BUFFER
+        );
+
+        // FILTER FTX for all spot entries
+        let (is_ftx) = are_equal(source, 4609112);
+
+        let should_skip_entry = is_not_zero(is_entry_stale + not_is_entry_initialized + is_ftx);
+
+        if (should_skip_entry == TRUE) {
+            let (entries_len, entries) = build_future_entries_array(
+                pair_id,
+                expiry_timestamp,
+                sources_len,
+                sources,
+                sources_idx + 1,
+                entries_idx,
+                entries,
+                latest_entry_timestamp,
+            );
+            return (entries_len, entries);
+        }
+
+        assert entries[entries_idx] = entry;
+
+        return build_future_entries_array(
+            pair_id,
+            expiry_timestamp,
+            sources_len,
+            sources,
+            sources_idx + 1,
+            entries_idx + 1,
+            entries,
+            latest_entry_timestamp,
+        );
+    }
     func build_entries_array{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,

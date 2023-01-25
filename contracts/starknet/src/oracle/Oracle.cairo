@@ -79,6 +79,25 @@ func get_spot_entry{
     return (entry,);
 }
 
+@view
+func get_future_entries_for_sources{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*) -> (
+    entries_len: felt, entries: FutureEntry*
+) {
+    let (entries_len, entries, _) = Oracle.get_future_entries(
+        pair_id, expiry_timestamp, sources_len, sources
+    );
+    return (entries_len, entries);
+}
+
+@view
+func get_future_entries{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp: felt) -> (entries_len: felt, entries: FutureEntry*) {
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    return get_future_entries_for_sources(pair_id, expiry_timestamp, all_sources_len, all_sources);
+}
 // @notice get entry by key and source
 // @param key: the key to fetch Entries for
 // @param source: the source to use for Entry
@@ -248,6 +267,18 @@ func get_spot_with_hop{
         decimals,
         last_updated_timestamp,
         num_sources_aggregated,
+    );
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
+@view
+func get_futures{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_futures(
+        pair_id, expiry_timestamp, aggregation_mode, sources_len, sources
     );
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
 }
