@@ -19,6 +19,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
+packages = [
+  {include = "cli", from = "empiric"},
+  {include = "core", from = "empiric"},
+  {include = "publisher", from = "empiric"},
+  {include = "test", from = "empiric"},
+]
 
 [tool.poetry.dependencies]
 python = "3.9.13"

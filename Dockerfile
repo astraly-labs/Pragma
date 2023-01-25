@@ -17,8 +17,8 @@ RUN poetry install
 
 FROM base as test
 COPY empiric-package/ /empiric-package
-RUN pip install -e empiric-package/
+RUN poetry install --only local
 
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION
-RUN pip install empiric-network==$EMPIRIC_PACKAGE_VERSION
+RUN poetry add empiric-network==$EMPIRIC_PACKAGE_VERSION
