@@ -1,6 +1,14 @@
 %lang starknet
 
-from entry.structs import Checkpoint, SpotEntry, FutureEntry, GenericEntry, Pair, Currency
+from entry.structs import (
+    Checkpoint,
+    SpotEntry,
+    FutureEntry,
+    GenericEntry,
+    Pair,
+    Currency,
+    EmpiricPricesResponse,
+)
 
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
@@ -31,6 +39,10 @@ namespace IOracle {
 
     func get_spot_median_for_sources(pair_id: felt, sources_len: felt, sources: felt*) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
+    func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*) -> (
+        prices_response_len: felt, prices_response: EmpiricPricesResponse*
     ) {
     }
 

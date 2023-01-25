@@ -72,3 +72,10 @@ struct Checkpoint {
     aggregation_mode: felt,
     num_sources_aggregated: felt,
 }
+
+struct EmpiricPricesResponse {
+    price: felt,
+    decimals: felt,
+    last_updated_timestamp: felt,
+    num_sources_aggregated: felt,
+}

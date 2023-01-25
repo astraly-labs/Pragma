@@ -4,7 +4,15 @@ from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
 
-from entry.structs import Currency, GenericEntry, FutureEntry, SpotEntry, Pair, Checkpoint
+from entry.structs import (
+    Currency,
+    GenericEntry,
+    FutureEntry,
+    SpotEntry,
+    Pair,
+    Checkpoint,
+    EmpiricPricesResponse,
+)
 from oracle.library import Oracle
 from proxy.library import Proxy
 
@@ -99,6 +107,36 @@ func get_spot_median_for_sources{
     price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
 ) {
     return get_spot_for_sources{bitwise_ptr=bitwise_ptr}(pair_id, MEDIAN, sources_len, sources);
+}
+
+@view
+func get_spot_median_multi{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    pair_ids_len: felt,
+    pair_ids: felt*,
+    idx: felt,
+    prices_response_len: felt,
+    prices_response: EmpiricPricesResponse*,
+) -> (prices_response_len: felt, prices_response: EmpiricPricesResponse*) {
+    if (idx == pair_ids_len - 1) {
+        return (prices_response_len, prices_response);
+    }
+    let pair_id = pair_ids[idx];
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
+        pair_id
+    );
+    let price_response = EmpiricPricesResponse(
+        price=price,
+        decimals=decimals,
+        last_updated_timestamp=last_updated_timestamp,
+        num_sources_aggregated=num_sources_aggregated,
+    );
+    assert prices_response[idx] = price_response;
+    let (new_prices_response_len, new_prices_response) = get_spot_median_multi(
+        pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
+    );
+    return (new_prices_response_len, new_prices_response);
 }
 
 // @notice get value by key and aggregation mode

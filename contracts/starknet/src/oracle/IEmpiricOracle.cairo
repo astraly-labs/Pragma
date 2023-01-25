@@ -21,6 +21,13 @@ struct Checkpoint {
     num_sources_aggregated: felt,
 }
 
+struct EmpiricPricesResponse {
+    price: felt,
+    decimals: felt,
+    last_updated_timestamp: felt,
+    num_sources_aggregated: felt,
+}
+
 namespace EmpiricAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
 }
@@ -41,7 +48,10 @@ namespace IEmpiricOracle {
     ) {
     }
 
-    // func get_spot_median_multi
+    func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*) -> (
+        prices_response_len: felt, prices_response: EmpiricPricesResponse*
+    ) {
+    }
 
     func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
