@@ -41,7 +41,7 @@ jobs:
         run: |
           poetry install --only dev
           cd empiric-package
-          python3 -m build
+          poetry run python3 -m build
           twine upload dist/* -u __token__ -p $PYPI_API_TOKEN --skip-existing
 
       - name: Build and publish Docker image
