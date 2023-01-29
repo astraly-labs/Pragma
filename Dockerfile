@@ -13,7 +13,7 @@ COPY . /app/
 
 # Defaults
 WORKDIR /app/
-RUN poetry install
+RUN poetry install --without local
 
 FROM base as test
 COPY empiric-package/ /empiric-package
