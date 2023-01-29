@@ -7,7 +7,7 @@ profile = "black"
 
 [tool.poetry]
 name = "empiric-network"
-version = "1.4.9"
+version = "1.4.10"
 authors = ["Astraly Labs <contact@astraly.xyz>"]
 description = "Core package for rollup-native Empiric Network"
 readme = "README.md"
@@ -20,6 +20,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 packages = [
+  {include = "empiric"},
   {include = "cli", from = "empiric"},
   {include = "core", from = "empiric"},
   {include = "publisher", from = "empiric"},
@@ -38,3 +39,4 @@ flake8 = "*"
 
 [tool.poetry.scripts]
 empiric = "empiric.cli:main"
+interface-check = "empiric.test.interface_consistency:main"
