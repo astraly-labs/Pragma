@@ -69,6 +69,7 @@ class BitstampFetcher(PublisherInterfaceT):
         pair = asset["pair"]
 
         timestamp = int(result["timestamp"])
+        volume = int(result["volume"])  # In base currency
         price = float(result["last"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
@@ -78,6 +79,7 @@ class BitstampFetcher(PublisherInterfaceT):
         return SpotEntry(
             pair_id=pair_id,
             price=price_int,
+            volume=volume,
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,

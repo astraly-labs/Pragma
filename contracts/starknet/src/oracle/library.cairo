@@ -440,7 +440,11 @@ namespace Oracle {
         let (entry_ptr: GenericEntry*) = alloc();
         assert entry_ptr[0] = entry;
 
-        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        // Check that the new entry is newer than the existing one
+        let valid = validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        if (valid == 0) {
+            return ();
+        }
 
         let element = actual_set_element_at(0, 0, 31, new_entry.base.timestamp);
         let element = actual_set_element_at(element, 32, 128, new_entry.value);
@@ -478,7 +482,11 @@ namespace Oracle {
         let (entry_ptr: FutureEntry*) = alloc();
         assert entry_ptr[0] = entry;
 
-        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        // Check that the new entry is newer than the existing one
+        let valid = validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        if (valid == 0) {
+            return ();
+        }
 
         SubmittedFutureEntry.emit(new_entry);
 
@@ -526,7 +534,11 @@ namespace Oracle {
         let (entry_ptr: SpotEntry*) = alloc();
         assert entry_ptr[0] = _entry;
 
-        validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        // Check that the new entry is newer than the existing one
+        let valid = validate_timestamp(cast(new_entry_ptr, felt*), cast(entry_ptr, felt*));
+        if (valid == 0) {
+            return ();
+        }
 
         SubmittedSpotEntry.emit(new_entry);
         let element = actual_set_element_at(0, 0, 31, new_entry.base.timestamp);
@@ -967,7 +979,7 @@ namespace Oracle {
 
     func validate_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         _new_entry: felt*, _entry: felt*
-    ) {
+    ) -> felt {
         alloc_locals;
 
         let new_entry_ptr = cast(_new_entry, SpotEntry*);
@@ -975,9 +987,14 @@ namespace Oracle {
         let entry_ptr = cast(_entry, SpotEntry*);
         let entry = entry_ptr[0];
 
-        with_attr error_message("Oracle: Existing entry is more recent") {
-            assert_le(entry.base.timestamp, new_entry.base.timestamp);
+        let more_recent = is_le(entry.base.timestamp, new_entry.base.timestamp);
+        if (more_recent == 0) {
+            return 0;
         }
+
+        // with_attr error_message("Oracle: Existing entry is more recent") {
+        //     assert_le(entry.base.timestamp, new_entry.base.timestamp);
+        // }
 
         if (entry.base.timestamp == 0) {
             // Source did not exist yet, so add to our list
@@ -993,7 +1010,7 @@ namespace Oracle {
             tempvar range_check_ptr = range_check_ptr;
         }
 
-        return ();
+        return 1;
     }
 
     func _binary_search{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(

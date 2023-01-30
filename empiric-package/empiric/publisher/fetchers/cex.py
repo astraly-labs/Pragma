@@ -80,6 +80,7 @@ class CexFetcher(PublisherInterfaceT):
         pair = asset["pair"]
 
         timestamp = int(result["timestamp"])
+        volume = int(result["volume"])
         price = float(result["last"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
@@ -88,6 +89,7 @@ class CexFetcher(PublisherInterfaceT):
 
         return SpotEntry(
             pair_id=pair_id,
+            volume=volume,
             price=price_int,
             timestamp=timestamp,
             source=self.SOURCE,
