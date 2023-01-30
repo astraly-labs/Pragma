@@ -998,11 +998,11 @@ gmpy2 = ["gmpy2"]
 
 [[package]]
 name = "empiric-network"
-version = "1.4.8"
+version = "1.4.11"
 description = "Core package for rollup-native Empiric Network"
 category = "dev"
 optional = false
-python-versions = "3.9.13"
+python-versions = ">=3.9,<3.10"
 files = []
 develop = true
 
@@ -3329,5 +3329,5 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [metadata]
 lock-version = "2.0"
-python-versions = "3.9.13"
-content-hash = "60381250401742c4101d052d1442b9b379cd2edd472a3a0c03125f57413ad737"
+python-versions = ">=3.9,<3.10"
+content-hash = "be13594f146ec5e82494a6b3f6c2f28022f35ab7194a43909c356fe7f95a7a8e"

@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "empiric"
-version = "1.4.10"
+version = "1.4.11"
 description = "Empiric, the leading Oracle on zkRollups."
 authors = ["0xevolve <support@astraly.xyz>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.9.13"
+python = ">=3.9,<3.10"
 cairo-lang = "0.10.3"
 pytest = "^7.0"
 pytest-asyncio = "^0.19"
