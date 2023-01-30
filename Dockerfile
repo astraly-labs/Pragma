@@ -1,5 +1,5 @@
 # Dockerfile for publisher
-FROM python:3.9.14-slim-buster AS base
+FROM python:3.9-slim-buster AS base
 
 # Needed for fastecdsa
 RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
@@ -21,4 +21,4 @@ RUN poetry install --only local
 
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION
-RUN poetry add empiric-network==$EMPIRIC_PACKAGE_VERSION
+RUN pip install empiric-network==$EMPIRIC_PACKAGE_VERSION
