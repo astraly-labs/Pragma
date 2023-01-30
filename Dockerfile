@@ -1,5 +1,5 @@
 # Dockerfile for publisher
-FROM python:3.9.13-slim-buster AS base
+FROM python:3.9.14-slim-buster AS base
 
 # Needed for fastecdsa
 RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
