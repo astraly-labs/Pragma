@@ -17,7 +17,7 @@ RUN poetry install --without local
 
 FROM base as test
 COPY empiric-package/ /empiric-package
-RUN poetry install --only local
+RUN pip install -e empiric-package
 
 FROM base as production
 ARG EMPIRIC_PACKAGE_VERSION
