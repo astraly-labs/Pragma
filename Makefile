@@ -14,6 +14,7 @@ check:
 
 setup:
 	poetry install --no-root
+	pip install -e empiric-package
 
 test: 
 	poetry run pytest tests --log-cli-level=INFO -n logical
