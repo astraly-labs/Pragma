@@ -20,7 +20,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 packages = [
-  {include = "empiric"},
+  {include = 'empiric' },
   {include = "cli", from = "empiric"},
   {include = "core", from = "empiric"},
   {include = "publisher", from = "empiric"},

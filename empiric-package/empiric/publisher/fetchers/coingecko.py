@@ -31,6 +31,7 @@ ASSET_MAPPING: Dict[str, str] = {
     "XRP": "ripple",
     "MATIC": "matic-network",
     "AAVE": "aave",
+    "stETH": "staked-ether",
 }
 
 
@@ -112,6 +113,7 @@ class CoingeckoFetcher(PublisherInterfaceT):
                 "%Y-%m-%dT%H:%M:%S.%f%z",
             ).timestamp()
         )
+        # volume = int(result["market_data"])
 
         logger.info(f"Fetched price {price} for {pair_id} from Coingecko")
 
@@ -121,4 +123,5 @@ class CoingeckoFetcher(PublisherInterfaceT):
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,
+            volume=0,
         )

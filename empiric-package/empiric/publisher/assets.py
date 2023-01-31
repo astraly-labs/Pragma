@@ -32,7 +32,7 @@ EMPIRIC_ALL_ASSETS: List[EmpiricAsset] = [
     {"type": "SPOT", "pair": ("WBTC", "BTC"), "decimals": 8},
     {"type": "SPOT", "pair": ("WBTC", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("BTC", "EUR"), "decimals": 8},
-    {"type": "SPOT", "pair": ("ETH", "USD"), "decimals": 8},
+    {"type": "SPOT", "pair": ("ETH", "USD"), "decimals": 18},
     {"type": "SPOT", "pair": ("SOL", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("AVAX", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("DOGE", "USD"), "decimals": 8},
@@ -49,6 +49,7 @@ EMPIRIC_ALL_ASSETS: List[EmpiricAsset] = [
     {"type": "SPOT", "pair": ("XRP", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("MATIC", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("AAVE", "USD"), "decimals": 8},
+    {"type": "SPOT", "pair": ("stETH", "USD"), "decimals": 8},
     {"type": "FUTURE", "pair": ("BTC", "USD"), "decimals": 8},
     {"type": "FUTURE", "pair": ("ETH", "USD"), "decimals": 8},
     {
