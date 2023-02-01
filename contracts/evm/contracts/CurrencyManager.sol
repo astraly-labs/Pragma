@@ -18,12 +18,34 @@ contract CurrencyManager is ICurrencyManager, Ownable {
         currencies[currency.id] = currency;
     }
 
+    function addCurrencyData(bytes32 id, uint256 decimals, bool isAbstractCurrency, address ethereumAddress) public onlyOwner {
+        Currency memory currency = Currency(id, decimals, isAbstractCurrency, ethereumAddress);
+
+        require(
+            currencies[currency.id].id == bytes32(""),
+            "Currency already set"
+        );
+        currencies[currency.id] = currency;
+    }
+
     function updateCurrency(Currency calldata currency) public onlyOwner {
         require(currencies[currency.id].id != bytes32(""), "Currency not set");
         currencies[currency.id] = currency;
     }
 
     function addPair(Pair calldata pair) external onlyOwner {
+        Pair memory oldPair = pairs[pair.id];
+        require(
+            oldPair.id == 0,
+            "Oracle: Pair with this key already registered"
+        );
+        pairs[pair.id] = pair;
+        pairIdStorage[pair.quoteCurrencyId][pair.baseCurrencyId] = pair.id;
+
+        emit SubmittedPair(pair);
+    }
+        function addPairData(bytes32 id,bytes32 quoteCurrencyId, bytes32 baseCurrencyId) external onlyOwner {
+        Pair memory pair = Pair(id, quoteCurrencyId, baseCurrencyId);
         Pair memory oldPair = pairs[pair.id];
         require(
             oldPair.id == 0,
