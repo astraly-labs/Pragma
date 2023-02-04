@@ -7,7 +7,15 @@ from starkware.starknet.common.syscalls import get_block_timestamp
 from oracle.IOracle import IOracle
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from compute_engines.summary_stats.ISummaryStats import ISummaryStats
-from entry.structs import Currency, Pair, SpotEntry, BaseEntry
+from entry.structs import (
+    Currency,
+    Pair,
+    SpotEntry,
+    BaseEntry,
+    EmpiricPricesResponse,
+    FutureEntry,
+    GenericEntry,
+)
 from time_series.prelude import ONE
 
 const ONE_ETH = 10 ** 18;
@@ -55,9 +63,30 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
 
     IOracle.initializer(oracle_address, 1234, publisher_registry_address, 4, currencies, 5, pairs);
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 0));
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 2, 1), 2, 3 * 10 ** 6, 0));
+
+    // 1:baseEntry: timestamp, source, publisher,pair_id, pirce, expiry_timestamp
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 3, 8 * 10 ** 6, 0));
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 4, 3 * 10 ** 6, 0));
     IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 5, 5 * 10 ** 6, 0));
+    IOracle.publish_entry(oracle_address, GenericEntry(BaseEntry(now, 1, 1), 2, 1 * 10 ** 6));
+    IOracle.publish_entry(oracle_address, GenericEntry(BaseEntry(now, 2, 1), 2, 3 * 10 ** 6));
+    IOracle.publish_entry(oracle_address, GenericEntry(BaseEntry(now, 1, 1), 3, 2 * 10 ** 6));
+    IOracle.publish_entry(oracle_address, GenericEntry(BaseEntry(now, 1, 1), 4, 4 * 10 ** 6));
+    IOracle.publish_entry(oracle_address, GenericEntry(BaseEntry(now, 1, 1), 5, 8 * 10 ** 6));
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 11111110)
+    );
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 3, 8 * 10 ** 6, 11111110)
+    );
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 4, 3 * 10 ** 6, 11111110)
+    );
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 5, 5 * 10 ** 6, 11111110)
+    );
+
     return ();
 }
 
@@ -82,19 +111,22 @@ func test_get_spot_with_USD_hop{syscall_ptr: felt*, range_check_ptr}() {
 
     %{ stop_warp = warp(100000, ids.oracle_address) %}
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 1, 0);
+    // key, aggregation_mode
     assert price = 0;
+    assert num_sources = 0;
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 2, 0);
-    assert price = 2000000;
+    assert price = 2500000;
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot(oracle_address, 3, 0);
     assert price = 8000000;
+    assert num_sources = 1;
 
     let (price, decimals, last_updated, num_sources) = IOracle.get_spot_with_USD_hop(
         oracle_address, 111, 222, 0
     );
-    assert price = 250000000000000000;
+    assert price = 312500000000000000;
     assert decimals = 18;
     assert last_updated = 100000;
-    assert num_sources = 1;
+    assert num_sources = 2;
 
     return ();
 }
@@ -134,7 +166,7 @@ func test_get_spot_with_hop{syscall_ptr: felt*, range_check_ptr}() {
     let (new_price, new_decimals, new_last_updated, new_num_sources) = IOracle.get_spot_with_hop(
         oracle_address, 6, second_currency_ids, 0, 0, 0, 0, 0, 0
     );
-    assert new_price = 50000000000;
+    assert new_price = 62500000000;
     return ();
 }
 
@@ -171,5 +203,71 @@ func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
     assert num_sources = 2;
     assert last_updated = 1665606930;
 
+    return ();
+}
+
+// @external
+// func test_get_spot_median_multi{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+//     alloc_locals;
+//     local oracle_address;
+//     %{ ids.oracle_address = context.oracle_address %}
+//     %{ stop_warp = warp(1665539811, ids.oracle_address) %}
+//     let (pairs_ids) = alloc();
+//     assert pairs_ids[0] = 1;
+//     assert pairs_ids[1] = 2;
+//     assert pairs_ids[2] = 3;
+//     let (prices_response: EmpiricPricesResponse*) = alloc();
+//     let prices_response_len = 0;
+//     IOracle.get_spot_median_multi(
+//         oracle_address, 3, pairs_ids, 0, prices_response_len, prices_response
+//     );
+//     %{ print(ids.prices_response) %}
+//     return ();
+// }
+
+@external
+func test_get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    %{ stop_warp = warp(1665539811, ids.oracle_address) %}
+    let (entry) = IOracle.get_entry(oracle_address, 2, 1);
+    assert entry.value = 1 * 10 ** 6;
+    assert entry.base.source = 1;
+    return ();
+}
+
+@external
+func test_get_future_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    let (future_entry) = IOracle.get_future_entry(oracle_address, 2, 11111110, 1);
+    assert future_entry.price = 2 * 10 ** 6;
+    assert future_entry.base.source = 1;
+
+    return ();
+}
+
+@external
+func test_get_spot_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    let (spot_entries_len, spot_entries: SpotEntry*) = IOracle.get_spot_entries(oracle_address, 2);
+    assert spot_entries_len = 2;
+    return ();
+}
+@external
+func test_get_entries{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    %{ stop_warp = warp(1665539811, ids.oracle_address) %}
+    let (entries_len, entries: GenericEntry*) = IOracle.get_entries(oracle_address, 2);
+    assert entries_len = 2;
+    assert entries[0].value = 1 * 10 ** 6;
+    assert entries[0].base.source = 1;
+    assert entries[1].value = 3 * 10 ** 6;
     return ();
 }

@@ -17,6 +17,9 @@ from oracle.library import Oracle
 from proxy.library import Proxy
 
 const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
+const SPOT = 1397772116;
+const FUTURE = 77332301042245;
+const GENERIC = 20060925819242819;
 
 //
 // Constructor
@@ -63,7 +66,7 @@ func get_spot_entries_for_sources{
 func get_spot_entries{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(pair_id: felt) -> (entries_len: felt, entries: SpotEntry*) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, SPOT);
     return get_spot_entries_for_sources(pair_id, all_sources_len, all_sources);
 }
 
@@ -95,7 +98,7 @@ func get_future_entries_for_sources{
 func get_future_entries{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(pair_id: felt, expiry_timestamp: felt) -> (entries_len: felt, entries: FutureEntry*) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, FUTURE);
     return get_future_entries_for_sources(pair_id, expiry_timestamp, all_sources_len, all_sources);
 }
 // @notice get entry by key and source
@@ -138,24 +141,35 @@ func get_spot_median_multi{
     prices_response_len: felt,
     prices_response: EmpiricPricesResponse*,
 ) -> (prices_response_len: felt, prices_response: EmpiricPricesResponse*) {
-    if (idx == pair_ids_len - 1) {
-        return (prices_response_len, prices_response);
+    alloc_locals;
+    if (idx == pair_ids_len) {
+        return (pair_ids_len, prices_response + idx * EmpiricPricesResponse.SIZE);
     }
     let pair_id = pair_ids[idx];
-    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
-        pair_id
+
+    // let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
+    //     pair_id
+    // );
+    let new_price_response = EmpiricPricesResponse(
+        price=idx, decimals=idx, last_updated_timestamp=idx, num_sources_aggregated=idx
     );
-    let price_response = EmpiricPricesResponse(
-        price=price,
-        decimals=decimals,
-        last_updated_timestamp=last_updated_timestamp,
-        num_sources_aggregated=num_sources_aggregated,
-    );
-    assert prices_response[idx] = price_response;
-    let (new_prices_response_len, new_prices_response) = get_spot_median_multi(
-        pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
-    );
-    return (new_prices_response_len, new_prices_response);
+
+    // assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
+    assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
+    if (idx != 0) {
+        let value = prices_response[1].price;
+        %{ print(ids.value) %}
+        return get_spot_median_multi(
+            pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
+        );
+    } else {
+        // assert prices_response[idx] = new_price_response;
+        %{ print(ids.prices_response) %}
+
+        return get_spot_median_multi(
+            pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
+        );
+    }
 }
 
 // @notice get value by key and aggregation mode
@@ -171,7 +185,7 @@ func get_spot{
 }(pair_id: felt, aggregation_mode: felt) -> (
     price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
 ) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, SPOT);
     let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
         pair_id, aggregation_mode, all_sources_len, all_sources
     );
@@ -290,13 +304,14 @@ func get_entry{
     return (entry,);
 }
 
+@view
 func get_entries{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(key: felt) -> (entries_len: felt, entries: GenericEntry*) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(key);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(key, GENERIC);
     return get_entries_for_sources(key, all_sources_len, all_sources);
 }
-
+@view
 func get_entries_for_sources{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(key: felt, sources_len: felt, sources: felt*) -> (entries_len: felt, entries: GenericEntry*) {

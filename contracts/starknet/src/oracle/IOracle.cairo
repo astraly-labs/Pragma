@@ -41,9 +41,13 @@ namespace IOracle {
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
-    func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*) -> (
-        prices_response_len: felt, prices_response: EmpiricPricesResponse*
-    ) {
+    func get_spot_median_multi(
+        pair_ids_len: felt,
+        pair_ids: felt*,
+        idx: felt,
+        prices_response_len: felt,
+        prices_response: EmpiricPricesResponse*,
+    ) -> (prices_response_len: felt, prices_response: EmpiricPricesResponse*) {
     }
 
     func get_spot(pair_id: felt, aggregation_mode: felt) -> (
@@ -73,9 +77,7 @@ namespace IOracle {
     func get_entry(key: felt, source: felt) -> (entry: GenericEntry) {
     }
 
-    func get_entries(key: felt, sources_len: felt, sources: felt*) -> (
-        entries_len: felt, entries: GenericEntry*
-    ) {
+    func get_entries(key: felt) -> (entries_len: felt, entries: GenericEntry*) {
     }
 
     func get_entries_for_sources(key: felt, sources_len: felt, sources: felt*) -> (
