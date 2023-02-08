@@ -206,24 +206,28 @@ func test_spot_comparison{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
     return ();
 }
 
-// @external
-// func test_get_spot_median_multi{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
-//     alloc_locals;
-//     local oracle_address;
-//     %{ ids.oracle_address = context.oracle_address %}
-//     %{ stop_warp = warp(1665539811, ids.oracle_address) %}
-//     let (pairs_ids) = alloc();
-//     assert pairs_ids[0] = 1;
-//     assert pairs_ids[1] = 2;
-//     assert pairs_ids[2] = 3;
-//     let (prices_response: EmpiricPricesResponse*) = alloc();
-//     let prices_response_len = 0;
-//     IOracle.get_spot_median_multi(
-//         oracle_address, 3, pairs_ids, 0, prices_response_len, prices_response
-//     );
-//     %{ print(ids.prices_response) %}
-//     return ();
-// }
+@external
+func test_get_spot_median_multi{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    let now = 100000;
+    %{ ids.oracle_address = context.oracle_address %}
+    %{ stop_warp = warp(1665539811, ids.oracle_address) %}
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 2, 1), 2, 10 * 10 ** 6, 0));
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 1, 1), 2, 7 * 10 ** 6, 0));
+    IOracle.publish_spot_entry(oracle_address, SpotEntry(BaseEntry(now, 2, 1), 2, 6 * 10 ** 6, 0));
+    let (pairs_ids) = alloc();
+    assert pairs_ids[0] = 2;
+    assert pairs_ids[1] = 3;
+    let pair_ids_len = 2;
+    let (prices_response_len, prices_response) = IOracle.get_spot_median_multi(
+        oracle_address, pair_ids_len, pairs_ids, 0
+    );
+    assert prices_response_len = 2;
+    let value = prices_response[0].price;
+    %{ print(ids.value) %}
+    return ();
+}
 
 @external
 func test_get_entry{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {

@@ -631,6 +631,9 @@ namespace Oracle {
         range_check_ptr,
     }(pair_id, expiry_timestamp, source) -> (future_entry: FutureEntry) {
         alloc_locals;
+        let (all_sources_len, all_sources) = get_all_sources(pair_id, FUTURE);
+        with_attr error_message("Source is not valid") {
+        }
         let (_future_entry) = Oracle__future_entry_storage.read(pair_id, expiry_timestamp, source);
 
         let timestamp = actual_get_element_at(_future_entry.timestamp__price, 0, 31);

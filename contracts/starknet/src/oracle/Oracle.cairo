@@ -3,6 +3,7 @@
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
+from starkware.cairo.common.registers import get_ap
 
 from entry.structs import (
     Currency,
@@ -134,42 +135,46 @@ func get_spot_median_for_sources{
 @view
 func get_spot_median_multi{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
+    prices_response_len: felt, prices_response: EmpiricPricesResponse*
+) {
+    alloc_locals;
+    let (prices_response: EmpiricPricesResponse*) = alloc();
+    get_spot_median_multi_loop(pair_ids_len, pair_ids, 0, 0, prices_response);
+    return (pair_ids_len, prices_response);
+}
+@view
+func get_spot_median_multi_loop{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(
     pair_ids_len: felt,
     pair_ids: felt*,
     idx: felt,
     prices_response_len: felt,
     prices_response: EmpiricPricesResponse*,
-) -> (prices_response_len: felt, prices_response: EmpiricPricesResponse*) {
+) {
     alloc_locals;
     if (idx == pair_ids_len) {
-        return (pair_ids_len, prices_response + idx * EmpiricPricesResponse.SIZE);
+        return ();
     }
     let pair_id = pair_ids[idx];
 
-    // let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
-    //     pair_id
-    // );
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
+        pair_id
+    );
     let new_price_response = EmpiricPricesResponse(
-        price=idx, decimals=idx, last_updated_timestamp=idx, num_sources_aggregated=idx
+        price=price,
+        decimals=decimals,
+        last_updated_timestamp=last_updated_timestamp,
+        num_sources_aggregated=num_sources_aggregated,
     );
 
     // assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
-    assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
-    if (idx != 0) {
-        let value = prices_response[1].price;
-        %{ print(ids.value) %}
-        return get_spot_median_multi(
-            pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
-        );
-    } else {
-        // assert prices_response[idx] = new_price_response;
-        %{ print(ids.prices_response) %}
-
-        return get_spot_median_multi(
-            pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
-        );
-    }
+    // assert [prices_response] = new_price_response;
+    assert prices_response[idx] = new_price_response;
+    return get_spot_median_multi_loop(
+        pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
+    );
 }
 
 // @notice get value by key and aggregation mode

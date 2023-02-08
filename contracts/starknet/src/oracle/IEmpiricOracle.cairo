@@ -60,13 +60,17 @@ namespace IEmpiricOracle {
     ) {
     }
 
-    func get_spot_median_multi(
+    func get_spot_median_multi_loop(
         pair_ids_len: felt,
         pair_ids: felt*,
         idx: felt,
         prices_response_len: felt,
         prices_response: EmpiricPricesResponse*,
-    ) -> (prices_response_len: felt, prices_response: EmpiricPricesResponse*) {
+    ) {
+    }
+    func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
+        prices_response_len: felt, prices_response: EmpiricPricesResponse*
+    ) {
     }
 
     func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
