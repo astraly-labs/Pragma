@@ -41,14 +41,7 @@ namespace IOracle {
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
-    func get_spot_median_multi_loop(
-        pair_ids_len: felt,
-        pair_ids: felt*,
-        idx: felt,
-        prices_response_len: felt,
-        prices_response: EmpiricPricesResponse*,
-    ) {
-    }
+    
     func get_spot_median_multi(
         pair_ids_len: felt,
         pair_ids: felt*,

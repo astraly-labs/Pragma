@@ -224,8 +224,9 @@ func test_get_spot_median_multi{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, 
         oracle_address, pair_ids_len, pairs_ids, 0
     );
     assert prices_response_len = 2;
-    let value = prices_response[0].price;
-    %{ print(ids.value) %}
+    assert prices_response[0].price = 6500000;
+    assert prices_response[1].price = 8000000;
+    assert prices_response[0].decimals = 6;
     return ();
 }
 
