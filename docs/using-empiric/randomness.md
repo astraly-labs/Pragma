@@ -86,7 +86,7 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
 ## How Randomness is Generated
 
-Empiric Network's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Random Function](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06) using elliptic curves. Their Python implementation is available as open source code [here](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
+Empiric Network's randomness is based on the [Internet Engineering Task Force's (IETF) Verifiable Random Function](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06) using elliptic curves. Their Python implementation is available as open source code [here](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
 
 When smart contracts request randomness, they specify a random seed. This seed uniquely determines the randomness, so the Empiric as the VRF provider is not able to manipulate the randomness. However calculating the randomness requires having access to a private key that is not known, so the smart contract (and any other party observing the randomness request) is not able to predict the randomness. Off-chain, the randomness is calculated using the private key and the seed. That randomness and the proof are then sent on-chain, where the unbiased randomness is then available to the smart contract that requested it.
 
