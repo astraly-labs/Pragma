@@ -124,7 +124,7 @@ Returns
 
 ### Callback Function: `receive_random_words`
 
-This is function must be defined on the contract at `callback_address` initially passed in the randomness request.
+This function must be defined on the contract at `callback_address` initially passed in the randomness request.
 
 Inputs
 
