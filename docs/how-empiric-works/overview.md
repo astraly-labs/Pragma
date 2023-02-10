@@ -18,7 +18,7 @@ But Empiric's functionality goes far beyond price feeds. As DeFi matures, import
 
 Our first computational feed is an entirely on-chain, verifiable and transparent yield curve oracle. Our smart contract bootstraps a crypto-native yield curve using Empiric's verified data building blocks such as inputs. This feed is already being used by CurveZero for their money market protocol.
 
-Our second computational feed is a market volatility feed based off of realized and implied volatility data derived from raw market data using verifiable computation. This feed is being integrated into vaults to ensure that trades are only executed during times of market stability and into leading lending/borrowing protocols to increase capital efficiency.&#x20;
+Our second computational feed is a market volatility feed based on realized and implied volatility data derived from raw market data using verifiable computation. This feed is being integrated into vaults to ensure that trades are only executed during times of market stability and into leading lending/borrowing protocols to increase capital efficiency.&#x20;
 
 ### Technical Components
 
