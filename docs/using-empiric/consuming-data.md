@@ -46,7 +46,7 @@ func check_eth_usd_threshold{syscall_ptr: felt*, range_check_ptr}(threshold: fel
 
 ### **Function:** `get_spot_median`
 
-This is the the simplest function that will aggregate all data into a median for a given spot pair ID.
+This is the simplest function that will aggregate all data into a median for a given spot pair ID.
 
 Inputs
 
@@ -194,7 +194,7 @@ Inputs
 
 * `pair_id`: uppercased utf8-encoded string
 * `sources_len`: number of sources to request for
-* `sources`: pointer to the first `source`, where each source is a uppercased utf8-encoded data source, e.g. `str_to_felt("GEMINI")=78362974965321`
+* `sources`: pointer to the first `source`, where each source is an uppercased utf8-encoded data source, e.g. `str_to_felt("GEMINI")=78362974965321`
 
 Returns
 
@@ -238,7 +238,7 @@ Inputs
 * `pair_id`: uppercased utf8-encoded string
 * `expiry_timestamp`: timestamp of the expiry of the future
 * `sources_len`: number of sources to request for
-* `sources`: pointer to the first `source`, where each source is a uppercased utf8-encoded data source, e.g. `str_to_felt("GEMINI")=78362974965321`
+* `sources`: pointer to the first `source`, where each source is an uppercased utf8-encoded data source, e.g. `str_to_felt("GEMINI")=78362974965321`
 
 Returns
 
