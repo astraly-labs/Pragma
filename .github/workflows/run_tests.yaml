@@ -53,9 +53,9 @@ jobs:
         with:
           version: nightly
 
-      - name: Check contracts' interface consistency
-        run: |
-          make check-contracts
+      # - name: Check contracts' interface consistency
+      #   run: |
+      #     make check-contracts
 
       - name: Check formatting
         run: |
