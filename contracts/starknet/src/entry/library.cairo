@@ -6,7 +6,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.bool import TRUE, FALSE
 
-from entry.structs import GenericEntry, SpotEntry, Checkpoint
+from entry.structs import GenericEntry, SpotEntry, Checkpoint, FutureEntry
 
 namespace Entries {
     //
@@ -30,6 +30,12 @@ namespace Entries {
         let (value) = generic_entries_median(entries_len, entries);
         return (value,);
     }
+    func aggregate_future_entries{range_check_ptr}(entries_len: felt, entries: FutureEntry*) -> (
+        value: felt
+    ) {
+        let (value) = future_entries_median(entries_len, entries);
+        return (value,);
+    }
 
     // @notice returns the max timestamp of an entries array
     // @param entries_len: length of entries array
@@ -47,6 +53,25 @@ namespace Entries {
 
         let (rec_last_updated_timestamp) = aggregate_timestamps_max(
             entries_len - 1, entries + SpotEntry.SIZE
+        );
+        let is_current_entry_last = is_le(rec_last_updated_timestamp, entry_timestamp);
+        if (is_current_entry_last == TRUE) {
+            return (entry_timestamp,);
+        }
+        return (rec_last_updated_timestamp,);
+    }
+    func aggregate_future_timestamps_max{range_check_ptr}(
+        entries_len: felt, entries: FutureEntry*
+    ) -> (last_updated_timestamp: felt) {
+        alloc_locals;
+
+        let entry_timestamp = [entries].base.timestamp;
+        if (entries_len == 1) {
+            return (entry_timestamp,);
+        }
+
+        let (rec_last_updated_timestamp) = aggregate_future_timestamps_max(
+            entries_len - 1, entries + FutureEntry.SIZE
         );
         let is_current_entry_last = is_le(rec_last_updated_timestamp, entry_timestamp);
         if (is_current_entry_last == TRUE) {
@@ -125,6 +150,29 @@ namespace Entries {
         return (value=value);
     }
 
+    func future_entries_median{range_check_ptr}(entries_len: felt, entries: FutureEntry*) -> (
+        value: felt
+    ) {
+        let (sorted_entries) = sort_future_entries_by_value(entries_len, entries);
+
+        let (q, r) = unsigned_div_rem(entries_len, 2);
+        let is_even = 1 - r;
+
+        if (is_even == FALSE) {
+            let median_idx = entries_len - q - 1;  // 0-indexed
+            let median_entry = sorted_entries[median_idx];
+            return (median_entry.price,);
+        }
+
+        let median_idx_1 = entries_len - q - 1;
+        let median_entry_1 = sorted_entries[median_idx_1];
+        let median_idx_2 = median_idx_1 + 1;
+        let median_entry_2 = sorted_entries[median_idx_2];
+
+        let value = average_values(median_entry_1.price, median_entry_2.price);
+        return (value=value);
+    }
+
     func sort_generic_entries_by_value{range_check_ptr}(
         entries_len: felt, entries: GenericEntry*
     ) -> (sorted_entries: GenericEntry*) {
@@ -145,6 +193,13 @@ namespace Entries {
         return (sorted_entries,);
     }
 
+    func sort_future_entries_by_value{range_check_ptr}(
+        entries_len: felt, entries: FutureEntry*
+    ) -> (sorted_entries: FutureEntry*) {
+        let (entries_input: FutureEntry*) = alloc();
+        let (sorted_entries) = mergesort_future_entries_by_value(entries_len, entries);
+        return (sorted_entries,);
+    }
     func mergesort_spot_entries_by_value{range_check_ptr}(
         felt_arr_len: felt, felt_arr: SpotEntry*
     ) -> (sorted_entries_ptr: SpotEntry*) {
@@ -347,6 +402,113 @@ namespace Entries {
         } else {
             assert sorted_arr[current_ix] = right_arr[right_arr_ix];
             return _merge_generic(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix,
+                right_arr_ix + 1,
+            );
+        }
+    }
+
+    func mergesort_future_entries_by_value{range_check_ptr}(
+        felt_arr_len: felt, felt_arr: FutureEntry*
+    ) -> (sorted_entries_ptr: FutureEntry*) {
+        alloc_locals;
+
+        // step 1. if len == 1 => return lst
+        if (felt_arr_len == 1) {
+            return (felt_arr,);
+        }
+
+        // step 2. split list at middle
+        let (left_arr_len, _) = unsigned_div_rem(felt_arr_len, 2);
+        let right_arr_len = felt_arr_len - left_arr_len;
+
+        // step 3. create left and right
+        let left_arr = felt_arr;
+        let right_arr = felt_arr + left_arr_len * FutureEntry.SIZE;
+
+        // step 4. recurse left and right
+        let (sorted_left_arr) = mergesort_future_entries_by_value(left_arr_len, left_arr);
+        let (sorted_right_arr) = mergesort_future_entries_by_value(right_arr_len, right_arr);
+        let (result_arr: FutureEntry*) = alloc();
+
+        // step 5. merge left and right
+        let (sorted_arr) = _merge_future(
+            left_arr_len, sorted_left_arr, right_arr_len, sorted_right_arr, result_arr, 0, 0, 0
+        );
+        return (sorted_arr,);
+    }
+
+    func _merge_future{range_check_ptr}(
+        left_arr_len: felt,
+        left_arr: FutureEntry*,
+        right_arr_len: felt,
+        right_arr: FutureEntry*,
+        sorted_arr: FutureEntry*,
+        current_ix: felt,
+        left_arr_ix: felt,
+        right_arr_ix: felt,
+    ) -> (sorted_arr: FutureEntry*) {
+        alloc_locals;
+
+        if ((current_ix) == (left_arr_len + right_arr_len)) {
+            return (sorted_arr,);
+        }
+
+        if (left_arr_len == left_arr_ix) {
+            let right_v = right_arr[right_arr_ix].price;
+            assert sorted_arr[current_ix] = right_arr[right_arr_ix];
+            return _merge_future(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix,
+                right_arr_ix + 1,
+            );
+        }
+
+        if (right_arr_len == right_arr_ix) {
+            let left_v = left_arr[left_arr_ix].price;
+            assert sorted_arr[current_ix] = left_arr[left_arr_ix];
+            return _merge_future(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix + 1,
+                right_arr_ix,
+            );
+        }
+
+        let left_val = left_arr[left_arr_ix].price;
+        let right_val = right_arr[right_arr_ix].price;
+        let is_left = is_le(left_val, right_val);
+
+        if (is_left == 1) {
+            assert sorted_arr[current_ix] = left_arr[left_arr_ix];
+            return _merge_future(
+                left_arr_len,
+                left_arr,
+                right_arr_len,
+                right_arr,
+                sorted_arr,
+                current_ix + 1,
+                left_arr_ix + 1,
+                right_arr_ix,
+            );
+        } else {
+            assert sorted_arr[current_ix] = right_arr[right_arr_ix];
+            return _merge_future(
                 left_arr_len,
                 left_arr,
                 right_arr_len,
