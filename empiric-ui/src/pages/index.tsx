@@ -80,7 +80,7 @@ const ecosystemPartners: Logo[] = [
   },
 ];
 
-const supportedTestnetNetworks :Logo[] = [
+const supportedTestnetNetworks: Logo[] = [
   {
     name: "Starknet Testnet",
     src: "/assets/angels/starknet.webp",
@@ -96,7 +96,7 @@ const supportedTestnetNetworks :Logo[] = [
     src: "/assets/features/zk-sync.svg",
     href: "https://zksync.io/",
   },
-]
+];
 
 const IndexPage = () => (
   <div className="w-screen">
@@ -110,16 +110,14 @@ const IndexPage = () => (
         logos={dataPublishers}
       />
     </SectionContainer> */}
-    
     <SectionContainer className="!pt-0">
-      <AssetsSection /> 
+      <AssetsSection />
       <LogoCloud title="Trusted by" logos={protocols} />
     </SectionContainer>
     <SectionContainer className="!pt-0">
-    <LogoCloud title="Supported Networks " logos={supportedTestnetNetworks}/>
-      </SectionContainer>
+      <LogoCloud title="Supported Networks" logos={supportedTestnetNetworks} />
+    </SectionContainer>
     <SectionContainer className="bg-slate-50">
-
       <Heading
         title="A few simple lines to integrate"
         subtitle="Try it yourself"
