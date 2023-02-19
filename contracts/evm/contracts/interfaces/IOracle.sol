@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+import "./ICurrencyManager.sol";
+
 interface IOracle {
     enum AggregationMode {
         MEDIAN
@@ -38,4 +40,10 @@ interface IOracle {
     );
     event SubmittedSpotEntry(SpotEntry newEntry);
     event CheckpointSpotEntry(Checkpoint cp);
+
+    function initialize(
+        address _publisherRegistry,
+        ICurrencyManager.Currency[] memory _currencies,
+        ICurrencyManager.Pair[] memory _pairs
+    ) external;
 }

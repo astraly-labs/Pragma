@@ -20,4 +20,9 @@ interface IPublisherRegistry {
         external
         view
         returns (address);
+
+    function addSourcesForPublisher(
+        bytes32 publisher,
+        bytes32[] calldata sources_
+    ) external;
 }

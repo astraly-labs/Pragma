@@ -24,6 +24,7 @@
 		"verify": "yarn hardhat run scripts/verify.ts --network goerli"
 	},
 	"dependencies": {
+		"@chugsplash/plugins": "^0.10.7",
 		"@matterlabs/signature-checker": "^1.1.1",
 		"@matterlabs/zksync-contracts": "^0.5.1"
 	},

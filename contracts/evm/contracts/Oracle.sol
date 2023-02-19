@@ -23,7 +23,7 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     uint256 constant FORWARD_TIMESTAMP_BUFFER = 900;
 
     constructor() {
-        _disableInitializers();
+        // _disableInitializers();
     }
 
     function initialize(
