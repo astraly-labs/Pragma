@@ -7,7 +7,12 @@ from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
 from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import BitstampFetcher, CexFetcher, CoinbaseFetcher
+from empiric.publisher.fetchers import (
+    BitstampFetcher,
+    CexFetcher,
+    CoinbaseFetcher,
+    AscendexFetcher,
+)
 
 logger = get_stream_logger()
 
@@ -32,7 +37,7 @@ def handler(event, context):
 
 
 def _get_pvt_key():
-    region_name = "us-west-1"
+    region_name = "eu-west-3"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
@@ -57,6 +62,7 @@ async def _handler(assets):
                 BitstampFetcher,
                 CexFetcher,
                 CoinbaseFetcher,
+                AscendexFetcher,
             )
         ]
     )
@@ -66,7 +72,8 @@ async def _handler(assets):
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
     for res in response:
-        await res.wait_for_acceptance(wait_for_accept=True)
+        await res.wait_for_acceptance()
+
     return _entries
 
 

@@ -1,5 +1,5 @@
 [project]
-protostar-version = "0.8.1"
+protostar-version = "0.9.1"
 lib-path = "contracts/starknet/lib"
 cairo-path = ["contracts/starknet/src", "contracts/starknet/lib", "contracts/starknet/lib/cairo_streams/src"]
 
@@ -18,3 +18,5 @@ ExampleRandomness = ["contracts/starknet/src/randomness/ExampleRandomness.cairo"
 [build]
 output = "contracts/starknet/build"
 
+[test]
+disable-hint-validation = true

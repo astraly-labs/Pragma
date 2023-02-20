@@ -18,6 +18,29 @@ func convert_via_usd{range_check_ptr}(a_price_in_usd, b_price_in_usd, output_dec
     return (output_);
 }
 
+func div_decimals{range_check_ptr}(a_price, b_price, output_decimals) -> felt {
+    let (pow_) = pow(10, output_decimals);
+
+    with_attr error_message("Conversion overflow") {
+        assert_le(pow_, 10 ** 36);
+        assert_le(a_price, 10 ** 36);
+    }
+
+    let (output_, _) = unsigned_div_rem(a_price * pow_, b_price);
+    return (output_);
+}
+
+func mult_decimals{range_check_ptr}(a_price, b_price, output_decimals) -> felt {
+    let (pow_) = pow(10, output_decimals);
+
+    with_attr error_message("Conversion overflow") {
+        assert_le(pow_, 10 ** 36);
+        assert_le(a_price, 10 ** 36);
+    }
+
+    let output_ = a_price * b_price * pow_;
+    return (output_);
+}
 // @dev divides two felts that represent decimal numbers
 // @dev the result has the higher number of decimals and is not rounded
 // @dev we shift the value first and then divide, which leads to higher accuracy but can lead to overflow

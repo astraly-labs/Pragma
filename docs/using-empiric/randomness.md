@@ -8,7 +8,7 @@ In the second phase, the proof will be verified directly on-chain (coming soon) 
 
 ## Sample Code
 
-If you are just trying to get started with using randomness, see the self-contained code snippet. If you'd like to use more advanced oracle functions, read on past the code block for further information. You can find a full sample randomness receiver contract [here](https://github.com/42labs/Empiric/blob/master/contracts/src/randomness/ExampleRandomness.cairo).
+If you are just trying to get started with using randomness, see the self-contained code snippet. If you'd like to use more advanced oracle functions, read on past the code block for further information. You can find a full sample randomness receiver contract [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/src/randomness/ExampleRandomness.cairo).
 
 ```
 %lang starknet
@@ -67,7 +67,7 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
     let (current_block_number) = get_block_number();
     let (min_block_number) = min_block_number_storage.read();
     assert_le(min_block_number, current_block_number);
-    
+
     // and that the requestor_address is what we expect it to be (can be self
     // or another contract address), checking for self in this case
     let (contract_address) = get_contract_address()
@@ -92,8 +92,8 @@ When smart contracts request randomness, they specify a random seed. This seed u
 
 Empiric Network's verifiable random function (VRF) over a specific elliptic curve, named Curve25519. Most known blockchain implementations of a VRF are using the so-called "Bitcoin curve", or secpk256k1. We chose this algorithm because it is more secure than other commonly used ones (that possibly [have](https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/#thedownside) [backdoors](https://blog.cryptographyengineering.com/2013/09/18/the-many-flaws-of-dualecdrbg/)). We chose this curve in particular for two reasons:
 
-* Building the tools to perform arithmetic operations on Curve25519 is a premiere for programmable blockchains and theoretically enables compatibility with [all the protocols](https://en.wikipedia.org/wiki/Curve25519#Protocols) that use Curve25519 for digital signatures, such as IPFS, Ripple, Monero, Signal, Protonmail, and many others. This is a great step towards interoperability with StarkNet and it is only possible by leveraging its computational capabilities.
-* One key part of the VRF algorithm implies taking a public input and converting it to an elliptic curve point. This process is called "hashing to the curve", and the standard way of doing it for Curve25519 is using [Elligator2](https://eprint.iacr.org/2013/325). In Cairo, part of the Elligator algorithm can be computed quickly and safely using a hint and allows cheaper verification costs than hashing to the secpk256k1 curve.
+- Building the tools to perform arithmetic operations on Curve25519 is a premiere for programmable blockchains and theoretically enables compatibility with [all the protocols](https://en.wikipedia.org/wiki/Curve25519#Protocols) that use Curve25519 for digital signatures, such as IPFS, Ripple, Monero, Signal, Protonmail, and many others. This is a great step towards interoperability with StarkNet and it is only possible by leveraging its computational capabilities.
+- One key part of the VRF algorithm implies taking a public input and converting it to an elliptic curve point. This process is called "hashing to the curve", and the standard way of doing it for Curve25519 is using [Elligator2](https://eprint.iacr.org/2013/325). In Cairo, part of the Elligator algorithm can be computed quickly and safely using a hint and allows cheaper verification costs than hashing to the secpk256k1 curve.
 
 ## Verifying The Randomness
 
@@ -112,15 +112,15 @@ Allows your smart contract to request randomness. Upon calling the Empiric contr
 
 Inputs
 
-* `seed`: random seed that feeds into the verifiable random algorithm, must be different every time. Until it it possible to get the block\_hash on StarkNet, it is recommended to use `hash(request_address, hash(nonce, block_timestamp))`
-* `callback_address`: address to call `receive_random_words` on with the randomness
-* `callback_gas_limit`: gas limit on the callback function
-* `publish_delay`: minimum number of blocks to wait from the request to fulfillment
-* `num_words`: number of random words to receive in one call. Each word is a felt, so 251 bits of randomness
+- `seed`: random seed that feeds into the verifiable random algorithm, must be different every time. Until it it possible to get the block_hash on StarkNet, it is recommended to use `hash(request_address, hash(nonce, block_timestamp))`
+- `callback_address`: address to call `receive_random_words` on with the randomness
+- `callback_gas_limit`: gas limit on the callback function
+- `publish_delay`: minimum number of blocks to wait from the request to fulfillment
+- `num_words`: number of random words to receive in one call. Each word is a felt, so 251 bits of randomness
 
 Returns
 
-* `request_id`: ID of the request, which can be used to check the status, cancel the request and check that the callback function was correctly called.
+- `request_id`: ID of the request, which can be used to check the status, cancel the request and check that the callback function was correctly called.
 
 ### Callback Function: `receive_random_words`
 
@@ -128,10 +128,10 @@ This is function must be defined on the contract at `callback_address` initially
 
 Inputs
 
-* `requestor_address`: address that submitted the randomness request
-* `request_id`: id of the randomness request (auto-incrementing for each `requestor_address`)
-* `random_words_len`: number of random words returned
-* `random_words`: pointer to the first random word
+- `requestor_address`: address that submitted the randomness request
+- `request_id`: id of the randomness request (auto-incrementing for each `requestor_address`)
+- `random_words_len`: number of random words returned
+- `random_words`: pointer to the first random word
 
 ### Function: `cancel_random_request`
 
@@ -139,13 +139,13 @@ Allows the requestor of randomness to cancel the request.
 
 Inputs
 
-* `request_id`: ID of the request to be canceled
-* `seed`: seed used to request the randomness
-* `requestor_address`: address of the contract that originally requested the randomness. Currently must be the same as the contract calling the cancel function
-* `minimum_block_number`: the block number in which the randomness could first have been published, equal to `publish_delay` + `block_number` of the request
-* `callback_address`: argument provided in the randomness request
-* `callback_gas_limit`: argument provided in the randomness request
-* `num_words`: argument provided in the randomness request
+- `request_id`: ID of the request to be canceled
+- `seed`: seed used to request the randomness
+- `requestor_address`: address of the contract that originally requested the randomness. Currently must be the same as the contract calling the cancel function
+- `minimum_block_number`: the block number in which the randomness could first have been published, equal to `publish_delay` + `block_number` of the request
+- `callback_address`: argument provided in the randomness request
+- `callback_gas_limit`: argument provided in the randomness request
+- `num_words`: argument provided in the randomness request
 
 ### Function: `get_request_status`
 
@@ -153,9 +153,9 @@ Get the status of a randomness request.
 
 Inputs
 
-* `requestor_address`: address of the requesting contract
-* `request_id`: ID of the request to be canceled
+- `requestor_address`: address of the requesting contract
+- `request_id`: ID of the request to be canceled
 
 Returns
 
-* `status_`: status of the request, see [here](https://github.com/42labs/Empiric/blob/master/contracts/src/randomness/structs.cairo). 0=UNINITIALIZED, 1=RECEIVED, 2=FULFILLED, 3=CANCELLED, 4=EXCESSIVE\_GAS\_NEEDED, 5=ERRORED.&#x20;
+- `status_`: status of the request, see [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/src/randomness/structs.cairo). 0=UNINITIALIZED, 1=RECEIVED, 2=FULFILLED, 3=CANCELLED, 4=EXCESSIVE_GAS_NEEDED, 5=ERRORED.&#x20;

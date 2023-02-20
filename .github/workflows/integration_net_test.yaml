@@ -16,7 +16,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.9.13"
+          python-version: "3.9"
           cache: "pip"
           cache-dependency-path: "requirements.txt"
 

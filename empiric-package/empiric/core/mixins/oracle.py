@@ -7,6 +7,7 @@ from empiric.core.entry import FutureEntry, SpotEntry
 from empiric.core.types import AggregationMode
 from empiric.core.utils import str_to_felt
 from starknet_py.contract import InvokeResult
+from starknet_py.net.account.account import Account
 from starknet_py.net.client import Client
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,7 @@ OracleResponse = collections.namedtuple(
 class OracleMixin:
     publisher_registry: Contract
     client: Client
+    account: Account
 
     async def publish_spot_entry(
         self,

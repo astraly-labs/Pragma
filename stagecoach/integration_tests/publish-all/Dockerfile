@@ -1,4 +1,4 @@
-FROM 42labs/empiric-publisher:test
+FROM astralylabs/empiric-publisher:test
 
 COPY publish_all.py .
 

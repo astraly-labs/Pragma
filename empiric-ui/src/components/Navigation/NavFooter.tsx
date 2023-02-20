@@ -98,7 +98,7 @@ const socials: SocialMedia[] = [
   {
     name: "GitHub",
     src: "/assets/social/github.svg",
-    href: "https://github.com/42labs/Empiric",
+    href: "https://github.com/Astraly-Labs/Empiric",
   },
   {
     name: "Twitter",

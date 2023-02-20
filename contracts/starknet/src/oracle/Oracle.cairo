@@ -3,12 +3,24 @@
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math import assert_not_zero
+from starkware.cairo.common.registers import get_ap
 
-from entry.structs import Currency, GenericEntry, FutureEntry, SpotEntry, Pair, Checkpoint
+from entry.structs import (
+    Currency,
+    GenericEntry,
+    FutureEntry,
+    SpotEntry,
+    Pair,
+    Checkpoint,
+    EmpiricPricesResponse,
+)
 from oracle.library import Oracle
 from proxy.library import Proxy
 
 const MEDIAN = 120282243752302;  // str_to_felt("MEDIAN")
+const SPOT = 1397772116;
+const FUTURE = 77332301042245;
+const GENERIC = 20060925819242819;
 
 //
 // Constructor
@@ -55,7 +67,7 @@ func get_spot_entries_for_sources{
 func get_spot_entries{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(pair_id: felt) -> (entries_len: felt, entries: SpotEntry*) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, SPOT);
     return get_spot_entries_for_sources(pair_id, all_sources_len, all_sources);
 }
 
@@ -71,6 +83,25 @@ func get_spot_entry{
     return (entry,);
 }
 
+@view
+func get_future_entries_for_sources{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*) -> (
+    entries_len: felt, entries: FutureEntry*
+) {
+    let (entries_len, entries, _) = Oracle.get_future_entries(
+        pair_id, expiry_timestamp, sources_len, sources
+    );
+    return (entries_len, entries);
+}
+
+@view
+func get_future_entries{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp: felt) -> (entries_len: felt, entries: FutureEntry*) {
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, FUTURE);
+    return get_future_entries_for_sources(pair_id, expiry_timestamp, all_sources_len, all_sources);
+}
 // @notice get entry by key and source
 // @param key: the key to fetch Entries for
 // @param source: the source to use for Entry
@@ -101,6 +132,51 @@ func get_spot_median_for_sources{
     return get_spot_for_sources{bitwise_ptr=bitwise_ptr}(pair_id, MEDIAN, sources_len, sources);
 }
 
+@view
+func get_spot_median_multi{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
+    prices_response_len: felt, prices_response: EmpiricPricesResponse*
+) {
+    alloc_locals;
+    let (prices_response: EmpiricPricesResponse*) = alloc();
+    get_spot_median_multi_loop(pair_ids_len, pair_ids, 0, 0, prices_response);
+    return (pair_ids_len, prices_response);
+}
+@view
+func get_spot_median_multi_loop{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    pair_ids_len: felt,
+    pair_ids: felt*,
+    idx: felt,
+    prices_response_len: felt,
+    prices_response: EmpiricPricesResponse*,
+) {
+    alloc_locals;
+    if (idx == pair_ids_len) {
+        return ();
+    }
+    let pair_id = pair_ids[idx];
+
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
+        pair_id
+    );
+    let new_price_response = EmpiricPricesResponse(
+        price=price,
+        decimals=decimals,
+        last_updated_timestamp=last_updated_timestamp,
+        num_sources_aggregated=num_sources_aggregated,
+    );
+
+    // assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
+    // assert [prices_response] = new_price_response;
+    assert prices_response[idx] = new_price_response;
+    return get_spot_median_multi_loop(
+        pair_ids_len, pair_ids, idx + 1, prices_response_len + 1, prices_response
+    );
+}
+
 // @notice get value by key and aggregation mode
 // @param key: the key to fetch Entries for
 // @param aggregation_mode: the mode of aggregation to use to find value
@@ -114,7 +190,7 @@ func get_spot{
 }(pair_id: felt, aggregation_mode: felt) -> (
     price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
 ) {
-    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id);
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(pair_id, SPOT);
     let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_spot(
         pair_id, aggregation_mode, all_sources_len, all_sources
     );
@@ -184,6 +260,68 @@ func get_spot_with_USD_hop{
         price, decimals, last_updated_timestamp, num_sources_aggregated
     ) = Oracle.get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode);
     return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
+@view
+func get_spot_with_hop{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    currency_ids_len: felt,
+    currency_ids: felt*,
+    aggregation_mode,
+    idx: felt,
+    price: felt,
+    decimals: felt,
+    last_updated_timestamp: felt,
+    num_sources_aggregated: felt,
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (
+        price, decimals, last_updated_timestamp, num_sources_aggregated
+    ) = Oracle.get_spot_with_hop(
+        currency_ids_len,
+        currency_ids,
+        aggregation_mode,
+        idx,
+        price,
+        decimals,
+        last_updated_timestamp,
+        num_sources_aggregated,
+    );
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
+@view
+func get_futures{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(
+    pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
+) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_futures(
+        pair_id, expiry_timestamp, aggregation_mode, sources_len, sources
+    );
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+@view
+func get_entry{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt, source: felt) -> (entry: GenericEntry) {
+    let (entry) = Oracle.get_entry(key, source);
+    return (entry,);
+}
+
+@view
+func get_entries{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt) -> (entries_len: felt, entries: GenericEntry*) {
+    let (all_sources_len, all_sources) = Oracle.get_all_sources(key, GENERIC);
+    return get_entries_for_sources(key, all_sources_len, all_sources);
+}
+@view
+func get_entries_for_sources{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(key: felt, sources_len: felt, sources: felt*) -> (entries_len: felt, entries: GenericEntry*) {
+    let (entries_len, entries, _) = Oracle.get_entries(key, sources_len, sources);
+    return (entries_len, entries);
 }
 
 //

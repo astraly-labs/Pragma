@@ -40,11 +40,10 @@ async def invoke_(
     if max_fee is not None:
         self.max_fee = max_fee
 
-    transaction = await self._client.sign_invoke_transaction(
+    transaction = await self._account.sign_invoke_transaction(
         calls=self,
         max_fee=self.max_fee,
         auto_estimate=auto_estimate,
-        version=self.version,
     )
     response = await self._client.send_transaction(transaction)
     if callback:

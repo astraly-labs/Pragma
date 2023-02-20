@@ -4,9 +4,9 @@ Empiric makes publishing data easy because there is no off-chain infrastructure,
 
 Here is the step-by-step breakdown:
 
-### 1. Clone the Empiric Network [GitHub repo](https://github.com/42labs/Empiric).
+### 1. Clone the Empiric Network [GitHub repo](https://github.com/Astraly-Labs/Empiric).
 
-### 2. Install the dependencies (see [instructions](https://github.com/42labs/Empiric#setup)).
+### 2. Install the dependencies (see [instructions](https://github.com/Astraly-Labs/Empiric#setup)).
 
 If you have trouble installing the fastecdsa dependency, try installing gmp with the command `brew install gmp` if you use Homebrew. For further troubleshooting, see this [thread](https://github.com/OpenZeppelin/nile/issues/22).
 
@@ -28,7 +28,7 @@ print(f'Public Key: {public_key}')
 
 ### 4. Deploy an account contract on StarkNet
 
-Use the following commands to compile and deploy the account contract. If you'd prefer to deploy your own account contract (we use the OpenZeppelin account contract), you can [compile and deploy](https://starknet.io/docs/hello\_starknet/intro.html#compile-the-contract) your own contract instead. Make sure to replace `PUBLIC_KEY_FROM_STEP_3` in the second command with your \*public\* key from step 3.
+Use the following commands to compile and deploy the account contract. If you'd prefer to deploy your own account contract (we use the OpenZeppelin account contract), you can [compile and deploy](https://starknet.io/docs/hello_starknet/intro.html#compile-the-contract) your own contract instead. Make sure to replace `PUBLIC_KEY_FROM_STEP_3` in the second command with your \*public\* key from step 3.
 
 ```
 starknet-compile --account_contract contracts/starknet/src/account/Account.cairo --abi contracts/starknet/build/Account_abi.json --output contracts/starknet/build/Account.json --cairo_path contracts/starknet/src:contracts/starknet/lib
@@ -47,7 +47,7 @@ The initial publishing frequency for the oracle is every 3 minutes on Starknet A
 
 #### Using the Empiric Network Python SDK
 
-See a full sample script [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/publish\_all.py), or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample `.env` file [here](https://github.com/42labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/.env) to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).&#x20;
+See a full sample script [here](https://github.com/Astraly-Labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/publish_all.py), or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample `.env` file [here](https://github.com/Astraly-Labs/Empiric/blob/master/stagecoach/jobs/publishers/examples/.env) to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).&#x20;
 
 To make fetching data simple, implement your own fetching function using whatever libraries you want, as long as it returns a `List[SpotEntry]`.
 
@@ -109,14 +109,14 @@ if __name__ == "__main__":
 
 **Docker Image**
 
-In this setup, a Python script would fetch data (your custom logic) and then use the Empiric SDK to publish that data, similar to the script above. In order to deploy you can use the empiric-publisher Docker base image. The base image is available on [Dockerhub](https://hub.docker.com/r/42labs/empiric-publisher/tags) and comes with the Python and all requirements (including the empiric-network Python package) installed.
+In this setup, a Python script would fetch data (your custom logic) and then use the Empiric SDK to publish that data, similar to the script above. In order to deploy you can use the empiric-publisher Docker base image. The base image is available on [Dockerhub](https://hub.docker.com/r/Astraly-Labs/empiric-publisher/tags) and comes with the Python and all requirements (including the empiric-network Python package) installed.
 
-Again, note the `.env` file in that same [folder](https://github.com/42labs/Empiric/tree/master/stagecoach/jobs/publishers/examples) which is passed to Docker at run time via the `--env-file` arg, with `PUBLISHER` and `PUBLISHER_ADDRESS` variables set, as well as a `PUBLISHER_PRIVATE_KEY` variable (which is not in the repository for obvious reasons).
+Again, note the `.env` file in that same [folder](https://github.com/Astraly-Labs/Empiric/tree/master/stagecoach/jobs/publishers/examples) which is passed to Docker at run time via the `--env-file` arg, with `PUBLISHER` and `PUBLISHER_ADDRESS` variables set, as well as a `PUBLISHER_PRIVATE_KEY` variable (which is not in the repository for obvious reasons).
 
 Alternatively, you can find an example of how to use the SDK in a serverless deployment (e.g. AWS Lambda).
 
 ```docker
-FROM 42labs/empiric-publisher:1.0.1
+FROM astralylabs/empiric-publisher:1.0.1
 
 COPY fetch-and-publish.py ./fetch-and-publish.py
 CMD python fetch-and-publish.py

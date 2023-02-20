@@ -29,6 +29,8 @@ EmpiricAsset = Union[EmpiricSpotAsset, EmpiricOnchainAsset]
 
 EMPIRIC_ALL_ASSETS: List[EmpiricAsset] = [
     {"type": "SPOT", "pair": ("BTC", "USD"), "decimals": 8},
+    {"type": "SPOT", "pair": ("WBTC", "BTC"), "decimals": 8},
+    {"type": "SPOT", "pair": ("WBTC", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("BTC", "EUR"), "decimals": 8},
     {"type": "SPOT", "pair": ("ETH", "USD"), "decimals": 8},
     {"type": "SPOT", "pair": ("SOL", "USD"), "decimals": 8},
