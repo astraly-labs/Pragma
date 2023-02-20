@@ -16,8 +16,8 @@ from starkware.cairo.common.math_cmp import is_not_zero, is_le
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 from time_series.convert import _max, _min, convert_via_usd, div_decimals, mult_decimals
-from time_series.utils import are_equal
-
+from time_series.utils import are_equal, safe_div, less_than, greater_than
+from herodotus.structs import (StorageSlot, L1HeadersStore, FactsRegistry)
 from entry.structs import (
     Checkpoint,
     Currency,
@@ -35,10 +35,12 @@ from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from entry.library import Entries
 from bits_manipulation.bits_manipulation import actual_set_element_at, actual_get_element_at
 from starkware.cairo.common.pow import pow
+
 const BACKWARD_TIMESTAMP_BUFFER = 7800;  // 2 hours and 10 minutes
 // Max difference between "current" timestamp and entry timestamp
 // where "current" timestamp is a conservative estimate: min(block_timestamp, latest_updated_timestamp)
 const BOTH_TRUE = 2;
+const ONE_TRUE = 1;
 const USD_CURRENCY_ID = 5591876;  // str_to_felt("USD")
 const SPOT = 1397772116;
 const FUTURE = 77332301042245;
@@ -463,36 +465,44 @@ namespace Oracle {
         syscall_ptr: felt*,
         pedersen_ptr: HashBuiltin*,
         range_check_ptr,
-    }(pool_address: felt, margin: Uint256) {
+    }(pool_address: felt, margin: felt) {
+    // Get latest commited L1 block
+    let (block_number) = L1HeadersStore.get_latest_commitments_l1_block();
     // Use get_storage method on FactsRegistry contract using storage slot 0 which returns the PriceSQRTx96
-    let (storage) = IFactsRegistry.get_storage(0, pool_address, 0, 0, 0);
+    let (_, _, storage) = FactsRegistry.get_storage(block_number, pool_address, StorageSlot(0,0,0,0), 0, 0, 0 ,0 ,0);
     // Get the first element from struct
     let (sqrtPriceX96) = storage[0];
     // Convert the returned price to the same precision as the one we get from off-chain sources.
     // uint(sqrtPriceX96).mul(uint(sqrtPriceX96)).mul(1e18) >> (96 * 2);
-    let (price) = mul(sqrtPriceX96, sqrtPriceX96);
-    let (price) = mul(price, 10 ** 18);
+    let (price) = sqrtPriceX96 * sqrtPriceX96;
+    let (price) = price *  10 ** 18;
     // Bitshift right ?
-    let (price) = div(price, 2 ** 192);
+    let (price) = safe_div(price, 2 ** 192);
     // Check if the price is within the specified range (e.g +-margin%)
-    let (lower_bound) = mul(price, 100 - margin);
-    let (lower_bound) = div(lower_bound, 100);
-    let (upper_bound) = mul(price, 100 + margin);
-    let (upper_bound) = div(upper_bound, 100);
+    let (lower_bound) = price * ( 100 - margin);
+    let (lower_bound) = safe_div(lower_bound, 100);
+    let (upper_bound) = price * (100 + margin);
+    let (upper_bound) = safe_div(upper_bound, 100);
     // Revert if out of range + save the timestamp at which it reverted. / If it has been reverting for more than a certain time range (should be configurable e.g 1 hour), don't revert but return the TWAP price.
     let (last_reverted_timestamp) = Oracle_reverted_timestamps_storage.read(pool_address);
     let (current_timestamp) = get_block_timestamp();
-    if (price < lower_bound || price > upper_bound) {
+    let (below_lower_bound) = less_than(price, lower_bound);
+    let (above_upper_bound) = greater_than(price, upper_bound);
+    if (below_lower_bound + above_upper_bound == ONE_TRUE) {
         if (last_reverted_timestamp == 0) {
             Oracle_reverted_timestamps_storage.write(pool_address, current_timestamp);
         }
         let (reverted_timestamp) = Oracle_reverted_timestamps_storage.read(pool_address);
         let (time_since_reverted) = current_timestamp - reverted_timestamp;
-        if (time_since_reverted > 3600) {
+        let (time_elapsed) = greater_than(time_since_reverted, 3600);
+        if (time_elapsed == 1) {
             // Return the TWAP price    
             return (price,);
         }
-        assert(0, 'Oracle: Price out of range {margin}');
+        with_attr error_message("Oracle: Price out of range {margin}") {
+            assert 0 = 1;
+        }
+    }
     }
 
     func get_spot_entries{
