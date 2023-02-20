@@ -71,6 +71,11 @@ func Oracle_spot_entry_storage(pair_id: felt, source: felt) -> (entry: SpotEntry
 }
 
 @storage_var
+func Oracle_reverted_timestamps_storage(pool_address: felt) -> (res: felt) {
+}
+
+
+@storage_var
 func Oracle__entry_storage(key: felt, source: felt) -> (entry: GenericEntryStorage) {
 }
 
@@ -451,6 +456,43 @@ namespace Oracle {
             entries_len, entries
         );
         return (price, 18, last_updated_timestamp, entries_len);
+    }
+
+    func sanity_check{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(pool_address: felt, margin: Uint256) {
+    // Use get_storage method on FactsRegistry contract using storage slot 0 which returns the PriceSQRTx96
+    let (storage) = IFactsRegistry.get_storage(0, pool_address, 0, 0, 0);
+    // Get the first element from struct
+    let (sqrtPriceX96) = storage[0];
+    // Convert the returned price to the same precision as the one we get from off-chain sources.
+    // uint(sqrtPriceX96).mul(uint(sqrtPriceX96)).mul(1e18) >> (96 * 2);
+    let (price) = mul(sqrtPriceX96, sqrtPriceX96);
+    let (price) = mul(price, 10 ** 18);
+    // Bitshift right ?
+    let (price) = div(price, 2 ** 192);
+    // Check if the price is within the specified range (e.g +-margin%)
+    let (lower_bound) = mul(price, 100 - margin);
+    let (lower_bound) = div(lower_bound, 100);
+    let (upper_bound) = mul(price, 100 + margin);
+    let (upper_bound) = div(upper_bound, 100);
+    // Revert if out of range + save the timestamp at which it reverted. / If it has been reverting for more than a certain time range (should be configurable e.g 1 hour), don't revert but return the TWAP price.
+    let (last_reverted_timestamp) = Oracle_reverted_timestamps_storage.read(pool_address);
+    let (current_timestamp) = get_block_timestamp();
+    if (price < lower_bound || price > upper_bound) {
+        if (last_reverted_timestamp == 0) {
+            Oracle_reverted_timestamps_storage.write(pool_address, current_timestamp);
+        }
+        let (reverted_timestamp) = Oracle_reverted_timestamps_storage.read(pool_address);
+        let (time_since_reverted) = current_timestamp - reverted_timestamp;
+        if (time_since_reverted > 3600) {
+            // Return the TWAP price    
+            return (price,);
+        }
+        assert(0, 'Oracle: Price out of range {margin}');
     }
 
     func get_spot_entries{
