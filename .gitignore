@@ -19,7 +19,6 @@ build/
 develop-eggs/
 dist/
 eggs/
-lib/
 !contracts/starknet/lib
 lib64/
 parts/
