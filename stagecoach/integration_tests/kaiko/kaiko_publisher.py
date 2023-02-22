@@ -27,7 +27,7 @@ async def main():
 
     response = await publisher_client.publish_many(_entries, pagination=20)
     for res in response:
-        logger.info(f"hash: {res.hash}")
+        logger.info(f"hash: {hex(res.hash)}")
         await res.wait_for_acceptance()
 
     for entry in _entries:

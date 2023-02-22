@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "empiric"
-version = "1.4.12"
+version = "1.4.13"
 description = "Empiric, the leading Oracle on zkRollups."
 authors = ["0xevolve <support@astraly.xyz>"]
 license = "MIT"

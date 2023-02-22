@@ -4,7 +4,7 @@ RUN yum install -y gcc python-devel gmp-devel git
 
 RUN python -m pip install --upgrade pip
 
-RUN pip install empiric-network==1.4.12
+RUN pip install empiric-network==1.4.13
 
 COPY app.py ${LAMBDA_TASK_ROOT}
 

@@ -84,7 +84,7 @@ class KaikoFetcher(PublisherInterfaceT):
         data = result["data"][0]
         pair = asset["pair"]
 
-        timestamp = int(data["timestamp"])
+        timestamp = int(int(data["timestamp"]) / 1000)
         price = float(data["price"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
