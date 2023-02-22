@@ -998,7 +998,7 @@ gmpy2 = ["gmpy2"]
 
 [[package]]
 name = "empiric-network"
-version = "1.4.11"
+version = "1.4.12"
 description = "Core package for rollup-native Empiric Network"
 category = "dev"
 optional = false

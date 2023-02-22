@@ -1,5 +1,6 @@
 from .bitstamp import BitstampFetcher
 from .cex import CexFetcher
+from .kaiko import KaikoFetcher
 from .coinbase import CoinbaseFetcher
 from .ascendex import AscendexFetcher
 from .okx import OkxFetcher
