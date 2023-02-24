@@ -789,7 +789,7 @@ namespace Oracle {
         let (first_cp) = get_checkpoint_by_index(key, 0);
         let is_in_future = is_le(cp.timestamp, timestamp);
         if (is_in_future == TRUE) {
-            return latest_checkpoint_index;
+            return latest_checkpoint_index - 1;
         }
 
         if (is_le(timestamp, first_cp.timestamp) == TRUE) {
