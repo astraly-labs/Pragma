@@ -19,5 +19,9 @@
   "previous": {
     "title": "Realized Volatility",
     "permalink": "/docs/starknet/computational-feeds/realized-volatility"
+  },
+  "next": {
+    "title": "Randomness",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
   }
 }

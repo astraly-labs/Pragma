@@ -74,8 +74,32 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','c2a'),
+    component: ComponentCreator('/docs','d3c'),
     routes: [
+      {
+        path: '/docs/Consensys Zk-EVM/computational-feeds/realized-volatility',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/computational-feeds/realized-volatility','eba'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/Consensys Zk-EVM/computational-feeds/yield-curve',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/computational-feeds/yield-curve','b2c'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/Consensys Zk-EVM/data-feeds/randomness',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/randomness','64e'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/Consensys Zk-EVM/randomness',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness','4b2'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
       {
         path: '/docs/howItWorks/architecture',
         component: ComponentCreator('/docs/howItWorks/architecture','c3a'),

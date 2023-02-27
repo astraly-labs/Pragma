@@ -17,6 +17,110 @@
           "contentPathLocalized": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V3",
           "docs": [
             {
+              "unversionedId": "Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "id": "version-V3/Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "title": "Realized Volatility",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/computational-feeds/Realized Volatility.md",
+              "sourceDirName": "Consensys Zk-EVM/computational-feeds",
+              "slug": "/Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "realized-volatility",
+                "title": "Realized Volatility",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Randomness",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
+              },
+              "next": {
+                "title": "Yield Curve",
+                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve"
+              }
+            },
+            {
+              "unversionedId": "Consensys Zk-EVM/computational-feeds/yield-curve",
+              "id": "version-V3/Consensys Zk-EVM/computational-feeds/yield-curve",
+              "title": "Yield Curve",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/computational-feeds/Yield Curve.md",
+              "sourceDirName": "Consensys Zk-EVM/computational-feeds",
+              "slug": "/Consensys Zk-EVM/computational-feeds/yield-curve",
+              "permalink": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 2,
+              "frontMatter": {
+                "id": "yield-curve",
+                "title": "Yield Curve",
+                "sidebar_position": 2
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Realized Volatility",
+                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility"
+              },
+              "next": {
+                "title": "Randomness",
+                "permalink": "/docs/Consensys Zk-EVM/randomness/"
+              }
+            },
+            {
+              "unversionedId": "Consensys Zk-EVM/data-feeds/randomness",
+              "id": "version-V3/Consensys Zk-EVM/data-feeds/randomness",
+              "title": "Randomness",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Overview.md",
+              "sourceDirName": "Consensys Zk-EVM/data-feeds",
+              "slug": "/Consensys Zk-EVM/data-feeds/randomness",
+              "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "randomness",
+                "title": "Randomness",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Randomness",
+                "permalink": "/docs/starknet/randomness/randomness"
+              },
+              "next": {
+                "title": "Realized Volatility",
+                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility"
+              }
+            },
+            {
+              "unversionedId": "Consensys Zk-EVM/randomness/randomness",
+              "id": "version-V3/Consensys Zk-EVM/randomness/randomness",
+              "title": "Randomness",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Randomness.md",
+              "sourceDirName": "Consensys Zk-EVM/randomness",
+              "slug": "/Consensys Zk-EVM/randomness/",
+              "permalink": "/docs/Consensys Zk-EVM/randomness/",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "randomness",
+                "title": "Randomness",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Yield Curve",
+                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve"
+              }
+            },
+            {
               "unversionedId": "howItWorks/architecture",
               "id": "version-V3/howItWorks/architecture",
               "title": "Architecture",
@@ -330,6 +434,10 @@
               "previous": {
                 "title": "Realized Volatility",
                 "permalink": "/docs/starknet/computational-feeds/realized-volatility"
+              },
+              "next": {
+                "title": "Randomness",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
               }
             }
           ],
@@ -420,6 +528,47 @@
                         "id": "version-V3/starknet/randomness/randomness"
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "category",
+                "label": "Consensys ZKEVM",
+                "collapsible": true,
+                "collapsed": false,
+                "items": [
+                  {
+                    "type": "category",
+                    "label": "Data Feeds",
+                    "collapsible": true,
+                    "collapsed": true,
+                    "items": [
+                      {
+                        "type": "doc",
+                        "id": "version-V3/Consensys Zk-EVM/data-feeds/randomness"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "category",
+                    "label": "Computational Feeds",
+                    "collapsible": true,
+                    "collapsed": true,
+                    "items": [
+                      {
+                        "type": "doc",
+                        "id": "version-V3/Consensys Zk-EVM/computational-feeds/realized-volatility"
+                      },
+                      {
+                        "type": "doc",
+                        "id": "version-V3/Consensys Zk-EVM/computational-feeds/yield-curve"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "doc",
+                    "label": "VRF",
+                    "id": "version-V3/Consensys Zk-EVM/randomness/randomness"
                   }
                 ]
               }

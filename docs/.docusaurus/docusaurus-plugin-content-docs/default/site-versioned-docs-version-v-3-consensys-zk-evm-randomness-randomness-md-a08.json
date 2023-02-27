@@ -1,0 +1,23 @@
+{
+  "unversionedId": "Consensys Zk-EVM/randomness/randomness",
+  "id": "version-V3/Consensys Zk-EVM/randomness/randomness",
+  "title": "Randomness",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Randomness.md",
+  "sourceDirName": "Consensys Zk-EVM/randomness",
+  "slug": "/Consensys Zk-EVM/randomness/",
+  "permalink": "/docs/Consensys Zk-EVM/randomness/",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "randomness",
+    "title": "Randomness",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Yield Curve",
+    "permalink": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve"
+  }
+}
