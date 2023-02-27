@@ -11,53 +11,13 @@
           "mainDocId": "introduction",
           "docs": [
             {
-              "id": "Consensys Zk-EVM/data-feeds/extract-information",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/extract-information",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/our-vision",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/our-vision",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/web3-change",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/web3-change",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/randomness/extract-information",
-              "path": "/docs/Consensys Zk-EVM/randomness/extract-information",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/randomness/how-to-get-there",
-              "path": "/docs/Consensys Zk-EVM/randomness/how-to-get-there",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/randomness/our-vision",
-              "path": "/docs/Consensys Zk-EVM/randomness/our-vision",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/randomness/web3-change",
-              "path": "/docs/Consensys Zk-EVM/randomness/web3-change",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
               "id": "howItWorks/architecture",
               "path": "/docs/howItWorks/architecture",
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "howItWorks/data-aggregation",
-              "path": "/docs/howItWorks/data-aggregation",
+              "id": "howItWorks/overview",
+              "path": "/docs/howItWorks/overview",
               "sidebar": "version-V3/mySidebar"
             },
             {
@@ -71,23 +31,43 @@
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "starknet/data-feeds/extract-information",
-              "path": "/docs/starknet/data-feeds/extract-information",
+              "id": "starknet/computational-feeds/realized-volatility",
+              "path": "/docs/starknet/computational-feeds/realized-volatility",
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "starknet/data-feeds/how-to-get-there",
-              "path": "/docs/starknet/data-feeds/how-to-get-there",
+              "id": "starknet/computational-feeds/what-are-computational-feeds",
+              "path": "/docs/starknet/computational-feeds/what-are-computational-feeds",
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "starknet/data-feeds/our-vision",
-              "path": "/docs/starknet/data-feeds/our-vision",
+              "id": "starknet/computational-feeds/yield-curve",
+              "path": "/docs/starknet/computational-feeds/yield-curve",
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "starknet/data-feeds/web3-change",
-              "path": "/docs/starknet/data-feeds/web3-change",
+              "id": "starknet/data-feeds/consuming-data",
+              "path": "/docs/starknet/data-feeds/consuming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/open-oracle",
+              "path": "/docs/starknet/data-feeds/open-oracle",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/publishing-data",
+              "path": "/docs/starknet/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/supported-assets",
+              "path": "/docs/starknet/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/randomness/randomness",
+              "path": "/docs/starknet/randomness/randomness",
               "sidebar": "version-V3/mySidebar"
             }
           ],

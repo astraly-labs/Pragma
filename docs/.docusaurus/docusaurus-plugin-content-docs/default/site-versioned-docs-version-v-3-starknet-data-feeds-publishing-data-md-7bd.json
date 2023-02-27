@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/data-feeds/publishing-data",
+  "id": "version-V3/starknet/data-feeds/publishing-data",
+  "title": "Publishing Data",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Publishing Data.md",
+  "sourceDirName": "starknet/data-feeds",
+  "slug": "/starknet/data-feeds/publishing-data",
+  "permalink": "/docs/starknet/data-feeds/publishing-data",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "publishing-data",
+    "title": "Publishing Data",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Supported Assets",
+    "permalink": "/docs/starknet/data-feeds/supported-assets"
+  },
+  "next": {
+    "title": "Open Oracle",
+    "permalink": "/docs/starknet/data-feeds/open-oracle"
+  }
+}

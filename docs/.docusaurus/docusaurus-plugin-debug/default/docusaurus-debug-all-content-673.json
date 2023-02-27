@@ -17,223 +17,11 @@
           "contentPathLocalized": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V3",
           "docs": [
             {
-              "unversionedId": "Consensys Zk-EVM/data-feeds/extract-information",
-              "id": "version-V3/Consensys Zk-EVM/data-feeds/extract-information",
-              "title": "Extract information from identifiers",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Extract information from identifiers.md",
-              "sourceDirName": "Consensys Zk-EVM/data-feeds",
-              "slug": "/Consensys Zk-EVM/data-feeds/extract-information",
-              "permalink": "/docs/Consensys Zk-EVM/data-feeds/extract-information",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 4,
-              "frontMatter": {
-                "id": "extract-information",
-                "title": "Extract information from identifiers",
-                "sidebar_position": 4
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "How to get there",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there"
-              },
-              "next": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "id": "version-V3/Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "title": "How to get there",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/How to get there.md",
-              "sourceDirName": "Consensys Zk-EVM/data-feeds",
-              "slug": "/Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "permalink": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 3,
-              "frontMatter": {
-                "id": "how-to-get-there",
-                "title": "How to get there",
-                "sidebar_position": 3
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/web3-change"
-              },
-              "next": {
-                "title": "Extract information from identifiers",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/extract-information"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/data-feeds/our-vision",
-              "id": "version-V3/Consensys Zk-EVM/data-feeds/our-vision",
-              "title": "Mapping the Web",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Mapping the Web.md",
-              "sourceDirName": "Consensys Zk-EVM/data-feeds",
-              "slug": "/Consensys Zk-EVM/data-feeds/our-vision",
-              "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 1,
-              "frontMatter": {
-                "id": "our-vision",
-                "title": "Mapping the Web",
-                "sidebar_position": 1
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "Extract information from identifiers",
-                "permalink": "/docs/starknet/data-feeds/extract-information"
-              },
-              "next": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/web3-change"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/data-feeds/web3-change",
-              "id": "version-V3/Consensys Zk-EVM/data-feeds/web3-change",
-              "title": "How Web3 can change this paradigm",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/How Web3 can change this paradigm.md",
-              "sourceDirName": "Consensys Zk-EVM/data-feeds",
-              "slug": "/Consensys Zk-EVM/data-feeds/web3-change",
-              "permalink": "/docs/Consensys Zk-EVM/data-feeds/web3-change",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 2,
-              "frontMatter": {
-                "id": "web3-change",
-                "title": "How Web3 can change this paradigm",
-                "sidebar_position": 2
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision"
-              },
-              "next": {
-                "title": "How to get there",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/randomness/extract-information",
-              "id": "version-V3/Consensys Zk-EVM/randomness/extract-information",
-              "title": "Extract information from identifiers",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Extract information from identifiers.md",
-              "sourceDirName": "Consensys Zk-EVM/randomness",
-              "slug": "/Consensys Zk-EVM/randomness/extract-information",
-              "permalink": "/docs/Consensys Zk-EVM/randomness/extract-information",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 4,
-              "frontMatter": {
-                "id": "extract-information",
-                "title": "Extract information from identifiers",
-                "sidebar_position": 4
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "How to get there",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/how-to-get-there"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/randomness/how-to-get-there",
-              "id": "version-V3/Consensys Zk-EVM/randomness/how-to-get-there",
-              "title": "How to get there",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/How to get there.md",
-              "sourceDirName": "Consensys Zk-EVM/randomness",
-              "slug": "/Consensys Zk-EVM/randomness/how-to-get-there",
-              "permalink": "/docs/Consensys Zk-EVM/randomness/how-to-get-there",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 3,
-              "frontMatter": {
-                "id": "how-to-get-there",
-                "title": "How to get there",
-                "sidebar_position": 3
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/web3-change"
-              },
-              "next": {
-                "title": "Extract information from identifiers",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/extract-information"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/randomness/our-vision",
-              "id": "version-V3/Consensys Zk-EVM/randomness/our-vision",
-              "title": "Mapping the Web",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Mapping the Web.md",
-              "sourceDirName": "Consensys Zk-EVM/randomness",
-              "slug": "/Consensys Zk-EVM/randomness/our-vision",
-              "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 1,
-              "frontMatter": {
-                "id": "our-vision",
-                "title": "Mapping the Web",
-                "sidebar_position": 1
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "Extract information from identifiers",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/extract-information"
-              },
-              "next": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/web3-change"
-              }
-            },
-            {
-              "unversionedId": "Consensys Zk-EVM/randomness/web3-change",
-              "id": "version-V3/Consensys Zk-EVM/randomness/web3-change",
-              "title": "How Web3 can change this paradigm",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/How Web3 can change this paradigm.md",
-              "sourceDirName": "Consensys Zk-EVM/randomness",
-              "slug": "/Consensys Zk-EVM/randomness/web3-change",
-              "permalink": "/docs/Consensys Zk-EVM/randomness/web3-change",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 2,
-              "frontMatter": {
-                "id": "web3-change",
-                "title": "How Web3 can change this paradigm",
-                "sidebar_position": 2
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision"
-              },
-              "next": {
-                "title": "How to get there",
-                "permalink": "/docs/Consensys Zk-EVM/randomness/how-to-get-there"
-              }
-            },
-            {
               "unversionedId": "howItWorks/architecture",
               "id": "version-V3/howItWorks/architecture",
               "title": "Architecture",
               "description": "---",
-              "source": "@site/versioned_docs/version-V3/howItWorks/Overview.md",
+              "source": "@site/versioned_docs/version-V3/howItWorks/Architecture.md",
               "sourceDirName": "howItWorks",
               "slug": "/howItWorks/architecture",
               "permalink": "/docs/howItWorks/architecture",
@@ -247,39 +35,39 @@
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "What is Empiric?",
-                "permalink": "/docs/introduction"
-              },
-              "next": {
-                "title": "Data Aggregation",
-                "permalink": "/docs/howItWorks/data-aggregation"
-              }
-            },
-            {
-              "unversionedId": "howItWorks/data-aggregation",
-              "id": "version-V3/howItWorks/data-aggregation",
-              "title": "Data Aggregation",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/howItWorks/Data Aggregation.md",
-              "sourceDirName": "howItWorks",
-              "slug": "/howItWorks/data-aggregation",
-              "permalink": "/docs/howItWorks/data-aggregation",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 3,
-              "frontMatter": {
-                "id": "data-aggregation",
-                "title": "Data Aggregation",
-                "sidebar_position": 3
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "Architecture",
-                "permalink": "/docs/howItWorks/architecture"
+                "title": "Overview",
+                "permalink": "/docs/howItWorks/overview"
               },
               "next": {
                 "title": "Roadmap",
                 "permalink": "/docs/howItWorks/roadmap"
+              }
+            },
+            {
+              "unversionedId": "howItWorks/overview",
+              "id": "version-V3/howItWorks/overview",
+              "title": "Overview",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/howItWorks/Overview.md",
+              "sourceDirName": "howItWorks",
+              "slug": "/howItWorks/overview",
+              "permalink": "/docs/howItWorks/overview",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "overview",
+                "title": "Overview",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "What is Empiric?",
+                "permalink": "/docs/introduction"
+              },
+              "next": {
+                "title": "Architecture",
+                "permalink": "/docs/howItWorks/architecture"
               }
             },
             {
@@ -301,12 +89,12 @@
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Data Aggregation",
-                "permalink": "/docs/howItWorks/data-aggregation"
+                "title": "Architecture",
+                "permalink": "/docs/howItWorks/architecture"
               },
               "next": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/starknet/data-feeds/our-vision"
+                "title": "Consuming Data",
+                "permalink": "/docs/starknet/data-feeds/consuming-data"
               }
             },
             {
@@ -328,79 +116,106 @@
               },
               "sidebar": "version-V3/mySidebar",
               "next": {
-                "title": "Architecture",
-                "permalink": "/docs/howItWorks/architecture"
+                "title": "Overview",
+                "permalink": "/docs/howItWorks/overview"
               }
             },
             {
-              "unversionedId": "starknet/data-feeds/extract-information",
-              "id": "version-V3/starknet/data-feeds/extract-information",
-              "title": "Extract information from identifiers",
+              "unversionedId": "starknet/computational-feeds/realized-volatility",
+              "id": "version-V3/starknet/computational-feeds/realized-volatility",
+              "title": "Realized Volatility",
               "description": "---",
-              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Extract information from identifiers.md",
-              "sourceDirName": "starknet/data-feeds",
-              "slug": "/starknet/data-feeds/extract-information",
-              "permalink": "/docs/starknet/data-feeds/extract-information",
-              "tags": [],
-              "version": "V3",
-              "sidebarPosition": 4,
-              "frontMatter": {
-                "id": "extract-information",
-                "title": "Extract information from identifiers",
-                "sidebar_position": 4
-              },
-              "sidebar": "version-V3/mySidebar",
-              "previous": {
-                "title": "How to get there",
-                "permalink": "/docs/starknet/data-feeds/how-to-get-there"
-              },
-              "next": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision"
-              }
-            },
-            {
-              "unversionedId": "starknet/data-feeds/how-to-get-there",
-              "id": "version-V3/starknet/data-feeds/how-to-get-there",
-              "title": "How to get there",
-              "description": "---",
-              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/How to get there.md",
-              "sourceDirName": "starknet/data-feeds",
-              "slug": "/starknet/data-feeds/how-to-get-there",
-              "permalink": "/docs/starknet/data-feeds/how-to-get-there",
+              "source": "@site/versioned_docs/version-V3/starknet/computational-feeds/Realized Volatility.md",
+              "sourceDirName": "starknet/computational-feeds",
+              "slug": "/starknet/computational-feeds/realized-volatility",
+              "permalink": "/docs/starknet/computational-feeds/realized-volatility",
               "tags": [],
               "version": "V3",
               "sidebarPosition": 3,
               "frontMatter": {
-                "id": "how-to-get-there",
-                "title": "How to get there",
+                "id": "realized-volatility",
+                "title": "Realized Volatility",
                 "sidebar_position": 3
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/starknet/data-feeds/web3-change"
+                "title": "Yield Curve",
+                "permalink": "/docs/starknet/computational-feeds/yield-curve"
               },
               "next": {
-                "title": "Extract information from identifiers",
-                "permalink": "/docs/starknet/data-feeds/extract-information"
+                "title": "Randomness",
+                "permalink": "/docs/starknet/randomness/randomness"
               }
             },
             {
-              "unversionedId": "starknet/data-feeds/our-vision",
-              "id": "version-V3/starknet/data-feeds/our-vision",
-              "title": "Mapping the Web",
+              "unversionedId": "starknet/computational-feeds/what-are-computational-feeds",
+              "id": "version-V3/starknet/computational-feeds/what-are-computational-feeds",
+              "title": "What are computational feeds",
               "description": "---",
-              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Mapping the Web.md",
-              "sourceDirName": "starknet/data-feeds",
-              "slug": "/starknet/data-feeds/our-vision",
-              "permalink": "/docs/starknet/data-feeds/our-vision",
+              "source": "@site/versioned_docs/version-V3/starknet/computational-feeds/Overview.md",
+              "sourceDirName": "starknet/computational-feeds",
+              "slug": "/starknet/computational-feeds/what-are-computational-feeds",
+              "permalink": "/docs/starknet/computational-feeds/what-are-computational-feeds",
               "tags": [],
               "version": "V3",
               "sidebarPosition": 1,
               "frontMatter": {
-                "id": "our-vision",
-                "title": "Mapping the Web",
+                "id": "what-are-computational-feeds",
+                "title": "What are computational feeds",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Open Oracle",
+                "permalink": "/docs/starknet/data-feeds/open-oracle"
+              },
+              "next": {
+                "title": "Yield Curve",
+                "permalink": "/docs/starknet/computational-feeds/yield-curve"
+              }
+            },
+            {
+              "unversionedId": "starknet/computational-feeds/yield-curve",
+              "id": "version-V3/starknet/computational-feeds/yield-curve",
+              "title": "Yield Curve",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/computational-feeds/Yield Curve.md",
+              "sourceDirName": "starknet/computational-feeds",
+              "slug": "/starknet/computational-feeds/yield-curve",
+              "permalink": "/docs/starknet/computational-feeds/yield-curve",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 2,
+              "frontMatter": {
+                "id": "yield-curve",
+                "title": "Yield Curve",
+                "sidebar_position": 2
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "What are computational feeds",
+                "permalink": "/docs/starknet/computational-feeds/what-are-computational-feeds"
+              },
+              "next": {
+                "title": "Realized Volatility",
+                "permalink": "/docs/starknet/computational-feeds/realized-volatility"
+              }
+            },
+            {
+              "unversionedId": "starknet/data-feeds/consuming-data",
+              "id": "version-V3/starknet/data-feeds/consuming-data",
+              "title": "Consuming Data",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Consuming Data.md",
+              "sourceDirName": "starknet/data-feeds",
+              "slug": "/starknet/data-feeds/consuming-data",
+              "permalink": "/docs/starknet/data-feeds/consuming-data",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "consuming-data",
+                "title": "Consuming Data",
                 "sidebar_position": 1
               },
               "sidebar": "version-V3/mySidebar",
@@ -409,35 +224,112 @@
                 "permalink": "/docs/howItWorks/roadmap"
               },
               "next": {
-                "title": "How Web3 can change this paradigm",
-                "permalink": "/docs/starknet/data-feeds/web3-change"
+                "title": "Supported Assets",
+                "permalink": "/docs/starknet/data-feeds/supported-assets"
               }
             },
             {
-              "unversionedId": "starknet/data-feeds/web3-change",
-              "id": "version-V3/starknet/data-feeds/web3-change",
-              "title": "How Web3 can change this paradigm",
+              "unversionedId": "starknet/data-feeds/open-oracle",
+              "id": "version-V3/starknet/data-feeds/open-oracle",
+              "title": "Open Oracle",
               "description": "---",
-              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/How Web3 can change this paradigm.md",
+              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Open Oracle.md",
               "sourceDirName": "starknet/data-feeds",
-              "slug": "/starknet/data-feeds/web3-change",
-              "permalink": "/docs/starknet/data-feeds/web3-change",
+              "slug": "/starknet/data-feeds/open-oracle",
+              "permalink": "/docs/starknet/data-feeds/open-oracle",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 4,
+              "frontMatter": {
+                "id": "open-oracle",
+                "title": "Open Oracle",
+                "sidebar_position": 4
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Publishing Data",
+                "permalink": "/docs/starknet/data-feeds/publishing-data"
+              },
+              "next": {
+                "title": "What are computational feeds",
+                "permalink": "/docs/starknet/computational-feeds/what-are-computational-feeds"
+              }
+            },
+            {
+              "unversionedId": "starknet/data-feeds/publishing-data",
+              "id": "version-V3/starknet/data-feeds/publishing-data",
+              "title": "Publishing Data",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Publishing Data.md",
+              "sourceDirName": "starknet/data-feeds",
+              "slug": "/starknet/data-feeds/publishing-data",
+              "permalink": "/docs/starknet/data-feeds/publishing-data",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 3,
+              "frontMatter": {
+                "id": "publishing-data",
+                "title": "Publishing Data",
+                "sidebar_position": 3
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Supported Assets",
+                "permalink": "/docs/starknet/data-feeds/supported-assets"
+              },
+              "next": {
+                "title": "Open Oracle",
+                "permalink": "/docs/starknet/data-feeds/open-oracle"
+              }
+            },
+            {
+              "unversionedId": "starknet/data-feeds/supported-assets",
+              "id": "version-V3/starknet/data-feeds/supported-assets",
+              "title": "Supported Assets",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Supported Assets.md",
+              "sourceDirName": "starknet/data-feeds",
+              "slug": "/starknet/data-feeds/supported-assets",
+              "permalink": "/docs/starknet/data-feeds/supported-assets",
               "tags": [],
               "version": "V3",
               "sidebarPosition": 2,
               "frontMatter": {
-                "id": "web3-change",
-                "title": "How Web3 can change this paradigm",
+                "id": "supported-assets",
+                "title": "Supported Assets",
                 "sidebar_position": 2
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Mapping the Web",
-                "permalink": "/docs/starknet/data-feeds/our-vision"
+                "title": "Consuming Data",
+                "permalink": "/docs/starknet/data-feeds/consuming-data"
               },
               "next": {
-                "title": "How to get there",
-                "permalink": "/docs/starknet/data-feeds/how-to-get-there"
+                "title": "Publishing Data",
+                "permalink": "/docs/starknet/data-feeds/publishing-data"
+              }
+            },
+            {
+              "unversionedId": "starknet/randomness/randomness",
+              "id": "version-V3/starknet/randomness/randomness",
+              "title": "Randomness",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/randomness/Architecture.md",
+              "sourceDirName": "starknet/randomness",
+              "slug": "/starknet/randomness/randomness",
+              "permalink": "/docs/starknet/randomness/randomness",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "randomness",
+                "title": "Randomness",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Realized Volatility",
+                "permalink": "/docs/starknet/computational-feeds/realized-volatility"
               }
             }
           ],
@@ -455,11 +347,11 @@
                 "items": [
                   {
                     "type": "doc",
-                    "id": "version-V3/howItWorks/architecture"
+                    "id": "version-V3/howItWorks/overview"
                   },
                   {
                     "type": "doc",
-                    "id": "version-V3/howItWorks/data-aggregation"
+                    "id": "version-V3/howItWorks/architecture"
                   },
                   {
                     "type": "doc",
@@ -477,55 +369,43 @@
                     "type": "category",
                     "label": "Data Feeds",
                     "collapsible": true,
-                    "collapsed": false,
+                    "collapsed": true,
                     "items": [
                       {
                         "type": "doc",
-                        "id": "version-V3/starknet/data-feeds/our-vision"
+                        "id": "version-V3/starknet/data-feeds/consuming-data"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/starknet/data-feeds/web3-change"
+                        "id": "version-V3/starknet/data-feeds/supported-assets"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/starknet/data-feeds/how-to-get-there"
+                        "id": "version-V3/starknet/data-feeds/publishing-data"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/starknet/data-feeds/extract-information"
+                        "id": "version-V3/starknet/data-feeds/open-oracle"
                       }
                     ]
-                  }
-                ]
-              },
-              {
-                "type": "category",
-                "label": "Consensys ZKEVM",
-                "collapsible": true,
-                "collapsed": false,
-                "items": [
+                  },
                   {
                     "type": "category",
-                    "label": "Data Feeds",
+                    "label": "Computational Feeds",
                     "collapsible": true,
-                    "collapsed": false,
+                    "collapsed": true,
                     "items": [
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/our-vision"
+                        "id": "version-V3/starknet/computational-feeds/what-are-computational-feeds"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/web3-change"
+                        "id": "version-V3/starknet/computational-feeds/yield-curve"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/how-to-get-there"
-                      },
-                      {
-                        "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/extract-information"
+                        "id": "version-V3/starknet/computational-feeds/realized-volatility"
                       }
                     ]
                   },
@@ -533,23 +413,11 @@
                     "type": "category",
                     "label": "VRF",
                     "collapsible": true,
-                    "collapsed": false,
+                    "collapsed": true,
                     "items": [
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/randomness/our-vision"
-                      },
-                      {
-                        "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/randomness/web3-change"
-                      },
-                      {
-                        "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/randomness/how-to-get-there"
-                      },
-                      {
-                        "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/randomness/extract-information"
+                        "id": "version-V3/starknet/randomness/randomness"
                       }
                     ]
                   }

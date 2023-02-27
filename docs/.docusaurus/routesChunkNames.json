@@ -44,49 +44,17 @@
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-v-2-404076-506"
   },
-  "/docs-c03": {
+  "/docs-c2a": {
     "component": "component---theme-doc-page-1-be-9be",
     "versionMetadata": "versionMetadata---docsa-12-137"
   },
-  "/docs/Consensys Zk-EVM/data-feeds/extract-information-7b6": {
+  "/docs/howItWorks/architecture-c3a": {
     "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-data-feeds-extract-information-1-bf-df2"
+    "content": "content---docs-how-it-works-architecturebc-8-9b3"
   },
-  "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there-864": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-data-feeds-how-to-get-there-00-c-c3c"
-  },
-  "/docs/Consensys Zk-EVM/data-feeds/our-vision-720": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-data-feeds-our-vision-003-9db"
-  },
-  "/docs/Consensys Zk-EVM/data-feeds/web3-change-ea6": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-data-feeds-web-3-changeb-9-b-b4d"
-  },
-  "/docs/Consensys Zk-EVM/randomness/extract-information-e4f": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-randomness-extract-information-8-fa-93c"
-  },
-  "/docs/Consensys Zk-EVM/randomness/how-to-get-there-fe7": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-randomness-how-to-get-thered-7-d-662"
-  },
-  "/docs/Consensys Zk-EVM/randomness/our-vision-4af": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-randomness-our-vision-46-f-527"
-  },
-  "/docs/Consensys Zk-EVM/randomness/web3-change-fe7": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-randomness-web-3-changecd-0-22b"
-  },
-  "/docs/howItWorks/architecture-e85": {
+  "/docs/howItWorks/overview-880": {
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-how-it-works-architecturedb-0-7e0"
-  },
-  "/docs/howItWorks/data-aggregation-9d6": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-how-it-works-data-aggregation-488-9fc"
   },
   "/docs/howItWorks/roadmap-229": {
     "component": "component---theme-doc-item-178-a40",
@@ -96,21 +64,37 @@
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-introduction-40-f-ff3"
   },
-  "/docs/starknet/data-feeds/extract-information-eb1": {
+  "/docs/starknet/computational-feeds/realized-volatility-725": {
     "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-extract-information-959-2e4"
+    "content": "content---docs-starknet-computational-feeds-yield-curve-3-c-9-6f5"
   },
-  "/docs/starknet/data-feeds/how-to-get-there-c05": {
+  "/docs/starknet/computational-feeds/what-are-computational-feeds-027": {
     "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-how-to-get-therea-9-b-33b"
+    "content": "content---docs-starknet-computational-feeds-yield-curve-2-b-6-0cb"
   },
-  "/docs/starknet/data-feeds/our-vision-9ce": {
+  "/docs/starknet/computational-feeds/yield-curve-055": {
     "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-our-vision-1-cd-b25"
+    "content": "content---docs-starknet-computational-feeds-yield-curve-4-d-0-5f6"
   },
-  "/docs/starknet/data-feeds/web3-change-f52": {
+  "/docs/starknet/data-feeds/consuming-data-a92": {
     "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-web-3-change-158-7f7"
+    "content": "content---docs-starknet-data-feeds-extract-informationda-3-d93"
+  },
+  "/docs/starknet/data-feeds/open-oracle-574": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-publishing-data-020-de1"
+  },
+  "/docs/starknet/data-feeds/publishing-data-767": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-supported-assets-7-bd-1e1"
+  },
+  "/docs/starknet/data-feeds/supported-assets-359": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-consuming-data-8-dc-3d0"
+  },
+  "/docs/starknet/randomness/randomness-72c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-randomness-architectureaa-3-ab3"
   },
   "/-deb": {
     "component": "component---site-src-pages-index-jsc-4-f-f99",

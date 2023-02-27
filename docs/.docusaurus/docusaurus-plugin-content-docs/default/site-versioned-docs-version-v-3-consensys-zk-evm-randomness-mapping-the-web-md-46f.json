@@ -17,11 +17,7 @@
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {
-    "title": "Extract information from identifiers",
-    "permalink": "/docs/Consensys Zk-EVM/data-feeds/extract-information"
-  },
-  "next": {
-    "title": "How Web3 can change this paradigm",
-    "permalink": "/docs/Consensys Zk-EVM/randomness/web3-change"
+    "title": "Randomness",
+    "permalink": "/docs/starknet/randomness/randomness"
   }
 }
