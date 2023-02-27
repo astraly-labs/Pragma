@@ -1,0 +1,119 @@
+{
+  "/__docusaurus/debug-3d6": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/config-914": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/content-c28": {
+    "component": "component---theme-debug-contentba-8-ce7",
+    "allContent": "allContent---docusaurus-debug-content-246-9aa"
+  },
+  "/__docusaurus/debug/globalData-3cf": {
+    "component": "component---theme-debug-global-dataede-0fa"
+  },
+  "/__docusaurus/debug/metadata-31b": {
+    "component": "component---theme-debug-site-metadata-68-e-3d4"
+  },
+  "/__docusaurus/debug/registry-0da": {
+    "component": "component---theme-debug-registry-679-501"
+  },
+  "/__docusaurus/debug/routes-244": {
+    "component": "component---theme-debug-routes-946-699"
+  },
+  "/blog/archive-f4c": {
+    "component": "component---theme-blog-archive-page-9-e-4-1d8",
+    "archive": "archive---blog-archiveb-2-f-393"
+  },
+  "/search-79a": {
+    "component": "component---theme-search-page-1-a-4-d6f"
+  },
+  "/docs/V1-1d3": {
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docs-v-19-b-8-ef8"
+  },
+  "/docs/V1/404-c97": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-v-1-404725-823"
+  },
+  "/docs/V2-fe7": {
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docs-v-2-c-28-f8b"
+  },
+  "/docs/V2/404-b96": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-v-2-404076-506"
+  },
+  "/docs-c03": {
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docsa-12-137"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/extract-information-7b6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-extract-information-1-bf-df2"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there-864": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-how-to-get-there-00-c-c3c"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/our-vision-720": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-our-vision-003-9db"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/web3-change-ea6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-web-3-changeb-9-b-b4d"
+  },
+  "/docs/Consensys Zk-EVM/randomness/extract-information-e4f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-randomness-extract-information-8-fa-93c"
+  },
+  "/docs/Consensys Zk-EVM/randomness/how-to-get-there-fe7": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-randomness-how-to-get-thered-7-d-662"
+  },
+  "/docs/Consensys Zk-EVM/randomness/our-vision-4af": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-randomness-our-vision-46-f-527"
+  },
+  "/docs/Consensys Zk-EVM/randomness/web3-change-fe7": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-randomness-web-3-changecd-0-22b"
+  },
+  "/docs/howItWorks/architecture-e85": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-architecturedb-0-7e0"
+  },
+  "/docs/howItWorks/data-aggregation-9d6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-data-aggregation-488-9fc"
+  },
+  "/docs/howItWorks/roadmap-229": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-roadmap-994-4fb"
+  },
+  "/docs/introduction-4b1": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-introduction-40-f-ff3"
+  },
+  "/docs/starknet/data-feeds/extract-information-eb1": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-extract-information-959-2e4"
+  },
+  "/docs/starknet/data-feeds/how-to-get-there-c05": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-how-to-get-therea-9-b-33b"
+  },
+  "/docs/starknet/data-feeds/our-vision-9ce": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-our-vision-1-cd-b25"
+  },
+  "/docs/starknet/data-feeds/web3-change-f52": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-web-3-change-158-7f7"
+  },
+  "/-deb": {
+    "component": "component---site-src-pages-index-jsc-4-f-f99",
+    "config": "config---5-e-9-4f3"
+  }
+}

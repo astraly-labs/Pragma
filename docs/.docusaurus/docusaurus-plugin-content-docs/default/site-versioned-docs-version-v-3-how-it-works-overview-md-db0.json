@@ -1,0 +1,27 @@
+{
+  "unversionedId": "howItWorks/architecture",
+  "id": "version-V3/howItWorks/architecture",
+  "title": "Architecture",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/howItWorks/Overview.md",
+  "sourceDirName": "howItWorks",
+  "slug": "/howItWorks/architecture",
+  "permalink": "/docs/howItWorks/architecture",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "architecture",
+    "title": "Architecture",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "What is Empiric?",
+    "permalink": "/docs/introduction"
+  },
+  "next": {
+    "title": "Data Aggregation",
+    "permalink": "/docs/howItWorks/data-aggregation"
+  }
+}

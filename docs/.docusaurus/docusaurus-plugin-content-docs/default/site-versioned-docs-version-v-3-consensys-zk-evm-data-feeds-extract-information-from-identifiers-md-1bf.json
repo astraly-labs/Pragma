@@ -1,0 +1,27 @@
+{
+  "unversionedId": "Consensys Zk-EVM/data-feeds/extract-information",
+  "id": "version-V3/Consensys Zk-EVM/data-feeds/extract-information",
+  "title": "Extract information from identifiers",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Extract information from identifiers.md",
+  "sourceDirName": "Consensys Zk-EVM/data-feeds",
+  "slug": "/Consensys Zk-EVM/data-feeds/extract-information",
+  "permalink": "/docs/Consensys Zk-EVM/data-feeds/extract-information",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "extract-information",
+    "title": "Extract information from identifiers",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "How to get there",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision"
+  }
+}

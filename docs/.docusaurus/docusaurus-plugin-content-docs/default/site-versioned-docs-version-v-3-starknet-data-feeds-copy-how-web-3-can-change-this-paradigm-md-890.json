@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/data-feeds copy/web3-change",
+  "id": "version-V3/starknet/data-feeds copy/web3-change",
+  "title": "How Web3 can change this paradigm",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/data-feeds copy/How Web3 can change this paradigm.md",
+  "sourceDirName": "starknet/data-feeds copy",
+  "slug": "/starknet/data-feeds copy/web3-change",
+  "permalink": "/docs/starknet/data-feeds copy/web3-change",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "web3-change",
+    "title": "How Web3 can change this paradigm",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/starknet/data-feeds copy/our-vision"
+  },
+  "next": {
+    "title": "How to get there",
+    "permalink": "/docs/starknet/data-feeds copy/how-to-get-there"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "unversionedId": "Consensys Zk-EVM/why-starknet",
+  "id": "version-V3/Consensys Zk-EVM/why-starknet",
+  "title": "Why Starknet",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/Why Starknet.md",
+  "sourceDirName": "Consensys Zk-EVM",
+  "slug": "/Consensys Zk-EVM/why-starknet",
+  "permalink": "/docs/Consensys Zk-EVM/why-starknet",
+  "tags": [],
+  "version": "V3",
+  "frontMatter": {
+    "id": "why-starknet",
+    "title": "Why Starknet"
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Extract information from identifiers",
+    "permalink": "/docs/Consensys Zk-EVM/randomness/extract-information"
+  },
+  "next": {
+    "title": "Get your Starknet wallet",
+    "permalink": "/docs/guides/starknet-wallet"
+  }
+}
