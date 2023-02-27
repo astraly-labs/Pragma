@@ -17,11 +17,11 @@
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {
-    "title": "Data Aggregation",
-    "permalink": "/docs/howItWorks/data-aggregation"
+    "title": "Architecture",
+    "permalink": "/docs/howItWorks/architecture"
   },
   "next": {
-    "title": "Mapping the Web",
-    "permalink": "/docs/starknet/data-feeds/our-vision"
+    "title": "Consuming Data",
+    "permalink": "/docs/starknet/data-feeds/consuming-data"
   }
 }

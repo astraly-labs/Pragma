@@ -17,7 +17,7 @@
   },
   "sidebar": "version-V3/mySidebar",
   "next": {
-    "title": "Architecture",
-    "permalink": "/docs/howItWorks/architecture"
+    "title": "Overview",
+    "permalink": "/docs/howItWorks/overview"
   }
 }

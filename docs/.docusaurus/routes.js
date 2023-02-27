@@ -74,65 +74,17 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','c03'),
+    component: ComponentCreator('/docs','c2a'),
     routes: [
       {
-        path: '/docs/Consensys Zk-EVM/data-feeds/extract-information',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/extract-information','7b6'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/how-to-get-there',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/how-to-get-there','864'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/our-vision',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/our-vision','720'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/web3-change',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/web3-change','ea6'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/randomness/extract-information',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness/extract-information','e4f'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/randomness/how-to-get-there',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness/how-to-get-there','fe7'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/randomness/our-vision',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness/our-vision','4af'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/randomness/web3-change',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness/web3-change','fe7'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
         path: '/docs/howItWorks/architecture',
-        component: ComponentCreator('/docs/howItWorks/architecture','e85'),
+        component: ComponentCreator('/docs/howItWorks/architecture','c3a'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/howItWorks/data-aggregation',
-        component: ComponentCreator('/docs/howItWorks/data-aggregation','9d6'),
+        path: '/docs/howItWorks/overview',
+        component: ComponentCreator('/docs/howItWorks/overview','880'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
@@ -149,26 +101,50 @@ export default [
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/starknet/data-feeds/extract-information',
-        component: ComponentCreator('/docs/starknet/data-feeds/extract-information','eb1'),
+        path: '/docs/starknet/computational-feeds/realized-volatility',
+        component: ComponentCreator('/docs/starknet/computational-feeds/realized-volatility','725'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/starknet/data-feeds/how-to-get-there',
-        component: ComponentCreator('/docs/starknet/data-feeds/how-to-get-there','c05'),
+        path: '/docs/starknet/computational-feeds/what-are-computational-feeds',
+        component: ComponentCreator('/docs/starknet/computational-feeds/what-are-computational-feeds','027'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/starknet/data-feeds/our-vision',
-        component: ComponentCreator('/docs/starknet/data-feeds/our-vision','9ce'),
+        path: '/docs/starknet/computational-feeds/yield-curve',
+        component: ComponentCreator('/docs/starknet/computational-feeds/yield-curve','055'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/starknet/data-feeds/web3-change',
-        component: ComponentCreator('/docs/starknet/data-feeds/web3-change','f52'),
+        path: '/docs/starknet/data-feeds/consuming-data',
+        component: ComponentCreator('/docs/starknet/data-feeds/consuming-data','a92'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/starknet/data-feeds/open-oracle',
+        component: ComponentCreator('/docs/starknet/data-feeds/open-oracle','574'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/starknet/data-feeds/publishing-data',
+        component: ComponentCreator('/docs/starknet/data-feeds/publishing-data','767'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/starknet/data-feeds/supported-assets',
+        component: ComponentCreator('/docs/starknet/data-feeds/supported-assets','359'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/starknet/randomness/randomness',
+        component: ComponentCreator('/docs/starknet/randomness/randomness','72c'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       }
