@@ -14,7 +14,11 @@ Empiric offers a feed that calculates the zero-coupon interest-rate curve fully 
 
 Aave overnight rates are used to estimate short-term rates. BTC spot and futures prices are pulled at the exact same time to calculate the rates for different maturities. The interest rate for each maturity is calculated according to the following equation:
 
-Where is the current time, ​ is the time to maturity, is the current futures price with maturity of , and is the spot price. ​We floor the values with 0 to account for case where spot > future (backwardation).
+  <div>
+  <img width="100%" height="100%" src="https://i.ibb.co/wCYD1bk/Screenshot-2023-02-27-at-16-26-47.png" />
+  </div>
+
+​We floor the values with 0 to account for case where spot > future (backwardation).
 
 ## Technical Specification
 
