@@ -11,6 +11,26 @@
           "mainDocId": "introduction",
           "docs": [
             {
+              "id": "Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "path": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/computational-feeds/yield-curve",
+              "path": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/randomness",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/randomness",
+              "path": "/docs/Consensys Zk-EVM/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
               "id": "howItWorks/architecture",
               "path": "/docs/howItWorks/architecture",
               "sidebar": "version-V3/mySidebar"
