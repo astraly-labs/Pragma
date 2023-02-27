@@ -1,0 +1,151 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "V3",
+          "label": "V3",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "introduction",
+          "docs": [
+            {
+              "id": "Consensys Zk-EVM/data-feeds/extract-information",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/extract-information",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/how-to-get-there",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/how-to-get-there",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/our-vision",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/our-vision",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/web3-change",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/web3-change",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/extract-information",
+              "path": "/docs/Consensys Zk-EVM/randomness/extract-information",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/how-to-get-there",
+              "path": "/docs/Consensys Zk-EVM/randomness/how-to-get-there",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/our-vision",
+              "path": "/docs/Consensys Zk-EVM/randomness/our-vision",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/web3-change",
+              "path": "/docs/Consensys Zk-EVM/randomness/web3-change",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/architecture",
+              "path": "/docs/howItWorks/architecture",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/data-aggregation",
+              "path": "/docs/howItWorks/data-aggregation",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/roadmap",
+              "path": "/docs/howItWorks/roadmap",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "introduction",
+              "path": "/docs/introduction",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/extract-information",
+              "path": "/docs/starknet/data-feeds/extract-information",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/how-to-get-there",
+              "path": "/docs/starknet/data-feeds/how-to-get-there",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/our-vision",
+              "path": "/docs/starknet/data-feeds/our-vision",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/web3-change",
+              "path": "/docs/starknet/data-feeds/web3-change",
+              "sidebar": "version-V3/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V3/mySidebar": {
+              "link": {
+                "path": "/docs/introduction",
+                "label": "version-V3/introduction"
+              }
+            }
+          }
+        },
+        {
+          "name": "V2",
+          "label": "V2",
+          "isLast": false,
+          "path": "/docs/V2",
+          "mainDocId": "404",
+          "docs": [
+            {
+              "id": "404",
+              "path": "/docs/V2/404",
+              "sidebar": "version-V2/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V2/mySidebar": {
+              "link": {
+                "path": "/docs/V2/404",
+                "label": "version-V2/404"
+              }
+            }
+          }
+        },
+        {
+          "name": "V1",
+          "label": "V1",
+          "isLast": false,
+          "path": "/docs/V1",
+          "mainDocId": "404",
+          "docs": [
+            {
+              "id": "404",
+              "path": "/docs/V1/404",
+              "sidebar": "version-V1/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V1/mySidebar": {
+              "link": {
+                "path": "/docs/V1/404",
+                "label": "version-V1/404"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

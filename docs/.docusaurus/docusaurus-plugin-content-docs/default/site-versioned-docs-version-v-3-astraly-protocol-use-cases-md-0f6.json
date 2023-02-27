@@ -1,0 +1,27 @@
+{
+  "unversionedId": "astraly-protocol/data-aggregation",
+  "id": "version-V3/astraly-protocol/data-aggregation",
+  "title": "Data Aggregation",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/astraly-protocol/Use cases.md",
+  "sourceDirName": "astraly-protocol",
+  "slug": "/astraly-protocol/data-aggregation",
+  "permalink": "/docs/astraly-protocol/data-aggregation",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "data-aggregation",
+    "title": "Data Aggregation",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Architecture",
+    "permalink": "/docs/astraly-protocol/architecture"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/context/OurVision/our-vision"
+  }
+}

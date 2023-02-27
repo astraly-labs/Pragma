@@ -1,0 +1,27 @@
+{
+  "unversionedId": "howItWorks/roadmap",
+  "id": "version-V3/howItWorks/roadmap",
+  "title": "Roadmap",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/howItWorks/Roadmap.md",
+  "sourceDirName": "howItWorks",
+  "slug": "/howItWorks/roadmap",
+  "permalink": "/docs/howItWorks/roadmap",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "roadmap",
+    "title": "Roadmap",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Data Aggregation",
+    "permalink": "/docs/howItWorks/data-aggregation"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/starknet/data-feeds/our-vision"
+  }
+}

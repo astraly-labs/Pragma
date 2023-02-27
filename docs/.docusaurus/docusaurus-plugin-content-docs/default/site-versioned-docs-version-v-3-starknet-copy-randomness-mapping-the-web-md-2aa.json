@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet copy/randomness/our-vision",
+  "id": "version-V3/starknet copy/randomness/our-vision",
+  "title": "Mapping the Web",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet copy/randomness/Mapping the Web.md",
+  "sourceDirName": "starknet copy/randomness",
+  "slug": "/starknet copy/randomness/our-vision",
+  "permalink": "/docs/starknet copy/randomness/our-vision",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "our-vision",
+    "title": "Mapping the Web",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Extract information from identifiers",
+    "permalink": "/docs/starknet copy/data-feeds/extract-information"
+  },
+  "next": {
+    "title": "How Web3 can change this paradigm",
+    "permalink": "/docs/starknet copy/randomness/web3-change"
+  }
+}

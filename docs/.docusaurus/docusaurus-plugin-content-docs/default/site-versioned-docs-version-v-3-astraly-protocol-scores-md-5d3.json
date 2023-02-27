@@ -1,0 +1,27 @@
+{
+  "unversionedId": "astraly-protocol/scores",
+  "id": "version-V3/astraly-protocol/scores",
+  "title": "Scores",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/astraly-protocol/Scores.md",
+  "sourceDirName": "astraly-protocol",
+  "slug": "/astraly-protocol/scores",
+  "permalink": "/docs/astraly-protocol/scores",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "scores",
+    "title": "Scores",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Badges",
+    "permalink": "/docs/astraly-protocol/badges"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/context/OurVision/our-vision"
+  }
+}

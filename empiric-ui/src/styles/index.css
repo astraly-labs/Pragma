@@ -1,21 +1,4 @@
 @font-face {
-    font-family: "iA Writer Duospace";
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    src: url(/fonts/iAWriterDuospace-Regular.woff2) format("woff2");
-  }
-  
-
-@font-face {
-    font-family: "iA Writer Duospace";
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-    src: url(/fonts/iAWriterDuospace-Bold.woff2) format("woff2");
-}
-
-@font-face {
     font-family: "Space Grotesk";
     font-style: normal;
     font-weight: 100 900;

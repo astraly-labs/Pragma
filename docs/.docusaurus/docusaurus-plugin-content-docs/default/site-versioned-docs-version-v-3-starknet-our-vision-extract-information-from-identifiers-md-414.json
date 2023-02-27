@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/OurVision/extract-information",
+  "id": "version-V3/starknet/OurVision/extract-information",
+  "title": "Extract information from identifiers",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/OurVision/Extract information from identifiers.md",
+  "sourceDirName": "starknet/OurVision",
+  "slug": "/starknet/OurVision/extract-information",
+  "permalink": "/docs/starknet/OurVision/extract-information",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "extract-information",
+    "title": "Extract information from identifiers",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "How to get there",
+    "permalink": "/docs/starknet/OurVision/how-to-get-there"
+  },
+  "next": {
+    "title": "Why Starknet",
+    "permalink": "/docs/starknet/why-starknet"
+  }
+}

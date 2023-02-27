@@ -81,7 +81,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Contact Us",
-        href: "mailto:support@astraly.xyz?body=Hi%20Empiric-Team,",
+        href: "mailto:support@empiric.network?body=Hi%20Empiric-Team,",
         external: true,
       },
     ],

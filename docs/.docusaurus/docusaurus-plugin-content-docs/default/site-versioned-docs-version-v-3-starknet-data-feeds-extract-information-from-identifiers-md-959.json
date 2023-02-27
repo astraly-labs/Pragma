@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/data-feeds/extract-information",
+  "id": "version-V3/starknet/data-feeds/extract-information",
+  "title": "Extract information from identifiers",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Extract information from identifiers.md",
+  "sourceDirName": "starknet/data-feeds",
+  "slug": "/starknet/data-feeds/extract-information",
+  "permalink": "/docs/starknet/data-feeds/extract-information",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "extract-information",
+    "title": "Extract information from identifiers",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "How to get there",
+    "permalink": "/docs/starknet/data-feeds/how-to-get-there"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision"
+  }
+}
