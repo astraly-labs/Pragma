@@ -1,0 +1,27 @@
+{
+  "unversionedId": "astraly-protocol/badges",
+  "id": "version-V3/astraly-protocol/badges",
+  "title": "Badges",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/astraly-protocol/Badges.md",
+  "sourceDirName": "astraly-protocol",
+  "slug": "/astraly-protocol/badges",
+  "permalink": "/docs/astraly-protocol/badges",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "badges",
+    "title": "Badges",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Data Aggregation",
+    "permalink": "/docs/astraly-protocol/data-aggregation"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/context/OurVision/our-vision"
+  }
+}

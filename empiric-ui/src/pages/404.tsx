@@ -35,7 +35,7 @@ const Custom404Page = () => (
         <ButtonLink
           variant="solid"
           color="indigo"
-          href="mailto:support@astraly.xyz?body=Hi%20Empiric-Team,"
+          href="mailto:support@empiric.network?body=Hi%20Empiric-Team,"
           icon={ChatIcon}
         >
           Request asset

@@ -1,0 +1,27 @@
+{
+  "unversionedId": "Consensys Zk-EVM/data-feeds/web3-change",
+  "id": "version-V3/Consensys Zk-EVM/data-feeds/web3-change",
+  "title": "How Web3 can change this paradigm",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/How Web3 can change this paradigm.md",
+  "sourceDirName": "Consensys Zk-EVM/data-feeds",
+  "slug": "/Consensys Zk-EVM/data-feeds/web3-change",
+  "permalink": "/docs/Consensys Zk-EVM/data-feeds/web3-change",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "web3-change",
+    "title": "How Web3 can change this paradigm",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision"
+  }
+}

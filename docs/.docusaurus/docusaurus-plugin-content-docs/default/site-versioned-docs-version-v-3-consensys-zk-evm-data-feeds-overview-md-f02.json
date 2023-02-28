@@ -1,0 +1,27 @@
+{
+  "unversionedId": "Consensys Zk-EVM/data-feeds/randomness",
+  "id": "version-V3/Consensys Zk-EVM/data-feeds/randomness",
+  "title": "Randomness",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Overview.md",
+  "sourceDirName": "Consensys Zk-EVM/data-feeds",
+  "slug": "/Consensys Zk-EVM/data-feeds/randomness",
+  "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "randomness",
+    "title": "Randomness",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Randomness",
+    "permalink": "/docs/starknet/randomness/randomness"
+  },
+  "next": {
+    "title": "Realized Volatility",
+    "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility"
+  }
+}

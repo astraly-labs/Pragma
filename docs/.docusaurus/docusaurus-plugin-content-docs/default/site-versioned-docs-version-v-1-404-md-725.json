@@ -1,0 +1,14 @@
+{
+  "unversionedId": "404",
+  "id": "version-V1/404",
+  "title": "404",
+  "description": "This page doesn't exist -yet-",
+  "source": "@site/versioned_docs/version-V1/404.md",
+  "sourceDirName": ".",
+  "slug": "/404",
+  "permalink": "/docs/V1/404",
+  "tags": [],
+  "version": "V1",
+  "frontMatter": {},
+  "sidebar": "version-V1/mySidebar"
+}

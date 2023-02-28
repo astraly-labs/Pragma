@@ -15,7 +15,7 @@ const PublishersPage = () => (
           title="Your favorite giants"
           subtitle="Meet our publishers"
           text="At Empiric, we care about the integrity of our data. We ensure that only high quality data publishers join this list."
-          href="mailto:support@astraly.xyz?body=Hi%20Empiric%20Team,%0AWe%20have%20high-quality%20data%20and%20would%20like%20to%20provide%20it%20to%20your%20network."
+          href="mailto:support@empiric.network?body=Hi%20Empiric%20Team,%0AWe%20have%20high-quality%20data%20and%20would%20like%20to%20provide%20it%20to%20your%20network."
           hrefText="Find out how you can become a publisher"
         />
         <PublishersSeciton />
@@ -25,7 +25,7 @@ const PublishersPage = () => (
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."
           mainAction={{
-            href: "mailto:support@astraly.xyz?body=Hi%20Empiric%20Team,%0AWe%20have%20high-quality%20data%20and%20would%20like%20to%20provide%20it%20to%20your%20network.",
+            href: "mailto:support@empiric.network?body=Hi%20Empiric%20Team,%0AWe%20have%20high-quality%20data%20and%20would%20like%20to%20provide%20it%20to%20your%20network.",
             actionText: "Become a publisher",
             icon: ChatIcon,
           }}

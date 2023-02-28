@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/data-feeds/supported-assets",
+  "id": "version-V3/starknet/data-feeds/supported-assets",
+  "title": "Supported Assets",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Supported Assets.md",
+  "sourceDirName": "starknet/data-feeds",
+  "slug": "/starknet/data-feeds/supported-assets",
+  "permalink": "/docs/starknet/data-feeds/supported-assets",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "supported-assets",
+    "title": "Supported Assets",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Consuming Data",
+    "permalink": "/docs/starknet/data-feeds/consuming-data"
+  },
+  "next": {
+    "title": "Publishing Data",
+    "permalink": "/docs/starknet/data-feeds/publishing-data"
+  }
+}

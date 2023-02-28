@@ -1,0 +1,271 @@
+{
+  "pluginId": "default",
+  "version": "V3",
+  "label": "V3",
+  "banner": null,
+  "badge": true,
+  "className": "docs-version-V3",
+  "isLast": true,
+  "docsSidebars": {
+    "version-V3/mySidebar": [
+      {
+        "type": "link",
+        "label": "What is Empiric?",
+        "href": "/docs/introduction",
+        "docId": "introduction"
+      },
+      {
+        "type": "category",
+        "label": "How Empiric Works",
+        "collapsible": true,
+        "collapsed": false,
+        "items": [
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/howItWorks/overview",
+            "docId": "howItWorks/overview"
+          },
+          {
+            "type": "link",
+            "label": "Architecture",
+            "href": "/docs/howItWorks/architecture",
+            "docId": "howItWorks/architecture"
+          },
+          {
+            "type": "link",
+            "label": "Roadmap",
+            "href": "/docs/howItWorks/roadmap",
+            "docId": "howItWorks/roadmap"
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Starknet",
+        "collapsible": true,
+        "collapsed": false,
+        "items": [
+          {
+            "type": "category",
+            "label": "Data Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Consuming Data",
+                "href": "/docs/starknet/data-feeds/consuming-data",
+                "docId": "starknet/data-feeds/consuming-data"
+              },
+              {
+                "type": "link",
+                "label": "Supported Assets",
+                "href": "/docs/starknet/data-feeds/supported-assets",
+                "docId": "starknet/data-feeds/supported-assets"
+              },
+              {
+                "type": "link",
+                "label": "Publishing Data",
+                "href": "/docs/starknet/data-feeds/publishing-data",
+                "docId": "starknet/data-feeds/publishing-data"
+              },
+              {
+                "type": "link",
+                "label": "Open Oracle",
+                "href": "/docs/starknet/data-feeds/open-oracle",
+                "docId": "starknet/data-feeds/open-oracle"
+              }
+            ]
+          },
+          {
+            "type": "category",
+            "label": "Computational Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "What are computational feeds",
+                "href": "/docs/starknet/computational-feeds/what-are-computational-feeds",
+                "docId": "starknet/computational-feeds/what-are-computational-feeds"
+              },
+              {
+                "type": "link",
+                "label": "Yield Curve",
+                "href": "/docs/starknet/computational-feeds/yield-curve",
+                "docId": "starknet/computational-feeds/yield-curve"
+              },
+              {
+                "type": "link",
+                "label": "Realized Volatility",
+                "href": "/docs/starknet/computational-feeds/realized-volatility",
+                "docId": "starknet/computational-feeds/realized-volatility"
+              }
+            ]
+          },
+          {
+            "type": "category",
+            "label": "VRF",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Randomness",
+                "href": "/docs/starknet/randomness/randomness",
+                "docId": "starknet/randomness/randomness"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Consensys ZKEVM",
+        "collapsible": true,
+        "collapsed": false,
+        "items": [
+          {
+            "type": "category",
+            "label": "Data Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Randomness",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+                "docId": "Consensys Zk-EVM/data-feeds/randomness"
+              }
+            ]
+          },
+          {
+            "type": "category",
+            "label": "Computational Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Realized Volatility",
+                "href": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility",
+                "docId": "Consensys Zk-EVM/computational-feeds/realized-volatility"
+              },
+              {
+                "type": "link",
+                "label": "Yield Curve",
+                "href": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve",
+                "docId": "Consensys Zk-EVM/computational-feeds/yield-curve"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": "VRF",
+            "href": "/docs/Consensys Zk-EVM/randomness/",
+            "docId": "Consensys Zk-EVM/randomness/randomness"
+          }
+        ]
+      }
+    ]
+  },
+  "docs": {
+    "Consensys Zk-EVM/computational-feeds/realized-volatility": {
+      "id": "Consensys Zk-EVM/computational-feeds/realized-volatility",
+      "title": "Realized Volatility",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "Consensys Zk-EVM/computational-feeds/yield-curve": {
+      "id": "Consensys Zk-EVM/computational-feeds/yield-curve",
+      "title": "Yield Curve",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "Consensys Zk-EVM/data-feeds/randomness": {
+      "id": "Consensys Zk-EVM/data-feeds/randomness",
+      "title": "Randomness",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "Consensys Zk-EVM/randomness/randomness": {
+      "id": "Consensys Zk-EVM/randomness/randomness",
+      "title": "Randomness",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "howItWorks/architecture": {
+      "id": "howItWorks/architecture",
+      "title": "Architecture",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "howItWorks/overview": {
+      "id": "howItWorks/overview",
+      "title": "Overview",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "howItWorks/roadmap": {
+      "id": "howItWorks/roadmap",
+      "title": "Roadmap",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "introduction": {
+      "id": "introduction",
+      "title": "What is Empiric?",
+      "description": "Your smart contracts are decentralized, transparent and composable. Of course they are, because you believe in a world where society’s crucial applications are accessible to anyone, where transparency replaces backroom dealings and trustless software makes middlemen obsolete. But unless you're using Empiric already, you are accessing real world data using an off-chain, trusted, black box oracle.",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/computational-feeds/realized-volatility": {
+      "id": "starknet/computational-feeds/realized-volatility",
+      "title": "Realized Volatility",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/computational-feeds/what-are-computational-feeds": {
+      "id": "starknet/computational-feeds/what-are-computational-feeds",
+      "title": "What are computational feeds",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/computational-feeds/yield-curve": {
+      "id": "starknet/computational-feeds/yield-curve",
+      "title": "Yield Curve",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/data-feeds/consuming-data": {
+      "id": "starknet/data-feeds/consuming-data",
+      "title": "Consuming Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/data-feeds/open-oracle": {
+      "id": "starknet/data-feeds/open-oracle",
+      "title": "Open Oracle",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/data-feeds/publishing-data": {
+      "id": "starknet/data-feeds/publishing-data",
+      "title": "Publishing Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/data-feeds/supported-assets": {
+      "id": "starknet/data-feeds/supported-assets",
+      "title": "Supported Assets",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/randomness/randomness": {
+      "id": "starknet/randomness/randomness",
+      "title": "Randomness",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/data-feeds copy/extract-information",
+  "id": "version-V3/starknet/data-feeds copy/extract-information",
+  "title": "Extract information from identifiers",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/data-feeds copy/Extract information from identifiers.md",
+  "sourceDirName": "starknet/data-feeds copy",
+  "slug": "/starknet/data-feeds copy/extract-information",
+  "permalink": "/docs/starknet/data-feeds copy/extract-information",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "extract-information",
+    "title": "Extract information from identifiers",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "How to get there",
+    "permalink": "/docs/starknet/data-feeds copy/how-to-get-there"
+  },
+  "next": {
+    "title": "Why Starknet",
+    "permalink": "/docs/starknet/why-starknet"
+  }
+}

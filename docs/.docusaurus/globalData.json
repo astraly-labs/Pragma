@@ -1,0 +1,151 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "V3",
+          "label": "V3",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "introduction",
+          "docs": [
+            {
+              "id": "Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "path": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/computational-feeds/yield-curve",
+              "path": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/randomness",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/randomness/randomness",
+              "path": "/docs/Consensys Zk-EVM/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/architecture",
+              "path": "/docs/howItWorks/architecture",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/overview",
+              "path": "/docs/howItWorks/overview",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/roadmap",
+              "path": "/docs/howItWorks/roadmap",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "introduction",
+              "path": "/docs/introduction",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/realized-volatility",
+              "path": "/docs/starknet/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/what-are-computational-feeds",
+              "path": "/docs/starknet/computational-feeds/what-are-computational-feeds",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/yield-curve",
+              "path": "/docs/starknet/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/consuming-data",
+              "path": "/docs/starknet/data-feeds/consuming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/open-oracle",
+              "path": "/docs/starknet/data-feeds/open-oracle",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/publishing-data",
+              "path": "/docs/starknet/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/supported-assets",
+              "path": "/docs/starknet/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/randomness/randomness",
+              "path": "/docs/starknet/randomness/randomness",
+              "sidebar": "version-V3/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V3/mySidebar": {
+              "link": {
+                "path": "/docs/introduction",
+                "label": "version-V3/introduction"
+              }
+            }
+          }
+        },
+        {
+          "name": "V2",
+          "label": "V2",
+          "isLast": false,
+          "path": "/docs/V2",
+          "mainDocId": "404",
+          "docs": [
+            {
+              "id": "404",
+              "path": "/docs/V2/404",
+              "sidebar": "version-V2/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V2/mySidebar": {
+              "link": {
+                "path": "/docs/V2/404",
+                "label": "version-V2/404"
+              }
+            }
+          }
+        },
+        {
+          "name": "V1",
+          "label": "V1",
+          "isLast": false,
+          "path": "/docs/V1",
+          "mainDocId": "404",
+          "docs": [
+            {
+              "id": "404",
+              "path": "/docs/V1/404",
+              "sidebar": "version-V1/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V1/mySidebar": {
+              "link": {
+                "path": "/docs/V1/404",
+                "label": "version-V1/404"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

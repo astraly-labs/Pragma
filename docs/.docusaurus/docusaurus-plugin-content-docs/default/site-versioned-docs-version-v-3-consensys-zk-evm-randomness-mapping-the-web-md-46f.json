@@ -1,0 +1,23 @@
+{
+  "unversionedId": "Consensys Zk-EVM/randomness/our-vision",
+  "id": "version-V3/Consensys Zk-EVM/randomness/our-vision",
+  "title": "Mapping the Web",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Mapping the Web.md",
+  "sourceDirName": "Consensys Zk-EVM/randomness",
+  "slug": "/Consensys Zk-EVM/randomness/our-vision",
+  "permalink": "/docs/Consensys Zk-EVM/randomness/our-vision",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "our-vision",
+    "title": "Mapping the Web",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Randomness",
+    "permalink": "/docs/starknet/randomness/randomness"
+  }
+}

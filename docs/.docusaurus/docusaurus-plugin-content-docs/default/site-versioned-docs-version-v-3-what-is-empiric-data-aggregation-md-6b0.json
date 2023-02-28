@@ -1,0 +1,27 @@
+{
+  "unversionedId": "whatIsEmpiric/data-aggregation",
+  "id": "version-V3/whatIsEmpiric/data-aggregation",
+  "title": "Data Aggregation",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/whatIsEmpiric/Data Aggregation.md",
+  "sourceDirName": "whatIsEmpiric",
+  "slug": "/whatIsEmpiric/data-aggregation",
+  "permalink": "/docs/whatIsEmpiric/data-aggregation",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "data-aggregation",
+    "title": "Data Aggregation",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Architecture",
+    "permalink": "/docs/whatIsEmpiric/architecture"
+  },
+  "next": {
+    "title": "Roadmap",
+    "permalink": "/docs/whatIsEmpiric/roadmap"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "unversionedId": "manifesto",
+  "id": "version-V3/manifesto",
+  "title": "Manifesto",
+  "description": "Verifiable computation is going to change the internet",
+  "source": "@site/versioned_docs/version-V3/manifesto.md",
+  "sourceDirName": ".",
+  "slug": "/manifesto",
+  "permalink": "/docs/manifesto",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "manifesto",
+    "title": "Manifesto",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Roadmap",
+    "permalink": "/docs/howItWorks/roadmap"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/starknet/data-feeds/our-vision"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "unversionedId": "context/why-starknet",
+  "id": "version-V3/context/why-starknet",
+  "title": "Why Starknet",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/context/Why Starknet.md",
+  "sourceDirName": "context",
+  "slug": "/context/why-starknet",
+  "permalink": "/docs/context/why-starknet",
+  "tags": [],
+  "version": "V3",
+  "frontMatter": {
+    "id": "why-starknet",
+    "title": "Why Starknet"
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Extract information from identifiers",
+    "permalink": "/docs/context/OurVision/extract-information"
+  },
+  "next": {
+    "title": "Architecture",
+    "permalink": "/docs/overview/"
+  }
+}
