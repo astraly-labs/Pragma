@@ -9,16 +9,16 @@
   "permalink": "/docs/starknet/data-feeds/consuming-data",
   "tags": [],
   "version": "V3",
-  "sidebarPosition": 1,
+  "sidebarPosition": 2,
   "frontMatter": {
     "id": "consuming-data",
     "title": "Consuming Data",
-    "sidebar_position": 1
+    "sidebar_position": 2
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {
-    "title": "Roadmap",
-    "permalink": "/docs/howItWorks/roadmap"
+    "title": "Starknet Quickstart",
+    "permalink": "/docs/starknet/data-feeds/starknet-quickstart"
   },
   "next": {
     "title": "Supported Assets",

@@ -1,7 +1,7 @@
 ---
 id: consuming-data
 title: Consuming Data
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 ---

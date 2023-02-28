@@ -9,11 +9,11 @@
   "permalink": "/docs/starknet/data-feeds/supported-assets",
   "tags": [],
   "version": "V3",
-  "sidebarPosition": 2,
+  "sidebarPosition": 3,
   "frontMatter": {
     "id": "supported-assets",
     "title": "Supported Assets",
-    "sidebar_position": 2
+    "sidebar_position": 3
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {

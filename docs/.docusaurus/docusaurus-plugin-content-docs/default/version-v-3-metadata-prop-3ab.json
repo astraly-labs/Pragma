@@ -54,6 +54,12 @@
             "items": [
               {
                 "type": "link",
+                "label": "Starknet Quickstart",
+                "href": "/docs/starknet/data-feeds/starknet-quickstart",
+                "docId": "starknet/data-feeds/starknet-quickstart"
+              },
+              {
+                "type": "link",
                 "label": "Consuming Data",
                 "href": "/docs/starknet/data-feeds/consuming-data",
                 "docId": "starknet/data-feeds/consuming-data"
@@ -134,9 +140,9 @@
             "items": [
               {
                 "type": "link",
-                "label": "Randomness",
-                "href": "/docs/Consensys Zk-EVM/data-feeds/randomness",
-                "docId": "Consensys Zk-EVM/data-feeds/randomness"
+                "label": "Assets Supported",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/assets-supported",
+                "docId": "Consensys Zk-EVM/data-feeds/assets-supported"
               }
             ]
           },
@@ -183,9 +189,9 @@
       "description": "---",
       "sidebar": "version-V3/mySidebar"
     },
-    "Consensys Zk-EVM/data-feeds/randomness": {
-      "id": "Consensys Zk-EVM/data-feeds/randomness",
-      "title": "Randomness",
+    "Consensys Zk-EVM/data-feeds/assets-supported": {
+      "id": "Consensys Zk-EVM/data-feeds/assets-supported",
+      "title": "Assets Supported",
       "description": "---",
       "sidebar": "version-V3/mySidebar"
     },
@@ -252,6 +258,12 @@
     "starknet/data-feeds/publishing-data": {
       "id": "starknet/data-feeds/publishing-data",
       "title": "Publishing Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "starknet/data-feeds/starknet-quickstart": {
+      "id": "starknet/data-feeds/starknet-quickstart",
+      "title": "Starknet Quickstart",
       "description": "---",
       "sidebar": "version-V3/mySidebar"
     },

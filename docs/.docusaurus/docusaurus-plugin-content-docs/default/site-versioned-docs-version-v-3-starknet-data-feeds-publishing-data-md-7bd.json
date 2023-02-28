@@ -9,11 +9,11 @@
   "permalink": "/docs/starknet/data-feeds/publishing-data",
   "tags": [],
   "version": "V3",
-  "sidebarPosition": 3,
+  "sidebarPosition": 4,
   "frontMatter": {
     "id": "publishing-data",
     "title": "Publishing Data",
-    "sidebar_position": 3
+    "sidebar_position": 4
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {

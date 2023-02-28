@@ -74,7 +74,7 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','d3c'),
+    component: ComponentCreator('/docs','9d7'),
     routes: [
       {
         path: '/docs/Consensys Zk-EVM/computational-feeds/realized-volatility',
@@ -89,8 +89,8 @@ export default [
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/Consensys Zk-EVM/data-feeds/randomness',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/randomness','64e'),
+        path: '/docs/Consensys Zk-EVM/data-feeds/assets-supported',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/assets-supported','922'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
@@ -157,6 +157,12 @@ export default [
       {
         path: '/docs/starknet/data-feeds/publishing-data',
         component: ComponentCreator('/docs/starknet/data-feeds/publishing-data','767'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/starknet/data-feeds/starknet-quickstart',
+        component: ComponentCreator('/docs/starknet/data-feeds/starknet-quickstart','114'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },

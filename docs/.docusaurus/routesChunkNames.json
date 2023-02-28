@@ -44,7 +44,7 @@
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-v-2-404076-506"
   },
-  "/docs-d3c": {
+  "/docs-9d7": {
     "component": "component---theme-doc-page-1-be-9be",
     "versionMetadata": "versionMetadata---docsa-12-137"
   },
@@ -56,7 +56,7 @@
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-consensys-zk-evm-computational-feeds-yield-curve-059-ac2"
   },
-  "/docs/Consensys Zk-EVM/data-feeds/randomness-64e": {
+  "/docs/Consensys Zk-EVM/data-feeds/assets-supported-922": {
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-consensys-zk-evm-data-feeds-randomnessf-02-6cd"
   },
@@ -103,6 +103,10 @@
   "/docs/starknet/data-feeds/publishing-data-767": {
     "component": "component---theme-doc-item-178-a40",
     "content": "content---docs-starknet-data-feeds-supported-assets-7-bd-1e1"
+  },
+  "/docs/starknet/data-feeds/starknet-quickstart-114": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-starknet-quickstart-043-7ad"
   },
   "/docs/starknet/data-feeds/supported-assets-359": {
     "component": "component---theme-doc-item-178-a40",

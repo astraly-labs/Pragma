@@ -9,11 +9,11 @@
   "permalink": "/docs/starknet/data-feeds/open-oracle",
   "tags": [],
   "version": "V3",
-  "sidebarPosition": 4,
+  "sidebarPosition": 5,
   "frontMatter": {
     "id": "open-oracle",
     "title": "Open Oracle",
-    "sidebar_position": 4
+    "sidebar_position": 5
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {

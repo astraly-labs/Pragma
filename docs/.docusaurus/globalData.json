@@ -21,8 +21,8 @@
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "Consensys Zk-EVM/data-feeds/randomness",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "id": "Consensys Zk-EVM/data-feeds/assets-supported",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/assets-supported",
               "sidebar": "version-V3/mySidebar"
             },
             {
@@ -78,6 +78,11 @@
             {
               "id": "starknet/data-feeds/publishing-data",
               "path": "/docs/starknet/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/starknet-quickstart",
+              "path": "/docs/starknet/data-feeds/starknet-quickstart",
               "sidebar": "version-V3/mySidebar"
             },
             {

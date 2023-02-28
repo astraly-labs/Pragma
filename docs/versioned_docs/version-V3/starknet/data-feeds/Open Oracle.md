@@ -1,7 +1,7 @@
 ---
 id: open-oracle
 title: Open Oracle
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 ---

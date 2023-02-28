@@ -1,6 +1,6 @@
 ---
-id: randomness
-title: Randomness
+id: assets-supported
+title: Assets Supported
 sidebar_position: 1
 ---
 

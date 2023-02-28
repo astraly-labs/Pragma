@@ -21,7 +21,7 @@
     "permalink": "/docs/howItWorks/architecture"
   },
   "next": {
-    "title": "Consuming Data",
-    "permalink": "/docs/starknet/data-feeds/consuming-data"
+    "title": "Starknet Quickstart",
+    "permalink": "/docs/starknet/data-feeds/starknet-quickstart"
   }
 }

@@ -35,8 +35,8 @@
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Randomness",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
+                "title": "Assets Supported",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/assets-supported"
               },
               "next": {
                 "title": "Yield Curve",
@@ -71,20 +71,20 @@
               }
             },
             {
-              "unversionedId": "Consensys Zk-EVM/data-feeds/randomness",
-              "id": "version-V3/Consensys Zk-EVM/data-feeds/randomness",
-              "title": "Randomness",
+              "unversionedId": "Consensys Zk-EVM/data-feeds/assets-supported",
+              "id": "version-V3/Consensys Zk-EVM/data-feeds/assets-supported",
+              "title": "Assets Supported",
               "description": "---",
               "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Overview.md",
               "sourceDirName": "Consensys Zk-EVM/data-feeds",
-              "slug": "/Consensys Zk-EVM/data-feeds/randomness",
-              "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "slug": "/Consensys Zk-EVM/data-feeds/assets-supported",
+              "permalink": "/docs/Consensys Zk-EVM/data-feeds/assets-supported",
               "tags": [],
               "version": "V3",
               "sidebarPosition": 1,
               "frontMatter": {
-                "id": "randomness",
-                "title": "Randomness",
+                "id": "assets-supported",
+                "title": "Assets Supported",
                 "sidebar_position": 1
               },
               "sidebar": "version-V3/mySidebar",
@@ -197,8 +197,8 @@
                 "permalink": "/docs/howItWorks/architecture"
               },
               "next": {
-                "title": "Consuming Data",
-                "permalink": "/docs/starknet/data-feeds/consuming-data"
+                "title": "Starknet Quickstart",
+                "permalink": "/docs/starknet/data-feeds/starknet-quickstart"
               }
             },
             {
@@ -316,16 +316,16 @@
               "permalink": "/docs/starknet/data-feeds/consuming-data",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 1,
+              "sidebarPosition": 2,
               "frontMatter": {
                 "id": "consuming-data",
                 "title": "Consuming Data",
-                "sidebar_position": 1
+                "sidebar_position": 2
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Roadmap",
-                "permalink": "/docs/howItWorks/roadmap"
+                "title": "Starknet Quickstart",
+                "permalink": "/docs/starknet/data-feeds/starknet-quickstart"
               },
               "next": {
                 "title": "Supported Assets",
@@ -343,11 +343,11 @@
               "permalink": "/docs/starknet/data-feeds/open-oracle",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 4,
+              "sidebarPosition": 5,
               "frontMatter": {
                 "id": "open-oracle",
                 "title": "Open Oracle",
-                "sidebar_position": 4
+                "sidebar_position": 5
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
@@ -370,11 +370,11 @@
               "permalink": "/docs/starknet/data-feeds/publishing-data",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 3,
+              "sidebarPosition": 4,
               "frontMatter": {
                 "id": "publishing-data",
                 "title": "Publishing Data",
-                "sidebar_position": 3
+                "sidebar_position": 4
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
@@ -384,6 +384,33 @@
               "next": {
                 "title": "Open Oracle",
                 "permalink": "/docs/starknet/data-feeds/open-oracle"
+              }
+            },
+            {
+              "unversionedId": "starknet/data-feeds/starknet-quickstart",
+              "id": "version-V3/starknet/data-feeds/starknet-quickstart",
+              "title": "Starknet Quickstart",
+              "description": "---",
+              "source": "@site/versioned_docs/version-V3/starknet/data-feeds/Starknet quickstart.md",
+              "sourceDirName": "starknet/data-feeds",
+              "slug": "/starknet/data-feeds/starknet-quickstart",
+              "permalink": "/docs/starknet/data-feeds/starknet-quickstart",
+              "tags": [],
+              "version": "V3",
+              "sidebarPosition": 1,
+              "frontMatter": {
+                "id": "starknet-quickstart",
+                "title": "Starknet Quickstart",
+                "sidebar_position": 1
+              },
+              "sidebar": "version-V3/mySidebar",
+              "previous": {
+                "title": "Roadmap",
+                "permalink": "/docs/howItWorks/roadmap"
+              },
+              "next": {
+                "title": "Consuming Data",
+                "permalink": "/docs/starknet/data-feeds/consuming-data"
               }
             },
             {
@@ -397,11 +424,11 @@
               "permalink": "/docs/starknet/data-feeds/supported-assets",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 2,
+              "sidebarPosition": 3,
               "frontMatter": {
                 "id": "supported-assets",
                 "title": "Supported Assets",
-                "sidebar_position": 2
+                "sidebar_position": 3
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
@@ -436,8 +463,8 @@
                 "permalink": "/docs/starknet/computational-feeds/realized-volatility"
               },
               "next": {
-                "title": "Randomness",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
+                "title": "Assets Supported",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/assets-supported"
               }
             }
           ],
@@ -479,6 +506,10 @@
                     "collapsible": true,
                     "collapsed": true,
                     "items": [
+                      {
+                        "type": "doc",
+                        "id": "version-V3/starknet/data-feeds/starknet-quickstart"
+                      },
                       {
                         "type": "doc",
                         "id": "version-V3/starknet/data-feeds/consuming-data"
@@ -545,7 +576,7 @@
                     "items": [
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/randomness"
+                        "id": "version-V3/Consensys Zk-EVM/data-feeds/assets-supported"
                       }
                     ]
                   },
