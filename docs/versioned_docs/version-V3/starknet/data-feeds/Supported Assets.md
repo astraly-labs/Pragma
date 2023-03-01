@@ -61,7 +61,7 @@ Abstract currencies are not tracking a specific token but rather a broader conce
 
 | Currency | Currency Id | Decimals | Mainnet |
 | -------- | ----------- | -------- | ------- |
-| USD      | 5591876     | 8        | ✖️      |
+| USD      | 5591876     | 8        | ✅      |
 | BTC      | 4346947     | 8        | ✖️      |
 | EUR      | 4543826     | 8        | ✖️      |
 
