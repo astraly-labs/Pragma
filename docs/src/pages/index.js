@@ -451,7 +451,7 @@ export default function Home() {
               </div>
             </CenterCard>
           </Link>
-          <Link style={{ textDecoration: 'none' }} href={'https://twitter.com/EmpiricNetwork'}>
+          <Link style={{ textDecoration: 'none' }} href={'https://kprem87muy4.typeform.com/to/ahJVbIeI'}>
             <CenterCard>
               {/* <img src={phone} style={{ width: '48px', height: '48px' }} /> */}
               <StyledIcon

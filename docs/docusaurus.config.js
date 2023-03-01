@@ -49,7 +49,7 @@ module.exports = {
         // },
         {
           label: 'Feedbacks',
-          to: 'https://forms.gle/KvLdKnLprrER3VyM6',
+          to: 'https://kprem87muy4.typeform.com/to/ahJVbIeI',
           position: 'right',
           className: 'persistent',
         },
