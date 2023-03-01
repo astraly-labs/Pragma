@@ -35,7 +35,7 @@ export const actions = [
     title: 'Use Empiric',
     href: '#',
     icon: BookOpenIcon,
-    to: './',
+    to: './docs/starknet/data-feeds/starknet-quickstart',
     text: `Get started using Empiric. Integrate Price feeds, VRF and more in your smart-contracts.`,
   },
   {
