@@ -1,7 +1,7 @@
 {
   "index_name": "v3-docs",
-  "start_urls": ["https://docs.empiric.network/"],
-  "sitemap_urls": ["https://docs.empiric.network/sitemap.xml"],
+  "start_urls": ["https://elaborate-moxie-7235f5.netlify.app/"],
+  "sitemap_urls": ["https://elaborate-moxie-7235f5.netlify.app//sitemap.xml"],
   "sitemap_alternate_links": true,
   "stop_urls": [],
   "selectors": {
