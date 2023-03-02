@@ -1,119 +1,97 @@
 {
-  "/__docusaurus/debug-3d6": {
-    "component": "component---theme-debug-config-23-a-2ff"
-  },
-  "/__docusaurus/debug/config-914": {
-    "component": "component---theme-debug-config-23-a-2ff"
-  },
-  "/__docusaurus/debug/content-c28": {
-    "component": "component---theme-debug-contentba-8-ce7",
-    "allContent": "allContent---docusaurus-debug-content-246-9aa"
-  },
-  "/__docusaurus/debug/globalData-3cf": {
-    "component": "component---theme-debug-global-dataede-0fa"
-  },
-  "/__docusaurus/debug/metadata-31b": {
-    "component": "component---theme-debug-site-metadata-68-e-3d4"
-  },
-  "/__docusaurus/debug/registry-0da": {
-    "component": "component---theme-debug-registry-679-501"
-  },
-  "/__docusaurus/debug/routes-244": {
-    "component": "component---theme-debug-routes-946-699"
-  },
   "/blog/archive-f4c": {
-    "component": "component---theme-blog-archive-page-9-e-4-1d8",
-    "archive": "archive---blog-archiveb-2-f-393"
+    "component": "9e4087bc",
+    "archive": "b2f554cd"
   },
   "/search-79a": {
-    "component": "component---theme-search-page-1-a-4-d6f"
+    "component": "1a4e3797"
   },
   "/docs/V1-1d3": {
-    "component": "component---theme-doc-page-1-be-9be",
-    "versionMetadata": "versionMetadata---docs-v-19-b-8-ef8"
+    "component": "1be78505",
+    "versionMetadata": "9b84ed36"
   },
   "/docs/V1/404-c97": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-v-1-404725-823"
+    "component": "17896441",
+    "content": "725eae7a"
   },
   "/docs/V2-fe7": {
-    "component": "component---theme-doc-page-1-be-9be",
-    "versionMetadata": "versionMetadata---docs-v-2-c-28-f8b"
+    "component": "1be78505",
+    "versionMetadata": "c28d9616"
   },
   "/docs/V2/404-b96": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-v-2-404076-506"
+    "component": "17896441",
+    "content": "0762a445"
   },
   "/docs-d3c": {
-    "component": "component---theme-doc-page-1-be-9be",
-    "versionMetadata": "versionMetadata---docsa-12-137"
+    "component": "1be78505",
+    "versionMetadata": "a12dfdb8"
   },
   "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility-eba": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-computational-feeds-realized-volatility-78-c-dde"
+    "component": "17896441",
+    "content": "78c59b85"
   },
   "/docs/Consensys Zk-EVM/computational-feeds/yield-curve-b2c": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-computational-feeds-yield-curve-059-ac2"
+    "component": "17896441",
+    "content": "059a9706"
   },
   "/docs/Consensys Zk-EVM/data-feeds/randomness-64e": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-data-feeds-randomnessf-02-6cd"
+    "component": "17896441",
+    "content": "f02055da"
   },
   "/docs/Consensys Zk-EVM/randomness-4b2": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-consensys-zk-evm-randomnessa-08-f51"
+    "component": "17896441",
+    "content": "a087ca28"
   },
   "/docs/howItWorks/architecture-c3a": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-how-it-works-architecturebc-8-9b3"
+    "component": "17896441",
+    "content": "bc83971d"
   },
   "/docs/howItWorks/overview-880": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-how-it-works-architecturedb-0-7e0"
+    "component": "17896441",
+    "content": "db015b90"
   },
   "/docs/howItWorks/roadmap-229": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-how-it-works-roadmap-994-4fb"
+    "component": "17896441",
+    "content": "994f3a31"
   },
   "/docs/introduction-4b1": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-introduction-40-f-ff3"
+    "component": "17896441",
+    "content": "40fa3d10"
   },
   "/docs/starknet/computational-feeds/realized-volatility-725": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-computational-feeds-yield-curve-3-c-9-6f5"
+    "component": "17896441",
+    "content": "3c9bacea"
   },
   "/docs/starknet/computational-feeds/what-are-computational-feeds-027": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-computational-feeds-yield-curve-2-b-6-0cb"
+    "component": "17896441",
+    "content": "2b6974ee"
   },
   "/docs/starknet/computational-feeds/yield-curve-055": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-computational-feeds-yield-curve-4-d-0-5f6"
+    "component": "17896441",
+    "content": "4d0f0d25"
   },
   "/docs/starknet/data-feeds/consuming-data-a92": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-extract-informationda-3-d93"
+    "component": "17896441",
+    "content": "da36ae94"
   },
   "/docs/starknet/data-feeds/open-oracle-574": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-publishing-data-020-de1"
+    "component": "17896441",
+    "content": "020dc610"
   },
   "/docs/starknet/data-feeds/publishing-data-767": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-supported-assets-7-bd-1e1"
+    "component": "17896441",
+    "content": "7bdc9a72"
   },
   "/docs/starknet/data-feeds/supported-assets-359": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-data-feeds-consuming-data-8-dc-3d0"
+    "component": "17896441",
+    "content": "8dc300e1"
   },
   "/docs/starknet/randomness/randomness-72c": {
-    "component": "component---theme-doc-item-178-a40",
-    "content": "content---docs-starknet-randomness-architectureaa-3-ab3"
+    "component": "17896441",
+    "content": "aa37fb31"
   },
   "/-deb": {
-    "component": "component---site-src-pages-index-jsc-4-f-f99",
-    "config": "config---5-e-9-4f3"
+    "component": "c4f5d8e4",
+    "config": "5e9f5e1a"
   }
 }

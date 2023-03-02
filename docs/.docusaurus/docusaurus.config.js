@@ -6,7 +6,7 @@ Modify the docusaurus.config.js file at your site's root instead.
 export default {
   "title": "Empiric Network",
   "tagline": "Documentation and Guides",
-  "url": "https://docs.empiric.network/",
+  "url": "https://docs.empiric.network",
   "baseUrl": "/",
   "onBrokenLinks": "warn",
   "onBrokenMarkdownLinks": "ignore",
@@ -86,7 +86,7 @@ export default {
             null
           ],
           "routeBasePath": "/docs",
-          "sidebarPath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/sidebars.js",
+          "sidebarPath": "/Users/matthall/Documents/Empiric/docs/sidebars.js",
           "includeCurrentVersion": false,
           "versions": {
             "V1": {
@@ -110,8 +110,8 @@ export default {
           "anonymizeIP": true
         },
         "theme": {
-          "customCss": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/src/css/custom.css",
-          "customCss2": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/src/css/colors.css"
+          "customCss": "/Users/matthall/Documents/Empiric/docs/src/css/custom.css",
+          "customCss2": "/Users/matthall/Documents/Empiric/docs/src/css/colors.css"
         }
       }
     ]
