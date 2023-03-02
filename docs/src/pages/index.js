@@ -35,7 +35,7 @@ export const actions = [
     title: 'Use Empiric',
     href: '#',
     icon: BookOpenIcon,
-    to: './',
+    to: './docs/starknet/data-feeds/starknet-quickstart',
     text: `Get started using Empiric. Integrate Price feeds, VRF and more in your smart-contracts.`,
   },
   {
@@ -451,7 +451,7 @@ export default function Home() {
               </div>
             </CenterCard>
           </Link>
-          <Link style={{ textDecoration: 'none' }} href={'https://twitter.com/EmpiricNetwork'}>
+          <Link style={{ textDecoration: 'none' }} href={'https://kprem87muy4.typeform.com/to/ahJVbIeI'}>
             <CenterCard>
               {/* <img src={phone} style={{ width: '48px', height: '48px' }} /> */}
               <StyledIcon
