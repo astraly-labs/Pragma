@@ -5,7 +5,7 @@ module.exports = {
   title: 'Empiric Network',
   tagline: 'Documentation and Guides',
   url: 'https://docs.empiric.network',
-  baseUrl: '/docs',
+  baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'ignore',
   favicon: 'img/favicon.png',
