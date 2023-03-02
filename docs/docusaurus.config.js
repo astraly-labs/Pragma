@@ -4,8 +4,8 @@ const katex = require('rehype-katex')
 module.exports = {
   title: 'Empiric Network',
   tagline: 'Documentation and Guides',
-  url: 'https://docs.empiric.network/',
-  baseUrl: '/',
+  url: 'https://docs.empiric.network',
+  baseUrl: '/docs',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'ignore',
   favicon: 'img/favicon.png',
