@@ -1,0 +1,27 @@
+{
+  "unversionedId": "Consensys Zk-EVM/data-feeds/publishing-data",
+  "id": "version-V3/Consensys Zk-EVM/data-feeds/publishing-data",
+  "title": "Publishing Data",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Publishing Data.md",
+  "sourceDirName": "Consensys Zk-EVM/data-feeds",
+  "slug": "/Consensys Zk-EVM/data-feeds/publishing-data",
+  "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "publishing-data",
+    "title": "Publishing Data",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Consumming Data",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/consumming-data"
+  },
+  "next": {
+    "title": "Supported Assets",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets"
+  }
+}

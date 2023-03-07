@@ -134,9 +134,21 @@
             "items": [
               {
                 "type": "link",
-                "label": "Randomness",
-                "href": "/docs/Consensys Zk-EVM/data-feeds/randomness",
-                "docId": "Consensys Zk-EVM/data-feeds/randomness"
+                "label": "Consumming Data",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/consumming-data",
+                "docId": "Consensys Zk-EVM/data-feeds/consumming-data"
+              },
+              {
+                "type": "link",
+                "label": "Publishing Data",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
+                "docId": "Consensys Zk-EVM/data-feeds/publishing-data"
+              },
+              {
+                "type": "link",
+                "label": "Supported Assets",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
+                "docId": "Consensys Zk-EVM/data-feeds/supported-assets"
               }
             ]
           },
@@ -183,9 +195,21 @@
       "description": "---",
       "sidebar": "version-V3/mySidebar"
     },
-    "Consensys Zk-EVM/data-feeds/randomness": {
-      "id": "Consensys Zk-EVM/data-feeds/randomness",
-      "title": "Randomness",
+    "Consensys Zk-EVM/data-feeds/consumming-data": {
+      "id": "Consensys Zk-EVM/data-feeds/consumming-data",
+      "title": "Consumming Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "Consensys Zk-EVM/data-feeds/publishing-data": {
+      "id": "Consensys Zk-EVM/data-feeds/publishing-data",
+      "title": "Publishing Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "Consensys Zk-EVM/data-feeds/supported-assets": {
+      "id": "Consensys Zk-EVM/data-feeds/supported-assets",
+      "title": "Supported Assets",
       "description": "---",
       "sidebar": "version-V3/mySidebar"
     },

@@ -21,7 +21,7 @@
     "permalink": "/docs/starknet/computational-feeds/realized-volatility"
   },
   "next": {
-    "title": "Randomness",
-    "permalink": "/docs/Consensys Zk-EVM/data-feeds/randomness"
+    "title": "Consumming Data",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/consumming-data"
   }
 }

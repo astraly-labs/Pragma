@@ -4,6 +4,41 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
+    path: '/__docusaurus/debug',
+    component: ComponentCreator('/__docusaurus/debug','3d6'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/config',
+    component: ComponentCreator('/__docusaurus/debug/config','914'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/content',
+    component: ComponentCreator('/__docusaurus/debug/content','c28'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/globalData',
+    component: ComponentCreator('/__docusaurus/debug/globalData','3cf'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/metadata',
+    component: ComponentCreator('/__docusaurus/debug/metadata','31b'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/registry',
+    component: ComponentCreator('/__docusaurus/debug/registry','0da'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/routes',
+    component: ComponentCreator('/__docusaurus/debug/routes','244'),
+    exact: true
+  },
+  {
     path: '/blog/archive',
     component: ComponentCreator('/blog/archive','f4c'),
     exact: true
@@ -39,7 +74,7 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','d3c'),
+    component: ComponentCreator('/docs','3bb'),
     routes: [
       {
         path: '/docs/Consensys Zk-EVM/computational-feeds/realized-volatility',
@@ -54,8 +89,20 @@ export default [
         'sidebar': "version-V3/mySidebar"
       },
       {
-        path: '/docs/Consensys Zk-EVM/data-feeds/randomness',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/randomness','64e'),
+        path: '/docs/Consensys Zk-EVM/data-feeds/consumming-data',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/consumming-data','316'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/Consensys Zk-EVM/data-feeds/publishing-data',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/publishing-data','147'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/Consensys Zk-EVM/data-feeds/supported-assets',
+        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/supported-assets','974'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },
