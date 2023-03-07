@@ -1,0 +1,27 @@
+{
+  "unversionedId": "Consensys Zk-EVM/data-feeds/consumming-data",
+  "id": "version-V3/Consensys Zk-EVM/data-feeds/consumming-data",
+  "title": "Consumming Data",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Consumming Data.md",
+  "sourceDirName": "Consensys Zk-EVM/data-feeds",
+  "slug": "/Consensys Zk-EVM/data-feeds/consumming-data",
+  "permalink": "/docs/Consensys Zk-EVM/data-feeds/consumming-data",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "consumming-data",
+    "title": "Consumming Data",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Randomness",
+    "permalink": "/docs/starknet/randomness/randomness"
+  },
+  "next": {
+    "title": "Publishing Data",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
+  }
+}

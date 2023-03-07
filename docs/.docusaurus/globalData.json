@@ -21,8 +21,18 @@
               "sidebar": "version-V3/mySidebar"
             },
             {
-              "id": "Consensys Zk-EVM/data-feeds/randomness",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/randomness",
+              "id": "Consensys Zk-EVM/data-feeds/consumming-data",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/publishing-data",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "Consensys Zk-EVM/data-feeds/supported-assets",
+              "path": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
               "sidebar": "version-V3/mySidebar"
             },
             {

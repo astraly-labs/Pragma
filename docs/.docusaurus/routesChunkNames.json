@@ -1,97 +1,127 @@
 {
+  "/__docusaurus/debug-3d6": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/config-914": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/content-c28": {
+    "component": "component---theme-debug-contentba-8-ce7",
+    "allContent": "allContent---docusaurus-debug-content-246-9aa"
+  },
+  "/__docusaurus/debug/globalData-3cf": {
+    "component": "component---theme-debug-global-dataede-0fa"
+  },
+  "/__docusaurus/debug/metadata-31b": {
+    "component": "component---theme-debug-site-metadata-68-e-3d4"
+  },
+  "/__docusaurus/debug/registry-0da": {
+    "component": "component---theme-debug-registry-679-501"
+  },
+  "/__docusaurus/debug/routes-244": {
+    "component": "component---theme-debug-routes-946-699"
+  },
   "/blog/archive-f4c": {
-    "component": "9e4087bc",
-    "archive": "b2f554cd"
+    "component": "component---theme-blog-archive-page-9-e-4-1d8",
+    "archive": "archive---blog-archiveb-2-f-393"
   },
   "/search-79a": {
-    "component": "1a4e3797"
+    "component": "component---theme-search-page-1-a-4-d6f"
   },
   "/docs/V1-1d3": {
-    "component": "1be78505",
-    "versionMetadata": "9b84ed36"
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docs-v-19-b-8-ef8"
   },
   "/docs/V1/404-c97": {
-    "component": "17896441",
-    "content": "725eae7a"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-v-1-404725-823"
   },
   "/docs/V2-fe7": {
-    "component": "1be78505",
-    "versionMetadata": "c28d9616"
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docs-v-2-c-28-f8b"
   },
   "/docs/V2/404-b96": {
-    "component": "17896441",
-    "content": "0762a445"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-v-2-404076-506"
   },
-  "/docs-d3c": {
-    "component": "1be78505",
-    "versionMetadata": "a12dfdb8"
+  "/docs-3bb": {
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docsa-12-137"
   },
   "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility-eba": {
-    "component": "17896441",
-    "content": "78c59b85"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-computational-feeds-realized-volatility-78-c-dde"
   },
   "/docs/Consensys Zk-EVM/computational-feeds/yield-curve-b2c": {
-    "component": "17896441",
-    "content": "059a9706"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-computational-feeds-yield-curve-059-ac2"
   },
-  "/docs/Consensys Zk-EVM/data-feeds/randomness-64e": {
-    "component": "17896441",
-    "content": "f02055da"
+  "/docs/Consensys Zk-EVM/data-feeds/consumming-data-316": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-consumming-datad-6-d-d6c"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/publishing-data-147": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-publishing-datafba-34e"
+  },
+  "/docs/Consensys Zk-EVM/data-feeds/supported-assets-974": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-data-feeds-supported-assetsb-48-0b8"
   },
   "/docs/Consensys Zk-EVM/randomness-4b2": {
-    "component": "17896441",
-    "content": "a087ca28"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-consensys-zk-evm-randomnessa-08-f51"
   },
   "/docs/howItWorks/architecture-c3a": {
-    "component": "17896441",
-    "content": "bc83971d"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-architecturebc-8-9b3"
   },
   "/docs/howItWorks/overview-880": {
-    "component": "17896441",
-    "content": "db015b90"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-overviewdb-0-b49"
   },
   "/docs/howItWorks/roadmap-229": {
-    "component": "17896441",
-    "content": "994f3a31"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-how-it-works-roadmap-994-4fb"
   },
   "/docs/introduction-4b1": {
-    "component": "17896441",
-    "content": "40fa3d10"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-introduction-40-f-ff3"
   },
   "/docs/starknet/computational-feeds/realized-volatility-725": {
-    "component": "17896441",
-    "content": "3c9bacea"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-computational-feeds-realized-volatility-3-c-9-21e"
   },
   "/docs/starknet/computational-feeds/what-are-computational-feeds-027": {
-    "component": "17896441",
-    "content": "2b6974ee"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-computational-feeds-what-are-computational-feeds-2-b-6-728"
   },
   "/docs/starknet/computational-feeds/yield-curve-055": {
-    "component": "17896441",
-    "content": "4d0f0d25"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-computational-feeds-yield-curve-4-d-0-5f6"
   },
   "/docs/starknet/data-feeds/consuming-data-a92": {
-    "component": "17896441",
-    "content": "da36ae94"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-consuming-datada-3-597"
   },
   "/docs/starknet/data-feeds/open-oracle-574": {
-    "component": "17896441",
-    "content": "020dc610"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-open-oracle-020-71e"
   },
   "/docs/starknet/data-feeds/publishing-data-767": {
-    "component": "17896441",
-    "content": "7bdc9a72"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-publishing-data-7-bd-b2b"
   },
   "/docs/starknet/data-feeds/supported-assets-359": {
-    "component": "17896441",
-    "content": "8dc300e1"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-data-feeds-supported-assets-8-dc-d69"
   },
   "/docs/starknet/randomness/randomness-72c": {
-    "component": "17896441",
-    "content": "aa37fb31"
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-starknet-randomness-randomnessaa-3-241"
   },
   "/-deb": {
-    "component": "c4f5d8e4",
-    "config": "5e9f5e1a"
+    "component": "component---site-src-pages-index-jsc-4-f-f99",
+    "config": "config---5-e-9-4f3"
   }
 }

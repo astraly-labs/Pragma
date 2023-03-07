@@ -3,22 +3,22 @@
   "id": "version-V3/Consensys Zk-EVM/data-feeds/supported-assets",
   "title": "Supported Assets",
   "description": "---",
-  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Overview.md",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/data-feeds/Suported Assets.md",
   "sourceDirName": "Consensys Zk-EVM/data-feeds",
   "slug": "/Consensys Zk-EVM/data-feeds/supported-assets",
   "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
   "tags": [],
   "version": "V3",
-  "sidebarPosition": 1,
+  "sidebarPosition": 4,
   "frontMatter": {
     "id": "supported-assets",
     "title": "Supported Assets",
-    "sidebar_position": 1
+    "sidebar_position": 4
   },
   "sidebar": "version-V3/mySidebar",
   "previous": {
-    "title": "Randomness",
-    "permalink": "/docs/starknet/randomness/randomness"
+    "title": "Publishing Data",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
   },
   "next": {
     "title": "Realized Volatility",
