@@ -3,7 +3,8 @@ import time
 from typing import List
 
 from empiric.core.entry import SpotEntry
-from web3 import HTTPProvider, Web3
+from web3 import Web3
+from web3.middleware import geth_poa_middleware
 
 ORACLE_ADDRESS = "0x26a7756c4aC33379621Da862308f8527FED3Dc47"  # "0xc09d042ed2f47297d1e8f010aF03d6f094433D65"
 ORACLE_ABI = [
@@ -645,9 +646,14 @@ class EvmHelper:
         publisher,
         sender_address,
         private_key,
-        provider_uri=,  # "https://zksync2-testnet.zksync.dev",
+        provider_uri="https://consensys-zkevm-goerli-prealpha.infura.io/v3/ef9b71db32e242f39c6cf0691c8b521a",  # "https://zksync2-testnet.zksync.dev",
     ):
-        self.w3 = Web3(HTTPProvider(endpoint_uri=provider_uri))
+        self.w3 = Web3(Web3.HTTPProvider(provider_uri))
+
+        # The following middleware is required for POA chains (polygon, bnb, consensys zkevm)
+        # See here for why https://web3py.readthedocs.io/en/v5/middleware.html?highlight=geth_poa_middleware#why-is-geth-poa-middleware-necessary
+        self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+        
         self.chain_id = 59140  # Consensys ZkEVM testnet chain id
         self.oracle = self.w3.eth.contract(
             address=ORACLE_ADDRESS,
@@ -694,15 +700,10 @@ class EvmHelper:
         return signed_txn.hash.hex()
 
     def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8)):
-        print(spot_entries)
         serialized_spot_entries = SpotEntry.serialize_entries_evm(spot_entries)
-        print(serialized_spot_entries)
         nonce = self.w3.eth.get_transaction_count(self.sender)
-        print("nonce", nonce)
-        print(self.oracle.functions)
-        print(self.oracle.functions.publishSpotEntries)
-        txn = self.oracle.functions.publishSpotEntries(
-            {"spotEntries": serialized_spot_entries}
+        transaction = self.oracle.functions.publishSpotEntries(
+            serialized_spot_entries
         ).build_transaction(
             {
                 "nonce": nonce,
@@ -710,11 +711,10 @@ class EvmHelper:
                 "from": self.sender,
             }
         )
-        print(txn)
-        signed_txn = self.w3.eth.account.sign_transaction(
-            txn, private_key=self.private_key
-        )
-        print(signed_txn)
-        hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        # print(transaction)
+        signed_tx = self.w3.eth.account.sign_transaction(transaction, self.private_key)
 
-        return hash.hex()
+        txn_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        txn_receipt = self.w3.eth.wait_for_transaction_receipt(txn_hash)
+
+        return txn_hash.hex()

@@ -5,6 +5,8 @@
 
 **_compiled.json
 
+.vscode/
+
 # default python virtual environment name
 .venv/
 

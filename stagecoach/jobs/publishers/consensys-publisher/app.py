@@ -50,7 +50,7 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = os.environ["PUBLISHER_PRIVATE_KEY"]
+    publisher_private_key = _get_pvt_key()
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
     )
@@ -69,8 +69,8 @@ async def _handler(assets):
     # Create an instance of the EvmHelper class
     evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key)
     # Publish the data to the smart contract
-    response = evm_helper.publish_spot_entry(
-        _entries[0].pair_id, _entries[0].price, _entries[0].base.source
+    response = evm_helper.publish_spot_entries(
+        _entries
     )
     print(f"Published data with tx hash: {response}")
 

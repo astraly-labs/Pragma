@@ -4,7 +4,7 @@ import abc
 from typing import Dict, List, Optional, Tuple, Union
 
 from empiric.core.utils import felt_to_str, str_to_felt
-
+from web3 import Web3
 
 class Entry(abc.ABC):
     @abc.abstractmethod
@@ -113,6 +113,7 @@ class SpotEntry(Entry):
         publisher: Union[str, int],
         volume: Optional[int] = 0,
     ) -> None:
+        # TODO: This should be network agnostic
         if type(pair_id) == str:
             pair_id = str_to_felt(pair_id)
 
@@ -175,13 +176,13 @@ class SpotEntry(Entry):
     def serialize_evm(self) -> Dict[str, str]:
         return {
             "base": {
-                "timestamp": str(self.base.timestamp),
-                "source": str(self.base.source),
-                "publisher": str(self.base.publisher),
+                "timestamp": self.base.timestamp,
+                "source": Web3.toBytes(text=felt_to_str(self.base.source)),
+                "publisher": Web3.toBytes(text=felt_to_str(self.base.publisher)),
             },
-            "pairId": str(self.pair_id),
-            "price": str(self.price),
-            "volume": str(self.volume),
+            "pairId": Web3.toBytes(text=felt_to_str(self.pair_id)),
+            "price": self.price,
+            "volume": self.volume,
         }
 
     @staticmethod
