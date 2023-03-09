@@ -6,7 +6,6 @@ import "./interfaces/IOracle.sol";
 contract SummaryStats is IOracle {
     IOracle public oracle;
     function calculateVolatility (
-        address oracleAddress, 
         bytes32 key, 
         bytes32 startTick, 
         bytes32 endTick,
@@ -41,8 +40,29 @@ contract SummaryStats is IOracle {
             skipFrequency=skipFrequency+1;
         }
         uint256 totalSamples = (endIndex-startIndex)/skipFrequency;
-        TickElem[] memory tickElems = new TickElem[](totalSamples);
-        
+        TickElem[] memory tickElems;
+        tickElems = _make_array(key,endIndex,startIndex,skipFrequency);
+        uint256 volatility = volatility(tickElems);
+        return volatility;
 
+
+    }
+     
+    function _make_array(
+        bytes32 key,
+        uint256 endIndex,
+        uint256 startIndex,
+        uint256 skipFrequency
+    ) internal view returns (TickElem[] memory) {
+        TickElem[] memory tickElems;
+        uint256 totalSamples = (endIndex-startIndex)/skipFrequency;
+        tickElems = new TickElem[](totalSamples);
+        uint256 j = 0;
+        for (uint256 i = startIndex; i < endIndex; i=i+skipFrequency) {
+            (uint256 tick, uint256 value) = oracle.getSpotCheckpoint(key, i);
+            tickElems[j] = TickElem(tick, value);
+            j++;
+        }
+        return tickElems;
     }
 }
