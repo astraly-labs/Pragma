@@ -34,4 +34,5 @@ contract CurrencyManager is ICurrencyManager, Ownable {
 
         emit SubmittedPair(pair);
     }
+
 }

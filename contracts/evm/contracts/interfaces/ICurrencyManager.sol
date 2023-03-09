@@ -18,4 +18,8 @@ interface ICurrencyManager {
     event SubmittedCurrency(Currency currency);
     event UpdatedCurrency(Currency currency);
     event SubmittedPair(Pair pair);
+
+    function addCurrency(Currency calldata currency) external;
+
+    function addPair(Pair calldata pair) external;
 }
