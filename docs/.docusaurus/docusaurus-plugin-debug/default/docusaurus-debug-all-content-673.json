@@ -12,9 +12,9 @@
           "versionClassName": "docs-version-V3",
           "isLast": true,
           "routePriority": -1,
-          "sidebarFilePath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_sidebars/version-V3-sidebars.json",
-          "contentPath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_docs/version-V3",
-          "contentPathLocalized": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V3",
+          "sidebarFilePath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_sidebars/version-V3-sidebars.json",
+          "contentPath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_docs/version-V3",
+          "contentPathLocalized": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V3",
           "docs": [
             {
               "unversionedId": "Consensys Zk-EVM/computational-feeds/realized-volatility",
@@ -35,8 +35,8 @@
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Supported Assets",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets"
+                "title": "Publishing Data",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
               },
               "next": {
                 "title": "Yield Curve",
@@ -93,8 +93,8 @@
                 "permalink": "/docs/starknet/randomness/randomness"
               },
               "next": {
-                "title": "Publishing Data",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
+                "title": "Supported Assets",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets"
               }
             },
             {
@@ -108,20 +108,20 @@
               "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 2,
+              "sidebarPosition": 3,
               "frontMatter": {
                 "id": "publishing-data",
                 "title": "Publishing Data",
-                "sidebar_position": 2
+                "sidebar_position": 3
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Consumming Data",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/consumming-data"
-              },
-              "next": {
                 "title": "Supported Assets",
                 "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets"
+              },
+              "next": {
+                "title": "Realized Volatility",
+                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility"
               }
             },
             {
@@ -135,20 +135,20 @@
               "permalink": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
               "tags": [],
               "version": "V3",
-              "sidebarPosition": 4,
+              "sidebarPosition": 2,
               "frontMatter": {
                 "id": "supported-assets",
                 "title": "Supported Assets",
-                "sidebar_position": 4
+                "sidebar_position": 2
               },
               "sidebar": "version-V3/mySidebar",
               "previous": {
-                "title": "Publishing Data",
-                "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
+                "title": "Consumming Data",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/consumming-data"
               },
               "next": {
-                "title": "Realized Volatility",
-                "permalink": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility"
+                "title": "Publishing Data",
+                "permalink": "/docs/Consensys Zk-EVM/data-feeds/publishing-data"
               }
             },
             {
@@ -603,11 +603,11 @@
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/publishing-data"
+                        "id": "version-V3/Consensys Zk-EVM/data-feeds/supported-assets"
                       },
                       {
                         "type": "doc",
-                        "id": "version-V3/Consensys Zk-EVM/data-feeds/supported-assets"
+                        "id": "version-V3/Consensys Zk-EVM/data-feeds/publishing-data"
                       }
                     ]
                   },
@@ -648,9 +648,9 @@
           "versionBadge": true,
           "versionClassName": "docs-version-V2",
           "isLast": false,
-          "sidebarFilePath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_sidebars/version-V2-sidebars.json",
-          "contentPath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_docs/version-V2",
-          "contentPathLocalized": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V2",
+          "sidebarFilePath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_sidebars/version-V2-sidebars.json",
+          "contentPath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_docs/version-V2",
+          "contentPathLocalized": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V2",
           "docs": [
             {
               "unversionedId": "404",
@@ -687,9 +687,9 @@
           "versionBadge": true,
           "versionClassName": "docs-version-V1",
           "isLast": false,
-          "sidebarFilePath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_sidebars/version-V1-sidebars.json",
-          "contentPath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/versioned_docs/version-V1",
-          "contentPathLocalized": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V1",
+          "sidebarFilePath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_sidebars/version-V1-sidebars.json",
+          "contentPath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/versioned_docs/version-V1",
+          "contentPathLocalized": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/i18n/en/docusaurus-plugin-content-docs/version-V1",
           "docs": [
             {
               "unversionedId": "404",

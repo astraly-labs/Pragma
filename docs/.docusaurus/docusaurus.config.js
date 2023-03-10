@@ -86,7 +86,7 @@ export default {
             null
           ],
           "routeBasePath": "/docs",
-          "sidebarPath": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/sidebars.js",
+          "sidebarPath": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/sidebars.js",
           "includeCurrentVersion": false,
           "versions": {
             "V1": {
@@ -110,8 +110,8 @@ export default {
           "anonymizeIP": true
         },
         "theme": {
-          "customCss": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/src/css/custom.css",
-          "customCss2": "/Users/jordyromuald/Documents/GitHub/Empiric/docs/src/css/colors.css"
+          "customCss": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/src/css/custom.css",
+          "customCss2": "/Users/matteogeorges/Documents/GitHub/docs/Empiric/docs/src/css/colors.css"
         }
       }
     ]
