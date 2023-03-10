@@ -1,7 +1,7 @@
 ---
 id: publishing-data
 title: Publishing Data
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 ---

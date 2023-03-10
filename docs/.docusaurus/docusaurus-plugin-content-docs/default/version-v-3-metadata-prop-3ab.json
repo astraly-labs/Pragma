@@ -140,15 +140,15 @@
               },
               {
                 "type": "link",
-                "label": "Publishing Data",
-                "href": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
-                "docId": "Consensys Zk-EVM/data-feeds/publishing-data"
-              },
-              {
-                "type": "link",
                 "label": "Supported Assets",
                 "href": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
                 "docId": "Consensys Zk-EVM/data-feeds/supported-assets"
+              },
+              {
+                "type": "link",
+                "label": "Publishing Data",
+                "href": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
+                "docId": "Consensys Zk-EVM/data-feeds/publishing-data"
               }
             ]
           },
