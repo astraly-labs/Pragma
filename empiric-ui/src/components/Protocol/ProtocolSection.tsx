@@ -94,18 +94,10 @@ export const protocols: Protocol[] = [
   {
     name: "Carmine Options",
     category: "Options",
-    src: "/assets/protocols/carmine.png",
+    src: "/assets/protocols/carmine.svg",
     description:
       "Carmine Options is an Automated Market Maker enabling anyone to buy and sell options at a fair price.",
     href: "https://carmine.finance/",
-  },
-  {
-    name: "CygnusDAO",
-    category: "Lending",
-    src: "/assets/protocols/cygnus.png",
-    description:
-      "CygnusDAO is a decentralized stablecoin lending and leveraged yield farming protocol. Users simply deposit LP tokens and borrow stablecoins, while CygnusDAO autocompounds their leveraged rewards.",
-    href: "https://cygnusdao.finance/",
   },
 ];
 
