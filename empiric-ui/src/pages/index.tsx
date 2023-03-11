@@ -28,10 +28,10 @@ const stats = [
     label: "Data feeds",
     value: "20+",
   },
-  {
-    label: "Seed round",
-    value: "$7M",
-  },
+  // {
+  //   label: "Seed round",
+  //   value: "$7M",
+  // },
 ];
 
 // const dataPublishers: Logo[] = [

@@ -24,28 +24,28 @@ import {
 } from '@heroicons/react/outline'
 
 export const actions = [
-  {
-    title: 'What is Empiric',
-    href: '#',
-    icon: InformationCircleIcon,
-    to: './docs/introduction',
-    text: `Learn about the Empiric Network protocol. Core concepts, vision and next developments.`,
-  },
-  {
-    title: 'Use Empiric',
-    href: '#',
-    icon: BookOpenIcon,
-    to: './docs/starknet/data-feeds/starknet-quickstart',
-    text: `Get started using Empiric. Integrate Price feeds, VRF and more in your smart-contracts.`,
-  },
-  {
-    title: 'Quickstart',
-    href: '#',
-    icon: QuestionMarkCircleIcon,
-    to: './',
-    text: `New to Validity Rollups? Get started right now and explore the key concepts using high computation.`,
-  },
-]
+	{
+		title: "What is Empiric",
+		href: "#",
+		icon: InformationCircleIcon,
+		to: "./docs/introduction",
+		text: `Learn about the Empiric Network protocol. Core concepts, vision and next developments.`,
+	},
+	{
+		title: "Use Empiric",
+		href: "#",
+		icon: BookOpenIcon,
+		to: "./docs/starknet/data-feeds/consuming-data",
+		text: `Get started using Empiric. Integrate Price feeds, VRF and more in your smart-contracts.`,
+	},
+	{
+		title: "Quickstart",
+		href: "#",
+		icon: QuestionMarkCircleIcon,
+		to: "./docs/howItWorks/architecture",
+		text: `New to Validity Rollups? Get started right now and explore the key concepts using high computation.`,
+	},
+];
 
 export const github = [
   {

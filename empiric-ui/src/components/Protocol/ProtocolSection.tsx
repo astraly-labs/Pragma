@@ -7,6 +7,7 @@ export const protocolCategories = [
   "Lending",
   "Social Wallet",
   "Infrastructure",
+  "Options",
 ] as const;
 
 export interface Protocol {
@@ -18,14 +19,14 @@ export interface Protocol {
 }
 
 export const protocols: Protocol[] = [
-  {
-    name: "Magnety",
-    category: "Social Wallet",
-    src: "/assets/protocols/magnety.webp",
-    description:
-      "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
-    href: "https://linktr.ee/Magnety",
-  },
+  // {
+  //   name: "Magnety",
+  //   category: "Social Wallet",
+  //   src: "/assets/protocols/magnety.webp",
+  //   description:
+  //     "Magnety is an asset management system allowing anyone, such as investment groups, DAOs, or individuals to get the most out of DeFi on Starknet & Ethereum through an easy-to-use platform.",
+  //   href: "https://linktr.ee/Magnety",
+  // },
   {
     name: "zkLend",
     category: "Lending",
@@ -81,6 +82,22 @@ export const protocols: Protocol[] = [
     description:
       " Nostra is a versatile liquidity protocol for lending and borrowing. On top of its basic use-case, Nostra has many innovative features designed to maximize capital efficiency and minimize liquidity risk.",
     href: "https://nostra.finance/",
+  },
+  {
+    name: "CygnusDAO",
+    category: "Lending",
+    src: "/assets/protocols/cygnus.png",
+    description:
+      "CygnusDAO is a decentralized stablecoin lending and leveraged yield farming protocol. Users simply deposit LP tokens and borrow stablecoins, while CygnusDAO autocompounds their leveraged rewards.",
+    href: "https://cygnusdao.finance/",
+  },
+  {
+    name: "Carmine Options",
+    category: "Options",
+    src: "/assets/protocols/carmine.png",
+    description:
+      "Carmine Options is an Automated Market Maker enabling anyone to buy and sell options at a fair price.",
+    href: "https://carmine.finance/",
   },
   {
     name: "CygnusDAO",
