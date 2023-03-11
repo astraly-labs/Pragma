@@ -64,6 +64,9 @@ class CexFetcher(PublisherInterfaceT):
             if asset["type"] != "SPOT":
                 logger.debug(f"Skipping CEX for non-spot asset {asset}")
                 continue
+            if asset["pair"][0] == "USDC":
+                logger.debug(f"Skipping Coinbase for USDC asset {asset}")
+                continue
             entries.append(asyncio.ensure_future(self._fetch_pair(asset, session)))
         return await asyncio.gather(*entries, return_exceptions=True)
 
