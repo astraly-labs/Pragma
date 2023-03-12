@@ -9,7 +9,7 @@ from starkware.cairo.common.math import (
     assert_nn,
     assert_not_equal,
     assert_not_zero,
-    assert_le,
+    assert_le_felt,
     unsigned_div_rem,
 )
 from starkware.cairo.common.math_cmp import is_not_zero, is_le
@@ -976,7 +976,7 @@ namespace Oracle {
         let entry = entry_ptr[0];
 
         with_attr error_message("Oracle: Existing entry is more recent") {
-            assert_le(entry.base.timestamp, new_entry.base.timestamp);
+            assert_le_felt(entry.base.timestamp, new_entry.base.timestamp);
         }
 
         if (entry.base.timestamp == 0) {

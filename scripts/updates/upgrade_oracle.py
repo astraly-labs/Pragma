@@ -59,7 +59,7 @@ async def main():
     invocation = await contract.functions["upgrade"].invoke(
         declared_contract_class_hash, max_fee=int(1e16)
     )
-    print(invocation.hash)
+    print(hex(invocation.hash))
     await invocation.wait_for_acceptance()
 
     print(f"Upgraded oracle proxy with class hash: {hex(declared_contract_class_hash)}")
