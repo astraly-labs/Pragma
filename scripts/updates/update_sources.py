@@ -4,7 +4,7 @@ import os
 from empiric.core.client import EmpiricClient
 
 publishers = ["EMPIRIC"]
-sources_to_add = [["KAIKO"]]
+sources_to_add = [["DEFILLAMA"]]
 NETWORK = "testnet"
 
 

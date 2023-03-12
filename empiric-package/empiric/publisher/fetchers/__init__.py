@@ -7,3 +7,4 @@ from .okx import OkxFetcher
 from .coingecko import CoingeckoFetcher
 from .gemini import GeminiFetcher
 from .thegraph import TheGraphFetcher
+from .defillama import DefillamaFetcher

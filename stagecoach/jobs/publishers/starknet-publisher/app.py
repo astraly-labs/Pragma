@@ -12,7 +12,8 @@ from empiric.publisher.fetchers import (
     CexFetcher,
     CoinbaseFetcher,
     AscendexFetcher,
-    KaikoFetcher
+    KaikoFetcher,
+    DefillamaFetcher
 )
 
 logger = get_stream_logger()
@@ -65,10 +66,11 @@ async def _handler(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 AscendexFetcher,
+                DefillamaFetcher
             )
         ]
     )
-    publisher_client.add_fetcher(KaikoFetcher(assets, PUBLISHER, KAIKO_API_KEY))
+    # publisher_client.add_fetcher(KaikoFetcher(assets, PUBLISHER, KAIKO_API_KEY))
     
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
