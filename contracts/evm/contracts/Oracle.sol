@@ -211,6 +211,32 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
+    function getLastCheckpointIndex(bytes32 pairId)
+        public
+        view
+        returns (uint256)
+    {
+        return checkpointIndex[pairId].length;
+    }
+
+    function getLastSpotCheckpointBefore(bytes32 pair_id, uint256 timestamp)
+        public
+        view
+        returns (Checkpoint memory)
+    {
+        Checkpoint[] memory checkpointsForPair = checkpoints[pair_id];
+        uint256 checkpointIndex = getLastCheckpointIndex(pair_id);
+        if (checkpointIndex == 0) {
+            return Checkpoint(0, 0, AggregationMode.None, 0);
+        }
+        Checkpoint memory checkpoint = checkpointsForPair[checkpointIndex - 1];
+        if (checkpoint.timestamp > timestamp) {
+            return Checkpoint(0, 0, AggregationMode.None, 0);
+        }
+        return checkpoint;
+    }
+
+
     function _aggregateSpotEntries(SpotEntryStorage[] memory entries)
         internal
         pure
