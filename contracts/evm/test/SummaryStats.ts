@@ -1,12 +1,11 @@
+import {expect} from "chai";
+import {ethers} from "hardhat";
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { expect } from "chai";
-import { ethers } from "hardhat";
-import { Oracle } from "../typechain-types";
-import { OracleInterface } from "../typechain-types/Oracle";
 
-describe("Oracle", function () {
-  async function deployContractsFixture() {
-    
+describe('SummaryStats', function () {
+    async function deployContractsFixture() {
+    const blockNumBefore = await ethers.provider.getBlockNumber();
+    const blockBefore = await ethers.provider.getBlock(blockNumBefore);
     const timestampBefore = await time.latest();
 
     const [owner, otherAccount] = await ethers.getSigners();
@@ -109,6 +108,4 @@ describe("Oracle", function () {
       );
       expect(response2.numSourcesAggregated).to.equal(2);
       expect(response2.price).to.equal(10500000000);
-    });
-  });
-});
+}

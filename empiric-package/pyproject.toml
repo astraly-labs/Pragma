@@ -13,7 +13,7 @@ description = "Core package for rollup-native Empiric Network"
 readme = "README.md"
 homepage = "https://empiric.network"
 repository = "https://github.com/Astraly-Labs/Empiric"
-documentation = "https://docs.empiric.network"
+documentation = "https://docs.empiric.network" 
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
