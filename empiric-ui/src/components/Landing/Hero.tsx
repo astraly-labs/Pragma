@@ -11,14 +11,14 @@ const Hero = () => (
       <br />
       Data Infrastructure
     </h1>
-    <p className="mt-10 max-w-7xl text-xl text-slate-700 sm:mt-12 sm:text-2xl">
+    {/* <p className="mt-10 max-w-7xl text-xl text-slate-700 sm:mt-12 sm:text-2xl">
       In strategic partnership with
       <img
         className="mt-3 inline w-36 sm:ml-3 sm:mt-0 sm:w-44"
         src="/assets/starkware.svg"
         alt="Starkware"
       />
-    </p>
+    </p> */}
   </header>
 );
 

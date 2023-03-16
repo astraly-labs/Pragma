@@ -24,7 +24,7 @@ const content: FooterColumn[] = [
     links: [
       {
         title: "Documentation",
-        href: "https://docs.empiric.network/quickstart",
+        href: "https://docs.empiric.network/",
         external: true,
       },
       {
