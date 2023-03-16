@@ -10,10 +10,9 @@ import {
 } from "../typechain-types";
 
 describe("Oracle", function () {
-	async function deployContractsFixture() {
-		const blockNumBefore = await ethers.provider.getBlockNumber();
-		const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-		const timestampBefore = await time.latest();
+  async function deployContractsFixture() {
+    
+    const timestampBefore = await time.latest();
 
 		const [owner, otherAccount] = await ethers.getSigners();
 

@@ -1,9 +1,11 @@
 pragma solidity ^0.8.9;
 
 
-import "./interfaces/IOracle.sol";
+import "../../interfaces/IOracle.sol";
+import "../../interfaces/ISummaryStats.sol";
+import "../../lib/time_series/stats/metrics.sol";
 
-contract SummaryStats is IOracle {
+contract SummaryStats is IOracle, ISummaryStats {
     IOracle public oracle;
     function calculateVolatility (
         bytes32 key, 
@@ -36,13 +38,14 @@ contract SummaryStats is IOracle {
         if (skipFrequency ==0) {
             skipFrequency = 1;
         }
+        uint256 r = (endIndex-startIndex)%numSamples;
         if (r*2>=numSamples){
             skipFrequency=skipFrequency+1;
         }
         uint256 totalSamples = (endIndex-startIndex)/skipFrequency;
         TickElem[] memory tickElems;
         tickElems = _make_array(key,endIndex,startIndex,skipFrequency);
-        uint256 volatility = volatility(tickElems);
+        uint256 volatility = Metrics.volatility(tickElems);
         return volatility;
 
 
