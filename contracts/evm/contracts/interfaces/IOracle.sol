@@ -38,4 +38,18 @@ interface IOracle {
     );
     event SubmittedSpotEntry(SpotEntry newEntry);
     event CheckpointSpotEntry(Checkpoint cp);
+
+    function getLastCheckpointIndex(
+        bytes32 pairID
+    ) external view returns (uint256);
+
+    function getLastSpotCheckpointBefore(
+        bytes32 pairID,
+        uint256 timestamp
+    ) external view returns (Checkpoint memory, uint256);
+    
+    function getSpotCheckpoint(
+        bytes32 pairID,
+        uint256 index
+    ) external view returns (Checkpoint memory);
 }

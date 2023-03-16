@@ -5,13 +5,15 @@ import "../../interfaces/IOracle.sol";
 import "../../interfaces/ISummaryStats.sol";
 import "../../lib/time_series/stats/metrics.sol";
 
-contract SummaryStats is IOracle, ISummaryStats {
+contract SummaryStats is ISummaryStats{
     IOracle public oracle;
+    Metrics public metrics;
+    
     function calculateVolatility (
         bytes32 key, 
-        bytes32 startTick, 
-        bytes32 endTick,
-        bytes32 numSamples
+        uint256 startTick, 
+        uint256 endTick,
+        uint256  numSamples
     ) public view returns (
         uint256 
     )
@@ -21,7 +23,7 @@ contract SummaryStats is IOracle, ISummaryStats {
             "Num_samples is too large. Must be <=200"
         );
         uint256 latestCheckpointIndex= oracle.getLastCheckpointIndex(key);
-        (uint256 startCp, uint256 startIndex) = oracle.getLastSpotCheckpointBefore(key,startTick);
+        (IOracle.Checkpoint memory startCp, uint256 startIndex) = oracle.getLastSpotCheckpointBefore(key,startTick);
         uint256 endIndex;
         if (endTick==0){
             endIndex = latestCheckpointIndex;
@@ -42,10 +44,9 @@ contract SummaryStats is IOracle, ISummaryStats {
         if (r*2>=numSamples){
             skipFrequency=skipFrequency+1;
         }
-        uint256 totalSamples = (endIndex-startIndex)/skipFrequency;
         TickElem[] memory tickElems;
         tickElems = _make_array(key,endIndex,startIndex,skipFrequency);
-        uint256 volatility = Metrics.volatility(tickElems);
+        uint256 volatility = metrics.volatility(tickElems);
         return volatility;
 
 
@@ -62,8 +63,8 @@ contract SummaryStats is IOracle, ISummaryStats {
         tickElems = new TickElem[](totalSamples);
         uint256 j = 0;
         for (uint256 i = startIndex; i < endIndex; i=i+skipFrequency) {
-            (uint256 tick, uint256 value) = oracle.getSpotCheckpoint(key, i);
-            tickElems[j] = TickElem(tick, value);
+            IOracle.Checkpoint memory cp = oracle.getSpotCheckpoint(key, i);
+            tickElems[j] = TickElem(cp.timestamp, cp.value);
             j++;
         }
         return tickElems;
