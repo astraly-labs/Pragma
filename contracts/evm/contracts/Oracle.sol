@@ -212,26 +212,34 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         view
         returns (uint256)
     {
-        return checkpointIndex[pairId].length;
+       
+        return checkpointIndex[pairId];
     }
 
     function getLastSpotCheckpointBefore(bytes32 pair_id, uint256 timestamp)
         public
         view
-        returns (Checkpoint memory)
+        returns (Checkpoint memory checkpoint, uint256 checkpointIdx)
     {
         Checkpoint[] memory checkpointsForPair = checkpoints[pair_id];
-        uint256 checkpointIndex = getLastCheckpointIndex(pair_id);
-        if (checkpointIndex == 0) {
-            return Checkpoint(0, 0, AggregationMode.None, 0);
+        uint256 cpIdx = getLastCheckpointIndex(pair_id);
+        require (cpIdx > 0, "No checkpoints found");
+        while (cpIdx > 0) {
+            Checkpoint memory cp = checkpointsForPair[cpIdx - 1];
+            if (cp.timestamp <= timestamp) {
+                return (cp, cpIdx);
+            }
+            cpIdx--;
         }
-        Checkpoint memory checkpoint = checkpointsForPair[checkpointIndex - 1];
-        if (checkpoint.timestamp > timestamp) {
-            return Checkpoint(0, 0, AggregationMode.None, 0);
-        }
-        return checkpoint;
     }
 
+    function getSpotCheckpoint(bytes32 key, uint256 index) 
+        public
+        view
+        returns (Checkpoint memory)
+    {
+        return checkpoints[key][index];
+    }
 
     function _aggregateSpotEntries(SpotEntryStorage[] memory entries)
         internal

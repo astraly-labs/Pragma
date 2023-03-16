@@ -7,11 +7,10 @@ interface ISummaryStats {
     }
 
     function calculateVolatility(
-        address oracleAddress, 
         bytes32 key, 
-        bytes32 startTick, 
-        bytes32 endTick,
-        bytes32 numSamples
+        uint256 startTick, 
+        uint256 endTick,
+        uint256  numSamples
     ) external view returns (
         uint256);
         
