@@ -4,8 +4,6 @@ import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 describe('SummaryStats', function () {
     async function deployContractsFixture() {
-    const blockNumBefore = await ethers.provider.getBlockNumber();
-    const blockBefore = await ethers.provider.getBlock(blockNumBefore);
     const timestampBefore = await time.latest();
 
     const [owner, otherAccount] = await ethers.getSigners();
@@ -109,3 +107,6 @@ describe('SummaryStats', function () {
       expect(response2.numSourcesAggregated).to.equal(2);
       expect(response2.price).to.equal(10500000000);
 }
+    );
+    });
+});
