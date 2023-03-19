@@ -10,7 +10,7 @@ const ProtocolsPage = () => (
   <>
     <NextSeo title="Protocols" />
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50" first>
+      <SectionContainer className="bg-dark" first>
         <Heading
           title="StarkNet's leading protocols"
           subtitle="Meet our users"
@@ -19,10 +19,10 @@ const ProtocolsPage = () => (
           hrefText="Get verifiable data for your project"
         />
       </SectionContainer>
-      <SectionContainer className="sm:!pt-0">
+      <SectionContainer className="bg-black sm:!pt-0">
         <ProtocolSection />
       </SectionContainer>
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-dark">
         <Heading
           title="A few simple lines to integrate"
           subtitle="Try it yourself"
@@ -32,7 +32,7 @@ const ProtocolsPage = () => (
         />
         <Code />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <DefaultCTASection />
       </SectionContainer>
     </div>
