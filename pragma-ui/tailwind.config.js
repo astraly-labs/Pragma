@@ -12,6 +12,16 @@ module.exports = {
         marquee: "marquee 30s linear infinite",
         marquee2: "marquee2 30s linear infinite",
       },
+      colors: {
+        transparent: "transparent",
+        current: "currentColor",
+        white: "#ffffff",
+        primary: "#15C435",
+        secondary: "#00A462",
+        dark: "#0e0e0e",
+        black: "#070707",
+        grey: "#aeaeae",
+      },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },

@@ -92,7 +92,7 @@ const mobileResources = [
 ];
 
 const NavHeader = () => (
-  <Popover className="relative bg-slate-50 px-4 sm:px-6 lg:px-8">
+  <Popover className="relative bg-dark px-4 sm:px-6 lg:px-8">
     <div className="mx-auto max-w-7xl">
       <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10 lg:space-x-0">
         <div className="flex justify-start lg:w-0 lg:flex-1">
@@ -100,7 +100,7 @@ const NavHeader = () => (
             <div>
               <span className="sr-only">Pragma</span>
               <img
-                className="h-12 w-auto sm:h-16"
+                className="h-7 w-auto sm:h-12"
                 src="/pragma-logo.svg"
                 alt="Pragma"
               />
@@ -109,7 +109,7 @@ const NavHeader = () => (
         </div>
         <div className="-my-2 -mr-2 md:hidden">
           {/* To open mobile menu */}
-          <Popover.Button className="inline-flex items-center justify-center rounded-md bg-slate-50 p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+          <Popover.Button className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-dark hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
             <span className="sr-only">Open menu</span>
             <MenuIcon className="h-6 w-6" aria-hidden="true" />
           </Popover.Button>
@@ -119,7 +119,7 @@ const NavHeader = () => (
             <a
               href={resource.href}
               key={resource.name}
-              className="text-base font-medium text-slate-500 hover:text-slate-900"
+              className="text-base font-medium text-grey hover:text-white"
             >
               {resource.name}
             </a>
@@ -147,7 +147,7 @@ const NavHeader = () => (
         focus
         className="absolute inset-x-0 top-0 z-10 origin-top-right transform p-2 transition md:hidden"
       >
-        <div className="divide-y-2 divide-slate-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <div className="divide-y-2 divide-grey rounded-lg bg-dark shadow-lg ring-1 ring-black ring-opacity-5">
           <div className="px-5 pt-5 pb-6">
             <div className="flex items-center justify-between">
               <div>
@@ -158,7 +158,7 @@ const NavHeader = () => (
                 />
               </div>
               <div className="-mr-2">
-                <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Popover.Button className="inline-flex items-center justify-center rounded-md bg-black p-2 text-white hover:bg-dark hover:text-grey focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
                   <span className="sr-only">Close menu</span>
                   <XIcon className="h-6 w-6" aria-hidden="true" />
                 </Popover.Button>
@@ -170,13 +170,13 @@ const NavHeader = () => (
                   <a
                     key={resource.name}
                     href={resource.href}
-                    className="-m-3 flex items-center rounded-md p-3 hover:bg-slate-50"
+                    className="-m-3 flex items-center rounded-md p-3 hover:bg-black"
                   >
                     <resource.icon
-                      className="h-6 w-6 flex-shrink-0 text-indigo-600"
+                      className="h-6 w-6 flex-shrink-0 text-primary"
                       aria-hidden="true"
                     />
-                    <span className="ml-3 text-base font-medium text-slate-900">
+                    <span className="ml-3 text-base font-medium text-grey">
                       {resource.name}
                     </span>
                   </a>
@@ -184,13 +184,13 @@ const NavHeader = () => (
               </nav>
             </div>
           </div>
-          <div className="space-y-6 py-6 px-5">
+          <div className="space-y-2 py-6 px-5">
             <div className="grid grid-cols-2 gap-y-4 gap-x-8">
               {additional.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-slate-900 hover:text-slate-700"
+                  className="text-base font-medium text-grey hover:text-white"
                 >
                   {item.name}
                 </a>
@@ -198,9 +198,9 @@ const NavHeader = () => (
             </div>
             <div className="flex flex-col items-center">
               <SearchBar />
-              <p className="mt-6 text-center text-base font-medium text-slate-500">
+              <p className="mt-6 text-center text-base font-medium text-grey">
                 Need help?{" "}
-                <a href="#" className="text-indigo-600 hover:text-indigo-500">
+                <a href="#" className="text-primary hover:text-secondary">
                   Contact us
                 </a>
               </p>

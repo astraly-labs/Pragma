@@ -101,7 +101,7 @@ const supportedTestnetNetworks: Logo[] = [
 const IndexPage = () => (
   <div className="w-screen">
     <Banner />
-    <SectionContainer className="bg-slate-50" first>
+    <SectionContainer className="bg-dark" first>
       <Hero />
     </SectionContainer>
     {/* <SectionContainer className="bg-slate-50 !pt-0 !pb-32">
@@ -110,7 +110,7 @@ const IndexPage = () => (
         logos={dataPublishers}
       />
     </SectionContainer> */}
-    <SectionContainer className="!pt-0">
+    <SectionContainer className="bg-black !pt-0">
       <AssetsSection />
       <LogoCloud title="Trusted by" logos={protocols} />
     </SectionContainer>

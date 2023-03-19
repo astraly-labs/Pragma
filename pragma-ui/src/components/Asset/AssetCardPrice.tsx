@@ -19,11 +19,11 @@ const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => {
           className="mr-2 h-6 w-6 md:mr-3"
           alt={alt}
         />
-        <div className="inline font-mono">
-          <span className="inline text-lg tracking-wide sm:text-xl md:text-2xl">
+        <div className="inline font-sans">
+          <span className="inline text-lg tracking-wide text-primary sm:text-xl md:text-2xl">
             {Math.floor(price)}
           </span>
-          <span className="hidden sm:inline md:text-lg">
+          <span className="hidden text-primary sm:inline md:text-lg">
             {(price - Math.floor(price))
               .toFixed(DECIMALS_TO_SHOW)
               .toString()

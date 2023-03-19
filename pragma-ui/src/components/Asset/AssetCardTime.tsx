@@ -24,8 +24,8 @@ const AssetCardTime: React.FC<AssetNameProps> = ({ lastUpdatedTimestamp }) => {
   setInterval(updateCurrentTimestampSeconds, 1000);
   return (
     <div className="flex flex-row items-center space-x-2 md:space-x-3">
-      <ClockIcon className="w-6 text-slate-900" />
-      <div className="font-mono text-base text-slate-900">
+      <ClockIcon className="w-6 text-grey" />
+      <div className="font-sans text-base text-grey">
         <span className="sm:text-xl md:text-2xl">
           {minutesSinceUpdate}:{secondsSinceUpdate < 10 && "0"}
           {secondsSinceUpdate}
