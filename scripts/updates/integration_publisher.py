@@ -2,24 +2,24 @@ import asyncio
 import os
 import traceback
 
-from empiric.core.logger import get_stream_logger
-from empiric.core.types import INTEGRATION
-from empiric.core.utils import log_entry
-from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
-from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import BitstampFetcher, GeminiFetcher
+from pragma.core.logger import get_stream_logger
+from pragma.core.types import INTEGRATION
+from pragma.core.utils import log_entry
+from pragma.publisher.assets import get_spot_asset_spec_for_pair_id
+from pragma.publisher.client import PragmaPublisherClient
+from pragma.publisher.fetchers import BitstampFetcher, GeminiFetcher
 
 logger = get_stream_logger()
 
 
 async def publish_all(assets):
 
-    exit_on_error = os.environ.get("__EMPIRIC_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
+    exit_on_error = os.environ.get("__PRAGMA_PUBLISHER_EXIT_ON_ERROR__") == "TRUE"
 
     publisher = os.environ.get("PUBLISHER")
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         network=INTEGRATION,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,

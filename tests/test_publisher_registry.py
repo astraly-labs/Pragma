@@ -5,7 +5,7 @@ from constants import (
     CAIRO_PATH,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
 )
-from empiric.core.utils import str_to_felt
+from pragma.core.utils import str_to_felt
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starkware_utils.error_handling import StarkException

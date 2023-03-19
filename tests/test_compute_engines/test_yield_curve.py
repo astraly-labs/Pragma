@@ -10,8 +10,8 @@ from constants import (
     PUBLISHER_REGISTRY_CONTRACT_FILE,
     YIELD_CURVE_CONTRACT_FILE,
 )
-from empiric.core.entry import FutureEntry, GenericEntry, SpotEntry
-from empiric.core.utils import str_to_felt
+from pragma.core.entry import FutureEntry, GenericEntry, SpotEntry
+from pragma.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,
@@ -244,7 +244,7 @@ async def initialized_contracts(contracts, admin_signer, source, publisher):
     await admin_signer.send_transaction(
         admin_account,
         yield_curve.contract_address,
-        "set_future_spot_empiric_source_key",
+        "set_future_spot_pragma_source_key",
         [source],
     )
 

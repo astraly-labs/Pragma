@@ -7,10 +7,10 @@ from entry.structs import (
     GenericEntry,
     Pair,
     Currency,
-    EmpiricPricesResponse,
+    PragmaPricesResponse,
 )
 
-namespace EmpiricAggregationModes {
+namespace PragmaAggregationModes {
     const MEDIAN = 84959893733710;  // str_to_felt("MEDIAN")
 }
 
@@ -43,7 +43,7 @@ namespace IOracle {
     }
 
     func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
-        prices_response_len: felt, prices_response: EmpiricPricesResponse*
+        prices_response_len: felt, prices_response: PragmaPricesResponse*
     ) {
     }
 

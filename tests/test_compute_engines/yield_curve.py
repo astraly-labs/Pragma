@@ -2,10 +2,10 @@ import asyncio
 import time
 from collections import namedtuple
 
-from empiric.core.client import EmpiricClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.types import AggregationMode
-from empiric.core.utils import str_to_felt
+from pragma.core.client import PragmaClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.types import AggregationMode
+from pragma.core.utils import str_to_felt
 
 logger = get_stream_logger()
 
@@ -75,7 +75,7 @@ def calculate_future_spot_yield_point(
 
 
 async def get_yield_points(output_decimals):
-    client = EmpiricClient()
+    client = PragmaClient()
 
     yield_points = []
 

@@ -2,9 +2,9 @@ import asyncio
 import os
 import time
 
-from empiric.core.client import EmpiricClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import str_to_felt
+from pragma.core.client import PragmaClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import str_to_felt
 
 logger = get_stream_logger()
 
@@ -20,7 +20,7 @@ yield_curve_address = 0x06DC5481AAA92AC4C00E33465BB327814261C4B36322A6858C693F4E
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricClient(
+    admin_client = PragmaClient(
         account_private_key=admin_private_key,
     )
     for on_key in on_keys:
@@ -32,9 +32,9 @@ async def main():
         time.sleep(1)  # sleep for nonce
 
     result = await admin_client.send_transaction(
-        yield_curve_address, "set_future_spot_empiric_source_key", [str_to_felt("FTX")]
+        yield_curve_address, "set_future_spot_pragma_source_key", [str_to_felt("FTX")]
     )
-    logger.info(f"Set future/spot empiric source-key with tx: {result}")
+    logger.info(f"Set future/spot pragma source-key with tx: {result}")
     # TODO (rlkelly): let's avoid this
     time.sleep(1)  # sleep for nonce
 

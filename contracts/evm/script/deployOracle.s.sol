@@ -71,7 +71,7 @@ contract deployOracle is Script {
         publisherRegistry = new PublisherRegistry();
 
         publisherRegistry.addPublisher(
-            "EMPIRIC",
+            "PRAGMA",
             0xC945cf53d9Ab754a3F5EE20030C78FE5D8Ce0010
         );
 
@@ -81,7 +81,7 @@ contract deployOracle is Script {
         sourcesArray[2] = (bytes32("GEMINI"));
         sourcesArray[3] = (bytes32("COINBASE"));
 
-        publisherRegistry.addSourcesForPublisher("EMPIRIC", sourcesArray);
+        publisherRegistry.addSourcesForPublisher("PRAGMA", sourcesArray);
 
         // Deploy the Oracle contract
         oracle = new Oracle();

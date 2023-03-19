@@ -2,7 +2,7 @@ name: Run test on integration net
 on:
   workflow_dispatch:
   schedule:
-    - cron: "40 6,18 * * *"
+    - cron: '40 6,18 * * *'
 
 jobs:
   publish_and_consume_on_integration:
@@ -16,23 +16,23 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.9"
-          cache: "pip"
-          cache-dependency-path: "requirements.txt"
+          python-version: '3.9'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --upgrade --upgrade-strategy eager
           pip install -r dev-requirements.txt --upgrade --upgrade-strategy eager
-          pip install -e empiric-package
+          pip install -e pragma-package
 
       - name: Publish data
         env:
-          PUBLISHER: empiric
+          PUBLISHER: pragma
           PUBLISHER_PRIVATE_KEY: ${{ secrets.INTEGRATION_PUBLISHER_PRIVATE_KEY }}
-          PUBLISHER_ADDRESS: "3053905924911392281185613487163536321775910383295124523151415438844445678030"
-          __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__: "TRUE"
+          PUBLISHER_ADDRESS: '3053905924911392281185613487163536321775910383295124523151415438844445678030'
+          __PRAGMA_PUBLISHER_EXIT_ON_ERROR__: 'TRUE'
         run: python stagecoach/jobs/publishers/examples/integration_publisher.py
 
       - name: Wait for transaction to be accepted

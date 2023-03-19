@@ -1,6 +1,6 @@
 import os
 
-from empiric.cli.randomness import handle_random
+from pragma.cli.randomness import handle_random
 
 
 def handler(event, context):

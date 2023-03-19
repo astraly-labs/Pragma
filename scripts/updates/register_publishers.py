@@ -1,8 +1,8 @@
 import asyncio
 import os
 
-from empiric.core.client import EmpiricClient
-from empiric.core.utils import str_to_felt
+from pragma.core.client import PragmaClient
+from pragma.core.utils import str_to_felt
 
 network = os.environ.get("NETWORK")
 
@@ -12,7 +12,7 @@ TESTNET
 if network == "testnet":
     publishers = [
         "TESTING",
-        "EMPIRIC",
+        "PRAGMA",
         "EQUILIBRIUM",
         "CMT",
         "ARGENT",
@@ -47,7 +47,7 @@ TESTNET2
 """
 if network == "testnet2":
     publishers = [
-        "EMPIRIC",
+        "PRAGMA",
         "TEST",
     ]
     publishers_sources = [
@@ -63,7 +63,7 @@ if network == "testnet2":
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricClient(
+    admin_client = PragmaClient(
         network=network,
         account_private_key=admin_private_key,
         account_contract_address=admin_address,

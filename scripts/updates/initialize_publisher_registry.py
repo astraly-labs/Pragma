@@ -1,9 +1,9 @@
 import asyncio
 import os
 
-from empiric.core.client import EmpiricClient
+from pragma.core.client import PragmaClient
 
-publishers = ["EMPIRIC"]
+publishers = ["PRAGMA"]
 publisher_address = [0x06F40A7CBA2E500321519ACC0E8C6554FC19DA93D7F46BC65637E9865752D4AE]
 publisher_sources = [["CEX", "BITSTAMP", "COINBASE"]]
 
@@ -13,7 +13,7 @@ async def main():
     admin_contract_address = (
         0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77
     )
-    admin_client = EmpiricClient(
+    admin_client = PragmaClient(
         network="mainnet",
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,

@@ -3,10 +3,10 @@ import json
 import os
 
 import boto3
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import currency_pair_to_pair_id
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.client import EmpiricPublisherClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import currency_pair_to_pair_id
+from pragma.publisher.assets import PRAGMA_ALL_ASSETS
+from pragma.publisher.client import PragmaPublisherClient
 
 logger = get_stream_logger()
 
@@ -14,7 +14,7 @@ SECRET_NAME = os.environ["SECRET_NAME"]
 
 
 def handler(event, context):
-    invocation = asyncio.run(_handler(EMPIRIC_ALL_ASSETS))
+    invocation = asyncio.run(_handler(PRAGMA_ALL_ASSETS))
     return {
         "result": invocation,
     }
@@ -39,7 +39,7 @@ async def _handler(assets):
         currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "SPOT"
     ]
 
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         account_private_key=private_key,
         account_contract_address=account_address,
     )

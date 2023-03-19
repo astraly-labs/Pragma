@@ -12,7 +12,7 @@ from entry.structs import (
     Pair,
     SpotEntry,
     BaseEntry,
-    EmpiricPricesResponse,
+    PragmaPricesResponse,
     FutureEntry,
     GenericEntry,
 )

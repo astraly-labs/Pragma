@@ -1,9 +1,9 @@
 import asyncio
 import os
 
-from empiric.core.client import EmpiricClient
+from pragma.core.client import PragmaClient
 
-publishers = ["EMPIRIC"]
+publishers = ["PRAGMA"]
 sources_to_add = [["DEFILLAMA"]]
 NETWORK = "testnet"
 
@@ -13,7 +13,7 @@ async def main():
     admin_contract_address = (
         956631751072274915798544178446858402482160883188347933332347731459244945425
     )
-    admin_client = EmpiricClient(
+    admin_client = PragmaClient(
         network=NETWORK,
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,

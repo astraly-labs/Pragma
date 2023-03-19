@@ -52,7 +52,7 @@ func request_my_randomness{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     requestor_address, request_id, random_words_len, random_words: felt*
 ) {
-    // Have to make sure that the caller is the Empiric Randomness Oracle contract
+    // Have to make sure that the caller is the Pragma Randomness Oracle contract
     let (caller_address) = get_caller_address();
     assert ORACLE_ADDRESS = caller_address;
 

@@ -59,11 +59,11 @@ describe("Oracle", function () {
 		const oracleProxy = oracle.attach(proxy.address);
 
 		await publisherRegistry.addPublisher(
-			ethers.utils.formatBytes32String("EMPIRIC"),
+			ethers.utils.formatBytes32String("PRAGMA"),
 			owner.address
 		);
 		await publisherRegistry.addSourcesForPublisher(
-			ethers.utils.formatBytes32String("EMPIRIC"),
+			ethers.utils.formatBytes32String("PRAGMA"),
 			[
 				ethers.utils.formatBytes32String("SOURCE1"),
 				ethers.utils.formatBytes32String("SOURCE2"),
@@ -90,7 +90,7 @@ describe("Oracle", function () {
 				base: {
 					timestamp: timestampBefore + 60,
 					source: ethers.utils.formatBytes32String("SOURCE1"),
-					publisher: ethers.utils.formatBytes32String("EMPIRIC"),
+					publisher: ethers.utils.formatBytes32String("PRAGMA"),
 				},
 				pairId: ethers.utils.formatBytes32String("ETH/USD"),
 				price: 10000000000,
@@ -109,7 +109,7 @@ describe("Oracle", function () {
 				base: {
 					timestamp: timestampBefore + 60,
 					source: ethers.utils.formatBytes32String("SOURCE2"),
-					publisher: ethers.utils.formatBytes32String("EMPIRIC"),
+					publisher: ethers.utils.formatBytes32String("PRAGMA"),
 				},
 				pairId: ethers.utils.formatBytes32String("ETH/USD"),
 				price: 11000000000,

@@ -412,7 +412,7 @@
     "0x5d6641f82de8dd9bb87d8658a365fc0d16ad26a68e580ef2be9a3e1a139e8dd6",
     "0xbc0449b8a8edd0e1d0323038f3d1692d4de5e0b6ae4c8fd70573658760c6e568"
   ],
-  "path": "/Users/matthall/Documents/Empiric/contracts/evm/broadcast/deployOracle.s.sol/59140/run-latest.json",
+  "path": "/Users/matthall/Documents/Pragma/contracts/evm/broadcast/deployOracle.s.sol/59140/run-latest.json",
   "returns": {},
   "timestamp": 1676890669,
   "chain": 59140,

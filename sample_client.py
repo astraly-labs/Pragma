@@ -3,10 +3,10 @@ from argparse import ArgumentParser
 from datetime import datetime
 
 import typing_extensions
-from empiric.core import AggregationMode, EmpiricClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.types import TESTNET, Network
-from empiric.core.utils import currency_pair_to_pair_id
+from pragma.core import AggregationMode, PragmaClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.types import TESTNET, Network
+from pragma.core.utils import currency_pair_to_pair_id
 
 
 async def main(network: Network, throw_if_no_data: bool):
@@ -16,7 +16,7 @@ async def main(network: Network, throw_if_no_data: bool):
     pair_id = currency_pair_to_pair_id(*asset_pair)
     aggregation_mode = AggregationMode.MEDIAN
 
-    client = EmpiricClient(network=network)
+    client = PragmaClient(network=network)
     (
         value,
         decimals,

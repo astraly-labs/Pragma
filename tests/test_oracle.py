@@ -10,9 +10,9 @@ from constants import (
     PROXY_CONTRACT_FILE,
     PUBLISHER_REGISTRY_CONTRACT_FILE,
 )
-from empiric.core.entry import SpotEntry
-from empiric.core.types import AggregationMode
-from empiric.core.utils import str_to_felt
+from pragma.core.entry import SpotEntry
+from pragma.core.types import AggregationMode
+from pragma.core.utils import str_to_felt
 from starkware.starknet.business_logic.state.state_api_objects import BlockInfo
 from starkware.starknet.compiler.compile import (
     compile_starknet_files,

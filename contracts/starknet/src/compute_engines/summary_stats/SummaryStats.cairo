@@ -6,7 +6,7 @@ from starkware.cairo.common.math import unsigned_div_rem
 
 from time_series.prelude import TickElem
 from time_series.stats.metrics import extract_values
-from oracle.IOracle import IOracle, EmpiricAggregationModes
+from oracle.IOracle import IOracle, PragmaAggregationModes
 from compute_engines.summary_stats.library import SummaryStats
 
 @storage_var

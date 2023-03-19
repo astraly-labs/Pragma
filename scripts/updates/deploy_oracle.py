@@ -1,8 +1,8 @@
 import asyncio
 import os
 
-from empiric.core import Currency, Pair
-from empiric.core.client import EmpiricClient
+from pragma.core import Currency, Pair
+from pragma.core.client import PragmaClient
 from starknet_py.contract import Contract, ContractFunction
 
 admin_contract_address = (
@@ -60,7 +60,7 @@ pairs = [
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricClient(
+    admin_client = PragmaClient(
         network="mainnet",
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,

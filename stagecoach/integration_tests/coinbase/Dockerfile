@@ -1,4 +1,4 @@
-FROM astralylabs/empiric-publisher:test
+FROM astralylabs/pragma-publisher:test
 
 COPY coinbase_publisher.py .
 

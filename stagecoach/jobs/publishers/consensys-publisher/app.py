@@ -3,17 +3,17 @@ import json
 import os
 
 import boto3
-from empiric.core import SpotEntry
-from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
-from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
+from pragma.core import SpotEntry
+from pragma.core.logger import get_stream_logger
+from pragma.publisher.assets import get_spot_asset_spec_for_pair_id
+from pragma.publisher.client import PragmaPublisherClient
+from pragma.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
     AscendexFetcher,
 )
-from empiric.core.mixins.evm import EvmHelper
+from pragma.core.mixins.evm import EvmHelper
 
 logger = get_stream_logger()
 
@@ -51,7 +51,7 @@ def _get_pvt_key():
 
 async def _handler(assets):
     publisher_private_key = _get_pvt_key()
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         network=NETWORK,
     )
     publisher_client.add_fetchers(

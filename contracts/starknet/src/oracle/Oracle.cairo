@@ -12,7 +12,7 @@ from entry.structs import (
     SpotEntry,
     Pair,
     Checkpoint,
-    EmpiricPricesResponse,
+    PragmaPricesResponse,
 )
 from oracle.library import Oracle
 from proxy.library import Proxy
@@ -136,10 +136,10 @@ func get_spot_median_for_sources{
 func get_spot_median_multi{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
-    prices_response_len: felt, prices_response: EmpiricPricesResponse*
+    prices_response_len: felt, prices_response: PragmaPricesResponse*
 ) {
     alloc_locals;
-    let (prices_response: EmpiricPricesResponse*) = alloc();
+    let (prices_response: PragmaPricesResponse*) = alloc();
     get_spot_median_multi_loop(pair_ids_len, pair_ids, 0, 0, prices_response);
     return (pair_ids_len, prices_response);
 }
@@ -151,7 +151,7 @@ func get_spot_median_multi_loop{
     pair_ids: felt*,
     idx: felt,
     prices_response_len: felt,
-    prices_response: EmpiricPricesResponse*,
+    prices_response: PragmaPricesResponse*,
 ) {
     alloc_locals;
     if (idx == pair_ids_len) {
@@ -162,14 +162,14 @@ func get_spot_median_multi_loop{
     let (price, decimals, last_updated_timestamp, num_sources_aggregated) = get_spot_median(
         pair_id
     );
-    let new_price_response = EmpiricPricesResponse(
+    let new_price_response = PragmaPricesResponse(
         price=price,
         decimals=decimals,
         last_updated_timestamp=last_updated_timestamp,
         num_sources_aggregated=num_sources_aggregated,
     );
 
-    // assert [prices_response + idx * EmpiricPricesResponse.SIZE] = new_price_response;
+    // assert [prices_response + idx * PragmaPricesResponse.SIZE] = new_price_response;
     // assert [prices_response] = new_price_response;
     assert prices_response[idx] = new_price_response;
     return get_spot_median_multi_loop(

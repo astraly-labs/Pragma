@@ -1,7 +1,0 @@
-[[plugins]]
-package = "@netlify/plugin-nextjs"
-
-[build]
-base = "empiric-ui/"
-publish = ".next"
-command = "yarn build"

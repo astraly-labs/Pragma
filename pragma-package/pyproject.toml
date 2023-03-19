@@ -1,0 +1,42 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "pragma-network"
+version = "1.4.16"
+authors = ["Astraly Labs <contact@pragmaoracle.com>"]
+description = "Core package for rollup-native Pragma Oracle"
+readme = "README.md"
+homepage = "https://pragma.network"
+repository = "https://github.com/Astraly-Labs/Pragma"
+documentation = "https://docs.pragma.network"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+packages = [
+  {include = "pragma"},
+  {include = "cli", from = "pragma"},
+  {include = "core", from = "pragma"},
+  {include = "publisher", from = "pragma"},
+  {include = "test", from = "pragma"},
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+"starknet.py" = "0.13.0a0"
+cairo-lang = "0.10.3"
+typer = "0.6.1"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+flake8 = "*"
+
+[tool.poetry.scripts]
+pragma = "pragma.cli:main"
+interface-check = "pragma.test.interface_consistency:main"

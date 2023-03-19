@@ -6,13 +6,13 @@ sidebar_position: 1
 
 ---
 
-Empiric Network offers a verifiable randomness feed that allows protocols to request secure randomness on-chain.
+Pragma Network offers a verifiable randomness feed that allows protocols to request secure randomness on-chain.
 This feed is being rolled out in two phases: In the first phase (currently live) the randomness proof is posted as calldata, allowing anyone to verify it off-chain. See below for more details on how to verify the randomness. This first phase is limited to testnet, and there is no charge for randomness.
 In the second phase, the proof will be verified directly on-chain (coming soon) and requesters will be required to cover gas costs of their callback function plus a small fee to cover the cost of generating randomness.
 
 ## Sample Code
 
-If you are just trying to get started with using randomness, see the self-contained code snippet. If you'd like to use more advanced oracle functions, read on past the code block for further information. You can find a full sample randomness receiver contract [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/randomness/ExampleRandomness.cairo).
+If you are just trying to get started with using randomness, see the self-contained code snippet. If you'd like to use more advanced oracle functions, read on past the code block for further information. You can find a full sample randomness receiver contract [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/randomness/ExampleRandomness.cairo).
 
 ```bash
 %lang starknet
@@ -25,7 +25,7 @@ get_contract_address,
 from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
-const EMPIRIC_RANDOM_ORACLE_ADDRESS = 0x681a206bfb74aa7436b3c5c20d7c9242bc41bc6471365ca9404e738ca8f1f3b;
+const PRAGMA_RANDOM_ORACLE_ADDRESS = 0x681a206bfb74aa7436b3c5c20d7c9242bc41bc6471365ca9404e738ca8f1f3b;
 
 @storage_var
 func min_block_number_storage() -> (min_block_number: felt) {
@@ -56,7 +56,7 @@ func request_my_randomness{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 seed, callback_address, callback_gas_limit, publish_delay, num_words
 ) {
 let (request_id) = IRandomness.request_random(
-EMPIRIC_RANDOM_ORACLE_ADDRESS,
+PRAGMA_RANDOM_ORACLE_ADDRESS,
 seed,
 callback_address,
 callback_gas_limit,
@@ -75,9 +75,9 @@ num_words,
 func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 requestor_address, request_id, random_words_len, random_words: felt\*
 ) {
-// Have to make sure that the caller is the Empiric Randomness Oracle contract
+// Have to make sure that the caller is the Pragma Randomness Oracle contract
 let (caller_address) = get_caller_address();
-assert EMPIRIC_RANDOM_ORACLE_ADDRESS = caller_address;
+assert PRAGMA_RANDOM_ORACLE_ADDRESS = caller_address;
 
     // and that the current block is within publish_delay of the request block
     let (current_block_number) = get_block_number();
@@ -104,11 +104,11 @@ assert EMPIRIC_RANDOM_ORACLE_ADDRESS = caller_address;
 
 ## How Randomness is Generated
 
-Empiric Network's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Random Function using elliptic curves](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06). Their Python implementation is available as [open source code](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
+Pragma's randomness is based off of the [Internet Engineering Task Force's (IETF) Verifiable Random Function using elliptic curves](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vrf-06). Their Python implementation is available as [open source code](https://github.com/nccgroup/draft-irtf-cfrg-vrf-06/blob/master/README.md).
 
-When smart contracts request randomness, they specify a random seed. This seed uniquely determines the randomness, so the Empiric as the VRF provider is not able to manipulate the randomness. However calculating the randomness requires having access to a private key that is not known, so the smart contract (and any other party observing the randomness request) is not able to predict the randomness. Off-chain, the randomness is calculated using the private key and the seed. That randomness and the proof are then sent on-chain, where the unbiased randomness is then available to the smart contract that requested it.
+When smart contracts request randomness, they specify a random seed. This seed uniquely determines the randomness, so the Pragma as the VRF provider is not able to manipulate the randomness. However calculating the randomness requires having access to a private key that is not known, so the smart contract (and any other party observing the randomness request) is not able to predict the randomness. Off-chain, the randomness is calculated using the private key and the seed. That randomness and the proof are then sent on-chain, where the unbiased randomness is then available to the smart contract that requested it.
 
-Empiric Network's verifiable random function (VRF) over a specific elliptic curve, named Curve25519. Most known blockchain implementations of a VRF are using the so-called "Bitcoin curve", or secpk256k1. We chose this algorithm because it is more secure than other commonly used ones (that possibly have backdoors - see [here](https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/#thedownside) and [here](https://blog.cryptographyengineering.com/2013/09/18/the-many-flaws-of-dualecdrbg/)). We chose this curve in particular for two reasons:
+Pragma Network's verifiable random function (VRF) over a specific elliptic curve, named Curve25519. Most known blockchain implementations of a VRF are using the so-called "Bitcoin curve", or secpk256k1. We chose this algorithm because it is more secure than other commonly used ones (that possibly have backdoors - see [here](https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/#thedownside) and [here](https://blog.cryptographyengineering.com/2013/09/18/the-many-flaws-of-dualecdrbg/)). We chose this curve in particular for two reasons:
 
 - Building the tools to perform arithmetic operations on Curve25519 is a premiere for programmable blockchains and theoretically enables compatibility with [all the protocols](https://en.wikipedia.org/wiki/Curve25519#Protocols) that use Curve25519 for digital signatures, such as IPFS, Ripple, Monero, Signal, Protonmail, and many others. This is a great step towards interoperability with StarkNet and it is only possible by leveraging its computational capabilities.
 
@@ -116,18 +116,18 @@ Empiric Network's verifiable random function (VRF) over a specific elliptic curv
 
 ## Verifying The Randomness
 
-As mentioned above, in the first phase of Empiric Network's VRF feed, the randomness proof is posted as calldata, allowing anyone to verify it off-chain.
+As mentioned above, in the first phase of Pragma Network's VRF feed, the randomness proof is posted as calldata, allowing anyone to verify it off-chain.
 
-In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier. Follow these simple steps to verify any randomness provided by Empiric Network:
+In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier. Follow these simple steps to verify any randomness provided by Pragma Network:
 
-1. Install the Empiric Python package `pip install empiric-network `
-2. Run `python3 -m empiric.cli random verify-random <TRANSACTION\*HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
+1. Install the Pragma Python package `pip install pragma-network `
+2. Run `python3 -m pragma.cli random verify-random <TRANSACTION\*HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
 
 ## Technical Specification
 
 ### Function: `request_random`
 
-Allows your smart contract to request randomness. Upon calling the Empiric contract, an event is emitted triggering the randomness and proof to be generated off-chain and then submitted back on-chain, calling the callback function `receive_random_words` on your contract.
+Allows your smart contract to request randomness. Upon calling the Pragma contract, an event is emitted triggering the randomness and proof to be generated off-chain and then submitted back on-chain, calling the callback function `receive_random_words` on your contract.
 
 #### Inputs
 
@@ -177,5 +177,5 @@ Get the status of a randomness request.
 
 #### Returns
 
-- `status_`: status of the request, see [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/randomness/structs.cairo).
+- `status_`: status of the request, see [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/randomness/structs.cairo).
   0=UNINITIALIZED, 1=RECEIVED, 2=FULFILLED, 3=CANCELLED, 4=EXCESSIVE_GAS_NEEDED, 5=ERRORED.

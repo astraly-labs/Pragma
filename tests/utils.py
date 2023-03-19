@@ -1,8 +1,8 @@
 import os
 from typing import List, Union
 
-from empiric.core.entry import SpotEntry
-from empiric.core.utils import str_to_felt
+from pragma.core.entry import SpotEntry
+from pragma.core.utils import str_to_felt
 from nile.signer import TRANSACTION_VERSION, Signer, from_call_to_call_array
 from starkware.starknet.business_logic.execution.objects import Event
 from starkware.starknet.business_logic.fact_state.state import CarriedState

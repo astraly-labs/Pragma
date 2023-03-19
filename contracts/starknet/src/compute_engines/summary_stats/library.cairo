@@ -7,7 +7,7 @@ from starkware.cairo.common.math import assert_nn, unsigned_div_rem, assert_not_
 from starkware.cairo.common.math_cmp import is_le, is_nn
 
 from time_series.prelude import TickElem, mean, variance, volatility, scale_data, FixedPoint
-from oracle.IOracle import IOracle, EmpiricAggregationModes
+from oracle.IOracle import IOracle, PragmaAggregationModes
 
 const SCALED_ARR_SIZE = 30;
 

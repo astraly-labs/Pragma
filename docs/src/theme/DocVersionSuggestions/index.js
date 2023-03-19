@@ -21,7 +21,7 @@ function UnreleasedVersionLabel({ siteTitle, versionLabel }) {
         versionLabel: <strong>{versionLabel}</strong>,
       }}
     >
-      {'This is unreleased documentation for the Empiric Protocol.'}
+      {'This is unreleased documentation for the Pragma Protocol.'}
     </Translate>
   )
 }

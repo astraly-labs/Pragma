@@ -18,7 +18,7 @@ jobs:
 
       - name: Build publisher images locally
         run: |
-          docker build . --target test -t astralylabs/empiric-publisher:test
+          docker build . --target test -t astralylabs/pragma-publisher:test
           docker build stagecoach/integration_tests/publish-all/ -t publish-all --platform linux/amd64
           docker build stagecoach/integration_tests/coinbase/ -t publish-coinbase --platform linux/amd64
 
@@ -28,14 +28,14 @@ jobs:
         run: |
           docker run \
             --env-file stagecoach/integration_tests/publish-all/.env \
-            -e __EMPIRIC_STAGING_ENV__=TRUE\
-            -e __EMPIRIC_PUBLISHER_EXIT_ON_ERROR__=TRUE\
+            -e __PRAGMA_STAGING_ENV__=TRUE\
+            -e __PRAGMA_PUBLISHER_EXIT_ON_ERROR__=TRUE\
             -e NETWORK=testnet2\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             publish-all
           docker run \
             --env-file stagecoach/integration_tests/coinbase/.env \
-            -e __EMPIRIC_STAGING_ENV__=TRUE\
+            -e __PRAGMA_STAGING_ENV__=TRUE\
             -e PUBLISHER_PRIVATE_KEY=${PUBLISHER_PRIVATE_KEY}\
             -e NETWORK=testnet2\
             publish-coinbase

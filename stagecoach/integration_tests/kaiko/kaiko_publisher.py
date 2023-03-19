@@ -1,11 +1,11 @@
 import asyncio
 import os
 
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import log_entry
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import KaikoFetcher
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import log_entry
+from pragma.publisher.assets import PRAGMA_ALL_ASSETS
+from pragma.publisher.client import PragmaPublisherClient
+from pragma.publisher.fetchers import KaikoFetcher
 
 logger = get_stream_logger()
 
@@ -16,11 +16,11 @@ async def main():
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
     api_key = os.environ.get("API_KEY")
 
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
-    kaiko_fetcher = KaikoFetcher(EMPIRIC_ALL_ASSETS, publisher, api_key)
+    kaiko_fetcher = KaikoFetcher(PRAGMA_ALL_ASSETS, publisher, api_key)
     publisher_client.add_fetcher(kaiko_fetcher)
     _entries = await publisher_client.fetch()
     print(_entries)

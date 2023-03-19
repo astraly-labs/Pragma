@@ -73,7 +73,7 @@ struct Checkpoint {
     num_sources_aggregated: felt,
 }
 
-struct EmpiricPricesResponse {
+struct PragmaPricesResponse {
     price: felt,
     decimals: felt,
     last_updated_timestamp: felt,

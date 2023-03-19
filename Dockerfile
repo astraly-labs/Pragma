@@ -16,9 +16,9 @@ WORKDIR /app/
 RUN poetry install --without local
 
 FROM base as test
-COPY empiric-package/ /empiric-package
+COPY pragma-package/ /pragma-package
 RUN poetry install --only local
 
 FROM base as production
-ARG EMPIRIC_PACKAGE_VERSION
-RUN pip install empiric-network==$EMPIRIC_PACKAGE_VERSION
+ARG PRAGMA_PACKAGE_VERSION
+RUN pip install pragma-network==$PRAGMA_PACKAGE_VERSION

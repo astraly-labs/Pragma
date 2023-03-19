@@ -3,11 +3,11 @@ import json
 import os
 
 import boto3
-from empiric.core import SpotEntry
-from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
+from pragma.core import SpotEntry
+from pragma.core.logger import get_stream_logger
+from pragma.publisher.assets import PRAGMA_ALL_ASSETS
+from pragma.publisher.client import PragmaPublisherClient
+from pragma.publisher.fetchers import (
     BitstampFetcher,
     CexFetcher,
     CoinbaseFetcher,
@@ -22,7 +22,7 @@ SECRET_NAME = os.environ["SECRET_NAME"]
 
 
 def handler(event, context):
-    entries_ = asyncio.run(_handler(EMPIRIC_ALL_ASSETS))
+    entries_ = asyncio.run(_handler(PRAGMA_ALL_ASSETS))
     serialized_entries_ = SpotEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
@@ -48,7 +48,7 @@ async def _handler(assets):
     publisher_private_key = _get_pvt_key()
 
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,

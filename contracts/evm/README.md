@@ -1,4 +1,4 @@
-# Empiric EVM Implementation
+# Pragma EVM Implementation
 
 Try running some of the following tasks :
 

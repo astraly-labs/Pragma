@@ -6,7 +6,7 @@ from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starknet_py.net.models import StarknetChainId
 from starknet_py.contract import Contract, ContractFunction
-from empiric.core import Currency, Pair
+from pragma.core import Currency, Pair
 
 ORACLE_ABI = [
     {

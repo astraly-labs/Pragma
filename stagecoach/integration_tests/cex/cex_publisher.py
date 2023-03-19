@@ -1,11 +1,11 @@
 import asyncio
 import os
 
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import log_entry
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
-from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import CexFetcher
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import log_entry
+from pragma.publisher.assets import PRAGMA_ALL_ASSETS
+from pragma.publisher.client import PragmaPublisherClient
+from pragma.publisher.fetchers import CexFetcher
 
 logger = get_stream_logger()
 
@@ -15,11 +15,11 @@ async def main():
     publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"))
 
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
     )
-    cex_fetcher = CexFetcher(EMPIRIC_ALL_ASSETS, publisher)
+    cex_fetcher = CexFetcher(PRAGMA_ALL_ASSETS, publisher)
     publisher_client.add_fetcher(cex_fetcher)
     _entries = await publisher_client.fetch()
 

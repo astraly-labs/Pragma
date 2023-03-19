@@ -997,9 +997,9 @@ gmpy = ["gmpy"]
 gmpy2 = ["gmpy2"]
 
 [[package]]
-name = "empiric-network"
+name = "pragma-network"
 version = "1.4.13"
-description = "Core package for rollup-native Empiric Network"
+description = "Core package for rollup-native Pragma"
 category = "dev"
 optional = false
 python-versions = ">=3.9,<3.10"
@@ -1013,7 +1013,7 @@ typer = "0.6.1"
 
 [package.source]
 type = "directory"
-url = "empiric-package"
+url = "pragma-package"
 
 [[package]]
 name = "eth-abi"

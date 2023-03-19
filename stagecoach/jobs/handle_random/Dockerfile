@@ -1,7 +1,7 @@
 FROM amazon/aws-lambda-python:3.9
 
 RUN yum install -y gcc python-devel gmp-devel git
-RUN pip install empiric-network==1.4.7
+RUN pip install pragma-network==1.4.7
 
 COPY cli-config.ini /cli-config.ini
 

@@ -3,9 +3,9 @@
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 
-from oracle.IEmpiricOracle import IEmpiricOracle, EmpiricAggregationModes
+from oracle.IPragmaOracle import IPragmaOracle, PragmaAggregationModes
 
-const EMPIRIC_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4;
+const PRAGMA_ORACLE_ADDRESS = 0x012fadd18ec1a23a160cc46981400160fbf4a7a5eed156c4669e39807265bcd4;
 const KEY = 19514442401534788;  // str_to_felt("ETH/USD")
 
 @view
@@ -14,8 +14,8 @@ func check_eth_usd_threshold{syscall_ptr: felt*, range_check_ptr}(threshold: fel
 ) {
     alloc_locals;
 
-    let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_spot(
-        EMPIRIC_ORACLE_ADDRESS, KEY, EmpiricAggregationModes.MEDIAN
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IPragmaOracle.get_spot(
+        PRAGMA_ORACLE_ADDRESS, KEY, PragmaAggregationModes.MEDIAN
     );
     let (multiplier) = pow(10, decimals);
 

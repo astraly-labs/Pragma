@@ -5,9 +5,9 @@ import os
 import boto3
 import requests
 import telegram
-from empiric.core.client import EmpiricClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import felt_to_str
+from pragma.core.client import PragmaClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import felt_to_str
 
 logger = get_stream_logger()
 
@@ -47,7 +47,7 @@ async def _handler():
     ignore_publishers = ignore_publishers_str.split(",")
     threshold_wei = int(os.environ.get("THRESHOLD_WEI", 0.5 * 10**18))
     bot = telegram.Bot(token=telegram_bot_token)
-    client = EmpiricClient(network)
+    client = PragmaClient(network)
 
     publishers = [
         publisher

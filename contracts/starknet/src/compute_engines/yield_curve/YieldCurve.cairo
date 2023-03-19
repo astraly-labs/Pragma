@@ -22,7 +22,7 @@ from compute_engines.yield_curve.structs import YieldPoint
 
 const ON_SOURCE_KEY = 20302;  // str_to_felt("ON")
 const FUTURE_SPOT_SOURCE_KEY = 85027764198622664552632148;  // str_to_felt("FUTURE/SPOT")
-const THEGRAPH_EMPIRIC_SOURCE_KEY = 6073180270134120520;  // str_to_felt("THEGRAPH")
+const THEGRAPH_PRAGMA_SOURCE_KEY = 6073180270134120520;  // str_to_felt("THEGRAPH")
 const SECONDS_IN_YEAR = 31536000;  // 365 * 24 * 60 * 60
 const DEFAULT_DECIMALS = 18;
 
@@ -44,7 +44,7 @@ func oracle_address_storage() -> (oracle_address: felt) {
 }
 
 @storage_var
-func future_spot_empiric_source_key_storage() -> (future_spot_empiric_source_key: felt) {
+func future_spot_pragma_source_key_storage() -> (future_spot_pragma_source_key: felt) {
 }
 
 @storage_var
@@ -126,11 +126,11 @@ func get_yield_points{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_chec
 
     // Spot & Futures
     let (pair_ids_len, pair_ids) = get_pair_ids();
-    let (future_spot_empiric_source_key) = future_spot_empiric_source_key_storage.read();
+    let (future_spot_pragma_source_key) = future_spot_pragma_source_key_storage.read();
     let (yield_points_len, yield_points) = YieldCurve.build_future_spot_yield_points(
         decimals,
         oracle_address,
-        future_spot_empiric_source_key,
+        future_spot_pragma_source_key,
         on_yield_points,
         pair_ids_len,
         pair_ids,
@@ -162,18 +162,18 @@ func get_oracle_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 }
 
 // @notice get the key/id of the source for which we get spot and futures data
-// @return future_spot_empiric_source_key: Empiric key for the source used to bootstrap the yield curve
+// @return future_spot_Pragma_source_key: Pragma key for the source used to bootstrap the yield curve
 @view
-func get_future_spot_empiric_source_key{
+func get_future_spot_pragma_source_key{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
-}() -> (future_spot_empiric_source_key: felt) {
-    let (future_spot_empiric_source_key) = future_spot_empiric_source_key_storage.read();
-    return (future_spot_empiric_source_key,);
+}() -> (future_spot_pragma_source_key: felt) {
+    let (future_spot_pragma_source_key) = future_spot_pragma_source_key_storage.read();
+    return (future_spot_pragma_source_key,);
 }
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
 // @param idx: index of the pair_id
-// @return pair_id: Empiric key for the spot asset used to bootstrap the yield curve
+// @return pair_id: Pragma key for the spot asset used to bootstrap the yield curve
 @view
 func get_pair_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(idx: felt) -> (
     pair_id: felt
@@ -183,7 +183,7 @@ func get_pair_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }
 
 // @notice get the status of whether a spot key is used in the yield curve bootstrapping calculations
-// @param pair_id: Empiric key for the asset to look up its status
+// @param pair_id: Pragma key for the asset to look up its status
 // @return pair_id_is_active: boolean felt for whether the given spot key is active
 @view
 func get_pair_id_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -194,8 +194,8 @@ func get_pair_id_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 }
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
-// @return pair_ids_len: length of Empiric keys for the spot asset used to bootstrap the yield curve
-// @return pair_ids: pointer to the first Empiric key
+// @return pair_ids_len: length of Pragma keys for the spot asset used to bootstrap the yield curve
+// @return pair_ids: pointer to the first Pragma key
 @view
 func get_pair_ids{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     pair_ids_len: felt, pair_ids: felt*
@@ -213,9 +213,9 @@ func get_pair_ids{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 }
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
-// @param pair_id: Empiric spot key for which this future key is a quarterly future
+// @param pair_id: Pragma spot key for which this future key is a quarterly future
 // @param idx: index of the future_expiry_timestamp
-// @return future_expiry_timestamp: Empiric key for the future asset used to bootstrap the yield curve
+// @return future_expiry_timestamp: Pragma key for the future asset used to bootstrap the yield curve
 @view
 func get_future_expiry_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt, idx: felt
@@ -225,9 +225,9 @@ func get_future_expiry_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*,
 }
 
 // @notice get the key of the asset for which we get spot data to compare to futures data
-// @param pair_id: Empiric spot key for which this future key is a quarterly future
-// @return future_expiry_timestamps_len: length of Empiric keys for the future assets used to bootstrap the yield curve
-// @return future_expiry_timestamps: pointer to the first Empiric key
+// @param pair_id: Pragma spot key for which this future key is a quarterly future
+// @return future_expiry_timestamps_len: length of Pragma keys for the future assets used to bootstrap the yield curve
+// @return future_expiry_timestamps: pointer to the first Pragma key
 @view
 func get_future_expiry_timestamps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     pair_id: felt
@@ -251,7 +251,7 @@ func get_future_expiry_timestamps{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*
 
 // @notice get the key of the overnight interest rate
 // @param idx: index of the overight rate key
-// @return on_key: Empiric key for the overnight rate used to bootstrap the yield curve
+// @return on_key: Pragma key for the overnight rate used to bootstrap the yield curve
 @view
 func get_on_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(idx: felt) -> (
     on_key: felt
@@ -261,7 +261,7 @@ func get_on_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}
 }
 
 // @notice get the status of whether a overnight rate key is used in the yield curve bootstrapping calculations
-// @param on_key: Empiric key for the overnight rate to look up its status
+// @param on_key: Pragma key for the overnight rate to look up its status
 // @return on_key_is_active: boolean felt for whether the given key is active
 @view
 func get_on_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -272,8 +272,8 @@ func get_on_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 }
 
 // @notice get all overnight keys used to bootstrap the yield curve
-// @return on_keys_len: length of Empiric keys for the overnight rates used to bootstrap the yield curve
-// @return on_keys: pointer to the first Empiric key
+// @return on_keys_len: length of Pragma keys for the overnight rates used to bootstrap the yield curve
+// @return on_keys: pointer to the first Pragma key
 @view
 func get_on_keys{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     on_keys_len: felt, on_keys: felt*
@@ -291,8 +291,8 @@ func get_on_keys{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }
 
 // @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
-// @param pair_id: Empiric spot key for which this future key is a quarterly future
-// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @param pair_id: Pragma spot key for which this future key is a quarterly future
+// @param future_expiry_timestamp: Pragma key for the asset to look up its status
 // @return future_expiry_timestamp_status: struct describing the given future key's status
 @view
 func get_future_expiry_timestamp_status{
@@ -307,8 +307,8 @@ func get_future_expiry_timestamp_status{
 }
 
 // @notice get the status of whether a future key is used in the yield curve bootstrapping calculations
-// @param pair_id: Empiric spot key for which this future key is a quarterly future
-// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @param pair_id: Pragma spot key for which this future key is a quarterly future
+// @param future_expiry_timestamp: Pragma key for the asset to look up its status
 // @return future_expiry_timestamp_is_active: whether the given future key is active
 @view
 func get_future_expiry_timestamp_is_active{
@@ -322,8 +322,8 @@ func get_future_expiry_timestamp_is_active{
 }
 
 // @notice get the expiry of a quarterly future used in the yield curve bootstrapping calculations
-// @param pair_id: Empiric spot key for which this future key is a quarterly future
-// @param future_expiry_timestamp: Empiric key for the asset to look up its status
+// @param pair_id: Pragma spot key for which this future key is a quarterly future
+// @param future_expiry_timestamp: Pragma key for the asset to look up its status
 // @return future_expiry_timestamp_status: expiry timestamp of the given future key
 @view
 func get_future_expiry_timestamp_expiry{
@@ -366,19 +366,19 @@ func set_oracle_address{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 
 // @notice set the source key for future and spot assets
 // @dev only the admin can update this
-// @param future_spot_empiric_source_key: new Empiric source key
+// @param future_spot_Pragma_source_key: new Pragma source key
 @external
-func set_future_spot_empiric_source_key{
+func set_future_spot_pragma_source_key{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
-}(future_spot_empiric_source_key: felt) -> () {
+}(future_spot_pragma_source_key: felt) -> () {
     Admin.only_admin();
-    future_spot_empiric_source_key_storage.write(future_spot_empiric_source_key);
+    future_spot_pragma_source_key_storage.write(future_spot_pragma_source_key);
     return ();
 }
 
 // @notice add a new spot key to get data for bootstrapping the yield curve
 // @dev only the admin can update this
-// @param pair_id: new Empiric spot key
+// @param pair_id: new Pragma spot key
 // @param is_active: whether the new key should be active immediately or not
 @external
 func add_pair_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -394,7 +394,7 @@ func add_pair_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 // @notice set the is_active status on a spot key
 // @dev only the admin can update this
-// @param pair_id: Empiric spot key
+// @param pair_id: Pragma spot key
 // @param pair_id: new status of the spot key
 @external
 func set_pair_id_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -408,8 +408,8 @@ func set_pair_id_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
 // @notice add a new future key to get data for bootstrapping the yield curve
 // @dev only the admin can update this
 // @dev have to add the spot key first
-// @param pair_id: Empiric spot key for which the future key is a quarterly future
-// @param future_expiry_timestamp: new Empiric future key
+// @param pair_id: Pragma spot key for which the future key is a quarterly future
+// @param future_expiry_timestamp: new Pragma future key
 // @param is_active: status of the new future key
 // @param expiry_timestamp: expiry timestamp of the new future (used to calculate time to maturity)
 @external
@@ -432,8 +432,8 @@ func add_future_expiry_timestamp{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*,
 
 // @notice set the status on a future key
 // @dev only the admin can update this
-// @param pair_id: Empiric spot key
-// @param future_expiry_timestamp: Empiric future key
+// @param pair_id: Pragma spot key
+// @param future_expiry_timestamp: Pragma future key
 // @param new_future_expiry_timestamp_status: new status for the future key
 @external
 func set_future_expiry_timestamp_status{
@@ -453,8 +453,8 @@ func set_future_expiry_timestamp_status{
 
 // @notice set the is_active status on a future key
 // @dev only the admin can update this
-// @param pair_id: Empiric spot key
-// @param future_expiry_timestamp: Empiric future key
+// @param pair_id: Pragma spot key
+// @param future_expiry_timestamp: Pragma future key
 // @param new_is_active: new is_active of the future key
 @external
 func set_future_expiry_timestamp_is_active{
@@ -473,7 +473,7 @@ func set_future_expiry_timestamp_is_active{
 
 // @notice add a new overnight rate key
 // @dev only the admin can update this
-// @param on_key: Empiric overnight rate key
+// @param on_key: Pragma overnight rate key
 // @param is_active: whether the new key should be active immediately or not
 @external
 func add_on_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -489,7 +489,7 @@ func add_on_key{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}
 
 // @notice set the is_active status on a overnight key
 // @dev only the admin can update this
-// @param on_key: Empiric overnight rate key
+// @param on_key: Pragma overnight rate key
 // @param is_active: new is_active of the overnight rate key
 @external
 func set_on_key_is_active{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -723,7 +723,7 @@ namespace YieldCurve {
     }(
         output_decimals: felt,
         oracle_address: felt,
-        future_spot_empiric_source_key: felt,
+        future_spot_pragma_source_key: felt,
         yield_points: YieldPoint*,
         pair_ids_len: felt,
         pair_ids: felt*,
@@ -744,7 +744,7 @@ namespace YieldCurve {
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 pair_ids_len,
                 pair_ids,
@@ -757,7 +757,7 @@ namespace YieldCurve {
 
         let (spot_decimals) = IOracle.get_spot_decimals(oracle_address, pair_id);
         let (spot_entry) = IOracle.get_spot_entry(
-            oracle_address, pair_id, future_spot_empiric_source_key
+            oracle_address, pair_id, future_spot_pragma_source_key
         );
         if (spot_entry.base.timestamp == 0) {
             // No entry so skip to next one
@@ -766,7 +766,7 @@ namespace YieldCurve {
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 pair_ids_len,
                 pair_ids,
@@ -784,7 +784,7 @@ namespace YieldCurve {
             let (future_yield_points_len, future_yield_points) = build_future_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 future_expiry_timestamps_len,
                 future_expiry_timestamps,
@@ -799,7 +799,7 @@ namespace YieldCurve {
             ) = build_future_spot_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 future_yield_points,
                 pair_ids_len,
                 pair_ids,
@@ -815,7 +815,7 @@ namespace YieldCurve {
     // @dev recursive function, set all indices to 0 for external call (except yield_points idx)
     // @param output_decimals: number of decimals to use for output
     // @param oracle_address: address from which to read overnight dataa
-    // @param future_spot_empiric_source_key: source key for future and spot data
+    // @param future_spot_pragma_source_key: source key for future and spot data
     // @param yield_points: pointer to first element in yield_points array to append to
     // @param future_expiry_timestamps_len: number of future keys to iterate over
     // @param future_expiry_timestamps: pointer to the first future_expiry_timestamp
@@ -828,7 +828,7 @@ namespace YieldCurve {
     func build_future_yield_points{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         output_decimals: felt,
         oracle_address: felt,
-        future_spot_empiric_source_key: felt,
+        future_spot_pragma_source_key: felt,
         yield_points: YieldPoint*,
         future_expiry_timestamps_len: felt,
         future_expiry_timestamps: felt*,
@@ -855,7 +855,7 @@ namespace YieldCurve {
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 future_expiry_timestamps_len,
                 future_expiry_timestamps,
@@ -881,7 +881,7 @@ namespace YieldCurve {
             oracle_address,
             spot_entry.pair_id,
             future_expiry_timestamps[future_expiry_timestamps_idx],
-            future_spot_empiric_source_key,
+            future_spot_pragma_source_key,
         );
         if (future_entry.base.timestamp == 0) {
             let (
@@ -889,7 +889,7 @@ namespace YieldCurve {
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 future_expiry_timestamps_len,
                 future_expiry_timestamps,
@@ -920,7 +920,7 @@ namespace YieldCurve {
             ) = build_future_yield_points(
                 output_decimals,
                 oracle_address,
-                future_spot_empiric_source_key,
+                future_spot_pragma_source_key,
                 yield_points,
                 future_expiry_timestamps_len,
                 future_expiry_timestamps,
@@ -949,7 +949,7 @@ namespace YieldCurve {
         ) = build_future_yield_points(
             output_decimals,
             oracle_address,
-            future_spot_empiric_source_key,
+            future_spot_pragma_source_key,
             yield_points,
             future_expiry_timestamps_len,
             future_expiry_timestamps,
