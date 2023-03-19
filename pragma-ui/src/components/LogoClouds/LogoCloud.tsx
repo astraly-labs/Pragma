@@ -16,7 +16,7 @@ interface LogoCloudProps {
 
 const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
   <figure className="w-full max-w-7xl">
-    <figcaption className="mb-2 text-sm uppercase tracking-wide text-slate-700 sm:text-2xl md:mb-5 md:text-base lg:text-lg ">
+    <figcaption className="mb-2 text-sm uppercase tracking-wide text-white sm:text-2xl md:mb-5 md:text-base lg:text-lg ">
       {title}
     </figcaption>
     <ul className="flex w-full flex-wrap items-center justify-between">

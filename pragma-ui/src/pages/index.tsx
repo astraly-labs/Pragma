@@ -65,12 +65,12 @@ const ecosystemPartners: Logo[] = [
   },
   {
     name: "Argent",
-    src: "/assets/ecosystem/argent.webp",
+    src: "/assets/ecosystem/argent.png",
     href: "https://www.argent.xyz/",
   },
   {
     name: "Equilibrium",
-    src: "/assets/ecosystem/equilibrium.webp",
+    src: "/assets/ecosystem/equilibrium.png",
     href: "https://equilibrium.co/",
   },
   {
@@ -83,7 +83,7 @@ const ecosystemPartners: Logo[] = [
 const supportedTestnetNetworks: Logo[] = [
   {
     name: "Starknet Testnet",
-    src: "/assets/angels/starknet.webp",
+    src: "/assets/angels/starknet.svg",
     href: "https://starkware.co/starknet/",
   },
   {
@@ -93,7 +93,7 @@ const supportedTestnetNetworks: Logo[] = [
   },
   {
     name: "Zk Sync Testnet",
-    src: "/assets/features/zk-sync.svg",
+    src: "/assets/ecosystem/zksync.svg",
     href: "https://zksync.io/",
   },
 ];
@@ -114,10 +114,10 @@ const IndexPage = () => (
       <AssetsSection />
       <LogoCloud title="Trusted by" logos={protocols} />
     </SectionContainer>
-    <SectionContainer className="!pt-0">
+    <SectionContainer className=" !pt-30 bg-dark">
       <LogoCloud title="Supported Networks" logos={supportedTestnetNetworks} />
     </SectionContainer>
-    <SectionContainer className="bg-slate-50">
+    <SectionContainer className="bg-dark">
       <Heading
         title="A few simple lines to integrate"
         subtitle="Try it yourself"
@@ -128,12 +128,12 @@ const IndexPage = () => (
       />
       <Code />
     </SectionContainer>
-    <SectionContainer>
+    <SectionContainer className="bg-black">
       <Testimonial />
       <Stats stats={stats} />
       {/* <Advisors /> */}
     </SectionContainer>
-    <SectionContainer className="overflow-hidden bg-slate-50">
+    <SectionContainer className="overflow-hidden bg-dark">
       <Heading
         title="Reimagine Oracles"
         subtitle="Why Pragma?"
@@ -143,7 +143,7 @@ const IndexPage = () => (
       />
       <InfoSection />
     </SectionContainer>
-    <SectionContainer>
+    <SectionContainer className=" bg-black">
       <LogoCloud title="Ecosystem Partners" logos={ecosystemPartners} />
       <DefaultCTASection />
     </SectionContainer>

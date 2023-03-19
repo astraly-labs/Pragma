@@ -17,17 +17,17 @@ const Heading: React.FC<HeadingProps> = ({
 }) => (
   <header className="w-full max-w-3xl">
     {subtitle !== undefined && (
-      <p className="mb-2 text-lg uppercase tracking-wide text-slate-600 sm:text-xl md:mb-4 md:text-2xl">
+      <p className="mb-2 text-lg uppercase tracking-wide text-white sm:text-xl md:mb-4 md:text-2xl">
         {subtitle}
       </p>
     )}
-    <h2 className="mb-5 text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
+    <h2 className="mb-5 text-3xl font-medium tracking-tight text-secondary sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
       {title}
     </h2>
-    {text && <p className="prose prose-slate lg:prose-xl">{text}</p>}
+    {text && <p className="prose prose-slate text-grey lg:prose-xl">{text}</p>}
     {href && hrefText && (
       <p className="prose prose-slate mt-4 prose-a:no-underline lg:prose-xl">
-        <a href={href} className="font-medium text-indigo-600">
+        <a href={href} className="font-medium text-primary">
           {hrefText} &nbsp;&rarr;
         </a>
       </p>

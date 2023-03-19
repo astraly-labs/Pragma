@@ -30,7 +30,7 @@ export const protocols: Protocol[] = [
   {
     name: "zkLend",
     category: "Lending",
-    src: "/assets/protocols/zklend.svg",
+    src: "/assets/ecosystem/zklend.svg",
     description:
       "zkLend is an L2 money-market protocol built on StarkNet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
     href: "https://zklend.com/",
@@ -70,7 +70,7 @@ export const protocols: Protocol[] = [
   {
     name: "Hashstack",
     category: "Lending",
-    src: "/assets/protocols/hashstack.webp",
+    src: "/assets/protocols/hashstack.png",
     description:
       "Hashstack Finance is a DeFi platform whose Open protocol aims to disrupt the DeFi lending market by offering under-collateralized loans. It addresses the need of lacking under-collateralized lending avenues by enabling loans at up to 3x collateral.",
     href: "https://hashstack.finance/",
@@ -78,7 +78,7 @@ export const protocols: Protocol[] = [
   {
     name: "Nostra",
     category: "Lending",
-    src: "/assets/protocols/nostra.webp",
+    src: "/assets/protocols/nostra.png",
     description:
       " Nostra is a versatile liquidity protocol for lending and borrowing. On top of its basic use-case, Nostra has many innovative features designed to maximize capital efficiency and minimize liquidity risk.",
     href: "https://nostra.finance/",
@@ -86,7 +86,7 @@ export const protocols: Protocol[] = [
   {
     name: "CygnusDAO",
     category: "Lending",
-    src: "/assets/protocols/cygnus.png",
+    src: "/assets/protocols/cygnus.jpeg",
     description:
       "CygnusDAO is a decentralized stablecoin lending and leveraged yield farming protocol. Users simply deposit LP tokens and borrow stablecoins, while CygnusDAO autocompounds their leveraged rewards.",
     href: "https://cygnusdao.finance/",

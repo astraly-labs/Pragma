@@ -118,8 +118,8 @@ const socials: SocialMedia[] = [
 ];
 
 const Footer = () => (
-  <div className="w-full bg-white">
-    <div className="mx-auto max-w-7xl border-t border-slate-100 px-4 pb-12 pt-16 lg:px-8">
+  <div className="w-full bg-dark">
+    <div className="mx-auto max-w-7xl border-t border-black px-4 pb-12 pt-16 lg:px-8">
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
           <Link href="/">
@@ -132,7 +132,7 @@ const Footer = () => (
               />
             </div>
           </Link>
-          <p className="prose prose-slate">
+          <p className="prose prose-slate text-grey">
             Pragma is the leading oracle on Starknet, built to empower native
             protocols to realize their ambitious potential.
           </p>
@@ -143,7 +143,7 @@ const Footer = () => (
                   <img
                     src={social.src}
                     alt={social.name}
-                    className="h-6 w-6 cursor-pointer"
+                    className="h-6 w-6 cursor-pointer invert"
                   />
                 </a>
               </li>
@@ -152,7 +152,7 @@ const Footer = () => (
         </div>
         {content.map((column) => (
           <nav key={column.heading} className="col-span-1 lg:col-span-2">
-            <p className="font-semibold uppercase tracking-wider text-slate-500">
+            <p className="font-semibold uppercase tracking-wider text-grey">
               {column.heading}
             </p>
             <div className="mt-6 flex flex-col space-y-4">
@@ -173,7 +173,7 @@ const Footer = () => (
           </nav>
         ))}
       </div>
-      <div className="mt-10 mb-6 w-full border-t border-slate-100 pt-10 text-center text-slate-600 md:mb-0">
+      <div className="mt-10 mb-6 w-full border-t border-black pt-10 text-center text-grey md:mb-0">
         © Assert Labs FZCO. - {new Date().getFullYear()}. All rights reserved.
       </div>
     </div>

@@ -20,10 +20,10 @@ const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => {
           alt={alt}
         />
         <div className="inline font-sans">
-          <span className="inline text-lg tracking-wide text-primary sm:text-xl md:text-2xl">
+          <span className="inline text-lg tracking-wide text-secondary sm:text-xl md:text-2xl">
             {Math.floor(price)}
           </span>
-          <span className="hidden text-primary sm:inline md:text-lg">
+          <span className="hidden text-secondary sm:inline md:text-lg">
             {(price - Math.floor(price))
               .toFixed(DECIMALS_TO_SHOW)
               .toString()

@@ -11,7 +11,7 @@ const FeaturesPage = () => (
   <>
     <NextSeo title="Features" />
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50" first>
+      <SectionContainer className="bg-dark" first>
         <Heading
           title="Reimagining Oracles"
           subtitle="Transparent, Decentralized &amp; Composable"
@@ -21,7 +21,7 @@ const FeaturesPage = () => (
         />
         <FeaturesDisplay />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <Heading
           title="Step by Step Overview"
           subtitle="How it works"
@@ -29,7 +29,7 @@ const FeaturesPage = () => (
         />
         <TimelineExplanation />
       </SectionContainer>
-      <SectionContainer className="bg-slate-50">
+      <SectionContainer className="bg-dark">
         <Heading
           title="Frequently asked questions"
           subtitle="Answers to"
@@ -38,7 +38,7 @@ const FeaturesPage = () => (
         />
         <FAQ />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <DefaultCTASection />
       </SectionContainer>
     </div>

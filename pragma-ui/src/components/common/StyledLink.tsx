@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link";
 import classNames from "classnames";
 
 const linkBaseStyles = (underline: boolean) =>
-  classNames("inline text-slate-900 hover:text-indigo-600", {
+  classNames("inline text-white hover:text-primary", {
     underline: underline,
   });
 

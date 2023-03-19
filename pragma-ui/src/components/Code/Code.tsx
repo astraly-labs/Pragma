@@ -32,15 +32,15 @@ const Code = () => {
   }
 
   return (
-    <div className="w-full max-w-3xl font-mono">
-      <div className="relative rounded-lg bg-slate-700">
+    <div className="w-full max-w-3xl">
+      <div className="relative rounded-lg bg-black">
         <div className="flex space-x-2 pl-3 pt-3">
-          <span className="block h-3 w-3 rounded-full bg-white bg-opacity-40 hover:bg-red-500" />
-          <span className="block h-3 w-3 rounded-full bg-white bg-opacity-40 hover:bg-yellow-500" />
-          <span className="block h-3 w-3 rounded-full bg-white bg-opacity-40 hover:bg-green-500" />
+          <span className="block h-3 w-3 rounded-full bg-red-500 bg-opacity-40" />
+          <span className="block h-3 w-3 rounded-full  bg-yellow-500 bg-opacity-40" />
+          <span className="block h-3 w-3 rounded-full  bg-green-500 bg-opacity-40" />
         </div>
         <pre>
-          <code className="flex flex-col space-y-3 overflow-auto py-8 text-lg font-medium leading-normal sm:overflow-visible sm:text-xl">
+          <code className="flex flex-col space-y-3 overflow-auto py-8 font-sans text-lg leading-normal sm:overflow-visible sm:text-xl">
             <div className="relative w-full px-8 text-white">
               <span className="absolute left-1 flex h-full items-center">
                 <ChevronRightIcon className="h-8 w-8 opacity-50" />
@@ -56,12 +56,12 @@ const Code = () => {
               <div
                 className={classNames(
                   isCopied ? "w-20 lg:w-32 xl:w-40" : "w-40 lg:w-64 xl:w-72",
-                  "absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md bg-indigo-600 p-4 text-base font-normal text-white transition-all duration-300 md:block"
+                  "absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md bg-secondary p-4 font-sans text-base text-white transition-all duration-300 md:block"
                 )}
               >
                 {isCopied ? "Copied!" : "Just copy the command to get started."}
                 <svg
-                  className="absolute right-full top-1/2 -translate-y-1/2 text-indigo-600"
+                  className="absolute right-full top-1/2 -translate-y-1/2 text-secondary"
                   xmlns="http://www.w3.org/2000/svg"
                   width="8"
                   height="22"

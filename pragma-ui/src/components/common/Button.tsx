@@ -11,13 +11,13 @@ const baseStyles = {
 
 const variantStyles = {
   solid: {
-    dark: "bg-slate-900 text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 active:bg-slate-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-slate-900",
+    dark: "bg-dark text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 active:bg-slate-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-slate-900",
     slate:
       "bg-black text-slate-900 hover:bg-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 active:bg-slate-400 active:text-slate-900/90 disabled:opacity-30 disabled:hover:bg-slate-900",
     indigo:
       "bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-indigo-600",
     white:
-      "bg-white text-indigo-600 hover:text-indigo-700 hover:bg-slate-50 focus-visible:text-indigo-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-indigo-50 active:text-indigo-900/80 disabled:opacity-40 disabled:hover:text-indigo-600",
+      "bg-white text-secondary hover:text-primary hover:bg-slate-50 focus-visible:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-secondary active:text-white disabled:opacity-40 disabled:hover:text-indigo-600",
   },
   outline: {
     dark: "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 active:border-slate-200 active:bg-slate-50 active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",

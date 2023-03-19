@@ -56,28 +56,28 @@ const TimelineExplanation = () => (
       >
         {stepIdx !== steps.length - 1 && (
           <div
-            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-indigo-600 sm:top-8 sm:left-8"
+            className="absolute top-6 left-6 -ml-1 h-full w-2 bg-secondary sm:top-8 sm:left-8"
             aria-hidden="true"
           />
         )}
         <div className="relative flex items-start">
-          <span className="relative flex items-center justify-center rounded-lg bg-indigo-600 p-3 ring-8 ring-white sm:p-4">
+          <span className="relative flex items-center justify-center rounded-lg bg-secondary p-3 ring-8 ring-dark sm:p-4">
             <step.icon
               className="h-6 w-6 text-white sm:h-8 sm:w-8"
               aria-hidden="true"
             />
           </span>
-          <span className="relative ml-8 flex w-full flex-col rounded-lg bg-white p-4 shadow-xl shadow-slate-900/10 sm:p-6">
+          <span className="relative ml-8 flex w-full flex-col rounded-lg bg-dark p-4 shadow-xl shadow-slate-900/10 sm:p-6">
             <div
-              className="absolute top-1 right-2 font-mono text-8xl text-slate-200 sm:top-3 sm:right-6"
+              className="absolute top-1 right-2 font-sans text-8xl text-black sm:top-3 sm:right-6"
               aria-hidden="true"
             >
               {stepIdx + 1}
             </div>
-            <h3 className="relative mb-3 text-xl font-semibold text-slate-900 sm:text-2xl">
+            <h3 className="relative mb-3 text-xl font-semibold text-white sm:text-2xl">
               {step.title}
             </h3>
-            <p className="prose prose-slate relative lg:prose-xl">
+            <p className="prose prose-slate relative text-grey lg:prose-xl">
               {step.description}
             </p>
           </span>
