@@ -5,7 +5,7 @@ import { ChatIcon, HomeIcon } from "@heroicons/react/outline";
 import { ButtonLink } from "../components/common/Button";
 
 const Custom404Page = () => (
-  <div className="w-screen grow bg-slate-50 px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
+  <div className="w-screen grow bg-black px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
     <div className="mx-auto flex max-w-3xl flex-col items-center space-y-8 sm:space-y-10 md:space-y-16">
       <div className="w-32 sm:w-48">
         <Image
@@ -16,10 +16,10 @@ const Custom404Page = () => (
         />
       </div>
       <div>
-        <h1 className="mb-4 text-center text-xl font-bold sm:text-2xl md:text-4xl">
+        <h1 className="mb-4 text-center text-xl font-bold text-secondary sm:text-2xl md:text-4xl">
           404&#8194;&#8211;&#8194;Zero knowledge of this page
         </h1>
-        <p className="prose prose-slate md:prose-xl">
+        <p className="prose prose-slate text-white md:prose-xl">
           You told your friends you weren’t bringing your phone, to try and
           experience what travel was like back in the day. You bought a map, a
           bottle of water and a camera just for this trip. But the map was from
