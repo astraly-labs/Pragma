@@ -12,7 +12,7 @@ const AboutPage = () => (
   <>
     <NextSeo title="About" />
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50" first>
+      <SectionContainer className="bg-dark" first>
         <Heading
           title="Developed by experts"
           subtitle="Meet our team"
@@ -20,12 +20,12 @@ const AboutPage = () => (
         />
         {/* <TeamSection /> */}
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <Heading title="Backed by" subtitle="Meet our investors" />
         <InvestorsSection />
         {/* <AngelsSection /> */}
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <CTASection
           title="Looking for a way to get involved?"
           description="If you’re looking for somewhere you can learn quickly and make a meaningful impact in a fast-paced company, you’re in the right place."

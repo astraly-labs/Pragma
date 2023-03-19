@@ -10,7 +10,7 @@ const PublishersPage = () => (
   <>
     <NextSeo title="Publishers" />
     <div className="w-screen">
-      <SectionContainer className="bg-slate-50" first>
+      <SectionContainer className="bg-dark" first>
         <Heading
           title="Your favorite giants"
           subtitle="Meet our publishers"
@@ -20,7 +20,7 @@ const PublishersPage = () => (
         />
         <PublishersSeciton />
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer className="bg-black">
         <CTASection
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."
