@@ -22,6 +22,11 @@ module.exports = {
         black: "#070707",
         grey: "#aeaeae",
       },
+      invert: {
+        25: ".25",
+        60: ".6",
+        75: ".75",
+      },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },

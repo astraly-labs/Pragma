@@ -97,9 +97,9 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
   });
 
   return (
-    <div className="w-full max-w-7xl overflow-y-hidden overflow-x-scroll rounded-lg shadow-md ring-1 ring-black ring-opacity-5">
-      <table className="w-full divide-y divide-slate-300 font-mono">
-        <thead className="bg-slate-50">
+    <div className="w-full max-w-7xl overflow-y-hidden overflow-x-scroll rounded-lg shadow-md ring-2 ring-white ring-opacity-5">
+      <table className="w-full divide-y divide-dark font-mono">
+        <thead className="bg-">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -107,7 +107,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
                   {header.isPlaceholder ? null : (
                     <div
                       className={classNames(
-                        "px-3 py-4 text-left text-lg font-semibold text-slate-900"
+                        "px-3 py-4 text-left font-sans text-lg text-grey"
                       )}
                     >
                       {flexRender(
@@ -121,18 +121,18 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
             </tr>
           ))}
         </thead>
-        <tbody className="bg-white">
+        <tbody className="bg-dark shadow-md ring-2 ring-white ring-opacity-5">
           {table.getRowModel().rows.map((row, i) => (
             <tr
               key={row.id}
               className={classNames({
-                "bg-slate-50": i % 2,
+                "bg-black": i % 2,
               })}
             >
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="whitespace-nowrap px-3 py-4 text-slate-900"
+                  className="whitespace-nowrap px-3 py-4 font-sans text-white "
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

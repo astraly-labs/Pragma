@@ -567,11 +567,12 @@ export default function Home() {
           <button style={{ width: '30px', height: '30px' }}></button>
         </Footer>
         <img
-          src="/img/emp_blue_logo.svg"
+          src="/img/prg_dark_logo.png"
           style={{
-            width: '100px',
+            width: '200px',
             margin: 'auto',
             padding: '20px',
+            filter: 'invert(1)',
           }}
         ></img>
       </Container>
