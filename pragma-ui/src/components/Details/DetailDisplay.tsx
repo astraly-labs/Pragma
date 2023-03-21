@@ -93,7 +93,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         img={
           <img
             src={`/assets/currencies/${currencySrc}`}
-            className="invert-60 h-6 w-6"
+            className="h-6·w-6·invert-60"
             alt={currencyAlt}
           />
         }
