@@ -13,7 +13,7 @@ module.exports = {
   projectName: 'Pragma', // Usually your repo name.
   trailingSlash: false,
   themeConfig: {
-    image: 'img/twitter_card_bg.jpeg',
+    image: 'img/background.jpg',
     prism: {
       additionalLanguages: ['solidity'],
     },
@@ -26,7 +26,7 @@ module.exports = {
       title: 'Pragma Docs',
       logo: {
         alt: 'Pragma Logo',
-        src: 'img/prg_dark_icon.svg',
+        src: 'img/prg_dark_icon.png',
       },
       items: [
         {
