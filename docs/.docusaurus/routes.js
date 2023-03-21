@@ -74,7 +74,7 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','3bb'),
+    component: ComponentCreator('/docs','7a2'),
     routes: [
       {
         path: '/docs/Consensys Zk-EVM/computational-feeds/realized-volatility',
@@ -132,7 +132,7 @@ export default [
       },
       {
         path: '/docs/introduction',
-        component: ComponentCreator('/docs/introduction','4b1'),
+        component: ComponentCreator('/docs/introduction','d95'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },

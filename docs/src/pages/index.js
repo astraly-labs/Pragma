@@ -24,28 +24,28 @@ import {
 } from '@heroicons/react/outline'
 
 export const actions = [
-	{
-		title: "What is Pragma",
-		href: "#",
-		icon: InformationCircleIcon,
-		to: "./docs/introduction",
-		text: `Learn about the Pragma protocol. Core concepts, vision and next developments.`,
-	},
-	{
-		title: "Use Pragma",
-		href: "#",
-		icon: BookOpenIcon,
-		to: "./docs/starknet/data-feeds/consuming-data",
-		text: `Get started using Pragma. Integrate Price feeds, VRF and more in your smart-contracts.`,
-	},
-	{
-		title: "Quickstart",
-		href: "#",
-		icon: QuestionMarkCircleIcon,
-		to: "./docs/howItWorks/architecture",
-		text: `New to Validity Rollups? Get started right now and explore the key concepts using high computation.`,
-	},
-];
+  {
+    title: 'What is Pragma',
+    href: '#',
+    icon: InformationCircleIcon,
+    to: './docs/introduction',
+    text: `Learn about the Pragma protocol. Core concepts, vision and next developments.`,
+  },
+  {
+    title: 'Use Pragma',
+    href: '#',
+    icon: BookOpenIcon,
+    to: './docs/starknet/data-feeds/consuming-data',
+    text: `Get started using Pragma. Integrate Price feeds, VRF and more in your smart-contracts.`,
+  },
+  {
+    title: 'Quickstart',
+    href: '#',
+    icon: QuestionMarkCircleIcon,
+    to: './docs/howItWorks/architecture',
+    text: `New to Validity Rollups? Get started right now and explore the key concepts using high computation.`,
+  },
+]
 
 export const github = [
   {
@@ -318,15 +318,15 @@ export default function Home() {
                 fontFamily: 'Space Grotesk',
               }}
             >
-              Get started with the Pragma smart-contracts, the leading oracle on Starknet and zk-Rollups. Use
-              our architecture to unlock access to composable and verifiable data.
+              Get started with the Pragma smart-contracts, the leading oracle on Starknet and zk-Rollups. Use our
+              architecture to unlock access to composable and verifiable data.
             </p>
           </div>
           <StyledTitleImage
             alt="Docusaurus themed image"
             sources={{
-              light: useBaseUrl('/img/Pragmabg.jpeg'),
-              dark: useBaseUrl('/img/Pragmabg.jpeg'),
+              light: useBaseUrl('/img/background.jpg'),
+              dark: useBaseUrl('/img/background.jpg'),
             }}
           />
           <h2>Getting Started</h2>
@@ -548,8 +548,8 @@ export default function Home() {
           <StyledFooterImage
             alt="Docusaurus themed image"
             sources={{
-              light: useBaseUrl('/img/Pragmabg.jpeg'),
-              dark: useBaseUrl('/img/Pragmabg.jpeg'),
+              light: useBaseUrl('/img/background.jpg'),
+              dark: useBaseUrl('/img/background.jpg'),
             }}
           />
           <h1
@@ -567,11 +567,12 @@ export default function Home() {
           <button style={{ width: '30px', height: '30px' }}></button>
         </Footer>
         <img
-          src="/img/emp_blue_logo.svg"
+          src="/img/prg_dark_logo.png"
           style={{
-            width: '100px',
+            width: '200px',
             margin: 'auto',
             padding: '20px',
+            filter: 'invert(1)',
           }}
         ></img>
       </Container>

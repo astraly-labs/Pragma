@@ -93,7 +93,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         img={
           <img
             src={`/assets/currencies/${currencySrc}`}
-            className="h-6 w-6"
+            className="h-6·w-6·invert-60"
             alt={currencyAlt}
           />
         }
@@ -102,7 +102,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         label="Last updated"
         description="This is the last time this price was updated on StarkNet. You might see bigger delays when StarkNet is slow in processing our requests."
         toDisplay={timeContent}
-        img={<ClockIcon className="h-6 w-6 stroke-slate-700" />}
+        img={<ClockIcon className="h-6 w-6 stroke-grey" />}
       />
     </div>
   );

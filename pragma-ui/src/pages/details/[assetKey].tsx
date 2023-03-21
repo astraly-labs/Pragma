@@ -32,7 +32,7 @@ const Details = ({ assetKey }) => {
   return (
     <div className="w-screen">
       <Banner />
-      <SectionContainer className="bg-slate-50" first>
+      <SectionContainer className="bg-dark" first>
         <DetailDisplay
           assetKey={assetKey}
           oracleResponse={valueResponse}
@@ -40,7 +40,7 @@ const Details = ({ assetKey }) => {
           error={valueError}
         />
       </SectionContainer>
-      <SectionContainer className="relative">
+      <SectionContainer className="relative bg-black">
         <EntriesTable
           assetKey={assetKey}
           decimals={decimals}
@@ -49,7 +49,7 @@ const Details = ({ assetKey }) => {
           error={entriesError}
         />
       </SectionContainer>
-      <SectionContainer className="!pt-0">
+      <SectionContainer className="bg-black !pt-0">
         <DefaultCTASection />
       </SectionContainer>
     </div>
