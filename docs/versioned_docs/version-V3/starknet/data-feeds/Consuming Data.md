@@ -7,7 +7,7 @@ sidebar_position: 1
 ---
 
 You can find the list of supported assets here.
-The current Empiric Network proxy addresses are:
+The current Pragma proxy addresses are:
 
 | Network                 | Address                                                             | Explorer                                                                                                                                                                                                                                              |
 | ----------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -17,7 +17,7 @@ The current Empiric Network proxy addresses are:
 
 ## Sample Code
 
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](/docs/starknet/data-feeds/quickstart). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/sample_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/oracle/IEmpiricOracle.cairo).
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](/docs/starknet/data-feeds/quickstart). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/sample_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/oracle/IPragmaOracle.cairo).
 
 ```bash
 %lang starknet
@@ -25,9 +25,9 @@ If you are just trying to get started with our price feeds, see this self-contai
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
 
-from oracle.IEmpiricOracle import IEmpiricOracle, EmpiricAggregationModes
+from oracle.IPragmaOracle import IPragmaOracle, PragmaAggregationModes
 
-const EMPIRIC_ORACLE_ADDRESS = 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093;
+const PRAGMA_ORACLE_ADDRESS = 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093;
 const KEY = 19514442401534788; // str_to_felt("ETH/USD")
 
 @view
@@ -36,8 +36,8 @@ is_above_threshold: felt
 ) {
 alloc_locals;
 
-    let (eth_price, decimals, timestamp, num_sources_aggregated) = IEmpiricOracle.get_spot(
-        EMPIRIC_ORACLE_ADDRESS, KEY, EmpiricAggregationModes.MEDIAN
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IPragmaOracle.get_spot(
+        PRAGMA_ORACLE_ADDRESS, KEY, PragmaAggregationModes.MEDIAN
     );
     let (multiplier) = pow(10, decimals);
 
@@ -72,7 +72,7 @@ Similar to get_spot_median except it allows for an additional parameter to speci
 #### Inputs
 
 - `pair_id`: uppercased utf8-encoded string
-- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN`. Additional options `VWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
+- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Pragma. Use constants defined in Pragma. Option must currently be set to `MEDIAN`. Additional options `VWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 
 #### Returns
 
@@ -93,7 +93,7 @@ Similar to get_spot_median except it allows for getting multiple spot prices in 
 #### Returns
 
 - `prices_response_len`: number of responses returned
-- `prices_response`: pointer to the first response, where each response is of type `EmpiricPricesResponse` which consists of (`price`, `decimals`, `last_updated_timestamp`, `num_sources_aggregated`) with the same interpretation as on a `single get_spot_median` call (see above)
+- `prices_response`: pointer to the first response, where each response is of type `PragmaPricesResponse` which consists of (`price`, `decimals`, `last_updated_timestamp`, `num_sources_aggregated`) with the same interpretation as on a `single get_spot_median` call (see above)
 
 ### Function: `get_spot_with_USD_hop`
 
@@ -103,7 +103,7 @@ This function enables you to rebase the price, i.e. use a different base currenc
 
 - `base_currency_id`: uppercase utf8-encoded string for the base currency (e.g. BTC)
 - `quote_currency_id`: uppercase utf8-encoded string for the base currency (e.g. ETH)
-- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
+- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Pragma. Use constants defined in Pragma. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 
 #### Returns
 
@@ -120,7 +120,7 @@ This function enables you to get the price of one currency in terms of another, 
 
 - `currency_ids_len`: number of currency ids in the hops
 - `currency_ids`: pointer to the first element in the list of currency IDs, where each currency ID is the utf8-encoded string for that currency (e.g. ETH)
-- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
+- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Pragma. Use constants defined in Pragma. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 
 #### Returns
 
@@ -136,7 +136,7 @@ This function enables you to get the price of one currency in terms of another, 
 #### Inputs
 
 - `pair_id`: uppercased utf8-encoded string
-- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
+- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Pragma. Use constants defined in Pragma. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 - `sources_len`: number of sources to aggregate
 - `sources`: pointer to the first source in the list of sources, where each source is a utf8-encoded string (e.g. "gemini")
 
@@ -155,7 +155,7 @@ This function enables you to get the price of one currency in terms of another, 
 
 - `pair_id`: uppercased utf8-encoded string
 - `expiry_timestamp`: timestamp of the expiry of the future (UTC)
-- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Empiric. Use constants defined in Empiric. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
+- `aggregation_mode`: aggregation mode to use for combining the many data sources available in Pragma. Use constants defined in Pragma. Option must currently be set to `MEDIAN`. Additional options `TWAP`, `EXPONENTIAL_DECAY` and `MEAN` are coming soon.
 - `sources_len`: number of sources to aggregate
 - `sources`: pointer to the first source in the list of sources, where each source is a utf8-encoded string (e.g. "gemini")
 

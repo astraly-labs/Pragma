@@ -6,11 +6,11 @@ sidebar_position: 2
 
 ---
 
-Empiric supports specific pairs that are listed and traded by our data partners. We also support a broader concept of currencies (each pair is a price of the quote currency in terms of the base currency). For pairs not listed, their price can be deduced by "hoping" using pairs that are listed, e.g. we can combine ETH/USD and BTC/USD to get a ETH/BTC feed.
+Pragma supports specific pairs that are listed and traded by our data partners. We also support a broader concept of currencies (each pair is a price of the quote currency in terms of the base currency). For pairs not listed, their price can be deduced by "hoping" using pairs that are listed, e.g. we can combine ETH/USD and BTC/USD to get a ETH/BTC feed.
 
 ## Asset Pairs
 
-The following asset pairs are officially supported by Empiric. More are added every week, so just reach out on [Twitter](https://twitter.com/EmpiricNetwork) or [Discord](https://discord.com/invite/N7sM7VzfJB) if you have a specific one you need.
+The following asset pairs are officially supported by Pragma. More are added every week, so just reach out on [Twitter](https://twitter.com/PragmaOracle) or [Discord](https://discord.com/invite/N7sM7VzfJB) if you have a specific one you need.
 
 The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_to_felt("BTC/USD")`) and used to refer to specific feeds on-chain.
 
@@ -20,8 +20,8 @@ The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_t
 | --------- | ---------------------- | -------- | ------- |
 | BTC/USD   | 18669995996566340      | 8        | ✅      |
 | ETH/USD   | 19514442401534788      | 8        | ✅      |
-| WBTC/USD   | 6287680677296296772      | 8        | ✖️      |
-| WBTC/BTC   | 6287680677295051843      | 8        | ✖️      |
+| WBTC/USD  | 6287680677296296772    | 8        | ✖️      |
+| WBTC/BTC  | 6287680677295051843    | 8        | ✖️      |
 | BTC/EUR   | 18669995995518290      | 8        | ✖️      |
 | SOL/USD   | 23449611697214276      | 8        | ✖️      |
 | AVAX/USD  | 4708022307469480772    | 8        | ✖️      |
@@ -44,7 +44,7 @@ The `pair_id` is calculated by utf-8 encoding the uppercased string (e.g. `str_t
 
 ### Experimental Spots (Testnet only)
 
-These assets are available as feeds on Empiric but due to limited data sources and liquidity, we cannot guarantee their accuracy and advise to only use them for experimental use cases.
+These assets are available as feeds on Pragma but due to limited data sources and liquidity, we cannot guarantee their accuracy and advise to only use them for experimental use cases.
 
 | Ticker   | Pair Id             | Decimals |
 | -------- | ------------------- | -------- |
@@ -53,7 +53,7 @@ These assets are available as feeds on Empiric but due to limited data sources a
 
 ## Currencies & Rebasing
 
-If you want the price of one asset that Empiric lists in the price of another asset also listed (e.g. the price of BTC/ETH), you can simply get the result by calling the `get_spot_with_USD_hop` or `get_spot_with_hops` endpoint. In that case, the result will have as many decimals as the base asset you are requesting, e.g. for BTC/ETH it would be 18 decimals because the base unit of ETH is wei where 10^18 wei = 1 ETH.
+If you want the price of one asset that Pragma lists in the price of another asset also listed (e.g. the price of BTC/ETH), you can simply get the result by calling the `get_spot_with_USD_hop` or `get_spot_with_hops` endpoint. In that case, the result will have as many decimals as the base asset you are requesting, e.g. for BTC/ETH it would be 18 decimals because the base unit of ETH is wei where 10^18 wei = 1 ETH.
 
 ### Abstract Currencies
 

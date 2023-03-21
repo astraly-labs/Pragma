@@ -8,7 +8,7 @@ sidebar_position: 2
 
 ## Yield Curve
 
-Empiric offers a feed that calculates the zero-coupon interest-rate curve fully on-chain. The interest rate values are derived from BTC spot and futures price difference, and Aave overnight rate.
+Pragma offers a feed that calculates the zero-coupon interest-rate curve fully on-chain. The interest rate values are derived from BTC spot and futures price difference, and Aave overnight rate.
 
 ### How the Yield Curve is Calculated
 
