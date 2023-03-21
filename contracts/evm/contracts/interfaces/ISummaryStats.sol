@@ -1,6 +1,9 @@
 pragma solidity ^0.8.9;
 
 interface ISummaryStats {
+    enum AggregationMode {
+        MEDIAN
+    }
     struct TickElem { 
         uint256 tick;
         uint256 value;
@@ -14,4 +17,9 @@ interface ISummaryStats {
     ) external view returns (
         uint256);
         
+    function testing (
+        bytes32 key
+    ) external view returns (
+        uint256 lastCheckpointIndex
+    );
 }

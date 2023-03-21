@@ -26,7 +26,8 @@
 	"dependencies": {
 		"@chugsplash/plugins": "^0.10.7",
 		"@matterlabs/signature-checker": "^1.1.1",
-		"@matterlabs/zksync-contracts": "^0.5.1"
+		"@matterlabs/zksync-contracts": "^0.5.1",
+		"@prb/math": "^3.3.1"
 	},
 	"devDependencies": {
 		"@defi-wonderland/smock": "^2.3.4",

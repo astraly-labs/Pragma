@@ -213,7 +213,8 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         returns (uint256)
     {
        
-        return checkpointIndex[pairId];
+        // return checkpointIndex[pairId];
+        return checkpoints[pairId].length;
     }
 
     function getLastSpotCheckpointBefore(bytes32 pair_id, uint256 timestamp)

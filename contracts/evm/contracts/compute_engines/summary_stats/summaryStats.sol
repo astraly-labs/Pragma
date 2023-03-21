@@ -3,12 +3,19 @@ pragma solidity ^0.8.9;
 
 import "../../interfaces/IOracle.sol";
 import "../../interfaces/ISummaryStats.sol";
-import "../../lib/time_series/stats/metrics.sol";
+import "../../utils/time_series/stats/Metrics.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract SummaryStats is ISummaryStats{
+
+contract SummaryStats is ISummaryStats, Metrics{
     IOracle public oracle;
-    Metrics public metrics;
-    
+
+    constructor(
+        address _oracle
+    ) {
+        oracle= IOracle(_oracle);
+    }
+
     function calculateVolatility (
         bytes32 key, 
         uint256 startTick, 
@@ -46,10 +53,16 @@ contract SummaryStats is ISummaryStats{
         }
         TickElem[] memory tickElems;
         tickElems = _make_array(key,endIndex,startIndex,skipFrequency);
-        uint256 volatility = metrics.volatility(tickElems);
-        return volatility;
+        require (tickElems.length>1,"Not enough data"); 
+        uint256 rea_volatility = volatility(tickElems);
+        return rea_volatility;
 
+    }
 
+    function testing (bytes32 key) public view returns (uint256 lastCheckpointIndex
+     ) {
+        uint256 latestCheckpointIndex = oracle.getLastCheckpointIndex(key);
+        return latestCheckpointIndex;
     }
      
     function _make_array(
@@ -69,4 +82,5 @@ contract SummaryStats is ISummaryStats{
         }
         return tickElems;
     }
+
 }

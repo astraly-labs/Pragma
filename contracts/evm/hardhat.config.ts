@@ -70,7 +70,7 @@ const config: HardhatUserConfig = {
 			url: zkSyncDeploy.ethNetwork,
 		},
 	},
-	defaultNetwork: "zksync",
+	// defaultNetwork: "zksync",
 	etherscan: {
 		apiKey: {
 			goerli: process.env.ETHERSCAN_KEY ?? "",
