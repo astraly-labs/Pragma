@@ -6,13 +6,13 @@ sidebar_position: 2
 
 ---
 
-The Empiric Oracle consists of three smart contracts, that each play a role in making the oracle easy to use and robust.
+The Pragma Oracle consists of three smart contracts, that each play a role in making the oracle easy to use and robust.
 
   <div>
   <img width="100%" height="100%" src="https://i.ibb.co/BfcJkrD/Screenshot-2023-02-27-at-11-05-39.png" />
   </div>
 
-The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because its state should be permanent (each publisher and their address). This is currently an ownable contract but will become permissionless as Empiric decentralizes.
+The first is the Publisher Registry, which is the most static. This is designed to be updated extremely infrequently because its state should be permanent (each publisher and their address). This is currently an ownable contract but will become permissionless as Pragma decentralizes.
 
 The second is the Oracle implementation and its proxy, which are also designed to be updated only as frequently as absolutely necessary. This is the contract which protocols use, and the one to which publishers publish. In the background, it coordinates the Publisher Registry and the Oracle contract implementation(s). The implementation contains the logic for storing and aggregating specific key/value data streams.
 

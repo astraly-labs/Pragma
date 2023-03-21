@@ -39,13 +39,13 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 
 // Oracle Interface Definition
-const EMPIRIC_ORACLE_ADDRESS = 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093;
+const PRAGMA_ORACLE_ADDRESS = 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093;
 const PAIR_ID = 19514442401534788; // str_to_felt("ETH/USD")
 const COINBASE_OO_SOURCE = 95879041655361647872660293; // str_to_felt("OO-COINBASE")
 const OKX_OO_SOURCE = 87201481182040; // str_to_felt("OO-OKX")
 
 @contract_interface
-namespace IEmpiricOracle {
+namespace IPragmaOracle {
 func get_spot_median_for_sources(pair_id: felt, sources_len: felt, sources: felt\*) -> (
 value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
 ) {
@@ -61,8 +61,8 @@ assert sources[1] = OKX_OO_SOURCE;
 
     let (
         eth_price, decimals, last_updated_timestamp, num_sources_aggregated
-    ) = IEmpiricOracle.get_spot_median_for_sources(
-        EMPIRIC_ORACLE_ADDRESS, PAIR_ID, 2, sources
+    ) = IPragmaOracle.get_spot_median_for_sources(
+        PRAGMA_ORACLE_ADDRESS, PAIR_ID, 2, sources
     );
     // Your smart contract logic!
     return ();
@@ -72,6 +72,6 @@ assert sources[1] = OKX_OO_SOURCE;
 
 ## Publishing Data
 
-One of the benefits of the open oracle is that anyone can publish data permissionlessly, as Coinbase and OKX signatures are verified on-chain. We are working with a number of leading protocols on StarkNet to publish data regularly in order to provide free, transparent and community-driven price feeds for the ecosystem. If you'd like to join the StarkNet Open Oracle Publisher Committee, please reach out on [Twitter](https://twitter.com/EmpiricNetwork)!
+One of the benefits of the open oracle is that anyone can publish data permissionlessly, as Coinbase and OKX signatures are verified on-chain. We are working with a number of leading protocols on StarkNet to publish data regularly in order to provide free, transparent and community-driven price feeds for the ecosystem. If you'd like to join the StarkNet Open Oracle Publisher Committee, please reach out on [Twitter](https://twitter.com/PragmaOracle)!
 
 In order to publish data, you must call the [Coinbase](https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getcoinbasepriceoracle) API or [OKX](https://www.okx.com/docs-v5/en/#rest-api-market-data-get-oracle) API to retrieve the signed and timestamped data. Then, you must prepare that data to be consumed by the on-chain verification contract. You can implement this logic yourself or feel free to use [our SDK](https://github.com/Astraly-Labs/StarknetOpenOracle/blob/master/client/client_tools.py). If you use our SDK, simply follow the instructions in the [README](https://github.com/Astraly-Labs/StarknetOpenOracle#using-the-client-to-publish-signed-prices) to get going.

@@ -7,7 +7,7 @@ sidebar_position: 1
 ---
 
 You can find the list of supported assets here.
-The current Empiric Network proxy addresses are:
+The current Pragma Network proxy addresses are:
 
 | Network           | Address                                    | Explorer                                                                                                   |
 | ----------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |

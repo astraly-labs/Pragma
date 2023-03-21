@@ -8,11 +8,11 @@ sidebar_position: 3
 
 ## Realized Volatility
 
-For any price feed, Empiric offers a realized volatility feed. The realized volatility feed uses checkpoints to calculate the annualized volatility of an asset over a period of time.
+For any price feed, Pragma offers a realized volatility feed. The realized volatility feed uses checkpoints to calculate the annualized volatility of an asset over a period of time.
 
 #### Sample Code
 
-If you are just trying to get started with our realized volatility feed, see this self-contained code snippet here. You can find the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Empiric/blob/master/contracts/starknet/src/compute_engines/summary_stats/ISummaryStats.cairo).
+If you are just trying to get started with our realized volatility feed, see this self-contained code snippet here. You can find the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/compute_engines/summary_stats/ISummaryStats.cairo).
 
 ```bash
 %lang starknet
@@ -22,7 +22,7 @@ from starkware.cairo.common.pow import pow
 
 from oracle.ISummaryStats import ISummaryStats
 
-const EMPIRIC_VOL_ADDRESS = 0x00b63d77cbf599e72ab23f2746edd1197ce45960910ea048b4898c4866d7f300;
+const PRAGMA_VOL_ADDRESS = 0x00b63d77cbf599e72ab23f2746edd1197ce45960910ea048b4898c4866d7f300;
 const KEY = 19514442401534788; // str_to_felt("ETH/USD")
 
 @view
@@ -56,7 +56,7 @@ Where σ is in units of 1/$\sqrt{T}$. We then multiply σ by $\sqrt{ΔTyear}$ to
 ### Function: `calculate_volatility`
 
 This function allows you to query realized volatility for any price feed calculated over a requested period of time. The function accesses checkpoints within the requested timeframe, and uses the above equation to calculate realized volatility.
-Currently, Empiric sets a checkpoint every 5 minutes. If you need more granular data, you can set more checkpoint via the `set_checkpoint function`.
+Currently, Pragma sets a checkpoint every 5 minutes. If you need more granular data, you can set more checkpoint via the `set_checkpoint function`.
 
 #### Inputs
 

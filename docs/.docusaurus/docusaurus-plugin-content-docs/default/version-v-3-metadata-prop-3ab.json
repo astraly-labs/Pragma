@@ -10,13 +10,13 @@
     "version-V3/mySidebar": [
       {
         "type": "link",
-        "label": "What is Empiric?",
+        "label": "What is Pragma?",
         "href": "/docs/introduction",
         "docId": "introduction"
       },
       {
         "type": "category",
-        "label": "How Empiric Works",
+        "label": "How Pragma Works",
         "collapsible": true,
         "collapsed": false,
         "items": [
@@ -239,8 +239,8 @@
     },
     "introduction": {
       "id": "introduction",
-      "title": "What is Empiric?",
-      "description": "Your smart contracts are decentralized, transparent and composable. Of course they are, because you believe in a world where society’s crucial applications are accessible to anyone, where transparency replaces backroom dealings and trustless software makes middlemen obsolete. But unless you're using Empiric already, you are accessing real world data using an off-chain, trusted, black box oracle.",
+      "title": "What is Pragma?",
+      "description": "Your smart contracts are decentralized, transparent and composable. Of course they are, because you believe in a world where society’s crucial applications are accessible to anyone, where transparency replaces backroom dealings and trustless software makes middlemen obsolete. But unless you're using Pragma already, you are accessing real world data using an off-chain, trusted, black box oracle.",
       "sidebar": "version-V3/mySidebar"
     },
     "starknet/computational-feeds/realized-volatility": {

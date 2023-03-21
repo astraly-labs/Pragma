@@ -25,18 +25,18 @@ import {
 
 export const actions = [
 	{
-		title: "What is Empiric",
+		title: "What is Pragma",
 		href: "#",
 		icon: InformationCircleIcon,
 		to: "./docs/introduction",
-		text: `Learn about the Empiric Network protocol. Core concepts, vision and next developments.`,
+		text: `Learn about the Pragma protocol. Core concepts, vision and next developments.`,
 	},
 	{
-		title: "Use Empiric",
+		title: "Use Pragma",
 		href: "#",
 		icon: BookOpenIcon,
 		to: "./docs/starknet/data-feeds/consuming-data",
-		text: `Get started using Empiric. Integrate Price feeds, VRF and more in your smart-contracts.`,
+		text: `Get started using Pragma. Integrate Price feeds, VRF and more in your smart-contracts.`,
 	},
 	{
 		title: "Quickstart",
@@ -49,8 +49,8 @@ export const actions = [
 
 export const github = [
   {
-    title: 'empiric-monorepo',
-    href: 'https://github.com/Astraly-Labs/Empiric',
+    title: 'pragma-monorepo',
+    href: 'https://github.com/Astraly-Labs/Pragma',
     icon: CodeIcon,
   },
   {
@@ -79,7 +79,7 @@ export const quick = [
   },
   {
     title: 'Whitepaper',
-    text: 'Read the Empiric whitepaper',
+    text: 'Read the Pragma whitepaper',
     to: '',
   },
 ]
@@ -291,8 +291,8 @@ const HideMedium = styled.div`
 export default function Home() {
   return (
     <Layout
-      title={`Empiric Network Documentation`}
-      description="Technical Documentation For The Empiric Protocol"
+      title={`Pragma Documentation`}
+      description="Technical Documentation For The Pragma Protocol"
       image={useBaseUrl('/img/favicon.png')}
     >
       <Container>
@@ -306,7 +306,7 @@ export default function Home() {
               alignItems: 'center',
             }}
           >
-            <h1 style={{ fontWeight: '600' }}> Welcome to the Empiric Network documentation</h1>
+            <h1 style={{ fontWeight: '600' }}> Welcome to the Pragma documentation</h1>
             <HideMedium>
               <SearchBar />
             </HideMedium>
@@ -318,15 +318,15 @@ export default function Home() {
                 fontFamily: 'Space Grotesk',
               }}
             >
-              Get started with the Empiric Network smart-contracts, the leading oracle on Starknet and zk-Rollups. Use
+              Get started with the Pragma smart-contracts, the leading oracle on Starknet and zk-Rollups. Use
               our architecture to unlock access to composable and verifiable data.
             </p>
           </div>
           <StyledTitleImage
             alt="Docusaurus themed image"
             sources={{
-              light: useBaseUrl('/img/Empiricbg.jpeg'),
-              dark: useBaseUrl('/img/Empiricbg.jpeg'),
+              light: useBaseUrl('/img/Pragmabg.jpeg'),
+              dark: useBaseUrl('/img/Pragmabg.jpeg'),
             }}
           />
           <h2>Getting Started</h2>
@@ -364,7 +364,7 @@ export default function Home() {
         >
           <div>
             <h2>Developer Links</h2>
-            <p>Find useful repositories, to integrate Empiric to your Dapp, or to start developing on Starknet.</p>
+            <p>Find useful repositories, to integrate Pragma to your Dapp, or to start developing on Starknet.</p>
             <TwoRow style={{ gridGap: '10px' }}>
               {github.map((action) => (
                 <Link style={{ textDecoration: 'none' }} href={action.href}>
@@ -483,12 +483,12 @@ export default function Home() {
               </div>
             </CenterCard>
           </Link>
-          <Link style={{ textDecoration: 'none' }} href={'https://twitter.com/EmpiricNetwork'}>
+          <Link style={{ textDecoration: 'none' }} href={'https://twitter.com/PragmaOracle'}>
             <CenterCard>
               <Twitter style={{ width: '48px', height: '48px' }} />
               <div>
                 <h3>Twitter</h3>
-                <p>Follow Empiric on Twitter</p>
+                <p>Follow Pragma on Twitter</p>
               </div>
             </CenterCard>
           </Link>
@@ -538,7 +538,7 @@ export default function Home() {
               </StyledGithubIcon>
               <div>
                 <h3>GitHub</h3>
-                <p>View all Empiric repositories.</p>
+                <p>View all Pragma repositories.</p>
               </div>
             </CenterCard>
           </Link>
@@ -548,8 +548,8 @@ export default function Home() {
           <StyledFooterImage
             alt="Docusaurus themed image"
             sources={{
-              light: useBaseUrl('/img/Empiricbg.jpeg'),
-              dark: useBaseUrl('/img/Empiricbg.jpeg'),
+              light: useBaseUrl('/img/Pragmabg.jpeg'),
+              dark: useBaseUrl('/img/Pragmabg.jpeg'),
             }}
           />
           <h1
@@ -561,7 +561,7 @@ export default function Home() {
               textAlign: 'center',
             }}
           >
-            Get the latest news of Empiric Network
+            Get the latest news of Pragma Network
           </h1>
           <input style={{ width: '100%', height: '20px' }}></input>
           <button style={{ width: '30px', height: '30px' }}></button>

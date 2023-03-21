@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://pragmaoracle.com
+
+# Sitemaps
+Sitemap: https://pragmaoracle.com/sitemap.xml

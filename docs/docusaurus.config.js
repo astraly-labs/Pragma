@@ -2,15 +2,15 @@ const math = require('remark-math')
 const katex = require('rehype-katex')
 
 module.exports = {
-  title: 'Empiric Network',
+  title: 'Pragma',
   tagline: 'Documentation and Guides',
-  url: 'https://docs.empiric.network',
+  url: 'https://docs.pragmaoracle.com',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'ignore',
   favicon: 'img/favicon.png',
   organizationName: 'Astraly-Labs', // Usually your GitHub org/user name.
-  projectName: 'Empiric', // Usually your repo name.
+  projectName: 'Pragma', // Usually your repo name.
   trailingSlash: false,
   themeConfig: {
     image: 'img/twitter_card_bg.jpeg',
@@ -23,10 +23,10 @@ module.exports = {
       appId: 'I2FJIAZ9PU',
     },
     navbar: {
-      title: 'Empiric Docs',
+      title: 'Pragma Docs',
       logo: {
-        alt: 'Empiric Logo',
-        src: 'img/emp_dark_icon.svg',
+        alt: 'Pragma Logo',
+        src: 'img/prg_dark_icon.svg',
       },
       items: [
         {
