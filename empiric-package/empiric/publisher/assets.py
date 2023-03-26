@@ -51,6 +51,8 @@ EMPIRIC_ALL_ASSETS: List[EmpiricAsset] = [
     {"type": "SPOT", "pair": ("AAVE", "USD"), "decimals": 8},
     {"type": "FUTURE", "pair": ("BTC", "USD"), "decimals": 8},
     {"type": "FUTURE", "pair": ("ETH", "USD"), "decimals": 8},
+    {"type" : "OPTION", "pair": ("BTC", "USD"), "decimals": 8},
+    {"type" : "OPTION", "pair": ("ETH", "USD"), "decimals": 8},
     {
         "type": "ONCHAIN",
         "source": "AAVE",
