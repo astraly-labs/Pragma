@@ -18,9 +18,7 @@ If you are just trying to get started with using randomness, see the self-contai
 %lang starknet
 
 from starkware.starknet.common.syscalls import (
-get_block_number,
-get_caller_address,
-get_contract_address,
+    get_block_number,get_caller_address, get_contract_address,
 )
 from starkware.cairo.common.math import assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
@@ -41,43 +39,37 @@ func request_random(seed, callback_address, callback_gas_limit, publish_delay, n
 request_id: felt
 ) {
 }
-}
 
 @view
-func get_last_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
-last_random: felt
-) {
-let (last_random) = last_random_storage.read();
-return (last_random=last_random);
+func get_last_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (last_random: felt) {
+    let (last_random) = last_random_storage.read();
+    return (last_random=last_random);
 }
 
 @external
 func request_my_randomness{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-seed, callback_address, callback_gas_limit, publish_delay, num_words
+    seed, callback_address, callback_gas_limit, publish_delay, num_words
 ) {
-let (request_id) = IRandomness.request_random(
-PRAGMA_RANDOM_ORACLE_ADDRESS,
-seed,
-callback_address,
-callback_gas_limit,
-publish_delay,
-num_words,
-);
+    let (request_id) = IRandomness.request_random(
+    PRAGMA_RANDOM_ORACLE_ADDRESS,
+    seed,
+    callback_address,
+    callback_gas_limit,
+    publish_delay,
+    num_words,
+    );
 
     let (current_block_number) = get_block_number();
     min_block_number_storage.write(current_block_number + publish_delay);
 
     return ();
-
 }
 
 @external
-func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-requestor_address, request_id, random_words_len, random_words: felt\*
-) {
-// Have to make sure that the caller is the Pragma Randomness Oracle contract
-let (caller_address) = get_caller_address();
-assert PRAGMA_RANDOM_ORACLE_ADDRESS = caller_address;
+func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(requestor_address, request_id, random_words_len, random_words: felt*) {
+    // Have to make sure that the caller is the Pragma Randomness Oracle contract
+    let (caller_address) = get_caller_address();
+    assert PRAGMA_RANDOM_ORACLE_ADDRESS = caller_address;
 
     // and that the current block is within publish_delay of the request block
     let (current_block_number) = get_block_number();
@@ -120,8 +112,8 @@ As mentioned above, in the first phase of Pragma Network's VRF feed, the randomn
 
 In order to make it easier to verify that a specific piece of randomness was verifiable, we provide an open source implementation of the verifier. Follow these simple steps to verify any randomness provided by Pragma Network:
 
-1. Install the Pragma Python package `pip install pragma-network `
-2. Run `python3 -m pragma.cli random verify-random <TRANSACTION\*HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
+1. Install the Pragma Python package `pip install empiric-network `
+2. Run `python3 -m empiric.cli random verify-random <TRANSACTION\*HASH>` where `TRANSACTION_HASH` is the hash of the StarkNet testnet transaction in which the randomness was submitted to your smart contract.
 
 ## Technical Specification
 

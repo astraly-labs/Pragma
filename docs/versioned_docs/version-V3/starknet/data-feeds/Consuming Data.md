@@ -17,7 +17,7 @@ The current Pragma proxy addresses are:
 
 ## Sample Code
 
-If you are just trying to get started with our price feeds, see this self-contained code snippet [here](/docs/starknet/data-feeds/quickstart). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/sample_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/oracle/IPragmaOracle.cairo).
+If you are just trying to get started with our price feeds, see this self-contained code snippet [here](/docs/starknet/data-feeds/quickstart). If you'd like to use more advanced oracle functions please see the further information below. You can find a full sample data feed consumer contract [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/sample_consumer/CheckEthThreshold.cairo) and the full Oracle interface specification is available [here](https://github.com/Astraly-Labs/Pragma/blob/master/contracts/starknet/src/oracle/IEmpiricOracle.cairo).
 
 ```bash
 %lang starknet
@@ -34,17 +34,14 @@ const KEY = 19514442401534788; // str_to_felt("ETH/USD")
 func check_eth_usd_threshold{syscall_ptr: felt\*, range_check_ptr}(threshold: felt) -> (
 is_above_threshold: felt
 ) {
-alloc_locals;
+    alloc_locals;
 
-    let (eth_price, decimals, timestamp, num_sources_aggregated) = IPragmaOracle.get_spot(
-        PRAGMA_ORACLE_ADDRESS, KEY, PragmaAggregationModes.MEDIAN
-    );
+    let (eth_price, decimals, timestamp, num_sources_aggregated) = IPragmaOracle.get_spot(PRAGMA_ORACLE_ADDRESS, KEY, PragmaAggregationModes.MEDIAN);
     let (multiplier) = pow(10, decimals);
 
     let shifted_threshold = threshold * multiplier;
     let is_above_threshold = is_le(shifted_threshold, eth_price);
     return (is_above_threshold,);
-
 }
 ```
 
