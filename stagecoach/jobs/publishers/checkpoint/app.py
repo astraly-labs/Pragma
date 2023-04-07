@@ -5,16 +5,19 @@ import os
 import boto3
 from empiric.core.logger import get_stream_logger
 from empiric.core.utils import currency_pair_to_pair_id
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
 
 logger = get_stream_logger()
 
 SECRET_NAME = os.environ["SECRET_NAME"]
+NETWORK = os.environ["NETWORK"]
+ASSETS = os.environ["ASSETS"]
 
 
 def handler(event, context):
-    invocation = asyncio.run(_handler(EMPIRIC_ALL_ASSETS))
+    assets = [get_spot_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
+    invocation = asyncio.run(_handler(assets))
     return {
         "result": invocation,
     }
@@ -42,6 +45,7 @@ async def _handler(assets):
     publisher_client = EmpiricPublisherClient(
         account_private_key=private_key,
         account_contract_address=account_address,
+        network=NETWORK,
     )
     invocation = await publisher_client.set_checkpoints(pairs, pagination=40)
     await invocation.wait_for_acceptance(wait_for_accept=True)

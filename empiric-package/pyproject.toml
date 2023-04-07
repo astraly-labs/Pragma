@@ -7,7 +7,7 @@ profile = "black"
 
 [tool.poetry]
 name = "empiric-network"
-version = "1.4.16"
+version = "1.4.17"
 authors = ["Astraly Labs <contact@astraly.xyz>"]
 description = "Core package for rollup-native Empiric Network"
 readme = "README.md"
@@ -29,7 +29,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
-"starknet.py" = "0.13.0a0"
+"starknet.py" = "0.14.0a0"
 cairo-lang = "0.10.3"
 typer = "0.6.1"
 
