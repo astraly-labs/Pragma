@@ -1,0 +1,66 @@
+[package]
+name = "starkex_publisher"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+# Required
+anyhow = "1.0"
+kiss3d = "0.32"
+reqwest = { version = "0.11", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+instant = {version = "0.1" }
+paste = "1"
+plotters = "0.3"
+num-traits = { version = "0.2" }
+rand = { version = "0.8.5" }
+rand_xoshiro = { version = "0.6.0" }
+thiserror = "1.0"
+#argmin-math = { path = "../argmin-math", version = "0.3", default-features = false, features = ["primitives"] }
+argmin-math = {version="0.3" , default-features = false, features = ["primitives"] }
+# optional
+bincode = { version = "1.3.3", optional = true }
+ctrlc = { version = "3.2.4", optional = true }
+getrandom = { version = "0.2", features = ["js"], optional = true }
+gnuplot = { version = "0.0.37", optional = true }
+rayon = { version = "1.6.0", optional = true }
+serde = { version = "1.0", features = ["derive", "rc"], optional = true }
+serde_json = { version = "1.0", optional = true }
+slog = { version = "2.7", optional = true, features = ["dynamic-keys"] }
+slog-term = { version = "2.9", optional = true }
+slog-async = { version = "2.7", optional = true }
+slog-json = { version = "2.6", optional = true }
+ndarray = { version = "0.15", features = ["serde-1"] }
+argmin="0.8.1"
+[dev-dependencies]
+approx = "0.5.0"
+finitediff = { version = "0.1.4", features = ["ndarray"] }
+argmin_testfunctions = "0.1.1"
+nalgebra = { version = "0.32", features = ["serde-serialize"] }
+#ndarray = { version = "0.15", features = ["serde-1"] }
+ndarray-linalg = { version = "0.16", features = ["netlib"] }
+#argmin-math = { path = "../argmin-math" }
+serde = { version = "1.0", features = ["derive", "rc"] }
+
+[features]
+default = ["slog-logger", "serde1", "argmin-math/ndarray_latest-serde", "slog-logger"]
+wasm-bindgen = ["instant/wasm-bindgen", "getrandom/js"]
+slog-logger = ["slog", "slog-term", "slog-async"]
+serde1 = ["serde", "serde_json", "rand/serde1", "bincode", "slog-json", "rand_xoshiro/serde1"]
+_ndarrayl = ["argmin-math/ndarray_latest-serde", "argmin-math/_dev_linalg_latest"]
+_nalgebral = ["argmin-math/nalgebra_latest-serde"]
+# When adding new features, please consider adding them to either `full` (for users)
+# or `_full_dev` (only for local development, tesing and computing test coverage).
+full = ["default", "slog-logger", "serde1", "ctrlc"]
+_full_dev = ["full", "_ndarrayl", "_nalgebral"]
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+features = ["slog-logger", "serde1"]
+

@@ -1,0 +1,11 @@
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/gif-9054b030b04a67a5.rmeta: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/traits.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/common.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/mod.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/decoder.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/encoder.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/../README.md
+
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/gif-9054b030b04a67a5.d: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/traits.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/common.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/mod.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/decoder.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/encoder.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/../README.md
+
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/lib.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/traits.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/common.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/mod.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/reader/decoder.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/encoder.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/gif-0.11.4/src/../README.md:

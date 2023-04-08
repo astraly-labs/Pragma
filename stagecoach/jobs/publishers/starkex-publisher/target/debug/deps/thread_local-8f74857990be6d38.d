@@ -1,0 +1,10 @@
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/thread_local-8f74857990be6d38.rmeta: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/cached.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/thread_id.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/unreachable.rs
+
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/libthread_local-8f74857990be6d38.rlib: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/cached.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/thread_id.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/unreachable.rs
+
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/thread_local-8f74857990be6d38.d: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/cached.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/thread_id.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/unreachable.rs
+
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/lib.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/cached.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/thread_id.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-1.1.7/src/unreachable.rs:

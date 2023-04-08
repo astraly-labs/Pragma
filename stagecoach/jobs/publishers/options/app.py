@@ -11,15 +11,15 @@ from empiric.publisher.fetchers import (
     
     BeribitFetcher
 )
-
+from dotenv import load_dotenv
+load_dotenv()
 logger = get_stream_logger()
 
 NETWORK = os.environ["NETWORK"]
 SECRET_NAME = os.environ["SECRET_NAME"]
-ASSETS = os.environ["ASSETS"]
+ASSETS = os.environ["EMPIRIC_ALL_ASSETS"]
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
-KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
 PAGINATION = os.environ.get("PAGINATION")
 if PAGINATION is not None:
     PAGINATION = int(PAGINATION)
@@ -37,7 +37,6 @@ def handler(event, context):
 
 def _get_pvt_key():
     region_name = "eu-west-3"
-
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
@@ -65,14 +64,15 @@ async def _handler(assets):
     # publisher_client.add_fetcher(KaikoFetcher(assets, PUBLISHER, KAIKO_API_KEY))
     
     _entries = await publisher_client.fetch()
-    response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
-    print(
-        f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
-    )
-    for res in response:
-        await res.wait_for_acceptance()
+    print(_entries)
+    # response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
+    # print(
+    #     f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
+    # )
+    # for res in response:
+    #     await res.wait_for_acceptance()
 
-    return _entries
+    # return _entries
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/pathfinder_simd-817efc306f5f9bb2.rmeta: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/extras.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/mod.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_f32x4.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_i32x4.rs
+
+/Users/jordyromuald/Documents/GitHub/Empiric/stagecoach/jobs/publishers/starkex-publisher/target/debug/deps/pathfinder_simd-817efc306f5f9bb2.d: /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/lib.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/extras.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/mod.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_f32x4.rs /Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_i32x4.rs
+
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/lib.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/extras.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/mod.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_f32x4.rs:
+/Users/jordyromuald/.cargo/registry/src/github.com-1ecc6299db9ec823/pathfinder_simd-0.5.1/src/scalar/swizzle_i32x4.rs:
