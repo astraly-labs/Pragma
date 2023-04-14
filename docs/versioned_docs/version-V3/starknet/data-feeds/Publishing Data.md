@@ -16,6 +16,8 @@ Here is the step-by-step breakdown:
 
 If you have trouble installing the fastecdsa dependency, try installing gmp with the command `brew install gmp` if you use Homebrew. For further troubleshooting, see this [thread](https://github.com/OpenZeppelin/nile/issues/22).
 
+If you're having a `typeguard.type_check()` error, try installing the correct version of typeguard with `pip install typeguard==2.13.3`.
+
 ### 3. Generate your public-private key pair
 
 Let's start by setting up some envirronement variables.
@@ -27,7 +29,7 @@ export STARKNET_NETWORK=alpha-goerli
 export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
 ```
 
-Now we can run the following commands 
+Now we can run the following commands:
 
 ```sh
 # Make sure you have starknet 0.10.3 installed
@@ -43,6 +45,13 @@ You should then be able to find your public/private keys under `~/.starknet/acco
 Next you will need to send some testnet/mainnet ETH on this account address in order to deploy the account.
 
 **Feel free to ask us for some!**
+
+Then simply run, replacing `<account_name>` with the name of your account.
+
+```sh
+# Deploying your account
+starknet deploy_account --account <account_name>
+```
 
 ### 5. Register your account contract address with Pragma
 
