@@ -18,28 +18,31 @@ If you have trouble installing the fastecdsa dependency, try installing gmp with
 
 ### 3. Generate your public-private key pair
 
-Run the following code to generate keys on the STARK curve (save these someplace secure and safe):
+Let's start by setting up some envirronement variables.
 
-```bash
-from starkware.crypto.signature.signature import (
-get_random_private_key,
-private_to_stark_key,
-)
-private_key = get_random_private_key()
-public_key = private_to_stark_key(private_key)
-
-print(f'Private Key: {private_key}')
-print(f'Public Key: {public_key}')
+```sh
+# Use Starknet testnet
+export STARKNET_NETWORK=alpha-goerli
+# Set the default wallet implementation to be used by the CLI
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
 ```
+
+Now we can run the following commands 
+
+```sh
+# Make sure you have starknet 0.10.3 installed
+starknet --version
+# Generate a new account
+starknet new_account --account <account_name>
+```
+
+You should then be able to find your public/private keys under `~/.starknet/accounts/starknet_open_zeppelin_accounts.json`
 
 ### 4. Deploy an account contract on StarkNet
 
-Use the following commands to compile and deploy the account contract. If you'd prefer to deploy your own account contract (we use the OpenZeppelin account contract), you can compile and deploy your own contract instead. Make sure to replace `PUBLIC_KEY_FROM_STEP_3` in the second command with your _public_ key from step 3.
+Next you will need to send some testnet/mainnet ETH on this account address in order to deploy the account.
 
-```bash
-starknet-compile --account_contract contracts/starknet/src/account/Account.cairo --abi contracts/starknet/build/Account_abi.json --output contracts/starknet/build/Account.json --cairo_path contracts/starknet/src:contracts/starknet/lib
-starknet deploy --contract contracts/starknet/build/Account.json --inputs <PUBLIC_KEY_FROM_STEP_3> --no_wallet --network alpha-goerli
-```
+**Feel free to ask us for some!**
 
 ### 5. Register your account contract address with Pragma
 
@@ -55,46 +58,46 @@ The initial publishing frequency for the oracle is every 3 minutes on Starknet A
 See a full sample script here, or copy paste the code below to get started. Note that you need to set environment variables `PUBLISHER`, `PUBLISHER_ADDRESS`, and `PUBLISHER_PRIVATE_KEY` before running the code. You can use the sample .env file here to set them (the file does not include `PUBLISHER_PRIVATE_KEY` for obvious reasons).
 To make fetching data simple, implement your own fetching function using whatever libraries you want, as long as it returns a `List[SpotEntry]`.
 
-```bash
+```python
 import asyncio
 import logging
 import os
 import time
 from typing import List
 
-from pragma.core.config import TESTNET_CONTRACTS
-from pragma.core.entry import SpotEntry
-from pragma.core.utils import currency_pair_to_pair_id, log_entry
-from pragma.publisher.assets import PRAGMA_ALL_ASSETS, PragmaAsset
-from pragma.publisher.client import PragmaPublisherClient
+from empiric.core.config import TESTNET_CONTRACTS
+from empiric.core.entry import SpotEntry
+from empiric.core.utils import currency_pair_to_pair_id, log_entry
+from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, EmpiricAsset
+from empiric.publisher.client import EmpiricPublisherClient
 
 logger = logging.getLogger(**name**)
 
 # you can fetch your data using any strategy or libraries you want
 
-def fetch*entries(assets: List[PragmaAsset], \_args, \*\*kwargs) -> List[SpotEntry]:
+def fetch_entries(assets: List[EmpiricAsset], *args, **kwargs) -> List[SpotEntry]:
 entries = []
 for asset in assets:
-entries.append(
-SpotEntry(
-timestamp=int(time.time()),
-source="MY_SOURCE",
-publisher="MY_PUBLISHER",
-pair_id=currency_pair_to_pair_id("TEST", "USD"),
-price=10 * 10 ** asset["decimals"], # shifted 10 ** decimals
-volume=0,
-)
-)
+    entries.append(
+        SpotEntry(
+        timestamp=int(time.time()),
+        source="MY_SOURCE",
+        publisher="MY_PUBLISHER",
+        pair_id=currency_pair_to_pair_id("TEST", "USD"),
+        price=10 * 10 ** asset["decimals"], # shifted 10 ** decimals
+        volume=0,
+        )
+    )
 return entries
 
 async def publish_all(assets):
-publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
-publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
-publisher_client = PragmaPublisherClient(
-account_private_key=publisher_private_key,
-account_contract_address=publisher_address,
-contract_addresses_config=TESTNET_CONTRACTS,
-)
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"), 0)
+    publisher_address = int(os.environ.get("PUBLISHER_ADDRESS"), 0)
+    publisher_client = EmpiricPublisherClient(
+        account_private_key=publisher_private_key,
+        account_contract_address=publisher_address,
+        contract_addresses_config=TESTNET_CONTRACTS,
+    )
 
     # or use your own custom logic
     _entries = fetch_entries(assets)
@@ -104,8 +107,8 @@ contract_addresses_config=TESTNET_CONTRACTS,
     for entry in _entries:
         log_entry(entry, logger=logger)
 
-if **name** == "**main**":
-asyncio.run(publish_all(PRAGMA_ALL_ASSETS))
+if __name__ == "__main__":
+    asyncio.run(publish_all(PRAGMA_ALL_ASSETS))
 
 ```
 
@@ -118,7 +121,7 @@ Again, note the .env file in that same [folder](https://github.com/Astraly-Labs/
 Alternatively, you can find an example of how to use the SDK in a serverless deployment (e.g. AWS Lambda).
 
 ```bash
-FROM Astraly-Labs/Pragma/pragma-publisher:1.0.1
+FROM Astraly-Labs/empiric-publisher:1.4.16
 
 COPY fetch-and-publish.py ./fetch-and-publish.py
 CMD python fetch-and-publish.py
