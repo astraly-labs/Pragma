@@ -4,14 +4,15 @@ import os
 from empiric.core.client import EmpiricClient
 
 publishers = ["EMPIRIC"]
-sources_to_add = [["DEFILLAMA"]]
-NETWORK = "testnet"
+sources_to_add = [["DEFILLAMA", "KAIKO", "ASCENDEX"]]
+NETWORK = "mainnet"
 
 
 async def main():
     admin_private_key = int(os.environ.get(f"ADMIN_PRIVATE_KEY_{NETWORK.upper()}"), 0)
     admin_contract_address = (
-        956631751072274915798544178446858402482160883188347933332347731459244945425
+        # 956631751072274915798544178446858402482160883188347933332347731459244945425
+        1184650273608125575980484871523834017570590833292245732172420989117857221495
     )
     admin_client = EmpiricClient(
         network=NETWORK,
