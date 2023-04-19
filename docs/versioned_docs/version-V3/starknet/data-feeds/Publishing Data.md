@@ -74,13 +74,12 @@ import os
 import time
 from typing import List
 
-from empiric.core.config import TESTNET_CONTRACTS
 from empiric.core.entry import SpotEntry
 from empiric.core.utils import currency_pair_to_pair_id, log_entry
 from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, EmpiricAsset
 from empiric.publisher.client import EmpiricPublisherClient
 
-logger = logging.getLogger(**name**)
+logger = logging.getLogger(__name__)
 
 # you can fetch your data using any strategy or libraries you want
 
@@ -105,7 +104,7 @@ async def publish_all(assets):
     publisher_client = EmpiricPublisherClient(
         account_private_key=publisher_private_key,
         account_contract_address=publisher_address,
-        contract_addresses_config=TESTNET_CONTRACTS,
+        network=os.environ['NETWORK'] # ENV var set to `testnet | mainnet`
     )
 
     # or use your own custom logic
