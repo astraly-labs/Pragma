@@ -12,9 +12,8 @@ import "../contracts/interfaces/ICurrencyManager.sol";
 
 contract deployOracle is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_LINEA");
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_SCROLL");
         TransparentUpgradeableProxy proxy;
-        CurrencyManager currencyManager;
         Oracle oracle;
         PublisherRegistry publisherRegistry;
         ProxyAdmin admin;
@@ -62,25 +61,34 @@ contract deployOracle is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        // Deploy the CurrencyManager contract
-        currencyManager = new CurrencyManager();
-
-        for (uint256 i = 0; i < currencies.length; i++) {
-            currencyManager.addCurrency(currencies[i]);
-        }
-
-        for (uint256 i = 0; i < pairs.length; i++) {
-            currencyManager.addPair(pairs[i]);
-        }
+        // Deploy the Admin contract
+        admin = new ProxyAdmin();
 
         // Deploy the PublisherRegistry contract
         publisherRegistry = new PublisherRegistry();
 
-        publisherRegistry.addPublisher(
-            "EMPIRIC",
-            0xC945cf53d9Ab754a3F5EE20030C78FE5D8Ce0010
+        // Deploy the Oracle contract
+        oracle = new Oracle();
+
+        // Deploy the Upgradeable proxy contract and set the Admin contract as its implementation
+        proxy = new TransparentUpgradeableProxy(
+            address(oracle),
+            address(admin),
+            abi.encodeWithSelector(
+                oracle.initialize.selector,
+                address(publisherRegistry),
+                currencies,
+                pairs
+            )
         );
 
+        // Add the EMPIRIC publisher
+        publisherRegistry.addPublisher(
+            "EMPIRIC",
+            0xaA4F7fD61DC6dc8a7aBb566c3D0Df48face86043 // CHANGE THIS WHEN DEPLOYING TO MAINNET
+        );
+
+        // Add the EMPIRIC sources
         bytes32[] memory sourcesArray = new bytes32[](6);
         sourcesArray[0] = (bytes32("CEX"));
         sourcesArray[1] = (bytes32("BITSTAMP"));
@@ -91,23 +99,6 @@ contract deployOracle is Script {
 
         publisherRegistry.addSourcesForPublisher("EMPIRIC", sourcesArray);
 
-        // Deploy the Oracle contract
-        oracle = new Oracle();
-
-        //initialise the oracle contract
-
-        oracle.initialize(address(publisherRegistry), currencies, pairs);
-
-        // Deploy the Admin contract
-        admin = new ProxyAdmin();
-
-        // Deploy the Upgradeable proxy contract and set the Admin contract as its implementation
-
-        proxy = new TransparentUpgradeableProxy(
-            address(oracle),
-            address(admin),
-            ""
-        );
         vm.stopBroadcast();
     }
 }
