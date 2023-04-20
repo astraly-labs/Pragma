@@ -639,11 +639,6 @@ ORACLE_ABI = [
     },
 ]
 
-provider_uris = {
-    "linea-testnet": "https://consensys-zkevm-goerli-prealpha.infura.io/v3/ef9b71db32e242f39c6cf0691c8b521a",
-    "scroll-testnet": "https://scroll-alphanet.public.blastapi.io",
-}
-
 ORACLE_ADDRESS = {
     LINEA_TESTNET: "0x26a7756c4aC33379621Da862308f8527FED3Dc47",
     SCROLL_TESTNET: "0x8445ea5A4F90C59F0BB32Ba659c659651E26e5ee",
@@ -658,15 +653,15 @@ class EvmHelper:
         private_key,
         network_name="linea_testnet",
     ):
-        self.w3 = Web3(Web3.HTTPProvider(GATEWAY_URLS[network_name.upper()]))
+        self.w3 = Web3(Web3.HTTPProvider(GATEWAY_URLS[network_name]))
 
         # The following middleware is required for POA chains (polygon, bnb, consensys zkevm)
         # See here for why https://web3py.readthedocs.io/en/v5/middleware.html?highlight=geth_poa_middleware#why-is-geth-poa-middleware-necessary
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
         
-        self.chain_id = CHAIN_IDS[network_name.upper()]
+        self.chain_id = CHAIN_IDS[network_name]
         self.oracle = self.w3.eth.contract(
-            address=ORACLE_ADDRESS[network_name.upper()],
+            address=ORACLE_ADDRESS[network_name],
             abi=ORACLE_ABI,
         )
         self.publisher = publisher

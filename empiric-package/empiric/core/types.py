@@ -11,6 +11,8 @@ STAGING = "staging"
 TESTNET = "testnet"
 INTEGRATION = "integration"
 MAINNET = "mainnet"
+SCROLL_TESTNET = "scroll_testnet"
+LINEA_TESTNET = "linea_testnet"
 
 Network = Literal["staging", "testnet", "integration", "mainnet"]
 
