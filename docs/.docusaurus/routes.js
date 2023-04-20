@@ -4,41 +4,6 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/__docusaurus/debug',
-    component: ComponentCreator('/__docusaurus/debug','3d6'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/config',
-    component: ComponentCreator('/__docusaurus/debug/config','914'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/content',
-    component: ComponentCreator('/__docusaurus/debug/content','c28'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/globalData',
-    component: ComponentCreator('/__docusaurus/debug/globalData','3cf'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/metadata',
-    component: ComponentCreator('/__docusaurus/debug/metadata','31b'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/registry',
-    component: ComponentCreator('/__docusaurus/debug/registry','0da'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/routes',
-    component: ComponentCreator('/__docusaurus/debug/routes','244'),
-    exact: true
-  },
-  {
     path: '/blog/archive',
     component: ComponentCreator('/blog/archive','f4c'),
     exact: true
@@ -74,44 +39,8 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs','7a2'),
+    component: ComponentCreator('/docs','8b2'),
     routes: [
-      {
-        path: '/docs/Consensys Zk-EVM/computational-feeds/realized-volatility',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/computational-feeds/realized-volatility','eba'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/computational-feeds/yield-curve',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/computational-feeds/yield-curve','b2c'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/consumming-data',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/consumming-data','316'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/publishing-data',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/publishing-data','147'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/data-feeds/supported-assets',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/data-feeds/supported-assets','974'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
-      {
-        path: '/docs/Consensys Zk-EVM/randomness',
-        component: ComponentCreator('/docs/Consensys Zk-EVM/randomness','4b2'),
-        exact: true,
-        'sidebar': "version-V3/mySidebar"
-      },
       {
         path: '/docs/howItWorks/architecture',
         component: ComponentCreator('/docs/howItWorks/architecture','c3a'),
@@ -133,6 +62,78 @@ export default [
       {
         path: '/docs/introduction',
         component: ComponentCreator('/docs/introduction','d95'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/computational-feeds/realized-volatility',
+        component: ComponentCreator('/docs/linea/computational-feeds/realized-volatility','083'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/computational-feeds/yield-curve',
+        component: ComponentCreator('/docs/linea/computational-feeds/yield-curve','c75'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/data-feeds/consumming-data',
+        component: ComponentCreator('/docs/linea/data-feeds/consumming-data','6c9'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/data-feeds/publishing-data',
+        component: ComponentCreator('/docs/linea/data-feeds/publishing-data','32e'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/data-feeds/supported-assets',
+        component: ComponentCreator('/docs/linea/data-feeds/supported-assets','1a1'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/linea/randomness',
+        component: ComponentCreator('/docs/linea/randomness','0c6'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/computational-feeds/realized-volatility',
+        component: ComponentCreator('/docs/scroll/computational-feeds/realized-volatility','b0d'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/computational-feeds/yield-curve',
+        component: ComponentCreator('/docs/scroll/computational-feeds/yield-curve','9ba'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/data-feeds/consumming-data',
+        component: ComponentCreator('/docs/scroll/data-feeds/consumming-data','6f6'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/data-feeds/publishing-data',
+        component: ComponentCreator('/docs/scroll/data-feeds/publishing-data','e64'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/data-feeds/supported-assets',
+        component: ComponentCreator('/docs/scroll/data-feeds/supported-assets','383'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/scroll/randomness',
+        component: ComponentCreator('/docs/scroll/randomness','236'),
         exact: true,
         'sidebar': "version-V3/mySidebar"
       },

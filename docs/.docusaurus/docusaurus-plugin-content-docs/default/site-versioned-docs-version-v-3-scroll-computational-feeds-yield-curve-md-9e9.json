@@ -1,0 +1,27 @@
+{
+  "unversionedId": "scroll/computational-feeds/yield-curve",
+  "id": "version-V3/scroll/computational-feeds/yield-curve",
+  "title": "Yield Curve",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/scroll/computational-feeds/Yield Curve.md",
+  "sourceDirName": "scroll/computational-feeds",
+  "slug": "/scroll/computational-feeds/yield-curve",
+  "permalink": "/docs/scroll/computational-feeds/yield-curve",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "yield-curve",
+    "title": "Yield Curve",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Realized Volatility",
+    "permalink": "/docs/scroll/computational-feeds/realized-volatility"
+  },
+  "next": {
+    "title": "Randomness",
+    "permalink": "/docs/scroll/randomness/"
+  }
+}

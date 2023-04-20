@@ -8,7 +8,7 @@ sidebar_position: 2
 
 ## Asset Pairs
 
-The following asset pairs are officially supported by Pragma on the Consensys ZkEVM. More are added every week, so just reach out on [Twitter](https://twitter.com/PragmaOracle) or [Discord](https://discord.com/invite/N7sM7VzfJB) if you have a specific one you need.
+The following asset pairs are officially supported by Pragma on Linea. More are added every week, so just reach out on [Twitter](https://twitter.com/PragmaOracle) or [Discord](https://discord.com/invite/N7sM7VzfJB) if you have a specific one you need.
 
 ### Spot
 

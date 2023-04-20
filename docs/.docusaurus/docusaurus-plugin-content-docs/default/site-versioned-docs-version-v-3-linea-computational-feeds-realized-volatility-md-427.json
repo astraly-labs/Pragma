@@ -1,0 +1,27 @@
+{
+  "unversionedId": "linea/computational-feeds/realized-volatility",
+  "id": "version-V3/linea/computational-feeds/realized-volatility",
+  "title": "Realized Volatility",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/linea/computational-feeds/Realized Volatility.md",
+  "sourceDirName": "linea/computational-feeds",
+  "slug": "/linea/computational-feeds/realized-volatility",
+  "permalink": "/docs/linea/computational-feeds/realized-volatility",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "realized-volatility",
+    "title": "Realized Volatility",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Publishing Data",
+    "permalink": "/docs/linea/data-feeds/publishing-data"
+  },
+  "next": {
+    "title": "Yield Curve",
+    "permalink": "/docs/linea/computational-feeds/yield-curve"
+  }
+}

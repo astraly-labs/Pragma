@@ -1,0 +1,27 @@
+{
+  "unversionedId": "linea/data-feeds/publishing-data",
+  "id": "version-V3/linea/data-feeds/publishing-data",
+  "title": "Publishing Data",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/linea/data-feeds/Publishing Data.md",
+  "sourceDirName": "linea/data-feeds",
+  "slug": "/linea/data-feeds/publishing-data",
+  "permalink": "/docs/linea/data-feeds/publishing-data",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "publishing-data",
+    "title": "Publishing Data",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Supported Assets",
+    "permalink": "/docs/linea/data-feeds/supported-assets"
+  },
+  "next": {
+    "title": "Realized Volatility",
+    "permalink": "/docs/linea/computational-feeds/realized-volatility"
+  }
+}

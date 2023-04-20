@@ -11,36 +11,6 @@
           "mainDocId": "introduction",
           "docs": [
             {
-              "id": "Consensys Zk-EVM/computational-feeds/realized-volatility",
-              "path": "/docs/Consensys Zk-EVM/computational-feeds/realized-volatility",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/computational-feeds/yield-curve",
-              "path": "/docs/Consensys Zk-EVM/computational-feeds/yield-curve",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/consumming-data",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/consumming-data",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/publishing-data",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/publishing-data",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/data-feeds/supported-assets",
-              "path": "/docs/Consensys Zk-EVM/data-feeds/supported-assets",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
-              "id": "Consensys Zk-EVM/randomness/randomness",
-              "path": "/docs/Consensys Zk-EVM/randomness/",
-              "sidebar": "version-V3/mySidebar"
-            },
-            {
               "id": "howItWorks/architecture",
               "path": "/docs/howItWorks/architecture",
               "sidebar": "version-V3/mySidebar"
@@ -58,6 +28,66 @@
             {
               "id": "introduction",
               "path": "/docs/introduction",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/computational-feeds/realized-volatility",
+              "path": "/docs/linea/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/computational-feeds/yield-curve",
+              "path": "/docs/linea/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/consumming-data",
+              "path": "/docs/linea/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/publishing-data",
+              "path": "/docs/linea/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/supported-assets",
+              "path": "/docs/linea/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/randomness/randomness",
+              "path": "/docs/linea/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/computational-feeds/realized-volatility",
+              "path": "/docs/scroll/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/computational-feeds/yield-curve",
+              "path": "/docs/scroll/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/consumming-data",
+              "path": "/docs/scroll/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/publishing-data",
+              "path": "/docs/scroll/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/supported-assets",
+              "path": "/docs/scroll/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/randomness/randomness",
+              "path": "/docs/scroll/randomness/",
               "sidebar": "version-V3/mySidebar"
             },
             {
