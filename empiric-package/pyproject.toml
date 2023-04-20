@@ -7,7 +7,7 @@ profile = "black"
 
 [tool.poetry]
 name = "empiric-network"
-version = "1.4.19"
+version = "1.4.20"
 authors = ["Astraly Labs <contact@astraly.xyz>"]
 description = "Core package for rollup-native Empiric Network"
 readme = "README.md"

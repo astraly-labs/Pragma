@@ -3,7 +3,7 @@ import time
 from typing import List
 
 from empiric.core.entry import SpotEntry
-from empiric.core.types import CHAIN_IDS, GATEWAY_URLS
+from empiric.core.types import CHAIN_IDS, GATEWAY_URLS, LINEA_TESTNET, SCROLL_TESTNET
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 
