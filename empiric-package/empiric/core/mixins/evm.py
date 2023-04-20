@@ -712,7 +712,7 @@ class EvmHelper:
         ).build_transaction(
             {
                 "nonce": nonce,
-                "chainId": 59140,
+                "chainId": self.chain_id,
                 "from": self.sender,
             }
         )
