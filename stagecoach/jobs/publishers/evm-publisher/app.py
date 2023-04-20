@@ -12,16 +12,19 @@ from empiric.publisher.fetchers import (
     CexFetcher,
     CoinbaseFetcher,
     AscendexFetcher,
+    DefillamaFetcher,
+    KaikoFetcher
 )
 from empiric.core.mixins.evm import EvmHelper
 
 logger = get_stream_logger()
 
 NETWORK = os.environ["NETWORK"]
-# SECRET_NAME = os.environ["SECRET_NAME"]
+SECRET_NAME = os.environ["SECRET_NAME"]
 ASSETS = os.environ["ASSETS"]
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = os.environ.get("PUBLISHER_ADDRESS")
+KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
 PAGINATION = os.environ.get("PAGINATION")
 if PAGINATION is not None:
     PAGINATION = int(PAGINATION)
@@ -51,9 +54,8 @@ def _get_pvt_key():
 
 async def _handler(assets):
     publisher_private_key = _get_pvt_key()
-    publisher_client = EmpiricPublisherClient(
-        network=NETWORK,
-    )
+    publisher_client = EmpiricPublisherClient()
+
     publisher_client.add_fetchers(
         [
             fetcher(assets, PUBLISHER)
@@ -62,12 +64,15 @@ async def _handler(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 AscendexFetcher,
+                DefillamaFetcher
             )
         ]
     )
+    publisher_client.add_fetcher(KaikoFetcher(assets, PUBLISHER, KAIKO_API_KEY))
+
     _entries = await publisher_client.fetch()
     # Create an instance of the EvmHelper class
-    evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key)
+    evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key, NETWORK)
     # Publish the data to the smart contract
     response = evm_helper.publish_spot_entries(
         _entries

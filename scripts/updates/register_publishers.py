@@ -60,6 +60,21 @@ if network == "testnet2":
     ]
     admin_address = 0x5B91611369AC8FF0DF129EA3A6874B063E5E4723E85A60F9F6F7477FFF439DD
 
+"""
+TESTNET2
+"""
+if network == "mainnet":
+    publishers = [
+        "EQUILIBRIUM",
+    ]
+    publishers_sources = [
+        ["BITSTAMP", "CEX", "COINBASE", "ASCENDEX", "DEFILLAMA", "KAIKO"],
+    ]
+    publisher_address = [
+        0x057944658c24ba297a3a03bbd8d88320dd197cd0144b1e2cdbdbf1dfd179da5d,
+    ]
+    admin_address = 0x29e7d00d0142eb684d6b010ddfe59348d892e5f8ff94f1b77cd372645df4b77
+
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
@@ -91,5 +106,4 @@ async def main():
 
 
 if __name__ == "__main__":
-
     asyncio.run(main())

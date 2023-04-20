@@ -3,7 +3,7 @@ import os
 
 from empiric.core.client import EmpiricClient
 
-publishers = ["EMPIRIC"]
+publishers = ["EQUILIBRIUM"]
 sources_to_add = [["DEFILLAMA", "KAIKO", "ASCENDEX"]]
 NETWORK = "mainnet"
 

@@ -12,7 +12,7 @@ import "../contracts/interfaces/ICurrencyManager.sol";
 
 contract deployOracle is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_SCROLL");
         TransparentUpgradeableProxy proxy;
         CurrencyManager currencyManager;
         Oracle oracle;
@@ -20,35 +20,41 @@ contract deployOracle is Script {
         ProxyAdmin admin;
 
         ICurrencyManager.Currency[]
-            memory currencies = new ICurrencyManager.Currency[](5);
-        currencies[0] = ICurrencyManager.Currency("USD", 6, false, address(0));
+            memory currencies = new ICurrencyManager.Currency[](6);
+        currencies[0] = ICurrencyManager.Currency("USD", 6, true, address(0));
         currencies[1] = ICurrencyManager.Currency(
-            "BTC",
+            "ETH",
             18,
-            true,
-            0x5FfD3916dCcC058aDAD868cbd4bbc58d090Ef8D2
+            false,
+            0x0000000000000000000000000000000000000000
         );
         currencies[2] = ICurrencyManager.Currency(
-            "WETH",
+            "BTC",
             18,
-            true,
-            0x2C1b868d6596a18e32E61B901E4060C872647b6C
+            false,
+            0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599
         );
         currencies[3] = ICurrencyManager.Currency(
             "USDC",
             6,
-            true,
-            0x942a59F3398Cfbf2CdB2256246F5Ed10f78C7995
+            false,
+            0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
         );
         currencies[4] = ICurrencyManager.Currency(
             "USDT",
+            6,
+            false,
+            0xdAC17F958D2ee523a2206206994597C13D831ec7
+        );
+        currencies[5] = ICurrencyManager.Currency(
+            "DAI",
             18,
-            true,
-            0xB57ffafc2E5A45A92f14A3aaa254B8Fa68C7F9c6
+            false,
+            0x6B175474E89094C44Da98b954EedeAC495271d0F
         );
 
         ICurrencyManager.Pair[] memory pairs = new ICurrencyManager.Pair[](5);
-        pairs[0] = ICurrencyManager.Pair("WETH/USD", "WETH", "USD");
+        pairs[0] = ICurrencyManager.Pair("ETH/USD", "ETH", "USD");
         pairs[1] = ICurrencyManager.Pair("BTC/USD", "BTC", "USD");
         pairs[2] = ICurrencyManager.Pair("USDC/USD", "USDC", "USD");
         pairs[3] = ICurrencyManager.Pair("USDT/USD", "USDT", "USD");
@@ -72,14 +78,16 @@ contract deployOracle is Script {
 
         publisherRegistry.addPublisher(
             "EMPIRIC",
-            0xC945cf53d9Ab754a3F5EE20030C78FE5D8Ce0010
+            0xaA4F7fD61DC6dc8a7aBb566c3D0Df48face86043
         );
 
-        bytes32[] memory sourcesArray = new bytes32[](4);
+        bytes32[] memory sourcesArray = new bytes32[](6);
         sourcesArray[0] = (bytes32("CEX"));
         sourcesArray[1] = (bytes32("BITSTAMP"));
-        sourcesArray[2] = (bytes32("GEMINI"));
-        sourcesArray[3] = (bytes32("COINBASE"));
+        sourcesArray[2] = (bytes32("ASCENDEX"));
+        sourcesArray[3] = (bytes32("DEFILLAMA"));
+        sourcesArray[4] = (bytes32("KAIKO"));
+        sourcesArray[5] = (bytes32("COINBASE"));
 
         publisherRegistry.addSourcesForPublisher("EMPIRIC", sourcesArray);
 

@@ -18,12 +18,16 @@ CHAIN_IDS = {
     INTEGRATION: 1536727068981429685321,
     TESTNET: 1536727068981429685321,
     MAINNET: 23448594291968334,
+    SCROLL_TESTNET: 534352,
+    LINEA_TESTNET: 59140,
 }
 
 GATEWAY_URLS = {
     TESTNET: "https://alpha4.starknet.io",
     INTEGRATION: "https://external.integration.starknet.io",
     MAINNET: "https://alpha-mainnet.starknet.io",
+    SCROLL_TESTNET: "https://scroll-alphanet.public.blastapi.io",
+    LINEA_TESTNET: "https://consensys-zkevm-goerli-prealpha.infura.io/v3/ef9b71db32e242f39c6cf0691c8b521a",
 }
 
 
