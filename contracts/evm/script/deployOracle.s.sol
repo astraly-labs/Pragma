@@ -12,7 +12,7 @@ import "../contracts/interfaces/ICurrencyManager.sol";
 
 contract deployOracle is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_SCROLL");
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_LINEA");
         TransparentUpgradeableProxy proxy;
         CurrencyManager currencyManager;
         Oracle oracle;
@@ -78,7 +78,7 @@ contract deployOracle is Script {
 
         publisherRegistry.addPublisher(
             "EMPIRIC",
-            0xaA4F7fD61DC6dc8a7aBb566c3D0Df48face86043
+            0xC945cf53d9Ab754a3F5EE20030C78FE5D8Ce0010
         );
 
         bytes32[] memory sourcesArray = new bytes32[](6);

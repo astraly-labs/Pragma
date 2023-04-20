@@ -640,7 +640,7 @@ ORACLE_ABI = [
 ]
 
 ORACLE_ADDRESS = {
-    LINEA_TESTNET: "0x26a7756c4aC33379621Da862308f8527FED3Dc47",
+    LINEA_TESTNET: "0x8A571d47fA7Ce97E8F6BDcEFAc1221585567C84b",
     SCROLL_TESTNET: "0x8445ea5A4F90C59F0BB32Ba659c659651E26e5ee",
 }
 
@@ -651,7 +651,7 @@ class EvmHelper:
         publisher,
         sender_address,
         private_key,
-        network_name="linea_testnet",
+        network_name,
     ):
         self.w3 = Web3(Web3.HTTPProvider(GATEWAY_URLS[network_name]))
 

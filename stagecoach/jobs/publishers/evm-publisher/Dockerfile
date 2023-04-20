@@ -4,7 +4,7 @@ RUN yum install -y gcc python-devel gmp-devel git
 
 RUN python -m pip install --upgrade pip
 
-RUN pip install empiric-network==1.4.20 typeguard==2.13.3
+RUN pip install empiric-network==1.4.21 typeguard==2.13.3 web3==5.31.4
 
 COPY app.py ${LAMBDA_TASK_ROOT}
 
