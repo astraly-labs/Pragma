@@ -641,7 +641,7 @@ ORACLE_ABI = [
 
 ORACLE_ADDRESS = {
     LINEA_TESTNET: "0x8A571d47fA7Ce97E8F6BDcEFAc1221585567C84b",
-    SCROLL_TESTNET: "0xc70b63d7c1Fd567003354Eb9Ed5ddCc81908ebc6",
+    SCROLL_TESTNET: "0xbb91Ed469258069Ff2590CA11E1800DE05Bf6Ec7",
 }
 
 
@@ -714,6 +714,7 @@ class EvmHelper:
                 "nonce": nonce,
                 "chainId": self.chain_id,
                 "from": self.sender,
+                "gasPrice": gas_price,
             }
         )
         # print(transaction)

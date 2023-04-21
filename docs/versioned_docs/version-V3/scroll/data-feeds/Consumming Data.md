@@ -11,7 +11,7 @@ The current Pragma Network proxy addresses are:
 
 | Network           | Address                                    | Explorer                                                                                                   |
 | ----------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| Scroll Alpha-Testnet | 0xc70b63d7c1Fd567003354Eb9Ed5ddCc81908ebc6 | [Explorer](https://blockscout.scroll.io/address/0xc70b63d7c1Fd567003354Eb9Ed5ddCc81908ebc6) |
+| Scroll Alpha-Testnet | 0xbb91Ed469258069Ff2590CA11E1800DE05Bf6Ec7 | [Explorer](https://blockscout.scroll.io/address/0xbb91Ed469258069Ff2590CA11E1800DE05Bf6Ec7) |
 
 ## Technical Specifications
 

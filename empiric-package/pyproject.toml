@@ -7,13 +7,13 @@ profile = "black"
 
 [tool.poetry]
 name = "empiric-network"
-version = "1.4.23"
-authors = ["Astraly Labs <contact@astraly.xyz>"]
-description = "Core package for rollup-native Empiric Network"
+version = "1.4.24"
+authors = ["Pragma <contact@pragmaoracle.com>"]
+description = "Core package for rollup-native Pragma Oracle"
 readme = "README.md"
-homepage = "https://empiric.network"
-repository = "https://github.com/Astraly-Labs/Empiric"
-documentation = "https://docs.empiric.network"
+homepage = "https://pragmaoracle.com"
+repository = "https://github.com/Astraly-Labs/Pragma"
+documentation = "https://docs.pragmaoracle.com"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

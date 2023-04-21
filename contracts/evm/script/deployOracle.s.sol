@@ -85,7 +85,7 @@ contract deployOracle is Script {
         // Add the EMPIRIC publisher
         publisherRegistry.addPublisher(
             "EMPIRIC",
-            0xaA4F7fD61DC6dc8a7aBb566c3D0Df48face86043 // CHANGE THIS WHEN DEPLOYING TO MAINNET
+            0x1e847b7d56a1aa3818E0d1E62F8C0d326801520f // CHANGE THIS WHEN DEPLOYING TO MAINNET
         );
 
         // Add the EMPIRIC sources

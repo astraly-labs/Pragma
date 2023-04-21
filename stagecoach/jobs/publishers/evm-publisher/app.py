@@ -53,7 +53,7 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = int(0x65ffe2e847a1f3389fee95a16370f562f783d48c4c5d74a8fdca701ec8d4b75c)
+    publisher_private_key = _get_pvt_key()
     publisher_client = EmpiricPublisherClient()
 
     publisher_client.add_fetchers(
@@ -75,7 +75,7 @@ async def _handler(assets):
     evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key, NETWORK)
     # Publish the data to the smart contract
     response = evm_helper.publish_spot_entries(
-        _entries
+        _entries, gas_price=1e6
     )
     print(f"Published data with tx hash: {response}")
 
