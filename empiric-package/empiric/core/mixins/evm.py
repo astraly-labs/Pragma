@@ -3,7 +3,7 @@ import time
 from typing import List
 
 from empiric.core.entry import SpotEntry
-from empiric.core.types import CHAIN_IDS, GATEWAY_URLS, LINEA_TESTNET, SCROLL_TESTNET
+from empiric.core.types import CHAIN_IDS, GATEWAY_URLS, LINEA_TESTNET, SCROLL_TESTNET, ERA_TESTNET
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 
@@ -642,6 +642,7 @@ ORACLE_ABI = [
 ORACLE_ADDRESS = {
     LINEA_TESTNET: "0x8A571d47fA7Ce97E8F6BDcEFAc1221585567C84b",
     SCROLL_TESTNET: "0xbb91Ed469258069Ff2590CA11E1800DE05Bf6Ec7",
+    ERA_TESTNET: "0x807dEEA2a8BA552b13C418F1E9Ac8a12af77D1B1",
 }
 
 

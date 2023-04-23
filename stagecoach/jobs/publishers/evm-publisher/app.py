@@ -47,9 +47,7 @@ def _get_pvt_key():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
     get_secret_value_response = client.get_secret_value(SecretId=SECRET_NAME)
-    return int(
-        json.loads(get_secret_value_response["SecretString"])["PUBLISHER_PRIVATE_KEY"]
-    )
+    return json.loads(get_secret_value_response["SecretString"])["PUBLISHER_PRIVATE_KEY"]
 
 
 async def _handler(assets):

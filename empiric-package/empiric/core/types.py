@@ -13,6 +13,7 @@ INTEGRATION = "integration"
 MAINNET = "mainnet"
 SCROLL_TESTNET = "scroll_testnet"
 LINEA_TESTNET = "linea_testnet"
+ERA_TESTNET = "era_testnet"
 
 Network = Literal["staging", "testnet", "integration", "mainnet"]
 
@@ -22,6 +23,7 @@ CHAIN_IDS = {
     MAINNET: 23448594291968334,
     SCROLL_TESTNET: 534353,
     LINEA_TESTNET: 59140,
+    ERA_TESTNET: 280
 }
 
 GATEWAY_URLS = {
@@ -30,6 +32,7 @@ GATEWAY_URLS = {
     MAINNET: "https://alpha-mainnet.starknet.io",
     SCROLL_TESTNET: "https://scroll-alphanet.public.blastapi.io",
     LINEA_TESTNET: "https://consensys-zkevm-goerli-prealpha.infura.io/v3/ef9b71db32e242f39c6cf0691c8b521a",
+    ERA_TESTNET: "https://testnet.era.zksync.dev"
 }
 
 
