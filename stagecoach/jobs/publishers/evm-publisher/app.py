@@ -75,7 +75,7 @@ async def _handler(assets):
     evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key, NETWORK)
     # Publish the data to the smart contract
     response = evm_helper.publish_spot_entries(
-        _entries, gas_price=1e6
+        _entries, gas_price=int(1e6)
     )
     print(f"Published data with tx hash: {response}")
 

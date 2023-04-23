@@ -3,7 +3,7 @@
   "version": "V3",
   "label": "V3",
   "banner": null,
-  "badge": true,
+  "badge": false,
   "className": "docs-version-V3",
   "isLast": true,
   "docsSidebars": {
@@ -239,10 +239,106 @@
             "docId": "scroll/randomness/randomness"
           }
         ]
+      },
+      {
+        "type": "category",
+        "label": "ZkSync Era",
+        "collapsible": true,
+        "collapsed": false,
+        "items": [
+          {
+            "type": "category",
+            "label": "Data Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Consumming Data",
+                "href": "/docs/era/data-feeds/consumming-data",
+                "docId": "era/data-feeds/consumming-data"
+              },
+              {
+                "type": "link",
+                "label": "Supported Assets",
+                "href": "/docs/era/data-feeds/supported-assets",
+                "docId": "era/data-feeds/supported-assets"
+              },
+              {
+                "type": "link",
+                "label": "Publishing Data",
+                "href": "/docs/era/data-feeds/publishing-data",
+                "docId": "era/data-feeds/publishing-data"
+              }
+            ]
+          },
+          {
+            "type": "category",
+            "label": "Computational Feeds",
+            "collapsible": true,
+            "collapsed": true,
+            "items": [
+              {
+                "type": "link",
+                "label": "Realized Volatility",
+                "href": "/docs/era/computational-feeds/realized-volatility",
+                "docId": "era/computational-feeds/realized-volatility"
+              },
+              {
+                "type": "link",
+                "label": "Yield Curve",
+                "href": "/docs/era/computational-feeds/yield-curve",
+                "docId": "era/computational-feeds/yield-curve"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": "VRF",
+            "href": "/docs/era/randomness/",
+            "docId": "era/randomness/randomness"
+          }
+        ]
       }
     ]
   },
   "docs": {
+    "era/computational-feeds/realized-volatility": {
+      "id": "era/computational-feeds/realized-volatility",
+      "title": "Realized Volatility",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "era/computational-feeds/yield-curve": {
+      "id": "era/computational-feeds/yield-curve",
+      "title": "Yield Curve",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "era/data-feeds/consumming-data": {
+      "id": "era/data-feeds/consumming-data",
+      "title": "Consumming Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "era/data-feeds/publishing-data": {
+      "id": "era/data-feeds/publishing-data",
+      "title": "Publishing Data",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "era/data-feeds/supported-assets": {
+      "id": "era/data-feeds/supported-assets",
+      "title": "Supported Assets",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
+    "era/randomness/randomness": {
+      "id": "era/randomness/randomness",
+      "title": "Randomness",
+      "description": "---",
+      "sidebar": "version-V3/mySidebar"
+    },
     "howItWorks/architecture": {
       "id": "howItWorks/architecture",
       "title": "Architecture",

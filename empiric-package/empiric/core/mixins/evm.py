@@ -715,9 +715,9 @@ class EvmHelper:
                 "chainId": self.chain_id,
                 "from": self.sender,
                 "gasPrice": gas_price,
+                "gas": 1000000,
             }
         )
-        # print(transaction)
         signed_tx = self.w3.eth.account.sign_transaction(transaction, self.private_key)
 
         txn_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)

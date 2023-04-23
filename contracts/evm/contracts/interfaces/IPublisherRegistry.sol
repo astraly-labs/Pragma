@@ -11,15 +11,14 @@ interface IPublisherRegistry {
 
     function addPublisher(bytes32 publisher, address publisherAddress) external;
 
-    function canPublishSource(bytes32 publisher, bytes32 source)
-        external
-        view
-        returns (bool);
+    function canPublishSource(
+        bytes32 publisher,
+        bytes32 source
+    ) external view returns (bool);
 
-    function publisherAddresses(bytes32 publisher)
-        external
-        view
-        returns (address);
+    function publisherAddresses(
+        bytes32 publisher
+    ) external view returns (address);
 
     function addSourcesForPublisher(
         bytes32 publisher,

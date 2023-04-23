@@ -4,11 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract EntryUtils {
-    function swap(
-        uint256[] memory array,
-        uint256 i,
-        uint256 j
-    ) internal pure {
+    function swap(uint256[] memory array, uint256 i, uint256 j) internal pure {
         (array[i], array[j]) = (array[j], array[i]);
     }
 
@@ -31,11 +27,10 @@ contract EntryUtils {
         }
     }
 
-    function median(uint256[] memory array, uint256 length)
-        internal
-        pure
-        returns (uint256)
-    {
+    function median(
+        uint256[] memory array,
+        uint256 length
+    ) internal pure returns (uint256) {
         sort(array, 0, length);
         return
             length % 2 == 0

@@ -19,5 +19,9 @@
   "previous": {
     "title": "Yield Curve",
     "permalink": "/docs/scroll/computational-feeds/yield-curve"
+  },
+  "next": {
+    "title": "Consumming Data",
+    "permalink": "/docs/era/data-feeds/consumming-data"
   }
 }

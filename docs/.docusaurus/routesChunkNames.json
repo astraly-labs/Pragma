@@ -6,25 +6,33 @@
   "/search-79a": {
     "component": "1a4e3797"
   },
-  "/docs/V1-1d3": {
-    "component": "1be78505",
-    "versionMetadata": "9b84ed36"
-  },
-  "/docs/V1/404-c97": {
-    "component": "17896441",
-    "content": "725eae7a"
-  },
-  "/docs/V2-fe7": {
-    "component": "1be78505",
-    "versionMetadata": "c28d9616"
-  },
-  "/docs/V2/404-b96": {
-    "component": "17896441",
-    "content": "0762a445"
-  },
-  "/docs-8b2": {
+  "/docs-038": {
     "component": "1be78505",
     "versionMetadata": "a12dfdb8"
+  },
+  "/docs/era/computational-feeds/realized-volatility-1e0": {
+    "component": "17896441",
+    "content": "75baba56"
+  },
+  "/docs/era/computational-feeds/yield-curve-293": {
+    "component": "17896441",
+    "content": "13220f73"
+  },
+  "/docs/era/data-feeds/consumming-data-d68": {
+    "component": "17896441",
+    "content": "78fb956c"
+  },
+  "/docs/era/data-feeds/publishing-data-66b": {
+    "component": "17896441",
+    "content": "563146b8"
+  },
+  "/docs/era/data-feeds/supported-assets-b18": {
+    "component": "17896441",
+    "content": "06bf8b0c"
+  },
+  "/docs/era/randomness-beb": {
+    "component": "17896441",
+    "content": "e10cd5b6"
   },
   "/docs/howItWorks/architecture-c3a": {
     "component": "17896441",

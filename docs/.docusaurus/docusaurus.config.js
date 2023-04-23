@@ -89,7 +89,7 @@ export default {
           "sidebarPath": "/Users/matthall/Documents/Empiric/docs/sidebars.js",
           "includeCurrentVersion": false,
           "versions": {
-            "V1": {
+            "V3": {
               "banner": "none"
             }
           }

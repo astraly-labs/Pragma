@@ -11,6 +11,36 @@
           "mainDocId": "introduction",
           "docs": [
             {
+              "id": "era/computational-feeds/realized-volatility",
+              "path": "/docs/era/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/computational-feeds/yield-curve",
+              "path": "/docs/era/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/consumming-data",
+              "path": "/docs/era/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/publishing-data",
+              "path": "/docs/era/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/supported-assets",
+              "path": "/docs/era/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/randomness/randomness",
+              "path": "/docs/era/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
               "id": "howItWorks/architecture",
               "path": "/docs/howItWorks/architecture",
               "sidebar": "version-V3/mySidebar"
@@ -136,50 +166,6 @@
               "link": {
                 "path": "/docs/introduction",
                 "label": "version-V3/introduction"
-              }
-            }
-          }
-        },
-        {
-          "name": "V2",
-          "label": "V2",
-          "isLast": false,
-          "path": "/docs/V2",
-          "mainDocId": "404",
-          "docs": [
-            {
-              "id": "404",
-              "path": "/docs/V2/404",
-              "sidebar": "version-V2/mySidebar"
-            }
-          ],
-          "sidebars": {
-            "version-V2/mySidebar": {
-              "link": {
-                "path": "/docs/V2/404",
-                "label": "version-V2/404"
-              }
-            }
-          }
-        },
-        {
-          "name": "V1",
-          "label": "V1",
-          "isLast": false,
-          "path": "/docs/V1",
-          "mainDocId": "404",
-          "docs": [
-            {
-              "id": "404",
-              "path": "/docs/V1/404",
-              "sidebar": "version-V1/mySidebar"
-            }
-          ],
-          "sidebars": {
-            "version-V1/mySidebar": {
-              "link": {
-                "path": "/docs/V1/404",
-                "label": "version-V1/404"
               }
             }
           }

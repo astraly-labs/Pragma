@@ -216,7 +216,10 @@ library Math {
     /**
      * @notice Calculates sqrt(a), following the selected rounding direction.
      */
-    function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {
+    function sqrt(
+        uint256 a,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         uint256 result = sqrt(a);
         if (rounding == Rounding.Up && result * result < a) {
             result += 1;
@@ -284,10 +287,16 @@ library AddressUpgradeable {
      * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
      */
     function sendValue(address payable recipient, uint256 amount) internal {
-        require(address(this).balance >= amount, "Address: insufficient balance");
+        require(
+            address(this).balance >= amount,
+            "Address: insufficient balance"
+        );
 
         (bool success, ) = recipient.call{value: amount}("");
-        require(success, "Address: unable to send value, recipient may have reverted");
+        require(
+            success,
+            "Address: unable to send value, recipient may have reverted"
+        );
     }
 
     /**
@@ -308,7 +317,10 @@ library AddressUpgradeable {
      *
      * _Available since v3.1._
      */
-    function functionCall(address target, bytes memory data) internal returns (bytes memory) {
+    function functionCall(
+        address target,
+        bytes memory data
+    ) internal returns (bytes memory) {
         return functionCall(target, data, "Address: low-level call failed");
     }
 
@@ -342,7 +354,13 @@ library AddressUpgradeable {
         bytes memory data,
         uint256 value
     ) internal returns (bytes memory) {
-        return functionCallWithValue(target, data, value, "Address: low-level call with value failed");
+        return
+            functionCallWithValue(
+                target,
+                data,
+                value,
+                "Address: low-level call with value failed"
+            );
     }
 
     /**
@@ -357,10 +375,15 @@ library AddressUpgradeable {
         uint256 value,
         string memory errorMessage
     ) internal returns (bytes memory) {
-        require(address(this).balance >= value, "Address: insufficient balance for call");
+        require(
+            address(this).balance >= value,
+            "Address: insufficient balance for call"
+        );
         require(isContract(target), "Address: call to non-contract");
 
-        (bool success, bytes memory returndata) = target.call{value: value}(data);
+        (bool success, bytes memory returndata) = target.call{value: value}(
+            data
+        );
         return verifyCallResult(success, returndata, errorMessage);
     }
 
@@ -370,8 +393,16 @@ library AddressUpgradeable {
      *
      * _Available since v3.3._
      */
-    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
-        return functionStaticCall(target, data, "Address: low-level static call failed");
+    function functionStaticCall(
+        address target,
+        bytes memory data
+    ) internal view returns (bytes memory) {
+        return
+            functionStaticCall(
+                target,
+                data,
+                "Address: low-level static call failed"
+            );
     }
 
     /**
@@ -493,7 +524,9 @@ abstract contract Initializable {
     modifier initializer() {
         bool isTopLevelCall = !_initializing;
         require(
-            (isTopLevelCall && _initialized < 1) || (!AddressUpgradeable.isContract(address(this)) && _initialized == 1),
+            (isTopLevelCall && _initialized < 1) ||
+                (!AddressUpgradeable.isContract(address(this)) &&
+                    _initialized == 1),
             "Initializable: contract is already initialized"
         );
         _initialized = 1;
@@ -520,7 +553,10 @@ abstract contract Initializable {
      * a contract, executing them in the right order is up to the developer or operator.
      */
     modifier reinitializer(uint8 version) {
-        require(!_initializing && _initialized < version, "Initializable: contract is already initialized");
+        require(
+            !_initializing && _initialized < version,
+            "Initializable: contract is already initialized"
+        );
         _initialized = version;
         _initializing = true;
         _;
@@ -630,15 +666,14 @@ interface IPublisherRegistry {
 
     function addPublisher(bytes32 publisher, address publisherAddress) external;
 
-    function canPublishSource(bytes32 publisher, bytes32 source)
-        external
-        view
-        returns (bool);
+    function canPublishSource(
+        bytes32 publisher,
+        bytes32 source
+    ) external view returns (bool);
 
-    function publisherAddresses(bytes32 publisher)
-        external
-        view
-        returns (address);
+    function publisherAddresses(
+        bytes32 publisher
+    ) external view returns (address);
 
     function addSourcesForPublisher(
         bytes32 publisher,
@@ -685,7 +720,10 @@ abstract contract Context {
 abstract contract Ownable is Context {
     address private _owner;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
@@ -732,7 +770,10 @@ abstract contract Ownable is Context {
      * Can only be called by the current owner.
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        require(
+            newOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
         _transferOwnership(newOwner);
     }
 
@@ -776,15 +817,10 @@ contract CurrencyManager is ICurrencyManager, Ownable {
 
         emit SubmittedPair(pair);
     }
-
 }
 
 contract EntryUtils {
-    function swap(
-        uint256[] memory array,
-        uint256 i,
-        uint256 j
-    ) internal pure {
+    function swap(uint256[] memory array, uint256 i, uint256 j) internal pure {
         (array[i], array[j]) = (array[j], array[i]);
     }
 
@@ -807,11 +843,10 @@ contract EntryUtils {
         }
     }
 
-    function median(uint256[] memory array, uint256 length)
-        internal
-        pure
-        returns (uint256)
-    {
+    function median(
+        uint256[] memory array,
+        uint256 length
+    ) internal pure returns (uint256) {
         sort(array, 0, length);
         return
             length % 2 == 0
@@ -861,9 +896,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         _publishSpotEntry(spotEntry);
     }
 
-    function setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
-        public
-    {
+    function setCheckpoint(
+        bytes32 pairId,
+        AggregationMode aggregationMode
+    ) public {
         _setCheckpoint(pairId, aggregationMode);
     }
 
@@ -876,9 +912,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
-        private
-    {
+    function _setCheckpoint(
+        bytes32 pairId,
+        AggregationMode aggregationMode
+    ) private {
         bytes32[] memory sources = oracleSourcesStorage[pairId];
         (
             uint256 value,
@@ -964,7 +1001,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         return (_price, _decimals, _lastUpdatedTimestamp, entries.length);
     }
 
-    function getSpotEntries(bytes32 pairId, bytes32[] memory sources)
+    function getSpotEntries(
+        bytes32 pairId,
+        bytes32[] memory sources
+    )
         public
         view
         returns (
@@ -983,7 +1023,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         return (entries, _lastUpdatedTimestamp);
     }
 
-    function _getSpotEntriesArray(bytes32 pairId, bytes32[] memory sources)
+    function _getSpotEntriesArray(
+        bytes32 pairId,
+        bytes32[] memory sources
+    )
         internal
         view
         returns (SpotEntryStorage[] memory, uint256 latestTimestamp)
@@ -1018,11 +1061,9 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _aggregateSpotEntries(SpotEntryStorage[] memory entries)
-        internal
-        pure
-        returns (uint256)
-    {
+    function _aggregateSpotEntries(
+        SpotEntryStorage[] memory entries
+    ) internal pure returns (uint256) {
         uint256[] memory values = new uint256[](entries.length);
         uint256 length = 0;
         for (uint256 i = 0; i < entries.length; i++) {
@@ -1110,11 +1151,9 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _splitBytes32(bytes32 source)
-        internal
-        pure
-        returns (bytes16, bytes16)
-    {
+    function _splitBytes32(
+        bytes32 source
+    ) internal pure returns (bytes16, bytes16) {
         bytes16[2] memory y = [bytes16(0), 0];
         assembly {
             mstore(y, source)

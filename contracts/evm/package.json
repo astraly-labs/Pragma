@@ -1,5 +1,5 @@
 {
-	"name": "empiric-protocol",
+	"name": "pragma-protocol",
 	"private": true,
 	"version": "1.0.0",
 	"license": "MIT",
@@ -11,7 +11,7 @@
 		"clean": "hardhat clean && rm -rf artifacts artifacts-zk cache cache-zk crytic-export corpus verify.json",
 		"coverage": "UNIT_TESTS=1 hardhat coverage --network hardhat && istanbul check-coverage --branches 100 --lines 100",
 		"format": "prettier --check \"./**/*.{ts,sol}\"",
-		"format:fix": "prettier --write \"./**/*.{ts,sol}\"",
+		"format:fix": "prettier --write \"./**/*.{ts,sol}\" --ignore-path lib/**/*",
 		"lint": "eslint --ext .ts test test-e2e zksync-helpers hardhat.config.ts",
 		"lint:fix": "yarn lint --fix",
 		"local-setup": "./scripts/start-local-setup.sh",
@@ -32,9 +32,9 @@
 		"@defi-wonderland/smock": "^2.3.4",
 		"@eth-optimism/smock": "=1.1.10",
 		"@makerdao/hardhat-utils": "^0.1.3",
-		"@matterlabs/hardhat-zksync-deploy": "^0.6.1",
-		"@matterlabs/hardhat-zksync-solc": "^0.3.14-beta.1",
-		"@matterlabs/hardhat-zksync-verify": "^0.1.1",
+		"@matterlabs/hardhat-zksync-deploy": "0.6.3",
+		"@matterlabs/hardhat-zksync-solc": "0.3.16",
+		"@matterlabs/hardhat-zksync-verify": "0.1.5",
 		"@nomicfoundation/hardhat-network-helpers": "^1.0.7",
 		"@nomiclabs/ethereumjs-vm": "^4.2.2",
 		"@nomiclabs/hardhat-ethers": "^2.1.1",
@@ -80,7 +80,7 @@
 		"typescript": "^4.7.4",
 		"utf8": "^3.0.0",
 		"web3": "^1.3.4",
-		"zksync-web3": "^0.12.5"
+		"zksync-web3": "0.14.3"
 	},
 	"main": "index.js"
 }

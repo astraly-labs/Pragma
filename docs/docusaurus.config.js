@@ -77,7 +77,7 @@ module.exports = {
 
       // Should we use the prefers-color-scheme media-query,
       // using user system preferences, instead of the hardcoded defaultMode
-      respectPrefersColorScheme: true,
+      respectPrefersColorScheme: false,
     },
   },
   presets: [
@@ -93,7 +93,7 @@ module.exports = {
           // editUrl: 'https://github.com/Astraly-Labs/astraly-docs/tree/main/',
           includeCurrentVersion: false,
           versions: {
-            V1: {
+            V3: {
               banner: 'none',
             },
           },

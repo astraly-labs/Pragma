@@ -14,33 +14,45 @@ export default [
     exact: true
   },
   {
-    path: '/docs/V1',
-    component: ComponentCreator('/docs/V1','1d3'),
-    routes: [
-      {
-        path: '/docs/V1/404',
-        component: ComponentCreator('/docs/V1/404','c97'),
-        exact: true,
-        'sidebar': "version-V1/mySidebar"
-      }
-    ]
-  },
-  {
-    path: '/docs/V2',
-    component: ComponentCreator('/docs/V2','fe7'),
-    routes: [
-      {
-        path: '/docs/V2/404',
-        component: ComponentCreator('/docs/V2/404','b96'),
-        exact: true,
-        'sidebar': "version-V2/mySidebar"
-      }
-    ]
-  },
-  {
     path: '/docs',
-    component: ComponentCreator('/docs','8b2'),
+    component: ComponentCreator('/docs','038'),
     routes: [
+      {
+        path: '/docs/era/computational-feeds/realized-volatility',
+        component: ComponentCreator('/docs/era/computational-feeds/realized-volatility','1e0'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/era/computational-feeds/yield-curve',
+        component: ComponentCreator('/docs/era/computational-feeds/yield-curve','293'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/era/data-feeds/consumming-data',
+        component: ComponentCreator('/docs/era/data-feeds/consumming-data','d68'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/era/data-feeds/publishing-data',
+        component: ComponentCreator('/docs/era/data-feeds/publishing-data','66b'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/era/data-feeds/supported-assets',
+        component: ComponentCreator('/docs/era/data-feeds/supported-assets','b18'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
+      {
+        path: '/docs/era/randomness',
+        component: ComponentCreator('/docs/era/randomness','beb'),
+        exact: true,
+        'sidebar': "version-V3/mySidebar"
+      },
       {
         path: '/docs/howItWorks/architecture',
         component: ComponentCreator('/docs/howItWorks/architecture','c3a'),

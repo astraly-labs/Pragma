@@ -63,9 +63,9 @@ cache-zk
 artifacts-zk
 
 # temporary gitignore during development
-contracts/evm/deploy/
 contracts/evm/out
 contracts/evm/forge-cache/solidity-files-cache.json
 contracts/evm/broadcast/*
+contracts/evm/lib/
 
 .env.local
