@@ -676,6 +676,7 @@ class EvmHelper:
         source,
         volume=0,
         gas_price=int(1e8),
+        gas=int(1e6)
     ):
         nonce = self.w3.eth.getTransactionCount(self.sender)
         txn = self.oracle.functions.publishSpotEntry(
@@ -693,6 +694,7 @@ class EvmHelper:
             {
                 "nonce": nonce,
                 "gasPrice": gas_price,
+                "gasPrice": gas,
                 "chainId": self.chain_id,
                 "from": self.sender,
             }
@@ -705,7 +707,7 @@ class EvmHelper:
 
         return signed_txn.hash.hex()
 
-    def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8)):
+    def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8), gas=int(1e6)):
         serialized_spot_entries = SpotEntry.serialize_entries_evm(spot_entries)
         nonce = self.w3.eth.get_transaction_count(self.sender)
         transaction = self.oracle.functions.publishSpotEntries(
@@ -716,7 +718,7 @@ class EvmHelper:
                 "chainId": self.chain_id,
                 "from": self.sender,
                 "gasPrice": gas_price,
-                "gas": 1000000,
+                "gas": gas,
             }
         )
         signed_tx = self.w3.eth.account.sign_transaction(transaction, self.private_key)
