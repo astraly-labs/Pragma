@@ -16,6 +16,12 @@ export default {
   "trailingSlash": false,
   "themeConfig": {
     "image": "img/background.jpg",
+    "metadata": [
+      {
+        "name": "twitter:card",
+        "content": "summary"
+      }
+    ],
     "prism": {
       "additionalLanguages": [
         "solidity"
@@ -60,12 +66,11 @@ export default {
     "colorMode": {
       "defaultMode": "dark",
       "disableSwitch": false,
-      "respectPrefersColorScheme": true
+      "respectPrefersColorScheme": false
     },
     "docs": {
       "versionPersistence": "localStorage"
     },
-    "metadata": [],
     "hideableSidebar": false,
     "autoCollapseSidebarCategories": false,
     "tableOfContents": {

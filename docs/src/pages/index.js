@@ -293,7 +293,7 @@ export default function Home() {
     <Layout
       title={`Pragma Documentation`}
       description="Technical Documentation For The Pragma Protocol"
-      image={useBaseUrl('/img/favicon.png')}
+      image={useBaseUrl('/img/background.jpg')}
     >
       <Container>
         <DocsHeader>
