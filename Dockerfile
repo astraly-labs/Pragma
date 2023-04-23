@@ -5,7 +5,7 @@ FROM python:3.9-slim-buster AS base
 RUN apt-get update && apt-get install -y gcc python-dev libgmp3-dev curl
 RUN python -m pip install --upgrade pip
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.4.0
 ENV PATH="${PATH}:/root/.local/bin"
 # Install grade
 RUN mkdir /app/
