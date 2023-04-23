@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pragma"
-version = "1.5.1"
+version = "1.5.2"
 description = "Pragma, the leading Oracle on zkRollups."
 authors = ["0xevolve <support@astraly.xyz>"]
 license = "MIT"
