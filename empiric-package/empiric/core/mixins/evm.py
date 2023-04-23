@@ -640,7 +640,7 @@ ORACLE_ABI = [
 ]
 
 ORACLE_ADDRESS = {
-    LINEA_TESTNET: "0x8A571d47fA7Ce97E8F6BDcEFAc1221585567C84b",
+    LINEA_TESTNET: "0xa2c8B12F06c27F235F1732A95cb86667476951Ac",
     SCROLL_TESTNET: "0xbb91Ed469258069Ff2590CA11E1800DE05Bf6Ec7",
     ERA_TESTNET: "0x807dEEA2a8BA552b13C418F1E9Ac8a12af77D1B1",
 }
@@ -710,17 +710,25 @@ class EvmHelper:
     def publish_spot_entries(self, spot_entries: List[SpotEntry], gas_price=int(1e8), gas=int(1e6)):
         serialized_spot_entries = SpotEntry.serialize_entries_evm(spot_entries)
         nonce = self.w3.eth.get_transaction_count(self.sender)
-        transaction = self.oracle.functions.publishSpotEntries(
-            serialized_spot_entries
-        ).build_transaction(
-            {
+
+        # Transaction params
+        # If it's a legacy transaction, we need to set the gasPrice and gas
+        build_params = {
                 "nonce": nonce,
                 "chainId": self.chain_id,
                 "from": self.sender,
-                "gasPrice": gas_price,
-                "gas": gas,
-            }
+        }
+        if gas_price > 0:
+            build_params["gasPrice"] = gas_price
+        if gas > 0:
+            build_params["gas"] = gas
+
+        transaction = self.oracle.functions.publishSpotEntries(
+            serialized_spot_entries
+        ).build_transaction(
+            build_params
         )
+
         signed_tx = self.w3.eth.account.sign_transaction(transaction, self.private_key)
 
         txn_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)

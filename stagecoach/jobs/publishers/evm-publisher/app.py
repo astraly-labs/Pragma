@@ -19,9 +19,9 @@ from empiric.core.mixins.evm import EvmHelper
 
 logger = get_stream_logger()
 
-NETWORK = os.environ["NETWORK"]
-SECRET_NAME = os.environ["SECRET_NAME"]
-ASSETS = os.environ["ASSETS"]
+NETWORK = os.environ.get("NETWORK")
+SECRET_NAME = os.environ.get("SECRET_NAME")
+ASSETS = os.environ.get("ASSETS")
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = os.environ.get("PUBLISHER_ADDRESS")
 KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
@@ -73,7 +73,7 @@ async def _handler(assets):
     evm_helper = EvmHelper(PUBLISHER, PUBLISHER_ADDRESS, publisher_private_key, NETWORK)
     # Publish the data to the smart contract
     response = evm_helper.publish_spot_entries(
-        _entries, gas_price=os.environ['GAS_PRICE'] or int(1e6), gas=os.environ['GAS'] or 1e6
+        _entries, gas_price=int(os.environ['GAS_PRICE']), gas=int(os.environ['GAS'])
     )
     print(f"Published data with tx hash: {response}")
 

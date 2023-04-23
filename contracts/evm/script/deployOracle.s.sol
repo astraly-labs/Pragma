@@ -12,7 +12,7 @@ import "../contracts/interfaces/ICurrencyManager.sol";
 
 contract deployOracle is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_SCROLL");
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_LINEA");
         TransparentUpgradeableProxy proxy;
         Oracle oracle;
         PublisherRegistry publisherRegistry;
@@ -85,7 +85,7 @@ contract deployOracle is Script {
         // Add the EMPIRIC publisher
         publisherRegistry.addPublisher(
             "EMPIRIC",
-            0x1e847b7d56a1aa3818E0d1E62F8C0d326801520f // CHANGE THIS WHEN DEPLOYING TO MAINNET
+            0xC945cf53d9Ab754a3F5EE20030C78FE5D8Ce0010 // CHANGE THIS WHEN DEPLOYING TO MAINNET
         );
 
         // Add the EMPIRIC sources
