@@ -11,7 +11,7 @@ The current Pragma Network proxy addresses are:
 
 | Network           | Address                                    | Explorer                                                                                                   |
 | ----------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| Linea Testnet | 0x26a7756c4aC33379621Da862308f8527FED3Dc47 | [Explorer](https://explorer.goerli.linea.build/address/0x26a7756c4aC33379621Da862308f8527FED3Dc47/) |
+| Linea Testnet | 0xa2c8B12F06c27F235F1732A95cb86667476951Ac | [Explorer](https://explorer.goerli.linea.build/address/0xa2c8B12F06c27F235F1732A95cb86667476951Ac/) |
 
 ## Technical Specifications
 
