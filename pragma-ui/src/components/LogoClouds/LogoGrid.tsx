@@ -9,7 +9,7 @@ interface LogoCloudProps {
 
 const LogoGrid: React.FC<LogoCloudProps> = ({ title, logos }) => (
   <figure className="w-full max-w-7xl">
-    <figcaption className="mb-2 text-sm uppercase tracking-wide text-slate-700 sm:text-base md:mb-5 md:text-lg ">
+    <figcaption className="mb-2 text-sm uppercase tracking-wide text-white sm:text-base md:mb-5 md:text-lg ">
       {title}
     </figcaption>
     <ul className="grid grid-cols-2 place-items-center md:grid-cols-4">

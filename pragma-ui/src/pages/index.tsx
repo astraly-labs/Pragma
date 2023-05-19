@@ -13,6 +13,7 @@ import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
 // import LogoGrid from "../components/LogoClouds/LogoGrid";
 import { Logo } from "../components/LogoClouds/LogoCloud";
+import LogoGrid from "../components/LogoClouds/LogoGrid";
 // import Advisors from "../components/Landing/Advisors";
 
 const stats = [
@@ -34,28 +35,18 @@ const stats = [
   // },
 ];
 
-// const dataPublishers: Logo[] = [
-// {
-//   name: "Jane Street",
-//   src: "/assets/publishers/jane-street.webp",
-//   href: "https://www.janestreet.com/",
-// },
-// {
-//   name: "CMT Digital",
-//   src: "/assets/publishers/cmtdigital.webp",
-//   href: "https://cmt.digital/",
-// },
-// {
-//   name: "Flow Traders",
-//   src: "/assets/publishers/flow-traders.webp",
-//   href: "https://www.flowtraders.com/",
-// },
-// {
-//   name: "Gemini",
-//   src: "/assets/publishers/gemini.svg",
-//   href: "https://www.gemini.com/",
-// },
-// ];
+const dataPublishers: Logo[] = [
+  {
+    name: "Skynet Trading",
+    src: "/assets/publishers/skynet.webp",
+    href: "https://www.skynettrading.com/",
+  },
+  {
+    name: "Flowdesk",
+    src: "/assets/publishers/flowdesk.webp",
+    href: "https://www.flowdesk.co/",
+  },
+];
 
 const ecosystemPartners: Logo[] = [
   {
@@ -104,12 +95,12 @@ const IndexPage = () => (
     <SectionContainer className="bg-dark" first>
       <Hero />
     </SectionContainer>
-    {/* <SectionContainer className="bg-slate-50 !pt-0 !pb-32">
+    <SectionContainer className="bg-dark">
       <LogoGrid
         title="Proprietary data from custom integrations with"
         logos={dataPublishers}
       />
-    </SectionContainer> */}
+    </SectionContainer>
     <SectionContainer className="bg-black !pt-0">
       <AssetsSection />
       <LogoCloud title="Trusted by" logos={protocols} />

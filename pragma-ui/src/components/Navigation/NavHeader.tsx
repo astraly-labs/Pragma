@@ -10,6 +10,7 @@ import {
   PuzzleIcon,
   ViewListIcon,
   XIcon,
+  SpeakerphoneIcon,
 } from "@heroicons/react/outline";
 import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
@@ -41,12 +42,12 @@ const resources: Resource[] = [
     href: "/features",
     icon: PuzzleIcon,
   },
-  // {
-  //   name: "Publishers",
-  //   description: "Meet our data publishers.",
-  //   href: "/publishers",
-  //   icon: SpeakerphoneIcon,
-  // },
+  {
+    name: "Publishers",
+    description: "Meet our data publishers.",
+    href: "/publishers",
+    icon: SpeakerphoneIcon,
+  },
   {
     name: "Protocols",
     description: "Take a look at who is already using Pragma.",

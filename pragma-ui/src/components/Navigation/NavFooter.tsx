@@ -49,11 +49,11 @@ const content: FooterColumn[] = [
         href: "/features",
         external: false,
       },
-      // {
-      //   title: "Publishers",
-      //   href: "/publishers",
-      //   external: false,
-      // },
+      {
+        title: "Publishers",
+        href: "/publishers",
+        external: false,
+      },
       {
         title: "Protocols",
         href: "/protocols",
