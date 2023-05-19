@@ -38,7 +38,7 @@ const stats = [
 const dataPublishers: Logo[] = [
   {
     name: "Skynet Trading",
-    src: "/assets/publishers/skynet.webp",
+    src: "/assets/publishers/skynet.svg",
     href: "https://www.skynettrading.com/",
   },
   {

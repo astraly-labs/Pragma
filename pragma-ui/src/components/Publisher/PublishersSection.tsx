@@ -12,7 +12,7 @@ export interface PublisherCardProps {
 export const publishers: PublisherCardProps[] = [
   {
     name: "Skynet Trading",
-    src: "/assets/publishers/skynet.webp",
+    src: "/assets/publishers/skynet.svg",
     description:
       "Skynet Trading is focused on trading strategies for the digital assets market. Skynet provides institutional-grade liquidity solutions and advisory services to token issuers and cryptocurrency exchanges that meet our vision for compliance and innovation.\n\n Skynet will contribute its proprietary crypto market data to the Pragma Network.",
     href: "https://skynettrading.com/",
