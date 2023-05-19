@@ -24,6 +24,13 @@ export const publishers: PublisherCardProps[] = [
       "Flowdesk is building an all-in-one platform for your crypto business.Flowdesk provides a trading infrastructure for market-making and other crypto-financial services.\n\n Skynet will contribute its proprietary crypto market data to the Pragma Network.",
     href: "https://www.flowdesk.co/",
   },
+  {
+    name: "Kaiko",
+    src: "/assets/publishers/kaiko.webp",
+    description:
+      "Kaiko provides Digital Assets Market Data Scaled for Institutions with seamless connectivity to historical and live data feeds from 100+ spot and derivatives exchanges.\n\n Kaiko will contribute its proprietary crypto market data to the Pragma Network.",
+    href: "https://www.kaiko.com/",
+  },
 ];
 
 const PublishersSection = () => (

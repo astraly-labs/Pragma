@@ -46,6 +46,11 @@ const dataPublishers: Logo[] = [
     src: "/assets/publishers/flowdesk.webp",
     href: "https://www.flowdesk.co/",
   },
+  {
+    name: "Kaiko",
+    src: "/assets/publishers/kaiko.webp",
+    href: "https://www.kaiko.com/",
+  },
 ];
 
 const ecosystemPartners: Logo[] = [
