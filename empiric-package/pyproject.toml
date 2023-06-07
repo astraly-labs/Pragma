@@ -21,7 +21,6 @@ classifiers = [
 ]
 packages = [
   {include = "empiric"},
-  {include = "cli", from = "empiric"},
   {include = "core", from = "empiric"},
   {include = "publisher", from = "empiric"},
   {include = "test", from = "empiric"},
@@ -38,5 +37,4 @@ black = "*"
 flake8 = "*"
 
 [tool.poetry.scripts]
-empiric = "empiric.cli:main"
 interface-check = "empiric.test.interface_consistency:main"
