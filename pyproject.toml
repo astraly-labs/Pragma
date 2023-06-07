@@ -1,17 +1,17 @@
 [tool.poetry]
 name = "pragma"
-version = "1.5.2"
+version = "1.6.0"
 description = "Pragma, the leading Oracle on zkRollups."
 authors = ["0xevolve <support@astraly.xyz>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
-cairo-lang = "0.10.3"
+cairo-lang = "^0.11"
 pytest = "^7.0"
 pytest-asyncio = "^0.19"
 typing_extensions = "4.3.0"
-"starknet.py" = "0.14.0a0"
+"starknet.py" = "^0.16"
 boto3 = "^1.26"
 pytest-xdist = "^3.1.0"
 
@@ -22,7 +22,7 @@ isort = "^5.11.4"
 build = "^0.10.0"
 twine = "^4.0.2"
 typer = "0.6.1"
-starknet-devnet = "0.4.6"
+starknet-devnet = "^0.5"
 cairo-nile = "0.12.0"
 vulture = "2.7"
 autoflake = "^2.0.0"

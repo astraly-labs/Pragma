@@ -1,46 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Literal
+from empiric.core.types import RPC_URLS
+from starknet_py.net.full_node_client import FullNodeClient
 
-from starknet_py.net.models import StarknetChainId
-from starkware.python.utils import from_bytes
-
-
-@dataclass
-class Network:
-    chain_id: int
-    gateway_url: str
-
-
-class StarknetChainIdExtension(Enum):
-    TESTNET2 = from_bytes(b"SN_GOERLI2")
-
-
-# network configurations
-LOCAL = Network(StarknetChainId.TESTNET, "http://127.0.0.1:5050")
-TESTNET = Network(StarknetChainId.TESTNET, "https://alpha4.starknet.io")
-TESTNET2 = Network(StarknetChainIdExtension.TESTNET2, "https://alpha4-2.starknet.io")
-INTEGRATION = Network(
-    StarknetChainId.TESTNET, "https://external.integration.starknet.io"
-)
-MAINNET = Network(StarknetChainId.MAINNET, "https://alpha-mainnet.starknet.io")
-
-NETWORKS = {
-    "testnet": TESTNET,
-    "testnet2": TESTNET2,
-    "integration": INTEGRATION,
-    "mainnet": MAINNET,
-    "local": LOCAL,
-}
-
-NetworkType = Literal[
-    "testnet",
-    "testnet2",
-    "integration",
-    "mainnet",
-    "local",
-]
-
+def get_client_from_network(network: str) -> FullNodeClient:
+    return FullNodeClient(node_url=RPC_URLS[network])
 
 # contract address configuration
 @dataclass
@@ -78,4 +43,5 @@ EnvironmentTypes = Literal[
     "testnet2",
     "integration",
     "mainnet",
+    "sharingan",
 ]

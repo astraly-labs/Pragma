@@ -12,7 +12,6 @@ from empiric.core.mixins import (
     TransactionMixin,
 )
 from starknet_py.net.account.account import Account
-from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 
 logger = logging.getLogger(__name__)
@@ -41,13 +40,7 @@ class EmpiricClient(
         self.network_config = NETWORKS[network]
         self.network = network
 
-        if network not in ["mainnet", "testnet"]:
-            if network in NETWORKS:
-                self.client = GatewayClient(self.network_config.gateway_url)
-            else:
-                raise NotImplementedError(f"Network {network} not recognized")
-        else:
-            self.client = GatewayClient(network)
+        self.client = get_client_from_network(network)
 
         if account_contract_address and account_private_key:
             self._setup_account_client(

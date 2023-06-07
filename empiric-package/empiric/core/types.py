@@ -2,6 +2,7 @@ from enum import IntEnum, unique
 from typing import List, Literal
 
 from empiric.core.utils import str_to_felt
+from starknet_py.net.full_node_client import FullNodeClient
 
 ADDRESS = int
 HEX_STR = str
@@ -14,11 +15,13 @@ MAINNET = "mainnet"
 SCROLL_TESTNET = "scroll_testnet"
 LINEA_TESTNET = "linea_testnet"
 ERA_TESTNET = "era_testnet"
+SHARINGAN = "sharingan"
 
-Network = Literal["staging", "testnet", "integration", "mainnet"]
+Network = Literal["staging", "testnet", "integration", "mainnet", "sharingan"]
 
 CHAIN_IDS = {
     INTEGRATION: 1536727068981429685321,
+    SHARINGAN: 1536727068981429685321,
     TESTNET: 1536727068981429685321,
     MAINNET: 23448594291968334,
     SCROLL_TESTNET: 534353,
@@ -26,14 +29,24 @@ CHAIN_IDS = {
     ERA_TESTNET: 280
 }
 
-GATEWAY_URLS = {
-    TESTNET: "https://alpha4.starknet.io",
-    INTEGRATION: "https://external.integration.starknet.io",
-    MAINNET: "https://alpha-mainnet.starknet.io",
-    SCROLL_TESTNET: "https://scroll-alphanet.public.blastapi.io",
-    LINEA_TESTNET: "https://consensys-zkevm-goerli-prealpha.infura.io/v3/ef9b71db32e242f39c6cf0691c8b521a",
-    ERA_TESTNET: "https://testnet.era.zksync.dev"
+STARKSCAN_URLS = {
+    "mainnet": "https://starkscan.co",
+    "testnet": "https://testnet.starkscan.co",
+    "testnet2": "https://testnet-2.starkscan.co",
+    "devnet": "https://devnet.starkscan.co",
+    "sharingan": "https://starknet-madara.netlify.app/#/explorer/query",
 }
+
+if not os.getenv("RPC_KEY") and NETWORK in ["mainnet", "testnet", "testnet2"]:
+    raise ValueError(f"RPC_KEY env variable is required when targeting {NETWORK}")
+RPC_URLS = {
+    "mainnet": f"https://starknet-mainnet.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "testnet": f"https://starknet-goerli.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "testnet2": f"https://starknet-goerli2.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "devnet": "http://127.0.0.1:5050/rpc",
+    "sharingan": os.getenv("SHARINGAN_RPC_URL"),
+}
+RPC_CLIENT = FullNodeClient(node_url=RPC_URLS[NETWORK])
 
 
 # aggregation mode enum
