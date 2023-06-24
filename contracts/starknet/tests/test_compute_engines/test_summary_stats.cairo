@@ -441,5 +441,8 @@ func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
     let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 301);
     assert _idx = 2;
 
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 401);
+    assert _idx = 3;
+
     return ();
 }

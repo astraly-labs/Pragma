@@ -1017,10 +1017,22 @@ namespace Oracle {
             return midpoint;
         }
 
-        if (is_le(target, timestamp) == TRUE) {
-            return _binary_search(key, low, midpoint - 1, target);
+        if (is_le(timestamp + 1, target) == TRUE) {
+            let (next_cp) = get_checkpoint_by_index(key, midpoint + 1);
+            let next_timestamp = next_cp.timestamp;
+            if (is_le(target + 1, next_timestamp) == TRUE) {
+                return midpoint;
+            } else {
+                return _binary_search(key, midpoint + 1, high, target);
+            }
         } else {
-            return _binary_search(key, midpoint + 1, high, target);
+            return _binary_search(key, low, midpoint - 1, target);
         }
+
+        // if (is_le(target + 1, timestamp) == TRUE) {
+        //     return _binary_search(key, low, midpoint - 1, target);
+        // } else {
+        //     return _binary_search(key, midpoint + 1, high, target);
+        // }
     }
 }
