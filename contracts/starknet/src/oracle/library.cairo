@@ -12,7 +12,7 @@ from starkware.cairo.common.math import (
     assert_le_felt,
     unsigned_div_rem,
 )
-from starkware.cairo.common.math_cmp import is_not_zero, is_le
+from starkware.cairo.common.math_cmp import is_not_zero, is_le, is_le_felt
 from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_caller_address, get_block_timestamp
 from time_series.convert import _max, _min, convert_via_usd
@@ -796,7 +796,7 @@ namespace Oracle {
             return 0;
         }
 
-        let startpoint = _binary_search(key, 0, latest_checkpoint_index, timestamp);
+        let startpoint = _binary_search(key, 0, latest_checkpoint_index - 1, timestamp);
         return startpoint;
     }
 
@@ -1001,55 +1001,36 @@ namespace Oracle {
     ) -> felt {
         alloc_locals;
 
-    //      if (low > high)
-    //     return -1;
-    if (is_le(high + 1, low) == TRUE) {
-        return 0;
-    }
+        let (high_cp) = get_checkpoint_by_index(key, high);
+        if (is_le_felt(high_cp.timestamp, target) == TRUE) {
+            return high;
+        }
 
-    // // If last element is smaller than x
-    // if (x >= arr[high])
-    //     return high;
-    let (high_cp) = get_checkpoint_by_index(key, high);
-    if (is_le(high_cp.timestamp, target) == TRUE) {
-        return high;
-    }
+        // Find the middle point
+        let (midpoint, _) = unsigned_div_rem(low + high, 2);
 
-    // // Find the middle point
-    // int mid = (low+high)/2;
-    let (midpoint, _) = unsigned_div_rem(low + high, 2);
+        // If middle point is target.
+        let (past_midpoint_cp) = get_checkpoint_by_index(key, midpoint - 1);
+        let (midpoint_cp) = get_checkpoint_by_index(key, midpoint);
 
-    // // If middle point is floor.
-    // if (arr[mid] == x)
-    //     return mid;
-    let (past_midpoint_cp) = get_checkpoint_by_index(key, midpoint - 1);
-    let (midpoint_cp) = get_checkpoint_by_index(key, midpoint);
+        if (midpoint_cp.timestamp == target) {
+            return midpoint;
+        }
 
-    if (midpoint_cp.timestamp == target) {
-        return midpoint;
-    }
+        // If x lies between mid-1 and mid
+        let is_lower_than_midpoint = is_le_felt(target, midpoint_cp.timestamp);
+        if (is_le_felt(past_midpoint_cp.timestamp, target) + is_lower_than_midpoint == 2) {
+            return midpoint - 1;
+        }
 
-    // // If x lies between mid-1 and mid
-    // if (mid > 0 && arr[mid-1] <= x && x < arr[mid])
-    //     return mid-1;
+        // If x is smaller than mid, floor
+        // must be in left half.
+        if (is_lower_than_midpoint == TRUE) {
+            return _binary_search(key, low, midpoint - 1, target);
+        }
 
-    let is_lower_than_midpoint = is_le(target, midpoint_cp.timestamp);
-
-    if (is_le(past_midpoint_cp.timestamp, target) + is_lower_than_midpoint == 2) {
-        return midpoint - 1;
-    }
-
-    // // If x is smaller than mid, floor
-    // // must be in left half.
-    // if (x < arr[mid])
-    //     return floorInArray(arr, low, mid - 1, x);
-    if (is_lower_than_midpoint == TRUE) {
-        return _binary_search(key, low, midpoint - 1, target);
-    }
-
-    // // If mid-1 is not floor and x is
-    // // greater than arr[mid],
-    // return floorInArray(arr, mid + 1, high,x);
-    return _binary_search(key, midpoint + 1, high, target);
+        // If mid-1 is not floor and x is
+        // greater than arr[mid],
+        return _binary_search(key, midpoint + 1, high, target);
     }
 }

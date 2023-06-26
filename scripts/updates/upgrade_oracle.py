@@ -31,7 +31,7 @@ async def main():
 
     admin = Account(address=admin_contract_address, client=gateway, signer=signer)
 
-    declared_contract_class_hash = 0x7e6725cf8b2bad84ef19a12139e9f3278f3fe73a212c3e60c1de69270c8ab8a
+    declared_contract_class_hash = None
 
     if declared_contract_class_hash is None:
         # Declare implementation

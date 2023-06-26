@@ -442,7 +442,7 @@ func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
     assert times_arr[12] = 1686873500;
 
     %{ stop_warp = warp(0) %}
-    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+    _iter_prices_and_times(0, 13, times_arr, prices_arr);
 
     let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 902);
     assert _idx = 8;
