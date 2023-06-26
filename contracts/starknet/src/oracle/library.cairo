@@ -1000,39 +1000,56 @@ namespace Oracle {
         key, low, high, target
     ) -> felt {
         alloc_locals;
-        let (midpoint, _) = unsigned_div_rem(low + high, 2);
 
-        if (high == low) {
-            return midpoint;
-        }
+    //      if (low > high)
+    //     return -1;
+    if (is_le(high + 1, low) == TRUE) {
+        return 0;
+    }
 
-        if (is_le(high + 1, low) == TRUE) {
-            return low - 1;
-        }
+    // // If last element is smaller than x
+    // if (x >= arr[high])
+    //     return high;
+    let (high_cp) = get_checkpoint_by_index(key, high);
+    if (is_le(high_cp.timestamp, target) == TRUE) {
+        return high;
+    }
 
-        let (cp) = get_checkpoint_by_index(key, midpoint);
-        let timestamp = cp.timestamp;
+    // // Find the middle point
+    // int mid = (low+high)/2;
+    let (midpoint, _) = unsigned_div_rem(low + high, 2);
 
-        if (timestamp == target) {
-            return midpoint;
-        }
+    // // If middle point is floor.
+    // if (arr[mid] == x)
+    //     return mid;
+    let (past_midpoint_cp) = get_checkpoint_by_index(key, midpoint - 1);
+    let (midpoint_cp) = get_checkpoint_by_index(key, midpoint);
 
-        if (is_le(timestamp + 1, target) == TRUE) {
-            let (next_cp) = get_checkpoint_by_index(key, midpoint + 1);
-            let next_timestamp = next_cp.timestamp;
-            if (is_le(target + 1, next_timestamp) == TRUE) {
-                return midpoint;
-            } else {
-                return _binary_search(key, midpoint + 1, high, target);
-            }
-        } else {
-            return _binary_search(key, low, midpoint - 1, target);
-        }
+    if (midpoint_cp.timestamp == target) {
+        return midpoint;
+    }
 
-        // if (is_le(target + 1, timestamp) == TRUE) {
-        //     return _binary_search(key, low, midpoint - 1, target);
-        // } else {
-        //     return _binary_search(key, midpoint + 1, high, target);
-        // }
+    // // If x lies between mid-1 and mid
+    // if (mid > 0 && arr[mid-1] <= x && x < arr[mid])
+    //     return mid-1;
+
+    let is_lower_than_midpoint = is_le(target, midpoint_cp.timestamp);
+
+    if (is_le(past_midpoint_cp.timestamp, target) + is_lower_than_midpoint == 2) {
+        return midpoint - 1;
+    }
+
+    // // If x is smaller than mid, floor
+    // // must be in left half.
+    // if (x < arr[mid])
+    //     return floorInArray(arr, low, mid - 1, x);
+    if (is_lower_than_midpoint == TRUE) {
+        return _binary_search(key, low, midpoint - 1, target);
+    }
+
+    // // If mid-1 is not floor and x is
+    // // greater than arr[mid],
+    // return floorInArray(arr, mid + 1, high,x);
+    return _binary_search(key, midpoint + 1, high, target);
     }
 }
