@@ -19,8 +19,9 @@ SCROLL_TESTNET = "scroll_testnet"
 LINEA_TESTNET = "linea_testnet"
 ERA_TESTNET = "era_testnet"
 SHARINGAN = "sharingan"
+PRAGMA_TESTNET = "pragma_testnet"
 
-Network = Literal["staging", "testnet", "integration", "mainnet", "sharingan"]
+Network = Literal["staging", "testnet", "integration", "mainnet", "sharingan", "pragma_testnet"]
 
 CHAIN_IDS = {
     INTEGRATION: 1536727068981429685321,
@@ -29,7 +30,8 @@ CHAIN_IDS = {
     MAINNET: 23448594291968334,
     SCROLL_TESTNET: 534353,
     LINEA_TESTNET: 59140,
-    ERA_TESTNET: 280
+    ERA_TESTNET: 280,
+    PRAGMA_TESTNET: 8908953246943201047421899664489
 }
 
 STARKSCAN_URLS = {

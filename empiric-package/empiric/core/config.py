@@ -31,6 +31,49 @@ MAINNET_CONTRACTS = ContractAddresses(
     0x346C57F094D641AD94E43468628D8E9C574DCB2803EC372576CCC60A40BE2C4,
 )
 
+from starknet_py.net.models import StarknetChainId
+from starkware.python.utils import from_bytes
+
+
+@dataclass
+class Network:
+    chain_id: int
+    gateway_url: str
+
+
+class StarknetChainIdExtension(Enum):
+    TESTNET2 = from_bytes(b"SN_GOERLI2")
+    PRAGMA_TESTNET = from_bytes(b"pragma_goerli")
+
+
+# network configurations
+LOCAL = Network(StarknetChainId.TESTNET, "http://127.0.0.1:5050")
+TESTNET = Network(StarknetChainId.TESTNET, "https://alpha4.starknet.io")
+TESTNET2 = Network(StarknetChainIdExtension.TESTNET2, "https://alpha4-2.starknet.io")
+INTEGRATION = Network(
+    StarknetChainId.TESTNET, "https://external.integration.starknet.io"
+)
+MAINNET = Network(StarknetChainId.MAINNET, "https://alpha-mainnet.starknet.io")
+PRAGMA_TESTNET = Network(StarknetChainIdExtension.PRAGMA_TESTNET, "https://testnet.pragmaoracle.com/rpc")
+
+NETWORKS = {
+    "testnet": TESTNET,
+    "testnet2": TESTNET2,
+    "integration": INTEGRATION,
+    "mainnet": MAINNET,
+    "local": LOCAL,
+    "pragma-testnet": PRAGMA_TESTNET,
+}
+
+NetworkType = Literal[
+    "testnet",
+    "testnet2",
+    "integration",
+    "mainnet",
+    "local",
+    "pragma-testnet"
+]
+
 CONTRACT_ADDRESSES = {
     "testnet": TESTNET_CONTRACTS,
     "testnet2": TESTNET2_CONTRACTS,
@@ -44,4 +87,5 @@ EnvironmentTypes = Literal[
     "integration",
     "mainnet",
     "sharingan",
+    "pragma-testnet"
 ]
