@@ -5,7 +5,7 @@ from typing import List, Literal
 from empiric.core.utils import str_to_felt
 from starknet_py.net.full_node_client import FullNodeClient
 
-NETWORK = os.getenv("NETWORK")
+NETWORK = os.getenv("NETWORK") or "sharingan"
 
 ADDRESS = int
 HEX_STR = str
@@ -38,16 +38,18 @@ STARKSCAN_URLS = {
     "testnet2": "https://testnet-2.starkscan.co",
     "devnet": "https://devnet.starkscan.co",
     "sharingan": "https://starknet-madara.netlify.app/#/explorer/query",
+    "pragma_testnet": "https://testnet.pragmaoracle.com/explorer",
 }
 
-if not os.getenv("RPC_KEY") and NETWORK in ["mainnet", "testnet", "testnet2"]:
+if not os.getenv("RPC_KEY") and NETWORK not in ["mainnet", "testnet", "testnet2"]:
     raise ValueError(f"RPC_KEY env variable is required when targeting {NETWORK}")
 RPC_URLS = {
     "mainnet": f"https://starknet-mainnet.infura.io/v3/{os.getenv('RPC_KEY')}",
     "testnet": f"https://starknet-goerli.infura.io/v3/{os.getenv('RPC_KEY')}",
     "testnet2": f"https://starknet-goerli2.infura.io/v3/{os.getenv('RPC_KEY')}",
     "devnet": "http://127.0.0.1:5050/rpc",
-    "sharingan": os.getenv("SHARINGAN_RPC_URL"),
+    "sharingan": "https://sharingan.madara.zone",
+    "pragma_testnet": "https://testnet.pragmaoracle.com/rpc"
 }
 RPC_CLIENT = FullNodeClient(node_url=RPC_URLS[NETWORK])
 
