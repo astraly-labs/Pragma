@@ -43,7 +43,7 @@ STARKSCAN_URLS = {
     "pragma_testnet": "https://testnet.pragmaoracle.com/explorer",
 }
 
-if not os.getenv("RPC_KEY") and NETWORK not in ["mainnet", "testnet", "testnet2"]:
+if not os.getenv("RPC_KEY") and NETWORK in ["mainnet", "testnet", "testnet2"]:
     raise ValueError(f"RPC_KEY env variable is required when targeting {NETWORK}")
 RPC_URLS = {
     "mainnet": f"https://starknet-mainnet.infura.io/v3/{os.getenv('RPC_KEY')}",

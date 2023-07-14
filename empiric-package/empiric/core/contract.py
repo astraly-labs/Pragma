@@ -4,7 +4,7 @@ from typing import Callable, Optional
 from starknet_py.contract import Contract as StarknetContract
 from starknet_py.contract import ContractFunction, InvokeResult
 from starknet_py.net.client_models import SentTransactionResponse, TransactionStatus
-from starknet_py.transaction_exceptions import (
+from starknet_py.transaction_errors import (
     TransactionFailedError,
     TransactionNotReceivedError,
     TransactionRejectedError,
