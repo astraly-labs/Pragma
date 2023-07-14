@@ -5,6 +5,8 @@ from typing import List, Literal
 from empiric.core.utils import str_to_felt
 from starknet_py.net.full_node_client import FullNodeClient
 
+NETWORK = os.getenv("NETWORK")
+
 ADDRESS = int
 HEX_STR = str
 
