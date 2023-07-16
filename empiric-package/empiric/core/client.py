@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from empiric.core.abis import ORACLE_ABI, PUBLISHER_REGISTRY_ABI, SUMMARY_STATS_ABI
-from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses
+from empiric.core.config import CONTRACT_ADDRESSES, NETWORKS, ContractAddresses, get_client_from_network
 from empiric.core.contract import Contract
 from empiric.core.mixins import (
     NonceMixin,

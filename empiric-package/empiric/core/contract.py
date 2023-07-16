@@ -65,7 +65,7 @@ async def invoke_(
 async def wait_for_received(
     client,
     tx_hash,
-    check_interval=3,
+    check_interval=6,
 ) -> (int, TransactionStatus):
     # pylint: disable=too-many-branches
     """
@@ -82,8 +82,12 @@ async def wait_for_received(
     first_run = True
     try:
         while True:
-            result = await client.get_transaction_receipt(tx_hash=tx_hash)
-            status = result.status
+            status = TransactionStatus.NOT_RECEIVED
+            try:
+                result = await client.get_transaction_receipt(tx_hash=tx_hash)
+                status = result.status
+            except:
+                continue
 
             if status in (
                 TransactionStatus.ACCEPTED_ON_L1,
