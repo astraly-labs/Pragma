@@ -175,6 +175,17 @@ func get_value{
 }
 
 @view
+func get_futures{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id : felt, expiry_timestamp : felt, aggregation_mode: felt) -> (
+    value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+) {
+let (all_sources_len, all_sources) = Oracle.get_all_future_sources(pair_id, expiry_timestamp);
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = Oracle.get_futures(pair_id, expiry_timestamp, aggregation_mode, all_sources_len, all_sources);
+    return (price, decimals, last_updated_timestamp, num_sources_aggregated);
+}
+
+@view
 func get_spot_with_USD_hop{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 }(base_currency_id, quote_currency_id, aggregation_mode) -> (
@@ -287,11 +298,27 @@ func get_latest_checkpoint_index{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*,
     return (latest,);
 }
 
+@view 
+func get_latest_future_checkpoint_index{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, expiry_timestamp: felt
+) -> (latest: felt) {
+    let (latest) = Oracle.get_latest_future_checkpoint_index(key, expiry_timestamp);
+    return (latest,);
+}
+
 @view
 func get_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     key: felt, index: felt
 ) -> (checkpoint: Checkpoint) {
     let (latest) = Oracle.get_checkpoint_by_index(key, index);
+    return (latest,);
+}
+
+@view
+func get_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, expiry_timestamp: felt, index : felt
+) -> (checkpoint: Checkpoint) {
+    let (latest) = Oracle.get_future_checkpoint_by_index(key, expiry_timestamp, index);
     return (latest,);
 }
 
@@ -359,6 +386,15 @@ func set_checkpoints{
     return ();
 }
 
+@external 
+func set_future_checkpoint{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt) {
+    Oracle.set_future_checkpoint(pair_id, expiry_timestamp, aggregation_mode);
+    return ();
+}
+
+
 @view
 func get_last_spot_checkpoint_before{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
@@ -367,6 +403,17 @@ func get_last_spot_checkpoint_before{
     let (cp) = Oracle.get_checkpoint_by_index(pair_id, idx);
     return (cp, idx);
 }
+
+
+@view 
+func get_last_future_checkpoint_before{
+    syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}(pair_id: felt, expiry_timestamp, timestamp: felt) -> (checkpoint: Checkpoint, idx: felt) {
+    let idx = Oracle.find_future_startpoint(pair_id,expiry_timestamp,  timestamp);
+    let (cp) = Oracle.get_future_checkpoint_by_index(pair_id, expiry_timestamp, idx);
+    return (cp, idx);
+}
+
 
 @external
 func set_sources_threshold{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
