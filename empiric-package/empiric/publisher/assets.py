@@ -9,6 +9,11 @@ class EmpiricSpotAsset(TypedDict):
     pair: Tuple[str, str]
     decimals: int
 
+class EmpiricFutureAsset(TypedDict):
+    type: str
+    pair: Tuple[str, str]
+    expiry_timestamp: str
+    decimals: int
 
 class EmpiricOnchainDetail(TypedDict):
     asset_name: str
