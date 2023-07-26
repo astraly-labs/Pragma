@@ -51,7 +51,7 @@ class OracleMixin:
 
     async def publish_many(
         self,
-        entries: List[SpotEntry],
+        entries: List[any],
         pagination: Optional[int] = 40,
         max_fee=int(1e18),
     ) -> List[InvokeResult]:

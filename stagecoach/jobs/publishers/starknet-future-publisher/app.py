@@ -3,16 +3,11 @@ import json
 import os
 
 import boto3
-from empiric.core import SpotEntry
+from empiric.core.entry import FutureEntry
 from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
+from empiric.publisher.assets import get_future_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetchers import (
-    BitstampFetcher,
-    CexFetcher,
-    CoinbaseFetcher,
-    AscendexFetcher,
-)
+from empiric.publisher.future_fetchers import OkxFutureFetcher
 from empiric.core.utils import currency_pair_to_pair_id
 
 logger = get_stream_logger()
@@ -28,9 +23,9 @@ if PAGINATION is not None:
 
 
 def handler(event, context):
-    assets = [get_spot_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
+    assets = [get_future_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
     entries_ = asyncio.run(_handler(assets))
-    serialized_entries_ = SpotEntry.serialize_entries(entries_)
+    serialized_entries_ = FutureEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
         "success": len(serialized_entries_),
@@ -50,7 +45,7 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = _get_pvt_key()
+    publisher_private_key = 1
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
@@ -58,26 +53,24 @@ async def _handler(assets):
     )
     publisher_client.add_fetchers(
         [
-            fetcher(assets, PUBLISHER)
-            for fetcher in (
-                BinanceFutureFetcher
-            )
+            OkxFutureFetcher(assets, PUBLISHER)
         ]
     )
     _entries = await publisher_client.fetch()
-    response = await publisher_client.publish_many_future(_entries, pagination=PAGINATION)
-    print(
-        f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
-    )
-    for res in response:
-        await res.wait_for_acceptance()
+    print(_entries)
+    # response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
+    # print(
+    #     f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
+    # )
+    # for res in response:
+    #     await res.wait_for_acceptance()
 
-    pairs = [
-        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "FUTURE"
-    ]
-    await publisher_client.set_future_checkpoints(pairs)
+    # pairs = [
+    #     currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "FUTURE"
+    # ]
+    # await publisher_client.set_future_checkpoints(pairs)
 
-    return _entries
+    # return _entries
 
 
 if __name__ == "__main__":
