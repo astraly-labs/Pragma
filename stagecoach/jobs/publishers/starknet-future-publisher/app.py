@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import time
 
 import boto3
 from empiric.core.entry import FutureEntry
@@ -45,7 +46,8 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    # publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    publisher_private_key = _get_pvt_key()
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
@@ -57,18 +59,24 @@ async def _handler(assets):
             ByBitFutureFetcher(assets, PUBLISHER)
         ]
     )
+
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
-    # for res in response:
-    #     await res.wait_for_acceptance()
 
-    # pairs = [
-    #     currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "FUTURE"
-    # ]
-    # await publisher_client.set_future_checkpoints(pairs)
+    await asyncio.sleep(30)
+
+    pairs = [
+        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "FUTURE"
+    ]
+    res = await publisher_client.set_future_checkpoint(pairs[0], 0) # PERPs
+    print(
+        f"Set Future checkpoint with tx hash: {hex(res.hash)}"
+    )
+
+    await asyncio.sleep(30)
 
     return _entries
 
