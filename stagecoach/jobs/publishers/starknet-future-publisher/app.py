@@ -78,6 +78,16 @@ async def _handler(assets):
 
     await asyncio.sleep(30)
 
+    pairs = [
+        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "FUTURE"
+    ]
+    res = await publisher_client.set_future_checkpoint(pairs[1], 0) # PERPs
+    print(
+        f"Set Future checkpoint with tx hash: {hex(res.hash)}"
+    )
+
+    await asyncio.sleep(30)
+
     return _entries
 
 

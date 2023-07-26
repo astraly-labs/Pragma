@@ -57,7 +57,7 @@ class OkxFutureFetcher(PublisherInterfaceT):
                 timestamp=timestamp,
                 source=self.SOURCE,
                 publisher=self.publisher,
-                expiry_timestamp=expiry_timestamp,
+                expiry_timestamp=int(expiry_timestamp),
             )
 
     async def _fetch_pair(self, asset: EmpiricFutureAsset, session: ClientSession):
