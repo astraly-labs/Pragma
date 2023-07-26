@@ -46,6 +46,7 @@ async def invoke_(
         auto_estimate=auto_estimate,
     )
     response = await self._client.send_transaction(transaction)
+    # print(response)
     if callback:
         await callback(transaction.nonce, response.transaction_hash)
 
@@ -57,7 +58,7 @@ async def invoke_(
     )
 
     # don't return invoke result until it is received or errors
-    await wait_for_received(self._client, invoke_result.hash)
+    # await wait_for_received(self._client, invoke_result.hash)
 
     return invoke_result
 

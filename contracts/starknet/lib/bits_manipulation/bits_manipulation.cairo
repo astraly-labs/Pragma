@@ -97,6 +97,7 @@ func assert_valid_felt{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     }
     return ();
 }
+
 // @notice Will check that the given position finumber_of_bitsts within the 251 bits available
 // @dev Will fail if the position is too big +
 // @param position: The position of the element, starts a 0

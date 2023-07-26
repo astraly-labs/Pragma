@@ -25,7 +25,6 @@ if PAGINATION is not None:
 def handler(event, context):
     assets = [get_future_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
     entries_ = asyncio.run(_handler(assets))
-    print(entries_)
     serialized_entries_ = FutureEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
@@ -46,7 +45,7 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = 1
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
@@ -59,11 +58,10 @@ async def _handler(assets):
         ]
     )
     _entries = await publisher_client.fetch()
-    print(_entries)
-    # response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
-    # print(
-    #     f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
-    # )
+    response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
+    print(
+        f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
+    )
     # for res in response:
     #     await res.wait_for_acceptance()
 

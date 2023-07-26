@@ -42,7 +42,7 @@ class OkxFutureFetcher(PublisherInterfaceT):
     def _construct(self, asset, data, expiry_timestamp) -> List[FutureEntry]:
     
         pair = asset["pair"]
-        timestamp = int(data["ts"])
+        timestamp = int(int(data["ts"]) / 1000)
         price = float(data["last"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
@@ -63,7 +63,6 @@ class OkxFutureFetcher(PublisherInterfaceT):
     async def _fetch_pair(self, asset: EmpiricFutureAsset, session: ClientSession):
         pair = asset["pair"]
         url = f"{self.BASE_URL}?instType=FUTURES&uly={pair[0]}-{pair[1]}"
-        print(url)
         future_entries = []
         async with session.get(url) as resp:
             if resp.status == 404:

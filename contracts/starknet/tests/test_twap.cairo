@@ -8,14 +8,7 @@ from starkware.starknet.common.syscalls import get_block_timestamp
 from oracle.IOracle import IOracle
 from publisher_registry.IPublisherRegistry import IPublisherRegistry
 from compute_engines.summary_stats.ISummaryStats import ISummaryStats
-from entry.structs import (
-    Currency,
-    Pair,
-    SpotEntry,
-    BaseEntry,
-    FutureEntry,
-    GenericEntry,
-)
+from entry.structs import Currency, Pair, SpotEntry, BaseEntry, FutureEntry, GenericEntry
 from time_series.prelude import ONE
 
 const ONE_ETH = 10 ** 18;
@@ -65,72 +58,62 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
 
     IOracle.initializer(oracle_address, 1234, publisher_registry_address, 4, currencies, 5, pairs);
 
-    
     IOracle.publish_future_entry(
         oracle_address, FutureEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 2,11111110,MEDIAN);
+    IOracle.set_future_checkpoint(oracle_address, 2, 11111110, MEDIAN);
 
-  
     IOracle.publish_future_entry(
         oracle_address, FutureEntry(BaseEntry(now + 200, 1, 1), 2, 8 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 2,11111110,MEDIAN);
-
-    
+    IOracle.set_future_checkpoint(oracle_address, 2, 11111110, MEDIAN);
 
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+400, 1, 1), 2, 3 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now + 400, 1, 1), 2, 3 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 2,11111110,MEDIAN);
+    IOracle.set_future_checkpoint(oracle_address, 2, 11111110, MEDIAN);
 
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+600, 1, 1), 2, 5 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 5 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 2,11111110,MEDIAN);
-
+    IOracle.set_future_checkpoint(oracle_address, 2, 11111110, MEDIAN);
 
     IOracle.publish_future_entry(
         oracle_address, FutureEntry(BaseEntry(now, 1, 1), 3, 2 * 10 ** 6, 11111110, 100)
     );
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now , 2, 1), 3, 4 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now, 2, 1), 3, 4 * 10 ** 6, 11111110, 100)
     );
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now , 3, 1), 3, 6 * 10 ** 6, 11111110, 100)
-        
+        oracle_address, FutureEntry(BaseEntry(now, 3, 1), 3, 6 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 3,11111110,MEDIAN); //4 *10**6
-     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+200, 1, 1), 3, 8 * 10 ** 6, 11111110, 100)
+    IOracle.set_future_checkpoint(oracle_address, 3, 11111110, MEDIAN);  // 4 *10**6
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 200, 1, 1), 3, 8 * 10 ** 6, 11111110, 100)
     );
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+200 , 2, 1), 3, 8 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now + 200, 2, 1), 3, 8 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 3,11111110,MEDIAN); //8 *10**6
-     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+400, 1, 1), 3, 2 * 10 ** 6, 11111110, 100)
+    IOracle.set_future_checkpoint(oracle_address, 3, 11111110, MEDIAN);  // 8 *10**6
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 400, 1, 1), 3, 2 * 10 ** 6, 11111110, 100)
     );
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+400 , 2, 1), 3, 3 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now + 400, 2, 1), 3, 3 * 10 ** 6, 11111110, 100)
     );
     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+400 , 3, 1), 3, 4 * 10 ** 6, 11111110, 100)
+        oracle_address, FutureEntry(BaseEntry(now + 400, 3, 1), 3, 4 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 3,11111110,MEDIAN); //3 *10**6
-     IOracle.publish_future_entry(
-        oracle_address, FutureEntry(BaseEntry(now+600, 1, 1), 3, 5 * 10 ** 6, 11111110, 100)
+    IOracle.set_future_checkpoint(oracle_address, 3, 11111110, MEDIAN);  // 3 *10**6
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 3, 5 * 10 ** 6, 11111110, 100)
     );
-    IOracle.set_future_checkpoint(oracle_address, 3,11111110,MEDIAN); //5 *10**6
+    IOracle.set_future_checkpoint(oracle_address, 3, 11111110, MEDIAN);  // 5 *10**6
 
-    
     return ();
 }
 
-
-
-
-@external 
+@external
 func test_set_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
     alloc_locals;
     local oracle_address;
@@ -139,48 +122,57 @@ func test_set_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, 
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     // let test = FixedPoint.to_decimals(46116860184273880);
-    
-    let (twap_test) = ISummaryStats.calculate_future_twap(summary_stats_address, 2,11111110, 10000, 100001);
+
+    let (twap_test) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 2, 11111110, 10000, 100001
+    );
     assert twap_test = 4333333;
-    let (twap_test_2) = ISummaryStats.calculate_future_twap(summary_stats_address, 2,11111110, 10000, 100201);
+    let (twap_test_2) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 2, 11111110, 10000, 100201
+    );
     assert twap_test_2 = 5499999;
-    let (twap_test_3) = ISummaryStats.calculate_future_twap(summary_stats_address, 2,11111110, 10000, 100401);
+    let (twap_test_3) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 2, 11111110, 10000, 100401
+    );
     assert twap_test_3 = 2999999;
-    let (twap_test_4) = ISummaryStats.calculate_future_twap(summary_stats_address, 3,11111110, 10000, 100001);
+    let (twap_test_4) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 3, 11111110, 10000, 100001
+    );
     assert twap_test_4 = 4999999;
-    let (twap_test_5) = ISummaryStats.calculate_future_twap(summary_stats_address, 3,11111110, 10000, 100201);
+    let (twap_test_5) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 3, 11111110, 10000, 100201
+    );
     assert twap_test_5 = 5499999;
-    let (twap_test_6) = ISummaryStats.calculate_future_twap(summary_stats_address, 3,11111110, 10000, 100401);
+    let (twap_test_6) = ISummaryStats.calculate_future_twap(
+        summary_stats_address, 3, 11111110, 10000, 100401
+    );
     assert twap_test_6 = 2999999;
     return ();
 }
 
-
-//PYTHON SCRIPTS FOR TESTS: 
+// PYTHON SCRIPTS FOR TESTS:
 // def calculate_twap(prices, timestamps):
 //     assert len(prices) == len(timestamps), "The prices and timestamps lists must be the same length."
 //     assert sorted(timestamps) == timestamps, "The timestamps must be in chronological order."
 
-//     total_weighted_price = 0
+// total_weighted_price = 0
 //     total_time = 0
-    
-//     for i in range(1, len(prices)):
+
+// for i in range(1, len(prices)):
 //         # Calculate the time difference between the current and the previous timestamp
 //         time_diff = timestamps[i] - timestamps[i-1]
-        
-//         # Calculate the weighted price
+
+// # Calculate the weighted price
 //         weighted_price = prices[i-1] * time_diff
 //         print(weighted_price)
 //         # Add the weighted price to the total weighted price
 //         total_weighted_price += weighted_price
-        
-//         # Add the time difference to the total time
+
+// # Add the time difference to the total time
 //         total_time += time_diff
-    
-//     # Return the TWAP
+
+// # Return the TWAP
 //     return total_weighted_price / total_time if total_time != 0 else 0
-
-
 
 // prices = [4 * 10**6, 8 * 10 ** 6, 3 * 10 ** 6, 5 * 10 ** 6]
 // timestamps = [100000,100000+200, 100000 + 400, 100000 + 600]

@@ -82,7 +82,7 @@ class ByBitFutureFetcher(PublisherInterfaceT):
     def _construct(self, asset, result) -> FutureEntry:
         pair = asset["pair"]
         data = result["result"]["list"][0]
-        timestamp = int(result["time"])
+        timestamp = int(int(result["time"]) / 1000)
         price = float(data["lastPrice"])
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
