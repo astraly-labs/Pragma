@@ -32,6 +32,9 @@ namespace IOracle {
     func get_spot_decimals(pair_id: felt) -> (decimals: felt) {
     }
 
+    func get_future_decimals(pair_id : felt) -> (decimals : felt){
+    }
+
     func get_spot_median(pair_id: felt) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {

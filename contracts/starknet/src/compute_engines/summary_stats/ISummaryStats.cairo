@@ -9,7 +9,7 @@ namespace ISummaryStats {
     ) {
     }
     func calculate_future_twap(key: felt, expiry_timestamp: felt, time: felt, start_tick: felt) -> (
-        twap: felt
+        twap: felt, decimals:felt
     ) {
     }
 }

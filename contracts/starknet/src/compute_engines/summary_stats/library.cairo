@@ -107,7 +107,7 @@ namespace SummaryStats {
 
     func calculate_future_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         oracle_address: felt, key: felt, expiry_timestamp: felt, time: felt, start_tick: felt
-    ) -> felt {
+    ) -> (felt,felt) {
         alloc_locals;
         let (_start_cp, start_index) = IOracle.get_last_future_checkpoint_before(
             oracle_address, key, expiry_timestamp, start_tick
@@ -115,7 +115,7 @@ namespace SummaryStats {
         let (_stop_cp, stop_index) = IOracle.get_last_future_checkpoint_before(
             oracle_address, key, expiry_timestamp, start_tick + time
         );
-
+        let (_decimals) = IOracle.get_future_decimals(key, expiry_timestamp);
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, stop_index);
         }
@@ -125,7 +125,7 @@ namespace SummaryStats {
         );
         let _twap = twap(arr_len, tick_arr);
         let _decs = FixedPoint.to_decimals(_twap);
-        return _decs;
+        return (_decs, _decimals);
     }
 
     func _make_scaled_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
