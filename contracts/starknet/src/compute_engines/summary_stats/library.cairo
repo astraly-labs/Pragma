@@ -115,7 +115,7 @@ namespace SummaryStats {
         let (_stop_cp, stop_index) = IOracle.get_last_future_checkpoint_before(
             oracle_address, key, expiry_timestamp, start_tick + time
         );
-        let (_decimals) = IOracle.get_future_decimals(key, expiry_timestamp);
+        let (_decimals) = IOracle.get_future_decimals(oracle_address, key);
         with_attr error_message("Not enough data") {
             assert_not_equal(start_index, stop_index);
         }
