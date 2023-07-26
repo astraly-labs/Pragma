@@ -130,3 +130,22 @@ func _sum_volatility{range_check_ptr}(total, cur_idx, arr_len, arr: TickElem**) 
 
     return _sum_volatility(summation, cur_idx + 1, arr_len, arr);
 }
+
+
+func twap{range_check_ptr}(arr_len, arr: TickElem**) -> felt {
+    let _twap = _sum_twap(0, 0,1, arr_len, arr);
+    return _twap;
+}
+
+func _sum_twap{range_check_ptr}(total_p, total_t, idx, arr_len, arr: TickElem**) ->felt {
+    if (idx == arr_len) {
+        return FixedPoint.div(total_p, total_t);
+    }
+    let sub_timestamp = FixedPoint.sub(arr[idx].tick, arr[idx - 1].tick);
+    let weighted_prices = FixedPoint.mul(arr[idx-1].value, sub_timestamp);
+    let total_p = FixedPoint.add(total_p, weighted_prices);
+    let total_t = FixedPoint.add(total_t, sub_timestamp);
+    return _sum_twap(total_p, total_t, idx + 1, arr_len, arr);
+
+
+}

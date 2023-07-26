@@ -41,6 +41,11 @@ namespace IEmpiricOracle {
     ) {
     }
 
+    func get_futures(pair_id: felt, expiry_timestamp : felt, aggregation_mode: felt) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
+
     // func get_spot_median_multi
 
     func get_spot_with_USD_hop(base_currency_id, quote_currency_id, aggregation_mode) -> (
@@ -85,6 +90,11 @@ namespace IEmpiricOracle {
     // func get_future_entries_for_sources
 
     func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
+        checkpoint: Checkpoint, idx: felt
+    ) {
+    }
+
+    func get_last_future_checkpoint_before(pair_id: felt, expiry_timestamp: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
     ) {
     }
