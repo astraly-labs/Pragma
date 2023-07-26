@@ -3,7 +3,7 @@ from typing import List
 
 import aiohttp
 from empiric.core.client import EmpiricClient
-from empiric.core.entry import SpotEntry
+from empiric.core.entry import SpotEntry, FutureEntry
 from empiric.publisher.types import PublisherInterfaceT
 
 
@@ -45,7 +45,7 @@ class EmpiricPublisherClient(EmpiricClient):
     def add_fetcher(self, fetcher: PublisherInterfaceT):
         self.fetchers.append(fetcher)
 
-    async def fetch(self, filter_exceptions=True) -> List[SpotEntry]:
+    async def fetch(self, filter_exceptions=True) -> List[any]:
         tasks = []
         timeout = aiohttp.ClientTimeout(total=10)  # 10 seconds per request
         async with aiohttp.ClientSession(timeout=timeout) as session:
@@ -57,7 +57,7 @@ class EmpiricPublisherClient(EmpiricClient):
                 result = [subl for subl in result if not isinstance(subl, Exception)]
             return [val for subl in result for val in subl]
 
-    def fetch_sync(self) -> List[SpotEntry]:
+    def fetch_sync(self) -> List[any]:
         results = []
         for fetcher in self.fetchers:
             data = fetcher.fetch_sync()

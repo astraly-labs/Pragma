@@ -224,14 +224,13 @@ class SpotEntry(Entry):
 
 
 class FutureEntry(Entry):
-    timestamp: int
-    source: int
-    publisher: int
+    base : BaseEntry
     pair_id: int
     price: int
     expiry_timestamp: int
+    volume :int 
 
-    def __init__(self, timestamp, source, publisher, pair_id, price, expiry_timestamp):
+    def __init__(self, timestamp, source, publisher, pair_id, price, expiry_timestamp, volume):
         if type(pair_id) == str:
             pair_id = str_to_felt(pair_id)
 
@@ -241,13 +240,11 @@ class FutureEntry(Entry):
         if type(source) == str:
             source = str_to_felt(source)
 
-        if type(expiry_timestamp) == str:
-            expiry_timestamp = str_to_felt(expiry_timestamp)
-
         self.base = BaseEntry(timestamp, source, publisher)
         self.pair_id = pair_id
         self.price = price
         self.expiry_timestamp = expiry_timestamp
+        self.volume = volume
 
     def __eq__(self, other):
         if isinstance(other, FutureEntry):
@@ -258,6 +255,7 @@ class FutureEntry(Entry):
                 and self.base.source == other.base.source
                 and self.base.publisher == other.base.publisher
                 and self.expiry_timestamp == other.expiry_timestamp
+                and self.volume == other.volume
             )
         # This supports comparing against entries that are returned by starknet.py,
         # which will be namedtuples.
@@ -269,6 +267,7 @@ class FutureEntry(Entry):
                 and self.base.source == other.base.source
                 and self.base.publisher == other.base.publisher
                 and self.expiry_timestamp == other.expiry_timestamp
+                and self.volume == other.volume
             )
         return False
 
@@ -280,6 +279,7 @@ class FutureEntry(Entry):
             self.pair_id,
             self.price,
             self.expiry_timestamp,
+            self.volume,
         )
 
     def serialize(self) -> Dict[str, str]:
@@ -292,6 +292,7 @@ class FutureEntry(Entry):
             "pair_id": self.pair_id,
             "price": self.price,
             "expiry_timestamp": self.expiry_timestamp,
+            "volume": self.volume,
         }
 
     @staticmethod

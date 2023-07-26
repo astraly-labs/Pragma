@@ -27,11 +27,13 @@ struct EmpiricPricesResponse {
     last_updated_timestamp: felt,
     num_sources_aggregated: felt,
 }
+
 struct FutureEntry {
     base: BaseEntry,
     pair_id: felt,
     price: felt,
     expiry_timestamp: felt,
+    volume: felt,
 }
 
 struct GenericEntry {
@@ -56,11 +58,6 @@ namespace IEmpiricOracle {
     }
 
     func get_spot(pair_id: felt, aggregation_mode: felt) -> (
-        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
-    ) {
-    }
-
-    func get_futures(pair_id: felt, expiry_timestamp : felt, aggregation_mode: felt) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
@@ -134,9 +131,9 @@ namespace IEmpiricOracle {
     ) {
     }
 
-    func get_last_future_checkpoint_before(pair_id: felt, expiry_timestamp: felt, timestamp: felt) -> (
-        checkpoint: Checkpoint, idx: felt
-    ) {
+    func get_last_future_checkpoint_before(
+        pair_id: felt, expiry_timestamp: felt, timestamp: felt
+    ) -> (checkpoint: Checkpoint, idx: felt) {
     }
 
     func get_entry(key: felt, source: felt) -> (entry: GenericEntry) {

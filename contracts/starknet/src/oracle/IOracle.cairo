@@ -52,8 +52,6 @@ namespace IOracle {
     ) {
     }
 
-
-
     func get_spot_for_sources(
         pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
@@ -91,22 +89,15 @@ namespace IOracle {
         pair_id: felt, expiry_timestamp: felt, sources_len: felt, sources: felt*
     ) -> (entries_len: felt, entries: FutureEntry*) {
     }
-    func get_futures(
-        pair_id: felt,
-        expiry_timestamp: felt,
-        aggregation_mode: felt,
-        sources_len: felt,
-        sources: felt*,
-    ) -> (price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
-    }
+
     func get_value(key) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
     ) {
     }
 
-    func get_futures(pair_id, expiry_timestamp) -> (
+    func get_futures(pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt) -> (
         price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
-    ){
+    ) {
     }
 
     // TODO (rlkelly): add adapters for currency conversion
@@ -206,8 +197,8 @@ namespace IOracle {
     ) {
     }
 
-    func get_last_future_checkpoint_before(pair_id: felt, expiry_timestamp: felt, timestamp: felt) -> (
-        checkpoint: Checkpoint, idx: felt
-    ) {
+    func get_last_future_checkpoint_before(
+        pair_id: felt, expiry_timestamp: felt, timestamp: felt
+    ) -> (checkpoint: Checkpoint, idx: felt) {
     }
 }

@@ -32,7 +32,7 @@ struct FutureEntry {
     pair_id: felt,
     price: felt,
     expiry_timestamp: felt,
-    volume :felt,
+    volume: felt,
 }
 
 struct FutureEntryStorage {

@@ -43,11 +43,13 @@ func calculate_volatility{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
     return (percentage_,);
 }
 
-@view 
+@view
 func calculate_future_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    key: felt, expiry_timestamp : felt, time: felt, start_tick: felt
+    key: felt, expiry_timestamp: felt, time: felt, start_tick: felt
 ) -> (twap_: felt) {
     let (oracle_address) = SummaryStats__oracle_address.read();
-    let _twap = SummaryStats.calculate_future_twap(oracle_address, key, expiry_timestamp,time,start_tick);
+    let _twap = SummaryStats.calculate_future_twap(
+        oracle_address, key, expiry_timestamp, time, start_tick
+    );
     return (_twap,);
 }

@@ -51,7 +51,7 @@ class OracleMixin:
 
     async def publish_many(
         self,
-        entries: List[SpotEntry],
+        entries: List[any],
         pagination: Optional[int] = 40,
         max_fee=int(1e18),
     ) -> List[InvokeResult]:
@@ -210,6 +210,25 @@ class OracleMixin:
             pair_id,
             aggregation_mode,
             callback=self.track_nonce,
+            max_fee=max_fee,
+        )
+        return invocation
+
+    async def set_future_checkpoint(
+        self,
+        pair_id: int,
+        expiry_timestamp: int,
+        aggregation_mode: int = str_to_felt("MEDIAN"),
+        max_fee=int(1e16),
+    ) -> InvokeResult:
+        if not self.is_user_client:
+            raise AttributeError(
+                "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
+            )
+        invocation = await self.oracle.set_future_checkpoint.invoke(
+            pair_id,
+            expiry_timestamp,
+            aggregation_mode,
             max_fee=max_fee,
         )
         return invocation
