@@ -6,7 +6,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math import assert_nn, unsigned_div_rem, assert_not_equal
 from starkware.cairo.common.math_cmp import is_le, is_nn
 
-from time_series.prelude import TickElem, mean, variance, volatility, scale_data, FixedPoint
+from time_series.prelude import TickElem, mean, variance, volatility, scale_data, FixedPoint, twap
 from oracle.IOracle import IOracle, EmpiricAggregationModes
 
 const SCALED_ARR_SIZE = 30;
@@ -105,6 +105,29 @@ namespace SummaryStats {
         return _decs;
     }
 
+    func calculate_future_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(oracle_address: felt, key: felt, expiry_timestamp : felt, time: felt, start_tick: felt) -> felt { 
+        alloc_locals;
+        let (_start_cp, start_index) = IOracle.get_last_future_checkpoint_before(
+            oracle_address, key, expiry_timestamp, start_tick
+        );
+        let (_stop_cp, stop_index) = IOracle.get_last_future_checkpoint_before(
+            oracle_address, key, expiry_timestamp, start_tick + time
+        );
+        
+        with_attr error_message("Not enough data") {
+            assert_not_equal(start_index, stop_index);
+        }
+        let (tick_arr: TickElem**) = alloc();
+        let arr_len = _make_future_array(
+            0, oracle_address, key, expiry_timestamp, stop_index, start_index, tick_arr, 1
+        );
+        let _twap = twap(arr_len, tick_arr);
+        let _decs = FixedPoint.to_decimals(_twap);
+        return _decs;
+
+
+    }
+
     func _make_scaled_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         oracle_address: felt,
         key: felt,
@@ -155,5 +178,39 @@ namespace SummaryStats {
         return _make_array(
             idx + 1, oracle_address, key, last_idx, offset, tick_arr, skip_frequency
         );
+    }
+
+    func _make_future_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        idx: felt,
+        oracle_address: felt,
+        key: felt,
+        expiry_timestamp : felt,
+        last_idx: felt,
+        offset: felt,
+        tick_arr: TickElem**,
+        skip_frequency: felt,
+    ) -> felt {
+        // returns length
+        let is_final = is_lt(last_idx, idx * skip_frequency + offset);
+        if (is_final == TRUE) {
+            return (idx);
+        }
+        let (cp) = IOracle.get_future_checkpoint(oracle_address, key, expiry_timestamp, idx * skip_frequency + offset);
+        // TODO: generalize decimals to use IOracle.get_decimals
+
+        assert tick_arr[idx] = new TickElem(cp.timestamp, FixedPoint.from_decimals(cp.value));
+        return _make_future_array(
+            idx + 1, oracle_address, key, expiry_timestamp,last_idx, offset, tick_arr, skip_frequency
+        );
+    }
+
+    func is_lt{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(a:felt, b:felt) ->felt{ 
+        alloc_locals;
+        if (a==b) { 
+            return 0;
+        }
+        let _is_le = is_le(a, b);
+        return _is_le;
+      
     }
 }

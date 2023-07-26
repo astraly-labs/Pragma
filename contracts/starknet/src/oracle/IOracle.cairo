@@ -52,6 +52,8 @@ namespace IOracle {
     ) {
     }
 
+
+
     func get_spot_for_sources(
         pair_id: felt, aggregation_mode: felt, sources_len: felt, sources: felt*
     ) -> (value: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt) {
@@ -102,6 +104,11 @@ namespace IOracle {
     ) {
     }
 
+    func get_futures(pair_id, expiry_timestamp) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ){
+    }
+
     // TODO (rlkelly): add adapters for currency conversion
     // func get_spot_with_hops(
     //     currency_ids_len : felt, currency_ids : felt*, aggregation_mode : felt
@@ -135,7 +142,15 @@ namespace IOracle {
     func get_latest_checkpoint_index(key: felt) -> (latest: felt) {
     }
 
+    func get_latest_future_checkpoint_index(key: felt, expiry_timestamp: felt) -> (latest: felt) {
+    }
+
     func get_checkpoint(key: felt, index: felt) -> (checkpoint: Checkpoint) {
+    }
+
+    func get_future_checkpoint(key: felt, expiry_timestamp: felt, index: felt) -> (
+        checkpoint: Checkpoint
+    ) {
     }
 
     func get_sources_threshold() -> (threshold: felt) {
@@ -180,10 +195,18 @@ namespace IOracle {
     func set_checkpoint(pair_id: felt, aggregation_mode: felt) {
     }
 
+    func set_future_checkpoint(pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt) {
+    }
+
     func set_sources_threshold(threshold: felt) {
     }
 
     func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
+        checkpoint: Checkpoint, idx: felt
+    ) {
+    }
+
+    func get_last_future_checkpoint_before(pair_id: felt, expiry_timestamp: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
     ) {
     }

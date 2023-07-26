@@ -9,11 +9,11 @@ from starknet_py.contract import Contract, ContractFunction
 from empiric.core.types import RPC_URLS
 
 admin_contract_address = (
-    # 0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77 mainnet
+    # 0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77 # mainnet
     0x021D6F33C00D3657D7EC6F9322399729AFDF21533B77CF0512AC583B4755F011  # goerli
 )
 oracle_proxy_address = (
-    # 0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4 mainnet
+    # 0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4 # mainnet
     0x446812BAC98C08190DEE8967180F4E3CDCD1DB9373CA269904ACB17F67F7093  # goerli
 )
 
@@ -60,7 +60,7 @@ async def main():
     invocation = await contract.functions["upgrade"].invoke(
         declared_contract_class_hash, max_fee=int(1e16)
     )
-    print(invocation.hash)
+    print(hex(invocation.hash))
     await invocation.wait_for_acceptance()
 
     print(f"Upgraded oracle proxy with class hash: {hex(declared_contract_class_hash)}")

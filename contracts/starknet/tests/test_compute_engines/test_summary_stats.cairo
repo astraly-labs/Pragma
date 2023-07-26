@@ -432,14 +432,32 @@ func test_checkpointing{syscall_ptr: felt*, range_check_ptr}() {
     assert prices_arr[9] = 73;
     assert times_arr[9] = 1000;
 
-    %{ stop_warp = warp(0) %}
-    _iter_prices_and_times(0, 10, times_arr, prices_arr);
+    assert prices_arr[10] = 13;
+    assert times_arr[10] = 1682035195;
 
-    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 901);
+    assert prices_arr[11] = 10;
+    assert times_arr[11] = 1682118005;
+
+    assert prices_arr[12] = 45;
+    assert times_arr[12] = 1686873500;
+
+    %{ stop_warp = warp(0) %}
+    _iter_prices_and_times(0, 13, times_arr, prices_arr);
+
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 902);
     assert _idx = 8;
 
     let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 301);
     assert _idx = 2;
+
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 401);
+    assert _idx = 3;
+
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 1682035200);
+    assert _idx = 10;
+
+    let (_cp, _idx) = IOracle.get_last_spot_checkpoint_before(oracle_address, 1, 1686873599);
+    assert _idx = 12;
 
     return ();
 }

@@ -60,6 +60,11 @@ namespace IEmpiricOracle {
     ) {
     }
 
+    func get_futures(pair_id: felt, expiry_timestamp : felt, aggregation_mode: felt) -> (
+        price: felt, decimals: felt, last_updated_timestamp: felt, num_sources_aggregated: felt
+    ) {
+    }
+
     func get_spot_median_multi(pair_ids_len: felt, pair_ids: felt*, idx: felt) -> (
         prices_response_len: felt, prices_response: EmpiricPricesResponse*
     ) {
@@ -125,6 +130,11 @@ namespace IEmpiricOracle {
     }
 
     func get_last_spot_checkpoint_before(pair_id: felt, timestamp: felt) -> (
+        checkpoint: Checkpoint, idx: felt
+    ) {
+    }
+
+    func get_last_future_checkpoint_before(pair_id: felt, expiry_timestamp: felt, timestamp: felt) -> (
         checkpoint: Checkpoint, idx: felt
     ) {
     }

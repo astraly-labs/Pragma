@@ -33,6 +33,7 @@ TIMESTAMP_BUFFER = 3600
 STARKNET_STARTING_TIMESTAMP = 1650590820
 
 
+
 @pytest_asyncio.fixture(scope="module")
 async def contract_classes():
     account_class = compile_starknet_files(
