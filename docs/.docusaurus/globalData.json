@@ -1,0 +1,177 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "V3",
+          "label": "V3",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "introduction",
+          "docs": [
+            {
+              "id": "era/computational-feeds/realized-volatility",
+              "path": "/docs/era/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/computational-feeds/yield-curve",
+              "path": "/docs/era/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/consumming-data",
+              "path": "/docs/era/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/publishing-data",
+              "path": "/docs/era/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/data-feeds/supported-assets",
+              "path": "/docs/era/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "era/randomness/randomness",
+              "path": "/docs/era/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/architecture",
+              "path": "/docs/howItWorks/architecture",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/overview",
+              "path": "/docs/howItWorks/overview",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "howItWorks/roadmap",
+              "path": "/docs/howItWorks/roadmap",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "introduction",
+              "path": "/docs/introduction",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/computational-feeds/realized-volatility",
+              "path": "/docs/linea/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/computational-feeds/yield-curve",
+              "path": "/docs/linea/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/consumming-data",
+              "path": "/docs/linea/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/publishing-data",
+              "path": "/docs/linea/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/data-feeds/supported-assets",
+              "path": "/docs/linea/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "linea/randomness/randomness",
+              "path": "/docs/linea/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/computational-feeds/realized-volatility",
+              "path": "/docs/scroll/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/computational-feeds/yield-curve",
+              "path": "/docs/scroll/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/consumming-data",
+              "path": "/docs/scroll/data-feeds/consumming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/publishing-data",
+              "path": "/docs/scroll/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/data-feeds/supported-assets",
+              "path": "/docs/scroll/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "scroll/randomness/randomness",
+              "path": "/docs/scroll/randomness/",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/realized-volatility",
+              "path": "/docs/starknet/computational-feeds/realized-volatility",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/what-are-computational-feeds",
+              "path": "/docs/starknet/computational-feeds/what-are-computational-feeds",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/computational-feeds/yield-curve",
+              "path": "/docs/starknet/computational-feeds/yield-curve",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/consuming-data",
+              "path": "/docs/starknet/data-feeds/consuming-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/open-oracle",
+              "path": "/docs/starknet/data-feeds/open-oracle",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/publishing-data",
+              "path": "/docs/starknet/data-feeds/publishing-data",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/data-feeds/supported-assets",
+              "path": "/docs/starknet/data-feeds/supported-assets",
+              "sidebar": "version-V3/mySidebar"
+            },
+            {
+              "id": "starknet/randomness/randomness",
+              "path": "/docs/starknet/randomness/randomness",
+              "sidebar": "version-V3/mySidebar"
+            }
+          ],
+          "sidebars": {
+            "version-V3/mySidebar": {
+              "link": {
+                "path": "/docs/introduction",
+                "label": "version-V3/introduction"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

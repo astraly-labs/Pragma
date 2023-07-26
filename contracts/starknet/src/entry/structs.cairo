@@ -62,9 +62,21 @@ struct Currency {
     ethereum_address: felt,  // optional
 }
 
+struct GenericEntity {
+    id: felt,
+    decimals: felt,
+    type_of_data: felt,
+}
 struct Checkpoint {
     timestamp: felt,
     value: felt,
     aggregation_mode: felt,
+    num_sources_aggregated: felt,
+}
+
+struct EmpiricPricesResponse {
+    price: felt,
+    decimals: felt,
+    last_updated_timestamp: felt,
     num_sources_aggregated: felt,
 }

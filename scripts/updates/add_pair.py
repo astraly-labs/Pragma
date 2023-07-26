@@ -2,11 +2,12 @@ import asyncio
 import os
 
 from starknet_py.net.account.account import Account
-from starknet_py.net.gateway_client import GatewayClient
+from starknet_py.net.full_node_client import FullNodeClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starknet_py.net.models import StarknetChainId
 from starknet_py.contract import Contract, ContractFunction
 from empiric.core import Currency, Pair
+from empiric.core.types import RPC_URLS
 
 ORACLE_ABI = [
     {
@@ -997,7 +998,7 @@ CHAIN_ID = StarknetChainId.TESTNET if NETWORK == "testnet" else StarknetChainId.
 
 async def main():
     admin_private_key = int(os.environ.get(f"ADMIN_PRIVATE_KEY_{NETWORK.upper()}"), 0)
-    gateway = GatewayClient(net=NETWORK)
+    gateway = FullNodeClient(node_url=RPC_URLS[NETWORK])
     signer = StarkCurveSigner(
         admin_contract_address,
         KeyPair.from_private_key(admin_private_key),

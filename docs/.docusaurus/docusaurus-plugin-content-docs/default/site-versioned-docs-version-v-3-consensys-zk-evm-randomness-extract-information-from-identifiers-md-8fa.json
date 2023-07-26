@@ -1,0 +1,23 @@
+{
+  "unversionedId": "Consensys Zk-EVM/randomness/extract-information",
+  "id": "version-V3/Consensys Zk-EVM/randomness/extract-information",
+  "title": "Extract information from identifiers",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/Consensys Zk-EVM/randomness/Extract information from identifiers.md",
+  "sourceDirName": "Consensys Zk-EVM/randomness",
+  "slug": "/Consensys Zk-EVM/randomness/extract-information",
+  "permalink": "/docs/Consensys Zk-EVM/randomness/extract-information",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "extract-information",
+    "title": "Extract information from identifiers",
+    "sidebar_position": 4
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "How to get there",
+    "permalink": "/docs/Consensys Zk-EVM/randomness/how-to-get-there"
+  }
+}

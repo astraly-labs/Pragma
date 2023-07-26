@@ -1,0 +1,27 @@
+{
+  "unversionedId": "era/data-feeds/publishing-data",
+  "id": "version-V3/era/data-feeds/publishing-data",
+  "title": "Publishing Data",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/era/data-feeds/Publishing Data.md",
+  "sourceDirName": "era/data-feeds",
+  "slug": "/era/data-feeds/publishing-data",
+  "permalink": "/docs/era/data-feeds/publishing-data",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "publishing-data",
+    "title": "Publishing Data",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Supported Assets",
+    "permalink": "/docs/era/data-feeds/supported-assets"
+  },
+  "next": {
+    "title": "Realized Volatility",
+    "permalink": "/docs/era/computational-feeds/realized-volatility"
+  }
+}

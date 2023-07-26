@@ -3,18 +3,21 @@ import os
 
 from empiric.core.client import EmpiricClient
 
-publishers = ["EMPIRIC"]
-publisher_address = [0x06F40A7CBA2E500321519ACC0E8C6554FC19DA93D7F46BC65637E9865752D4AE]
-publisher_sources = [["CEX", "BITSTAMP", "COINBASE"]]
+NETWORK = "testnet"
+
+publishers = ["SKYNET"]
+publisher_address = [0x1d8e01188c4c8984fb19f00156491787e64fd2de1c3ce4eb9571924c540cf3b]
+publisher_sources = [["SKYNET"]]
 
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
     admin_contract_address = (
-        0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77
+        # 0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77
+        0x21D6F33C00D3657D7EC6F9322399729AFDF21533B77CF0512AC583B4755F011
     )
     admin_client = EmpiricClient(
-        network="mainnet",
+        network=NETWORK,
         account_private_key=admin_private_key,
         account_contract_address=admin_contract_address,
     )
@@ -22,7 +25,7 @@ async def main():
         publishers, publisher_address, publisher_sources
     ):
         result = await admin_client.add_publisher(
-            publisher, address, max_fee=int(10e15)
+            publisher, address, max_fee=int(1e16)
         )
         print(hex(result.hash))
 

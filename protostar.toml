@@ -18,3 +18,5 @@ ExampleRandomness = ["contracts/starknet/src/randomness/ExampleRandomness.cairo"
 [build]
 output = "contracts/starknet/build"
 
+[test]
+disable-hint-validation = true

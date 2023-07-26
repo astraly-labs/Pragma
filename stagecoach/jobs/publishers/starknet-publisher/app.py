@@ -12,6 +12,8 @@ from empiric.publisher.fetchers import (
     CexFetcher,
     CoinbaseFetcher,
     AscendexFetcher,
+    KaikoFetcher,
+    DefillamaFetcher
 )
 
 logger = get_stream_logger()
@@ -21,6 +23,7 @@ SECRET_NAME = os.environ["SECRET_NAME"]
 ASSETS = os.environ["ASSETS"]
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
+KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
 PAGINATION = os.environ.get("PAGINATION")
 if PAGINATION is not None:
     PAGINATION = int(PAGINATION)
@@ -63,9 +66,12 @@ async def _handler(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 AscendexFetcher,
+                DefillamaFetcher
             )
         ]
     )
+    publisher_client.add_fetcher(KaikoFetcher(assets, PUBLISHER, KAIKO_API_KEY))
+    
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
     print(

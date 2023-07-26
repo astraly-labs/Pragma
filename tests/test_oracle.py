@@ -714,6 +714,9 @@ async def test_mean_aggregation(
 
 
 @pytest.mark.asyncio
+async def test_get_median_spot
+
+@pytest.mark.asyncio
 async def test_median_aggregation(
     initialized_contracts,
     admin_signer,

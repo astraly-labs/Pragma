@@ -1,20 +1,20 @@
-# Empiric Network
+# Pragma Network
 
-This is the repository for the zk-native Empiric Network Oracle, the leading oracle network on Starknet.
+This is the repository for the zk-native Pragma Network Oracle, the leading oracle network on Starknet.
 
 ## About
 
-You can read more about the Empiric Network [here](https://docs.empiric.network) and you can see the frontend in action [here](https://empiric.network).
+You can read more about the Pragma Network [here](https://docs.empiric.network) and you can see the frontend in action [here](https://empiric.network).
 
 ### Overview
 
-![Empiric Network Architecture](/assets/Empiric-Architecture.png)
+![Pragma Network Architecture](/assets/Pragma-Architecture.png)
 
-The Empiric Network consists of three smart contracts. The first is the Proxy contract, which is the most static. This is designed to never be updated because it uses fallback functions to redirect any calls to its implementation contract (standard OpenZeppelin Proxy contract). This is the contract which protocols use, and the one to which publishers publish. The second is the Publisher Registry, which is also designed to be updated extremely infrequently because it's state should be permanent (each publisher and their address). The third is the Oracle implementation which contains the logic for storing and aggregating specific key/value data streams. The Oracle proxy forwards calls to the implementation, which can be updated when necessary, but must be updated in a backward compatible way.
+The Pragma Network consists of three smart contracts. The first is the Proxy contract, which is the most static. This is designed to never be updated because it uses fallback functions to redirect any calls to its implementation contract (standard OpenZeppelin Proxy contract). This is the contract which protocols use, and the one to which publishers publish. The second is the Publisher Registry, which is also designed to be updated extremely infrequently because it's state should be permanent (each publisher and their address). The third is the Oracle implementation which contains the logic for storing and aggregating specific key/value data streams. The Oracle proxy forwards calls to the implementation, which can be updated when necessary, but must be updated in a backward compatible way.
 
 ### Deployed Contracts
 
-The addresses of the deployed contracts can be found in the Empiric Network [documentation](https://docs.empiric.network/using-empiric/consuming-data).
+The addresses of the deployed contracts can be found in the Pragma Network [documentation](https://docs.empiric.network/using-empiric/consuming-data).
 
 ## Setup
 
@@ -60,7 +60,7 @@ docker build sample-publisher/coinbase/ -t coinbase
 docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
 ```
 
-See the [full docs](https://docs.empiric.network/using-empiric/publishing-data) for details on how to publish data to Empiric.
+See the [full docs](https://docs.pragmaoracle.com/using-pragma/publishing-data) for details on how to publish data to Empiric.
 
 ## Running Tests
 
@@ -75,7 +75,7 @@ Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public 
 ```bash
 export STARKNET_NETWORK=alpha-goerli
 protostar build
-cp contracts/starknet/build/Oracle_abi.json empiric-ui/src/abi/Oracle_abi.json
+cp contracts/starknet/build/Oracle_abi.json pragma-ui/src/abi/Oracle_abi.json
 starknet deploy --contract contracts/starknet/build/Account_abi.json --inputs <ADMIN_PUBLIC_KEY>
 starknet deploy --contract contracts/starknet/build/Account_abi.json --inputs <PUBLISHER_PUBLIC_KEY>
 starknet deploy --contract contracts/starknet/build/PublisherRegistry_abi.json --inputs <ADMIN_ADDRESS>
@@ -90,17 +90,17 @@ The release flow depends on which parts of the code base changed. Below is a map
 
 Declare the new implementation's contract class and then update the proxy contract to refer to the new class hash.
 
-## Empiric Package
+## Pragma Package
 
 To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
 
 This new version will be released automatically along with the Docker base image when a branch is merged to master.
 
-## Empiric UI
+## Pragma UI
 
 Netlify will automatically deploy previews on push if a pull request is open and will redeploy the main website on merge to master.
 
-## Empiric Publisher Docker Base Image
+## Pragma Publisher Docker Base Image
 
 Run the following commands to build a new base image for empiric-publisher locally. Use the `latest` tag for testing:
 
@@ -109,4 +109,4 @@ docker build . -t astralylabs/empiric-publisher
 docker push astralylabs/empiric-publisher:latest
 ```
 
-empiric-publisher base images are versioned together with the Empiric Python package because when the Empiric package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Empiric package release, the release flow will overwrite the Empiric package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.
+empiric-publisher base images are versioned together with the Pragma Python package because when the Pragma package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Pragma package release, the release flow will overwrite the Pragma package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.

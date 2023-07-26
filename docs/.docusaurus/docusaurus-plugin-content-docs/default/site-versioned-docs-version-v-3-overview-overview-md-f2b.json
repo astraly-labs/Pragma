@@ -1,0 +1,27 @@
+{
+  "unversionedId": "overview/architecture",
+  "id": "version-V3/overview/architecture",
+  "title": "Architecture",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/overview/Overview.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/",
+  "permalink": "/docs/overview/",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "architecture",
+    "title": "Architecture",
+    "sidebar_position": 2
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Manifesto",
+    "permalink": "/docs/manifesto"
+  },
+  "next": {
+    "title": "Data Aggregation",
+    "permalink": "/docs/overview/data-aggregation"
+  }
+}

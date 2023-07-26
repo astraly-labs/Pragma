@@ -22,10 +22,6 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
     uint256 constant BACKWARD_TIMESTAMP_BUFFER = 3600;
     uint256 constant FORWARD_TIMESTAMP_BUFFER = 900;
 
-    constructor() {
-        _disableInitializers();
-    }
-
     function initialize(
         address _publisherRegistry,
         Currency[] memory _currencies,
@@ -54,9 +50,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         _publishSpotEntry(spotEntry);
     }
 
-    function setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
-        public
-    {
+    function setCheckpoint(
+        bytes32 pairId,
+        AggregationMode aggregationMode
+    ) public {
         _setCheckpoint(pairId, aggregationMode);
     }
 
@@ -69,9 +66,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _setCheckpoint(bytes32 pairId, AggregationMode aggregationMode)
-        private
-    {
+    function _setCheckpoint(
+        bytes32 pairId,
+        AggregationMode aggregationMode
+    ) private {
         bytes32[] memory sources = oracleSourcesStorage[pairId];
         (
             uint256 value,
@@ -157,7 +155,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         return (_price, _decimals, _lastUpdatedTimestamp, entries.length);
     }
 
-    function getSpotEntries(bytes32 pairId, bytes32[] memory sources)
+    function getSpotEntries(
+        bytes32 pairId,
+        bytes32[] memory sources
+    )
         public
         view
         returns (
@@ -176,7 +177,10 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         return (entries, _lastUpdatedTimestamp);
     }
 
-    function _getSpotEntriesArray(bytes32 pairId, bytes32[] memory sources)
+    function _getSpotEntriesArray(
+        bytes32 pairId,
+        bytes32[] memory sources
+    )
         internal
         view
         returns (SpotEntryStorage[] memory, uint256 latestTimestamp)
@@ -211,11 +215,9 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _aggregateSpotEntries(SpotEntryStorage[] memory entries)
-        internal
-        pure
-        returns (uint256)
-    {
+    function _aggregateSpotEntries(
+        SpotEntryStorage[] memory entries
+    ) internal pure returns (uint256) {
         uint256[] memory values = new uint256[](entries.length);
         uint256 length = 0;
         for (uint256 i = 0; i < entries.length; i++) {
@@ -303,11 +305,9 @@ contract Oracle is Initializable, CurrencyManager, EntryUtils, IOracle {
         }
     }
 
-    function _splitBytes32(bytes32 source)
-        internal
-        pure
-        returns (bytes16, bytes16)
-    {
+    function _splitBytes32(
+        bytes32 source
+    ) internal pure returns (bytes16, bytes16) {
         bytes16[2] memory y = [bytes16(0), 0];
         assembly {
             mstore(y, source)

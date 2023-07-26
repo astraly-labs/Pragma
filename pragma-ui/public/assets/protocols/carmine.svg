@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="76.991" height="86.968" viewBox="0 0 76.991 86.968">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#8600ff"/>
+      <stop offset="1" stop-color="#c00"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.031" y1="0.944" x2="0.83" y2="0.287" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffbc00"/>
+      <stop offset="1" stop-color="#ff0f00"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_15" data-name="Group 15" transform="translate(-4137 -1501.659)">
+    <g id="Group_13" data-name="Group 13" transform="translate(4137 1501.659)">
+      <path id="Subtraction_6" data-name="Subtraction 6" d="M43.3,86.607a43.639,43.639,0,0,1-8.727-.88,43.073,43.073,0,0,1-15.484-6.516A43.431,43.431,0,0,1,3.4,60.159,43.077,43.077,0,0,1,.88,52.031a43.72,43.72,0,0,1,0-17.454A43.06,43.06,0,0,1,7.4,19.092,43.434,43.434,0,0,1,26.448,3.4,43.076,43.076,0,0,1,34.576.88a43.721,43.721,0,0,1,17.454,0A43.057,43.057,0,0,1,67.515,7.4a43.608,43.608,0,0,1,6.409,5.288c.132.132.266.268.4.4-.825.765-1.635,1.554-2.407,2.345a58.507,58.507,0,0,0-8.075,10.3,49.455,49.455,0,0,0-3.789,7.575,19.512,19.512,0,1,0-2.476,23.274,43.806,43.806,0,0,0,1.162,4.989,48,48,0,0,0,5.1,11.387,55.879,55.879,0,0,0,4.17,5.908c-.176.122-.343.237-.5.34a43.129,43.129,0,0,1-24.212,7.4Z" transform="translate(0 0.361)" fill="url(#linear-gradient)"/>
+      <path id="Path_14" data-name="Path 14" d="M3915.148,1375.544s3.022-9.522,14.185-20.26a42.623,42.623,0,0,0-43.385-11.728,51.618,51.618,0,0,0-9.936,4.364c-20.276,12.013-20.832,33.522-20.832,33.522a51.112,51.112,0,0,0,.756,13.724c.979,4.912,3.989,10.221,5.683,13.248,4.1,7.328,10.441-20.474,18.46-31.03s15.852-12.522,22.377-11.025a20.485,20.485,0,0,1,8.74,4.507A22.2,22.2,0,0,1,3915.148,1375.544Z" transform="translate(-3855.01 -1341.748)" fill="url(#linear-gradient-2)"/>
+      <ellipse id="Ellipse_27" data-name="Ellipse 27" cx="3.316" cy="12.597" rx="3.316" ry="12.597" transform="matrix(0.839, 0.545, -0.545, 0.839, 71.429, 11.358)" fill="#af0d02"/>
+      <ellipse id="Ellipse_32" data-name="Ellipse 32" cx="2.926" cy="12.465" rx="2.926" ry="12.465" transform="translate(71.033 78.048) rotate(155)" fill="#69002b"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+{
+  "unversionedId": "howItWorks/data-aggregation",
+  "id": "version-V3/howItWorks/data-aggregation",
+  "title": "Data Aggregation",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/howItWorks/Data Aggregation.md",
+  "sourceDirName": "howItWorks",
+  "slug": "/howItWorks/data-aggregation",
+  "permalink": "/docs/howItWorks/data-aggregation",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "data-aggregation",
+    "title": "Data Aggregation",
+    "sidebar_position": 3
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Architecture",
+    "permalink": "/docs/howItWorks/architecture"
+  },
+  "next": {
+    "title": "Roadmap",
+    "permalink": "/docs/howItWorks/roadmap"
+  }
+}

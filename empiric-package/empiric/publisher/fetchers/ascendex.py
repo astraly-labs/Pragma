@@ -35,7 +35,7 @@ class AscendexFetcher(PublisherInterfaceT):
                     f"No data found for {'/'.join(pair)} from Ascendex"
                 )
             result = await resp.json(content_type="application/json")
-            if result["code"] == "100002" or result["reason"] == "DATA_NOT_AVAILABLE":
+            if result["code"] == "100002" and result["reason"] == "DATA_NOT_AVAILABLE":
                 return PublisherFetchError(
                     f"No data found for {'/'.join(pair)} from Ascendex"
                 )
@@ -54,7 +54,7 @@ class AscendexFetcher(PublisherInterfaceT):
                 f"No data found for {'/'.join(pair)} from Ascendex"
             )
         result = resp.json(content_type="application/json")
-        if result["code"] == "100002" or result["reason"] == "DATA_NOT_AVAILABLE":
+        if result["code"] == "100002" and result["reason"] == "DATA_NOT_AVAILABLE":
             return PublisherFetchError(
                 f"No data found for {'/'.join(pair)} from Ascendex"
             )
@@ -84,14 +84,13 @@ class AscendexFetcher(PublisherInterfaceT):
     def _construct(self, asset, result) -> SpotEntry:
         pair = asset["pair"]
         data = result["data"]
-
         timestamp = int(time.time())
         ask = float(data["ask"][0])
         bid = float(data["bid"][0])
         price = (float(data["ask"][0]) + float(data["bid"][0])) / 2.0
         price_int = int(price * (10 ** asset["decimals"]))
         pair_id = currency_pair_to_pair_id(*pair)
-        volume = int(data["volume"])
+        volume = int(float(data["volume"]))
 
         logger.info(f"Fetched price {price} for {'/'.join(pair)} from Ascendex")
 

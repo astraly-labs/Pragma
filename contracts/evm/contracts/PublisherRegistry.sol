@@ -14,10 +14,10 @@ contract PublisherRegistry is Ownable, IPublisherRegistry {
     mapping(bytes32 => bytes32[]) public sourcesForPublisher;
     uint256 public publisherStorageLen;
 
-    function addPublisher(bytes32 publisher, address publisherAddress)
-        external
-        onlyOwner
-    {
+    function addPublisher(
+        bytes32 publisher,
+        address publisherAddress
+    ) external onlyOwner {
         require(publisherAddresses[publisher] == address(0), "Already Added");
         publishers.push(publisher);
         publisherAddresses[publisher] = publisherAddress;
@@ -60,10 +60,10 @@ contract PublisherRegistry is Ownable, IPublisherRegistry {
         delete sourcesForPublisher[publisher];
     }
 
-    function addSourceForPublisher(bytes32 publisher, bytes32 source)
-        public
-        onlyOwner
-    {
+    function addSourceForPublisher(
+        bytes32 publisher,
+        bytes32 source
+    ) public onlyOwner {
         address publisherAddress = publisherAddresses[publisher];
         require(publisherAddress != address(0), "Publisher does not exist");
         require(!canPublishSource(publisher, source), "Already Registered");
@@ -80,10 +80,10 @@ contract PublisherRegistry is Ownable, IPublisherRegistry {
         }
     }
 
-    function removeSourceForPublisher(bytes32 publisher, bytes32 source)
-        public
-        onlyOwner
-    {
+    function removeSourceForPublisher(
+        bytes32 publisher,
+        bytes32 source
+    ) public onlyOwner {
         uint256 index;
         bytes32[] storage _publisherSources = sourcesForPublisher[publisher];
         for (uint256 i = 0; i < _publisherSources.length; i++) {
@@ -100,11 +100,10 @@ contract PublisherRegistry is Ownable, IPublisherRegistry {
 
     // views
 
-    function canPublishSource(bytes32 publisher, bytes32 source)
-        public
-        view
-        returns (bool)
-    {
+    function canPublishSource(
+        bytes32 publisher,
+        bytes32 source
+    ) public view returns (bool) {
         return publisherSources[publisher][source];
     }
 }

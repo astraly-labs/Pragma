@@ -1,7 +1,11 @@
+import os
 from enum import IntEnum, unique
 from typing import List, Literal
 
 from empiric.core.utils import str_to_felt
+from starknet_py.net.full_node_client import FullNodeClient
+
+NETWORK = os.getenv("NETWORK") or "sharingan"
 
 ADDRESS = int
 HEX_STR = str
@@ -11,20 +15,45 @@ STAGING = "staging"
 TESTNET = "testnet"
 INTEGRATION = "integration"
 MAINNET = "mainnet"
+SCROLL_TESTNET = "scroll_testnet"
+LINEA_TESTNET = "linea_testnet"
+ERA_TESTNET = "era_testnet"
+SHARINGAN = "sharingan"
+PRAGMA_TESTNET = "pragma_testnet"
 
-Network = Literal["staging", "testnet", "integration", "mainnet"]
+Network = Literal["staging", "testnet", "integration", "mainnet", "sharingan", "pragma_testnet"]
 
 CHAIN_IDS = {
     INTEGRATION: 1536727068981429685321,
+    SHARINGAN: 1536727068981429685321,
     TESTNET: 1536727068981429685321,
     MAINNET: 23448594291968334,
+    SCROLL_TESTNET: 534353,
+    LINEA_TESTNET: 59140,
+    ERA_TESTNET: 280,
+    PRAGMA_TESTNET: 8908953246943201047421899664489
 }
 
-GATEWAY_URLS = {
-    TESTNET: "https://alpha4.starknet.io",
-    INTEGRATION: "https://external.integration.starknet.io",
-    MAINNET: "https://alpha-mainnet.starknet.io",
+STARKSCAN_URLS = {
+    "mainnet": "https://starkscan.co",
+    "testnet": "https://testnet.starkscan.co",
+    "testnet2": "https://testnet-2.starkscan.co",
+    "devnet": "https://devnet.starkscan.co",
+    "sharingan": "https://starknet-madara.netlify.app/#/explorer/query",
+    "pragma_testnet": "https://testnet.pragmaoracle.com/explorer",
 }
+
+if not os.getenv("RPC_KEY") and NETWORK in ["mainnet", "testnet", "testnet2"]:
+    raise ValueError(f"RPC_KEY env variable is required when targeting {NETWORK}")
+RPC_URLS = {
+    "mainnet": f"https://starknet-mainnet.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "testnet": f"https://starknet-goerli.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "testnet2": f"https://starknet-goerli2.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "devnet": "http://127.0.0.1:5050/rpc",
+    "sharingan": "https://sharingan.madara.zone",
+    "pragma_testnet": "https://testnet.pragmaoracle.com/rpc"
+}
+RPC_CLIENT = FullNodeClient(node_url=RPC_URLS[NETWORK])
 
 
 # aggregation mode enum

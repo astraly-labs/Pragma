@@ -1,0 +1,27 @@
+{
+  "unversionedId": "starknet/randomness copy/randomness",
+  "id": "version-V3/starknet/randomness copy/randomness",
+  "title": "Randomness",
+  "description": "---",
+  "source": "@site/versioned_docs/version-V3/starknet/randomness copy/Architecture.md",
+  "sourceDirName": "starknet/randomness copy",
+  "slug": "/starknet/randomness copy/randomness",
+  "permalink": "/docs/starknet/randomness copy/randomness",
+  "tags": [],
+  "version": "V3",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "randomness",
+    "title": "Randomness",
+    "sidebar_position": 1
+  },
+  "sidebar": "version-V3/mySidebar",
+  "previous": {
+    "title": "Randomness",
+    "permalink": "/docs/starknet/randomness/randomness"
+  },
+  "next": {
+    "title": "Mapping the Web",
+    "permalink": "/docs/Consensys Zk-EVM/data-feeds/our-vision"
+  }
+}
