@@ -7,7 +7,7 @@ from empiric.core.entry import FutureEntry
 from empiric.core.logger import get_stream_logger
 from empiric.publisher.assets import get_future_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.future_fetchers import OkxFutureFetcher
+from empiric.publisher.future_fetchers import OkxFutureFetcher, ByBitFutureFetcher
 from empiric.core.utils import currency_pair_to_pair_id
 
 logger = get_stream_logger()
@@ -25,6 +25,7 @@ if PAGINATION is not None:
 def handler(event, context):
     assets = [get_future_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
     entries_ = asyncio.run(_handler(assets))
+    print(entries_)
     serialized_entries_ = FutureEntry.serialize_entries(entries_)
     print(serialized_entries_)
     return {
@@ -53,7 +54,8 @@ async def _handler(assets):
     )
     publisher_client.add_fetchers(
         [
-            OkxFutureFetcher(assets, PUBLISHER)
+            OkxFutureFetcher(assets, PUBLISHER),
+            ByBitFutureFetcher(assets, PUBLISHER)
         ]
     )
     _entries = await publisher_client.fetch()
@@ -70,7 +72,7 @@ async def _handler(assets):
     # ]
     # await publisher_client.set_future_checkpoints(pairs)
 
-    # return _entries
+    return _entries
 
 
 if __name__ == "__main__":
