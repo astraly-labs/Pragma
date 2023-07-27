@@ -163,6 +163,15 @@ func get_spot_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     return (decimals,);
 }
 
+
+@view
+func get_future_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    pair_id: felt
+) -> (decimals: felt) {
+    let (decimals) = Oracle.get_future_decimals(pair_id);
+    return (decimals,);
+}
+
 @view
 func get_value{
     bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
