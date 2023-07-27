@@ -8,7 +8,7 @@ from empiric.core.entry import FutureEntry
 from empiric.core.logger import get_stream_logger
 from empiric.publisher.assets import get_future_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.future_fetchers import OkxFutureFetcher, ByBitFutureFetcher
+from empiric.publisher.future_fetchers import OkxFutureFetcher, ByBitFutureFetcher, BinanceFutureFetcher
 from empiric.core.utils import currency_pair_to_pair_id
 
 logger = get_stream_logger()
@@ -46,8 +46,8 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    # publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
-    publisher_private_key = _get_pvt_key()
+    publisher_private_key = int(os.environ.get("PUBLISHER_PRIVATE_KEY"))
+    # publisher_private_key = _get_pvt_key()
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
@@ -55,8 +55,8 @@ async def _handler(assets):
     )
     publisher_client.add_fetchers(
         [
-            OkxFutureFetcher(assets, PUBLISHER),
-            ByBitFutureFetcher(assets, PUBLISHER)
+            fetcher(assets, PUBLISHER)
+            for fetcher in (BinanceFutureFetcher, OkxFutureFetcher, ByBitFutureFetcher)
         ]
     )
 

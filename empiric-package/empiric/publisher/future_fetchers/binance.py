@@ -127,7 +127,7 @@ class BinanceFutureFetcher(PublisherInterfaceT):
                 return list_vol
         return 0
     
-    def _construct(self, asset, result, volume_arr) -> FutureEntry:
+    def _construct(self, asset, result, volume_arr) -> List[FutureEntry]:
         pair = asset["pair"]
         result_len = len(result)
         selection = f"{pair[0]}{pair[1]}"
