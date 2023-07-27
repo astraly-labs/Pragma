@@ -36,7 +36,7 @@ async def main():
 
     if declared_contract_class_hash is None:
         # Declare implementation
-        with open("Oracle.json", "r") as f:
+        with open("build/Oracle.json", "r") as f:
             compiled_contract = f.read()
 
         declare_transaction = await admin.sign_declare_transaction(
@@ -48,7 +48,8 @@ async def main():
 
         print(hex(resp.transaction_hash))
 
-        await admin.client.wait_for_tx(resp.transaction_hash)
+        # await admin.client.wait_for_tx(resp.transaction_hash)
+        await asyncio.sleep(10)
 
         declared_contract_class_hash = resp.class_hash
 
@@ -61,7 +62,7 @@ async def main():
         declared_contract_class_hash, max_fee=int(1e16)
     )
     print(hex(invocation.hash))
-    await invocation.wait_for_acceptance()
+    # await invocation.wait_for_acceptance()
 
     print(f"Upgraded oracle proxy with class hash: {hex(declared_contract_class_hash)}")
 
