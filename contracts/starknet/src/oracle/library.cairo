@@ -400,6 +400,19 @@ namespace Oracle {
         return (entry,);
     }
 
+    func get_future_decimals{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        pair_id: felt
+    ) -> (decimals: felt) {
+        let (pair) = Oracle_pairs_storage.read(pair_id);
+        let (key_currency) = Oracle_currencies_storage.read(pair.base_currency_id);
+        if (key_currency.id == 0) {
+            return (0,);
+        }
+
+        let key_decimals = key_currency.decimals;
+        return (key_decimals,);
+    }
+
     func get_generic_entry{
         bitwise_ptr: BitwiseBuiltin*,
         syscall_ptr: felt*,
