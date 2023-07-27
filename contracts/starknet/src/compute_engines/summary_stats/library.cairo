@@ -128,6 +128,30 @@ namespace SummaryStats {
         return (_decs, _decimals);
     }
 
+    func calculate_spot_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        oracle_address: felt, key: felt, time: felt, start_tick: felt
+    ) -> (felt,felt) {
+        alloc_locals;
+        let (_start_cp, start_index) = IOracle.get_last_spot_checkpoint_before(
+            oracle_address, key, start_tick
+        );
+        let (_stop_cp, stop_index) = IOracle.get_last_spot_checkpoint_before(
+            oracle_address, key, start_tick + time
+        );
+        let (_decimals) = IOracle.get_spot_decimals(oracle_address, key);
+        with_attr error_message("Not enough data") {
+            assert_not_equal(start_index, stop_index);
+        }
+        let (tick_arr: TickElem**) = alloc();
+        let arr_len = _make_array(
+            0, oracle_address, key, stop_index, start_index, tick_arr, 1
+        );
+        let _twap = twap(arr_len, tick_arr);
+        let _decs = FixedPoint.to_decimals(_twap);
+        return (_decs, _decimals);
+    }
+
+
     func _make_scaled_array{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         oracle_address: felt,
         key: felt,
@@ -167,7 +191,7 @@ namespace SummaryStats {
         skip_frequency: felt,
     ) -> felt {
         // returns length
-        let is_final = is_le(last_idx, idx * skip_frequency + offset);
+        let is_final = is_lt(last_idx, idx * skip_frequency + offset);
         if (is_final == TRUE) {
             return (idx);
         }

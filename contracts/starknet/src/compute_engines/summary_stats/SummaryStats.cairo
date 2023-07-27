@@ -53,3 +53,15 @@ func calculate_future_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
     );
     return (_twap,decimals);
 }
+
+
+@view 
+func calculate_spot_twap{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    key: felt, time: felt, start_tick: felt
+) -> (twap_: felt, decimals:felt) {
+    let (oracle_address) = SummaryStats__oracle_address.read();
+    let (_twap, decimals) = SummaryStats.calculate_spot_twap(
+        oracle_address, key, time, start_tick
+    );
+    return (_twap,decimals);
+}
