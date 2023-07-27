@@ -117,33 +117,38 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
 func test_set_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
     alloc_locals;
     local oracle_address;
+    local summary_stats_address;
     %{ ids.oracle_address = context.oracle_address %}
-    tempvar summary_stats_address;
     %{ ids.summary_stats_address = context.summary_stats_address %}
 
     // let test = FixedPoint.to_decimals(46116860184273880);
 
-    let (twap_test) = ISummaryStats.calculate_future_twap(
+    let (twap_test,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 2, 11111110, 10000, 100001
     );
     assert twap_test = 4333333;
-    let (twap_test_2) = ISummaryStats.calculate_future_twap(
+    assert decimals = 6; 
+    let (twap_test_2,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 2, 11111110, 10000, 100201
     );
     assert twap_test_2 = 5499999;
-    let (twap_test_3) = ISummaryStats.calculate_future_twap(
+    assert decimals = 6; 
+    let (twap_test_3,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 2, 11111110, 10000, 100401
     );
     assert twap_test_3 = 2999999;
-    let (twap_test_4) = ISummaryStats.calculate_future_twap(
+    assert decimals = 6; 
+    let (twap_test_4,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 3, 11111110, 10000, 100001
     );
     assert twap_test_4 = 4999999;
-    let (twap_test_5) = ISummaryStats.calculate_future_twap(
+    assert decimals = 6; 
+    let (twap_test_5,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 3, 11111110, 10000, 100201
     );
     assert twap_test_5 = 5499999;
-    let (twap_test_6) = ISummaryStats.calculate_future_twap(
+    assert decimals = 6; 
+    let (twap_test_6,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 3, 11111110, 10000, 100401
     );
     assert twap_test_6 = 2999999;
