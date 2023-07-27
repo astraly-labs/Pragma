@@ -12,4 +12,9 @@ namespace ISummaryStats {
         twap: felt, decimals:felt
     ) {
     }
+
+    func calculate_spot_twap(key: felt, time: felt, start_tick: felt) -> (
+        twap: felt, decimals:felt
+    ) {
+    }
 }
