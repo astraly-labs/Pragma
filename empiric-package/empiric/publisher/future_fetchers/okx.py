@@ -39,6 +39,23 @@ class OkxFutureFetcher(PublisherInterfaceT):
                 )
             return result["data"][0]["expTime"]
 
+    def fetch_sync_expiry_timestamp(self, asset, id):
+        pair = asset["pair"]
+        url = f"{self.TIMESTAMP_URL}?instType=FUTURES&instId={id}"
+        resp = requests.get(url)
+        if resp.status_code == 404:
+            return PublisherFetchError(
+                f"No data found for {'/'.join(pair)} from OKX"
+            )
+        result = resp.json()
+        if (
+            result["code"] == "51001"
+            or result["msg"] == "Instrument ID does not exist"
+        ):
+            return PublisherFetchError(
+                f"No data found for {'/'.join(pair)} from OKX"
+            )
+        return result["data"][0]["expTime"]
     def _construct(self, asset, data, expiry_timestamp) -> List[FutureEntry]:
     
         pair = asset["pair"]
@@ -88,6 +105,7 @@ class OkxFutureFetcher(PublisherInterfaceT):
         self, asset: EmpiricFutureAsset
     ) -> Union[FutureEntry, PublisherFetchError]:
         pair = asset["pair"]
+        future_entries = []
         url = f"{self.BASE_URL}?instType=FUTURES&uly={pair[0]}-{pair[1]}"
 
         resp = requests.get(url)
@@ -96,8 +114,12 @@ class OkxFutureFetcher(PublisherInterfaceT):
         result = resp.json(content_type="text/json")
         if result["code"] == "51001" or result["msg"] == "Instrument ID does not exist":
             return PublisherFetchError(f"No data found for {'/'.join(pair)} from OKX")
-
-        return self._construct(asset, result,)
+        result_len = len(result["data"])
+        if result_len > 1:
+            for i in range(0, result_len):
+                expiry_timestamp = self.fetch_sync_expiry_timestamp(asset, result["data"][i]["instId"])
+                future_entries.append(self._construct(asset, result['data'][i],expiry_timestamp))
+        return future_entries
 
     def fetch_sync(self):
         entries = []
@@ -116,7 +138,7 @@ class OkxFutureFetcher(PublisherInterfaceT):
         entries = []
         for asset in self.assets:
             if asset["type"] != "FUTURE":
-                logger.debug(f"Skipping ByBit for non-future asset {asset}")
+                logger.debug(f"Skipping OKX for non-future asset {asset}")
                 continue
             future_entries = await self._fetch_pair(asset, session)
             if isinstance(future_entries, list):
