@@ -110,6 +110,61 @@ func __setup__{syscall_ptr: felt*, range_check_ptr}() {
     );
     IOracle.set_future_checkpoint(oracle_address, 3, 11111110, MEDIAN);  // 5 *10**6
 
+    
+    //------SPOT
+    
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 2, MEDIAN);
+
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 200, 1, 1), 2, 8 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 2, MEDIAN);
+
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 400, 1, 1), 2, 3 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 2, MEDIAN);
+
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 600, 1, 1), 2, 5 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 2, MEDIAN);
+
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now, 1, 1), 3, 2 * 10 ** 6, 100)
+    );
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now, 2, 1), 3, 4 * 10 ** 6, 100)
+    );
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now, 3, 1), 3, 6 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 3, MEDIAN);  // 4 *10**6
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 200, 1, 1), 3, 8 * 10 ** 6, 100)
+    );
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 200, 2, 1), 3, 8 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 3, MEDIAN);  // 8 *10**6
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 400, 1, 1), 3, 2 * 10 ** 6, 100)
+    );
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 400, 2, 1), 3, 3 * 10 ** 6, 100)
+    );
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 400, 3, 1), 3, 4 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 3, MEDIAN);  // 3 *10**6
+    IOracle.publish_spot_entry(
+        oracle_address, SpotEntry(BaseEntry(now + 600, 1, 1), 3, 5 * 10 ** 6, 100)
+    );
+    IOracle.set_checkpoint(oracle_address, 3, MEDIAN);  // 5 *10**6
+
     return ();
 }
 
@@ -150,6 +205,49 @@ func test_set_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, 
     assert decimals = 6; 
     let (twap_test_6,decimals) = ISummaryStats.calculate_future_twap(
         summary_stats_address, 3, 11111110, 10000, 100401
+    );
+    assert twap_test_6 = 2999999;
+    return ();
+}
+
+
+@external
+func test_set_spot_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    local oracle_address;
+    local summary_stats_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    %{ ids.summary_stats_address = context.summary_stats_address %}
+
+    // let test = FixedPoint.to_decimals(46116860184273880);
+
+    let (twap_test,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 2, 10000, 100001
+    );
+    assert twap_test = 4333333;
+    assert decimals = 6; 
+    let (twap_test_2,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 2, 10000, 100201
+    );
+    assert twap_test_2 = 5499999;
+    assert decimals = 6; 
+    let (twap_test_3,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 2, 10000, 100401
+    );
+    assert twap_test_3 = 2999999;
+    assert decimals = 6; 
+    let (twap_test_4,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 3, 10000, 100001
+    );
+    assert twap_test_4 = 4999999;
+    assert decimals = 6; 
+    let (twap_test_5,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 3, 10000, 100201
+    );
+    assert twap_test_5 = 5499999;
+    assert decimals = 6; 
+    let (twap_test_6,decimals) = ISummaryStats.calculate_spot_twap(
+        summary_stats_address, 3, 10000, 100401
     );
     assert twap_test_6 = 2999999;
     return ();
