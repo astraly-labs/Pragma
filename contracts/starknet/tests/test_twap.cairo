@@ -269,6 +269,165 @@ func test_set_spot_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
     return ();
 }
 
+@external 
+func test_multiple_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    let now = 100000;
+    local oracle_address;
+    local summary_stats_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 11111111, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 8 * 10 ** 6, 11111112, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 3 * 10 ** 6, 11111113, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 5 * 10 ** 6, 11111114, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now+600, 1, 1), 2, 2 * 10 ** 6, 11111115, 100)
+    );
+    let (expiries:felt*) = alloc();
+    assert expiries[0] = 11111111;
+    assert expiries[1]= 11111112;
+    assert expiries[2] = 11111113;
+    assert expiries[3] = 11111114;
+    assert expiries[4] = 11111115;
+
+    IOracle.set_multiple_expiries_future_checkpoints(oracle_address,2,5,expiries, MEDIAN);
+    let (idx1) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111111);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111111,idx1-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx2) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111112);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111112,idx2-1); 
+    assert checkpoint.value = 8 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx3) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111113);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111113,idx3-1); 
+    assert checkpoint.value = 3 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx4) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111114);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111114,idx4-1); 
+    assert checkpoint.value = 5 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx5) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111115);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111115,idx5-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    return();
+
+}
+
+@external
+func test_multiple_multiple_checkpoints{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() {
+    alloc_locals;
+    let now = 100000;
+    local oracle_address;
+    local summary_stats_address;
+    %{ ids.oracle_address = context.oracle_address %}
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 2, 2 * 10 ** 6, 11111111, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 8 * 10 ** 6, 11111112, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 3 * 10 ** 6, 11111113, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 2, 5 * 10 ** 6, 11111114, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now+600, 1, 1), 2, 2 * 10 ** 6, 11111115, 100)
+    );
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now, 1, 1), 3, 2 * 10 ** 6, 11111111, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 3, 8 * 10 ** 6, 11111112, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 3, 3 * 10 ** 6, 11111113, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now + 600, 1, 1), 3, 5 * 10 ** 6, 11111114, 100)
+    );
+
+    IOracle.publish_future_entry(
+        oracle_address, FutureEntry(BaseEntry(now+600, 1, 1), 3, 2 * 10 ** 6, 11111115, 100)
+    );
+    let (expiries:felt*) = alloc();
+    assert expiries[0] = 11111111;
+    assert expiries[1]= 11111112;
+    assert expiries[2] = 11111113;
+    assert expiries[3] = 11111114;
+    assert expiries[4] = 11111115;
+
+    let (keys : felt*) = alloc();
+    assert keys[0]=2;
+    assert keys[1] = 3;
+    IOracle.set_multiple_expiries_and_keys_future_checkpoints(oracle_address,2, keys,5,expiries, MEDIAN);
+    let (idx1) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111111);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111111,idx1-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx2) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111112);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111112,idx2-1); 
+    assert checkpoint.value = 8 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx3) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111113);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111113,idx3-1); 
+    assert checkpoint.value = 3 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx4) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111114);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111114,idx4-1); 
+    assert checkpoint.value = 5 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx5) = IOracle.get_latest_future_checkpoint_index(oracle_address,2,11111115);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 2,11111115,idx5-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx6) = IOracle.get_latest_future_checkpoint_index(oracle_address,3,11111111);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 3,11111111,idx6-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx7) = IOracle.get_latest_future_checkpoint_index(oracle_address,3,11111112);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 3,11111112,idx7-1); 
+    assert checkpoint.value = 8 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx8) = IOracle.get_latest_future_checkpoint_index(oracle_address,3,11111113);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 3,11111113,idx8-1); 
+    assert checkpoint.value = 3 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx9) = IOracle.get_latest_future_checkpoint_index(oracle_address,3,11111114);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 3,11111114,idx9-1); 
+    assert checkpoint.value = 5 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    let (idx10) = IOracle.get_latest_future_checkpoint_index(oracle_address,3,11111115);
+    let (checkpoint) = IOracle.get_future_checkpoint(oracle_address, 3,11111115,idx10-1); 
+    assert checkpoint.value = 2 * 10 ** 6;
+    assert checkpoint.num_sources_aggregated=1;
+    return();
+
+}
+
+
 // PYTHON SCRIPTS FOR TESTS:
 // def calculate_twap(prices, timestamps):
 //     assert len(prices) == len(timestamps), "The prices and timestamps lists must be the same length."

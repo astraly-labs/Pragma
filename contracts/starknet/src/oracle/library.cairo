@@ -818,6 +818,33 @@ namespace Oracle {
 
         }
 
+    func set_multiple_expiries_future_checkpoints{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(key: felt, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) { 
+        if (expiries_len == 0) {
+            return ();
+        }
+        alloc_locals; 
+        set_future_checkpoint(key, [expiries], aggregation_mode);
+        return set_multiple_expiries_future_checkpoints(key, expiries_len-1, expiries + 1,aggregation_mode);
+    }
+
+    func set_multiple_expiries_and_keys_future_checkpoints{
+        bitwise_ptr: BitwiseBuiltin*,
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr,
+    }(keys_len: felt, keys : felt*, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) { 
+        if (keys_len == 0) {
+            return ();
+        }
+        alloc_locals; 
+        set_multiple_expiries_future_checkpoints([keys],expiries_len, expiries, aggregation_mode);
+        return set_multiple_expiries_and_keys_future_checkpoints(keys_len-1 , keys + 1 , expiries_len, expiries,aggregation_mode);
+    }
     //
     // Helpers
     //

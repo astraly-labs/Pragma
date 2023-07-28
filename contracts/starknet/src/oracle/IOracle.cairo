@@ -151,6 +151,14 @@ namespace IOracle {
     func set_future_checkpoint(pair_id: felt, expiry_timestamp: felt, aggregation_mode: felt) {
     }
 
+    func set_multiple_expiries_future_checkpoints(key: felt, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) {
+
+    }
+
+    func set_multiple_expiries_and_keys_future_checkpoints(keys_len: felt, keys : felt*, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) {
+        
+    }
+    
     func set_sources_threshold(threshold: felt) {
     }
 

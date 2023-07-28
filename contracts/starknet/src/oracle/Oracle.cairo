@@ -331,6 +331,7 @@ func get_future_checkpoint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range
     return (latest,);
 }
 
+
 @view
 func get_sources_threshold{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     threshold: felt
@@ -403,7 +404,23 @@ func set_future_checkpoint{
     return ();
 }
 
+@external
+func set_multiple_expiries_future_checkpoints{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}    (key: felt, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) 
+ {
+    Oracle.set_multiple_expiries_future_checkpoints(key, expiries_len, expiries, aggregation_mode);
+    return ();
+}
 
+@external 
+func set_multiple_expiries_and_keys_future_checkpoints{
+    bitwise_ptr: BitwiseBuiltin*, syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
+}    (keys_len: felt,keys : felt*, expiries_len :felt, expiries : felt*, aggregation_mode :felt,) 
+ {
+    Oracle.set_multiple_expiries_and_keys_future_checkpoints(keys_len,keys, expiries_len, expiries, aggregation_mode);
+    return ();
+}
 @view
 func get_last_spot_checkpoint_before{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
