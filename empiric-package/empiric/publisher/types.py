@@ -29,3 +29,12 @@ class PublisherFetchError:
 
     def serialize(self):
         return self.message
+
+class UnsupportedAssetError:
+    message: str
+
+    def __init__(self, message: str):
+        self.message = message
+
+    def serialize(self):
+        return self.message

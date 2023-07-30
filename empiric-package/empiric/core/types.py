@@ -55,6 +55,8 @@ RPC_URLS = {
 }
 RPC_CLIENT = FullNodeClient(node_url=RPC_URLS[NETWORK])
 
+AssetType = Literal["SPOT", "FUTURE", "OPTION"]
+
 
 # aggregation mode enum
 @unique

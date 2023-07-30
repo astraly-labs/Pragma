@@ -1,7 +1,9 @@
 from typing import Dict, List, Tuple, Union
 
 from empiric.core.utils import key_for_asset
+from empiric.core.types import AssetType
 from typing_extensions import TypedDict
+from empiric.publisher.types import UnsupportedAssetError
 
 
 class EmpiricSpotAsset(TypedDict):
@@ -87,6 +89,15 @@ _EMPIRIC_ALL_ASSET_BY_KEY: Dict[str, EmpiricAsset] ={
     key_for_asset(asset): asset
     for asset in EMPIRIC_ALL_ASSETS
 }
+
+# TODO: Add support for option asset type
+def get_asset_spec_for_pair_id_by_type(pair_id: str, asset_type: AssetType) -> EmpiricAsset:
+    if asset_type == "SPOT":
+        return get_spot_asset_spec_for_pair_id(pair_id)
+    elif asset_type == "FUTURE":
+        return get_future_asset_spec_for_pair_id(pair_id)
+    else:
+        raise UnsupportedAssetError("Only SPOT & FUTURE are supported for now.")
 
 
 def get_spot_asset_spec_for_pair_id(pair_id: str) -> EmpiricSpotAsset:
