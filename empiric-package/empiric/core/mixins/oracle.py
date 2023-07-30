@@ -233,6 +233,45 @@ class OracleMixin:
         )
         return invocation
 
+    async def set_future_checkpoints(
+        self,
+        pair_ids: List[int],
+        expiry_timestamps: List[int],
+        aggregation_mode: int = str_to_felt("MEDIAN"),
+        max_fee=int(1e16),
+        pagination: Optional[int] = 15,
+    ) -> InvokeResult:
+        if not self.is_user_client:
+            raise AttributeError(
+                "Must set account.  You may do this by invoking self._setup_account_client(private_key, account_contract_address)"
+            )
+
+        if pagination:
+            ix = 0
+            while ix < len(pair_ids):
+                pair_ids_subset = pair_ids[ix : ix + pagination]
+                invocation = await self.oracle.set_future_checkpoints.invoke(
+                    pair_ids_subset,
+                    expiry_timestamps,
+                    aggregation_mode,
+                    callback=self.track_nonce,
+                    max_fee=max_fee,
+                )
+                ix += pagination
+                logger.debug(str(invocation))
+                logger.info(
+                    f"Set future checkpoints for {len(pair_ids_subset)} pair IDs with transaction {hex(invocation.hash)}"
+                )
+        else:
+            invocation = await self.oracle.set_future_checkpoints.invoke(
+                pair_ids,
+                expiry_timestamps,
+                aggregation_mode,
+                max_fee=max_fee,
+            )
+
+        return invocation
+
     async def set_checkpoints(
         self,
         pair_ids: List[int],
@@ -251,7 +290,7 @@ class OracleMixin:
                 invocation = await self.oracle.set_checkpoints.invoke(
                     pair_ids_subset,
                     aggregation_mode,
-                    callback=self.track_nonce,
+                    # callback=self.track_nonce,
                     max_fee=max_fee,
                 )
                 ix += pagination
@@ -263,7 +302,7 @@ class OracleMixin:
             invocation = await self.oracle.set_checkpoints.invoke(
                 pair_ids,
                 aggregation_mode,
-                callback=self.track_nonce,
+                # callback=self.track_nonce,
                 max_fee=max_fee,
             )
 

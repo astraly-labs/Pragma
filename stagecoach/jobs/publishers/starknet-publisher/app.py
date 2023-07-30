@@ -5,7 +5,7 @@ import os
 import boto3
 from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
+from empiric.publisher.assets import get_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetchers import (
     BitstampFetcher,
@@ -15,6 +15,7 @@ from empiric.publisher.fetchers import (
     KaikoFetcher,
     DefillamaFetcher
 )
+from empiric.publisher.future_fetchers import (BinanceFutureFetcher, OkxFutureFetcher, ByBitFutureFetcher)
 
 logger = get_stream_logger()
 
@@ -30,7 +31,7 @@ if PAGINATION is not None:
 
 
 def handler(event, context):
-    assets = [get_spot_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
+    assets = [get_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
     entries_ = asyncio.run(_handler(assets))
     serialized_entries_ = SpotEntry.serialize_entries(entries_)
     print(serialized_entries_)
@@ -52,12 +53,15 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    publisher_private_key = _get_pvt_key()
+    # publisher_private_key = _get_pvt_key()
+    publisher_private_key = os.environ["PUBLISHER_PRIVATE_KEY"]
+
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
         account_private_key=publisher_private_key,
         account_contract_address=PUBLISHER_ADDRESS,
     )
+
     publisher_client.add_fetchers(
         [
             fetcher(assets, PUBLISHER)
@@ -66,7 +70,10 @@ async def _handler(assets):
                 CexFetcher,
                 CoinbaseFetcher,
                 AscendexFetcher,
-                DefillamaFetcher
+                DefillamaFetcher,
+                BinanceFutureFetcher,
+                OkxFutureFetcher,
+                ByBitFutureFetcher
             )
         ]
     )
@@ -77,6 +84,7 @@ async def _handler(assets):
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
+
     for res in response:
         await res.wait_for_acceptance()
 

@@ -83,6 +83,11 @@ _EMPIRIC_FUTURE_ASSET_BY_KEY: Dict[str, EmpiricFutureAsset] = {
     if asset["type"] == "FUTURE"
 }
 
+_EMPIRIC_ALL_ASSET_BY_KEY: Dict[str, EmpiricAsset] ={
+    key_for_asset(asset): asset
+    for asset in EMPIRIC_ALL_ASSETS
+}
+
 
 def get_spot_asset_spec_for_pair_id(pair_id: str) -> EmpiricSpotAsset:
     if pair_id not in _EMPIRIC_ASSET_BY_KEY:
@@ -93,3 +98,8 @@ def get_future_asset_spec_for_pair_id(pair_id: str) -> EmpiricFutureAsset:
     if pair_id not in _EMPIRIC_FUTURE_ASSET_BY_KEY:
         raise ValueError(f"Pair ID not found: {pair_id}")
     return _EMPIRIC_FUTURE_ASSET_BY_KEY[pair_id]
+
+def get_asset_spec_for_pair_id(pair_id: str) -> EmpiricAsset:
+    if pair_id not in _EMPIRIC_ALL_ASSET_BY_KEY:
+        raise ValueError(f"Pair ID not found: {pair_id}")
+    return _EMPIRIC_ALL_ASSET_BY_KEY[pair_id]

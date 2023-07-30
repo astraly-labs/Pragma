@@ -37,6 +37,8 @@ def _get_pvt_key():
 
 async def _handler(assets):
     private_key = _get_pvt_key()
+    # private_key = int(os.environ["PRIVATE_KEY"])
+
     account_address = int(os.environ.get("ACCOUNT_ADDRESS"))
     pairs = [
         currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == "SPOT"
@@ -48,7 +50,8 @@ async def _handler(assets):
         network=NETWORK,
     )
     invocation = await publisher_client.set_checkpoints(pairs, pagination=40)
-    await invocation.wait_for_acceptance(wait_for_accept=True)
+    print(f"Set checkpoints for pairs {pairs} at tx hash : {hex(invocation.hash)}")
+    # await invocation.wait_for_acceptance(wait_for_accept=True)
 
     return invocation.hash
 
