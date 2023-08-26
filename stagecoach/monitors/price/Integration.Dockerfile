@@ -1,4 +1,4 @@
-FROM astralylabs/empiric-publisher:test
+FROM astralylabs/pragma-publisher:test
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt

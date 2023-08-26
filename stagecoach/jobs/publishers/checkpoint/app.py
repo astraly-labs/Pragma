@@ -3,17 +3,19 @@ import json
 import os
 
 import boto3
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import currency_pair_to_pair_id
-from empiric.publisher.assets import get_asset_spec_for_pair_id_by_type
-from empiric.publisher.client import EmpiricPublisherClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import currency_pair_to_pair_id
+from pragma.publisher.assets import get_asset_spec_for_pair_id_by_type
+from pragma.publisher.client import PragmaPublisherClient
 
 logger = get_stream_logger()
 
 SECRET_NAME = os.environ["SECRET_NAME"]
 NETWORK = os.environ["NETWORK"]
 ASSETS = os.environ["ASSETS"]
-ASSET_TYPE = os.environ.get("ASSET_TYPE", "SPOT")
+ASSET_TYPE = os.environ.get("ASSET_TYPE", "SPOT")    
+ACCOUNT_ADDRESS = int(os.environ.get("ACCOUNT_ADDRESS"))
+
 
 
 def handler(event, context):
@@ -40,19 +42,22 @@ async def _handler(assets):
     private_key = _get_pvt_key()
     # private_key = int(os.environ["PRIVATE_KEY"])
 
-    account_address = int(os.environ.get("ACCOUNT_ADDRESS"))
     pairs = [
-        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == ASSET_TYPE
+        currency_pair_to_pair_id(*p["pair"]) for p in assets if p["type"] == ASSET_TYPE 
     ]
 
-    publisher_client = EmpiricPublisherClient(
+    publisher_client = PragmaPublisherClient(
         account_private_key=private_key,
-        account_contract_address=account_address,
+        account_contract_address=ACCOUNT_ADDRESS,
         network=NETWORK,
     )
-    invocation = await publisher_client.set_checkpoints(pairs, pagination=40)
+
+    if ASSET_TYPE == "SPOT":
+        invocation = await publisher_client.set_checkpoints(pairs, pagination=40)
+    else:
+        invocation = await publisher_client.set_future_checkpoints(pairs, pagination=40)
+
     print(f"Set checkpoints for pairs {pairs} at tx hash : {hex(invocation.hash)}")
-    # await invocation.wait_for_acceptance(wait_for_accept=True)
 
     return invocation.hash
 

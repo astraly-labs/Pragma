@@ -1,4 +1,4 @@
-FROM astralylabs/empiric-publisher:test
+FROM astralylabs/pragma-publisher:test
 
 COPY app.py ${LAMBDA_TASK_ROOT}
 
