@@ -1,112 +1,54 @@
-# Pragma Network
+<!-- markdownlint-disable -->
+![image](https://github.com/Astraly-Labs/Pragma/assets/12902455/45243fd4-5a1d-4b85-864f-2ceca50c7f79)
+<!-- markdownlint-restore -->
 
-This is the repository for the zk-native Pragma Network Oracle, the leading oracle network on Starknet.
+[![Project license](https://img.shields.io/github/license/Astraly-Labs/Pragma.svg?style=flat-square)](LICENSE)
+[![Pull Requests welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square)](https://github.com/Astraly-Labs/Pragma/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+<a href="https://twitter.com/PragmaOracle">
+<img src="https://img.shields.io/twitter/follow/PragmaOracle?style=social"/>
+</a> <a href="https://github.com/Astraly-Labs/Pragma">
+<img src="https://img.shields.io/github/stars/Astraly-Labs/Pragma?style=social"/>
+</a> <a href="https://docs.pragmaoracle.com/">
+<img src="https://img.shields.io/badge/Documentation-Website-yellow"/> </a>
 
-## About
+# 🧩 Pragma: Provable Oracle 💚
 
-You can read more about the Pragma Network [here](https://docs.pragma.network) and you can see the frontend in action [here](https://pragma.network).
+Welcome to **Pragma**, a modular provable oracle 🧩 leveraging [Starknet](https://www.starknet.io/)
+to enable computational data feeds at scale!
 
-### Overview
+## 📣 Peripheral repositories
 
-![Pragma Network Architecture](/assets/Pragma-Architecture.png)
+- [Pragma X](https://github.com/Astraly-Labs/pragma-x): Pragma X chain configuration, built on top of [Madara](https://github.com/keep-starknet-strange/madara).
+- [Pragma SDK](https://github.com/Astraly-Labs/pragma-sdk): SDK to interact with Pragma on Starknet or Pragma X. Written in Python.
+- [Pragma Contracts](https://github.com/Astraly-Labs/pragma-oracle): Source code of the Pragma contracts, written in Cairo.
+- [Pragma Hack](https://github.com/Astraly-Labs/pragma-hack): Template to kickstart your new DeFi protocol using Pragma.
+- [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragmaoracle.com`.
+- [Madara Tsukuyomi](https://github.com/keep-starknet-strange/madara-tsukuyomi):
+  The source code of the Madara Desktop App. A friendly GUI to start a Pragma X node and interact with it!
 
-The Pragma Network consists of three smart contracts. The first is the Proxy contract, which is the most static. This is designed to never be updated because it uses fallback functions to redirect any calls to its implementation contract (standard OpenZeppelin Proxy contract). This is the contract which protocols use, and the one to which publishers publish. The second is the Publisher Registry, which is also designed to be updated extremely infrequently because it's state should be permanent (each publisher and their address). The third is the Oracle implementation which contains the logic for storing and aggregating specific key/value data streams. The Oracle proxy forwards calls to the implementation, which can be updated when necessary, but must be updated in a backward compatible way.
+## 🌟 Features
 
-### Deployed Contracts
+- Built on Starknet 🐺
+- Fully Modular 🌐
+- Track-record of accuracy and resilience 🏎️
+- Comprehensive documentation 📚
+- Active development and community support 🤝
 
-The addresses of the deployed contracts can be found in the Pragma Network [documentation](https://docs.pragma.network/using-pragma/consuming-data).
+## 🌐 Pragma X Explorer
 
-## Setup
+Live explorer of data feeds on the Pragma X chain.
+[Check here!](https://explorer.pragmaoracle.com/)
 
-After you have cloned the repository, run the following commands to set up the repo:
+## 🤝 Contribute
 
-1. `pip install -r requirements.txt`
-2. `pip install -r dev-requirements.txt`
-3. `pip install -e pragma-package`
-4. `curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash`
+We're always looking for passionate developers to join our community and
+contribute to Madara. Check out our [contributing guide](./docs/CONTRIBUTING.md)
+for more information on how to get started.
 
-# Usage
+## 📖 License
 
-## Developing Contracts Locally
+This project is licensed under the **MIT license**.
 
-To ensure your IDE settings and contracts compile correctly, make sure to run any pragma code after activating your Cairo virtual environment.
+See [LICENSE](LICENSE) for more information.
 
-Then add this line of code to your shell profile:
-
-`code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}`
-
-After doing so, open all subsequent windows of the repo from the CLI, using the `code .` command, for correct formatting.
-
-## Pulling Data Locally from Feeds in Deployed Contracts
-
-Make sure you set the following environment variables to be able to interact with the deployed contract:
-
-```bash
-STARKNET_NETWORK=alpha-goerli
-```
-
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `19514442401534788` (use `str_to_felt("ETH/USD")` util in `pragma.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle Proxy contract (see above):
-
-```bash
-starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/starknet/build/Oracle_abi.json --function get_spot_median --inputs 19514442401534788
-```
-
-## Publishing Data to a Feed in a Deployed Contract
-
-The recommended way to publish data is to use the `pragma-publisher` Docker image which has the pragma SDK baked in, which includes the most up to date contract addresses and the `pragmaPublisherClient`. You just need to create a Python script that fetches the data and then publishes it via the `pragmaPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
-
-```bash
-docker build sample-publisher/coinbase/ -t coinbase
-docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
-```
-
-See the [full docs](https://docs.pragmaoracle.com/using-pragma/publishing-data) for details on how to publish data to pragma.
-
-## Running Tests
-
-To run tests, simply run `pytest .` from the project root. Note: We are currently transitioning to using Protostar which will require you to run `protostar test ./contracts/starknet/test` to run the tests. As we transition, there will be an intermediate period where you are required to run both.
-
-## Deploying Contracts
-
-To deploy these contracts on Goerli testnet (e.g. to test behavior outside of the production contract), first create a private/public admin key pair for admin actions with both the publisher registry and the Oracle Proxy (use `get_random_private_key` and `private_to_stark_key` in `starkware.crypto.signature.signature`).
-
-Then run the following commands, replacing `<ADMIN_PUBLIC_KEY>` with the public key you generated in the previous step. Replace `<ADMIN_ADDRESS>`, `<PUBLISHER_REGISTRY_ADDRESS>` and `<ORACLE_PROXY_ADDRESS>` with the addresses of the first, second and third contract deployed in the steps below, respectively. `<CURRENCIES>` and `<PAIRS>` should be replaced with the lists of currencies and pairs you want the contract to support.
-
-```bash
-export STARKNET_NETWORK=alpha-goerli
-protostar build
-cp contracts/starknet/build/Oracle_abi.json pragma-ui/src/abi/Oracle_abi.json
-starknet deploy --contract contracts/starknet/build/Account_abi.json --inputs <ADMIN_PUBLIC_KEY>
-starknet deploy --contract contracts/starknet/build/Account_abi.json --inputs <PUBLISHER_PUBLIC_KEY>
-starknet deploy --contract contracts/starknet/build/PublisherRegistry_abi.json --inputs <ADMIN_ADDRESS>
-starknet deploy --contract contracts/starknet/build/Oracle_abi.json --inputs <ADMIN_ADDRESS> <PUBLISHER_REGISTRY_ADDRESS> <CURRENCIES> <PAIRS>
-```
-
-# Release Flow
-
-The release flow depends on which parts of the code base changed. Below is a mapping from which parts of the code base changed to how to release the updates.
-
-## Contracts
-
-Declare the new implementation's contract class and then update the proxy contract to refer to the new class hash.
-
-## Pragma Package
-
-To create a new version, just navigate into `pragma-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
-
-This new version will be released automatically along with the Docker base image when a branch is merged to master.
-
-## Pragma UI
-
-Netlify will automatically deploy previews on push if a pull request is open and will redeploy the main website on merge to master.
-
-## Pragma Publisher Docker Base Image
-
-Run the following commands to build a new base image for pragma-publisher locally. Use the `latest` tag for testing:
-
-```bash
-docker build . -t astralylabs/pragma-publisher
-docker push astralylabs/pragma-publisher:latest
-```
-
-pragma-publisher base images are versioned together with the Pragma Python package because when the Pragma package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Pragma package release, the release flow will overwrite the Pragma package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.
+Happy coding! 🎉
