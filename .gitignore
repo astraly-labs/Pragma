@@ -37,7 +37,7 @@ contracts/starknet/build/*[!_abi].json
 # cli
 cli-config.ini
 oracle_constructor_data.json
-!empiric-package/empiric/cli/sample_config/oracle_constructor_data.json
+!pragma-package/pragma/cli/sample_config/oracle_constructor_data.json
 
 # private files
 private/

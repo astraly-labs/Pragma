@@ -4,7 +4,7 @@ This is the repository for the zk-native Pragma Network Oracle, the leading orac
 
 ## About
 
-You can read more about the Pragma Network [here](https://docs.empiric.network) and you can see the frontend in action [here](https://empiric.network).
+You can read more about the Pragma Network [here](https://docs.pragma.network) and you can see the frontend in action [here](https://pragma.network).
 
 ### Overview
 
@@ -14,7 +14,7 @@ The Pragma Network consists of three smart contracts. The first is the Proxy con
 
 ### Deployed Contracts
 
-The addresses of the deployed contracts can be found in the Pragma Network [documentation](https://docs.empiric.network/using-empiric/consuming-data).
+The addresses of the deployed contracts can be found in the Pragma Network [documentation](https://docs.pragma.network/using-pragma/consuming-data).
 
 ## Setup
 
@@ -22,14 +22,14 @@ After you have cloned the repository, run the following commands to set up the r
 
 1. `pip install -r requirements.txt`
 2. `pip install -r dev-requirements.txt`
-3. `pip install -e empiric-package`
+3. `pip install -e pragma-package`
 4. `curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash`
 
 # Usage
 
 ## Developing Contracts Locally
 
-To ensure your IDE settings and contracts compile correctly, make sure to run any Empiric code after activating your Cairo virtual environment.
+To ensure your IDE settings and contracts compile correctly, make sure to run any pragma code after activating your Cairo virtual environment.
 
 Then add this line of code to your shell profile:
 
@@ -45,7 +45,7 @@ Make sure you set the following environment variables to be able to interact wit
 STARKNET_NETWORK=alpha-goerli
 ```
 
-Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `19514442401534788` (use `str_to_felt("ETH/USD")` util in `empiric.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle Proxy contract (see above):
+Then you can use the Starknet CLI to invoke the contract. For instance to get the price of ETH/USD first calculate the key by converting the string to the UTF-8 encoded felt `19514442401534788` (use `str_to_felt("ETH/USD")` util in `pragma.core.utils`). Then run the following commands, replacing `<ORACLE_PROXY_ADDRESS>` with the address of the Oracle Proxy contract (see above):
 
 ```bash
 starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/starknet/build/Oracle_abi.json --function get_spot_median --inputs 19514442401534788
@@ -53,14 +53,14 @@ starknet call --address <ORACLE_PROXY_ADDRESS> --abi contracts/starknet/build/Or
 
 ## Publishing Data to a Feed in a Deployed Contract
 
-The recommended way to publish data is to use the `empiric-publisher` Docker image which has the Empiric SDK baked in, which includes the most up to date contract addresses and the `EmpiricPublisherClient`. You just need to create a Python script that fetches the data and then publishes it via the `EmpiricPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
+The recommended way to publish data is to use the `pragma-publisher` Docker image which has the pragma SDK baked in, which includes the most up to date contract addresses and the `pragmaPublisherClient`. You just need to create a Python script that fetches the data and then publishes it via the `pragmaPublisherClient.publish` method. See the setup in `sample-publisher/coinbase` for an example. With the setup there (and an additional file `.secrets.env` with the secret runtime args), we would just have to run:
 
 ```bash
 docker build sample-publisher/coinbase/ -t coinbase
 docker run --env-file sample-publisher/coinbase/.secrets.env coinbase
 ```
 
-See the [full docs](https://docs.pragmaoracle.com/using-pragma/publishing-data) for details on how to publish data to Empiric.
+See the [full docs](https://docs.pragmaoracle.com/using-pragma/publishing-data) for details on how to publish data to pragma.
 
 ## Running Tests
 
@@ -92,7 +92,7 @@ Declare the new implementation's contract class and then update the proxy contra
 
 ## Pragma Package
 
-To create a new version, just navigate into `empiric-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
+To create a new version, just navigate into `pragma-package` and run `bumpversion <part>` (where `<part>` is major, minor or patch). Make sure to run `git push --tags` once you've done that.
 
 This new version will be released automatically along with the Docker base image when a branch is merged to master.
 
@@ -102,11 +102,11 @@ Netlify will automatically deploy previews on push if a pull request is open and
 
 ## Pragma Publisher Docker Base Image
 
-Run the following commands to build a new base image for empiric-publisher locally. Use the `latest` tag for testing:
+Run the following commands to build a new base image for pragma-publisher locally. Use the `latest` tag for testing:
 
 ```bash
-docker build . -t astralylabs/empiric-publisher
-docker push astralylabs/empiric-publisher:latest
+docker build . -t astralylabs/pragma-publisher
+docker push astralylabs/pragma-publisher:latest
 ```
 
-empiric-publisher base images are versioned together with the Pragma Python package because when the Pragma package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Pragma package release, the release flow will overwrite the Pragma package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.
+pragma-publisher base images are versioned together with the Pragma Python package because when the Pragma package is updated, a new Docker image should always be released. If the Docker image needs to be updated for a reason other than a new Pragma package release, the release flow will overwrite the Pragma package. A new Docker image is automatically tagged with the appropriate version and pushed to Dockerhub by the GHA release flow, so no need to do this locally.

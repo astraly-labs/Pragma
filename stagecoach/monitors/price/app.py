@@ -7,12 +7,12 @@ from typing import Union
 import boto3
 import requests
 import telegram
-from empiric.core.client import EmpiricClient
-from empiric.core.logger import get_stream_logger
-from empiric.core.utils import pair_id_for_asset, str_to_felt
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS, get_spot_asset_spec_for_pair_id
-from empiric.publisher.fetchers import CoinbaseFetcher
-from empiric.publisher.types import PublisherFetchError
+from pragma.core.client import PragmaClient
+from pragma.core.logger import get_stream_logger
+from pragma.core.utils import pair_id_for_asset, str_to_felt
+from pragma.publisher.assets import PRAGMA_ALL_ASSETS, get_spot_asset_spec_for_pair_id
+from pragma.publisher.fetchers import CoinbaseFetcher
+from pragma.publisher.types import PublisherFetchError
 
 logger = get_stream_logger()
 
@@ -47,7 +47,7 @@ def check_asset_price(
             ratio = "undefined (div by 0)"
         else:
             ratio = reference_price / actual_price
-        return f"{pair_id}: price discrepancy (ratio: {ratio}, reference: {reference_price}, Empiric: {actual_price})"
+        return f"{pair_id}: price discrepancy (ratio: {ratio}, reference: {reference_price}, Pragma: {actual_price})"
     publisher_decimals = get_spot_asset_spec_for_pair_id(pair_id)["decimals"]
     if oracle_decimals != publisher_decimals:
         return f"{pair_id}: decimals mismatch (oracle: {oracle_decimals}, publisher: {publisher_decimals})"
@@ -97,11 +97,11 @@ async def _handler():
 
     assets = [
         asset
-        for asset in EMPIRIC_ALL_ASSETS
+        for asset in PRAGMA_ALL_ASSETS
         if asset["type"] == "SPOT" and pair_id_for_asset(asset) not in ignore_assets
     ]
 
-    client = EmpiricClient(network)
+    client = PragmaClient(network)
     cb = CoinbaseFetcher(assets, "PUBLISHER")
     entries = cb.fetch_sync()
     coinbase = {
@@ -146,7 +146,7 @@ async def _handler():
             logger.info(f"All checks passed for pair {pair_id}")
 
     if all_errors:
-        telegram_text = f"Prices monitoring :Error(s) with Empiric price on network {client.network} \n"
+        telegram_text = f"Prices monitoring :Error(s) with Pragma price on network {client.network} \n"
         telegram_text += "\n".join(all_errors)
 
         await bot.send_message(chat_id, text=telegram_text)
