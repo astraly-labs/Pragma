@@ -5,7 +5,7 @@ import os
 import boto3
 from pragma.core import SpotEntry
 from pragma.core.logger import get_stream_logger
-from pragma.publisher.assets import get_asset_spec_for_pair_id
+from pragma.core.assets import get_asset_spec_for_pair_id
 from pragma.publisher.client import PragmaPublisherClient
 from pragma.publisher.fetchers import (
     BitstampFetcher,
@@ -54,8 +54,8 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    # publisher_private_key = _get_pvt_key()
-    publisher_private_key = os.environ["PUBLISHER_PRIVATE_KEY"]
+    publisher_private_key = _get_pvt_key()
+    # publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 0)
 
     publisher_client = PragmaPublisherClient(
         network=NETWORK,
@@ -83,6 +83,7 @@ async def _handler(assets):
     
     _entries = await publisher_client.fetch()
     response = await publisher_client.publish_many(_entries, pagination=PAGINATION)
+    
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
