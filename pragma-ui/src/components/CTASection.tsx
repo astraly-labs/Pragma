@@ -22,7 +22,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   mainAction,
   secondaryAction,
 }) => (
-  <div className="relative w-full py-16 md:w-screen">
+  <div className="relative w-full py-16 md:w-full">
     <div aria-hidden="true" className="hidden sm:block">
       <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-dark" />
       <Dots
@@ -99,7 +99,7 @@ export const DefaultCTASection = () => (
     title="Ready to get the data you need?"
     description="Leverage recent breakthroughs in zero-knowledge computation by using verifiable and composable data in your decentralized application."
     mainAction={{
-      href: "https://docs.pragmaoracle.com/quickstart",
+      href: "https://docs.pragmaoracle.com/docs/introduction",
       actionText: "Get started",
       icon: CodeIcon,
     }}

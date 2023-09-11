@@ -9,7 +9,7 @@ import PublishersSeciton from "../components/Publisher/PublishersSection";
 const PublishersPage = () => (
   <>
     <NextSeo title="Publishers" />
-    <div className="w-screen">
+    <div className="w-full">
       <SectionContainer className="bg-dark" first>
         <Heading
           title="Your favorite giants"
@@ -30,7 +30,7 @@ const PublishersPage = () => (
             icon: ChatIcon,
           }}
           secondaryAction={{
-            href: "https://docs.pragmaoracle.com/quickstart",
+            href: "https://docs.pragmaoracle.com/docs/introduction",
             actionText: "Read the docs",
             icon: CodeIcon,
           }}

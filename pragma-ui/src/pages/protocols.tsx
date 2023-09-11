@@ -9,7 +9,7 @@ import ProtocolSection from "../components/Protocol/ProtocolSection";
 const ProtocolsPage = () => (
   <>
     <NextSeo title="Protocols" />
-    <div className="w-screen">
+    <div className="w-full">
       <SectionContainer className="bg-dark" first>
         <Heading
           title="StarkNet's leading protocols"

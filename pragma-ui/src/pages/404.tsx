@@ -5,7 +5,7 @@ import { ChatIcon, HomeIcon } from "@heroicons/react/outline";
 import { ButtonLink } from "../components/common/Button";
 
 const Custom404Page = () => (
-  <div className="w-screen grow bg-black px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
+  <div className="w-full grow bg-black px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
     <div className="mx-auto flex max-w-3xl flex-col items-center space-y-8 sm:space-y-10 md:space-y-16">
       <div className="w-32 sm:w-48">
         <Image

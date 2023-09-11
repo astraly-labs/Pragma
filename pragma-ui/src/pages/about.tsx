@@ -11,7 +11,7 @@ import InvestorsSection from "../components/InvestorsSection";
 const AboutPage = () => (
   <>
     <NextSeo title="About" />
-    <div className="w-screen">
+    <div className="w-full">
       <SectionContainer className="bg-dark" first>
         <Heading
           title="Developed by experts"

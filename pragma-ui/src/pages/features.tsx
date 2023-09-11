@@ -10,13 +10,13 @@ import TimelineExplanation from "../components/TimelineExplanation";
 const FeaturesPage = () => (
   <>
     <NextSeo title="Features" />
-    <div className="w-screen">
+    <div className="w-full">
       <SectionContainer className="bg-dark" first>
         <Heading
           title="Reimagining Oracles"
           subtitle="Transparent, Decentralized &amp; Composable"
           text="Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. "
-          href="https://docs.pragmaoracle.com/quickstart"
+          href="https://docs.pragmaoracle.com/docs/introduction"
           hrefText="Integrate verifiable data into your project"
         />
         <FeaturesDisplay />
