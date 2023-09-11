@@ -88,6 +88,6 @@ typing_extensions==4.3.0
 urllib3==1.26.16
 web3==6.0.0
 websockets==11.0.3
-Werkzeug==2.0.3
+Werkzeug==2.2.3
 wrapt==1.15.0
 yarl==1.9.2
