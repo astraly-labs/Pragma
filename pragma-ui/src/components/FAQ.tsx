@@ -8,7 +8,7 @@ const faqs = [
       <>
         Integration is simple, just add a few lines of code to your smart
         contract and you can start using our price feeds. See a{" "}
-        <StyledExternalLink href="https://docs.pragmaoracle.com/quickstart#sample-code">
+        <StyledExternalLink href="https://docs.pragmaoracle.com/docs/introduction">
           sample code snippet
         </StyledExternalLink>
         .

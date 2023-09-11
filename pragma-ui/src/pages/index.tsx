@@ -95,7 +95,7 @@ const supportedTestnetNetworks: Logo[] = [
 ];
 
 const IndexPage = () => (
-  <div className="w-screen">
+  <div className="w-full overflow-hidden">
     <Banner />
     <SectionContainer className="bg-dark" first>
       <Hero />
@@ -119,7 +119,7 @@ const IndexPage = () => (
         subtitle="Try it yourself"
         text="Ready to get going? Head to our documentation using the link below and start using high-quality data in your smart contracts!
         Or, copy the code below to install the Pragma SDK and start interacting with our feeds locally."
-        href="https://docs.pragmaoracle.com/quickstart"
+        href="https://docs.pragmaoracle.com/docs/introduction"
         hrefText="Start using robust data on-chain"
       />
       <Code />

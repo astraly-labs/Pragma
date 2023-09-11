@@ -24,7 +24,7 @@ const content: FooterColumn[] = [
     links: [
       {
         title: "Documentation",
-        href: "https://docs.pragmaoracle.com/quickstart",
+        href: "https://docs.pragmaoracle.com/docs/introduction",
         external: true,
       },
       {
@@ -71,7 +71,7 @@ const content: FooterColumn[] = [
       // },
       {
         title: "Blog",
-        href: "https://medium.com/@pragmaoracle",
+        href: "https://mirror.xyz/pragmagic.eth",
         external: true,
       },
       {
@@ -108,7 +108,7 @@ const socials: SocialMedia[] = [
   {
     name: "Medium",
     src: "/assets/social/medium.svg",
-    href: "https://medium.com/@PragmaOracle",
+    href: "https://mirror.xyz/pragmagic.eth",
   },
   {
     name: "Discord",
@@ -118,7 +118,7 @@ const socials: SocialMedia[] = [
 ];
 
 const Footer = () => (
-  <div className="w-full bg-dark">
+  <div className="w-full overflow-hidden bg-dark">
     <div className="mx-auto max-w-7xl border-t border-black px-4 pb-12 pt-16 lg:px-8">
       <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
         <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
