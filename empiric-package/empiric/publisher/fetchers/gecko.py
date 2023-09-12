@@ -21,6 +21,7 @@ ASSET_MAPPING: Dict[str, any] = {
     ),
     "R": ("eth", "0x183015a9ba6ff60230fdeadc3f43b3d788b13e21"),
     "WBTC": ("eth", "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"),
+    "WSTETH": ("eth", "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0"),
 }
 
 

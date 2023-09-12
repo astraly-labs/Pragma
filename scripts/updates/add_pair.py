@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from starknet_py.net.account.account import Account
-from starknet_py.net.full_node_client import FullNodeClient
+from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starknet_py.net.models import StarknetChainId
 from starknet_py.contract import Contract, ContractFunction
@@ -970,27 +970,42 @@ oracle_proxy_address = (
 
 currencies_to_add = [
     # Currency(
-    #     "WBTC",
+    #     "LORDS",
     #     8,
     #     0,
-    #     0x12d537dc323c439dc65c976fad242d5610d27cfb5f31689a0a319b8be7f3d56,
-    #     0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05,
+    #     0x0124aeb495b947201f5fac96fd1138e326ad86195b98df6dec9009158a533b49,
+    #     0x686f2404e77ab0d9070a46cdfb0b7fecdd2318b0,
     # ),
-]
-pairs_to_add = [
-    # Pair("WBTC/BTC", "WBTC", "BTC"),
-    # Pair("WBTC/USD", "WBTC", "USD"),
-]
-
-currencies_to_update = [ 
+    # Currency(
+    #     "R",
+    #     8,
+    #     0,
+    #     0x01fa2fb85f624600112040e1f3a848f53a37ed5a7385810063d5fe6887280333,
+    #     0x183015a9bA6fF60230fdEaDc3F43b3D788b13e21,
+    # ),
     Currency(
-        "BTC",
+        "wstETH",
         8,
-        1,
         0,
-        0,
+        0x042b8f0484674ca266ac5d08e4ac6a3fe65bd3129795def2dca5c34ecc5f96d2,
+        0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0,
     ),
 ]
+pairs_to_add = [
+    # Pair("LORDS/USD", "LORDS", "USD"),
+    # Pair("R/USD", "R", "USD"),
+    Pair("wstETH/USD", "wstETH", "USD"),
+]
+
+# currencies_to_update = [ 
+#     Currency(
+#         "R",
+#         8,
+#         1,
+#         0,
+#         0,
+#     ),
+# ]
 
 NETWORK = "testnet"
 CHAIN_ID = StarknetChainId.TESTNET if NETWORK == "testnet" else StarknetChainId.MAINNET
@@ -998,7 +1013,7 @@ CHAIN_ID = StarknetChainId.TESTNET if NETWORK == "testnet" else StarknetChainId.
 
 async def main():
     admin_private_key = int(os.environ.get(f"ADMIN_PRIVATE_KEY_{NETWORK.upper()}"), 0)
-    gateway = FullNodeClient(node_url=RPC_URLS[NETWORK])
+    gateway = GatewayClient(net=NETWORK)
     signer = StarkCurveSigner(
         admin_contract_address,
         KeyPair.from_private_key(admin_private_key),
@@ -1034,15 +1049,15 @@ async def main():
         print(hex(invocation.hash))
         await invocation.wait_for_acceptance()
 
-    # Update Currencies
-    for currency in currencies_to_update:
-        print(currency.to_dict())
-        invocation = await contract.functions['update_currency'].invoke(
-            currency.to_dict(),
-            max_fee=int(1e16)
-        )
-        print(hex(invocation.hash))
-        await invocation.wait_for_acceptance()
+    # # Update Currencies
+    # for currency in currencies_to_update:
+    #     print(currency.to_dict())
+    #     invocation = await contract.functions['update_currency'].invoke(
+    #         currency.to_dict(),
+    #         max_fee=int(1e16)
+    #     )
+    #     print(hex(invocation.hash))
+    #     await invocation.wait_for_acceptance()
 
 if __name__ == "__main__":
     asyncio.run(main())
