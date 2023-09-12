@@ -16,6 +16,7 @@ export const AssetKeys = [
   "SOL/USD",
   "WBTC/USD",
   "BTC/EUR",
+  "WSTETH/USD",
   "AVAX/USD",
   "DOGE/USD",
   "SHIB/USD",
