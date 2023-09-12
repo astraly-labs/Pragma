@@ -8,7 +8,6 @@ from empiric.core.mixins import (
     NonceMixin,
     OracleMixin,
     PublisherRegistryMixin,
-    RandomnessMixin,
     TransactionMixin,
 )
 from starknet_py.net.account.account import Account
@@ -17,7 +16,7 @@ from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 logger = logging.getLogger(__name__)
 
 class EmpiricClient(
-    NonceMixin, OracleMixin, PublisherRegistryMixin, RandomnessMixin, TransactionMixin
+    NonceMixin, OracleMixin, PublisherRegistryMixin, TransactionMixin
 ):
     is_user_client: bool = False
     account_contract_address: Optional[int] = None

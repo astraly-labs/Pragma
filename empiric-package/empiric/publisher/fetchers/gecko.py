@@ -6,10 +6,10 @@ from typing import Dict, List
 import requests
 from aiohttp import ClientSession
 
-from pragma.core.assets import PragmaAsset, PragmaSpotAsset
-from pragma.core.entry import SpotEntry
-from pragma.core.utils import currency_pair_to_pair_id
-from pragma.publisher.types import PublisherFetchError, PublisherInterfaceT
+from empiric.core.entry import SpotEntry
+from empiric.core.utils import currency_pair_to_pair_id
+from empiric.publisher.assets import EmpiricAsset, EmpiricSpotAsset
+from empiric.publisher.types import PublisherFetchError, PublisherInterfaceT
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +36,12 @@ class GeckoTerminalFetcher(PublisherInterfaceT):
 
     publisher: str
 
-    def __init__(self, assets: List[PragmaAsset], publisher):
+    def __init__(self, assets: List[EmpiricAsset], publisher):
         self.assets = assets
         self.publisher = publisher
 
     async def _fetch_pair(
-        self, asset: PragmaSpotAsset, session: ClientSession
+        self, asset: EmpiricSpotAsset, session: ClientSession
     ) -> SpotEntry:
         pair = asset["pair"]
         pool = ASSET_MAPPING.get(pair[0])
@@ -68,7 +68,7 @@ class GeckoTerminalFetcher(PublisherInterfaceT):
                 )
             return self._construct(asset, result)
 
-    def _fetch_pair_sync(self, asset: PragmaSpotAsset) -> SpotEntry:
+    def _fetch_pair_sync(self, asset: EmpiricSpotAsset) -> SpotEntry:
         pair = asset["pair"]
         pool = ASSET_MAPPING.get(pair[0])
         if pool is None:
@@ -131,5 +131,5 @@ class GeckoTerminalFetcher(PublisherInterfaceT):
             timestamp=timestamp,
             source=self.SOURCE,
             publisher=self.publisher,
-            volume=volume,
+            volume=int(volume),
         )

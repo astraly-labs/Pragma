@@ -13,7 +13,8 @@ from empiric.publisher.fetchers import (
     CoinbaseFetcher,
     AscendexFetcher,
     KaikoFetcher,
-    DefillamaFetcher
+    DefillamaFetcher,
+    GeckoTerminalFetcher
 )
 from empiric.publisher.future_fetchers import (BinanceFutureFetcher, OkxFutureFetcher, ByBitFutureFetcher)
 
@@ -53,8 +54,8 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    # publisher_private_key = _get_pvt_key()
-    publisher_private_key = os.environ["PUBLISHER_PRIVATE_KEY"]
+    publisher_private_key = _get_pvt_key()
+    # publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 0)
 
     publisher_client = EmpiricPublisherClient(
         network=NETWORK,
@@ -73,7 +74,8 @@ async def _handler(assets):
                 DefillamaFetcher,
                 BinanceFutureFetcher,
                 OkxFutureFetcher,
-                ByBitFutureFetcher
+                ByBitFutureFetcher,
+                GeckoTerminalFetcher
             )
         ]
     )
