@@ -3,8 +3,8 @@ import os
 
 from empiric.core.client import EmpiricClient
 
-publishers = ["EMPIRIC"]
-sources_to_add = [["BINANCE"]]
+publishers = ["EQUILIBRIUM"]
+sources_to_add = [["GECKOTERMINAL"]]
 NETWORK = "testnet"
 
 
