@@ -53,7 +53,7 @@ class OracleMixin:
         self,
         entries: List[any],
         pagination: Optional[int] = 40,
-        max_fee=int(1e18),
+        max_fee=int(1e17),
     ) -> List[InvokeResult]:
         if len(entries) == 0:
             logger.warning("Skipping publishing as entries array is empty")

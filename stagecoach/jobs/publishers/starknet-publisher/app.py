@@ -5,7 +5,7 @@ import os
 import boto3
 from empiric.core import SpotEntry
 from empiric.core.logger import get_stream_logger
-from empiric.publisher.assets import get_asset_spec_for_pair_id
+from empiric.publisher.assets import get_spot_asset_spec_for_pair_id
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetchers import (
     BitstampFetcher,
@@ -32,7 +32,7 @@ if PAGINATION is not None:
 
 
 def handler(event, context):
-    assets = [get_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
+    assets = [get_spot_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
     entries_ = asyncio.run(_handler(assets))
     serialized_entries_ = SpotEntry.serialize_entries(entries_)
     print(serialized_entries_)
@@ -73,8 +73,8 @@ async def _handler(assets):
                 AscendexFetcher,
                 DefillamaFetcher,
                 BinanceFutureFetcher,
-                OkxFutureFetcher,
-                ByBitFutureFetcher,
+                # OkxFutureFetcher,
+                # ByBitFutureFetcher,
                 GeckoTerminalFetcher
             )
         ]
@@ -86,9 +86,6 @@ async def _handler(assets):
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
-
-    # for res in response:
-    #     await res.wait_for_acceptance()
 
     return _entries
 

@@ -58,65 +58,9 @@ async def invoke_(
     )
 
     # don't return invoke result until it is received or errors
-    # await wait_for_received(self._client, invoke_result.hash)
+    await self._client.wait_for_tx(invoke_result.hash)
 
     return invoke_result
-
-
-async def wait_for_received(
-    client,
-    tx_hash,
-    check_interval=6,
-) -> (int, TransactionStatus):
-    # pylint: disable=too-many-branches
-    """
-    Awaits for transaction to get accepted or at least pending by polling its status
-
-    :param client: Account client
-    :param tx_hash: Transaction's hash
-    :param check_interval: Defines interval between checks
-    :return: Tuple containing block number and transaction status
-    """
-    if check_interval <= 0:
-        raise ValueError("check_interval has to bigger than 0.")
-
-    first_run = True
-    try:
-        while True:
-            status = TransactionStatus.NOT_RECEIVED
-            try:
-                result = await client.get_transaction_receipt(tx_hash=tx_hash)
-                status = result.status
-            except:
-                continue
-
-            if status in (
-                TransactionStatus.ACCEPTED_ON_L1,
-                TransactionStatus.ACCEPTED_ON_L2,
-            ):
-                return result.block_number, status
-            if status == TransactionStatus.PENDING:
-                return result.block_number, status
-            elif status == TransactionStatus.REJECTED:
-                raise TransactionRejectedError(
-                    message=result.rejection_reason,
-                )
-            elif status == TransactionStatus.NOT_RECEIVED:
-                if not first_run:
-                    raise TransactionNotReceivedError()
-            elif status != TransactionStatus.RECEIVED:
-                # This will never get executed with current possible transactions statuses
-                raise TransactionFailedError(
-                    message=result.rejection_reason,
-                )
-            elif status == TransactionStatus.RECEIVED:
-                return 0, 0
-
-            first_run = False
-            await asyncio.sleep(check_interval)
-    except asyncio.CancelledError as exc:
-        raise TransactionNotReceivedError from exc
-
 
 # patch contract function to use new invoke function
 ContractFunction.invoke = invoke_

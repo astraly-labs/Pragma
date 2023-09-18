@@ -3,9 +3,11 @@ from enum import Enum
 from typing import Literal
 from empiric.core.types import RPC_URLS
 from starknet_py.net.full_node_client import FullNodeClient
+from starknet_py.net.gateway_client import GatewayClient
 
 def get_client_from_network(network: str) -> FullNodeClient:
-    return FullNodeClient(node_url=RPC_URLS[network])
+    return GatewayClient(net=network)
+    # return FullNodeClient(node_url=RPC_URLS[network])
 
 # contract address configuration
 @dataclass
