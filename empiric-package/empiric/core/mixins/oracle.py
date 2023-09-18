@@ -67,7 +67,7 @@ class OracleMixin:
                 entries_subset = serialized_spot_entries[ix : ix + pagination]
                 invocation = await self.oracle.publish_spot_entries.invoke(
                     entries_subset,
-                    callback=self.track_nonce,
+                    # callback=self.track_nonce,
                     max_fee=max_fee,
                 )
                 ix += pagination
@@ -93,7 +93,7 @@ class OracleMixin:
                 entries_subset = serialized_future_entries[ix : ix + pagination]
                 invocation = await self.oracle.publish_future_entries.invoke(
                     entries_subset,
-                    callback=self.track_nonce,
+                    # callback=self.track_nonce,
                     max_fee=max_fee,
                 )
                 ix += pagination
@@ -209,7 +209,7 @@ class OracleMixin:
         invocation = await self.oracle.set_checkpoint.invoke(
             pair_id,
             aggregation_mode,
-            callback=self.track_nonce,
+            # callback=self.track_nonce,
             max_fee=max_fee,
         )
         return invocation
@@ -254,7 +254,7 @@ class OracleMixin:
                     pair_ids_subset,
                     expiry_timestamps,
                     aggregation_mode,
-                    callback=self.track_nonce,
+                    # callback=self.track_nonce,
                     max_fee=max_fee,
                 )
                 ix += pagination

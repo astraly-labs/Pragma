@@ -7,7 +7,6 @@ from starknet_py.net.signer.stark_curve_signer import KeyPair, StarkCurveSigner
 from starknet_py.net.models import StarknetChainId
 from starknet_py.contract import Contract, ContractFunction
 from empiric.core import Currency, Pair
-from empiric.core.types import RPC_URLS
 
 ORACLE_ABI = [
     {
@@ -960,41 +959,41 @@ ORACLE_ABI = [
 ]
 
 admin_contract_address = (
-    # 0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77 mainnet
-    0x021d6f33c00d3657d7ec6f9322399729afdf21533b77cf0512ac583b4755f011  # goerli
+    0x029E7D00D0142EB684D6B010DDFE59348D892E5F8FF94F1B77CD372645DF4B77 # mainnet
+    # 0x021d6f33c00d3657d7ec6f9322399729afdf21533b77cf0512ac583b4755f011  # goerli
 )
 oracle_proxy_address = (
-    # 0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4 mainnet
-    0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093  # goerli
+    0x0346c57f094d641ad94e43468628d8e9c574dcb2803ec372576ccc60a40be2c4 # mainnet
+    # 0x446812bac98c08190dee8967180f4e3cdcd1db9373ca269904acb17f67f7093  # goerli
 )
 
 currencies_to_add = [
-    # Currency(
-    #     "LORDS",
-    #     8,
-    #     0,
-    #     0x0124aeb495b947201f5fac96fd1138e326ad86195b98df6dec9009158a533b49,
-    #     0x686f2404e77ab0d9070a46cdfb0b7fecdd2318b0,
-    # ),
-    # Currency(
-    #     "R",
-    #     8,
-    #     0,
-    #     0x01fa2fb85f624600112040e1f3a848f53a37ed5a7385810063d5fe6887280333,
-    #     0x183015a9bA6fF60230fdEaDc3F43b3D788b13e21,
-    # ),
     Currency(
-        "wstETH",
-        8,
+        "LORDS",
+        18,
+        0,
+        0x0124aeb495b947201f5fac96fd1138e326ad86195b98df6dec9009158a533b49,
+        0x686f2404e77ab0d9070a46cdfb0b7fecdd2318b0,
+    ),
+    Currency(
+        "R",
+        18,
+        0,
+        0x01fa2fb85f624600112040e1f3a848f53a37ed5a7385810063d5fe6887280333,
+        0x183015a9bA6fF60230fdEaDc3F43b3D788b13e21,
+    ),
+    Currency(
+        "WSTETH",
+        18,
         0,
         0x042b8f0484674ca266ac5d08e4ac6a3fe65bd3129795def2dca5c34ecc5f96d2,
         0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0,
     ),
 ]
 pairs_to_add = [
-    # Pair("LORDS/USD", "LORDS", "USD"),
-    # Pair("R/USD", "R", "USD"),
-    Pair("wstETH/USD", "wstETH", "USD"),
+    Pair("LORDS/USD", "LORDS", "USD"),
+    Pair("R/USD", "R", "USD"),
+    Pair("WSTETH/USD", "WSTETH", "USD"),
 ]
 
 # currencies_to_update = [ 
@@ -1007,7 +1006,7 @@ pairs_to_add = [
 #     ),
 # ]
 
-NETWORK = "testnet"
+NETWORK = "mainnet"
 CHAIN_ID = StarknetChainId.TESTNET if NETWORK == "testnet" else StarknetChainId.MAINNET
 
 
@@ -1034,7 +1033,7 @@ async def main():
         print(currency.to_dict())
         invocation = await contract.functions['add_currency'].invoke(
             currency.to_dict(),
-            max_fee=int(1e16)
+            max_fee=int(1e15)
         )
         print(hex(invocation.hash))
         await invocation.wait_for_acceptance()
@@ -1044,7 +1043,7 @@ async def main():
         print(pair.to_dict())
         invocation = await contract.functions['add_pair'].invoke(
             pair.to_dict(),
-            max_fee=int(1e16)
+            max_fee=int(1e15)
         )
         print(hex(invocation.hash))
         await invocation.wait_for_acceptance()
