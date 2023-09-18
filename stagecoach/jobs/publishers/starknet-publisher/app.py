@@ -3,9 +3,8 @@ import json
 import os
 
 import boto3
-from pragma.core import SpotEntry
 from pragma.core.logger import get_stream_logger
-from pragma.core.assets import get_asset_spec_for_pair_id
+from pragma.core.assets import get_spot_asset_spec_for_pair_id, get_future_asset_spec_for_pair_id
 from pragma.publisher.client import PragmaPublisherClient
 from pragma.publisher.fetchers import (
     BitstampFetcher,
@@ -14,7 +13,8 @@ from pragma.publisher.fetchers import (
     AscendexFetcher,
     KaikoFetcher,
     DefillamaFetcher,
-    OkxFetcher
+    GeckoTerminalFetcher,
+    OkxFetcher,
 )
 from pragma.publisher.future_fetchers import (BinanceFutureFetcher, OkxFutureFetcher, ByBitFutureFetcher)
 
@@ -22,7 +22,8 @@ logger = get_stream_logger()
 
 NETWORK = os.environ["NETWORK"]
 SECRET_NAME = os.environ["SECRET_NAME"]
-ASSETS = os.environ["ASSETS"]
+SPOT_ASSETS = os.environ["SPOT_ASSETS"]
+FUTURE_ASSETS = os.environ["FUTURE_ASSETS"]
 PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
 KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
@@ -32,12 +33,12 @@ if PAGINATION is not None:
 
 
 def handler(event, context):
-    assets = [get_asset_spec_for_pair_id(asset) for asset in ASSETS.split(",")]
-    entries_ = asyncio.run(_handler(assets))
-    serialized_entries_ = SpotEntry.serialize_entries(entries_)
-    print(serialized_entries_)
+    spot_assets = [get_spot_asset_spec_for_pair_id(asset) for asset in SPOT_ASSETS.split(",")]
+    future_assets = [get_future_asset_spec_for_pair_id(asset) for asset in FUTURE_ASSETS.split(",")]
+    spot_assets.extend(future_assets)
+    entries_ = asyncio.run(_handler(spot_assets))
     return {
-        "success": len(serialized_entries_),
+        "success": len(entries_),
     }
 
 
@@ -55,7 +56,7 @@ def _get_pvt_key():
 
 async def _handler(assets):
     publisher_private_key = _get_pvt_key()
-    # publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 0)
+    # publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 16)
 
     publisher_client = PragmaPublisherClient(
         network=NETWORK,
@@ -72,9 +73,11 @@ async def _handler(assets):
                 CoinbaseFetcher,
                 AscendexFetcher,
                 DefillamaFetcher,
+                OkxFetcher,
+                GeckoTerminalFetcher,
                 BinanceFutureFetcher,
                 OkxFutureFetcher,
-                ByBitFutureFetcher
+                ByBitFutureFetcher,
             )
         ]
     )
@@ -87,9 +90,6 @@ async def _handler(assets):
     print(
         f"Published data with tx hashes: {', '.join([hex(res.hash) for res in response])}"
     )
-
-    for res in response:
-        await res.wait_for_acceptance()
 
     return _entries
 
