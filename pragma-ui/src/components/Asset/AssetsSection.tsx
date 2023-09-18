@@ -1,9 +1,11 @@
+/* eslint-disable new-cap */
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import AssetCard from "./AssetCard";
 import { AssetKeys } from "../../hooks/oracle";
 import { Button } from "../common/Button";
 import SearchBar from "../Navigation/SearchBar";
+import { useNetwork } from "../../providers/network";
 
 const SHOW_DEFAULT = 3;
 const SHOW_STEP = 5;
@@ -12,32 +14,38 @@ const SHOW_STEP = 5;
  * Returns the new number of assets to show. Never increments past the length of AssetKeys.
  * Uses SHOW_STEP to determine step size.
  * @param {number} curNum current number of assets displayed
+ * @param {Array<string>} assets list of assets to display
  * @return {number} the incremented number to display
  */
-function incrementShow(curNum: number): number {
+function incrementShow(curNum: number, assets: Array<string>): number {
   const newNum = curNum + SHOW_STEP;
-  return newNum < AssetKeys.length ? newNum : AssetKeys.length;
+  return newNum < assets.length ? newNum : assets.length;
 }
 
 const AssetsSection = () => {
   const [numToShow, setNumToShow] = useState<number>(SHOW_DEFAULT);
+  const { network } = useNetwork();
 
   return (
     <div className="flex w-full max-w-3xl -translate-y-14 flex-col items-center space-y-16 sm:-translate-y-8">
-      {AssetKeys.slice(0, numToShow).map((assetKey, index) => (
-        <AssetCard assetKey={assetKey} key={index} />
-      ))}
+      {AssetKeys(network)
+        .slice(0, numToShow)
+        .map((assetKey, index) => (
+          <AssetCard assetKey={assetKey} key={index} />
+        ))}
       <div className="flex w-min flex-col items-center space-y-4 sm:w-full sm:flex-row sm:justify-between sm:space-y-0">
         <SearchBar />
         <div className="flex items-center">
           <Button
             variant="outline"
             color="slate"
-            onClick={() => setNumToShow(incrementShow(numToShow))}
+            onClick={() =>
+              setNumToShow(incrementShow(numToShow, AssetKeys(network)))
+            }
             icon={ChevronDownIcon}
             className="rounded-l-lg rounded-r-none"
             type="button"
-            disabled={numToShow === AssetKeys.length}
+            disabled={numToShow === AssetKeys(network).length}
           >
             More
           </Button>

@@ -2,10 +2,11 @@ import React from "react";
 import Link from "next/link";
 import { StyledExternalLink, StyledInternalLink } from "../common/StyledLink";
 import {
+  Network,
   buildExplorerUrlForAddress,
-  networkId,
 } from "../../services/wallet.service";
 import { getOracleProxyAddress } from "../../services/address.service";
+import { useNetwork } from "../../providers/network";
 
 interface FooterLink {
   title: string;
@@ -18,7 +19,7 @@ interface FooterColumn {
   links: FooterLink[];
 }
 
-const content: FooterColumn[] = [
+const content = (network: Network): FooterColumn[] => [
   {
     heading: "Developers",
     links: [
@@ -30,7 +31,8 @@ const content: FooterColumn[] = [
       {
         title: "View on Block Explorer",
         href: `${buildExplorerUrlForAddress(
-          getOracleProxyAddress(networkId())
+          getOracleProxyAddress(network),
+          network
         )}#readContract`,
         external: true,
       },
@@ -117,67 +119,70 @@ const socials: SocialMedia[] = [
   },
 ];
 
-const Footer = () => (
-  <div className="w-full overflow-hidden bg-dark">
-    <div className="mx-auto max-w-7xl border-t border-black px-4 pb-12 pt-16 lg:px-8">
-      <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
-        <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
-          <Link href="/">
-            <div className="w-fit">
-              <span className="sr-only">Pragma</span>
-              <img
-                className="h-12 w-auto sm:h-16 md:h-20"
-                src="/pragma-logo.svg"
-                alt="Pragma"
-              />
-            </div>
-          </Link>
-          <p className="prose prose-slate text-grey">
-            Pragma is the leading oracle on Starknet, built to empower native
-            protocols to realize their ambitious potential.
-          </p>
-          <ul className="flex flex-row items-center space-x-6">
-            {socials.map((social) => (
-              <li key={social.name}>
-                <a href={social.href}>
-                  <img
-                    src={social.src}
-                    alt={social.name}
-                    className="h-6 w-6 cursor-pointer invert"
-                  />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {content.map((column) => (
-          <nav key={column.heading} className="col-span-1 lg:col-span-2">
-            <p className="font-semibold uppercase tracking-wider text-grey">
-              {column.heading}
+const Footer = () => {
+  const { network } = useNetwork();
+  return (
+    <div className="w-full overflow-hidden bg-dark">
+      <div className="mx-auto max-w-7xl border-t border-black px-4 pb-12 pt-16 lg:px-8">
+        <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
+          <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
+            <Link href="/">
+              <div className="w-fit">
+                <span className="sr-only">Pragma</span>
+                <img
+                  className="h-12 w-auto sm:h-16 md:h-20"
+                  src="/pragma-logo.svg"
+                  alt="Pragma"
+                />
+              </div>
+            </Link>
+            <p className="prose prose-slate text-grey">
+              Pragma is the leading oracle on Starknet, built to empower native
+              protocols to realize their ambitious potential.
             </p>
-            <div className="mt-6 flex flex-col space-y-4">
-              {column.links.map(({ external, title, href }) => (
-                <React.Fragment key={title}>
-                  {external ? (
-                    <StyledExternalLink href={href} underline={false}>
-                      {title}
-                    </StyledExternalLink>
-                  ) : (
-                    <StyledInternalLink href={href} underline={false}>
-                      {title}
-                    </StyledInternalLink>
-                  )}
-                </React.Fragment>
+            <ul className="flex flex-row items-center space-x-6">
+              {socials.map((social) => (
+                <li key={social.name}>
+                  <a href={social.href}>
+                    <img
+                      src={social.src}
+                      alt={social.name}
+                      className="h-6 w-6 cursor-pointer invert"
+                    />
+                  </a>
+                </li>
               ))}
-            </div>
-          </nav>
-        ))}
-      </div>
-      <div className="mt-10 mb-6 w-full border-t border-black pt-10 text-center text-grey md:mb-0">
-        © Assert Labs FZCO. - {new Date().getFullYear()}. All rights reserved.
+            </ul>
+          </div>
+          {content(network).map((column) => (
+            <nav key={column.heading} className="col-span-1 lg:col-span-2">
+              <p className="font-semibold uppercase tracking-wider text-grey">
+                {column.heading}
+              </p>
+              <div className="mt-6 flex flex-col space-y-4">
+                {column.links.map(({ external, title, href }) => (
+                  <React.Fragment key={title}>
+                    {external ? (
+                      <StyledExternalLink href={href} underline={false}>
+                        {title}
+                      </StyledExternalLink>
+                    ) : (
+                      <StyledInternalLink href={href} underline={false}>
+                        {title}
+                      </StyledInternalLink>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </nav>
+          ))}
+        </div>
+        <div className="mt-10 mb-6 w-full border-t border-black pt-10 text-center text-grey md:mb-0">
+          © Assert Labs FZCO. - {new Date().getFullYear()}. All rights reserved.
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Footer;

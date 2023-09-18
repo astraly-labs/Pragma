@@ -1,50 +1,69 @@
 import { useContract, useStarknetCall } from "@starknet-react/core";
 import { hexToString, strToHexFelt } from "../../utils/felt";
 import { getOracleProxyAddress } from "../services/address.service";
-import { networkId } from "../services/wallet.service";
 import OracleAbi from "../abi/Oracle.json";
 import { Abi } from "starknet";
 import {
   bigNumberishArrayToDecimalStringArray,
   toHex,
 } from "starknet/utils/number";
+import { useNetwork } from "../providers/network";
+import { Network } from "../services/wallet.service";
 
 // List from https://github.com/Astraly-Labs/Pragma/blob/master/pragma-package/pragma/publisher/assets.py
-export const AssetKeys = [
-  "ETH/USD",
-  "BTC/USD",
-  "SOL/USD",
-  "WBTC/USD",
-  "BTC/EUR",
-  "WSTETH/USD",
-  "AVAX/USD",
-  "DOGE/USD",
-  "SHIB/USD",
-  // "TEMP/USD",
-  "DAI/USD",
-  "USDT/USD",
-  "USDC/USD",
-  "R/USD",
-  "LORDS/USD",
-  // "TUSD/USD",
-  "BUSD/USD",
-  // "ETH/MXN",
-  "BNB/USD",
-  "ADA/USD",
-  "XRP/USD",
-  "MATIC/USD",
-  "AAVE/USD",
-];
+export const AssetKeys = (network: Network): Array<string> => {
+  if (network === "goerli-alpha") {
+    return [
+      "ETH/USD",
+      "BTC/USD",
+      "SOL/USD",
+      "WBTC/USD",
+      "BTC/EUR",
+      "WSTETH/USD",
+      "AVAX/USD",
+      "DOGE/USD",
+      "SHIB/USD",
+      // "TEMP/USD",
+      "DAI/USD",
+      "USDT/USD",
+      "USDC/USD",
+      "R/USD",
+      "LORDS/USD",
+      // "TUSD/USD",
+      "BUSD/USD",
+      // "ETH/MXN",
+      "BNB/USD",
+      "ADA/USD",
+      "XRP/USD",
+      "MATIC/USD",
+      "AAVE/USD",
+    ];
+  } else {
+    return [
+      "ETH/USD",
+      "BTC/USD",
+      "WBTC/USD",
+      "WSTETH/USD",
+      "DAI/USD",
+      "USDT/USD",
+      "USDC/USD",
+      "R/USD",
+      "LORDS/USD",
+    ];
+  }
+};
 
-export type AssetKeyT = typeof AssetKeys[number];
+export type AssetKeyT = string;
 
 export const useOracleContract = () => {
-  const network = networkId();
+  const { network, provider } = useNetwork();
   const oracleProxyContractAddress = getOracleProxyAddress(network);
-  return useContract({
+  const { contract } = useContract({
     abi: OracleAbi as Abi,
     address: oracleProxyContractAddress,
   });
+  contract.connect(provider);
+  return { contract };
 };
 
 export type GetValueResponseT = {
@@ -77,7 +96,7 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   }
 
   let oracleResponse: GetValueResponseT | undefined = undefined;
-  if (data !== undefined) {
+  if (data !== undefined && data !== null) {
     const [
       strValue,
       strDecimals,

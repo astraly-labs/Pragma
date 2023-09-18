@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import React, { useMemo } from "react";
 import { assetKeyToUrl, urlToAssetKey } from "../../../utils/encodeUrl";
 import {
@@ -65,7 +66,9 @@ export const getStaticProps = async ({ params }: { params: any }) => {
 };
 
 export const getStaticPaths = async () => {
-  const encodedAssets = AssetKeys.map((assetKey) => assetKeyToUrl(assetKey));
+  const encodedAssets = AssetKeys("goerli-alpha").map((assetKey) =>
+    assetKeyToUrl(assetKey)
+  );
   const paths = encodedAssets.map((assetKey) => ({ params: { assetKey } }));
   return {
     paths,

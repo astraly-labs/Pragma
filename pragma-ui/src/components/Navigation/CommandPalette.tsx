@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import classNames from "classnames";
@@ -8,6 +9,7 @@ import { ChevronRightIcon, SearchIcon } from "@heroicons/react/outline";
 import AssetCardName from "../Asset/AssetCardName";
 import { useSearch } from "../../providers/search";
 import { assetKeyToUrl } from "../../../utils/encodeUrl";
+import { useNetwork } from "../../providers/network";
 
 interface CommandPallateProps {
   isOpen: boolean;
@@ -17,6 +19,7 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
   const router = useRouter();
   const setSearch = useSearch();
   const [query, setQuery] = useState("");
+  const { network } = useNetwork();
 
   useEffect(() => {
     /**
@@ -36,7 +39,7 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
     };
   }, [setSearch]);
 
-  const filteredAssets = AssetKeys.filter((asset) =>
+  const filteredAssets = AssetKeys(network).filter((asset) =>
     asset.toLowerCase().includes(query.toLowerCase())
   );
   return (

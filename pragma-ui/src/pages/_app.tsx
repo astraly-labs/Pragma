@@ -11,17 +11,13 @@ import {
   StarknetProvider,
   getInstalledInjectedConnectors,
 } from "@starknet-react/core";
-import { Provider } from "starknet";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
+import { NetworkProvider, useNetwork } from "../providers/network";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
-  const provider = new Provider({
-    sequencer: {
-      baseUrl: "https://alpha4.starknet.io",
-    },
-  });
+  const network = useNetwork();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
@@ -81,20 +77,21 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           cardType: "summary_large_image",
         }}
       />
-      <StarknetProvider
-        autoConnect
-        connectors={connectors}
-        defaultProvider={provider}
-      >
-        <div className="flex min-h-screen flex-col justify-start bg-white">
-          <SearchContext.Provider value={setIsSearchOpen}>
-            <NavHeader />
-            <CommandPallate isOpen={isSearchOpen} />
-            <Component {...pageProps} key={router.asPath} />
-            <NavFooter />
-          </SearchContext.Provider>
-        </div>
-      </StarknetProvider>
+      <NetworkProvider>
+        <StarknetProvider
+          connectors={connectors}
+          defaultProvider={network?.provider}
+        >
+          <div className="flex min-h-screen flex-col justify-start bg-white">
+            <SearchContext.Provider value={setIsSearchOpen}>
+              <NavHeader />
+              <CommandPallate isOpen={isSearchOpen} />
+              <Component {...pageProps} key={router.asPath} />
+              <NavFooter />
+            </SearchContext.Provider>
+          </div>
+        </StarknetProvider>
+      </NetworkProvider>
     </>
   );
 };

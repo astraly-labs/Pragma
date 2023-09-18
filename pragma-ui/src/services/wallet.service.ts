@@ -1,30 +1,27 @@
-// TODO: Make this adaptive in the future
-export const networkId = (): Network => "goerli-alpha";
-
-export const getExplorerBaseUrl = (): string | undefined => {
-  if (networkId() === "mainnet-alpha") {
+export const getExplorerBaseUrl = (network: Network): string | undefined => {
+  if (network === "mainnet-alpha") {
     return "https://voyager.online";
-  } else if (networkId() === "goerli-alpha") {
+  } else if (network === "goerli-alpha") {
     return "https://goerli.voyager.online";
-  } else if (networkId() === "goerli2-alpha") {
-    return "https://goerli-2.voyager.online";
   }
 };
 
-export const buildExplorerUrlForAddress = (address: string): string => {
-  const baseUrl = getExplorerBaseUrl();
+export const buildExplorerUrlForAddress = (
+  address: string,
+  network: Network
+): string => {
+  const baseUrl = getExplorerBaseUrl(network);
   const path = "/contract/" + address;
   return baseUrl + path;
 };
 
-export const buildExplorerUrlForTransaction = (transaction: string): string => {
-  const baseUrl = getExplorerBaseUrl();
+export const buildExplorerUrlForTransaction = (
+  transaction: string,
+  network: Network
+): string => {
+  const baseUrl = getExplorerBaseUrl(network);
   const path = "/tx/" + transaction;
   return baseUrl + path;
 };
 
-export type Network =
-  | "mainnet-alpha"
-  | "goerli2-alpha"
-  | "goerli-alpha"
-  | "localhost";
+export type Network = "mainnet-alpha" | "goerli-alpha" | "localhost";
