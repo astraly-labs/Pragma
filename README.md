@@ -23,6 +23,7 @@ to enable computational data feeds at scale!
 - [Pragma Contracts](https://github.com/Astraly-Labs/pragma-oracle): Source code of the Pragma contracts, written in Cairo.
 - [Pragma Hack](https://github.com/Astraly-Labs/pragma-hack): Template to kickstart your new DeFi protocol using Pragma.
 - [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragmaoracle.com`.
+- [Pragma Indexer](https://github.com/Astraly-Labs/indexer-service): Indexer service written in rust to start/stop/manage indexers.
 - [Madara Tsukuyomi](https://github.com/keep-starknet-strange/madara-tsukuyomi):
   The source code of the Madara Desktop App. A friendly GUI to start a Pragma X node and interact with it!
 
