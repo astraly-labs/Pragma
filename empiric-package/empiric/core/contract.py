@@ -57,6 +57,8 @@ async def invoke_(
         invoke_transaction=transaction,
     )
 
+    await asyncio.sleep(3)
+
     # don't return invoke result until it is received or errors
     await self._client.wait_for_tx(invoke_result.hash)
 
