@@ -27,6 +27,7 @@ PUBLISHER = os.environ.get("PUBLISHER")
 PUBLISHER_ADDRESS = int(os.environ.get("PUBLISHER_ADDRESS"))
 KAIKO_API_KEY = os.environ.get("KAIKO_API_KEY")
 PAGINATION = os.environ.get("PAGINATION")
+API_URL = os.environ.get("API_URL", "https://api.dev.pragma.build/node")
 if PAGINATION is not None:
     PAGINATION = int(PAGINATION)
 
@@ -52,12 +53,13 @@ def _get_pvt_key():
 
 
 async def _handler(assets):
-    # publisher_private_key = _get_pvt_key()
-    publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 10)
+    publisher_private_key = _get_pvt_key()
+    # publisher_private_key = int(os.environ["PUBLISHER_PRIVATE_KEY"], 10)
 
     publisher_client = PragmaPublisherClient(
         account_private_key=publisher_private_key,
         account_contract_address=PUBLISHER_ADDRESS,
+        api_url=API_URL
     )
 
     publisher_client.add_fetchers(
@@ -71,10 +73,6 @@ async def _handler(assets):
                 DefillamaFetcher,
                 OkxFetcher,
                 GeckoTerminalFetcher,
-                BinanceFutureFetcher,
-                OkxFutureFetcher,
-                ByBitFutureFetcher,
-                AvnuFetcher
             )
         ]
     )

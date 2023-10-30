@@ -10,7 +10,7 @@ import telegram
 from pragma.core.client import PragmaClient
 from pragma.core.logger import get_stream_logger
 from pragma.core.utils import pair_id_for_asset, str_to_felt
-from pragma.publisher.assets import PRAGMA_ALL_ASSETS, get_spot_asset_spec_for_pair_id
+from pragma.core.assets import PRAGMA_ALL_ASSETS, get_spot_asset_spec_for_pair_id
 from pragma.publisher.fetchers import CoinbaseFetcher
 from pragma.publisher.types import PublisherFetchError
 
