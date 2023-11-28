@@ -76,7 +76,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Press Kit",
-        href: "https://drive.google.com/drive/folders/11mE8amIoNa13xeTDI59uyeykPo2iYON9",
+        href: "https://drive.google.com/drive/folders/1m_qM6GRPEbGN_78l9lHMkpT_rASzpcae?usp=share_link",
         external: true,
       },
       {
