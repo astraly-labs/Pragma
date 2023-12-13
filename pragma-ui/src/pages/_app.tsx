@@ -18,8 +18,9 @@ import NavHeader from "../components/Navigation/NavHeader";
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
   const provider = new Provider({
-    sequencer: {
-      baseUrl: "https://alpha4.starknet.io",
+    rpc: {
+      nodeUrl: "https://starknet-testnet.public.blastapi.io",
+      retries: 3,
     },
   });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
