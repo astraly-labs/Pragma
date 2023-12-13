@@ -47,7 +47,7 @@ if not os.getenv("RPC_KEY") and NETWORK in ["mainnet", "testnet", "testnet2"]:
     raise ValueError(f"RPC_KEY env variable is required when targeting {NETWORK}")
 RPC_URLS = {
     "mainnet": f"https://starknet-mainnet.infura.io/v3/{os.getenv('RPC_KEY')}",
-    "testnet": f"https://starknet-goerli.infura.io/v3/{os.getenv('RPC_KEY')}",
+    "testnet": f"https://starknet-testnet.public.blastapi.io/rpc/v0.4",
     "testnet2": f"https://starknet-goerli2.infura.io/v3/{os.getenv('RPC_KEY')}",
     "devnet": "http://127.0.0.1:5050/rpc",
     "sharingan": "https://sharingan.madara.zone",

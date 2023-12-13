@@ -7,7 +7,7 @@ profile = "black"
 
 [tool.poetry]
 name = "empiric-network"
-version = "1.8.7"
+version = "1.8.8"
 authors = ["Pragma <contact@pragmaoracle.com>"]
 description = "Core package for rollup-native Pragma Oracle"
 readme = "README.md"
@@ -28,7 +28,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
-"starknet.py" = "0.18.1"
+"starknet.py" = "0.18.3"
 cairo-lang = "^0.12"
 typer = "0.6.1"
 
