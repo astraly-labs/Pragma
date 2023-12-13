@@ -9,7 +9,7 @@ import SectionContainer from "../../components/common/SectionContainer";
 import { DefaultCTASection } from "../../components/CTASection";
 import EntriesTable from "../../components/Details/EntriesTable";
 import DetailDisplay from "../../components/Details/DetailDisplay";
-import Banner from "../../components/Banner";
+// import Banner from "../../components/Banner";
 
 const Details = ({ assetKey }) => {
   const {
@@ -31,7 +31,7 @@ const Details = ({ assetKey }) => {
 
   return (
     <div className="w-screen">
-      <Banner />
+      {/* <Banner /> */}
       <SectionContainer className="bg-dark" first>
         <DetailDisplay
           assetKey={assetKey}

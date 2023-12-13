@@ -7,7 +7,7 @@ import Testimonial from "../components/Landing/Testimonial";
 import { DefaultCTASection } from "../components/CTASection";
 import Code from "../components/Code/Code";
 import InfoSection from "../components/Info/InfoSection";
-import Banner from "../components/Banner";
+// import Banner from "../components/Banner";
 import LogoCloud from "../components/LogoClouds/LogoCloud";
 import Stats from "../components/Stats";
 import { protocols } from "../components/Protocol/ProtocolSection";
@@ -96,7 +96,7 @@ const supportedTestnetNetworks: Logo[] = [
 
 const IndexPage = () => (
   <div className="w-full overflow-hidden">
-    <Banner />
+    {/* <Banner /> */}
     <SectionContainer className="bg-dark" first>
       <Hero />
     </SectionContainer>
