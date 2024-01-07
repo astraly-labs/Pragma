@@ -1,0 +1,133 @@
+.verifiable {
+    color: #15FF81;
+    font-family: IBM Plex Sans;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 72px;
+    letter-spacing: -1.2px;
+    text-decoration-line: underline;
+}
+
+.heading {
+    color: #B5F0E5;
+    text-align: center;
+    text-decoration-line: none !important;
+    /* Headline/H1 */
+    font-family: IBM Plex Sans;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 72px;
+    /* 120% */
+    letter-spacing: -1.2px;
+}
+
+.videoBg {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(90deg, rgba(4, 36, 32, 0) 0%, rgba(4, 36, 32, 1) 50%, rgba(4, 36, 32, 0) 100%), url('/background.gif');
+    background-size: cover;
+}
+
+.boxMarquee {
+    display: flex;
+    margin: 32px;
+    margin-bottom: 0;
+    padding: 20px 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(#082F28, #082F28) padding-box, linear-gradient(150deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 055%, rgba(255, 255, 255, 0.06%), rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+}
+
+.boxBlur {
+    display: flex;
+    width: 788px;
+    padding: 56px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid #FFF;
+    background: var(--green-50, rgba(0, 71, 56, 0.50));
+}
+
+.greenCode {
+    color: #15FF81;
+}
+
+.purpleCode {
+    color: #B692F6;
+}
+
+.darkGreenBox {
+    display: flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(#02201E, #02201E) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 020%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.25) 080%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+}
+
+.testimonyBox {
+    display: flex;
+    padding: 64px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+    background: var(--green-12, rgba(27, 99, 82, 0.12));
+    width: full;
+    height: 100%;
+}
+
+.blogBox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+    background: var(--green-12, rgba(27, 99, 82, 0.12));
+    height: 455px;
+    width: 410px;
+    overflow-x: hidden;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.lightDot1 {
+    position: absolute;
+    width: 40px;
+    bottom: -19px;
+    z-index: 10;
+    left: 75px;
+}
+
+.lightDot2 {
+    position: absolute;
+    width: 40px;
+    top: -19px;
+    z-index: 10;
+    right: 75px;
+}
+
+.swiperContainer .swiper-wrapper {
+    display: flex;
+}
+
+.carouselWrapper {
+    height: 540px;
+}

@@ -1,34 +1,32 @@
 import React from "react";
-import QuoteIcon from "../common/QuoteIcon";
+import styles from "./styles.module.scss";
+import classNames from "classnames";
+import GreenText from "../common/GreenText";
+import { ButtonLink } from "../common/Button";
+import GreenUpperText from "../common/GreenUpperText";
+import GreenTitle from "../common/GreenTitle";
+import GreenBox from "../common/GreenBox";
+import { TestimonialCarousel } from "./TestimonialCarousel";
 
 const Testimonial = () => (
-  <div className="relative w-full max-w-3xl lg:flex lg:items-center">
-    <QuoteIcon className="absolute top-0 left-0 h-36 w-36 -translate-y-10 -translate-x-8 transform fill-transparent stroke-gray-800 stroke-2" />
-    <blockquote className="relative">
-      <p className="text-xl font-medium leading-9 text-grey lg:text-2xl">
-        The Pragma team has attracted fantastic data partners and Pragma is
-        already one of the leading protocols on StarkNet. I am excited to see
-        them leverage zk-technology to build out their vision of decentralized,
-        transparent and composable data feeds.
-      </p>
-      <footer className="mt-8">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <img
-              className="h-16 w-16 rounded-full lg:h-20 lg:w-20"
-              src="/assets/testimonial/uri-starkware.webp"
-              alt="Uri Kolodny"
-            />
-          </div>
-          <div className="ml-4 space-y-1">
-            <div className="text-base font-medium text-grey">Uri Kolodny</div>
-            <div className="text-base font-medium text-primary">
-              Co-Founder and CEO at StarkWare
-            </div>
-          </div>
-        </div>
-      </footer>
-    </blockquote>
+  <div
+    className={classNames(
+      "align-row max-w-screen flex gap-28 overflow-hidden py-28"
+    )}
+  >
+    <div className="flex w-5/12 flex-col justify-center">
+      <GreenUpperText className="pb-3">Meet our users</GreenUpperText>
+      <GreenTitle className="pb-6">Trusted by innovators</GreenTitle>
+      <GreenText>
+        Pragma Network has a uniquely robust and transparent architecture made
+        possible by leveraging new zk-technology.
+      </GreenText>
+    </div>
+    <div className=" relative w-6/12">
+      <img src="/assets/vectors/lightDot.svg" className={styles.lightDot1} />
+      <img src="/assets/vectors/lightDot.svg" className={styles.lightDot2} />
+      <TestimonialCarousel />
+    </div>
   </div>
 );
 

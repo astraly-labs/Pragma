@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "ui-sans-serif", "system-ui"],
-        mono: ["iA Writer Duospace", "ui-monospace", "SFMono-Regular"],
+        sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui"],
+        mono: ["IBM Plex Mono"],
       },
       animation: {
         blob: "blob 9s infinite",
@@ -14,13 +14,16 @@ module.exports = {
       },
       colors: {
         transparent: "transparent",
-        current: "currentColor",
         white: "#ffffff",
-        primary: "#15C435",
-        secondary: "#00A462",
-        dark: "#0e0e0e",
-        black: "#070707",
-        grey: "#aeaeae",
+        darkGreen: "#042420",
+        green: "#00473880",
+        lightGreen: "#B5F0E5",
+        mint: "#15FF81",
+        lightBlur: "#B5F0E51F",
+        codeColor: "#98A2B3",
+        greenFooter: "#1B63521F",
+        LightGreenFooter: "#B5F0E580",
+        whiteTrans: "#FFFFFF26",
       },
       invert: {
         25: ".25",

@@ -1,25 +1,34 @@
 import React from "react";
-import Underline from "../common/Underline";
+import styles from "./styles.module.scss";
+import classNames from "classnames";
+import GreenText from "../common/GreenText";
+import { ButtonLink } from "../common/Button";
 
 const Hero = () => (
-  <header className="text-center md:py-8 lg:py-10">
-    <h1 className="max-w-7xl text-3xl font-medium !leading-[1.2] tracking-tight text-white md:text-5xl lg:text-7xl">
-      <span className="relative text-primary md:whitespace-nowrap ">
-        <Underline className="absolute top-2/3 left-0 hidden h-[0.45em] w-full fill-secondary opacity-50 md:block" />
-        <span className="relative">Decentralized &amp; Composable</span>
-      </span>
-      <br />
-      Data Infrastructure
-    </h1>
-    <p className="mt-10 max-w-7xl text-xl text-grey sm:mt-12 sm:text-2xl">
-      In strategic partnership with
-      <img
-        className="mt-3 inline w-36 sm:ml-3 sm:mt-0 sm:w-44"
-        src="/assets/starkware.svg"
-        alt="Starkware"
-      />
-    </p>
-  </header>
+  <div
+    className={classNames(
+      "flex w-screen justify-center align-middle",
+      styles.videoBg
+    )}
+  >
+    <header className="mt-32 flex flex-col justify-center space-y-10 text-center md:w-6/12 md:py-8 lg:py-10">
+      <h1>
+        <span className="text-primary relative md:whitespace-nowrap ">
+          <span className={styles.heading}>The internet is now</span>
+        </span>
+        <br />
+        <span className={styles.verifiable}>verifiable</span>
+      </h1>
+      <GreenText isAligned={true}>
+        Pragma is the first zk-oracle, providing access to internet data from
+        blockchains in a verifiable way. Star(k)t building more efficient and
+        safer applications now.
+      </GreenText>
+      <ButtonLink center={true} color="mint" variant="solid" href="/">
+        Start Building
+      </ButtonLink>
+    </header>
+  </div>
 );
 
 export default Hero;

@@ -60,15 +60,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         titleTemplate="%s - Pragma - StarkNet Oracle"
         defaultTitle="Pragma - StarkNet Oracle"
         description="Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
-        canonical="https://www.pragmaoracle.com"
+        canonical="https://www.pragma.build"
         openGraph={{
-          url: "https://www.pragmaoracle.com",
+          url: "https://www.pragma.build",
           title: "Pragma - StarkNet Oracle",
           description:
             "Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
           images: [
             {
-              url: "https://www.pragmaoracle.com/pragma-og-img.png",
+              url: "https://www.pragma.build/pragma-og-img.png",
               width: 1200,
               height: 630,
               alt: "Pragma",
@@ -87,7 +87,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         connectors={connectors}
         defaultProvider={provider}
       >
-        <div className="flex min-h-screen flex-col justify-start bg-white">
+        <div className="flex min-h-screen flex-col justify-start bg-darkGreen">
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
             <CommandPallate isOpen={isSearchOpen} />

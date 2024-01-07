@@ -1,0 +1,113 @@
+.blurBox {
+    display: flex;
+    position: relative;
+    min-width: 788px;
+    padding: 56px;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(rgba(0, 71, 56, 0.8), rgba(0, 71, 56, 0.8)) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06) 050%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+    z-index: 10;
+    min-height: 623px;
+}
+
+.greenText {
+    color: #B5F0E5;
+    /* Body/Body L */
+    font-family: IBM Plex Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    /* 155.556% */
+}
+
+.svgIllustration {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.greenBox {
+    display: flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+    background: var(--green-12, rgba(27, 99, 82, 0.12));
+}
+
+.eventBox {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 21px;
+    width: 100%;
+    align-items: center;
+    padding-bottom: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.lastBox {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 21px;
+    width: 100%;
+    align-items: center;
+    padding-bottom: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(217, 217, 217, 0.25);
+    border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.darkGreenBox {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    padding: 120px 72px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(#02201E, #02201E) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 020%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.25) 080%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+    width: 100%;
+}
+
+
+/* PopupComponent.css */
+
+.popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 40px;
+    background-color: (0, 71, 56, 0.50);
+    border: 0.5px solid rgba(181, 240, 229, 0.12);
+    border-radius: 20px;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12.5px);
+    z-index: 100;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    color: #B5F0E5;
+    border-radius: 100%;
+    padding: 5px;
+}
+
+.close:hover {
+    background-color: #B5F0E51F;
+}
