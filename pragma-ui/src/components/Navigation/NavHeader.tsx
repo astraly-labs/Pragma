@@ -34,25 +34,25 @@ const resources: Resource[] = [
   {
     name: "Ecosystem",
     description: "Start using our data by reading our docs.",
-    href: "https://docs.pragmaoracle.com/",
+    href: "/",
     icon: CodeIcon,
   },
   {
     name: "Docs",
     description: "Learn about what makes Pragma special.",
-    href: "/features",
+    href: "/",
     icon: PuzzleIcon,
   },
   {
     name: "Resources",
     description: "Meet our data publishers.",
-    href: "/publishers",
+    href: "/",
     icon: SpeakerphoneIcon,
   },
   {
     name: "Community",
     description: "Take a look at who is already using Pragma.",
-    href: "/protocols",
+    href: "/",
     icon: ViewListIcon,
   },
 ];
