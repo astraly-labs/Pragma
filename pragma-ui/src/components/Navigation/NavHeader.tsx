@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import {
-  ChatIcon,
   CodeIcon,
   CursorClickIcon,
   HomeIcon,
@@ -12,7 +11,6 @@ import {
   XIcon,
   SpeakerphoneIcon,
 } from "@heroicons/react/outline";
-import NavPopover from "./NavPopover";
 import SearchBar from "./SearchBar";
 import StyledTransition from "../common/StyledTransition";
 import {
@@ -78,13 +76,13 @@ const additional = [
 ];
 
 // Calls to action at the bottom of the more tab.
-const callsToAction = [
-  {
-    name: "Request Asset",
-    href: "mailto:support@pragma.build?body=Hi%Pragma%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
-    icon: ChatIcon,
-  },
-];
+// const callsToAction = [
+//   {
+//     name: "Request Asset",
+//     href: "mailto:support@pragma.build?body=Hi%Pragma%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
+//     icon: ChatIcon,
+//   },
+// ];
 
 // Mobile only
 const mobileResources = [

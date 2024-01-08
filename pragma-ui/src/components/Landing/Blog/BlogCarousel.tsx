@@ -70,7 +70,7 @@ const BlogCarousel: React.FC = () => {
       >
         <Slider>
           {dummyBlogPosts.map((post, index) => (
-            <Slide index={index}>
+            <Slide index={index} key={index}>
               <BlogPostBox
                 image={post.image}
                 date={post.date}

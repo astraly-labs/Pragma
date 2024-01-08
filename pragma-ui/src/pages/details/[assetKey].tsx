@@ -5,10 +5,10 @@ import {
   useOracleGetEntries,
   useOracleGetValue,
 } from "../../hooks/oracle";
-import SectionContainer from "../../components/common/SectionContainer";
 import { DefaultCTASection } from "../../components/CTASection";
 import EntriesTable from "../../components/Details/EntriesTable";
 import DetailDisplay from "../../components/Details/DetailDisplay";
+import BoxContainer from "../../components/common/BoxContainer";
 // import Banner from "../../components/Banner";
 
 const Details = ({ assetKey }) => {
@@ -32,15 +32,15 @@ const Details = ({ assetKey }) => {
   return (
     <div className="w-screen">
       {/* <Banner /> */}
-      <SectionContainer className="bg-dark" first>
+      <BoxContainer className="bg-dark">
         <DetailDisplay
           assetKey={assetKey}
           oracleResponse={valueResponse}
           loading={valueLoading}
           error={valueError}
         />
-      </SectionContainer>
-      <SectionContainer className="relative bg-black">
+      </BoxContainer>
+      <BoxContainer className="relative bg-black">
         <EntriesTable
           assetKey={assetKey}
           decimals={decimals}
@@ -48,10 +48,10 @@ const Details = ({ assetKey }) => {
           loading={entriesLoading}
           error={entriesError}
         />
-      </SectionContainer>
-      <SectionContainer className="bg-black !pt-0">
+      </BoxContainer>
+      <BoxContainer className="bg-black !pt-0">
         <DefaultCTASection />
-      </SectionContainer>
+      </BoxContainer>
     </div>
   );
 };

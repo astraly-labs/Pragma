@@ -102,7 +102,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         label="Last updated"
         description="This is the last time this price was updated on StarkNet. You might see bigger delays when StarkNet is slow in processing our requests."
         toDisplay={timeContent}
-        img={<ClockIcon className="h-6 w-6 stroke-grey" />}
+        img={<ClockIcon className="stroke-grey h-6 w-6" />}
       />
     </div>
   );

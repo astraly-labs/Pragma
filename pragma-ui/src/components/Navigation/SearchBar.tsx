@@ -9,10 +9,10 @@ const SearchBar: React.FC = () => {
   return (
     <button
       type="button"
-      className="flex h-12 w-full items-center space-x-3 rounded-lg bg-black px-4 text-left text-grey shadow-sm ring-1 ring-grey hover:ring-secondary focus:outline-none focus:ring-2 focus:ring-primary sm:w-60 lg:h-14"
+      className="text-grey ring-grey hover:ring-secondary focus:ring-primary flex h-12 w-full items-center space-x-3 rounded-lg bg-black px-4 text-left shadow-sm ring-1 focus:outline-none focus:ring-2 sm:w-60 lg:h-14"
       onClick={() => setSearch(true)}
     >
-      <SearchIcon aria-hidden="true" className="h-6 w-6 text-grey" />
+      <SearchIcon aria-hidden="true" className="text-grey h-6 w-6" />
       <span className="flex-auto">Search assets...</span>
       <kbd className="hidden font-sans font-semibold sm:inline-block">
         <kbd title="Command" className="text-grey no-underline">

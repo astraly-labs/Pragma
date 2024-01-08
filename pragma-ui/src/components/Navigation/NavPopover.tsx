@@ -57,7 +57,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
         >
           <Popover.Panel className="absolute z-10 -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
             <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-white ring-opacity-5">
-              <div className="relative grid gap-6 bg-dark px-5 py-6 sm:gap-8 sm:p-8">
+              <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
                 {content.map((item) => (
                   <a
                     key={item.name}
@@ -65,14 +65,14 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                     className="-m-3 flex items-start rounded-lg p-3 hover:bg-black"
                   >
                     <item.icon
-                      className="h-6 w-6 flex-shrink-0 text-primary"
+                      className="text-primary h-6 w-6 flex-shrink-0"
                       aria-hidden="true"
                     />
                     <div className="ml-4">
                       <p className="text-base font-medium text-white">
                         {item.name}
                       </p>
-                      <p className="mt-1 text-sm text-grey">
+                      <p className="text-grey mt-1 text-sm">
                         {item.description}
                       </p>
                     </div>
@@ -84,7 +84,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                   <div key={item.name} className="flow-root">
                     <a
                       href={item.href}
-                      className="-m-3 flex items-center rounded-md p-3 text-base font-medium text-grey hover:bg-dark"
+                      className="text-grey hover:bg-dark -m-3 flex items-center rounded-md p-3 text-base font-medium"
                     >
                       <item.icon
                         className="h-6 w-6 flex-shrink-0 text-slate-400"

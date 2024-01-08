@@ -14,7 +14,13 @@ const ReadyBox = () => (
       Leverage recent breakthroughs in zero-knowledge computation by using
       verifiable and composable data in your decentralized application.
     </GreenText>
-    <ButtonLink variant="solid" color="mint" href="/" className="mb-20">
+    <ButtonLink
+      center={false}
+      variant="solid"
+      color="mint"
+      href="/"
+      className="mb-20"
+    >
       Start building
     </ButtonLink>
 

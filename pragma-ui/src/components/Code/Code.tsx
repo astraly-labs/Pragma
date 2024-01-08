@@ -37,7 +37,7 @@ const Code = () => {
         <div className="flex space-x-2 pl-3 pt-3">
           <span className="block h-3 w-3 rounded-full bg-red-500 bg-opacity-40" />
           <span className="block h-3 w-3 rounded-full  bg-yellow-500 bg-opacity-40" />
-          <span className="block h-3 w-3 rounded-full  bg-green-500 bg-opacity-40" />
+          <span className="bg-green-500 block h-3 w-3  rounded-full bg-opacity-40" />
         </div>
         <pre>
           <code className="flex flex-col space-y-3 overflow-auto py-8 font-sans text-lg leading-normal sm:overflow-visible sm:text-xl">
@@ -56,12 +56,12 @@ const Code = () => {
               <div
                 className={classNames(
                   isCopied ? "w-20 lg:w-32 xl:w-40" : "w-40 lg:w-64 xl:w-72",
-                  "absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md bg-secondary p-4 font-sans text-base text-white transition-all duration-300 md:block"
+                  "bg-secondary absolute top-1/2 left-full -ml-48 hidden translate-x-2 -translate-y-1/2 whitespace-normal rounded-md p-4 font-sans text-base text-white transition-all duration-300 md:block"
                 )}
               >
                 {isCopied ? "Copied!" : "Just copy the command to get started."}
                 <svg
-                  className="absolute right-full top-1/2 -translate-y-1/2 text-secondary"
+                  className="text-secondary absolute right-full top-1/2 -translate-y-1/2"
                   xmlns="http://www.w3.org/2000/svg"
                   width="8"
                   height="22"

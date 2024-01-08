@@ -42,8 +42,8 @@ const ecosystem: Ecosystem[] = [
 const MarqueeLogo = () => (
   <div className={classNames(styles.boxMarquee)}>
     <Marquee>
-      {ecosystem.map(({ name, src }) => (
-        <img className="h-8 px-8" src={src} alt={name} />
+      {ecosystem.map(({ name, src }, index) => (
+        <img key={index} className="h-8 px-8" src={src} alt={name} />
       ))}
     </Marquee>
   </div>

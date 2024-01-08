@@ -1,17 +1,17 @@
 import React from "react";
 import { NextSeo } from "next-seo";
-import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import { DefaultCTASection } from "../components/CTASection";
 import FAQ from "../components/FAQ";
 import FeaturesDisplay from "../components/Features/FeaturesDisplay";
 import TimelineExplanation from "../components/TimelineExplanation";
+import BoxContainer from "../components/common/BoxContainer";
 
 const FeaturesPage = () => (
   <>
     <NextSeo title="Features" />
     <div className="w-full">
-      <SectionContainer className="bg-dark" first>
+      <BoxContainer className="bg-dark">
         <Heading
           title="Reimagining Oracles"
           subtitle="Transparent, Decentralized &amp; Composable"
@@ -20,16 +20,16 @@ const FeaturesPage = () => (
           hrefText="Integrate verifiable data into your project"
         />
         <FeaturesDisplay />
-      </SectionContainer>
-      <SectionContainer className="bg-black">
+      </BoxContainer>
+      <BoxContainer className="bg-black">
         <Heading
           title="Step by Step Overview"
           subtitle="How it works"
           text="Follow along as the data moves from the sources on-chain and to your smart contract."
         />
         <TimelineExplanation />
-      </SectionContainer>
-      <SectionContainer className="bg-dark">
+      </BoxContainer>
+      <BoxContainer className="bg-dark">
         <Heading
           title="Frequently asked questions"
           subtitle="Answers to"
@@ -37,10 +37,10 @@ const FeaturesPage = () => (
           hrefText="Send us your question"
         />
         <FAQ />
-      </SectionContainer>
-      <SectionContainer className="bg-black">
+      </BoxContainer>
+      <BoxContainer className="bg-black">
         <DefaultCTASection />
-      </SectionContainer>
+      </BoxContainer>
     </div>
   </>
 );

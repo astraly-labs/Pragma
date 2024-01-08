@@ -1,17 +1,16 @@
 import React from "react";
-import Heading from "../components/Heading";
 import Hero from "../components/Landing/Hero";
-import AssetsSection from "../components/Asset/AssetsSection";
-import { DefaultCTASection } from "../components/CTASection";
-import Code from "../components/Code/Code";
-import InfoSection from "../components/Info/InfoSection";
-// import Banner from "../components/Banner";
-import LogoCloud from "../components/LogoClouds/LogoCloud";
-import Stats from "../components/Stats";
-import { protocols } from "../components/Protocol/ProtocolSection";
+// import AssetsSection from "../components/Asset/AssetsSection";
+// import { DefaultCTASection } from "../components/CTASection";
+// import Code from "../components/Code/Code";
+// import InfoSection from "../components/Info/InfoSection";
+// // import Banner from "../components/Banner";
+// import LogoCloud from "../components/LogoClouds/LogoCloud";
+// import Stats from "../components/Stats";
+// import { protocols } from "../components/Protocol/ProtocolSection";
 // import LogoGrid from "../components/LogoClouds/LogoGrid";
-import { Logo } from "../components/LogoClouds/LogoCloud";
-import LogoGrid from "../components/LogoClouds/LogoGrid";
+// import { Logo } from "../components/LogoClouds/LogoCloud";
+// import LogoGrid from "../components/LogoClouds/LogoGrid";
 import MarqueeLogo from "../components/Landing/MarqueeLogo";
 import BoxContainer from "../components/common/BoxContainer";
 import BlurBox from "../components/common/BlurBox";
@@ -23,46 +22,46 @@ import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
 // import Advisors from "../components/Landing/Advisors";
 
-const dataPublishers: Logo[] = [
-  {
-    name: "Skynet Trading",
-    src: "/assets/publishers/skynet.svg",
-    href: "https://www.skynettrading.com/",
-  },
-  {
-    name: "Flowdesk",
-    src: "/assets/publishers/flowdesk.webp",
-    href: "https://www.flowdesk.co/",
-  },
-  {
-    name: "Kaiko",
-    src: "/assets/publishers/kaiko.webp",
-    href: "https://www.kaiko.com/",
-  },
-];
+// const dataPublishers: Logo[] = [
+//   {
+//     name: "Skynet Trading",
+//     src: "/assets/publishers/skynet.svg",
+//     href: "https://www.skynettrading.com/",
+//   },
+//   {
+//     name: "Flowdesk",
+//     src: "/assets/publishers/flowdesk.webp",
+//     href: "https://www.flowdesk.co/",
+//   },
+//   {
+//     name: "Kaiko",
+//     src: "/assets/publishers/kaiko.webp",
+//     href: "https://www.kaiko.com/",
+//   },
+// ];
 
-const ecosystemPartners: Logo[] = [
-  {
-    name: "Consensys",
-    src: "/assets/ecosystem/consensys.webp",
-    href: "https://consensys.net/",
-  },
-  {
-    name: "Argent",
-    src: "/assets/ecosystem/argent.png",
-    href: "https://www.argent.xyz/",
-  },
-  {
-    name: "Equilibrium",
-    src: "/assets/ecosystem/equilibrium.png",
-    href: "https://equilibrium.co/",
-  },
-  {
-    name: "Braavos",
-    src: "/assets/ecosystem/braavos.webp",
-    href: "https://braavos.app/",
-  },
-];
+// const ecosystemPartners: Logo[] = [
+//   {
+//     name: "Consensys",
+//     src: "/assets/ecosystem/consensys.webp",
+//     href: "https://consensys.net/",
+//   },
+//   {
+//     name: "Argent",
+//     src: "/assets/ecosystem/argent.png",
+//     href: "https://www.argent.xyz/",
+//   },
+//   {
+//     name: "Equilibrium",
+//     src: "/assets/ecosystem/equilibrium.png",
+//     href: "https://equilibrium.co/",
+//   },
+//   {
+//     name: "Braavos",
+//     src: "/assets/ecosystem/braavos.webp",
+//     href: "https://braavos.app/",
+//   },
+// ];
 
 const IndexPage = () => (
   <div className="w-full">

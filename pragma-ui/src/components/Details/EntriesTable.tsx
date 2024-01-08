@@ -98,7 +98,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
 
   return (
     <div className="w-full max-w-7xl overflow-y-hidden overflow-x-scroll rounded-lg shadow-md ring-2 ring-white ring-opacity-5">
-      <table className="w-full divide-y divide-dark font-mono">
+      <table className="divide-dark w-full divide-y font-mono">
         <thead className="bg-">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -107,7 +107,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
                   {header.isPlaceholder ? null : (
                     <div
                       className={classNames(
-                        "px-3 py-4 text-left font-sans text-lg text-grey"
+                        "text-grey px-3 py-4 text-left font-sans text-lg"
                       )}
                     >
                       {flexRender(

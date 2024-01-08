@@ -1,4 +1,4 @@
-import React, { CSSProperties, Component, useState } from "react";
+import React, { CSSProperties, Component } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import GreenText from "../common/GreenText";
@@ -29,7 +29,14 @@ const categories: Category[] = [
   },
 ];
 
+/**
+ * Testimonial Carousel Component displaying testimonials in a carousel format.
+ */
 export class TestimonialCarousel extends Component {
+  /**
+   * Renders the Testimonial Carousel Component.
+   * @return {JSX.Element} JSX for the Testimonial Carousel.
+   */
   render() {
     const arrowStyles: CSSProperties = {
       position: "absolute",

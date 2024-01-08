@@ -2,10 +2,8 @@ import React from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
 import GreenTitle from "../common/GreenTitle";
-import GreenBox from "../common/GreenBox";
 import { TestimonialCarousel } from "./TestimonialCarousel";
 
 const Testimonial = () => (

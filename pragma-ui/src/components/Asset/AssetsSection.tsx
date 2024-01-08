@@ -32,7 +32,8 @@ const AssetsSection = () => {
         <div className="flex items-center">
           <Button
             variant="outline"
-            color="slate"
+            color="mint"
+            center={true}
             onClick={() => setNumToShow(incrementShow(numToShow))}
             icon={ChevronDownIcon}
             className="rounded-l-lg rounded-r-none"
@@ -43,7 +44,8 @@ const AssetsSection = () => {
           </Button>
           <Button
             variant="outline"
-            color="slate"
+            color="mint"
+            center={true}
             onClick={() => setNumToShow(SHOW_DEFAULT)}
             icon={ChevronUpIcon}
             className="rounded-r-lg rounded-l-none border-l-0"

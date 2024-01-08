@@ -1,16 +1,16 @@
 import React from "react";
 import { NextSeo } from "next-seo";
 import { DefaultCTASection } from "../components/CTASection";
-import SectionContainer from "../components/common/SectionContainer";
 import Code from "../components/Code/Code";
 import Heading from "../components/Heading";
 import ProtocolSection from "../components/Protocol/ProtocolSection";
+import BoxContainer from "../components/common/BoxContainer";
 
 const ProtocolsPage = () => (
   <>
     <NextSeo title="Protocols" />
     <div className="w-full">
-      <SectionContainer className="bg-dark" first>
+      <BoxContainer className="bg-dark">
         <Heading
           title="StarkNet's leading protocols"
           subtitle="Meet our users"
@@ -18,11 +18,11 @@ const ProtocolsPage = () => (
           href="https://docs.pragmaoracle.com/using-pragma/consuming-data"
           hrefText="Get verifiable data for your project"
         />
-      </SectionContainer>
-      <SectionContainer className="bg-black sm:!pt-0">
+      </BoxContainer>
+      <BoxContainer className="bg-black sm:!pt-0">
         <ProtocolSection />
-      </SectionContainer>
-      <SectionContainer className="bg-dark">
+      </BoxContainer>
+      <BoxContainer className="bg-dark">
         <Heading
           title="A few simple lines to integrate"
           subtitle="Try it yourself"
@@ -31,10 +31,10 @@ const ProtocolsPage = () => (
           hrefText="Read the documentation"
         />
         <Code />
-      </SectionContainer>
-      <SectionContainer className="bg-black">
+      </BoxContainer>
+      <BoxContainer className="bg-black">
         <DefaultCTASection />
-      </SectionContainer>
+      </BoxContainer>
     </div>
   </>
 );

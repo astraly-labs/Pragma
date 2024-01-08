@@ -9,7 +9,7 @@ const Blog = () => (
     <GreenUpperText className="pb-3">Read our blog</GreenUpperText>
     <div className="flex w-full justify-between pb-12">
       <GreenTitle>Stay updated with Pragma</GreenTitle>
-      <ButtonLink variant="outline" color="mint" href="/">
+      <ButtonLink center={false} variant="outline" color="mint" href="/">
         Read All
       </ButtonLink>
     </div>

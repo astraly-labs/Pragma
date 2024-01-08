@@ -1,16 +1,15 @@
 import React from "react";
 import { NextSeo } from "next-seo";
 import { ChatIcon, CodeIcon } from "@heroicons/react/outline";
-import SectionContainer from "../components/common/SectionContainer";
 import Heading from "../components/Heading";
 import CTASection from "../components/CTASection";
-import PublishersSeciton from "../components/Publisher/PublishersSection";
+import BoxContainer from "../components/common/BoxContainer";
 
 const PublishersPage = () => (
   <>
     <NextSeo title="Publishers" />
     <div className="w-full">
-      <SectionContainer className="bg-dark" first>
+      <BoxContainer className="bg-dark">
         <Heading
           title="Your favorite giants"
           subtitle="Meet our publishers"
@@ -18,9 +17,8 @@ const PublishersPage = () => (
           href="mailto:support@pragmaoracle.com?body=Hi%Pragma%20Team,%0AWe%20have%20high-quality%20data%20and%20would%20like%20to%20provide%20it%20to%20your%20network."
           hrefText="Find out how you can become a publisher"
         />
-        <PublishersSeciton />
-      </SectionContainer>
-      <SectionContainer className="bg-black">
+      </BoxContainer>
+      <BoxContainer className="bg-black">
         <CTASection
           title="Interested in becoming a publisher?"
           description="We'd love to have you onboard. Shoot us an email and we will help you figure out what is best for you."
@@ -35,7 +33,7 @@ const PublishersPage = () => (
             icon: CodeIcon,
           }}
         />
-      </SectionContainer>
+      </BoxContainer>
     </div>
   </>
 );

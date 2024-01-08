@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";

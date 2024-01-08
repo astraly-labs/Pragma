@@ -12,6 +12,8 @@ const variantStyles = {
   solid: {
     mint: "rounded-full bg-mint text-darkGreen border-mint hover:text-mint px-6 py-4",
     grey: "rounded-md	bg-whiteTrans border-whiteTrans px-6 py-3 text-lightGreen font-light font-sans",
+    lightGreen:
+      "rounded-full bg-lightGreen text-darkGreen border-lightGreen hover:bg-lightGreen hover:text-darkGreen px-6 py-4",
   },
   outline: {
     mint: "border-mint text-mint hover:bg-mint hover:text-darkGreen px-6 py-4",

@@ -4,21 +4,17 @@ import GreenBox from "../common/GreenBox";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Button } from "../common/Button";
-import { ClipboardCopyIcon } from "@heroicons/react/outline";
+import CopyButtonComponent from "../common/CopyCode";
 
 interface Category {
   title: string;
 }
 
+/**
+ * Renders a code snippet component with tabs.
+ * @return {JSX.Element} JSX for the code snippet component.
+ */
 export default function CodeSnippet() {
-  const [isCopied, setIsCopied] = useState(false);
-  async function copyCode() {
-    setIsCopied(true);
-    await new Promise((f) => setTimeout(f, 1500));
-    setIsCopied(false);
-  }
   const [categories] = useState<Category[]>([
     {
       title: "Price Feed",
@@ -76,43 +72,19 @@ export default function CodeSnippet() {
               <span className={classNames(styles.purpleCode)}>ImnotDev</span>();
               <br />
               <div className="absolute bottom-9">
-                <CopyToClipboard
-                  text="pip install pragma-sdk"
-                  onCopy={() => copyCode()}
-                >
-                  <Button variant="solid" color="grey" center={false}>
-                    <img src="/assets/vectors/copy.svg" className="pr-3" />
-                    Copy Code
-                  </Button>
-                </CopyToClipboard>
+                <CopyButtonComponent textToCopy={"test"} />
               </div>
             </Tab.Panel>
             <Tab.Panel className={"pt-6"} key={1}>
               {" "}
               <div className="absolute bottom-9">
-                <CopyToClipboard
-                  text="pip install pragma-sdk"
-                  onCopy={() => copyCode()}
-                >
-                  <Button variant="solid" color="grey" center={false}>
-                    <img src="/assets/vectors/copy.svg" className="pr-3" />
-                    Copy Code
-                  </Button>
-                </CopyToClipboard>
+                <CopyButtonComponent textToCopy={"test"} />
               </div>
             </Tab.Panel>
             <Tab.Panel className={"pt-6"} key={1}>
               {" "}
               <div className="absolute bottom-9">
-                <CopyToClipboard
-                  text="pip install pragma-sdk"
-                  onCopy={() => copyCode()}
-                >
-                  <Button variant="solid" color="grey" center={false}>
-                    <img src="/assets/vectors/copy.svg" className="pr-3" />
-                    Copy Code
-                  </Button>
-                </CopyToClipboard>
+                <CopyButtonComponent textToCopy={"test"} />
               </div>
             </Tab.Panel>
           </Tab.Panels>

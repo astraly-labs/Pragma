@@ -96,28 +96,28 @@ export interface SocialMedia {
   href: string;
 }
 
-const socials: SocialMedia[] = [
-  {
-    name: "GitHub",
-    src: "/assets/social/github.svg",
-    href: "https://github.com/Astraly-Labs/Pragma",
-  },
-  {
-    name: "Twitter",
-    src: "/assets/social/twitter.svg",
-    href: "https://twitter.com/PragmaOracle",
-  },
-  {
-    name: "Medium",
-    src: "/assets/social/medium.svg",
-    href: "https://mirror.xyz/pragmagic.eth",
-  },
-  {
-    name: "Discord",
-    src: "/assets/social/discord.svg",
-    href: "https://discord.gg/N7sM7VzfJB",
-  },
-];
+// const socials: SocialMedia[] = [
+//   {
+//     name: "GitHub",
+//     src: "/assets/social/github.svg",
+//     href: "https://github.com/Astraly-Labs/Pragma",
+//   },
+//   {
+//     name: "Twitter",
+//     src: "/assets/social/twitter.svg",
+//     href: "https://twitter.com/PragmaOracle",
+//   },
+//   {
+//     name: "Medium",
+//     src: "/assets/social/medium.svg",
+//     href: "https://mirror.xyz/pragmagic.eth",
+//   },
+//   {
+//     name: "Discord",
+//     src: "/assets/social/discord.svg",
+//     href: "https://discord.gg/N7sM7VzfJB",
+//   },
+// ];
 
 const Footer = () => (
   <div className="mt-20 w-full overflow-hidden bg-greenFooter">
