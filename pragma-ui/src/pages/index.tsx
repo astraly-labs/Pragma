@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Hero from "../components/Landing/Hero";
 // import AssetsSection from "../components/Asset/AssetsSection";
 // import { DefaultCTASection } from "../components/CTASection";
@@ -63,46 +63,83 @@ import ReadyBox from "../components/common/ReadyBox";
 //   },
 // ];
 
-const IndexPage = () => (
-  <div className="w-full">
-    {/* <Banner /> */}
-    <Hero />
-    <MarqueeLogo />
-    <BoxContainer>
-      <BlurBox
-        firstText="Price Feeds"
-        title="The data your smart-contracts always wanted."
-        generalText="Your smart contracts are decentralized, transparent and composable. The data you’re using to feed them should have the same properties. Start integrating Pragma’s price feed now and unlock the power of verifiable data."
-        urlSvg="/assets/vectors/vector1.svg"
-        textButton="Integrate Now"
-      />
-    </BoxContainer>
-    <BoxContainer>
-      <CodeSnippet />
-      <BlurBox
-        firstText="Start Building"
-        title="Integrate new feeds, or build new ones."
-        generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
-        urlSvg="/assets/vectors/vector2.svg"
-        textButton="Start Building"
-      />
-    </BoxContainer>
-    <BoxContainer>
-      <Architecture />
-    </BoxContainer>
-    <BoxContainer>
-      <Testimonial />
-    </BoxContainer>
-    <BoxContainer>
-      <Blog />
-    </BoxContainer>
-    <BoxContainer>
-      <Events />
-    </BoxContainer>
-    <BoxContainer>
-      <ReadyBox />
-    </BoxContainer>
-  </div>
-);
+const IndexPage = () => {
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  useEffect(() => {
+    // Check if the window object is available
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Clean-up function to remove event listener
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  // Define different image sources based on screen size
+  const getImageSource1 = () => {
+    if (windowWidth < 640) {
+      return "/assets/vectors/vector1bis.svg";
+    } else {
+      return "/assets/vectors/vector1.svg";
+    }
+  };
+
+  const getImageSource2 = () => {
+    if (windowWidth < 640) {
+      return "/assets/vectors/vector2bis.svg";
+    } else {
+      return "/assets/vectors/vector2.svg";
+    }
+  };
+
+  return (
+    <div className="w-full">
+      {/* <Banner /> */}
+      <Hero />
+      <MarqueeLogo />
+      <BoxContainer>
+        <BlurBox
+          firstText="Price Feeds"
+          title="The data your smart-contracts always wanted."
+          generalText="Your smart contracts are decentralized, transparent and composable. The data you’re using to feed them should have the same properties. Start integrating Pragma’s price feed now and unlock the power of verifiable data."
+          urlSvg={getImageSource1()}
+          textButton="Integrate Now"
+        />
+      </BoxContainer>
+      <BoxContainer>
+        <CodeSnippet />
+        <BlurBox
+          firstText="Start Building"
+          title="Integrate new feeds, or build new ones."
+          generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
+          urlSvg={getImageSource2()}
+          textButton="Start Building"
+        />
+      </BoxContainer>
+      <BoxContainer>
+        <Architecture />
+      </BoxContainer>
+      <BoxContainer>
+        <Testimonial />
+      </BoxContainer>
+      <BoxContainer>
+        <Blog />
+      </BoxContainer>
+      <BoxContainer>
+        <Events />
+      </BoxContainer>
+      <BoxContainer>
+        <ReadyBox />
+      </BoxContainer>
+    </div>
+  );
+};
 
 export default IndexPage;

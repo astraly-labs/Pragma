@@ -162,15 +162,19 @@ const NavHeader = () => {
           focus
           className={classNames(
             styles.mobilePop,
-            "absolute inset-x-0 top-0 z-10 origin-top-right transform transition md:hidden"
+            "absolute inset-x-0 top-0 origin-top-right transform transition md:hidden"
           )}
         >
-          <div className="relative m-auto flex h-full flex-col justify-center rounded-lg">
+          <div
+            className={classNames(
+              "relative m-auto flex h-full flex-col justify-center rounded-lg"
+            )}
+          >
             <div className="px-5 pb-6">
               <div className="absolute top-2 left-4 flex w-full items-center justify-between">
                 <div>
                   <img
-                    className="h-8 w-auto"
+                    className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
                     src="pragma-og-img.png"
                     alt="Pragma"
                   />

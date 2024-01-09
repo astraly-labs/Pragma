@@ -13,7 +13,6 @@
 
 .mobilePop {
     border-radius: 20px;
-    z-index: 2;
     border: 0.5px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
     background: rgba(0, 71, 56, 0.70);
     box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
@@ -24,7 +23,7 @@
     align-items: center;
     flex: 1 0 0;
     align-self: stretch;
-    height: calc(100vh - 80px);
+    height: 90vh;
 }
 
 .input {

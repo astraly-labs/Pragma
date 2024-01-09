@@ -13,7 +13,7 @@ const GreenTitle: React.FC<GreenTitleProps> = ({
 }) => (
   <div
     className={classNames(
-      "leading-14 text-5xl font-light text-lightGreen	",
+      "leading-14 text-3xl font-light text-lightGreen md:text-5xl	",
       className
     )}
     {...props}

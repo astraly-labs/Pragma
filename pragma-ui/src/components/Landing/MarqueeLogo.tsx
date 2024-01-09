@@ -41,7 +41,7 @@ const ecosystem: Ecosystem[] = [
 
 const MarqueeLogo = () => (
   <div className={classNames(styles.boxMarquee)}>
-    <Marquee>
+    <Marquee gradient={true} gradientColor="#082F28" gradientWidth={300}>
       {ecosystem.map(({ name, src }, index) => (
         <img key={index} className="h-8 px-8" src={src} alt={name} />
       ))}

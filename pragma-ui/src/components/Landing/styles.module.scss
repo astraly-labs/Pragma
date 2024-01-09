@@ -22,17 +22,6 @@
     /* 120% */
     letter-spacing: -1.2px;
 }
-@media (max-width: 640px) {
-    .heading {
-        font-size: 40px;
-        line-height: 48px;
-    }
-    .verifiable{
-        font-size: 40px;
-        line-height: 48px;
-
-    }
-}
 
 .videoBg {
     width: 100%;
@@ -45,7 +34,7 @@
     display: flex;
     margin: 32px;
     margin-bottom: 0;
-    padding: 20px 40px;
+    padding: 20px 0px;
     justify-content: center;
     align-items: center;
     gap: 50px;
@@ -53,6 +42,8 @@
     border: 1px solid transparent;
     background: linear-gradient(#082F28, #082F28) padding-box, linear-gradient(150deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 055%, rgba(255, 255, 255, 0.06%), rgba(255, 255, 255, 0.205) 100%) border-box;
     backdrop-filter: blur(12.5px);
+    overflow: hidden;
+    max-width: 100%;
 }
 
 .boxBlur {
@@ -141,4 +132,19 @@
 
 .carouselWrapper {
     height: 540px;
+}
+
+@media (max-width: 640px) {
+    .heading {
+        font-size: 40px;
+        line-height: 48px;
+    }
+    .verifiable{
+        font-size: 40px;
+        line-height: 48px;
+
+    }
+    .boxMarquee {
+        margin:12px;
+    }
 }

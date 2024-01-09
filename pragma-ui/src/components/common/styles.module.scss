@@ -27,8 +27,25 @@
 
 @media (max-width: 640px) {
     .greenText{
-        font-size:14px;
-        line-height: 21px;
+        font-size:16px;
+        line-height: 24px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .blurBox{
+        padding: 24px 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .blurBox{
+        min-width: unset!important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .blurBox{
+        min-width: 707px;
     }
 }
 
@@ -97,7 +114,6 @@
     bottom: 20px;
     right: 20px;
     padding: 40px;
-    background-color: (0, 71, 56, 0.50);
     border: 0.5px solid rgba(181, 240, 229, 0.12);
     border-radius: 20px;
     box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
