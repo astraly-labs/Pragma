@@ -114,7 +114,7 @@ const NavHeader = () => {
               <div>
                 <span className="sr-only">Pragma</span>
                 <img
-                  className="h-8 w-auto md:h-6 lg:h-8"
+                  className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
                   src="/pragma-og-img.png"
                   alt="Pragma"
                 />
@@ -133,7 +133,7 @@ const NavHeader = () => {
           </div>
           <Popover.Group
             as="nav"
-            className="hidden md:flex md:space-x-5 lg:space-x-10"
+            className="hidden md:flex md:space-x-4 lg:space-x-10"
           >
             {resources.map((resource) => (
               <a

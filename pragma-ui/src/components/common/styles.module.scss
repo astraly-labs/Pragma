@@ -25,6 +25,13 @@
     /* 155.556% */
 }
 
+@media (max-width: 640px) {
+    .greenText{
+        font-size:14px;
+        line-height: 21px;
+    }
+}
+
 .svgIllustration {
     position: absolute;
     width: 100%;
