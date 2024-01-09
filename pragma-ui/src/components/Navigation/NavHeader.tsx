@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import {
@@ -34,7 +34,7 @@ const resources: Resource[] = [
   {
     name: "Ecosystem",
     description: "Start using our data by reading our docs.",
-    href: "/",
+    href: "/features",
     icon: CodeIcon,
   },
   {
@@ -93,69 +93,81 @@ const mobileResources = [
   },
 ];
 
-const NavHeader = () => (
-  <Popover className={"absolute w-full p-8"}>
-    <Popover className={styles.container}>
-      <div className="flex items-center justify-between md:justify-start md:space-x-10 lg:space-x-0">
-        <div className="flex justify-start lg:w-0 lg:flex-1">
-          <Link href="/">
-            <div>
-              <span className="sr-only">Pragma</span>
-              <img
-                className="h-8 w-auto"
-                src="/pragma-og-img.png"
-                alt="Pragma"
-              />
-            </div>
-          </Link>
-        </div>
-        <div className="-my-2 -mr-2 md:hidden">
-          {/* To open mobile menu */}
-          <Popover.Button className="hover:bg-dark focus:ring-primary inline-flex items-center justify-center rounded-md p-2 text-white hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-inset">
-            <span className="sr-only">Open menu</span>
-            <MenuIcon className="h-6 w-6" aria-hidden="true" />
-          </Popover.Button>
-        </div>
-        <Popover.Group as="nav" className="hidden space-x-10 md:flex">
-          {resources.map((resource) => (
-            <a
-              href={resource.href}
-              key={resource.name}
-              className="text-base font-medium text-lightGreen hover:text-white"
+const NavHeader = () => {
+  const [isHidden, setIsHidden] = useState(false);
+  return (
+    <Popover className={"absolute w-full p-8"}>
+      <div
+        className={classNames(
+          styles.container,
+          isHidden ? "border-0 px-0 py-0" : "block"
+        )}
+      >
+        <div
+          className={classNames(
+            " items-center justify-between md:space-x-5 lg:space-x-0",
+            isHidden ? "hidden" : "flex"
+          )}
+        >
+          <div className="flex justify-start lg:w-0 lg:flex-1">
+            <Link href="/">
+              <div>
+                <span className="sr-only">Pragma</span>
+                <img
+                  className="h-8 w-auto md:h-6 lg:h-8"
+                  src="/pragma-og-img.png"
+                  alt="Pragma"
+                />
+              </div>
+            </Link>
+          </div>
+          <div className="-my-2 -mr-2 md:hidden">
+            {/* To open mobile menu */}
+            <Popover.Button
+              onClick={() => setIsHidden(true)}
+              className="hover:bg-dark inline-flex items-center justify-center rounded-md p-2 text-lightGreen"
             >
-              {resource.name}
-            </a>
-          ))}
-          {/* <NavPopover
+              <span className="sr-only">Open menu</span>
+              <MenuIcon className="h-6 w-6" aria-hidden="true" />
+            </Popover.Button>
+          </div>
+          <Popover.Group
+            as="nav"
+            className="hidden md:flex md:space-x-5 lg:space-x-10"
+          >
+            {resources.map((resource) => (
+              <a
+                href={resource.href}
+                key={resource.name}
+                className="text-base font-medium text-lightGreen hover:text-white"
+              >
+                {resource.name}
+              </a>
+            ))}
+            {/* <NavPopover
           buttonName="More"
           content={additional}
           callsToAction={callsToAction}
         /> */}
-        </Popover.Group>
-        <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-          <ButtonLink center={false} variant="solid" color="mint" href="/">
-            Start building
-          </ButtonLink>
+          </Popover.Group>
+          <div className="hidden items-center justify-end md:flex lg:w-0 lg:flex-1">
+            <ButtonLink center={false} variant="solid" color="mint" href="/">
+              Start building
+            </ButtonLink>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Version */}
-      <StyledTransition
-        enterFrom="scale-95"
-        enterTo="scale-100"
-        leaveFrom="scale-100"
-        leaveTo="scale-95"
-      >
+        {/* Mobile Version */}
         <Popover.Panel
           focus
           className={classNames(
             styles.mobilePop,
-            "absolute inset-x-0 top-0 z-10 origin-top-right transform p-2 transition md:hidden"
+            "absolute inset-x-0 top-0 z-10 origin-top-right transform transition md:hidden"
           )}
         >
-          <div className="divide-grey bg-dark divide-y-2 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-            <div className="px-5 pt-5 pb-6">
-              <div className="flex items-center justify-between">
+          <div className="relative m-auto flex h-full flex-col justify-center rounded-lg">
+            <div className="px-5 pb-6">
+              <div className="absolute top-2 left-4 flex w-full items-center justify-between">
                 <div>
                   <img
                     className="h-8 w-auto"
@@ -163,8 +175,11 @@ const NavHeader = () => (
                     alt="Pragma"
                   />
                 </div>
-                <div className="-mr-2">
-                  <Popover.Button className="hover:bg-dark hover:text-grey focus:ring-primary inline-flex items-center justify-center rounded-md bg-black p-2 text-white focus:outline-none focus:ring-2 focus:ring-inset">
+                <div className="my-auto mr-7">
+                  <Popover.Button
+                    onClick={() => setIsHidden(false)}
+                    className="inline-flex items-center justify-center rounded-full p-1 text-lightGreen"
+                  >
                     <span className="sr-only">Close menu</span>
                     <XIcon className="h-6 w-6" aria-hidden="true" />
                   </Popover.Button>
@@ -176,13 +191,9 @@ const NavHeader = () => (
                     <a
                       key={resource.name}
                       href={resource.href}
-                      className="-m-3 flex items-center rounded-md p-3 hover:bg-black"
+                      className="-m-3 flex items-center rounded-md p-3 text-center"
                     >
-                      <resource.icon
-                        className="text-primary h-6 w-6 flex-shrink-0"
-                        aria-hidden="true"
-                      />
-                      <span className="text-grey ml-3 text-base font-medium">
+                      <span className=" mx-auto font-medium text-lightGreen hover:text-white">
                         {resource.name}
                       </span>
                     </a>
@@ -190,33 +201,25 @@ const NavHeader = () => (
                 </nav>
               </div>
             </div>
-            <div className="space-y-2 py-6 px-5">
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                {additional.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-grey text-base font-medium hover:text-white"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-              <div className="flex flex-col items-center">
-                <SearchBar />
-                <p className="text-grey mt-6 text-center text-base font-medium">
-                  Need help?{" "}
-                  <a href="#" className="text-primary hover:text-secondary">
-                    Contact us
-                  </a>
-                </p>
-              </div>
+            <div className="mx-auto space-y-2 py-6 px-5">
+              {/* {additional.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="mx-auto text-base font-medium text-lightGreen"
+                >
+                  {item.name}
+                </a>
+              ))} */}
+              <ButtonLink variant="solid" color="mint" center={true} href="/">
+                Start Building
+              </ButtonLink>
             </div>
           </div>
         </Popover.Panel>
-      </StyledTransition>
+      </div>
     </Popover>
-  </Popover>
-);
+  );
+};
 
 export default NavHeader;

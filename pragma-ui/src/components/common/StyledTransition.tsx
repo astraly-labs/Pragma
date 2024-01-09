@@ -26,8 +26,8 @@ const StyledTransition: React.FC<StyledTransitionProps> = ({
   <Transition
     as={Fragment}
     show={show}
-    enter={classNames("transition duration-200 ease-out", enter)}
-    enterFrom={classNames("opacity-0", enterFrom)}
+    enter={classNames("transition duration-50 ease-out", enter)}
+    enterFrom={classNames("opacity-50", enterFrom)}
     enterTo={classNames("opacity-100", enterTo)}
     leave={classNames("transition duration-100 ease-in", leave)}
     leaveFrom={classNames("opacity-100", leaveFrom)}
