@@ -28,16 +28,16 @@ export default function CodeSnippet() {
   ]);
 
   return (
-    <GreenBox className="relative w-full">
+    <GreenBox className="relative w-full pb-40">
       <div className=" w-full">
         <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-full bg-lightBlur">
+          <Tab.List className="flex rounded-full bg-lightBlur md:space-x-1">
             {categories.map((category, index) => (
               <Tab
                 key={index}
                 className={({ selected }) =>
                   classNames(
-                    "w-full rounded-full p-6 text-sm font-medium leading-5",
+                    "w-full rounded-full p-2 text-sm font-medium leading-5 sm:p-4 md:p-6",
                     "focus:outline-none",
                     selected
                       ? "bg-mint text-darkGreen"

@@ -1,7 +1,6 @@
 .blurBox {
     display: flex;
     position: relative;
-    min-width: 788px;
     padding: 56px;
     flex-direction: column;
     align-items: flex-start;
@@ -12,6 +11,7 @@
     backdrop-filter: blur(12.5px);
     z-index: 10;
     min-height: 623px;
+    min-width: 55%;
 }
 
 .greenText {
@@ -37,15 +37,10 @@
     }
 }
 
-@media (max-width: 768px) {
-    .blurBox{
-        min-width: unset!important;
-    }
-}
 
 @media (max-width: 1024px) {
     .blurBox{
-        min-width: 707px;
+        min-width: unset!important;
     }
 }
 
