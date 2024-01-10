@@ -20,6 +20,8 @@ import Testimonial from "../components/Landing/Testimonial/Testimonial";
 import Blog from "../components/Landing/Blog/Blog";
 import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
+import { ChartBox } from "../components/common/ChartBox";
+import AssetBox from "../components/common/AssetBox";
 // import Advisors from "../components/Landing/Advisors";
 
 // const dataPublishers: Logo[] = [
@@ -63,6 +65,35 @@ import ReadyBox from "../components/common/ReadyBox";
 //   },
 // ];
 
+const initialData = [
+  { time: "2018-12-22", value: 32.51 },
+  { time: "2018-12-23", value: 31.11 },
+  { time: "2018-12-24", value: 27.02 },
+  { time: "2018-12-25", value: 27.32 },
+  { time: "2018-12-26", value: 25.17 },
+  { time: "2018-12-27", value: 28.89 },
+  { time: "2018-12-28", value: 25.46 },
+  { time: "2018-12-29", value: 23.92 },
+  { time: "2018-12-30", value: 22.68 },
+  { time: "2018-12-31", value: 22.67 },
+];
+
+const assets = [
+  {
+    pair: "BTC/USD",
+    lastPrice: 45000,
+    var24h: 1200,
+    var24hPercent: 2.7,
+  },
+  {
+    pair: "ETH/USD",
+    lastPrice: 3500,
+    var24h: -200,
+    var24hPercent: -4.2,
+  },
+  // Add more asset data as needed...
+];
+
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -100,7 +131,7 @@ const IndexPage = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-hidden">
       {/* <Banner /> */}
       <Hero />
       <MarqueeLogo />
@@ -112,6 +143,10 @@ const IndexPage = () => {
           urlSvg={getImageSource1()}
           textButton="Integrate Now"
         />
+        <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
+          <ChartBox data={initialData} pairid={"ETH / USD"} />
+          <AssetBox assets={assets} />
+        </div>
       </BoxContainer>
       <BoxContainer>
         <CodeSnippet />

@@ -11,7 +11,7 @@
     backdrop-filter: blur(12.5px);
     z-index: 10;
     min-height: 623px;
-    min-width: 55%;
+    min-width: 50%;
 }
 
 .greenText {
@@ -109,6 +109,34 @@
 .close:hover {
     background-color: #B5F0E51F;
 }
+
+.chartLayout{
+    align-items: flex-start;
+    height: fit-content;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.chartBox{
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid transparent;
+    background: linear-gradient(#082F28, #082F28) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+    width: 100%;
+}
+
+.assetBox{
+    display: flex;
+padding: 36px;
+flex-direction: column;
+align-items: flex-start;
+gap: 10px;
+border-radius: 20px;
+border: 1px solid rgba(181, 240, 229, 0.12);
+background: rgba(27, 99, 82, 0.12);
+}
+
 @media (max-width: 1024px) {
     .blurBox{
         min-width: unset!important;
@@ -137,5 +165,11 @@
     }
     .darkGreenBox {
         padding: 24px 32px;
+    }
+    .assetBox{
+        padding: 24px;
+    }
+    .chartBox{
+        padding: 24px;
     }
 }

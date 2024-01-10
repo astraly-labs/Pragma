@@ -28,7 +28,7 @@ export default function CodeSnippet() {
   ]);
 
   return (
-    <GreenBox className="relative w-full pb-40">
+    <GreenBox className="relative w-full pb-40 lg:w-5/12">
       <div className=" w-full">
         <Tab.Group>
           <Tab.List className="flex rounded-full bg-lightBlur md:space-x-1">
