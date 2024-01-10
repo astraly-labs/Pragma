@@ -29,10 +29,10 @@ const events = [
 const Events = () => (
   <div
     className={classNames(
-      "align-row max-w-screen flex gap-28 overflow-hidden py-28"
+      "align-row max-w-screen flex flex-col gap-10 overflow-hidden py-4 md:flex-row md:gap-28 md:py-28"
     )}
   >
-    <div className="flex w-5/12 flex-col justify-center">
+    <div className="flex w-full flex-col justify-center md:w-5/12">
       <GreenUpperText className="pb-3">Events</GreenUpperText>
       <GreenTitle className="pb-6">Find us at these events</GreenTitle>
       <GreenText>
@@ -40,7 +40,7 @@ const Events = () => (
         possible by leveraging new zk-technology.
       </GreenText>
     </div>
-    <div className="flex w-6/12 flex-col justify-start">
+    <div className="flex w-full flex-col justify-start md:w-6/12">
       {events.map((event, index: number) => (
         <EventBox
           name={event.name}
