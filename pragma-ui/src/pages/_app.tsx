@@ -87,7 +87,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         connectors={connectors}
         defaultProvider={provider}
       >
-        <div className="flex min-h-screen flex-col justify-start bg-darkGreen">
+        <div className="text-sans flex min-h-screen flex-col justify-start bg-darkGreen">
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
             <CommandPallate isOpen={isSearchOpen} />
