@@ -133,14 +133,17 @@ const Footer = () => (
             />
           </div>
         </Link>
-        <p className="prose-slate w-5/12 pt-5 text-lightGreen">
+        <p className="lg:5/12 prose-slate w-full pt-5 text-lightGreen sm:w-10/12 md:w-7/12">
           Pragma is the leading oracle on Starknet, built to empower native
           protocols to realize their ambitious potential.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-10">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-3 lg:grid-cols-10 lg:gap-10">
         {content.map((column) => (
-          <nav key={column.heading} className="col-span-1 lg:col-span-2">
+          <nav
+            key={column.heading}
+            className="col-span-3 md:col-span-1 lg:col-span-2"
+          >
             <p className="text-xs uppercase	 tracking-wider text-LightGreenFooter">
               {column.heading}
             </p>
@@ -161,14 +164,14 @@ const Footer = () => (
             </div>
           </nav>
         ))}
-        <div className="col-span-4">
+        <div className="col-span-4 max-w-md">
           <div className="pb-3 text-lg text-lightGreen">
             Subscribe to our mailing list
           </div>
           <InputComponent placeholderText="Email address" />
         </div>
       </div>
-      <LightGreenUpper className="mt-10 mb-6 pt-10 text-left md:mb-0">
+      <LightGreenUpper className="mt-4 pt-3 text-left md:mt-10 md:pt-10">
         © Pragma Labs - {new Date().getFullYear()}. All rights reserved.
       </LightGreenUpper>
     </div>
