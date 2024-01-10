@@ -2,7 +2,7 @@
     font-family: "IBM Plex Sans";
     font-style: normal;
     font-display: swap;
-    src: url(/fonts/IBMPlexSans-Light.woff2) format("woff2");
+    src: url(/fonts/IBMPlexSans-Light.ttf) format("woff2");
     line-height: 16px;
     /* 100% */
     letter-spacing: 0.32px;
