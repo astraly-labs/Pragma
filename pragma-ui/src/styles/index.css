@@ -18,6 +18,28 @@
     letter-spacing: 0.7px;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #042420;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #15FF81;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B5F0E5;
+  }
+  
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

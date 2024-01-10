@@ -91,7 +91,24 @@ const assets = [
     var24h: -200,
     var24hPercent: -4.2,
   },
-  // Add more asset data as needed...
+  {
+    pair: "ETH/USD",
+    lastPrice: 3500,
+    var24h: -200,
+    var24hPercent: -4.2,
+  },
+  {
+    pair: "ETH/USD",
+    lastPrice: 3500,
+    var24h: -200,
+    var24hPercent: -4.2,
+  },
+  {
+    pair: "ETH/USD",
+    lastPrice: 3500,
+    var24h: -200,
+    var24hPercent: -4.2,
+  },
 ];
 
 const IndexPage = () => {
@@ -152,7 +169,7 @@ const IndexPage = () => {
         <CodeSnippet />
         <BlurBox
           firstText="Start Building"
-          title="Integrate new feeds, or build new ones."
+          title="Integrate existing feeds, or build new ones."
           generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
           urlSvg={getImageSource2()}
           textButton="Start Building"
