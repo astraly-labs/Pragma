@@ -34,7 +34,9 @@ const EventBox: React.FC<EventsProps> = ({
     )}
     {...props}
   >
-    <div className="leading-14 text-2xl font-light text-lightGreen">{name}</div>
+    <div className="leading-14 text-lg font-light text-lightGreen sm:text-2xl">
+      {name}
+    </div>
     <GreenUpperText>{location}</GreenUpperText>
     <GreenUpperText>{date}</GreenUpperText>
     <a

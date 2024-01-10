@@ -120,6 +120,12 @@
     }
 }
 
+@media (max-width: 768px) {
+    .darkGreenBox {
+        margin: 40px;
+    }
+}
+
 @media (max-width: 640px) {
     .greenText{
         font-size:16px;
