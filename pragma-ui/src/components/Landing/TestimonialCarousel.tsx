@@ -45,6 +45,7 @@ const TestimonialCarousel: React.FC = () => {
       totalSlides={3}
       step={1}
       infinite={true}
+      dragEnabled={false}
       isIntrinsicHeight={true}
       className={styles.carouselWrapper}
     >
