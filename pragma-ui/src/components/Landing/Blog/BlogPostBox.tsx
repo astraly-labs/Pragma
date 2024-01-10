@@ -22,20 +22,22 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
       <div className="w-full">
         <img src={image} />
       </div>
-      <div className="flex flex-col p-6 text-left ">
-        <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
-          {date}
+      <div className="flex h-full w-full flex-col justify-between p-6 text-left">
+        <div className="flex flex-col">
+          <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
+            {date}
+          </div>
+          <div className="leading-14 pb-3 text-2xl font-light text-lightGreen">
+            {title}
+          </div>
+          <div className="pb-8 text-sm text-lightGreen">{description}</div>
         </div>
-        <div className="leading-14 pb-3 text-2xl font-light text-lightGreen">
-          {title}
-        </div>
-        <div className="pb-8 text-sm text-lightGreen">{description}</div>
         <ButtonLink
           variant="outline"
           color="lightGreen"
           center={false}
           href={link}
-          className="mb-6"
+          className="mb-6 mt-auto"
         >
           Read more
         </ButtonLink>

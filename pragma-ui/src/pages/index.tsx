@@ -129,9 +129,7 @@ const IndexPage = () => {
       <BoxContainer>
         <Testimonial />
       </BoxContainer>
-      <BoxContainer>
-        <Blog />
-      </BoxContainer>
+      <Blog />
       <BoxContainer>
         <Events />
       </BoxContainer>

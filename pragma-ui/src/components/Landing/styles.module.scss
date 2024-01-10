@@ -102,8 +102,8 @@
     border-radius: 20px;
     border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
     background: var(--green-12, rgba(27, 99, 82, 0.12));
-    height: 455px;
-    width: 410px;
+    height: 100%;
+    max-height: 500px;
     overflow-x: hidden;
     margin-left: 10px;
     margin-right: 10px;
@@ -136,14 +136,9 @@
 
 .noTransition {
     transition: none !important;
-  }
+}
 
   @media (max-width: 768px) {
-    .blogBox {
-        gap: 10px;
-        height: 190px;
-        width: 250px;
-    }
     .testimonyBox{
         padding: 24px;
         align-items: center;
