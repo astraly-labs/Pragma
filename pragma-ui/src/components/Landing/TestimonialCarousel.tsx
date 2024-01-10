@@ -1,5 +1,4 @@
 import React from "react";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import GreenText from "../common/GreenText";
 import GreenUpperText from "../common/GreenUpperText";
 import styles from "./styles.module.scss";
