@@ -82,8 +82,14 @@ const MarqueeLogo = () => {
         gradientWidth={gradientW}
       >
         {ecosystem.map(({ name, src, link }, index) => (
-          <a target="_blank" className="relative z-10" href={link}>
-            <img key={index} className="h-8 px-8" src={src} alt={name} />
+          <a
+            key={index}
+            rel="noreferrer"
+            target="_blank"
+            className="relative z-10"
+            href={link}
+          >
+            <img className="h-8 px-8" src={src} alt={name} />
           </a>
         ))}
       </Marquee>
