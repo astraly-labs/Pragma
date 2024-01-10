@@ -42,7 +42,7 @@ export const ChartBox = (props) => {
           visible: false,
         },
         horzLines: {
-          color: "#B5F0E580",
+          color: "#B5F0E51F",
         },
       },
       width: chartContainerRef.current.clientWidth,
