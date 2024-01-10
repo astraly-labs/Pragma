@@ -1,7 +1,7 @@
 import React from "react";
-import GreenText from "../common/GreenText";
-import GreenUpperText from "../common/GreenUpperText";
-import styles from "./styles.module.scss";
+import GreenText from "../../common/GreenText";
+import GreenUpperText from "../../common/GreenUpperText";
+import styles from "../styles.module.scss";
 import {
   CarouselProvider,
   Slider,

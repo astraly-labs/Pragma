@@ -16,7 +16,7 @@ import BoxContainer from "../components/common/BoxContainer";
 import BlurBox from "../components/common/BlurBox";
 import CodeSnippet from "../components/Landing/CodeSnippet";
 import Architecture from "../components/Landing/Architecture";
-import Testimonial from "../components/Landing/Testimonial";
+import Testimonial from "../components/Landing/Testimonial/Testimonial";
 import Blog from "../components/Landing/Blog/Blog";
 import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
