@@ -24,7 +24,6 @@
         "react-copy-to-clipboard": "^5.1.0",
         "react-dom": "^18.2.0",
         "react-fast-marquee": "^1.6.2",
-        "react-responsive-carousel": "^3.2.23",
         "react-slick": "^0.29.0",
         "sass": "^1.69.7",
         "starknet": "^4.9.0"

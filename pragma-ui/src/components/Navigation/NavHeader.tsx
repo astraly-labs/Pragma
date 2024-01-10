@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import {
   CodeIcon,
-  CursorClickIcon,
+  // CursorClickIcon,
   HomeIcon,
   MenuIcon,
   PuzzleIcon,
@@ -11,13 +11,11 @@ import {
   XIcon,
   SpeakerphoneIcon,
 } from "@heroicons/react/outline";
-import SearchBar from "./SearchBar";
-import StyledTransition from "../common/StyledTransition";
-import {
-  buildExplorerUrlForAddress,
-  networkId,
-} from "../../services/wallet.service";
-import { getOracleProxyAddress } from "../../services/address.service";
+// import {
+//   buildExplorerUrlForAddress,
+//   networkId,
+// } from "../../services/wallet.service";
+// import { getOracleProxyAddress } from "../../services/address.service";
 import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import classNames from "classnames";
@@ -58,22 +56,22 @@ const resources: Resource[] = [
 ];
 
 // List of resources displayed in the more tab
-const additional = [
-  // {
-  //   name: "About Us",
-  //   description: "Get to know the team behind Pragma.",
-  //   href: "/about",
-  //   icon: UserGroupIcon,
-  // },
-  {
-    name: "View on Block Explorer",
-    description: "Take a closer look at our Starknet contract.",
-    href: `${buildExplorerUrlForAddress(
-      getOracleProxyAddress(networkId())
-    )}#readContract`,
-    icon: CursorClickIcon,
-  },
-];
+// const additional = [
+//   // {
+//   //   name: "About Us",
+//   //   description: "Get to know the team behind Pragma.",
+//   //   href: "/about",
+//   //   icon: UserGroupIcon,
+//   // },
+//   {
+//     name: "View on Block Explorer",
+//     description: "Take a closer look at our Starknet contract.",
+//     href: `${buildExplorerUrlForAddress(
+//       getOracleProxyAddress(networkId())
+//     )}#readContract`,
+//     icon: CursorClickIcon,
+//   },
+// ];
 
 // Calls to action at the bottom of the more tab.
 // const callsToAction = [
