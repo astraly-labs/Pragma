@@ -10,7 +10,7 @@ const baseStyles = {
 } as const;
 const variantStyles = {
   solid: {
-    mint: "rounded-full bg-mint text-darkGreen border-mint hover:text-mint px-5 py-4 lg:px-6 lg:py-4",
+    mint: "rounded-full bg-mint text-darkGreen border-mint hover:text-mint px-4 py-3 md:px-5 md:py-4 lg:px-6 lg:py-4",
     grey: "rounded-md	bg-whiteTrans border-whiteTrans px-6 py-3 text-lightGreen font-light font-sans",
     lightGreen:
       "rounded-full bg-lightGreen text-darkGreen border-lightGreen hover:bg-lightGreen hover:text-darkGreen px-6 py-4",
