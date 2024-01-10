@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BlogPostBox from "./BlogPostBox";
 import styles from "../styles.module.scss";
 import {
@@ -20,6 +20,32 @@ interface BlogPost {
 }
 
 const BlogCarousel: React.FC = () => {
+  const [visibleSlides, setVisibleSlides] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Update the number of visible slides based on screen width
+      if (window.innerWidth < 768) {
+        setVisibleSlides(1); // For smaller screens, show fewer slides
+      } else if (window.innerWidth < 1024) {
+        setVisibleSlides(2); // For medium screens, show a moderate number
+      } else {
+        setVisibleSlides(3); // For larger screens, show more slides
+      }
+    };
+
+    // Listen for window resize events
+    window.addEventListener("resize", handleResize);
+
+    // Call handleResize on initial load
+    handleResize();
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const dummyBlogPosts: BlogPost[] = [
     {
       image: "/assets/vectors/blog.png",
@@ -58,14 +84,16 @@ const BlogCarousel: React.FC = () => {
     },
   ];
 
+  const sizeOfBlogPosts = dummyBlogPosts.length;
+
   return (
-    <div className="pb-30 relative h-full">
+    <div className="pb-30 relative">
       <CarouselProvider
         naturalSlideWidth={150}
         naturalSlideHeight={200}
-        visibleSlides={3}
-        totalSlides={5}
-        step={3}
+        visibleSlides={visibleSlides}
+        totalSlides={sizeOfBlogPosts}
+        step={1}
         className={styles.carouselWrapper}
       >
         <Slider>
@@ -82,10 +110,10 @@ const BlogCarousel: React.FC = () => {
             </Slide>
           ))}
         </Slider>
-        <ButtonBack className="absolute bottom-0 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen">
+        <ButtonBack className="absolute bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen lg:block">
           <ArrowLeftIcon className="w-5" />
         </ButtonBack>
-        <ButtonNext className="absolute left-16 bottom-0 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen">
+        <ButtonNext className="absolute left-16 bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen lg:block">
           <ArrowRightIcon className="w-5" />
         </ButtonNext>
       </CarouselProvider>

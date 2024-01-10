@@ -14,7 +14,7 @@ const Architecture = () => (
       achieve this while maintaining a 200ms latency in running the oracle,
       enabling composability and programmability.
     </GreenText>
-    <img className="mx-auto w-10/12" src="/architecture.gif" />
+    <img className="mx-auto w-full md:w-10/12" src="/architecture.gif" />
   </div>
 );
 

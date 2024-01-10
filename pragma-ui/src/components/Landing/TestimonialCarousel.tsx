@@ -4,6 +4,15 @@ import { Carousel } from "react-responsive-carousel";
 import GreenText from "../common/GreenText";
 import GreenUpperText from "../common/GreenUpperText";
 import styles from "./styles.module.scss";
+import {
+  CarouselProvider,
+  Slider,
+  Slide,
+  ButtonBack,
+  ButtonNext,
+} from "pure-react-carousel";
+import "pure-react-carousel/dist/react-carousel.es.css";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 
 interface Category {
   logo: string;
@@ -29,68 +38,43 @@ const categories: Category[] = [
   },
 ];
 
-/**
- * Testimonial Carousel Component displaying testimonials in a carousel format.
- */
-export class TestimonialCarousel extends Component {
-  /**
-   * Renders the Testimonial Carousel Component.
-   * @return {JSX.Element} JSX for the Testimonial Carousel.
-   */
-  render() {
-    const arrowStyles: CSSProperties = {
-      position: "absolute",
-      zIndex: 10,
-      width: 40,
-      height: 40,
-      cursor: "pointer",
-      borderRadius: "full",
-      border: "1px lightGreen",
-      bottom: 40,
-    };
-    return (
-      <Carousel
-        infiniteLoop={true}
-        showStatus={false}
-        showIndicators={false}
-        showThumbs={false}
-        className="relative "
-        transitionTime={1}
-        renderArrowPrev={(onClickHandler, hasPrev, label) =>
-          hasPrev && (
-            <button
-              type="button"
-              onClick={onClickHandler}
-              title={label}
-              style={{ ...arrowStyles, left: 60 }}
-            >
-              <img src="/assets/vectors/arrowL.svg" />
-            </button>
-          )
-        }
-        renderArrowNext={(onClickHandler, hasNext, label) =>
-          hasNext && (
-            <button
-              type="button"
-              onClick={onClickHandler}
-              title={label}
-              style={{ ...arrowStyles, left: 120 }}
-            >
-              <img src="/assets/vectors/arrowR.svg" />
-            </button>
-          )
-        }
-      >
+const TestimonialCarousel: React.FC = () => {
+  return (
+    <CarouselProvider
+      naturalSlideWidth={648}
+      naturalSlideHeight={460}
+      visibleSlides={1}
+      totalSlides={3}
+      step={1}
+      infinite={true}
+      isIntrinsicHeight={true}
+      className={styles.carouselWrapper}
+    >
+      <Slider className="w-full" classNameAnimation={styles.noTransition}>
         {categories.map((category, index) => (
-          <div className={styles.testimonyBox} key={index}>
-            <div className="w-48">
-              <img src={category.logo} />
+          <Slide index={index} key={index}>
+            <div className={styles.testimonyBox} key={index}>
+              <div className="w-48">
+                <img src={category.logo} />
+              </div>
+              <GreenText className="py-8 text-center md:text-left">
+                {category.text}
+              </GreenText>
+              <GreenUpperText className="pb-20">
+                {category.author}
+              </GreenUpperText>
             </div>
-            <GreenText className="py-8">{category.text}</GreenText>
-            <GreenUpperText className="pb-20">{category.author}</GreenUpperText>
-          </div>
+          </Slide>
         ))}
-      </Carousel>
-    );
-  }
-}
+      </Slider>
+      <ButtonBack className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
+        <ArrowLeftIcon className="w-5" />
+      </ButtonBack>
+      <ButtonNext className="absolute left-1/2 bottom-6 translate-x-1/4	 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
+        <ArrowRightIcon className="w-5" />
+      </ButtonNext>
+    </CarouselProvider>
+  );
+};
+
+export default TestimonialCarousel;
