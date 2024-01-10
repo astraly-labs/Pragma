@@ -83,36 +83,42 @@ const assets = [
     pair: "BTC/USD",
     lastPrice: 45000,
     var24h: 1200,
-    var24hPercent: 2.7,
+    var24hPercent: "+2.7",
   },
   {
     pair: "ETH/USD",
     lastPrice: 3500,
     var24h: -200,
-    var24hPercent: -4.2,
+    var24hPercent: "-4.2",
   },
   {
     pair: "ETH/USD",
     lastPrice: 3500,
     var24h: -200,
-    var24hPercent: -4.2,
+    var24hPercent: "-4.2",
   },
   {
     pair: "ETH/USD",
     lastPrice: 3500,
     var24h: -200,
-    var24hPercent: -4.2,
+    var24hPercent: "-4.2",
   },
   {
     pair: "ETH/USD",
     lastPrice: 3500,
     var24h: -200,
-    var24hPercent: -4.2,
+    var24hPercent: "-4.2",
   },
 ];
 
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState("BTC/USD");
+
+  // Function to handle asset selection
+  const handleAssetSelect = (assetPair) => {
+    setSelectedAsset(assetPair); // Update selected asset in state
+  };
 
   useEffect(() => {
     // Check if the window object is available
@@ -161,8 +167,8 @@ const IndexPage = () => {
           textButton="Integrate Now"
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
-          <ChartBox data={initialData} pairid={"ETH / USD"} />
-          <AssetBox assets={assets} />
+          <ChartBox data={initialData} pairid={selectedAsset} />
+          <AssetBox assets={assets} onAssetSelect={handleAssetSelect} />
         </div>
       </BoxContainer>
       <BoxContainer>
