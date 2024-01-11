@@ -22,7 +22,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
       <div className="w-full">
         <img src={image} />
       </div>
-      <div className="flex h-full w-full flex-col justify-between p-6 text-left">
+      <div className="flex h-full w-full flex-col justify-between p-6 pb-2 text-left">
         <div className="flex flex-col">
           <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
             {date}
@@ -30,7 +30,9 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
           <div className="leading-14 pb-3 text-2xl font-light text-lightGreen">
             {title}
           </div>
-          <div className="pb-8 text-sm text-lightGreen">{description}</div>
+          <div className="max-h-5 pb-8 text-sm text-lightGreen">
+            {description}
+          </div>
         </div>
         <ButtonLink
           variant="outline"

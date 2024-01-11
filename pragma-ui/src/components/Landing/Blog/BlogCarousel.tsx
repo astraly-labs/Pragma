@@ -50,45 +50,44 @@ const BlogCarousel: React.FC = () => {
     };
   }, []);
 
-  const dummyBlogPosts: BlogPost[] = [
+  const BlogPosts: BlogPost[] = [
     {
-      image: "/assets/vectors/blog.png",
-      date: "January 1, 2024",
-      title: "Blog Post 1",
-      description: "Description of Blog Post 1",
-      link: "/blog-post-1",
+      image:
+        "https://images.mirror-media.xyz/publication-images/zZert-yfY3OFeuCAhNcMP.jpeg?height=512&width=1024",
+      date: "December 1st, 2023",
+      title: "Introducing the Verifiable Random Function (VRF) in Cairo 1",
+      description:
+        "We are thrilled to announce the first phase of Pragma VRF, leveraging verifiable random functions to generate onchain verifiable randomness. Pragma VRF will greatly help...",
+      link: "https://mirror.xyz/pragmagic.eth/AtrYK2CLU9uflovElf8pO1U2mjyspdMqjfTV9yizWeI",
     },
     {
-      image: "/assets/vectors/blog.png",
-      date: "February 15, 2024",
-      title: "Blog Post 2",
-      description: "Description of Blog Post 2",
-      link: "/blog-post-2",
+      image:
+        "https://images.mirror-media.xyz/publication-images/yDlZUg0hFCJuzPS_6wAri.jpeg?height=512&width=1024",
+      date: "November 29th, 2023",
+      title: "Exploring Pragma's Security",
+      description:
+        "We're thrilled to (officially) announce our bounty program on Immunefi, offering up to $50,000 for discovering vulnerabilities in our smart contracts. If you're proficient in Cairo and keen on assisting us in securing our Oracle...",
+      link: "https://mirror.xyz/pragmagic.eth/I_sNYLA1RvJoFFvPPoL-aTp52r4XRe6Y2zpWqTIBelw",
     },
     {
-      image: "/assets/vectors/blog.png",
-      date: "February 15, 2024",
-      title: "Blog Post 2",
-      description: "Description of Blog Post 2",
-      link: "/blog-post-2",
+      image: "https://images.mirror-media.xyz/nft/RzZhNkJCO447zAbKTXPh6.png",
+      date: "September 7th, 2023",
+      title: "(RE)Introducing Pragma on Starknet",
+      description:
+        "Pragma is the leading Oracle on Starknet. It provides off-chain data to all DeFi happening on Starknet. Pragma is built from the ground up to remove any trust assumptions...",
+      link: "https://mirror.xyz/pragmagic.eth/_HKhpTGRG4SiCw6PS2vZ88Ssvgix_UVw2OMg3vD8O14",
     },
     {
-      image: "/assets/vectors/blog.png",
-      date: "February 15, 2024",
-      title: "Blog Post 2",
-      description: "Description of Blog Post 2",
-      link: "/blog-post-2",
-    },
-    {
-      image: "/assets/vectors/blog.png",
-      date: "February 15, 2024",
-      title: "Blog Post 2",
-      description: "Description of Blog Post 2",
-      link: "/blog-post-2",
+      image: "https://images.mirror-media.xyz/nft/gpEaXet0nQaanR_aWd_ED.png",
+      date: "August 21st, 2023",
+      title: "Oracles are dead, Long live Oracles",
+      description:
+        "For as long as blockchains have been programmable, developers have attempted to bring data on-chain. Blockchains offer amazing properties, especially in terms of transparency, immutability, and openness...",
+      link: "https://mirror.xyz/pragmagic.eth/Hq509KXkqmdsWK7niszCXW-XaVc1WfmQBMUqjjrx2eY",
     },
   ];
 
-  const sizeOfBlogPosts = dummyBlogPosts.length;
+  const sizeOfBlogPosts = BlogPosts.length;
 
   return (
     <div className="pb-30">
@@ -101,7 +100,7 @@ const BlogCarousel: React.FC = () => {
         className={styles.carouselWrapper}
       >
         <Slider className=" sm:pl-8">
-          {dummyBlogPosts.map((post, index) => (
+          {BlogPosts.map((post, index) => (
             <Slide index={index} key={index}>
               <BlogPostBox
                 image={post.image}
