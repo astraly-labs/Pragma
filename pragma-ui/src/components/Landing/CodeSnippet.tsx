@@ -49,7 +49,7 @@ export default function CodeSnippet() {
               </Tab>
             ))}
           </Tab.List>
-          <Tab.Panels className={"h-full "}>
+          <Tab.Panels className={"h-full overflow-x-auto"}>
             <Tab.Panel
               className={"h-full pt-6 font-mono leading-7 text-codeColor"}
               key={1}
