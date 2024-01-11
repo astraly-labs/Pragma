@@ -26,7 +26,7 @@ const Blog = () => (
       center={true}
       variant="outline"
       color="mint"
-      href="/"
+      href="https://mirror.xyz/pragmagic.eth"
       className="mt-8 block w-fit md:hidden"
     >
       Read All

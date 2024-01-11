@@ -54,37 +54,167 @@ export default function CodeSnippet() {
               className={"h-full pt-6 font-mono leading-7 text-codeColor"}
               key={1}
             >
-              <span className={classNames(styles.greenCode)}>function </span>
-              <span className={classNames(styles.purpleCode)}>getThePrice</span>
-              ()
-              <span className={classNames(styles.greenCode)}>
-                {" "}
-                public view returns{" "}
+              <span className={"italic"}>fn </span>
+              <span className={classNames(styles.purpleCode)}>
+                get_asset_price_median
               </span>
-              (<span className={classNames(styles.purpleCode)}>int</span>){"{"}
-              <br /> (<br />
-              <span className={classNames(styles.greenCode)}>felt </span>
-              test;
+              (<span className={"italic"}>oracle_address: </span>
+              <span className={classNames(styles.greenCode)}>
+                ContractAddress
+              </span>
+              ,<span className={"italic"}> asset: </span>{" "}
+              <span className={classNames(styles.greenCode)}>DataType</span> ){" "}
+              {"->"} u128 {"{"}
               <br />
-              <span className={classNames(styles.greenCode)}>felt </span>
-              IdkanyCairo; <br /> ) ={" "}
-              <span className={classNames(styles.purpleCode)}>priceFeed</span>.
-              <span className={classNames(styles.purpleCode)}>ImnotDev</span>();
+              <span className={"pl-5 italic"}>let </span> oracle_dispatcher =
+              <span className={classNames(styles.greenCode)}>
+                IOracleABIDispatcher
+              </span>
+              {"{"}contract_address : oracle_address{"}"}; <br />
+              <span className={"pl-5 italic"}>let </span> output :{" "}
+              <span className={classNames(styles.greenCode)}>
+                PragmaPricesResponse
+              </span>{" "}
+              = oracle_dispatcher.
+              <span className={classNames(styles.purpleCode)}>get_data</span>
+              (asset,{" "}
+              <span className={classNames(styles.greenCode)}>
+                AggregationMode
+              </span>
+              :: <span className={classNames(styles.greenCode)}>Median</span>
+              (()));
               <br />
+              <span className={"pl-5 italic"}>return </span> output.price;
+              <br />
+              {"}"}
               <div className="absolute bottom-9">
-                <CopyButtonComponent textToCopy={"test"} />
+                <CopyButtonComponent
+                  textToCopy={`fn get_asset_price_median(oracle_address: ContractAddress, asset : DataType) -> u128  { 
+                    let oracle_dispatcher = IOracleABIDispatcher{contract_address : oracle_address};
+                    let output : PragmaPricesResponse= oracle_dispatcher.get_data(asset, AggregationMode::Median(()));
+                    return output.price;
+                }`}
+                />
               </div>
             </Tab.Panel>
-            <Tab.Panel className={"pt-6"} key={2}>
-              {" "}
+            <Tab.Panel
+              className={"h-full pt-6 font-mono leading-7 text-codeColor"}
+              key={2}
+            >
+              <span className={"italic"}>fn </span>
+              <span className={classNames(styles.purpleCode)}>
+                compute_volatility
+              </span>
+              (data_type:{" "}
+              <span className={classNames(styles.greenCode)}>DataType</span>,
+              aggregation_mode:{" "}
+              <span className={classNames(styles.greenCode)}>
+                AggregationMode
+              </span>
+              ) {"->"} u128 <br />
+              {"{"}
+              <br />
+              <span className={"pl-5 italic"}>let </span> start_tick = {""}
+              starknet::
+              <span className={classNames(styles.purpleCode)}>
+                get_block_timestamp
+              </span>
+              () - <span className={classNames(styles.greenCode)}>604800</span>;
+              <br />
+              <span className={"pl-5 italic"}>let </span> end_tick = {""}
+              starknet::
+              <span className={classNames(styles.purpleCode)}>
+                get_block_timestamp
+              </span>
+              (); <br />
+              [...]
+              <br />
+              <span className={"pl-5 italic"}>let </span> (volatility, decimals)
+              = summary_dispatcher.
+              <span className={classNames(styles.purpleCode)}>
+                calculate_volatility
+              </span>
+              (data_type, start_tick, end_tick, num_samples, aggregation_mode);
+              <br />
+              <span className={"pl-5 italic"}>return </span> summary_dispatcher
+              = volatility;
+              <br />
+              {"}"}
               <div className="absolute bottom-9">
-                <CopyButtonComponent textToCopy={"test"} />
+                <CopyButtonComponent
+                  textToCopy={`fn compute_volatility(data_type: DataType, aggregation_mode: AggregationMode) -> u128 {
+    let SUMMARY_STATS_ADDRESS: ContractAddress =
+        contract_address_const::<0x6421fdd068d0dc56b7f5edc956833ca0ba66b2d5f9a8fea40932f226668b5c4>();
+
+    let start_tick = starknet::get_block_timestamp() - 604800;
+    let end_tick = starknet::get_block_timestamp();
+
+    let num_samples = 200;
+    let summary_dispatcher = ISummaryStatsABIDispatcher { contract_address: SUMMARY_STATS_ADDRESS };
+    let (volatility, decimals) = summary_dispatcher
+        .calculate_volatility(data_type, start_tick, end_tick, num_samples, aggregation_mode);
+
+    return volatility; // will return the volatility multiplied by 10^decimals
+}`}
+                />
               </div>
             </Tab.Panel>
-            <Tab.Panel className={"pt-6"} key={3}>
-              {" "}
+            <Tab.Panel
+              className={"h-full pt-6 font-mono leading-7 text-codeColor"}
+              key={3}
+            >
+              <span className={"italic"}>fn </span>
+              <span className={classNames(styles.purpleCode)}>
+                get_last_random
+              </span>
+              (<span className={"italic"}>self: </span>@
+              <span className={classNames(styles.greenCode)}>
+                TContractState
+              </span>
+              ) {"->"} felt252;
+              <br />
+              <span className={"italic"}>fn </span>{" "}
+              <span className={classNames(styles.purpleCode)}>
+                request_my_randomness(
+              </span>
+              <br /> <span className={"pl-5 italic"}>ref self: </span>{" "}
+              <span className={classNames(styles.greenCode)}>
+                TContractState
+              </span>
+              ,
+              <br />
+              <span className={"pl-5 italic"}>seed: </span> u64,
+              <br />
+              <span className={"pl-5 italic"}>callback_address: </span>
+              <span className={classNames(styles.greenCode)}>
+                ContractAddress
+              </span>
+              ,<br />
+              <span className={"pl-5 italic"}>callback_fee_limit: </span> u128,
+              <br />
+              <span className={"pl-5 italic"}>publish_delay: </span> u64,
+              <br />
+              <span className={"pl-5 italic"}>num_words: </span> u64,
+              <br />
+              );
               <div className="absolute bottom-9">
-                <CopyButtonComponent textToCopy={"test"} />
+                <CopyButtonComponent
+                  textToCopy={`fn get_last_random(self: @TContractState) -> felt252;
+    fn request_my_randomness(
+        ref self: TContractState,
+        seed: u64,
+        callback_address: ContractAddress,
+        callback_fee_limit: u128,
+        publish_delay: u64,
+        num_words: u64
+    );
+    fn receive_random_words(
+        ref self: TContractState,
+        requestor_address: ContractAddress,
+        request_id: u64,
+        random_words: Span<felt252>
+    );`}
+                />
               </div>
             </Tab.Panel>
           </Tab.Panels>
