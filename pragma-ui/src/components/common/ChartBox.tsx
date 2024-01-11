@@ -1,5 +1,5 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 import { AssetPair } from "./AssetBox";
 
