@@ -14,7 +14,7 @@ const Hero = () => (
     <header className="mx-5 mt-32 flex flex-col justify-center space-y-10 text-center md:mx-0 md:w-8/12 md:py-8 lg:w-6/12 lg:py-10">
       <h1>
         <span className="relative text-lightGreen md:whitespace-nowrap">
-          <span className={styles.heading}>The internet is now</span>
+          <span className={styles.heading}>The Internet is now</span>
         </span>
         <br />
         <span className={styles.verifiable}>verifiable</span>
