@@ -29,7 +29,7 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
       <div className="grid w-full grid-cols-4 gap-4 pr-2 font-mono text-xs text-LightGreenFooter">
         <div>Symbol</div> <div>Last</div> <div>24H</div> <div>24H%</div>
       </div>
-      <div className="flex max-h-36 w-full flex-col overflow-auto pr-2">
+      <div className="flex max-h-16 w-full flex-col overflow-auto pr-2">
         {assets.map((asset, index) => (
           <button
             key={index}
