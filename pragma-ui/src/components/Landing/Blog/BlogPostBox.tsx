@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../styles.module.scss";
 import { ButtonLink } from "../../common/Button";
+import classNames from "classnames";
 
 interface BlogPostBoxProps {
   image: string;
@@ -27,10 +28,15 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
           <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
             {date}
           </div>
-          <div className="leading-14 pb-3 text-2xl font-light text-lightGreen">
+          <div className="leading-14 pb-3 text-lg font-light text-lightGreen md:text-2xl">
             {title}
           </div>
-          <div className="max-h-5 pb-8 text-sm text-lightGreen">
+          <div
+            className={classNames(
+              styles.overflowContainer,
+              "hidden pb-8 text-sm text-lightGreen md:block"
+            )}
+          >
             {description}
           </div>
         </div>

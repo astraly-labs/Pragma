@@ -102,9 +102,16 @@
     background: var(--green-12, rgba(27, 99, 82, 0.12));
     height: 100%;
     max-height: 500px;
-    overflow-x: hidden;
+    overflow: hidden;
     margin-left: 10px;
     margin-right: 10px;
+
+}
+
+.overflowContainer{
+    height: 58px; /* Set your desired fixed height */
+    overflow-y:hidden;
+    text-overflow:ellipsis;
 }
 
 .lightDot1 {

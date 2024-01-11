@@ -28,11 +28,11 @@ const BlogCarousel: React.FC = () => {
       if (window.innerWidth < 400) {
         setVisibleSlides(1.1); // For smaller screens, show fewer slides
       } else if (window.innerWidth < 640) {
-        setVisibleSlides(1.5); // For medium screens, show a moderate number
+        setVisibleSlides(1.4); // For medium screens, show a moderate number
       } else if (window.innerWidth < 768) {
-        setVisibleSlides(2.1); // For medium screens, show a moderate number
+        setVisibleSlides(1.8); // For medium screens, show a moderate number
       } else if (window.innerWidth < 1024) {
-        setVisibleSlides(2.5); // For medium screens, show a moderate number
+        setVisibleSlides(2.1); // For medium screens, show a moderate number
       } else {
         setVisibleSlides(3.1); // For larger screens, show more slides
       }
@@ -55,7 +55,7 @@ const BlogCarousel: React.FC = () => {
       image:
         "https://images.mirror-media.xyz/publication-images/zZert-yfY3OFeuCAhNcMP.jpeg?height=512&width=1024",
       date: "December 1st, 2023",
-      title: "Introducing the Verifiable Random Function (VRF) in Cairo 1",
+      title: "Introducing the Verifiable Random Function in Cairo 1",
       description:
         "We are thrilled to announce the first phase of Pragma VRF, leveraging verifiable random functions to generate onchain verifiable randomness. Pragma VRF will greatly help...",
       link: "https://mirror.xyz/pragmagic.eth/AtrYK2CLU9uflovElf8pO1U2mjyspdMqjfTV9yizWeI",

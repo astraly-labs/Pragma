@@ -30,15 +30,20 @@ const EventBox: React.FC<EventsProps> = ({
     className={classNames(
       className,
       styles.eventBox,
-      last ? styles.lastBox : ""
+      last ? styles.lastBox : "",
+      "items-center"
     )}
     {...props}
   >
-    <div className="leading-14 text-lg font-light text-lightGreen sm:text-2xl">
+    <div className="leading-14 flex h-full items-center text-lg font-light text-lightGreen sm:text-2xl">
       {name}
     </div>
-    <GreenUpperText>{location}</GreenUpperText>
-    <GreenUpperText>{date}</GreenUpperText>
+    <GreenUpperText className="flex h-full items-center pt-1 md:tracking-wider">
+      {location}
+    </GreenUpperText>
+    <GreenUpperText className="flex h-full items-center pt-1 md:tracking-wider">
+      {date}
+    </GreenUpperText>
     <a
       href={link}
       className="ml-auto cursor-pointer rounded-full border border-mint bg-transparent p-3 text-mint hover:bg-mint hover:text-darkGreen"
