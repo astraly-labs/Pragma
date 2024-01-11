@@ -21,7 +21,7 @@ import Blog from "../components/Landing/Blog/Blog";
 import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
 import { ChartBox } from "../components/common/ChartBox";
-import AssetBox from "../components/common/AssetBox";
+import AssetBox, { AssetPair } from "../components/common/AssetBox";
 // import Advisors from "../components/Landing/Advisors";
 
 // const dataPublishers: Logo[] = [
@@ -65,60 +65,64 @@ import AssetBox from "../components/common/AssetBox";
 //   },
 // ];
 
-const initialData = [
-  { time: "2018-12-22", value: 32.51 },
-  { time: "2018-12-23", value: 31.11 },
-  { time: "2018-12-24", value: 27.02 },
-  { time: "2018-12-25", value: 27.32 },
-  { time: "2018-12-26", value: 25.17 },
-  { time: "2018-12-27", value: 28.89 },
-  { time: "2018-12-28", value: 25.46 },
-  { time: "2018-12-29", value: 23.92 },
-  { time: "2018-12-30", value: 22.68 },
-  { time: "2018-12-31", value: 22.67 },
-];
-
-const assets = [
-  {
-    pair: "BTC/USD",
-    lastPrice: 45000,
-    var24h: 1200,
-    var24hPercent: "+2.7",
-  },
-  {
-    pair: "ETH/USD",
-    lastPrice: 3500,
-    var24h: -200,
-    var24hPercent: "-4.2",
-  },
-  {
-    pair: "ETH/USD",
-    lastPrice: 3500,
-    var24h: -200,
-    var24hPercent: "-4.2",
-  },
-  {
-    pair: "ETH/USD",
-    lastPrice: 3500,
-    var24h: -200,
-    var24hPercent: "-4.2",
-  },
-  {
-    pair: "ETH/USD",
-    lastPrice: 3500,
-    var24h: -200,
-    var24hPercent: "-4.2",
-  },
-];
-
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
-  const [selectedAsset, setSelectedAsset] = useState("BTC/USD");
+  const [selectedAsset, setSelectedAsset] = useState<AssetPair>({
+    ticker: "BTC/USD",
+    lastPrice: 50000,
+    variation24h: 2000,
+    relativeVariation24h: 4,
+    priceData: [
+      { time: "2018-12-22", value: 32.51 },
+      { time: "2018-12-23", value: 31.11 },
+      // Add more data as needed
+    ],
+  });
+
+  const initialAssets: AssetPair[] = [
+    {
+      ticker: "BTC/USD",
+      lastPrice: 40000,
+      variation24h: 2000,
+      relativeVariation24h: 5,
+      priceData: [
+        { time: "2022-01-01", value: 38000 },
+        { time: "2022-01-02", value: 42000 },
+        // ... other data points
+      ],
+    },
+    {
+      ticker: "ETH/USD",
+      lastPrice: 40000,
+      variation24h: 2000,
+      relativeVariation24h: 5,
+      priceData: [
+        { time: "2022-01-01", value: 3000 },
+        { time: "2022-01-02", value: 42000 },
+        // ... other data points
+      ],
+    },
+    {
+      ticker: "ETH/USD",
+      lastPrice: 40000,
+      variation24h: 2000,
+      relativeVariation24h: 5,
+      priceData: [
+        { time: "2022-01-01", value: 42000 },
+        { time: "2022-01-02", value: 42000 },
+
+        // ... other data points
+      ],
+    },
+    // Add more assets as needed
+  ];
 
   // Function to handle asset selection
-  const handleAssetSelect = (assetPair) => {
+  const handleAssetSelect = (assetPair: AssetPair) => {
     setSelectedAsset(assetPair); // Update selected asset in state
   };
+
+  useEffect(() => {}, [selectedAsset]);
 
   useEffect(() => {
     // Check if the window object is available
@@ -167,8 +171,8 @@ const IndexPage = () => {
           textButton="Integrate Now"
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
-          <ChartBox data={initialData} pairid={selectedAsset} />
-          <AssetBox assets={assets} onAssetSelect={handleAssetSelect} />
+          <ChartBox assetPair={selectedAsset} />
+          <AssetBox assets={initialAssets} onAssetSelect={handleAssetSelect} />
         </div>
       </BoxContainer>
       <BoxContainer>

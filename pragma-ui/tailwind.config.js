@@ -5,8 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["IBM Plex Sans"],
-        mono: ["IBM Plex Mono"],
+        sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui"],
+        mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular"],
       },
       animation: {
         blob: "blob 9s infinite",

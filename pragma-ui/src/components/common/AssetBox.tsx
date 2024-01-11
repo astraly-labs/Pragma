@@ -2,21 +2,24 @@ import React from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
 
-interface Asset {
-  pair: string;
+type PriceDataPoint = { time: string; value: number };
+
+export interface AssetPair {
+  ticker: string;
   lastPrice: number;
-  var24h: number;
-  var24hPercent: string;
+  variation24h: number;
+  relativeVariation24h: number;
+  priceData: PriceDataPoint[];
 }
 
-interface AssetListProps {
-  assets: Asset[];
-  onAssetSelect: (assetPair: string) => void; // Define onAssetSelect function
+interface AssetBoxProps {
+  assets: AssetPair[];
+  onAssetSelect: (assetPair: AssetPair) => void;
 }
 
-const AssetBox: React.FC<AssetListProps> = ({ assets, onAssetSelect }) => {
-  const handleAssetSelect = (assetPair) => {
-    onAssetSelect(assetPair); // Pass the selected asset pair to the parent component
+const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
+  const handleAssetSelect = (assetPair: AssetPair) => {
+    onAssetSelect(assetPair);
   };
   return (
     <div className={styles.assetBox}>
@@ -31,12 +34,12 @@ const AssetBox: React.FC<AssetListProps> = ({ assets, onAssetSelect }) => {
           <button
             key={index}
             className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen hover:opacity-50"
-            onClick={() => handleAssetSelect(asset.pair)} // Call handleAssetSelect onClick
+            onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
           >
-            <td className="text-left">{asset.pair}</td>
-            <td className="text-left">{asset.lastPrice}</td>
-            <td className="text-left">{asset.var24h}</td>
-            <td className="text-left">{asset.var24hPercent}%</td>
+            <div className="text-left">{asset.ticker}</div>
+            <div className="text-left">{asset.lastPrice}</div>
+            <div className="text-left">{asset.variation24h}</div>
+            <div className="text-left">{asset.relativeVariation24h}%</div>
           </button>
         ))}
       </div>

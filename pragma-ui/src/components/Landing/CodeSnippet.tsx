@@ -75,13 +75,13 @@ export default function CodeSnippet() {
                 <CopyButtonComponent textToCopy={"test"} />
               </div>
             </Tab.Panel>
-            <Tab.Panel className={"pt-6"} key={1}>
+            <Tab.Panel className={"pt-6"} key={2}>
               {" "}
               <div className="absolute bottom-9">
                 <CopyButtonComponent textToCopy={"test"} />
               </div>
             </Tab.Panel>
-            <Tab.Panel className={"pt-6"} key={1}>
+            <Tab.Panel className={"pt-6"} key={3}>
               {" "}
               <div className="absolute bottom-9">
                 <CopyButtonComponent textToCopy={"test"} />

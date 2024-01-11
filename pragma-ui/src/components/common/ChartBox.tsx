@@ -1,19 +1,30 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
+import { AssetPair } from "./AssetBox";
 
-export const ChartBox = (props) => {
+interface ChartBoxProps {
+  assetPair: AssetPair;
+  colors?: {
+    backgroundColor?: string;
+    lineColor?: string;
+    textColor?: string;
+    areaTopColor?: string;
+    areaBottomColor?: string;
+  };
+}
+
+export const ChartBox: React.FC<ChartBoxProps> = ({
+  assetPair,
+  colors = {},
+}) => {
   const {
-    data,
-    colors: {
-      backgroundColor = "#082F28",
-      lineColor = "#15FF81",
-      textColor = "black",
-      areaTopColor = "#3CF46742",
-      areaBottomColor = "#FFFFFF00",
-    } = {},
-    pairid,
-  } = props;
+    backgroundColor = "#082F28",
+    lineColor = "#15FF81",
+    textColor = "black",
+    areaTopColor = "#3CF46742",
+    areaBottomColor = "#FFFFFF00",
+  } = colors;
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
@@ -51,21 +62,23 @@ export const ChartBox = (props) => {
     chart.timeScale().fitContent();
 
     const newSeries = chart.addAreaSeries({
-      lineColor,
+      lineColor: lineColor,
       topColor: areaTopColor,
       bottomColor: areaBottomColor,
     });
-    newSeries.setData(data);
+    newSeries.setData(assetPair.priceData);
 
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
 
-      chart.remove();
+      if (chart) {
+        chart.remove();
+      }
     };
   }, [
-    data,
+    assetPair,
     backgroundColor,
     lineColor,
     textColor,
@@ -75,7 +88,9 @@ export const ChartBox = (props) => {
 
   return (
     <div className={styles.chartBox}>
-      <div className="font-mono text-xs text-lightGreen">{pairid}</div>
+      <div className="font-mono text-xs text-lightGreen">
+        {assetPair.ticker}
+      </div>
       <div className={styles.chartLayout} ref={chartContainerRef} />
     </div>
   );
