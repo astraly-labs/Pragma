@@ -7,22 +7,22 @@ import EventBox from "../common/EventBox";
 
 const events = [
   {
-    name: "DevConnect",
-    location: "Paris",
-    date: "23 DEC 2024",
-    link: "/",
+    name: "ETH Denver",
+    location: "Denver",
+    date: "23 FEB 2024",
+    link: "https://www.ethdenver.com/",
   },
   {
-    name: "DevConnect",
-    location: "Paris",
-    date: "23 DEC 2024",
-    link: "/",
+    name: "The Mu",
+    location: "Buenos Aires",
+    date: "MARCH 2024",
+    link: "https://twitter.com/themu_xyz",
   },
   {
-    name: "DevConnect",
-    location: "Paris",
-    date: "23 DEC 2024",
-    link: "/",
+    name: "Eth CC",
+    location: "Brussels",
+    date: "8 JUL 2024",
+    link: "https://www.ethcc.io/",
   },
 ];
 

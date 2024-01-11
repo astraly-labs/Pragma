@@ -31,7 +31,7 @@ const EventBox: React.FC<EventsProps> = ({
       className,
       styles.eventBox,
       last ? styles.lastBox : "",
-      "items-center"
+      "items- grid grid-cols-4"
     )}
     {...props}
   >
