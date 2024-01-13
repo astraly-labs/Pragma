@@ -94,7 +94,7 @@ const mobileResources = [
 const NavHeader = () => {
   const [isHidden, setIsHidden] = useState(false);
   return (
-    <Popover className={"absolute w-full p-8"}>
+    <Popover className={classNames(styles.bigScreen, "absolute w-full p-8")}>
       <div
         className={classNames(
           styles.container,

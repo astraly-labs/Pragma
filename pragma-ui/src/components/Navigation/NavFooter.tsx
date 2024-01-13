@@ -8,6 +8,8 @@ import {
 import { getOracleProxyAddress } from "../../services/address.service";
 import InputComponent from "./EmailInput";
 import LightGreenUpper from "../common/LightGreenUpperText";
+import classNames from "classnames";
+import styles from "./styles.module.scss";
 
 interface FooterLink {
   title: string;
@@ -121,7 +123,12 @@ export interface SocialMedia {
 
 const Footer = () => (
   <div className="mt-20 w-full overflow-hidden bg-greenFooter">
-    <div className="mx-auto max-w-7xl px-4 pb-12 pt-16 lg:px-8">
+    <div
+      className={classNames(
+        "3xl:px-0 mx-auto px-4 pb-12 pt-16 md:px-10",
+        styles.bigScreen
+      )}
+    >
       <div className="pb-20">
         <Link href="/">
           <div className="w-fit">

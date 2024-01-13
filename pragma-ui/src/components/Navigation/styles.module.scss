@@ -11,6 +11,10 @@
     z-index: 10;
 }
 
+.bigScreen{
+    max-width: 1700px;
+}
+
 .mobilePop {
     border-radius: 20px;
     border: 0.5px solid var(--light-green-12, rgba(181, 240, 229, 0.12));

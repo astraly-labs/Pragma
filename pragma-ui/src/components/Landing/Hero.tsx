@@ -7,12 +7,12 @@ import { ButtonLink } from "../common/Button";
 const Hero = () => (
   <div
     className={classNames(
-      "flex w-screen justify-center align-middle",
+      "flex w-full justify-center align-middle",
       styles.videoBg
     )}
   >
-    <header className="mx-5 mt-32 flex flex-col justify-center space-y-10 text-center md:mx-0 md:w-8/12 md:py-8 lg:w-6/12 lg:py-10">
-      <h1>
+    <header className="mx-5 my-32 flex flex-col justify-center space-y-10 text-center md:mx-0 md:w-8/12 md:py-8 lg:w-6/12 lg:py-10">
+      <h1 className="mt-32">
         <span className="relative text-lightGreen md:whitespace-nowrap">
           <span className={styles.heading}>The Internet is now</span>
         </span>

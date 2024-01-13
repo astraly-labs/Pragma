@@ -11,6 +11,7 @@ import Hero from "../components/Landing/Hero";
 // import LogoGrid from "../components/LogoClouds/LogoGrid";
 // import { Logo } from "../components/LogoClouds/LogoCloud";
 // import LogoGrid from "../components/LogoClouds/LogoGrid";
+import styles from "./styles.module.scss";
 import MarqueeLogo from "../components/Landing/MarqueeLogo";
 import BoxContainer from "../components/common/BoxContainer";
 import BlurBox from "../components/common/BlurBox";
@@ -22,6 +23,7 @@ import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
 import { ChartBox } from "../components/common/ChartBox";
 import AssetBox, { AssetPair } from "../components/common/AssetBox";
+import classNames from "classnames";
 // import Advisors from "../components/Landing/Advisors";
 
 // const dataPublishers: Logo[] = [
@@ -158,7 +160,7 @@ const IndexPage = () => {
   };
 
   return (
-    <div className="w-full overflow-x-hidden">
+    <div className={classNames("w-full overflow-x-hidden", styles.bigScreen)}>
       {/* <Banner /> */}
       <Hero />
       <MarqueeLogo />
