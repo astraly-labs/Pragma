@@ -29,7 +29,7 @@ const events = [
 const Events = () => (
   <div
     className={classNames(
-      "align-row max-w-screen flex flex-col gap-10 overflow-hidden py-4 md:flex-row md:gap-28 md:py-28"
+      "align-row max-w-screen flex w-full flex-col gap-10 overflow-hidden py-4 md:flex-row md:gap-28 md:py-28 lg:px-10"
     )}
   >
     <div className="flex w-full flex-col justify-center md:w-5/12">

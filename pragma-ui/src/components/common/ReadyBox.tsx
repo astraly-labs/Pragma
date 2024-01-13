@@ -53,7 +53,7 @@ const ReadyBox = () => {
       </ButtonLink>
 
       <img
-        className="-z-1 absolute bottom-0 right-0 mx-auto h-full lg:w-10/12"
+        className="-z-1 absolute bottom-0 right-0 mx-auto h-full lg:w-10/12 2xl:w-auto"
         src={getImageSource1()}
       />
     </div>
