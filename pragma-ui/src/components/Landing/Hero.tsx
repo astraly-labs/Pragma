@@ -28,9 +28,9 @@ const Hero = () => {
           play
           style={{
             position: "absolute",
-            height: "100vh",
+            width: "100%",
+            height: "100vw",
             transform: "rotate(90deg)",
-            transformBox: "fill-box",
           }}
         />
       </div>
