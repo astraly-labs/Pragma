@@ -9,25 +9,41 @@ import animationHero from "../../../public/pragma_hero.json";
 const Hero = () => {
   return (
     <div className="relative h-full w-full">
-      <Lottie
-        loop
-        animationData={animationHero}
-        play
-        style={{
-          width: "100%",
-          position: "absolute",
-          left: 0,
-        }}
-      />
+      <div className="hidden md:block">
+        <Lottie
+          loop
+          animationData={animationHero}
+          play
+          style={{
+            width: "100%",
+            position: "absolute",
+            left: 0,
+          }}
+        />
+      </div>
+      <div className="block md:hidden">
+        <Lottie
+          loop
+          animationData={animationHero}
+          play
+          style={{
+            position: "absolute",
+            height: "100vh",
+            transform: "rotate(90deg)",
+            transformBox: "fill-box",
+          }}
+        />
+      </div>
+      <div className={classNames("hidden md:block", styles.heroFilter)}></div>
       <div
         className={classNames(
-          " flex w-full justify-center align-middle",
+          "flex w-full justify-center align-middle",
           styles.videoBg
         )}
       >
-        <header className="mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-24 lg:w-6/12">
+        <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-24 lg:w-6/12">
           <h1 className=" pt-32">
-            <span className="relative whitespace-nowrap text-lightGreen">
+            <span className="relative text-lightGreen md:whitespace-nowrap">
               <span className={styles.heading}>The Internet is now</span>
             </span>
             <br />
