@@ -14,7 +14,7 @@ const Hero = () => {
         styles.videoBg
       )}
     >
-      <header className="mx-5 my-32 flex flex-col justify-center space-y-10 text-center md:mx-0 md:w-8/12 md:py-8 lg:w-6/12 lg:py-10">
+      <header className="mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-16 lg:w-6/12">
         <Lottie
           loop
           animationData={animationHero}
@@ -26,7 +26,7 @@ const Hero = () => {
             left: 0,
           }}
         />
-        <h1 className="mt-32 pt-32">
+        <h1 className=" pt-32">
           <span className="relative whitespace-nowrap text-lightGreen">
             <span className={styles.heading}>The Internet is now</span>
           </span>
