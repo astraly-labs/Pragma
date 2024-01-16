@@ -12,6 +12,7 @@
         "@heroicons/react": "^1.0.6",
         "@starknet-react/core": "^0.14.6",
         "@tanstack/react-table": "^8.5.30",
+        "@vercel/speed-insights": "^1.0.4",
         "classnames": "^2.3.2",
         "lightweight-charts": "^4.1.1",
         "next": "^13.0.3",

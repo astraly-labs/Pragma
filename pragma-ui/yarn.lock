@@ -674,6 +674,11 @@
   resolved "https://registry.yarnpkg.com/@vercel/node-bridge/-/node-bridge-2.2.2.tgz#f63466ab6a2588afdc6262c2d060289bfe8baa6b"
   integrity sha512-haGBC8noyA5BfjCRXRH+VIkHCDVW5iD5UX24P2nOdilwUxI4qWsattS/co8QBGq64XsNLRAMdM5pQUE3zxkF9Q==
 
+"@vercel/speed-insights@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@vercel/speed-insights/-/speed-insights-1.0.4.tgz#b52a66ac041e7d64ab15056be62695b1d7327d9e"
+  integrity sha512-Q7O0bnV11KUqNKAKA984YWIGxCjqgOuJdwH1cdItqlkUVTLbIm8BhObro6hJobGMSUHm+z7xjQ0YbC8ps1ekDg==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"

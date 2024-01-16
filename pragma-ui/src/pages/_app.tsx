@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
@@ -56,6 +57,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2151af" />
       </Head>
+      <SpeedInsights />
       <DefaultSeo
         titleTemplate="%s - Pragma - StarkNet Oracle"
         defaultTitle="Pragma - StarkNet Oracle"

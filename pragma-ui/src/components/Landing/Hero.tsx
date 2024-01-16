@@ -14,7 +14,7 @@ const Hero = () => {
         styles.videoBg
       )}
     >
-      <header className="mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-16 lg:w-6/12">
+      <header className="mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-24 lg:w-6/12">
         <Lottie
           loop
           animationData={animationHero}
