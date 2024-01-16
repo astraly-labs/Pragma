@@ -32,7 +32,7 @@ const resources: Resource[] = [
   {
     name: "Ecosystem",
     description: "Start using our data by reading our docs.",
-    href: "/features",
+    href: "/ecosystem",
     icon: CodeIcon,
   },
   {
