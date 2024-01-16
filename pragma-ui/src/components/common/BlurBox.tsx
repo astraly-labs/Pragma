@@ -39,7 +39,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
       src={urlSvg}
       alt="Illustration SVG"
     />
-    <div className="z-10">
+    <div className="z-2">
       <ButtonLink variant="outline" color="mint" center={false} href="/">
         {textButton}
       </ButtonLink>
