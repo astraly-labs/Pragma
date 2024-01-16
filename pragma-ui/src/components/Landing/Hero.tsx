@@ -27,7 +27,7 @@ const Hero = () => {
             zIndex: 0,
           }}
         />
-        <h1 className="z-10 mt-32">
+        <h1 className="z-2 mt-32 pt-32">
           <span className="relative text-lightGreen md:whitespace-nowrap">
             <span className={styles.heading}>The Internet is now</span>
           </span>
