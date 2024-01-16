@@ -4,6 +4,8 @@ import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import GreenUpperText from "../common/GreenUpperText";
 import GreenTitle from "../common/GreenTitle";
+import Lottie from "react-lottie-player";
+import animationHero from "../../../public/pragma_scheme.json";
 
 const Architecture = () => (
   <div className={classNames("align-center w-full", styles.darkGreenBox)}>
@@ -14,7 +16,17 @@ const Architecture = () => (
       achieve this while maintaining a 200ms latency in running the oracle,
       enabling composability and programmability.
     </GreenText>
-    <img className="mx-auto w-full md:w-10/12" src="/architecture.gif" />
+    <div className="m-auto w-full md:w-10/12">
+      <Lottie
+        loop
+        animationData={animationHero}
+        play
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </div>
   </div>
 );
 

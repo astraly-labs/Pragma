@@ -9,7 +9,7 @@ import animationHero from "../../../public/pragma_hero.json";
 const Hero = () => {
   return (
     <div className="relative h-full w-full">
-      <div className="hidden md:block">
+      <div className="hidden h-full md:block">
         <Lottie
           loop
           animationData={animationHero}
@@ -34,7 +34,7 @@ const Hero = () => {
           }}
         />
       </div>
-      <div className={classNames("hidden md:block", styles.heroFilter)}></div>
+      {/* <div className={classNames("hidden md:block", styles.heroFilter)}></div> */}
       <div
         className={classNames(
           "flex w-full justify-center align-middle",
