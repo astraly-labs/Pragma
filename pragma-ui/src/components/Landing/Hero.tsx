@@ -24,7 +24,6 @@ const Hero = () => {
             height: "100%",
             position: "absolute",
             left: 0,
-            zIndex: 0,
           }}
         />
         <h1 className=" mt-32 pt-32">
