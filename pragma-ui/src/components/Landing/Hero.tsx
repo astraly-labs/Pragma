@@ -26,7 +26,7 @@ const Hero = () => {
             left: 0,
           }}
         />
-        <h1 className=" mt-32 pt-32">
+        <h1 className="mt-32 pt-32">
           <span className="relative whitespace-nowrap text-lightGreen">
             <span className={styles.heading}>The Internet is now</span>
           </span>
