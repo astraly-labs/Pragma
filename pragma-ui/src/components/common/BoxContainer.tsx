@@ -19,7 +19,7 @@ const BoxContainer: React.FC<ContainerProps> = ({
 }) => (
   <div
     className={classNames(
-      "flex w-full flex-col items-center gap-8 p-3 pb-0 sm:p-8 sm:pb-0 lg:flex-row",
+      "relative z-10 flex w-full flex-col items-center gap-8 p-3 pb-0 sm:p-8 sm:pb-0 lg:flex-row",
       modeOne ? "" : "",
       className
     )}

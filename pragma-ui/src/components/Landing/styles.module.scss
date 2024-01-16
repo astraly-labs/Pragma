@@ -50,6 +50,8 @@
     backdrop-filter: blur(12.5px);
     overflow: hidden;
     max-width: 100%;
+    z-index: 10;
+    position: inherit;
 }
 
 .boxBlur {
