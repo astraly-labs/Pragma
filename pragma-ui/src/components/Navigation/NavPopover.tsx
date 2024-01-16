@@ -55,7 +55,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
           leaveFrom="translate-y-0"
           leaveTo="translate-y-1"
         >
-          <Popover.Panel className="absolute z-20 -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
+          <Popover.Panel className="absolute z-10 -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
             <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-white ring-opacity-5">
               <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
                 {content.map((item) => (
