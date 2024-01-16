@@ -27,26 +27,19 @@ const Hero = () => {
             zIndex: 0,
           }}
         />
-        <div className={styles.heroFilter} />
-        <h1 className="z-10 mt-32">
+        <h1 className=" mt-32">
           <span className="relative text-lightGreen md:whitespace-nowrap">
             <span className={styles.heading}>The Internet is now</span>
           </span>
           <br />
           <span className={styles.verifiable}>verifiable</span>
         </h1>
-        <GreenText className="z-10" isAligned={true}>
+        <GreenText isAligned={true}>
           Pragma is the first zk-oracle, providing access to internet data from
           blockchains in a verifiable way. Star(k)t building more efficient and
           safer applications now.
         </GreenText>
-        <ButtonLink
-          className="z-10"
-          center={true}
-          color="mint"
-          variant="solid"
-          href="/"
-        >
+        <ButtonLink center={true} color="mint" variant="solid" href="/">
           Start Building
         </ButtonLink>
       </header>
