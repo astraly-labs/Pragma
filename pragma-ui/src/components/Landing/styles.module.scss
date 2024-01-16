@@ -24,8 +24,16 @@
 .videoBg {
     width: 100%;
     height: fit-content;
-    background-image: linear-gradient(90deg, rgba(4, 36, 32, 0) 0%, rgba(4, 36, 32, 1) 50%, rgba(4, 36, 32, 0) 100%), url('/background.gif');
     background-size: cover;
+}
+
+.heroFilter{
+    background: linear-gradient(90deg, rgba(4, 36, 32, 0) 0%, rgba(4, 36, 32, 1) 50%, rgba(4, 36, 32, 0) 100%);
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    left: 0;
 }
 
 .boxMarquee {

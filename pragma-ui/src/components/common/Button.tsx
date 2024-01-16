@@ -77,7 +77,7 @@ export const ButtonLink: React.FC<
   ...props
 }) => (
   // I'm unsure whether we need an external vs internal differentiation
-  <Link href={href} className={classNames(center ? "mx-auto" : "")}>
+  <Link href={href} className={classNames(center ? "z-10 mx-auto" : "z-10")}>
     <div
       className={classNames(
         baseStyles[variant],

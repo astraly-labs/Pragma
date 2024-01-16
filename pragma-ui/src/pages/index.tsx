@@ -160,7 +160,12 @@ const IndexPage = () => {
   };
 
   return (
-    <div className={classNames("w-full overflow-x-hidden", styles.bigScreen)}>
+    <div
+      className={classNames(
+        "relative w-full overflow-x-hidden",
+        styles.bigScreen
+      )}
+    >
       {/* <Banner /> */}
       <Hero />
       <MarqueeLogo />
