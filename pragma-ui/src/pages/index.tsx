@@ -203,7 +203,7 @@ const IndexPage = () => {
         <Events />
       </BoxContainer>
       <BoxContainer>
-        <ReadyBox />
+        <ReadyBox version={true} />
       </BoxContainer>
     </div>
   );

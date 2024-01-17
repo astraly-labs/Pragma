@@ -72,6 +72,23 @@
     background: linear-gradient(#042420F2, #042420F2) padding-box, linear-gradient(120deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.205) 100%) border-box;
     }
 
+
+.dpBox {
+        display: flex;
+        flex-direction: column;
+        padding: 36px;
+        align-items: flex-start;
+        gap: 24px;
+        border-radius: 20px;
+        border: 1px solid #FFFFFF40;
+        background: rgba(27, 99, 82, 0.12);
+        width: 100%;
+        height: 100%;
+        color: #B5F0E580;
+        font-size: 18px;
+        line-height: 28px;
+    }
+
 @media (max-width: 768px) {
     .customerBox {
         flex-direction: column;

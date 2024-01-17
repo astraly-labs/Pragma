@@ -6,6 +6,9 @@ import BasicHero from "../components/Ecosystem/BasicHero";
 import BlurBoxEcosystem from "../components/common/BlurBoxEcosystem";
 import StatsBox from "../components/Ecosystem/StatsBox";
 import CustomerCarousel from "../components/Ecosystem/Customer/CustomerCarousel";
+import DataProviders from "../components/Ecosystem/DataProviders";
+import ReadyBox from "../components/common/ReadyBox";
+import ProvidersList from "../components/Ecosystem/ProvidersList";
 
 const EcosystemPage = () => {
   return (
@@ -43,6 +46,15 @@ const EcosystemPage = () => {
       </BoxContainer>
       <BoxContainer>
         <CustomerCarousel />
+      </BoxContainer>
+      <BoxContainer>
+        <DataProviders />
+      </BoxContainer>
+      <BoxContainer>
+        <ProvidersList />
+      </BoxContainer>
+      <BoxContainer>
+        <ReadyBox version={false} />
       </BoxContainer>
     </div>
   );

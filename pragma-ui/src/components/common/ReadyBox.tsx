@@ -6,7 +6,7 @@ import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
 import GreenTitle from "../common/GreenTitle";
 
-const ReadyBox = () => {
+const ReadyBox = ({ version }) => {
   const [windowWidth, setWindowWidth] = useState(null);
 
   useEffect(() => {
@@ -34,11 +34,36 @@ const ReadyBox = () => {
     }
   };
 
+  const getImageSource2 = () => {
+    if (windowWidth < 640) {
+      return "/assets/vectors/vector5bis.svg";
+    } else {
+      return "/assets/vectors/vector5.svg";
+    }
+  };
+
   return (
-    <div className={classNames(styles.darkGreenBox)}>
+    <div
+      className={classNames(
+        version ? styles.darkGreenBox : styles.darkGreenBoxBis
+      )}
+    >
       <GreenUpperText className="pb-3">Get in touch</GreenUpperText>
-      <GreenTitle className="pb-6">Ready to get the data you need?</GreenTitle>
-      <GreenText isAligned={false} className="max-w-3xl pb-10">
+      <h2
+        className={classNames(
+          "pb-6 leading-loose text-lightGreen",
+          version ? "" : "w-full md:w-5/12"
+        )}
+      >
+        Ready to get the data you need?
+      </h2>
+      <GreenText
+        isAligned={false}
+        className={classNames(
+          "max-w-3xl pb-10",
+          version ? "" : "w-full md:w-5/12"
+        )}
+      >
         Leverage recent breakthroughs in zero-knowledge computation by using
         verifiable and composable data in your decentralized application.
       </GreenText>
@@ -47,14 +72,17 @@ const ReadyBox = () => {
         variant="solid"
         color="mint"
         href="/"
-        className="mb-20"
+        className={classNames(version ? "mb-20" : "mb-40 md:mb-0")}
       >
         Start building
       </ButtonLink>
 
       <img
-        className="-z-1 absolute bottom-0 right-0 mx-auto h-full lg:w-10/12 2xl:w-auto"
-        src={getImageSource1()}
+        className={classNames(
+          "bottom-0 right-0 -z-10 mx-auto lg:w-10/12 2xl:w-auto",
+          version ? "absolute h-full" : "absolute w-full"
+        )}
+        src={version ? getImageSource1() : getImageSource2()}
       />
     </div>
   );

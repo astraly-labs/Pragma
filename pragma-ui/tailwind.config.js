@@ -10,6 +10,9 @@ module.exports = {
         sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui"],
         mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular"],
       },
+      lineHeight:{
+        loose: "3.75rem",
+      },
       animation: {
         blob: "blob 9s infinite",
         marquee: "marquee 30s linear infinite",
