@@ -42,7 +42,7 @@ const BlurBoxEcosystem: React.FC<BlurBoxProps> = ({
     <GreenText isAligned={false} className="mb-auto">
       {generalText}
     </GreenText>
-    <div className="mt-auto flex flex-col gap-6 pt-5 md:flex-row md:pt-20">
+    <div className="mx-auto mt-auto flex flex-col gap-6 pt-5 md:mx-0 md:flex-row md:pt-20">
       <ButtonLink
         variant="outline"
         color="mint"

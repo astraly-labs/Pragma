@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 const baseStyles = {
   solid:
-    "flex  cursor-pointer items-center justify-center  uppercase border md:text-sm lg:tracking-wider hover:bg-transparent focus:outline-none",
+    "flex  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-wider hover:bg-transparent focus:outline-none",
   outline:
     "flex  cursor-pointer items-center justify-center rounded-full border uppercase text-sm focus:outline-none",
 } as const;
@@ -16,7 +16,7 @@ const variantStyles = {
       "rounded-full bg-lightGreen text-darkGreen border-lightGreen hover:bg-lightGreen hover:text-darkGreen px-6 py-4",
   },
   outline: {
-    mint: "border-mint text-mint hover:bg-mint hover:text-darkGreen px-6 py-4",
+    mint: "border-mint text-mint hover:bg-mint hover:text-darkGreen px-4 py-3 md:px-5 md:py-4 lg:px-6 lg:py-4",
     lightGreen:
       "border-lightGreen text-lightGreen hover:bg-lightGreen hover:text-darkGreen py-2 px-4 w-fit",
   },

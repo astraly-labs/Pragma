@@ -28,7 +28,7 @@ const BasicHero = ({
         className="absolute right-0 left-0 bottom-0 ml-auto mr-auto block w-full md:hidden"
       />
       <div className={classNames("flex w-full")}>
-        <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:justify-start md:py-8 md:pl-20 md:text-left lg:my-32 lg:w-5/12">
+        <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 pb-32 text-center md:mx-0 md:w-8/12 md:justify-start md:py-8 md:pl-20 md:text-left lg:my-32 lg:w-5/12">
           <h1 className=" pt-32">
             <span className="relative text-lightGreen md:whitespace-nowrap">
               <span className={styles.heading}>{title}</span>
@@ -36,13 +36,19 @@ const BasicHero = ({
             <br />
             <span className={styles.verifiable}>{greenTitle}</span>
           </h1>
-          <GreenText isAligned={false}>{description}</GreenText>
-          <div className=" flex flex-col gap-6 md:flex-row">
+          <GreenText isAligned={false} className="hidden md:block">
+            {description}
+          </GreenText>
+          <GreenText isAligned={true} className="block md:hidden">
+            {description}
+          </GreenText>
+          <div className=" m-auto flex flex-col gap-6 md:m-0 md:flex-row">
             <ButtonLink
               center={false}
               color="mint"
               variant="solid"
               href={solidButtonLink}
+              className="w-fit"
             >
               {solidButton}
             </ButtonLink>
@@ -51,6 +57,7 @@ const BasicHero = ({
               color="mint"
               variant="outline"
               href={outlineButtonLink}
+              className="w-full"
             >
               {outlineButton}
             </ButtonLink>
