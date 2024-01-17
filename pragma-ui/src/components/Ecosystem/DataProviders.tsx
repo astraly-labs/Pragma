@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles.module.scss";
 import classNames from "classnames";
 import GreenUpperText from "../common/GreenUpperText";
 import GreenTitle from "../common/GreenTitle";

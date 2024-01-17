@@ -4,7 +4,6 @@ import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
-import GreenTitle from "../common/GreenTitle";
 
 const ReadyBox = ({ version }) => {
   const [windowWidth, setWindowWidth] = useState(null);
