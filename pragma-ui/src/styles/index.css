@@ -39,6 +39,11 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #B5F0E5;
   }
+
+  .carousel__slide-focus-ring {
+    display: none !important;
+    outline-width: 0 !important;
+    }
   
 
 @tailwind base;

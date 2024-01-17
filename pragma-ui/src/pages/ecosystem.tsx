@@ -1,123 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Hero from "../components/Landing/Hero";
-// import AssetsSection from "../components/Asset/AssetsSection";
-// import { DefaultCTASection } from "../components/CTASection";
-// import Code from "../components/Code/Code";
-// import InfoSection from "../components/Info/InfoSection";
-// // import Banner from "../components/Banner";
-// import LogoCloud from "../components/LogoClouds/LogoCloud";
-// import Stats from "../components/Stats";
-// import { protocols } from "../components/Protocol/ProtocolSection";
-// import LogoGrid from "../components/LogoClouds/LogoGrid";
-// import { Logo } from "../components/LogoClouds/LogoCloud";
-// import LogoGrid from "../components/LogoClouds/LogoGrid";
+import React from "react";
 import styles from "./styles.module.scss";
-import MarqueeLogo from "../components/Landing/MarqueeLogo";
 import BoxContainer from "../components/common/BoxContainer";
-import BlurBox from "../components/common/BlurBox";
-import CodeSnippet from "../components/Landing/CodeSnippet";
-import Architecture from "../components/Landing/Architecture";
-import Testimonial from "../components/Landing/Testimonial/Testimonial";
-import Blog from "../components/Landing/Blog/Blog";
-import Events from "../components/Landing/Events";
-import ReadyBox from "../components/common/ReadyBox";
-import { ChartBox } from "../components/common/ChartBox";
-import AssetBox, { AssetPair } from "../components/common/AssetBox";
 import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
+import BlurBoxEcosystem from "../components/common/BlurBoxEcosystem";
+import StatsBox from "../components/Ecosystem/StatsBox";
+import CustomerCarousel from "../components/Ecosystem/Customer/CustomerCarousel";
 
 const EcosystemPage = () => {
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [selectedAsset, setSelectedAsset] = useState<AssetPair>({
-    ticker: "BTC/USD",
-    lastPrice: 50000,
-    variation24h: 2000,
-    relativeVariation24h: 4,
-    priceData: [
-      { time: "2018-12-22", value: 32.51 },
-      { time: "2018-12-23", value: 31.11 },
-      // Add more data as needed
-    ],
-  });
-
-  const initialAssets: AssetPair[] = [
-    {
-      ticker: "BTC/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 38000 },
-        { time: "2022-01-02", value: 42000 },
-        // ... other data points
-      ],
-    },
-    {
-      ticker: "ETH/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 3000 },
-        { time: "2022-01-02", value: 42000 },
-        // ... other data points
-      ],
-    },
-    {
-      ticker: "ETH/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 42000 },
-        { time: "2022-01-02", value: 42000 },
-
-        // ... other data points
-      ],
-    },
-    // Add more assets as needed
-  ];
-
-  // Function to handle asset selection
-  const handleAssetSelect = (assetPair: AssetPair) => {
-    setSelectedAsset(assetPair); // Update selected asset in state
-  };
-
-  useEffect(() => {}, [selectedAsset]);
-
-  useEffect(() => {
-    // Check if the window object is available
-    if (typeof window !== "undefined") {
-      setWindowWidth(window.innerWidth);
-
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      // Clean-up function to remove event listener
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
-
-  // Define different image sources based on screen size
-  const getImageSource1 = () => {
-    if (windowWidth < 640) {
-      return "/assets/vectors/vector1bis.svg";
-    } else {
-      return "/assets/vectors/vector1.svg";
-    }
-  };
-
-  const getImageSource2 = () => {
-    if (windowWidth < 640) {
-      return "/assets/vectors/vector2bis.svg";
-    } else {
-      return "/assets/vectors/vector2.svg";
-    }
-  };
-
   return (
     <div
       className={classNames(
@@ -136,7 +26,24 @@ const EcosystemPage = () => {
         outlineButton={"integrate now"}
         outlineButtonLink={"/"}
         illustrationLink={"/assets/vectors/ecosystem.svg"}
+        illustrationSmallLink={"/assets/vectors/ecosystemSmall.svg"}
       />
+      <BoxContainer>
+        <BlurBoxEcosystem
+          greenText="50+"
+          firstText="Our users"
+          title="Projects already use verifiable data."
+          generalText="50+ projects already switched to verifiable data using Pragma. You’re next?"
+          textButton="Integrate now"
+          linkButton="/"
+          textButton2="Discover all ecosystem"
+          linkButton2="/"
+        />
+        <StatsBox tve="10,000,000" tvs="10,000,000" />
+      </BoxContainer>
+      <BoxContainer>
+        <CustomerCarousel />
+      </BoxContainer>
     </div>
   );
 };

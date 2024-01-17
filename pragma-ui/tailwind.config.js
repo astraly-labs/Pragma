@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
   important: true,
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -57,5 +59,38 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    plugin(function ({ addBase, theme }) {
+      addBase({
+        h1: {
+          fontSize: "60px",
+          fontWeight: "300",
+          lineHeight: "70px",
+          letterSpacing: "-1.2px",
+        },
+        h2: {
+          fontSize: "48px",
+          fontWeight: "300",
+          lineHeight: "60px",
+          letterSpacing: "-0.96px",
+        },
+        h3: {
+          fontSize: "36px",
+          fontWeight: "400",
+          lineHeight: "46px",
+        },
+        h4: {
+          fontSize: "30px",
+          fontWeight: "400",
+          lineHeight: "38px",
+        },
+        h4: {
+          fontSize: "24px",
+          fontWeight: "400",
+          lineHeight: "32px",
+        },
+      });
+    }),
+  ],
 };

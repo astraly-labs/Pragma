@@ -14,6 +14,21 @@
     min-width: 50%;
 }
 
+.blurBoxEcosystem {
+    display: flex;
+    position: relative;
+    padding: 56px;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(#082F28E6, #082F28E6) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06) 050%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    backdrop-filter: blur(12.5px);
+    z-index: 10;
+    min-width: 50%;
+}
+
 .greenText {
     color: #B5F0E5;
     /* Body/Body L */
