@@ -5,7 +5,7 @@ export const getExplorerBaseUrl = (): string | undefined => {
   if (networkId() === "mainnet-alpha") {
     return "https://voyager.online";
   } else if (networkId() === "goerli-alpha") {
-    return "https://goerli.voyager.online";
+    return "https://sepolia.voyager.online";
   } else if (networkId() === "goerli2-alpha") {
     return "https://goerli-2.voyager.online";
   }

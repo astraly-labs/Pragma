@@ -19,7 +19,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const connectors = getInstalledInjectedConnectors();
   const provider = new Provider({
     rpc: {
-      nodeUrl: "https://starknet-testnet.public.blastapi.io",
+      nodeUrl: "https://starknet-sepolia.public.blastapi.io",
       retries: 3,
     },
   });
