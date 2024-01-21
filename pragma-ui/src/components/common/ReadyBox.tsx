@@ -86,5 +86,4 @@ const ReadyBox = ({ version }) => {
     </div>
   );
 };
-
 export default ReadyBox;

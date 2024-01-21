@@ -1,18 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import Lottie from "react-lottie-player";
 import animationHero from "../../../public/pragma_hero.json";
+import animationHeroMobile from "../../../public/pragma_hero_mobile.json";
 
 const Hero = () => {
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  useEffect(() => {
+    // Check if the window object is available
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Clean-up function to remove event listener
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  // Define different image sources based on screen size
+  const getImageSource = () => {
+    if (windowWidth < 640) {
+      return animationHeroMobile;
+    } else {
+      return animationHero;
+    }
+  };
   return (
     <div className="relative h-full w-full">
       <div className="hidden h-full md:block">
         <Lottie
           loop
-          animationData={animationHero}
+          animationData={getImageSource()}
           play
           style={{
             width: "100%",
@@ -24,13 +51,12 @@ const Hero = () => {
       <div className="block md:hidden">
         <Lottie
           loop
-          animationData={animationHero}
+          animationData={getImageSource()}
           play
           style={{
             position: "absolute",
             width: "100%",
-            height: "100vw",
-            transform: "rotate(90deg)",
+            height: "120vw",
           }}
         />
       </div>
