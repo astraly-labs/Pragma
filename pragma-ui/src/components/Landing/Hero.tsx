@@ -56,7 +56,8 @@ const Hero = () => {
           style={{
             position: "absolute",
             width: "100%",
-            height: "120vw",
+            height: "110%",
+            top: "0",
           }}
         />
       </div>
