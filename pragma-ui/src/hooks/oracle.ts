@@ -1,39 +1,24 @@
-import { useContract, useStarknetCall } from "@starknet-react/core";
+import { useContract, useContractRead } from "@starknet-react/core";
 import { hexToString, strToHexFelt } from "../../utils/felt";
 import { getOracleProxyAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
 import OracleAbi from "../abi/Oracle.json";
-import { Abi } from "starknet";
+import { Abi, CairoCustomEnum } from "starknet";
 import {
-  bigNumberishArrayToDecimalStringArray,
-  toHex,
-} from "starknet/utils/number";
+  num
+} from "starknet";
 
 // List from https://github.com/Astraly-Labs/Pragma/blob/master/pragma-package/pragma/publisher/assets.py
 export const AssetKeys = [
   "ETH/USD",
   "BTC/USD",
-  "SOL/USD",
   "WBTC/USD",
   "BTC/EUR",
   "WSTETH/USD",
-  "AVAX/USD",
-  "DOGE/USD",
-  "SHIB/USD",
-  // "TEMP/USD",
   "DAI/USD",
   "USDT/USD",
   "USDC/USD",
-  "R/USD",
   "LORDS/USD",
-  // "TUSD/USD",
-  "BUSD/USD",
-  // "ETH/MXN",
-  "BNB/USD",
-  "ADA/USD",
-  "XRP/USD",
-  "MATIC/USD",
-  "AAVE/USD",
 ];
 
 export type AssetKeyT = typeof AssetKeys[number];
@@ -57,19 +42,23 @@ export type GetValueResponseT = {
 export interface GetValueHookT {
   oracleResponse: GetValueResponseT | undefined;
   loading: boolean;
-  error: string;
+  error: Error;
 }
 
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
-  const { data, loading, error } = useStarknetCall({
-    contract,
-    method: "get_spot_median",
-    args: [arg],
+  const { data, isLoading, error } = useContractRead({
+    address: contract.address,
+    abi: contract.abi,
+    functionName: "get_data_median",
+    args: [new CairoCustomEnum({ SpotEntry: arg })],
   });
+  const realData = data ? data : undefined;
+  console.log(contract.address)
+  console.log(data)
 
-  if (error !== undefined) {
+  if (error !== null) {
     console.error(
       `Error retrieving price for ${assetKey}, encoded as ${arg}`,
       error
@@ -77,13 +66,15 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   }
 
   let oracleResponse: GetValueResponseT | undefined = undefined;
-  if (data !== undefined) {
-    const [
-      strValue,
-      strDecimals,
-      strLastUpdatedTimestamp,
-      strNumSourcesAggregated,
-    ] = bigNumberishArrayToDecimalStringArray(data);
+  if (realData !== undefined) {
+    const strValue = num.toHex(realData["price"]);
+    const strDecimals = num.toHex(realData["decimals"]);
+    const strLastUpdatedTimestamp = num.toHex(
+      realData["last_updated_timestamp"]
+    );
+    const strNumSourcesAggregated = num.toHex(
+      realData["num_sources_aggregated"]
+    );
     const decimals = parseInt(strDecimals);
     oracleResponse = {
       value: parseInt(strValue) / 10 ** decimals,
@@ -92,7 +83,7 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
       numSourcesAggregated: parseInt(strNumSourcesAggregated),
     };
   }
-  return { oracleResponse, loading, error };
+  return { oracleResponse, loading: isLoading, error };
 };
 
 export interface SpotEntry {
@@ -113,10 +104,11 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
   const sources = [];
-  const { data, loading, error } = useStarknetCall({
-    contract,
-    method: "get_spot_entries",
-    args: [arg, sources],
+  const { data, isLoading: loading, error } = useContractRead({
+    address: contract.address,
+    abi: contract.abi,
+    functionName: "get_data_median_for_sources",
+    args: [new CairoCustomEnum({ SpotEntry: arg }), sources],
   });
 
   if (error !== undefined) {
@@ -132,10 +124,10 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
     if (Array.isArray(responseArray)) {
       oracleResponse = responseArray.map((entry: Object): SpotEntry => {
         return {
-          pair_id: hexToString(toHex(entry["pair_id"])),
-          price: parseInt(toHex(entry["price"])),
-          timestamp: parseInt(toHex(entry["base"]["timestamp"])),
-          source: hexToString(toHex(entry["base"]["source"])),
+          pair_id: hexToString(num.toHex(entry["pair_id"])),
+          price: parseInt(num.toHex(entry["price"])),
+          timestamp: parseInt(num.toHex(entry["base"]["timestamp"])),
+          source: hexToString(num.toHex(entry["base"]["source"])),
         };
       });
     }
