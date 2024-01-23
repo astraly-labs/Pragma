@@ -37,7 +37,7 @@ const Details = ({ assetKey }) => {
           assetKey={assetKey}
           oracleResponse={valueResponse}
           loading={valueLoading}
-          error={valueError.message ?? ""}
+          error={valueError ? valueError.message : ""}
         />
       </SectionContainer>
       <SectionContainer className="relative bg-black">
@@ -46,7 +46,7 @@ const Details = ({ assetKey }) => {
           decimals={decimals}
           oracleResponse={entriesResponse}
           loading={entriesLoading}
-          error={entriesError.message ?? ""}
+          error={entriesError ? entriesError.message : ""}
         />
       </SectionContainer>
       <SectionContainer className="bg-black !pt-0">
