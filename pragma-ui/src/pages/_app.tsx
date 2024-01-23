@@ -7,8 +7,8 @@ import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
-import { StarknetConfig, publicProvider, voyager } from "@starknet-react/core";
-import { sepolia } from "@starknet-react/chains";
+import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
+import { sepolia, Chain } from "@starknet-react/chains";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
 
@@ -16,6 +16,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
+
+  function rpc(chain: Chain) {
+    return {
+      nodeUrl: `https://starknet-sepolia.public.blastapi.io/rpc/v0_6`,
+    };
+  }
+
+  const provider = jsonRpcProvider({ rpc });
 
   return (
     <>
@@ -47,18 +55,18 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2151af" />
       </Head>
       <DefaultSeo
-        titleTemplate="%s - Pragma - StarkNet Oracle"
+        titleTemplate="%s - Pragma - Starknet Oracle"
         defaultTitle="Pragma - StarkNet Oracle"
         description="Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
-        canonical="https://www.pragmaoracle.com"
+        canonical="https://www.pragma.build"
         openGraph={{
-          url: "https://www.pragmaoracle.com",
+          url: "https://www.pragma.build",
           title: "Pragma - StarkNet Oracle",
           description:
             "Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
           images: [
             {
-              url: "https://www.pragmaoracle.com/pragma-og-img.png",
+              url: "https://www.pragma.build/pragma-og-img.png",
               width: 1200,
               height: 630,
               alt: "Pragma",
@@ -72,11 +80,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           cardType: "summary_large_image",
         }}
       />
-      <StarknetConfig
-        chains={[sepolia]}
-        provider={publicProvider()}
-        explorer={voyager}
-      >
+      <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
         <div className="flex min-h-screen flex-col justify-start bg-white">
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
