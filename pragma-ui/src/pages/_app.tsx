@@ -17,6 +17,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
 
+  /**
+   * @param {Chain} chain
+   * @return {Rpc}
+   */
   function rpc(chain: Chain) {
     return {
       nodeUrl: `https://starknet-sepolia.public.blastapi.io/rpc/v0_6`,

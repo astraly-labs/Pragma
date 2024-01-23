@@ -19,7 +19,7 @@ export const AssetKeys = [
   "LORDS/USD",
 ];
 
-export type AssetKeyT = typeof AssetKeys[number];
+export type AssetKeyT = (typeof AssetKeys)[number];
 
 export const useOracleContract = () => {
   const network = networkId();

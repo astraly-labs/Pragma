@@ -32,7 +32,7 @@ const variantStyles = {
 
 interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
-  color: keyof typeof variantStyles["solid"];
+  color: keyof (typeof variantStyles)["solid"];
   children: ReactNode;
   className?: string;
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
