@@ -7,11 +7,7 @@ import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
-import {
-  StarknetConfig,
-  publicProvider,
-  voyager
-} from "@starknet-react/core";
+import { StarknetConfig, publicProvider, voyager } from "@starknet-react/core";
 import { sepolia } from "@starknet-react/chains";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
@@ -89,7 +85,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <NavFooter />
           </SearchContext.Provider>
         </div>
-      </StarknetConfig >
+      </StarknetConfig>
     </>
   );
 };

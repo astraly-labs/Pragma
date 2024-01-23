@@ -4,9 +4,7 @@ import { getOracleProxyAddress } from "../services/address.service";
 import { networkId } from "../services/wallet.service";
 import OracleAbi from "../abi/Oracle.json";
 import { Abi, CairoCustomEnum } from "starknet";
-import {
-  num
-} from "starknet";
+import { num } from "starknet";
 
 // List from https://github.com/Astraly-Labs/Pragma/blob/master/pragma-package/pragma/publisher/assets.py
 export const AssetKeys = [
@@ -55,8 +53,8 @@ export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
     args: [new CairoCustomEnum({ SpotEntry: arg })],
   });
   const realData = data ? data : undefined;
-  console.log(contract.address)
-  console.log(data)
+  console.log(contract.address);
+  console.log(data);
 
   if (error !== null) {
     console.error(
@@ -104,7 +102,11 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
   const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
   const sources = [];
-  const { data, isLoading: loading, error } = useContractRead({
+  const {
+    data,
+    isLoading: loading,
+    error,
+  } = useContractRead({
     address: contract.address,
     abi: contract.abi,
     functionName: "get_data_median_for_sources",
