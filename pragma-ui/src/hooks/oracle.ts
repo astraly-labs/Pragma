@@ -19,6 +19,7 @@ export const AssetKeys = [
   "LORDS/USD",
 ];
 
+// prettier-ignore
 export type AssetKeyT = (typeof AssetKeys)[number];
 
 export const useOracleContract = () => {

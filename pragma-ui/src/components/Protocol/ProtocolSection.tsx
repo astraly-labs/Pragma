@@ -10,6 +10,7 @@ export const protocolCategories = [
   "Options",
 ] as const;
 
+// prettier-ignore
 export interface Protocol {
   name: string;
   category: (typeof protocolCategories)[number];

@@ -30,6 +30,7 @@ const variantStyles = {
   },
 } as const;
 
+// prettier-ignore
 interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
   color: keyof (typeof variantStyles)["solid"];
