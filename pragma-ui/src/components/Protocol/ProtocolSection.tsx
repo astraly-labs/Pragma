@@ -10,9 +10,10 @@ export const protocolCategories = [
   "Options",
 ] as const;
 
+// prettier-ignore
 export interface Protocol {
   name: string;
-  category: typeof protocolCategories[number];
+  category: (typeof protocolCategories)[number];
   src: string;
   description: string;
   href: string;

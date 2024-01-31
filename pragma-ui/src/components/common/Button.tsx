@@ -22,9 +22,10 @@ const variantStyles = {
   },
 } as const;
 
+// prettier-ignore
 interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
-  color: keyof typeof variantStyles["solid"];
+  color: keyof (typeof variantStyles)["solid"];
   children: ReactNode;
   center: boolean;
   className?: string;
