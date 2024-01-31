@@ -22,7 +22,7 @@ import Blog from "../components/Landing/Blog/Blog";
 import Events from "../components/Landing/Events";
 import ReadyBox from "../components/common/ReadyBox";
 import { ChartBox } from "../components/common/ChartBox";
-import AssetBox, { AssetPair } from "../components/common/AssetBox";
+import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
 // import Advisors from "../components/Landing/Advisors";
 
@@ -67,6 +67,11 @@ import classNames from "classnames";
 //   },
 // ];
 
+const initialAssets: AssetT[] = [
+  { ticker: 'BTC/USD', address: '0x0' },
+  { ticker: 'ETH/USD', address: '0x1' },
+];
+
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState<AssetPair>({
@@ -81,50 +86,61 @@ const IndexPage = () => {
     ],
   });
 
-  const initialAssets: AssetPair[] = [
-    {
-      ticker: "BTC/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 38000 },
-        { time: "2022-01-02", value: 42000 },
-        // ... other data points
-      ],
-    },
-    {
-      ticker: "ETH/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 3000 },
-        { time: "2022-01-02", value: 42000 },
-        // ... other data points
-      ],
-    },
-    {
-      ticker: "ETH/USD",
-      lastPrice: 40000,
-      variation24h: 2000,
-      relativeVariation24h: 5,
-      priceData: [
-        { time: "2022-01-01", value: 42000 },
-        { time: "2022-01-02", value: 42000 },
+  const [allData, setAllData] = useState<AssetPair[]>([]); // Initialize state with empty array
 
-        // ... other data points
-      ],
-    },
-    // Add more assets as needed
-  ];
+  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>({
+    ticker: "BTC/USD",
+    address: "0x0",
+  });
 
   // Function to handle asset selection
-  const handleAssetSelect = (assetPair: AssetPair) => {
-    setSelectedAsset(assetPair); // Update selected asset in state
+  const handleAssetSelect = (assetPair: AssetT) => {
+    setSelectedAssetPair(assetPair); // Update selected asset in state
   };
 
-  useEffect(() => {}, [selectedAsset]);
+  useEffect(() => {
+    const fetchData = async (pairId: string) => {
+      try {
+        // This URL is now pointing to your Next.js API route (the proxy)
+        const url = `/api/proxy?pair=${pairId}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data);
+
+        // Update your state with the new data
+        let asset_data = {
+          ticker: data.pair_id,
+          lastPrice: data.data[0].close,
+          variation24h: 2000,
+          relativeVariation24h: 4,
+          priceData: data.data.reverse().map((d) => ({
+            time: new Date(d.time).getTime() / 1000,
+            value: parseInt(d.close) / 10 ** 8,
+          })),
+        };
+        setAllData((data) => [...data, asset_data]);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    for (let i = 0; i < initialAssets.length; i++) {
+      const asset = initialAssets[i];
+      fetchData(asset.ticker);
+    }
+
+  }, []); // Dependency array is empty to run once on mount
+
+  useEffect(() => {
+    // Update data when selected asset changes
+    if (allData.length > 0) {
+      let new_asset = allData.find((asset) => asset.ticker === selectedAssetPair.ticker);
+      setSelectedAsset(new_asset);
+    }
+  }, [allData, selectedAssetPair]);
 
   useEffect(() => {
     // Check if the window object is available

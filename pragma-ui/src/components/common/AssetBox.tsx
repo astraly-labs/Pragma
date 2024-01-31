@@ -12,15 +12,22 @@ export interface AssetPair {
   priceData: PriceDataPoint[];
 }
 
+export interface AssetT {
+  ticker: string;
+  address: string;
+}
+
 interface AssetBoxProps {
-  assets: AssetPair[];
-  onAssetSelect: (assetPair: AssetPair) => void;
+  assets: AssetT[];
+  onAssetSelect: (assetPair: AssetT) => void;
 }
 
 const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
-  const handleAssetSelect = (assetPair: AssetPair) => {
+
+  const handleAssetSelect = (assetPair: AssetT) => {
     onAssetSelect(assetPair);
   };
+
   return (
     <div className={styles.assetBox}>
       <div className="flex w-full flex-col justify-between gap-2 pb-3 text-left text-3xl text-lightGreen sm:flex-row sm:items-center">
@@ -37,9 +44,9 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
             onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
           >
             <div className="text-left">{asset.ticker}</div>
-            <div className="text-left">{asset.lastPrice}</div>
+            {/* <div className="text-left">{asset.lastPrice}</div>
             <div className="text-left">{asset.variation24h}</div>
-            <div className="text-left">{asset.relativeVariation24h}%</div>
+            <div className="text-left">{asset.relativeVariation24h}%</div> */}
           </button>
         ))}
       </div>

@@ -47,6 +47,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
       },
       timeScale: {
         borderVisible: false,
+        secondsVisible: true,
       },
       grid: {
         vertLines: {
@@ -88,10 +89,11 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
 
   return (
     <div className={styles.chartBox}>
-      <div className="font-mono text-xs text-lightGreen">
-        {assetPair.ticker}
-      </div>
-      <div className={styles.chartLayout} ref={chartContainerRef} />
+
+      {assetPair != undefined && <><div className="font-mono text-xs text-lightGreen">
+        {assetPair?.ticker}
+      </div><div className={styles.chartLayout} ref={chartContainerRef} /></>}
+      {assetPair == undefined && <><div className="font-mono text-xs text-lightGreen">loading...</div></>}
     </div>
   );
 };
