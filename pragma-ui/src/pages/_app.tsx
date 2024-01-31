@@ -9,21 +9,22 @@ import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import {
-  StarknetProvider,
-  getInstalledInjectedConnectors,
-} from "@starknet-react/core";
-import { Provider } from "starknet";
+  StarknetConfig, voyager, jsonRpcProvider
+}
+  from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
+import { sepolia, Chain } from "@starknet-react/chains";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const connectors = getInstalledInjectedConnectors();
-  const provider = new Provider({
-    rpc: {
-      nodeUrl: "https://starknet-testnet.public.blastapi.io",
-      retries: 3,
-    },
-  });
+  function rpc(chain: Chain) {
+    return {
+      nodeUrl: `https://starknet-sepolia.public.blastapi.io/rpc/v0_6`,
+    };
+  }
+
+  const provider = jsonRpcProvider({ rpc });
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
@@ -84,11 +85,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           cardType: "summary_large_image",
         }}
       />
-      <StarknetProvider
-        autoConnect
-        connectors={connectors}
-        defaultProvider={provider}
-      >
+      <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
         <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
@@ -97,7 +94,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <NavFooter />
           </SearchContext.Provider>
         </div>
-      </StarknetProvider>
+      </StarknetConfig>
     </>
   );
 };
