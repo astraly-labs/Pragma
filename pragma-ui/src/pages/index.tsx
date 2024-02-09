@@ -68,8 +68,8 @@ import classNames from "classnames";
 // ];
 
 const initialAssets: AssetT[] = [
-  { ticker: 'BTC/USD', address: '0x0' },
-  { ticker: 'ETH/USD', address: '0x1' },
+  { ticker: "BTC/USD", address: "0x0" },
+  { ticker: "ETH/USD", address: "0x1" },
 ];
 
 const IndexPage = () => {
@@ -105,13 +105,13 @@ const IndexPage = () => {
         const url = `/api/proxy?pair=${pairId}`;
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         console.log(data);
 
         // Update your state with the new data
-        let asset_data = {
+        const assetData = {
           ticker: data.pair_id,
           lastPrice: data.data[0].close,
           variation24h: 2000,
@@ -121,9 +121,9 @@ const IndexPage = () => {
             value: parseInt(d.close) / 10 ** 8,
           })),
         };
-        setAllData((data) => [...data, asset_data]);
+        setAllData((data) => [...data, assetData]);
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error("Failed to fetch data:", error);
       }
     };
 
@@ -131,14 +131,15 @@ const IndexPage = () => {
       const asset = initialAssets[i];
       fetchData(asset.ticker);
     }
-
   }, []); // Dependency array is empty to run once on mount
 
   useEffect(() => {
     // Update data when selected asset changes
     if (allData.length > 0) {
-      let new_asset = allData.find((asset) => asset.ticker === selectedAssetPair.ticker);
-      setSelectedAsset(new_asset);
+      const newAsset = allData.find(
+        (asset) => asset.ticker === selectedAssetPair.ticker
+      );
+      setSelectedAsset(newAsset);
     }
   }, [allData, selectedAssetPair]);
 

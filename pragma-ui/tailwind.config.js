@@ -10,13 +10,16 @@ module.exports = {
         sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui"],
         mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular"],
       },
-      lineHeight:{
+      lineHeight: {
         loose: "3.75rem",
       },
       animation: {
         blob: "blob 9s infinite",
         marquee: "marquee 30s linear infinite",
         marquee2: "marquee2 30s linear infinite",
+      },
+      width: {
+        xlarge: "450px",
       },
       colors: {
         transparent: "transparent",
@@ -62,21 +65,30 @@ module.exports = {
       },
     },
   },
+
   plugins: [
     require("@tailwindcss/typography"),
-    plugin(function ({ addBase, theme }) {
+    plugin(function ({ addBase }) {
       addBase({
         h1: {
           fontSize: "60px",
           fontWeight: "300",
           lineHeight: "70px",
           letterSpacing: "-1.2px",
+          "@media (max-width: 640px)": {
+            fontSize: "36px",
+            lineHeight: "46px",
+          },
         },
         h2: {
           fontSize: "48px",
           fontWeight: "300",
           lineHeight: "60px",
           letterSpacing: "-0.96px",
+          "@media (max-width: 640px)": {
+            fontSize: "30px",
+            lineHeight: "38px",
+          },
         },
         h3: {
           fontSize: "36px",

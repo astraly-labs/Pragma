@@ -8,15 +8,17 @@ import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
-import {
-  StarknetConfig, voyager, jsonRpcProvider
-}
-  from "@starknet-react/core";
+import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  /**
+   * Generates RPC configuration for the specified chain.
+   * @param {Chain} chain - The blockchain chain for which to generate RPC configuration.
+   * @return {object} An object containing RPC configuration for the specified chain.
+   */
   function rpc(chain: Chain) {
     return {
       nodeUrl: `https://starknet-sepolia.public.blastapi.io/rpc/v0_6`,

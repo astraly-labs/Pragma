@@ -54,7 +54,7 @@ const EcosystemPage = () => {
         <ProvidersList />
       </BoxContainer>
       <BoxContainer>
-        <ReadyBox version={false} />
+        <ReadyBox version={true} />
       </BoxContainer>
     </div>
   );

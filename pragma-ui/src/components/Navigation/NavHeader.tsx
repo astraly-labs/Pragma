@@ -44,7 +44,7 @@ const resources: Resource[] = [
   {
     name: "Resources",
     description: "Meet our data publishers.",
-    href: "/",
+    href: "/resources",
     icon: SpeakerphoneIcon,
   },
   {

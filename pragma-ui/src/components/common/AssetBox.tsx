@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
+// import { useRouter } from "next/router";
+// import { useSearch } from "../../providers/search";
 
 type PriceDataPoint = { time: string; value: number };
 
@@ -23,10 +25,35 @@ interface AssetBoxProps {
 }
 
 const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
-
   const handleAssetSelect = (assetPair: AssetT) => {
     onAssetSelect(assetPair);
   };
+
+  // const router = useRouter();
+  // const setSearch = useSearch();
+  // const [query, setQuery] = useState("");
+
+  // useEffect(() => {
+  //   /**
+  //    * Listens for shortcut to open command pallete.
+  //    * @param {KeyboardEvent} event keydown event
+  //    */
+  //   function onKeydown(event) {
+  //     if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+  //       // AFAIK (isOpen) => !isOpen instead of !isOpen allows us to remove isOpen from the dependency array.
+  //       // This prevents us from mounting and unmounting the event listeners on every render.
+  //       setSearch((isOpen) => !isOpen);
+  //     }
+  //   }
+  //   window.addEventListener("keydown", onKeydown);
+  //   return () => {
+  //     window.removeEventListener("keydown", onKeydown);
+  //   };
+  // }, [setSearch]);
+
+  // const filteredAssets = assets.filter((asset) =>
+  //   asset.ticker.toLowerCase().includes(query.toLowerCase())
+  // );
 
   return (
     <div className={styles.assetBox}>

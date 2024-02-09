@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
@@ -24,16 +23,7 @@ const ReadyBox = ({ version }) => {
     }
   }, []);
 
-  // Define different image sources based on screen size
-  const getImageSource1 = () => {
-    if (windowWidth < 640) {
-      return "/assets/vectors/vector3bis.svg";
-    } else {
-      return "/assets/vectors/vector3.svg";
-    }
-  };
-
-  const getImageSource2 = () => {
+  const getImageSource = () => {
     if (windowWidth < 640) {
       return "/assets/vectors/vector5bis.svg";
     } else {
@@ -42,46 +32,61 @@ const ReadyBox = ({ version }) => {
   };
 
   return (
-    <div
-      className={classNames(
-        version ? styles.darkGreenBox : styles.darkGreenBoxBis
-      )}
-    >
+    <div className={styles.darkGreenBoxBis}>
       <GreenUpperText className="pb-3">Get in touch</GreenUpperText>
-      <h2
-        className={classNames(
-          "pb-6 leading-loose text-lightGreen",
-          version ? "" : "w-full md:w-5/12"
-        )}
-      >
-        Ready to get the data you need?
-      </h2>
-      <GreenText
-        isAligned={false}
-        className={classNames(
-          "max-w-3xl pb-10",
-          version ? "" : "w-full md:w-5/12"
-        )}
-      >
-        Leverage recent breakthroughs in zero-knowledge computation by using
-        verifiable and composable data in your decentralized application.
-      </GreenText>
-      <ButtonLink
-        center={false}
-        variant="solid"
-        color="mint"
-        href="/"
-        className={classNames(version ? "mb-20" : "mb-40 md:mb-0")}
-      >
-        Start building
-      </ButtonLink>
+      {version ? (
+        <h2 className={"w-full pb-6 leading-loose text-lightGreen md:w-5/12"}>
+          Ready to get the data you need?
+        </h2>
+      ) : (
+        <h2 className={"w-full pb-6 leading-loose text-lightGreen md:w-5/12"}>
+          Need help on ideas or integration?
+        </h2>
+      )}
+      {version ? (
+        <GreenText
+          isAligned={false}
+          className={"w-full max-w-3xl pb-10 md:w-5/12"}
+        >
+          Leverage recent breakthroughs in zero-knowledge computation by using
+          verifiable and composable data in your decentralized application.
+        </GreenText>
+      ) : (
+        <GreenText
+          isAligned={false}
+          className={"w-full max-w-3xl pb-10 md:w-5/12"}
+        >
+          Leverage recent breakthroughs in zero-knowledge computation by using
+          verifiable and composable data in your decentralized application.
+        </GreenText>
+      )}
+      {version ? (
+        <ButtonLink
+          center={false}
+          variant="solid"
+          color="mint"
+          href="/"
+          className={"mb-40 md:mb-0"}
+        >
+          Start building
+        </ButtonLink>
+      ) : (
+        <ButtonLink
+          center={false}
+          variant="outline"
+          color="mint"
+          href="/"
+          className={"mb-40 md:mb-0"}
+        >
+          Book a call
+        </ButtonLink>
+      )}
 
       <img
-        className={classNames(
-          "bottom-0 right-0 -z-10 mx-auto lg:w-10/12 2xl:w-auto",
-          version ? "absolute h-full" : "absolute w-full"
-        )}
-        src={version ? getImageSource1() : getImageSource2()}
+        className={
+          "absolute bottom-0 right-0 -z-10 mx-auto w-full lg:w-10/12 2xl:w-auto"
+        }
+        src={getImageSource()}
       />
     </div>
   );
