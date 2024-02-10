@@ -10,7 +10,7 @@ const Blog = () => (
       Read our blog
     </GreenUpperText>
     <div className="md:px-18 flex w-full justify-between px-3 pb-12 sm:px-10 ">
-      <GreenTitle>Stay updated with Pragma</GreenTitle>
+      <h2 className="text-lightGreen">Stay updated with Pragma</h2>
       <ButtonLink
         center={false}
         variant="outline"

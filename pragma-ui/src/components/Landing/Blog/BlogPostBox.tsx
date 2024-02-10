@@ -28,13 +28,11 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
           <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
             {date}
           </div>
-          <div className="leading-14 pb-3 text-lg font-light text-lightGreen md:text-2xl">
-            {title}
-          </div>
+          <h5 className="leading-14 pb-3 text-lightGreen">{title}</h5>
           <div
             className={classNames(
               styles.overflowContainer,
-              "hidden pb-8 text-sm text-lightGreen md:block"
+              "hidden pb-8 text-sm text-LightGreenFooter md:block"
             )}
           >
             {description}

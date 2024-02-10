@@ -35,9 +35,9 @@ const EventBox: React.FC<EventsProps> = ({
     )}
     {...props}
   >
-    <div className="leading-14 flex h-full items-center text-lg font-light text-lightGreen sm:text-2xl">
+    <h5 className="leading-14 flex h-full items-center  text-lightGreen">
       {name}
-    </div>
+    </h5>
     <GreenUpperText className="flex h-full items-center pt-1 md:tracking-wider">
       {location}
     </GreenUpperText>

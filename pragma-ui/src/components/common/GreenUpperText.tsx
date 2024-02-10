@@ -12,7 +12,10 @@ const GreenUpperText: React.FC<GreenUpperProps> = ({
   ...props
 }) => (
   <div
-    className={classNames("text-sm uppercase leading-4 text-mint", className)}
+    className={classNames(
+      "text-sm uppercase leading-4 tracking-widest text-mint",
+      className
+    )}
     {...props}
   >
     {children}

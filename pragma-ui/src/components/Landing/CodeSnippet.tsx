@@ -37,7 +37,7 @@ export default function CodeSnippet() {
                 key={index}
                 className={({ selected }) =>
                   classNames(
-                    "w-full rounded-full p-2 text-sm font-medium leading-5 sm:p-4 md:p-6",
+                    "w-full rounded-full p-2 text-sm font-medium leading-5 tracking-wider sm:p-4 md:p-6",
                     "focus:outline-none",
                     selected
                       ? "bg-mint text-darkGreen"

@@ -14,7 +14,7 @@ const Testimonial = () => (
   >
     <div className="flex w-full flex-col justify-center lg:w-6/12">
       <GreenUpperText className="pb-3">Meet our users</GreenUpperText>
-      <GreenTitle className="pb-6">Trusted by innovators</GreenTitle>
+      <h2 className="pb-6 text-lightGreen">Trusted by innovators</h2>
       <GreenText>
         World class builders already leverage Pragma. Here is what they think
         about it.

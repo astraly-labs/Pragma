@@ -34,7 +34,7 @@ const Events = () => (
   >
     <div className="flex w-full flex-col justify-center md:w-5/12">
       <GreenUpperText className="pb-3">Events</GreenUpperText>
-      <GreenTitle className="pb-6">Find us at these events</GreenTitle>
+      <h2 className="pb-6 text-lightGreen">Find us at these events</h2>
       <GreenText>
         Meet us at these events. Coffee is on us, we like crypto, oracles,
         Austrian economy, elliptic curves, Rust, Cairo and so much more.{" "}

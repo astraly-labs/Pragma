@@ -39,9 +39,9 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
 
   return (
     <div className={styles.assetBox}>
-      <div className="flex w-full flex-col justify-between gap-2 pb-3 text-left text-3xl text-lightGreen sm:flex-row sm:items-center">
+      <h4 className="flex w-full flex-col justify-between gap-2 pb-3 text-left text-lightGreen sm:flex-row sm:items-center">
         Assets <SearchBar onInputChange={handleInputChange} />
-      </div>
+      </h4>
       <div className="grid w-full grid-cols-4 gap-4 pr-2 font-mono text-xs text-LightGreenFooter">
         <div>Symbol</div> <div>Last</div> <div>24H</div> <div>24H%</div>
       </div>

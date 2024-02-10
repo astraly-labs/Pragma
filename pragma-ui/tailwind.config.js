@@ -99,11 +99,19 @@ module.exports = {
           fontSize: "30px",
           fontWeight: "400",
           lineHeight: "38px",
+          "@media (max-width: 640px)": {
+            fontSize: "24px",
+            lineHeight: "32px",
+          },
         },
-        h4: {
+        h5: {
           fontSize: "24px",
           fontWeight: "400",
           lineHeight: "32px",
+          "@media (max-width: 640px)": {
+            fontSize: "20px",
+            lineHeight: "25px",
+          },
         },
       });
     }),

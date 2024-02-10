@@ -32,7 +32,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
 }) => (
   <div className={classNames(className, styles.blurBox)} {...props}>
     <GreenUpperText className="pb-3">{firstText}</GreenUpperText>
-    <GreenTitle className="pb-5">{title}</GreenTitle>
+    <h2 className="pb-5 text-lightGreen">{title}</h2>
     <GreenText isAligned={false} className="mb-auto">
       {generalText}
     </GreenText>
