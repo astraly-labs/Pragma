@@ -25,9 +25,13 @@ const EcosystemPage = () => {
           "World-class builders already work on Pragma. If you’re an app builder, a data provider, an open-source contributor, or a smart person, join us in our mission "
         }
         solidButton={"become a publisher"}
-        solidButtonLink={"/"}
+        solidButtonLink={
+          "mailto:support@pragma.build?body=Hi%Pragma-Team,%I%want%to%become%a%publisher"
+        }
         outlineButton={"integrate now"}
-        outlineButtonLink={"/"}
+        outlineButtonLink={
+          "https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+        }
         illustrationLink={"/assets/vectors/ecosystem.svg"}
         illustrationSmallLink={"/assets/vectors/ecosystemSmall.svg"}
       />
@@ -38,9 +42,9 @@ const EcosystemPage = () => {
           title="Projects already use verifiable data."
           generalText="50+ projects already switched to verifiable data using Pragma. You’re next?"
           textButton="Integrate now"
-          linkButton="/"
+          linkButton="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
           textButton2="Discover all ecosystem"
-          linkButton2="/"
+          linkButton2="https://defillama.com/oracles/Pragma"
         />
         <StatsBox tve="10,000,000" tvs="10,000,000" />
       </BoxContainer>

@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import {
-  CodeIcon,
   // CursorClickIcon,
   HomeIcon,
   MenuIcon,
-  PuzzleIcon,
-  ViewListIcon,
   XIcon,
-  SpeakerphoneIcon,
 } from "@heroicons/react/outline";
 // import {
 //   buildExplorerUrlForAddress,
@@ -20,7 +16,6 @@ import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import classNames from "classnames";
 import NavPopover from "./NavPopover";
-import { ThumbDownIcon } from "@heroicons/react/solid";
 
 interface Resource {
   name: string;

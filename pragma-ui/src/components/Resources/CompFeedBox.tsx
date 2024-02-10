@@ -9,15 +9,15 @@ const CompFeedBox = () => {
       <div className="my-auto w-10/12 items-center">
         <h2 className="mb-4 text-lightGreen">Computational Feeds</h2>
         <GreenText isAligned={false} className="mb-10">
-          Lorem ipsum dolor sit amet, consectetur adipiscing , sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
+          Leverage the highest-quality data available and apply any desired
+          logic on top. Everything is STARK-proven, guaranteeing the security of
+          the computation. Composability and modularity are now achievable for
+          oracles.
         </GreenText>
         <ButtonLink
           variant="outline"
           color="mint"
-          href="/"
+          href="https://docs.pragma.build/Resources/Cairo%201/computational-feeds/what-are-computational-feeds"
           center={false}
           className="w-fit"
         >

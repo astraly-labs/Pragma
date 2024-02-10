@@ -9,15 +9,15 @@ const VerifRandBox = () => {
       <div className="my-auto w-10/12 items-center">
         <h2 className="mb-4 text-lightGreen">Verifiable random function</h2>
         <GreenText isAligned={false} className="mb-10">
-          Lorem ipsum dolor sit amet, consectetur adipiscing , sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
+          Pragma offers a verifiable randomness feed that allows protocols to
+          request secure randomness on-chain. The randomness proof is posted as
+          calldata, and enables games, betting platforms or any other app to
+          leverage verifiable randomness securely.
         </GreenText>
         <ButtonLink
           variant="outline"
           color="mint"
-          href="/"
+          href="https://docs.pragma.build/Resources/Cairo%201/randomness/randomness"
           center={false}
           className="w-fit"
         >

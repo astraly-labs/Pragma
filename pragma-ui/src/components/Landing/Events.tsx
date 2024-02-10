@@ -36,8 +36,8 @@ const Events = () => (
       <GreenUpperText className="pb-3">Events</GreenUpperText>
       <GreenTitle className="pb-6">Find us at these events</GreenTitle>
       <GreenText>
-        Pragma Network has a uniquely robust and transparent architecture made
-        possible by leveraging new zk-technology.
+        Meet us at these events. Coffee is on us, we like crypto, oracles,
+        Austrian economy, elliptic curves, Rust, Cairo and so much more.{" "}
       </GreenText>
     </div>
     <div className="flex w-full flex-col justify-start md:w-6/12">

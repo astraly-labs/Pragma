@@ -12,6 +12,7 @@ interface BlurBoxProps {
   generalText: string;
   urlSvg: string;
   textButton: string;
+  linkButton: string;
   className?: string;
   props?: React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
@@ -25,6 +26,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
   generalText,
   urlSvg,
   textButton,
+  linkButton,
   className,
   ...props
 }) => (
@@ -40,7 +42,12 @@ const BlurBox: React.FC<BlurBoxProps> = ({
       alt="Illustration SVG"
     />
     <div className="z-10">
-      <ButtonLink variant="outline" color="mint" center={false} href="/">
+      <ButtonLink
+        variant="outline"
+        color="mint"
+        center={false}
+        href={linkButton}
+      >
         {textButton}
       </ButtonLink>
     </div>

@@ -11,15 +11,14 @@ interface PopoverContent {
   icon: string;
 }
 
-interface CallsToAction {
-  name: string;
-  href: string;
-}
+// interface CallsToAction {
+//   name: string;
+//   href: string;
+// }
 
 interface NavPopoverProps {
   buttonName: string;
   content: PopoverContent[];
-  callsToAction: CallsToAction[];
 }
 
 const NavPopover: React.FC<NavPopoverProps> = ({

@@ -28,7 +28,7 @@ const content: FooterColumn[] = [
     links: [
       {
         title: "Documentation",
-        href: "https://docs.pragmaoracle.com/docs/introduction",
+        href: "https://docs.pragma.build",
         external: true,
       },
       {
@@ -49,18 +49,13 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
-        title: "Features",
-        href: "/features",
+        title: "Ecosystem",
+        href: "/ecosystem",
         external: false,
       },
       {
-        title: "Publishers",
-        href: "/publishers",
-        external: false,
-      },
-      {
-        title: "Protocols",
-        href: "/protocols",
+        title: "Resources",
+        href: "/resources",
         external: false,
       },
     ],
@@ -85,7 +80,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Contact Us",
-        href: "mailto:support@pragmaoracle.com?body=Hi%Pragma-Team,",
+        href: "mailto:support@pragma.build?body=Hi%Pragma-Team,",
         external: true,
       },
     ],

@@ -24,15 +24,17 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
       <div className="my-auto w-10/12 items-center md:pb-20">
         <h2 className="mb-4 text-lightGreen">Data Feeds</h2>
         <GreenText isAligned={false} className="mb-10">
-          Lorem ipsum dolor sit amet, consectetur adipiscing , sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
+          Data feeds are the most secure means of obtaining price information on
+          Starknet, and soon, everywhere. Pragma harnesses its network of data
+          providers, including market makers, centralized and decentralized
+          exchanges, solvers, and aggregators, to deliver prices for any asset
+          you require. The aggregation process is validated by STARK proofs,
+          ensuring that security is never compromised.
         </GreenText>
         <ButtonLink
           variant="outline"
           color="mint"
-          href="/"
+          href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
           center={false}
           className="w-fit"
         >

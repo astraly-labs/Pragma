@@ -56,8 +56,8 @@ const ReadyBox = ({ version }) => {
           isAligned={false}
           className={"w-full max-w-3xl pb-10 md:w-5/12"}
         >
-          Leverage recent breakthroughs in zero-knowledge computation by using
-          verifiable and composable data in your decentralized application.
+          We&apos;d love to hear from you, about your ideas and how we can help.
+          Reach out!
         </GreenText>
       )}
       {version ? (
@@ -65,7 +65,7 @@ const ReadyBox = ({ version }) => {
           center={false}
           variant="solid"
           color="mint"
-          href="/"
+          href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
           className={"mb-40 md:mb-0"}
         >
           Start building
@@ -75,7 +75,7 @@ const ReadyBox = ({ version }) => {
           center={false}
           variant="outline"
           color="mint"
-          href="/"
+          href="https://cal.com/0xmatteo/15min"
           className={"mb-40 md:mb-0"}
         >
           Book a call

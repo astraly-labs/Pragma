@@ -16,8 +16,8 @@ const Testimonial = () => (
       <GreenUpperText className="pb-3">Meet our users</GreenUpperText>
       <GreenTitle className="pb-6">Trusted by innovators</GreenTitle>
       <GreenText>
-        Pragma Network has a uniquely robust and transparent architecture made
-        possible by leveraging new zk-technology.
+        World class builders already leverage Pragma. Here is what they think
+        about it.
       </GreenText>
     </div>
     <div className="relative w-full lg:w-6/12">

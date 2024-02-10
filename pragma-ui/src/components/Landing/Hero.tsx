@@ -81,7 +81,12 @@ const Hero = () => {
             from blockchains in a verifiable way. Star(k)t building more
             efficient and safer applications now.
           </GreenText>
-          <ButtonLink center={true} color="mint" variant="solid" href="/">
+          <ButtonLink
+            center={true}
+            color="mint"
+            variant="solid"
+            href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          >
             Start Building
           </ButtonLink>
         </header>
