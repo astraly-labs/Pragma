@@ -39,15 +39,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
         className=" h-5 w-5 pr-2 text-lightGreen"
       />
       <span className=" pr-10">Search</span>
-      <kbd className="hidden font-sans font-semibold sm:inline-block">
-        <kbd title="Command" className="text-grey no-underline">
-          {/* This needs to be cross-platform compatible.
-            More info at https://github.com/mdn/content/issues/14429.
-          */}
-          ⌘
-        </kbd>{" "}
-        K
-      </kbd>
     </button>
   );
 };
