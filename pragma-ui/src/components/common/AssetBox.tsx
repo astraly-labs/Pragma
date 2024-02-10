@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
-// import { useRouter } from "next/router";
-// import { useSearch } from "../../providers/search";
 
 type PriceDataPoint = { time: string; value: number };
 
@@ -29,42 +27,26 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
     onAssetSelect(assetPair);
   };
 
-  // const router = useRouter();
-  // const setSearch = useSearch();
-  // const [query, setQuery] = useState("");
+  const [filteredValue, setFilteredValue] = useState("");
 
-  // useEffect(() => {
-  //   /**
-  //    * Listens for shortcut to open command pallete.
-  //    * @param {KeyboardEvent} event keydown event
-  //    */
-  //   function onKeydown(event) {
-  //     if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-  //       // AFAIK (isOpen) => !isOpen instead of !isOpen allows us to remove isOpen from the dependency array.
-  //       // This prevents us from mounting and unmounting the event listeners on every render.
-  //       setSearch((isOpen) => !isOpen);
-  //     }
-  //   }
-  //   window.addEventListener("keydown", onKeydown);
-  //   return () => {
-  //     window.removeEventListener("keydown", onKeydown);
-  //   };
-  // }, [setSearch]);
+  const handleInputChange = (value: string) => {
+    setFilteredValue(value);
+  };
 
-  // const filteredAssets = assets.filter((asset) =>
-  //   asset.ticker.toLowerCase().includes(query.toLowerCase())
-  // );
+  const filteredAssets = assets.filter((asset) =>
+    asset.ticker.toLowerCase().includes(filteredValue.toLowerCase())
+  );
 
   return (
     <div className={styles.assetBox}>
       <div className="flex w-full flex-col justify-between gap-2 pb-3 text-left text-3xl text-lightGreen sm:flex-row sm:items-center">
-        Assets <SearchBar />
+        Assets <SearchBar onInputChange={handleInputChange} />
       </div>
       <div className="grid w-full grid-cols-4 gap-4 pr-2 font-mono text-xs text-LightGreenFooter">
         <div>Symbol</div> <div>Last</div> <div>24H</div> <div>24H%</div>
       </div>
       <div className="flex max-h-16 w-full flex-col overflow-auto pr-2">
-        {assets.map((asset, index) => (
+        {filteredAssets.map((asset, index) => (
           <button
             key={index}
             className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen hover:opacity-50"
@@ -76,6 +58,13 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
             <div className="text-left">{asset.relativeVariation24h}%</div> */}
           </button>
         ))}
+        {filteredAssets.length === 0 ? (
+          <div className="py-2 font-mono text-xs text-lightGreen">
+            No assets for your search
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );
