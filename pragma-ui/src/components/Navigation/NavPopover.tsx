@@ -1,20 +1,19 @@
 import React, { Fragment } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
 import StyledTransition from "../common/StyledTransition";
+import styles from "./styles.module.scss";
 
 interface PopoverContent {
   name: string;
   description: string;
   href: string;
-  icon: (props: React.ComponentProps<"svg">) => JSX.Element;
+  icon: string;
 }
 
 interface CallsToAction {
   name: string;
   href: string;
-  icon: (props: React.ComponentProps<"svg">) => JSX.Element;
 }
 
 interface NavPopoverProps {
@@ -26,27 +25,18 @@ interface NavPopoverProps {
 const NavPopover: React.FC<NavPopoverProps> = ({
   buttonName,
   content,
-  callsToAction,
+  // callsToAction,
 }) => (
-  <Popover className="relative">
+  <Popover className="relative text-lightGreen">
     {({ open }) => (
       <>
         <Popover.Button
           className={classNames(
-            open ? "text-primary hover:text-white" : "text-grey",
+            open ? "text-lightGreen hover:text-white" : "text-grey",
             "group inline-flex items-center rounded-md text-base font-medium hover:text-white focus:outline-none"
           )}
         >
           <span>{buttonName}</span>
-          <ChevronDownIcon
-            className={classNames(
-              open
-                ? "stroke-primary group-hover:stroke-primary"
-                : "stroke-grey",
-              "ml-2 h-5 w-5 group-hover:text-white"
-            )}
-            aria-hidden="true"
-          />
         </Popover.Button>
 
         <StyledTransition
@@ -56,17 +46,23 @@ const NavPopover: React.FC<NavPopoverProps> = ({
           leaveTo="translate-y-1"
         >
           <Popover.Panel className="absolute -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
-            <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-white ring-opacity-5">
+            <div
+              className={classNames(
+                "border-1 overflow-hidden	rounded-2xl bg-lightBlur shadow-lg ring-1 ring-white ring-opacity-5",
+                styles.popoverPanel
+              )}
+            >
               <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
                 {content.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
-                    className="-m-3 flex items-start rounded-lg p-3 hover:bg-black"
+                    className="-m-3 flex items-start rounded-lg p-3 hover:opacity-50"
                   >
-                    <item.icon
-                      className="text-primary h-6 w-6 flex-shrink-0"
-                      aria-hidden="true"
+                    <img
+                      className="my-auto h-4 w-4 text-lightGreen"
+                      src={item.icon}
+                      alt={"logo"}
                     />
                     <div className="ml-4">
                       <p className="text-base font-medium text-white">
@@ -79,22 +75,18 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                   </a>
                 ))}
               </div>
-              <div className="space-y-6 bg-black px-5 py-5 sm:flex sm:space-y-0 sm:space-x-10 sm:px-8">
+              {/* <div className="space-y-6 px-5 py-5 sm:flex sm:space-y-0 sm:space-x-10 sm:px-8">
                 {callsToAction.map((item) => (
                   <div key={item.name} className="flow-root">
                     <a
                       href={item.href}
                       className="text-grey hover:bg-dark -m-3 flex items-center rounded-md p-3 text-base font-medium"
                     >
-                      <item.icon
-                        className="h-6 w-6 flex-shrink-0 text-slate-400"
-                        aria-hidden="true"
-                      />
                       <span className="ml-3">{item.name}</span>
                     </a>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </Popover.Panel>
         </StyledTransition>

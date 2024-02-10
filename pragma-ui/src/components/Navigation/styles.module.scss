@@ -123,7 +123,9 @@
     transform: rotate(45deg);
 }
 
-
-.inputSearch::foc{
-
+.popoverPanel{
+    border: 1px solid transparent;
+    background: linear-gradient(#082F28E6, #082F28E6) padding-box, linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 30%, rgba(255, 255, 255, 0) 050%, rgba(255, 255, 255, 0.25) 070%, rgba(255, 255, 255, 0.205) 100%) border-box;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12.5px);
 }

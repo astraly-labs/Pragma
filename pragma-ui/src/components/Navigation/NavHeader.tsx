@@ -19,12 +19,13 @@ import {
 import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import classNames from "classnames";
+import NavPopover from "./NavPopover";
+import { ThumbDownIcon } from "@heroicons/react/solid";
 
 interface Resource {
   name: string;
   description: string;
   href: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 }
 
 // List of resources displayed directly in the nav
@@ -33,54 +34,67 @@ const resources: Resource[] = [
     name: "Ecosystem",
     description: "Start using our data by reading our docs.",
     href: "/ecosystem",
-    icon: CodeIcon,
   },
   {
     name: "Docs",
     description: "Learn about what makes Pragma special.",
-    href: "/",
-    icon: PuzzleIcon,
+    href: "https://docs.pragma.build",
   },
   {
     name: "Resources",
     description: "Meet our data publishers.",
     href: "/resources",
-    icon: SpeakerphoneIcon,
-  },
-  {
-    name: "Community",
-    description: "Take a look at who is already using Pragma.",
-    href: "/",
-    icon: ViewListIcon,
   },
 ];
 
-// List of resources displayed in the more tab
-// const additional = [
-//   // {
-//   //   name: "About Us",
-//   //   description: "Get to know the team behind Pragma.",
-//   //   href: "/about",
-//   //   icon: UserGroupIcon,
-//   // },
-//   {
-//     name: "View on Block Explorer",
-//     description: "Take a closer look at our Starknet contract.",
-//     href: `${buildExplorerUrlForAddress(
-//       getOracleProxyAddress(networkId())
-//     )}#readContract`,
-//     icon: CursorClickIcon,
-//   },
-// ];
+const additional = [
+  {
+    name: "Twitter",
+    description: "",
+    href: "https://twitter.com/PragmaOracle",
+    icon: "/assets/social/twitter.svg",
+  },
+  {
+    name: "Farcaster",
+    description: "",
+    href: "https://warpcast.com/pragmaoracle",
+    icon: "/assets/social/farcaster.svg",
+  },
+  {
+    name: "Discord",
+    description: "",
+    href: "https://discord.com/invite/N7sM7VzfJB",
+    icon: "/assets/social/discord.svg",
+  },
+  {
+    name: "Telegram",
+    description: "",
+    href: "https://t.me/+Xri-uUMpWXI3ZmRk",
+    icon: "/assets/social/telegram.svg",
+  },
+  {
+    name: "GitHub",
+    description: "",
+    href: "https://github.com/Astraly-Labs/Pragma",
+    icon: "/assets/social/github.svg",
+  },
+  {
+    name: "Blog",
+    description: "",
+    href: "https://mirror.xyz/pragmagic.eth",
+    icon: "/assets/social/medium.svg",
+  },
+  // {
+  //   name: "View on Block Explorer",
+  //   description: "Take a closer look at our Starknet contract.",
+  //   href: `${buildExplorerUrlForAddress(
+  //     getOracleProxyAddress(networkId())
+  //   )}#readContract`,
+  //   icon: CursorClickIcon,
+  // },
+];
 
-// Calls to action at the bottom of the more tab.
-// const callsToAction = [
-//   {
-//     name: "Request Asset",
-//     href: "mailto:support@pragma.build?body=Hi%Pragma%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
-//     icon: ChatIcon,
-//   },
-// ];
+// const callsToAction = [];
 
 // Mobile only
 const mobileResources = [
@@ -142,11 +156,11 @@ const NavHeader = () => {
                 {resource.name}
               </a>
             ))}
-            {/* <NavPopover
-          buttonName="More"
-          content={additional}
-          callsToAction={callsToAction}
-        /> */}
+            <NavPopover
+              buttonName="Community"
+              content={additional}
+              // callsToAction={callsToAction}
+            />
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex lg:w-0 lg:flex-1">
             <ButtonLink center={false} variant="solid" color="mint" href="/">
