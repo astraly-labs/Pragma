@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
 import GreenUpperText from "../common/GreenUpperText";
-import GreenTitle from "../common/GreenTitle";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 
@@ -13,7 +12,7 @@ const DataProviders = () => (
   >
     <div className="flex w-full flex-col items-center justify-center md:items-start lg:w-6/12">
       <GreenUpperText className="pb-3">Data Providers</GreenUpperText>
-      <GreenTitle className="pb-6">Data you can trust</GreenTitle>
+      <h2 className="pb-6 text-lightGreen">Data you can trust</h2>
       <GreenText className="pb-10 text-center md:text-left">
         20+ data providers alreday provide data for Pragma. You have first-class
         data and want to monetize it in order to help DeFi being safer?

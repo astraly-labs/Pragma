@@ -3,7 +3,6 @@ import styles from "../styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../../common/GreenText";
 import GreenUpperText from "../../common/GreenUpperText";
-import GreenTitle from "../../common/GreenTitle";
 import TestimonialCarousel from "./TestimonialCarousel";
 
 const Testimonial = () => (

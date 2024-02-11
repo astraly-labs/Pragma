@@ -2,7 +2,6 @@ import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";
-import GreenTitle from "./GreenTitle";
 import GreenText from "./GreenText";
 import { ButtonLink } from "./Button";
 
@@ -36,9 +35,9 @@ const BlurBoxEcosystem: React.FC<BlurBoxProps> = ({
 }) => (
   <div className={classNames(className, styles.blurBoxEcosystem)} {...props}>
     <GreenUpperText className="pb-3">{firstText}</GreenUpperText>
-    <GreenTitle className="pb-5">
+    <h2 className="pb-5 text-lightGreen">
       <span className="text-mint">{greenText}</span> {title}
-    </GreenTitle>
+    </h2>
     <GreenText isAligned={false} className="mb-auto">
       {generalText}
     </GreenText>

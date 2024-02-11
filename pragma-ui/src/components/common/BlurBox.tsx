@@ -2,7 +2,6 @@ import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";
-import GreenTitle from "./GreenTitle";
 import GreenText from "./GreenText";
 import { ButtonLink } from "./Button";
 

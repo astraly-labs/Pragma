@@ -1,7 +1,6 @@
 import React from "react";
 import GreenUpperText from "../common/GreenUpperText";
 import classNames from "classnames";
-import GreenTitle from "../common/GreenTitle";
 import GreenText from "../common/GreenText";
 import EventBox from "../common/EventBox";
 
