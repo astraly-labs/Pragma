@@ -47,6 +47,7 @@ const Hero = () => {
             left: 0,
           }}
         />
+        <div className={styles.grad}></div>
       </div>
       <div className="block md:hidden">
         <Lottie
@@ -60,6 +61,7 @@ const Hero = () => {
             top: "0",
           }}
         />
+        <div className={styles.grad2}></div>
       </div>
       {/* <div className={classNames("hidden md:block", styles.heroFilter)}></div> */}
       <div

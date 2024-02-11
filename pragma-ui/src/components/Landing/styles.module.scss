@@ -146,6 +146,24 @@
     max-width: 1700px;
 }
 
+.grad{
+    background: linear-gradient(90deg, rgba(4,36,32,0) 0%, rgba(4,36,32,1) 50%, rgba(4,36,32,0) 100%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.grad2{
+    background: linear-gradient(180deg, rgba(4,36,32,0) 0%, rgba(4,36,32,1) 50%, rgba(4,36,32,0) 100%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
   @media (max-width: 768px) {
     .testimonyBox{
         padding: 24px;
