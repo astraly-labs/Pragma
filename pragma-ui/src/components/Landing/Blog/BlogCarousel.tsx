@@ -10,6 +10,7 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
+import classNames from "classnames";
 
 interface BlogPost {
   image: string;
@@ -90,7 +91,7 @@ const BlogCarousel: React.FC = () => {
   const sizeOfBlogPosts = BlogPosts.length;
 
   return (
-    <div className="pb-30">
+    <div className={classNames("pb-30 overflow-visible ", styles.carouselWrap)}>
       <CarouselProvider
         naturalSlideWidth={150}
         naturalSlideHeight={200}

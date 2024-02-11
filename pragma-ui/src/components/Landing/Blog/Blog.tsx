@@ -5,10 +5,10 @@ import BlogCarousel from "./BlogCarousel";
 
 const Blog = () => (
   <div className={"relative flex w-full flex-col"}>
-    <GreenUpperText className="md:px-18 px-3 pb-3 sm:px-10">
+    <GreenUpperText className="px-3 pb-3 sm:px-10 md:mx-auto md:w-11/12">
       Read our blog
     </GreenUpperText>
-    <div className="md:px-18 flex w-full justify-between px-3 pb-12 sm:px-10 ">
+    <div className="md:px-18 flex w-full justify-between px-3 pb-12 sm:px-10 md:mx-auto md:w-11/12 ">
       <h2 className="text-lightGreen">Stay updated with Pragma</h2>
       <ButtonLink
         center={false}

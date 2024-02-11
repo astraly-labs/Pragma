@@ -26,7 +26,6 @@
 
 .boxMarquee {
     display: flex;
-    margin: 32px;
     margin-bottom: 0;
     padding: 20px 0px;
     justify-content: center;
@@ -37,7 +36,6 @@
     background: linear-gradient(#082F28, #082F28) padding-box, linear-gradient(150deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 055%, rgba(255, 255, 255, 0.06%), rgba(255, 255, 255, 0.205) 100%) border-box;
     backdrop-filter: blur(12.5px);
     overflow: hidden;
-    max-width: 100%;
 }
 
 .boxBlur {
@@ -135,6 +133,11 @@
     overflow: hidden;
 }
 
+.carouselWrap{
+    width: 96%;
+    margin-left: auto;
+}
+
 .noTransition {
     transition: none !important;
 }
@@ -147,6 +150,10 @@
         padding: 24px;
         align-items: center;
         text-align: center;
+    }
+    .carouselWrap{
+        width: unset;
+        margin-left: unset;
     }
 
   }

@@ -120,7 +120,7 @@ const Footer = () => (
   <div className="mt-20 w-full overflow-hidden bg-greenFooter">
     <div
       className={classNames(
-        "3xl:px-0 mx-auto px-4 pb-12 pt-16 md:px-10",
+        "3xl:px-0 mx-auto px-4 pb-12 pt-16 md:mx-auto md:w-11/12 md:px-10 2xl:px-24",
         styles.bigScreen
       )}
     >

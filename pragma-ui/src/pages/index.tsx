@@ -185,7 +185,10 @@ const IndexPage = () => {
     >
       {/* <Banner /> */}
       <Hero />
-      <MarqueeLogo />
+      <BoxContainer>
+        <MarqueeLogo />
+      </BoxContainer>
+
       <BoxContainer>
         <BlurBox
           firstText="Price Feeds"
