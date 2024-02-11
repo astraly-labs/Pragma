@@ -5,7 +5,7 @@ import { ChatIcon, HomeIcon } from "@heroicons/react/outline";
 import { ButtonLink } from "../components/common/Button";
 
 const Custom404Page = () => (
-  <div className="w-full grow bg-black px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
+  <div className="gro w-full px-6 pt-4 pb-24 sm:px-24 md:px-32 md:pt-12">
     <div className="mx-auto flex max-w-3xl flex-col items-center space-y-8 sm:space-y-10 md:space-y-16">
       <div className="w-32 sm:w-48">
         <Image
@@ -16,7 +16,7 @@ const Custom404Page = () => (
         />
       </div>
       <div>
-        <h1 className="text-secondary mb-4 text-center text-xl font-bold sm:text-2xl md:text-4xl">
+        <h1 className="mb-4 text-center text-lightGreen">
           404&#8194;&#8211;&#8194;Zero knowledge of this page
         </h1>
         <p className="prose prose-slate text-white md:prose-xl">
@@ -29,21 +29,14 @@ const Custom404Page = () => (
         </p>
       </div>
       <div className="flex flex-col space-y-8 text-center sm:flex-row sm:space-x-12 sm:space-y-0">
-        <ButtonLink
-          variant="solid"
-          color="mint"
-          center={false}
-          href="/"
-          icon={HomeIcon}
-        >
+        <ButtonLink variant="solid" color="mint" center={false} href="/">
           Return home
         </ButtonLink>
         <ButtonLink
-          variant="solid"
+          variant="outline"
           color="mint"
           center={false}
           href="mailto:support@pragmaoracle.com?body=Hi%Pragma-Team,"
-          icon={ChatIcon}
         >
           Request asset
         </ButtonLink>

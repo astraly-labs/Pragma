@@ -62,15 +62,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <SpeedInsights />
       <DefaultSeo
-        titleTemplate="%s - Pragma - StarkNet Oracle"
-        defaultTitle="Pragma - StarkNet Oracle"
-        description="Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
+        titleTemplate="%s - Pragma - Starknet Oracle"
+        defaultTitle="Pragma - Starknet Oracle"
+        description="Pragma is the leading zk-native oracle, live on Starknet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
         canonical="https://www.pragma.build"
         openGraph={{
           url: "https://www.pragma.build",
-          title: "Pragma - StarkNet Oracle",
+          title: "Pragma - Starknet Oracle",
           description:
-            "Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
+            "Pragma is the leading zk-native oracle, live on Starknet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
           images: [
             {
               url: "https://www.pragma.build/pragma-og-img.png",

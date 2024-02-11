@@ -33,7 +33,7 @@ export const protocols: Protocol[] = [
     category: "Lending",
     src: "/assets/ecosystem/zklend.svg",
     description:
-      "zkLend is an L2 money-market protocol built on StarkNet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
+      "zkLend is an L2 money-market protocol built on Starknet, combining zk-rollup scalability, superior transaction speed, and cost-savings with Ethereum's security.",
     href: "https://zklend.com/",
   },
   {
