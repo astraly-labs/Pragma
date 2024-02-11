@@ -125,7 +125,7 @@ const NavHeader = () => {
                 <span className="sr-only">Pragma</span>
                 <img
                   className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
-                  src="/pragma-og-img.png"
+                  src="/pragma-logo.png"
                   alt="Pragma"
                 />
               </div>
@@ -185,7 +185,7 @@ const NavHeader = () => {
                 <div>
                   <img
                     className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
-                    src="pragma-og-img.png"
+                    src="pragma-logo.png"
                     alt="Pragma"
                   />
                 </div>

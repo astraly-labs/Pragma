@@ -130,7 +130,7 @@ const Footer = () => (
             <span className="sr-only">Pragma</span>
             <img
               className="h-8 w-auto sm:h-10 md:h-10"
-              src="/pragma-og-img.png"
+              src="/pragma-logo.png"
               alt="Pragma"
             />
           </div>
