@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import tourist from "../../public/assets/tourist.webp";
-import { ChatIcon, HomeIcon } from "@heroicons/react/outline";
 import { ButtonLink } from "../components/common/Button";
 import GreenText from "../components/common/GreenText";
 
