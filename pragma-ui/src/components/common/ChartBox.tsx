@@ -29,6 +29,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("assetPair", assetPair);
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -57,7 +58,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           color: "#B5F0E51F",
         },
       },
-      width: chartContainerRef.current.clientWidth,
+      width: chartContainerRef.current?.clientWidth ?? 300,
       height: 300,
     });
     chart.timeScale().fitContent();
@@ -67,7 +68,12 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
       topColor: areaTopColor,
       bottomColor: areaBottomColor,
     });
-    newSeries.setData(assetPair.priceData);
+
+    if (assetPair == undefined) {
+      newSeries.setData([]);
+    } else {
+      newSeries.setData(assetPair.priceData);
+    }
 
     window.addEventListener("resize", handleResize);
 
@@ -89,19 +95,10 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
 
   return (
     <div className={styles.chartBox}>
-      {assetPair != undefined && (
-        <>
-          <div className="font-mono text-xs text-lightGreen">
-            {assetPair?.ticker}
-          </div>
-          <div className={styles.chartLayout} ref={chartContainerRef} />
-        </>
-      )}
-      {assetPair == undefined && (
-        <>
-          <div className="font-mono text-xs text-lightGreen">loading...</div>
-        </>
-      )}
+      <div className="font-mono text-xs text-lightGreen">
+        {assetPair?.ticker ?? "LOADING..."}
+      </div>
+      <div className={styles.chartLayout} ref={chartContainerRef} />
     </div>
   );
 };

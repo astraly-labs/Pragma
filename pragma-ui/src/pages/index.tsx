@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Hero from "../components/Landing/Hero";
-// import AssetsSection from "../components/Asset/AssetsSection";
-// import { DefaultCTASection } from "../components/CTASection";
-// import Code from "../components/Code/Code";
-// import InfoSection from "../components/Info/InfoSection";
-// // import Banner from "../components/Banner";
-// import LogoCloud from "../components/LogoClouds/LogoCloud";
-// import Stats from "../components/Stats";
-// import { protocols } from "../components/Protocol/ProtocolSection";
-// import LogoGrid from "../components/LogoClouds/LogoGrid";
-// import { Logo } from "../components/LogoClouds/LogoCloud";
-// import LogoGrid from "../components/LogoClouds/LogoGrid";
 import styles from "./styles.module.scss";
 import MarqueeLogo from "../components/Landing/MarqueeLogo";
 import BoxContainer from "../components/common/BoxContainer";
@@ -24,48 +13,7 @@ import ReadyBox from "../components/common/ReadyBox";
 import { ChartBox } from "../components/common/ChartBox";
 import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
-// import Advisors from "../components/Landing/Advisors";
 
-// const dataPublishers: Logo[] = [
-//   {
-//     name: "Skynet Trading",
-//     src: "/assets/publishers/skynet.svg",
-//     href: "https://www.skynettrading.com/",
-//   },
-//   {
-//     name: "Flowdesk",
-//     src: "/assets/publishers/flowdesk.webp",
-//     href: "https://www.flowdesk.co/",
-//   },
-//   {
-//     name: "Kaiko",
-//     src: "/assets/publishers/kaiko.webp",
-//     href: "https://www.kaiko.com/",
-//   },
-// ];
-
-// const ecosystemPartners: Logo[] = [
-//   {
-//     name: "Consensys",
-//     src: "/assets/ecosystem/consensys.webp",
-//     href: "https://consensys.net/",
-//   },
-//   {
-//     name: "Argent",
-//     src: "/assets/ecosystem/argent.png",
-//     href: "https://www.argent.xyz/",
-//   },
-//   {
-//     name: "Equilibrium",
-//     src: "/assets/ecosystem/equilibrium.png",
-//     href: "https://equilibrium.co/",
-//   },
-//   {
-//     name: "Braavos",
-//     src: "/assets/ecosystem/braavos.webp",
-//     href: "https://braavos.app/",
-//   },
-// ];
 
 const initialAssets: AssetT[] = [
   { ticker: "BTC/USD", address: "0x0" },
@@ -74,24 +22,11 @@ const initialAssets: AssetT[] = [
 
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
-  const [selectedAsset, setSelectedAsset] = useState<AssetPair>({
-    ticker: "BTC/USD",
-    lastPrice: 50000,
-    variation24h: 2000,
-    relativeVariation24h: 4,
-    priceData: [
-      { time: "2018-12-22", value: 32.51 },
-      { time: "2018-12-23", value: 31.11 },
-      // Add more data as needed
-    ],
-  });
+  const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);
 
   const [allData, setAllData] = useState<AssetPair[]>([]); // Initialize state with empty array
 
-  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>({
-    ticker: "BTC/USD",
-    address: "0x0",
-  });
+  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(initialAssets[0]);
 
   // Function to handle asset selection
   const handleAssetSelect = (assetPair: AssetT) => {
@@ -113,12 +48,12 @@ const IndexPage = () => {
         // Update your state with the new data
         const assetData = {
           ticker: data.pair_id,
-          lastPrice: data.data[0].close,
+          lastPrice: data.data[0].open,
           variation24h: 2000,
           relativeVariation24h: 4,
           priceData: data.data.reverse().map((d) => ({
             time: new Date(d.time).getTime() / 1000,
-            value: parseInt(d.close) / 10 ** 8,
+            value: parseInt(d.open) / 10 ** 8,
           })),
         };
         setAllData((data) => [...data, assetData]);
