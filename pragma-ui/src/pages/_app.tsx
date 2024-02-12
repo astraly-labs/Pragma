@@ -45,6 +45,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           property="twitter:title"
           content="Pragma - The network of zk-truth machines"
         ></meta>
+        <meta
+          property="twitter:description"
+          content="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
+        ></meta>
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
@@ -67,15 +71,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <SpeedInsights />
       <DefaultSeo
-        titleTemplate="%s - Pragma - Starknet Oracle"
-        defaultTitle="Pragma - Starknet Oracle"
-        description="Pragma is the leading zk-native oracle, live on Starknet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
+        titleTemplate="%s - Pragma - The network of zk-truth machines"
+        defaultTitle="Pragma - The network of zk-truth machines"
+        description="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
         canonical="https://www.pragma.build"
         openGraph={{
           url: "https://www.pragma.build",
-          title: "Pragma - Starknet Oracle",
+          title: "Pragma - The network of zk-truth machines",
           description:
-            "Pragma is the leading zk-native oracle, live on Starknet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
+            "Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines.",
           images: [
             {
               url: "https://www.pragma.build/pragma-og-img.png",
