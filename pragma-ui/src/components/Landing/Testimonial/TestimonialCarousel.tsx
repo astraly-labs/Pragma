@@ -21,8 +21,8 @@ interface Category {
 const categories: Category[] = [
   {
     logo: "/assets/ecosystem/starknet.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
+    text: "Since our testnet launch in August of last year, Pragma's price oracle has been a robust and scalable solution to zkLend’s needs. The on-chain price feed and aggregation system has proven reliable and is a valuable asset to our platform.",
+    author: "Brian Fu CEO",
   },
   {
     logo: "/assets/ecosystem/canvas.png",
@@ -66,10 +66,10 @@ const TestimonialCarousel: React.FC = () => {
           </Slide>
         ))}
       </Slider>
-      <ButtonBack className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
+      <ButtonBack className="absolute right-1/2	bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
         <ArrowLeftIcon className="w-5" />
       </ButtonBack>
-      <ButtonNext className="absolute left-1/2 bottom-6 translate-x-1/4	 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
+      <ButtonNext className="absolute left-1/2	bottom-6 translate-x-1/4 cursor-pointer rounded-full	 border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
         <ArrowRightIcon className="w-5" />
       </ButtonNext>
     </CarouselProvider>

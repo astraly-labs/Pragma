@@ -49,7 +49,7 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
         {filteredAssets.map((asset, index) => (
           <button
             key={index}
-            className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen hover:opacity-50"
+            className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen transition-opacity duration-300 hover:opacity-50"
             onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
           >
             <div className="text-left">{asset.ticker}</div>

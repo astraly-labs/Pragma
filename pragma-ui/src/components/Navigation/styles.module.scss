@@ -55,6 +55,8 @@
     cursor: pointer;
     font-size: 18px;
     width: fit-content;
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+
 }
 
 
@@ -85,10 +87,12 @@
 
 .checkbox:hover input~.checkmark {
     background-color: rgba(181, 240, 229, 0.50);
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+
 }
 
 
-/* When the checkbox is checked, add a blue background */
+/* When the checkbox is checked, add a background */
 
 .checkbox input:checked~.checkmark {
     background-color: rgba(181, 240, 229, 0.50);

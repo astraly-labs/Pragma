@@ -115,10 +115,10 @@ const BlogCarousel: React.FC = () => {
           ))}
         </Slider>
         <div className="relative lg:h-20 xl:h-0">
-          <ButtonBack className="absolute bottom-0 left-10 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
+          <ButtonBack className="absolute bottom-0	left-10 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
             <ArrowLeftIcon className="w-5" />
           </ButtonBack>
-          <ButtonNext className="absolute left-24 bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
+          <ButtonNext className="absolute left-24	bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
             <ArrowRightIcon className="w-5" />
           </ButtonNext>
         </div>

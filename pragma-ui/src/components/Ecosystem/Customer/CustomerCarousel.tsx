@@ -68,14 +68,14 @@ const CustomerCarousel: React.FC = () => {
         {categories.map((category, index) => (
           <Slide index={index} key={index}>
             <div className={styles.customerBox} key={index}>
-              <ButtonBack className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
+              <ButtonBack className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
                 <ArrowLeftIcon className="w-5" />
               </ButtonBack>
-              <ButtonNext className="absolute left-1/2 bottom-6 translate-x-1/4	 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
+              <ButtonNext className="absolute left-1/2 bottom-6  translate-x-1/4 cursor-pointer rounded-full	 border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
                 <ArrowRightIcon className="w-5" />
               </ButtonNext>
               <div className="flex w-full flex-col gap-6 md:w-6/12">
-                <div className="w-fit rounded-full bg-lightBlur px-4 py-2 text-xs uppercase text-lightGreen">
+                <div className="w-fit rounded-full bg-lightBlur px-4 py-2 text-xs uppercase tracking-widest text-lightGreen">
                   {category.category}
                 </div>
                 <div className="w-48">

@@ -46,7 +46,7 @@ const EventBox: React.FC<EventsProps> = ({
     </GreenUpperText>
     <a
       href={link}
-      className="ml-auto cursor-pointer rounded-full border border-mint bg-transparent p-3 text-mint hover:bg-mint hover:text-darkGreen"
+      className="ml-auto cursor-pointer	rounded-full border border-mint bg-transparent p-3 text-mint transition-colors duration-300 hover:bg-mint hover:text-darkGreen"
     >
       <ArrowRightIcon className="w-5 cursor-pointer" />
     </a>

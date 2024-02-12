@@ -149,7 +149,7 @@ const NavHeader = () => {
               <a
                 href={resource.href}
                 key={resource.name}
-                className="text-base font-medium text-lightGreen hover:text-white"
+                className="text-base font-medium text-lightGreen transition-colors duration-300 hover:text-white"
               >
                 {resource.name}
               </a>

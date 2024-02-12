@@ -55,7 +55,7 @@ const InputComponent: React.FC<InputProps> = ({
           className={classNames(className, styles.input)}
         />
         <button
-          className="ml-auto cursor-pointer rounded-full border border-LightGreenFooter bg-transparent p-2 text-LightGreenFooter hover:bg-LightGreenFooter hover:text-darkGreen"
+          className="ml-auto cursor-pointer rounded-full border border-LightGreenFooter	bg-transparent p-2 text-LightGreenFooter transition-colors duration-300 hover:bg-LightGreenFooter hover:text-darkGreen"
           onClick={handleButtonClick}
         >
           <ArrowRightIcon className="w-3 cursor-pointer" />
