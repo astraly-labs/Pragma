@@ -45,13 +45,16 @@ const IndexPage = () => {
         const data = await response.json();
         console.log(data);
 
+        const variation24h = data.data[0].open - data.data[1440].open;
+        const relativeVariation24h = ((variation24h / data.data[1440].open) * 100);
+
         // Update your state with the new data
         const assetData = {
           ticker: data.pair_id,
           lastPrice: data.data[0].open,
-          variation24h: 2000,
-          relativeVariation24h: 4,
-          priceData: data.data.reverse().map((d) => ({
+          variation24h,
+          relativeVariation24h: variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
+          priceData: data.data.reverse().map((d: any) => ({
             time: new Date(d.time).getTime() / 1000,
             value: parseInt(d.open) / 10 ** 8,
           })),
@@ -135,7 +138,7 @@ const IndexPage = () => {
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
           <ChartBox assetPair={selectedAsset} />
-          <AssetBox assets={initialAssets} onAssetSelect={handleAssetSelect} />
+          <AssetBox assets={initialAssets} onAssetSelect={handleAssetSelect} data={allData} />
         </div>
       </BoxContainer>
       <BoxContainer>

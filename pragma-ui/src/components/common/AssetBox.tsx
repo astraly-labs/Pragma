@@ -20,9 +20,10 @@ export interface AssetT {
 interface AssetBoxProps {
   assets: AssetT[];
   onAssetSelect: (assetPair: AssetT) => void;
+  data: AssetPair[];
 }
 
-const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
+const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
   const handleAssetSelect = (assetPair: AssetT) => {
     onAssetSelect(assetPair);
   };
@@ -53,9 +54,9 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect }) => {
             onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
           >
             <div className="text-left">{asset.ticker}</div>
-            {/* <div className="text-left">{asset.lastPrice}</div>
-            <div className="text-left">{asset.variation24h}</div>
-            <div className="text-left">{asset.relativeVariation24h}%</div> */}
+            <div className="text-left">{data[index]?.lastPrice / 10 ** 8}</div>
+            <div className="text-left">{data[index]?.variation24h / 10 ** 8}</div>
+            <div className="text-left">{data[index]?.relativeVariation24h.toFixed(2)}%</div>
           </button>
         ))}
         {filteredAssets.length === 0 ? (
