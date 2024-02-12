@@ -16,6 +16,16 @@ const ecosystem: Ecosystem[] = [
     link: "https://canvas.co/",
   },
   {
+    name: "carmine",
+    src: "/assets/ecosystem/carmine.svg",
+    link: "https://carmine.finance/",
+  },
+  {
+    name: "haiko",
+    src: "/assets/ecosystem/haiko.svg",
+    link: "https://haiko.xyz/",
+  },
+  {
     name: "zklend",
     src: "/assets/ecosystem/zklendfull.svg",
     link: "https://canvas.co/",
