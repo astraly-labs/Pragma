@@ -38,7 +38,7 @@ export default function CodeSnippet() {
                 className={({ selected }) =>
                   classNames(
                     "w-full rounded-full p-2 text-sm font-medium leading-5 tracking-wider sm:p-4 md:p-6",
-                    "focus:outline-none",
+                    "focus:outline-none ",
                     selected
                       ? "bg-mint text-darkGreen"
                       : "text-lightGreen hover:text-white"

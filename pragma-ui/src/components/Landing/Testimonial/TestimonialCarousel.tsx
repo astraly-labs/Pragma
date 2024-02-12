@@ -20,7 +20,7 @@ interface Category {
 
 const categories: Category[] = [
   {
-    logo: "/assets/ecosystem/starknet.png",
+    logo: "/assets/ecosystem/zklendfull.svg",
     text: "Since our testnet launch in August of last year, Pragma's price oracle has been a robust and scalable solution to zkLend’s needs. The on-chain price feed and aggregation system has proven reliable and is a valuable asset to our platform.",
     author: "Brian Fu CEO",
   },

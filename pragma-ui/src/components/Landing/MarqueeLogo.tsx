@@ -16,14 +16,14 @@ const ecosystem: Ecosystem[] = [
     link: "https://canvas.co/",
   },
   {
-    name: "starknet",
-    src: "/assets/ecosystem/starknet.png",
+    name: "zklend",
+    src: "/assets/ecosystem/zklendfull.svg",
     link: "https://canvas.co/",
   },
   {
-    name: "era",
-    src: "/assets/ecosystem/era.png",
-    link: "https://canvas.co/",
+    name: "starknet",
+    src: "/assets/ecosystem/starknet.png",
+    link: "https://zklend.com/",
   },
   {
     name: "hashstack",
@@ -36,14 +36,29 @@ const ecosystem: Ecosystem[] = [
     link: "https://canvas.co/",
   },
   {
-    name: "canvas",
-    src: "/assets/ecosystem/canvas.png",
-    link: "https://canvas.co/",
+    name: "avnu",
+    src: "/assets/ecosystem/avnu.svg",
+    link: "https://avnu.fi/",
   },
   {
-    name: "starknet",
-    src: "/assets/ecosystem/starknet.png",
-    link: "https://canvas.co/",
+    name: "nimbora",
+    src: "/assets/ecosystem/nimbora.svg",
+    link: "https://nimbora.io/",
+  },
+  {
+    name: "propeller heads",
+    src: "/assets/ecosystem/propeller.svg",
+    link: "https://propellerheads.xyz/",
+  },
+  {
+    name: "flowdesk",
+    src: "/assets/ecosystem/flowdesk.svg",
+    link: "https://flowdesk.co/",
+  },
+  {
+    name: "skynet",
+    src: "/assets/ecosystem/skynet.svg",
+    link: "https://skynettrading.com/",
   },
 ];
 
@@ -86,10 +101,10 @@ const MarqueeLogo = () => {
             key={index}
             rel="noreferrer"
             target="_blank"
-            className="relative z-10"
+            className="relative z-10 my-auto flex items-center justify-center"
             href={link}
           >
-            <img className="h-8 px-8" src={src} alt={name} />
+            <img className="my-auto h-8 px-8" src={src} alt={name} />
           </a>
         ))}
       </Marquee>
