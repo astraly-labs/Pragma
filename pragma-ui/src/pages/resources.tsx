@@ -10,31 +10,15 @@ import { ChartBox } from "../components/common/ChartBox";
 import CompFeedBox from "../components/Resources/CompFeedBox";
 import VerifRandBox from "../components/Resources/VerifRandBox";
 import Blog from "../components/Landing/Blog/Blog";
+import { initialAssets } from ".";
 
 const EcosystemPage = () => {
-  const initialAssets: AssetT[] = [
-    { ticker: "BTC/USD", address: "0x0" },
-    { ticker: "ETH/USD", address: "0x1" },
-  ];
 
-  const [selectedAsset, setSelectedAsset] = useState<AssetPair>({
-    ticker: "BTC/USD",
-    lastPrice: 50000,
-    variation24h: 2000,
-    relativeVariation24h: 4,
-    priceData: [
-      { time: "2018-12-22", value: 32.51 },
-      { time: "2018-12-23", value: 31.11 },
-      // Add more data as needed
-    ],
-  });
+  const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);
 
   const [allData, setAllData] = useState<AssetPair[]>([]); // Initialize state with empty array
 
-  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>({
-    ticker: "BTC/USD",
-    address: "0x0",
-  });
+  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(initialAssets[0]);
 
   // Function to handle asset selection
   const handleAssetSelect = (assetPair: AssetT) => {
@@ -53,15 +37,18 @@ const EcosystemPage = () => {
         const data = await response.json();
         console.log(data);
 
+        const variation24h = data.data[0].open - data.data[1440].open;
+        const relativeVariation24h = ((variation24h / data.data[1440].open) * 100);
+
         // Update your state with the new data
         const assetData = {
           ticker: data.pair_id,
-          lastPrice: data.data[0].close,
-          variation24h: 2000,
-          relativeVariation24h: 4,
-          priceData: data.data.reverse().map((d) => ({
+          lastPrice: data.data[0].open,
+          variation24h,
+          relativeVariation24h: variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
+          priceData: data.data.reverse().map((d: any) => ({
             time: new Date(d.time).getTime() / 1000,
-            value: parseInt(d.close) / 10 ** 8,
+            value: parseInt(d.open) / 10 ** 8,
           })),
         };
         setAllData((data) => [...data, assetData]);
@@ -110,6 +97,7 @@ const EcosystemPage = () => {
           selectedAsset={selectedAsset}
           initialAssets={initialAssets}
           handleAssetSelect={handleAssetSelect}
+          data={allData}
         />
       </BoxContainer>
       <BoxContainer>

@@ -10,6 +10,7 @@ interface PriceFeedBoxProps {
   selectedAsset: AssetPair;
   initialAssets: AssetT[];
   handleAssetSelect: (asset: AssetT) => void;
+  data: AssetPair[];
 }
 
 const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
@@ -18,6 +19,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
   selectedAsset,
   initialAssets,
   handleAssetSelect,
+  data,
 }) => {
   return (
     <div className={styles.darkGreenBox}>
@@ -53,6 +55,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
           <AssetComponent
             assets={initialAssets}
             onAssetSelect={handleAssetSelect}
+            data={data}
           />
         </div>
       </div>

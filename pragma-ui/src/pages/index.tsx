@@ -15,7 +15,7 @@ import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
 
 
-const initialAssets: AssetT[] = [
+export const initialAssets: AssetT[] = [
   { ticker: "BTC/USD", address: "0x0" },
   { ticker: "ETH/USD", address: "0x1" },
 ];
