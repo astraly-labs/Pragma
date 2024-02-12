@@ -146,13 +146,13 @@ const NavHeader = () => {
             className="hidden md:flex md:space-x-4 lg:space-x-10"
           >
             {resources.map((resource) => (
-              <a
+              <Link
                 href={resource.href}
                 key={resource.name}
                 className="text-base font-medium text-lightGreen transition-colors duration-300 hover:text-white"
               >
                 {resource.name}
-              </a>
+              </Link>
             ))}
             <NavPopover
               buttonName="Community"
@@ -202,7 +202,7 @@ const NavHeader = () => {
               <div className="mt-6">
                 <nav className="grid gap-y-8">
                   {[...mobileResources, ...resources].map((resource) => (
-                    <a
+                    <Link
                       key={resource.name}
                       href={resource.href}
                       className="-m-3 flex items-center rounded-md p-3 text-center"
@@ -210,7 +210,7 @@ const NavHeader = () => {
                       <span className=" mx-auto font-medium text-lightGreen hover:text-white">
                         {resource.name}
                       </span>
-                    </a>
+                    </Link>
                   ))}
                 </nav>
               </div>

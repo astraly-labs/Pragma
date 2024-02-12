@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { Popover } from "@headlessui/react";
 import StyledTransition from "../common/StyledTransition";
 import styles from "./styles.module.scss";
+import Link from "next/link";
 
 interface PopoverContent {
   name: string;
@@ -53,7 +54,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
             >
               <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
                 {content.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="-m-3 flex items-start rounded-lg p-3 hover:opacity-50"
@@ -71,7 +72,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                         {item.description}
                       </p>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
               {/* <div className="space-y-6 px-5 py-5 sm:flex sm:space-y-0 sm:space-x-10 sm:px-8">

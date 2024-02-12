@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Marquee from "react-fast-marquee";
+import Link from "next/link";
 
 interface Ecosystem {
   name: string;
@@ -107,7 +108,7 @@ const MarqueeLogo = () => {
         gradientWidth={gradientW}
       >
         {ecosystem.map(({ name, src, link }, index) => (
-          <a
+          <Link
             key={index}
             rel="noreferrer"
             target="_blank"
@@ -115,7 +116,7 @@ const MarqueeLogo = () => {
             href={link}
           >
             <img className="my-auto h-8 px-8" src={src} alt={name} />
-          </a>
+          </Link>
         ))}
       </Marquee>
     </div>
