@@ -8,7 +8,7 @@ const Banner = () => {
 
   useEffect(() => {
     /**
-     * Checks whether StarkNet's status is okay.
+     * Checks whether Starknet's status is okay.
      */
     async function checkStatus() {
       const { status } = await getStarknetStatus();
@@ -30,7 +30,7 @@ const Banner = () => {
                 aria-hidden="true"
               />
               <p className="ml-3 text-slate-700">
-                <span>StarkNet is experiencing delays.</span>
+                <span>Starknet is experiencing delays.</span>
                 <span className="hidden md:inline">
                   {" "}
                   The network is taking longer to process our updates.

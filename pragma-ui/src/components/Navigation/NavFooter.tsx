@@ -6,6 +6,10 @@ import {
   networkId,
 } from "../../services/wallet.service";
 import { getOracleProxyAddress } from "../../services/address.service";
+import InputComponent from "./EmailInput";
+import LightGreenUpper from "../common/LightGreenUpperText";
+import classNames from "classnames";
+import styles from "./styles.module.scss";
 
 interface FooterLink {
   title: string;
@@ -24,7 +28,7 @@ const content: FooterColumn[] = [
     links: [
       {
         title: "Documentation",
-        href: "https://docs.pragmaoracle.com/docs/introduction",
+        href: "https://docs.pragma.build",
         external: true,
       },
       {
@@ -45,18 +49,13 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
-        title: "Features",
-        href: "/features",
+        title: "Ecosystem",
+        href: "/ecosystem",
         external: false,
       },
       {
-        title: "Publishers",
-        href: "/publishers",
-        external: false,
-      },
-      {
-        title: "Protocols",
-        href: "/protocols",
+        title: "Resources",
+        href: "/resources",
         external: false,
       },
     ],
@@ -81,7 +80,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Contact Us",
-        href: "mailto:support@pragmaoracle.com?body=Hi%Pragma-Team,",
+        href: "mailto:support@pragma.build?body=Hi%Pragma-Team,",
         external: true,
       },
     ],
@@ -94,65 +93,60 @@ export interface SocialMedia {
   href: string;
 }
 
-const socials: SocialMedia[] = [
-  {
-    name: "GitHub",
-    src: "/assets/social/github.svg",
-    href: "https://github.com/Astraly-Labs/Pragma",
-  },
-  {
-    name: "Twitter",
-    src: "/assets/social/twitter.svg",
-    href: "https://twitter.com/PragmaOracle",
-  },
-  {
-    name: "Medium",
-    src: "/assets/social/medium.svg",
-    href: "https://mirror.xyz/pragmagic.eth",
-  },
-  {
-    name: "Discord",
-    src: "/assets/social/discord.svg",
-    href: "https://discord.gg/N7sM7VzfJB",
-  },
-];
+// const socials: SocialMedia[] = [
+//   {
+//     name: "GitHub",
+//     src: "/assets/social/github.svg",
+//     href: "https://github.com/Astraly-Labs/Pragma",
+//   },
+//   {
+//     name: "Twitter",
+//     src: "/assets/social/twitter.svg",
+//     href: "https://twitter.com/PragmaOracle",
+//   },
+//   {
+//     name: "Medium",
+//     src: "/assets/social/medium.svg",
+//     href: "https://mirror.xyz/pragmagic.eth",
+//   },
+//   {
+//     name: "Discord",
+//     src: "/assets/social/discord.svg",
+//     href: "https://discord.gg/N7sM7VzfJB",
+//   },
+// ];
 
 const Footer = () => (
-  <div className="w-full overflow-hidden bg-dark">
-    <div className="mx-auto max-w-7xl border-t border-black px-4 pb-12 pt-16 lg:px-8">
-      <div className="grid grid-cols-2 gap-10 lg:grid-cols-10 lg:gap-20">
-        <div className="col-span-2 flex flex-col space-y-8 lg:col-span-4">
-          <Link href="/">
-            <div className="w-fit">
-              <span className="sr-only">Pragma</span>
-              <img
-                className="h-12 w-auto sm:h-16 md:h-20"
-                src="/pragma-logo.svg"
-                alt="Pragma"
-              />
-            </div>
-          </Link>
-          <p className="prose prose-slate text-grey">
-            Pragma is the leading oracle on Starknet, built to empower native
-            protocols to realize their ambitious potential.
-          </p>
-          <ul className="flex flex-row items-center space-x-6">
-            {socials.map((social) => (
-              <li key={social.name}>
-                <a href={social.href}>
-                  <img
-                    src={social.src}
-                    alt={social.name}
-                    className="h-6 w-6 cursor-pointer invert"
-                  />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+  <div className="mt-20 w-full overflow-hidden bg-greenFooter">
+    <div
+      className={classNames(
+        "3xl:px-0 mx-auto px-4 pb-12 pt-16 md:mx-auto md:w-11/12 md:px-10 2xl:px-24",
+        styles.bigScreen
+      )}
+    >
+      <div className="pb-20">
+        <Link href="/">
+          <div className="w-fit">
+            <span className="sr-only">Pragma</span>
+            <img
+              className="h-8 w-auto sm:h-10 md:h-10"
+              src="/pragma-logo.png"
+              alt="Pragma"
+            />
+          </div>
+        </Link>
+        <p className="lg:5/12 prose-slate w-full pt-5 text-lightGreen sm:w-10/12 md:w-7/12">
+          Pragma is the leading oracle on Starknet, built to empower native
+          protocols to realize their ambitious potential.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-3 lg:grid-cols-10 lg:gap-10">
         {content.map((column) => (
-          <nav key={column.heading} className="col-span-1 lg:col-span-2">
-            <p className="font-semibold uppercase tracking-wider text-grey">
+          <nav
+            key={column.heading}
+            className="col-span-3 md:col-span-1 lg:col-span-2"
+          >
+            <p className="text-xs uppercase	 tracking-wider text-LightGreenFooter">
               {column.heading}
             </p>
             <div className="mt-6 flex flex-col space-y-4">
@@ -172,10 +166,16 @@ const Footer = () => (
             </div>
           </nav>
         ))}
+        <div className="col-span-4 max-w-md">
+          <div className="pb-3 text-lg text-lightGreen">
+            Subscribe to our mailing list
+          </div>
+          <InputComponent placeholderText="Email address" />
+        </div>
       </div>
-      <div className="mt-10 mb-6 w-full border-t border-black pt-10 text-center text-grey md:mb-0">
-        © Assert Labs FZCO. - {new Date().getFullYear()}. All rights reserved.
-      </div>
+      <LightGreenUpper className="mt-4 pt-3 text-left md:mt-10 md:pt-10">
+        © Pragma Labs - {new Date().getFullYear()}. All rights reserved.
+      </LightGreenUpper>
     </div>
   </div>
 );

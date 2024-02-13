@@ -1,9 +1,48 @@
 @font-face {
-  font-family: "Space Grotesk";
+  font-family: "IBM Plex Sans";
   font-style: normal;
-  font-weight: 100 900;
   font-display: swap;
-  src: url(/fonts/SpaceGrotesk-wght.woff2) format("woff2");
+  src: url(/fonts/IBMPlexSans-Light.ttf) format("woff2");
+  line-height: 16px;
+  /* 100% */
+  letter-spacing: 0.32px;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-display: swap;
+  src: url(/fonts/IBMPlexMono-Regular.ttf) format("woff2");
+  line-height: 20px;
+  /* 142.857% */
+  letter-spacing: 0.7px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #042420;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #15ff81;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b5f0e5;
+}
+
+.carousel__slide-focus-ring {
+  display: none !important;
+  outline-width: 0 !important;
 }
 
 @tailwind base;

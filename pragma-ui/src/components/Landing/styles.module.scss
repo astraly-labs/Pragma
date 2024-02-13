@@ -1,0 +1,227 @@
+.verifiable {
+  color: #15ff81;
+  border-bottom: #15ff81 solid 1px;
+}
+
+.heading {
+  color: #b5f0e5;
+  text-align: center;
+  text-decoration-line: none !important;
+}
+
+.videoBg {
+  width: 100%;
+  height: fit-content;
+  background-size: cover;
+}
+
+.heroFilter {
+  background: linear-gradient(
+    0.25turn,
+    #04242000 0%,
+    #042420 50%,
+    #04242000 100%
+  );
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+}
+
+.boxMarquee {
+  display: flex;
+  margin-bottom: 0;
+  padding: 20px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#082f28, #082f28) padding-box,
+    linear-gradient(
+        150deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.25) 055%,
+        rgba(255, 255, 255, 0.06%),
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
+  overflow: hidden;
+  width: 100%;
+}
+
+.boxBlur {
+  display: flex;
+  width: 788px;
+  padding: 56px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid #fff;
+  background: var(--green-50, rgba(0, 71, 56, 0.5));
+}
+
+.greenCode {
+  color: #15ff81;
+}
+
+.purpleCode {
+  color: #b692f6;
+}
+
+.darkGreenBox {
+  display: flex;
+  padding: 56px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#02201e, #02201e) padding-box,
+    linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.25) 020%,
+        rgba(255, 255, 255, 0.06%) 050%,
+        rgba(255, 255, 255, 0.25) 080%,
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
+}
+
+.testimonyBox {
+  display: flex;
+  padding: 64px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+  background: var(--green-12, rgba(27, 99, 82, 0.12));
+  width: full;
+  height: 100%;
+}
+
+.blogBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 20px;
+  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+  background: var(--green-12, rgba(27, 99, 82, 0.12));
+  height: 100%;
+  max-height: 500px;
+  overflow: hidden;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.overflowContainer {
+  height: 38px; /* Set your desired fixed height */
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+}
+
+.lightDot1 {
+  position: absolute;
+  width: 40px;
+  bottom: -19px;
+  z-index: 10;
+  left: 75px;
+}
+
+.lightDot2 {
+  position: absolute;
+  width: 40px;
+  top: -19px;
+  z-index: 10;
+  right: 75px;
+}
+
+.swiperContainer .swiper-wrapper {
+  display: flex;
+}
+
+.carouselWrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.carouselWrap {
+  width: 96%;
+  margin-left: auto;
+}
+
+.noTransition {
+  transition: none !important;
+}
+.bigScreen {
+  max-width: 1700px;
+}
+
+.grad {
+  background: linear-gradient(
+    90deg,
+    rgba(4, 36, 32, 0) 0%,
+    rgba(4, 36, 32, 1) 50%,
+    rgba(4, 36, 32, 0) 100%
+  );
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.grad2 {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 36, 32, 0) 0%,
+    rgba(4, 36, 32, 1) 50%,
+    rgba(4, 36, 32, 0) 100%
+  );
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .testimonyBox {
+    padding: 24px;
+    align-items: center;
+    text-align: center;
+  }
+  .carouselWrap {
+    width: unset;
+    margin-left: unset;
+  }
+}
+
+@media (max-width: 640px) {
+  .heading {
+    font-size: 40px;
+    line-height: 48px;
+  }
+  .verifiable {
+    font-size: 40px;
+    line-height: 48px;
+  }
+  .boxMarquee {
+    margin: 12px;
+  }
+  .darkGreenBox {
+    padding: 24px 32px;
+  }
+}

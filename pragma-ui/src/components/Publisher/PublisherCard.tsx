@@ -19,12 +19,12 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
       )}
     </figcaption>
     <div className="relative mt-6">
-      <h3 className="relative mb-3 text-2xl font-semibold text-secondary">
+      <h3 className="text-secondary relative mb-3 text-2xl font-semibold">
         {name}
       </h3>
       <blockquote className="relative">
-        <QuoteIcon className="absolute top-0 left-0 fill-dark" />
-        <p className="prose prose-slate relative whitespace-pre-line text-grey">
+        <QuoteIcon className="fill-dark absolute top-0 left-0" />
+        <p className="text-grey prose prose-slate relative whitespace-pre-line">
           {description}
         </p>
       </blockquote>

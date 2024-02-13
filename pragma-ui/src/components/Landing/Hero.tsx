@@ -1,25 +1,100 @@
-import React from "react";
-import Underline from "../common/Underline";
+import React, { useEffect, useState } from "react";
+import styles from "./styles.module.scss";
+import classNames from "classnames";
+import GreenText from "../common/GreenText";
+import { ButtonLink } from "../common/Button";
+import Lottie from "react-lottie-player";
+import animationHero from "../../../public/pragma_hero.json";
+import animationHeroMobile from "../../../public/pragma_hero_mobile.json";
 
-const Hero = () => (
-  <header className="text-center md:py-8 lg:py-10">
-    <h1 className="max-w-7xl text-3xl font-medium !leading-[1.2] tracking-tight text-white md:text-5xl lg:text-7xl">
-      <span className="relative text-primary md:whitespace-nowrap ">
-        <Underline className="absolute top-2/3 left-0 hidden h-[0.45em] w-full fill-secondary opacity-50 md:block" />
-        <span className="relative">Decentralized &amp; Composable</span>
-      </span>
-      <br />
-      Data Infrastructure
-    </h1>
-    <p className="mt-10 max-w-7xl text-xl text-grey sm:mt-12 sm:text-2xl">
-      In strategic partnership with
-      <img
-        className="mt-3 inline w-36 sm:ml-3 sm:mt-0 sm:w-44"
-        src="/assets/starkware.svg"
-        alt="Starkware"
-      />
-    </p>
-  </header>
-);
+const Hero = () => {
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  useEffect(() => {
+    // Check if the window object is available
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Clean-up function to remove event listener
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  // Define different image sources based on screen size
+  const getImageSource = () => {
+    if (windowWidth < 640) {
+      return animationHeroMobile;
+    } else {
+      return animationHero;
+    }
+  };
+  return (
+    <div className="relative h-full w-full">
+      <div className="hidden h-full md:block">
+        <Lottie
+          loop
+          animationData={getImageSource()}
+          play
+          style={{
+            width: "100%",
+            position: "absolute",
+            left: 0,
+          }}
+        />
+        <div className={styles.grad}></div>
+      </div>
+      <div className="block md:hidden">
+        <Lottie
+          loop
+          animationData={getImageSource()}
+          play
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "110%",
+            top: "0",
+          }}
+        />
+        <div className={styles.grad2}></div>
+      </div>
+      {/* <div className={classNames("hidden md:block", styles.heroFilter)}></div> */}
+      <div
+        className={classNames(
+          "flex w-full justify-center align-middle",
+          styles.videoBg
+        )}
+      >
+        <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-24 lg:w-6/12">
+          <h1 className="pt-32">
+            <span className="relative text-lightGreen md:whitespace-nowrap">
+              <span className={styles.heading}>The Internet is now</span>
+            </span>
+            <br />
+            <span className={styles.verifiable}>verifiable</span>
+          </h1>
+          <GreenText isAligned={true}>
+            Pragma is the first zk-oracle, providing access to internet data
+            from blockchains in a verifiable way. Star(k)t building more
+            efficient and safer applications now.
+          </GreenText>
+          <ButtonLink
+            center={true}
+            color="mint"
+            variant="solid"
+            href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          >
+            Start Building
+          </ButtonLink>
+        </header>
+      </div>
+    </div>
+  );
+};
 
 export default Hero;

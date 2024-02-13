@@ -3,7 +3,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 import AssetCard from "./AssetCard";
 import { AssetKeys } from "../../hooks/oracle";
 import { Button } from "../common/Button";
-import SearchBar from "../Navigation/SearchBar";
+// import SearchBar from "../Navigation/SearchBar";
 
 const SHOW_DEFAULT = 3;
 const SHOW_STEP = 5;
@@ -28,11 +28,12 @@ const AssetsSection = () => {
         <AssetCard assetKey={assetKey} key={index} />
       ))}
       <div className="flex w-min flex-col items-center space-y-4 sm:w-full sm:flex-row sm:justify-between sm:space-y-0">
-        <SearchBar />
+        {/* <SearchBar /> */}
         <div className="flex items-center">
           <Button
             variant="outline"
-            color="slate"
+            color="mint"
+            center={true}
             onClick={() => setNumToShow(incrementShow(numToShow))}
             icon={ChevronDownIcon}
             className="rounded-l-lg rounded-r-none"
@@ -43,7 +44,8 @@ const AssetsSection = () => {
           </Button>
           <Button
             variant="outline"
-            color="slate"
+            color="mint"
+            center={true}
             onClick={() => setNumToShow(SHOW_DEFAULT)}
             icon={ChevronUpIcon}
             className="rounded-r-lg rounded-l-none border-l-0"

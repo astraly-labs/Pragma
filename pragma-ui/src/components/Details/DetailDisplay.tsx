@@ -100,9 +100,9 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
       />
       <DetailCard
         label="Last updated"
-        description="This is the last time this price was updated on StarkNet. You might see bigger delays when StarkNet is slow in processing our requests."
+        description="This is the last time this price was updated on Starknet. You might see bigger delays when Starknet is slow in processing our requests."
         toDisplay={timeContent}
-        img={<ClockIcon className="h-6 w-6 stroke-grey" />}
+        img={<ClockIcon className="stroke-grey h-6 w-6" />}
       />
     </div>
   );

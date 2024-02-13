@@ -2,24 +2,22 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
 import CommandPallate from "../components/Navigation/CommandPalette";
 import { SearchContext } from "../providers/search";
 import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
-import { sepolia, Chain } from "@starknet-react/chains";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
+import { sepolia, Chain } from "@starknet-react/chains";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
-  const router = useRouter();
-
   /**
-   * @param {Chain} chain
-   * @return {Rpc}
+   * Generates RPC configuration for the specified chain.
+   * @param {Chain} chain - The blockchain chain for which to generate RPC configuration.
+   * @return {object} An object containing RPC configuration for the specified chain.
    */
   function rpc(chain: Chain) {
     return {
@@ -28,6 +26,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }
 
   const provider = jsonRpcProvider({ rpc });
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
+  const router = useRouter();
 
   return (
     <>
@@ -38,6 +40,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           content="width=device-width,initial-scale=1"
           key="viewport"
         />
+        <meta property="twitter:image" content="pragma-og-img.png"></meta>
+        <meta
+          property="twitter:title"
+          content="Pragma - The network of zk-truth machines"
+        ></meta>
+        <meta
+          property="twitter:description"
+          content="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
+        ></meta>
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
@@ -56,18 +67,19 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2151af" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#B5F0E5" />
       </Head>
+      <SpeedInsights route={router.pathname} />
       <DefaultSeo
-        titleTemplate="%s - Pragma - Starknet Oracle"
-        defaultTitle="Pragma - StarkNet Oracle"
-        description="Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable."
+        titleTemplate="%s - Pragma - The network of zk-truth machines"
+        defaultTitle="Pragma - The network of zk-truth machines"
+        description="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
         canonical="https://www.pragma.build"
         openGraph={{
           url: "https://www.pragma.build",
-          title: "Pragma - StarkNet Oracle",
+          title: "Pragma - The network of zk-truth machines",
           description:
-            "Pragma is the leading zk-native oracle, live on StarkNet with 20+ price feeds. Pragma makes data decentralized, transparent and composable.",
+            "Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines.",
           images: [
             {
               url: "https://www.pragma.build/pragma-og-img.png",
@@ -85,7 +97,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         }}
       />
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
-        <div className="flex min-h-screen flex-col justify-start bg-white">
+        <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
           <SearchContext.Provider value={setIsSearchOpen}>
             <NavHeader />
             <CommandPallate isOpen={isSearchOpen} />
