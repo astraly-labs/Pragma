@@ -29,7 +29,7 @@ const categories: Category[] = [
     integration:
       "ZkLend leverages Pragma to ensure the collateral locked in the protocol is valuable enough to borrow. Pragma's robust price feeds make sure ZkLend doesn't end up with bad debt.",
     category: "lending",
-    avatar: "/assets/chads/brian.png",
+    avatar: "/assets/chads/brian.jpg",
   },
   {
     logo: "/assets/ecosystem/nostra.png",
@@ -48,7 +48,7 @@ const CustomerCarousel: React.FC = () => {
       naturalSlideWidth={648}
       naturalSlideHeight={460}
       visibleSlides={1}
-      totalSlides={3}
+      totalSlides={2}
       step={1}
       infinite={true}
       dragEnabled={false}
@@ -79,7 +79,11 @@ const CustomerCarousel: React.FC = () => {
               <div className={styles.testimonialBox}>
                 <div className="text-lg text-lightGreen">{category.text}</div>
                 <div className="flex flex-row gap-4">
-                  <img src={category.avatar} alt="avatar" />
+                  <img
+                    src={category.avatar}
+                    className={styles.avatar}
+                    alt="avatar"
+                  />
                   <GreenUpperText className="flex items-center">
                     {category.author}
                   </GreenUpperText>
