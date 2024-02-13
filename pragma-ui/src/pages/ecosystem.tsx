@@ -37,16 +37,16 @@ const EcosystemPage = () => {
       />
       <BoxContainer>
         <BlurBoxEcosystem
-          greenText="50+"
+          greenText="10+"
           firstText="Our users"
           title="Projects already use verifiable data."
-          generalText="50+ projects already switched to verifiable data using Pragma. You’re next?"
+          generalText="10+ projects already switched to verifiable data using Pragma. You’re next?"
           textButton="Integrate now"
           linkButton="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
           textButton2="Discover all ecosystem"
           linkButton2="https://defillama.com/oracles/Pragma"
         />
-        <StatsBox tve="10,000,000" tvs="10,000,000" />
+        <StatsBox tve="+350,000,000" tvs="+35,000,000" />
       </BoxContainer>
       <BoxContainer>
         <CustomerCarousel />
