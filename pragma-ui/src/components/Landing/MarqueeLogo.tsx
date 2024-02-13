@@ -71,6 +71,11 @@ const ecosystem: Ecosystem[] = [
     src: "/assets/ecosystem/skynet.svg",
     link: "https://skynettrading.com/",
   },
+  {
+    name: "starkware",
+    src: "/assets/ecosystem/starkware.svg",
+    link: "https://starkware.co/",
+  },
 ];
 
 const MarqueeLogo = () => {
