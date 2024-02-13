@@ -25,7 +25,7 @@ const categories: Category[] = [
     author: "Brian Fu CEO",
   },
   {
-    logo: "/assets/ecosystem/canvas.png",
+    logo: "/assets/ecosystem/nostra.png",
     text: "We are pleased to partner with the Pragma team and integrating their StarkNet native oracle to our Defi products.",
     author: "David Garai CEO",
   },
