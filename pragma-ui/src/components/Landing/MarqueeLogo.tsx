@@ -29,22 +29,22 @@ const ecosystem: Ecosystem[] = [
   {
     name: "zklend",
     src: "/assets/ecosystem/zklendfull.svg",
-    link: "https://canvas.co/",
+    link: "https://zklend.com/",
   },
   {
     name: "starknet",
     src: "/assets/ecosystem/starknet.png",
-    link: "https://zklend.com/",
+    link: "https://starknet.io/",
   },
   {
     name: "hashstack",
     src: "/assets/ecosystem/hashstack.png",
-    link: "https://canvas.co/",
+    link: "https://hashstack.finance/",
   },
   {
     name: "nostra",
     src: "/assets/ecosystem/nostra.png",
-    link: "https://canvas.co/",
+    link: "https://nostra.finance/",
   },
   {
     name: "avnu",
