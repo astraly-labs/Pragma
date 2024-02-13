@@ -37,6 +37,7 @@
     padding-bottom: 6px;
     border-bottom: 0.5px solid rgba(181, 240, 229, 0.50);
     color: #15FF81;
+    font-family: IBM Plex Sans;
 }
 
 .input:focus {
@@ -45,6 +46,7 @@
 
 .input::placeholder {
     color: rgba(181, 240, 229, 0.50);
+    font-family: IBM Plex Sans;
 }
 
 .checkbox {
