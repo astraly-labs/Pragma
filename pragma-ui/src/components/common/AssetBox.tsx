@@ -15,6 +15,7 @@ export interface AssetPair {
 export interface AssetT {
   ticker: string;
   address: string;
+  decimals: number;
 }
 
 interface AssetBoxProps {
@@ -47,18 +48,32 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
         <div>Symbol</div> <div>Last</div> <div>24H</div> <div>24H%</div>
       </div>
       <div className="flex max-h-16 w-full flex-col overflow-auto pr-2">
-        {filteredAssets?.map((asset, index) => (
-          <button
-            key={index}
-            className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen transition-opacity duration-300 hover:opacity-50"
-            onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
-          >
-            <div className="text-left">{asset.ticker}</div>
-            <div className="text-left">{data ? data[index]?.lastPrice / 10 ** 8 : 0}</div>
-            <div className="text-left">{data ? data[index]?.variation24h / 10 ** 8 : 0}</div>
-            <div className="text-left">{data ? data[index]?.relativeVariation24h.toFixed(2) : 0}%</div>
-          </button>
-        ))}
+        {filteredAssets
+          ?.sort((a, b) => a.ticker.localeCompare(b.ticker))
+          .map((asset, index) => (
+            <button
+              key={index}
+              className="grid w-full grid-cols-4 gap-4 border-t border-t-lightBlur py-2 font-mono text-xs text-lightGreen transition-opacity duration-300 hover:opacity-50"
+              onClick={() => handleAssetSelect(asset)} // Call handleAssetSelect onClick
+            >
+              <div className="text-left">{asset.ticker}</div>
+              <div className="text-left">
+                {data
+                  ? (data[index]?.lastPrice / 10 ** asset.decimals).toFixed(2)
+                  : 0}
+              </div>
+              <div className="text-left">
+                {data
+                  ? (data[index]?.variation24h / 10 ** asset.decimals).toFixed(
+                      5
+                    )
+                  : 0}
+              </div>
+              <div className="text-left">
+                {data ? data[index]?.relativeVariation24h.toFixed(2) : 0}%
+              </div>
+            </button>
+          ))}
         {filteredAssets.length === 0 ? (
           <div className="py-2 font-mono text-xs text-lightGreen">
             No assets for your search

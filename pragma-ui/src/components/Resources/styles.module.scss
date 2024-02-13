@@ -1,70 +1,82 @@
 .darkGreenBox {
-    display: flex;
-    gap: 30px;
-    overflow: hidden;
-    position: relative;
-    padding: 80px 60px;
-    flex-direction: row;
-    align-items: flex-start;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    background: linear-gradient(#02201E, #02201E) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 020%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.25) 080%, rgba(255, 255, 255, 0.205) 100%) border-box;
-    backdrop-filter: blur(12.5px);
-    width: 100%;
-    padding-bottom: 0px;
+  display: flex;
+  gap: 30px;
+  overflow: hidden;
+  position: relative;
+  padding: 80px 60px;
+  flex-direction: row;
+  align-items: flex-start;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(#02201e, #02201e) padding-box,
+    linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.25) 020%,
+        rgba(255, 255, 255, 0.06%) 050%,
+        rgba(255, 255, 255, 0.25) 080%,
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
+  width: 100%;
+  padding-bottom: 0px;
 }
 
 .darkGreenBoxBis {
-    display: flex;
-    gap: 30px;
-    overflow: hidden;
-    position: relative;
-    padding: 80px 60px;
-    flex-direction: row;
-    align-items: flex-start;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    background: linear-gradient(#02201E, #02201E) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 020%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.25) 080%, rgba(255, 255, 255, 0.205) 100%) border-box;
-    backdrop-filter: blur(12.5px);
-    width: 100%;
+  display: flex;
+  gap: 30px;
+  overflow: hidden;
+  position: relative;
+  padding: 80px 60px;
+  flex-direction: row;
+  align-items: flex-start;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(#02201e, #02201e) padding-box,
+    linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.25) 020%,
+        rgba(255, 255, 255, 0.06%) 050%,
+        rgba(255, 255, 255, 0.25) 080%,
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
+  width: 100%;
 }
 
-    @media (max-width: 1024px) {
-        .darkGreenBox{
-            padding: 70px 50px;
-            flex-direction: column;
-            padding-bottom: 0px;
-
-        }
-        .darkGreenBoxBis{
-            padding: 70px 50px;
-            flex-direction: column;
-
-        }
-    }
+@media (max-width: 1024px) {
+  .darkGreenBox {
+    padding: 70px 50px;
+    flex-direction: column;
+    padding-bottom: 0px;
+  }
+  .darkGreenBoxBis {
+    padding: 70px 50px;
+    flex-direction: column;
+  }
+}
 
 @media (max-width: 768px) {
-        .darkGreenBox{
-            padding: 70px 50px;
-            flex-direction: column;
-            padding-bottom: 0px;
-
-        }
-        .darkGreenBoxBis{
-            padding: 70px 50px;
-            flex-direction: column;
-
-        }
+  .darkGreenBox {
+    padding: 70px 50px;
+    flex-direction: column;
+    padding-bottom: 0px;
+  }
+  .darkGreenBoxBis {
+    padding: 70px 50px;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 640px) {
-    .darkGreenBox {
-        padding: 24px 32px;
-        padding-bottom: 0px;
-
-    }
-    .darkGreenBoxBis {
-        padding: 24px 32px;
-
-    }
+  .darkGreenBox {
+    padding: 24px 32px;
+    padding-bottom: 0px;
+  }
+  .darkGreenBoxBis {
+    padding: 24px 32px;
+  }
 }

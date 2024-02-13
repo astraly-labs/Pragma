@@ -14,10 +14,13 @@ import { ChartBox } from "../components/common/ChartBox";
 import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
 
-
 export const initialAssets: AssetT[] = [
-  { ticker: "BTC/USD", address: "0x0" },
-  { ticker: "ETH/USD", address: "0x1" },
+  { ticker: "BTC/USD", address: "0x0", decimals: 8 },
+  { ticker: "ETH/USD", address: "0x1", decimals: 8 },
+  { ticker: "USDC/USD", address: "0x2", decimals: 6 },
+  { ticker: "USDT/USD", address: "0x2", decimals: 6 },
+  { ticker: "ETH/STRK", address: "0x2", decimals: 18 },
+  // { ticker: "DAI/USD", address: "0x2", decimals: 8 },
 ];
 
 const IndexPage = () => {
@@ -26,7 +29,9 @@ const IndexPage = () => {
 
   const [allData, setAllData] = useState<AssetPair[]>([]); // Initialize state with empty array
 
-  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(initialAssets[0]);
+  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(
+    initialAssets[0]
+  );
 
   // Function to handle asset selection
   const handleAssetSelect = (assetPair: AssetT) => {
@@ -34,7 +39,7 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
-    const fetchData = async (pairId: string) => {
+    const fetchData = async (pairId: string, decimals: number) => {
       try {
         // This URL is now pointing to your Next.js API route (the proxy)
         const url = `/api/proxy?pair=${pairId}`;
@@ -46,19 +51,22 @@ const IndexPage = () => {
         console.log(data);
 
         const variation24h = data.data[0].open - data.data[1440].open;
-        const relativeVariation24h = ((variation24h / data.data[1440].open) * 100);
+        const relativeVariation24h =
+          (variation24h / data.data[1440].open) * 100;
 
         // Update your state with the new data
         const assetData = {
           ticker: data.pair_id,
           lastPrice: data.data[0].open,
           variation24h,
-          relativeVariation24h: variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
+          relativeVariation24h:
+            variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
           priceData: data.data.reverse().map((d: any) => ({
             time: new Date(d.time).getTime() / 1000,
-            value: parseInt(d.open) / 10 ** 8,
+            value: parseInt(d.open) / 10 ** decimals,
           })),
         };
+
         setAllData((data) => [...data, assetData]);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -67,7 +75,7 @@ const IndexPage = () => {
 
     for (let i = 0; i < initialAssets.length; i++) {
       const asset = initialAssets[i];
-      fetchData(asset.ticker);
+      fetchData(asset.ticker, asset.decimals);
     }
   }, []); // Dependency array is empty to run once on mount
 
@@ -138,7 +146,11 @@ const IndexPage = () => {
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
           <ChartBox assetPair={selectedAsset} />
-          <AssetBox assets={initialAssets} onAssetSelect={handleAssetSelect} data={allData} />
+          <AssetBox
+            assets={initialAssets}
+            onAssetSelect={handleAssetSelect}
+            data={allData.sort((a, b) => a.ticker.localeCompare(b.ticker))}
+          />
         </div>
       </BoxContainer>
       <BoxContainer>

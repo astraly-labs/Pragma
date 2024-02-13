@@ -55,7 +55,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
           <AssetComponent
             assets={initialAssets}
             onAssetSelect={handleAssetSelect}
-            data={data}
+            data={data.sort((a, b) => a.ticker.localeCompare(b.ticker))}
           />
         </div>
       </div>

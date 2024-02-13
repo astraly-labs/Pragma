@@ -1,104 +1,115 @@
 .verifiable {
-    color: #15FF81;
-    font-size: 60px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 72px;
-    letter-spacing: -1.2px;
+  color: #15ff81;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 72px;
+  letter-spacing: -1.2px;
 }
 
 .heading {
-    color: #B5F0E5;
-    text-align: center;
-    text-decoration-line: none !important;
-    /* Headline/H1 */
-    font-size: 60px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 72px;
-    /* 120% */
-    letter-spacing: -1.2px;
+  color: #b5f0e5;
+  text-align: center;
+  text-decoration-line: none !important;
+  /* Headline/H1 */
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 72px;
+  /* 120% */
+  letter-spacing: -1.2px;
 }
 
-.statsBox{
-    display: flex;
-    padding: 36px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    align-self: stretch;
-    width: 100%;
-    min-height: 100%;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    background: linear-gradient(#082F28, #082F28) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06%) 050%, rgba(255, 255, 255, 0.205) 100%) border-box;
-    backdrop-filter: blur(12.5px);
-
+.statsBox {
+  display: flex;
+  padding: 36px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+  width: 100%;
+  min-height: 100%;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(#082f28, #082f28) padding-box,
+    linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.06%) 050%,
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
 }
 
 .customerBox {
-    display: flex;
-    flex-direction: row;
-    padding: 64px;
-    align-items: flex-start;
-    gap: 70px;
-    border-radius: 20px;
-    border: 1px solid #FFFFFF40;
-    background: rgba(27, 99, 82, 0.12);
-    width: full;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 64px;
+  align-items: flex-start;
+  gap: 70px;
+  border-radius: 20px;
+  border: 1px solid #ffffff40;
+  background: rgba(27, 99, 82, 0.12);
+  width: full;
+  height: 100%;
 }
 
 .carouselWrapper {
-    width: 100%;
-    overflow: hidden;
+  width: 100%;
+  overflow: hidden;
 }
 
 .noTransition {
-    transition: none !important;
+  transition: none !important;
 }
 
 .testimonialBox {
-    display: flex;
-    height: 100%;
-    width: 60%;
-    padding: 36px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-    flex: 1 0 0;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    background: linear-gradient(#042420F2, #042420F2) padding-box, linear-gradient(120deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.205) 100%) border-box;
-    }
-
+  display: flex;
+  height: 100%;
+  width: 60%;
+  padding: 36px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  flex: 1 0 0;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(#042420f2, #042420f2) padding-box,
+    linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+}
 
 .dpBox {
-        display: flex;
-        flex-direction: column;
-        padding: 36px;
-        align-items: flex-start;
-        gap: 24px;
-        border-radius: 20px;
-        border: 1px solid #FFFFFF40;
-        background: rgba(27, 99, 82, 0.12);
-        width: 100%;
-        height: 100%;
-        color: #B5F0E580;
-        font-size: 18px;
-        line-height: 28px;
-    }
+  display: flex;
+  flex-direction: column;
+  padding: 36px;
+  align-items: flex-start;
+  gap: 24px;
+  border-radius: 20px;
+  border: 1px solid #ffffff40;
+  background: rgba(27, 99, 82, 0.12);
+  width: 100%;
+  height: 100%;
+  color: #b5f0e580;
+  font-size: 18px;
+  line-height: 28px;
+}
 
 @media (max-width: 768px) {
-    .customerBox {
-        flex-direction: column;
-        gap: 24px;
-        padding: 32px 24px;
-
-    }
-    .testimonialBox{
-        width: 100%;
-        padding: 24px;
-        height: fit-content;
-    }
+  .customerBox {
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px 24px;
+  }
+  .testimonialBox {
+    width: 100%;
+    padding: 24px;
+    height: fit-content;
+  }
 }
