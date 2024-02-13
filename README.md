@@ -26,8 +26,6 @@ to enable computational data feeds at scale!
 - [Pragma Hack](https://github.com/Astraly-Labs/pragma-hack): Template to kickstart your new DeFi protocol using Pragma.
 - [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragmaoracle.com`.
 - [Pragma Indexer](https://github.com/Astraly-Labs/indexer-service): Indexer service written in rust to start/stop/manage indexers.
-- [Madara Tsukuyomi](https://github.com/keep-starknet-strange/madara-tsukuyomi):
-  The source code of the Madara Desktop App. A friendly GUI to start a Pragma X node and interact with it!
 
 ## 🌟 Features
 
@@ -36,11 +34,6 @@ to enable computational data feeds at scale!
 - Track-record of accuracy and resilience 🏎️
 - Comprehensive documentation 📚
 - Active development and community support 🤝
-
-## 🌐 Pragma X Explorer
-
-Live explorer of data feeds on the Pragma X chain.
-[Check here!](https://explorer.pragmaoracle.com/)
 
 ## 🤝 Contribute
 
