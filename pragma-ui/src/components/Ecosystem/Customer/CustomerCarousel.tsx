@@ -29,7 +29,7 @@ const categories: Category[] = [
     integration:
       "ZkLend leverages Pragma to ensure the collateral locked in the protocol is valuable enough to borrow. Pragma's robust price feeds make sure ZkLend doesn't end up with bad debt.",
     category: "lending",
-    avatar: "/Avatars.svg",
+    avatar: "/assets/chads/brian.png",
   },
   {
     logo: "/assets/ecosystem/nostra.png",
@@ -38,7 +38,7 @@ const categories: Category[] = [
     integration:
       "Nostra leverages Pragma in their lending protocol, to make sure no bad debt is accrued in the protocol. You can borrow and lend safely on Nostra thanks to Pragma.",
     category: "lending",
-    avatar: "/Avatars.svg",
+    avatar: "/assets/chads/david.webp",
   },
 ];
 
