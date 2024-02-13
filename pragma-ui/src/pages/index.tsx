@@ -19,7 +19,7 @@ export const initialAssets: AssetT[] = [
   { ticker: "ETH/USD", address: "0x1", decimals: 8 },
   { ticker: "USDC/USD", address: "0x2", decimals: 6 },
   { ticker: "USDT/USD", address: "0x2", decimals: 6 },
-  { ticker: "ETH/STRK", address: "0x2", decimals: 18 },
+  // { ticker: "ETH/STRK", address: "0x2", decimals: 18 },
   // { ticker: "DAI/USD", address: "0x2", decimals: 8 },
 ];
 
