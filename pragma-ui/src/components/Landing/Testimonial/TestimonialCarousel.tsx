@@ -25,14 +25,14 @@ const categories: Category[] = [
     author: "Brian Fu CEO",
   },
   {
-    logo: "/assets/ecosystem/canvas.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
+    logo: "/assets/ecosystem/nostra.png",
+    text: "We are pleased to partner with the Pragma team and integrating their StarkNet native oracle to our Defi products.",
+    author: "David Garai CEO",
   },
   {
-    logo: "/assets/ecosystem/nostra.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
+    logo: "/assets/ecosystem/starkware.svg",
+    text: "The Pragma team has attracted fantastic data partners and Pragma is already one of the leading protocols on StarkNet. I am excited to see them leverage zk-technology to build out their vision of decentralized, transparent and composable data feeds.",
+    author: "Uri Kolodny ex-CEO",
   },
 ];
 
