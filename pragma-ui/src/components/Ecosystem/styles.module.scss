@@ -101,6 +101,12 @@
   line-height: 28px;
 }
 
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50px;
+}
+
 @media (max-width: 768px) {
   .customerBox {
     flex-direction: column;

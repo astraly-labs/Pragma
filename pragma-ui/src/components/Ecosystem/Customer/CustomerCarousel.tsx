@@ -23,31 +23,22 @@ interface Category {
 
 const categories: Category[] = [
   {
-    logo: "/assets/ecosystem/starknet.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
+    logo: "/assets/ecosystem/zklendfull.svg",
+    text: "Since our testnet launch in August of last year, Pragma's price oracle has been a robust and scalable solution to zkLend’s needs. The on-chain price feed and aggregation system has proven reliable and is a valuable asset to our platform.",
+    author: "Brian Fu CEO",
     integration:
-      "Text about the intergration Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis consequat tellus. Phasellus sed bibendum ex. Proin tortor lectus, cursus sit amet consequat non, vestibulum in nisi.",
+      "ZkLend leverages Pragma to ensure the collateral locked in the protocol is valuable enough to borrow. Pragma's robust price feeds make sure ZkLend doesn't end up with bad debt.",
     category: "lending",
-    avatar: "/Avatars.svg",
-  },
-  {
-    logo: "/assets/ecosystem/canvas.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
-    integration:
-      "Text about the intergration Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis consequat tellus. Phasellus sed bibendum ex. Proin tortor lectus, cursus sit amet consequat non, vestibulum in nisi.",
-    category: "lending",
-    avatar: "/Avatars.svg",
+    avatar: "/assets/chads/brian.png",
   },
   {
     logo: "/assets/ecosystem/nostra.png",
-    text: "Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology. Pragma Network has a uniquely robust and transparent architecture made possible by leveraging new zk-technology.",
-    author: "Brian Lee CEO",
+    text: "We are pleased to partner with the Pragma team and integrating their StarkNet native oracle to our Defi products.",
+    author: "David Garai CEO",
     integration:
-      "Text about the intergration Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis consequat tellus. Phasellus sed bibendum ex. Proin tortor lectus, cursus sit amet consequat non, vestibulum in nisi.",
+      "Nostra leverages Pragma in their lending protocol, to make sure no bad debt is accrued in the protocol. You can borrow and lend safely on Nostra thanks to Pragma.",
     category: "lending",
-    avatar: "/Avatars.svg",
+    avatar: "/assets/chads/david.webp",
   },
 ];
 
