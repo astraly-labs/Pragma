@@ -1,28 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { SearchIcon } from "@heroicons/react/outline";
+import styles from "./styles.module.scss";
 
-import { useSearch } from "../../providers/search";
+import classNames from "classnames";
 
-const SearchBar: React.FC = () => {
-  const setSearch = useSearch();
+interface SearchBarProps {
+  onInputChange: (value: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({
+  onInputChange,
+}: SearchBarProps) => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInputValue(value);
+    onInputChange(value);
+  };
 
   return (
     <button
       type="button"
-      className="flex h-12 w-full items-center space-x-3 rounded-lg bg-black px-4 text-left text-grey shadow-sm ring-1 ring-grey hover:ring-secondary focus:outline-none focus:ring-2 focus:ring-primary sm:w-60 lg:h-14"
-      onClick={() => setSearch(true)}
+      className="text-lightGrey relative flex w-full flex-row justify-start rounded-full bg-lightBlur px-6 py-3 text-sm sm:w-fit"
+      // onClick={() => setSearch(true)}
     >
-      <SearchIcon aria-hidden="true" className="h-6 w-6 text-grey" />
-      <span className="flex-auto">Search assets...</span>
-      <kbd className="hidden font-sans font-semibold sm:inline-block">
-        <kbd title="Command" className="text-grey no-underline">
-          {/* This needs to be cross-platform compatible.
-            More info at https://github.com/mdn/content/issues/14429.
-          */}
-          ⌘
-        </kbd>{" "}
-        K
-      </kbd>
+      <input
+        className={classNames(
+          styles.inputSearch,
+          "absolute left-0 bottom-0 h-full w-full rounded-full bg-transparent pl-6 text-lightGreen",
+          inputValue ? "backdrop-blur-3xl" : ""
+        )}
+        value={inputValue}
+        onChange={handleInputChange}
+      />
+      <SearchIcon
+        aria-hidden="true"
+        className=" h-5 w-5 pr-2 text-lightGreen"
+      />
+      <span className=" pr-10">Search</span>
     </button>
   );
 };

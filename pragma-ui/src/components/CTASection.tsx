@@ -24,7 +24,7 @@ const CTASection: React.FC<CTASectionProps> = ({
 }) => (
   <div className="relative w-full py-16 md:w-full">
     <div aria-hidden="true" className="hidden sm:block">
-      <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-dark" />
+      <div className="bg-dark absolute inset-y-0 left-0 w-1/2 rounded-r-3xl" />
       <Dots
         className="absolute top-8 left-1/2 -ml-3"
         width={404}
@@ -32,7 +32,7 @@ const CTASection: React.FC<CTASectionProps> = ({
       />
     </div>
     <div className="mx-auto max-w-md sm:max-w-3xl lg:max-w-7xl">
-      <div className="relative overflow-hidden rounded-2xl bg-secondary px-6 py-10 shadow-xl sm:px-12 sm:py-20">
+      <div className="bg-secondary relative overflow-hidden rounded-2xl px-6 py-10 shadow-xl sm:px-12 sm:py-20">
         <div
           aria-hidden="true"
           className="absolute inset-0 -mt-72 sm:-mt-32 md:mt-0"
@@ -69,7 +69,8 @@ const CTASection: React.FC<CTASectionProps> = ({
           <div className="mt-12 w-fit sm:mx-auto sm:flex">
             <ButtonLink
               variant="solid"
-              color="dark"
+              color="mint"
+              center={false}
               href={mainAction.href}
               icon={mainAction.icon}
             >
@@ -78,7 +79,8 @@ const CTASection: React.FC<CTASectionProps> = ({
             <div className="mt-4 sm:mt-0 sm:ml-6">
               <ButtonLink
                 variant="solid"
-                color="white"
+                color="mint"
+                center={false}
                 href={secondaryAction.href}
                 icon={secondaryAction.icon}
               >

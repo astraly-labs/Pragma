@@ -9,7 +9,7 @@ const ProtocolCard: React.FC<Protocol> = ({
   src,
   href,
 }) => (
-  <figure className="hover:translate-x-y-2 relative h-full rounded-lg bg-dark p-6 shadow-xl shadow-slate-900/10">
+  <figure className="hover:translate-x-y-2 bg-dark relative h-full rounded-lg p-6 shadow-xl shadow-slate-900/10">
     <figcaption className="relative flex flex-col items-center justify-between border-b border-slate-100 pb-6">
       <a href={href}>
         <img src={src} alt={`${name} logo`} className="h-12 w-auto" />
@@ -22,7 +22,7 @@ const ProtocolCard: React.FC<Protocol> = ({
       </header>
       <blockquote className="relative">
         <QuoteIcon className="absolute top-0 left-0 fill-black" />
-        <p className="prose prose-slate relative whitespace-pre-line text-grey">
+        <p className="text-grey prose prose-slate relative whitespace-pre-line">
           {description}
         </p>
       </blockquote>

@@ -21,13 +21,13 @@ const Heading: React.FC<HeadingProps> = ({
         {subtitle}
       </p>
     )}
-    <h2 className="mb-5 text-3xl font-medium tracking-tight text-secondary sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
+    <h2 className="text-secondary mb-5 text-3xl font-medium tracking-tight sm:text-4xl sm:leading-tight md:mb-8 md:text-5xl">
       {title}
     </h2>
-    {text && <p className="prose prose-slate text-grey lg:prose-xl">{text}</p>}
+    {text && <p className="text-grey prose prose-slate lg:prose-xl">{text}</p>}
     {href && hrefText && (
       <p className="prose prose-slate mt-4 prose-a:no-underline lg:prose-xl">
-        <a href={href} className="font-medium text-primary">
+        <a href={href} className="text-primary font-medium">
           {hrefText} &nbsp;&rarr;
         </a>
       </p>

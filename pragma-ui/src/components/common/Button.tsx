@@ -4,29 +4,21 @@ import classNames from "classnames";
 
 const baseStyles = {
   solid:
-    "flex cursor-pointer items-center justify-center rounded-lg px-4 py-3 text-base shadow-lg hover:shadow-xl md:px-6 md:py-4 md:text-xl focus:outline-none",
+    "flex transition-colors	duration-300  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-widest hover:bg-transparent focus:outline-none",
   outline:
-    "flex cursor-pointer items-center justify-center rounded-lg border-2 px-[calc(theme(spacing.4)-2px)] py-[calc(theme(spacing.3)-2px)] text-base md:px-[calc(theme(spacing.6)-1px)] md:py-[calc(theme(spacing.4)-1px)] md:text-xl focus:outline-none",
+    "flex  cursor-pointer transition-colors	duration-300 items-center justify-center rounded-full border uppercase text-sm lg:tracking-widest focus:outline-none",
 } as const;
-
 const variantStyles = {
   solid: {
-    dark: "bg-dark text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 active:bg-slate-700 active:text-white/80 disabled:opacity-30 disabled:hover:bg-slate-900",
-    slate:
-      "bg-black text-slate-900 hover:bg-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 active:bg-slate-400 active:text-slate-900/90 disabled:opacity-30 disabled:hover:bg-slate-900",
-    indigo:
-      "bg-secondary text-white hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-primary active:text-white/80 disabled:opacity-30 disabled:hover:bg-indigo-600",
-    white:
-      "bg-white text-secondary hover:text-primary hover:bg-slate-50 focus-visible:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-secondary active:text-white disabled:opacity-40 disabled:hover:text-indigo-600",
+    mint: "rounded-full bg-mint text-darkGreen border-mint hover:text-mint px-4 py-3 md:px-5 md:py-4 lg:px-6 lg:py-4",
+    grey: "rounded-md	bg-whiteTrans border-whiteTrans px-6 py-3 text-lightGreen font-light font-sans",
+    lightGreen:
+      "rounded-full bg-lightGreen text-darkGreen border-lightGreen hover:bg-lightGreen hover:text-darkGreen px-6 py-4",
   },
   outline: {
-    dark: "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 active:border-slate-200 active:bg-slate-50 active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",
-    slate:
-      "border-grey text-grey hover:border-slate-300 hover:bg-dark focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-slate-300 active:border-primary active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",
-    indigo:
-      "border-indigo-300 text-indigo-600 hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:text-indigo-600/70 disabled:opacity-40 disabled:hover:border-indigo-300 disabled:hover:bg-transparent",
-    white:
-      "border-slate-200 text-slate-900 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 active:border-slate-200 active:bg-slate-50 active:text-slate-900/70 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-transparent",
+    mint: "border-mint text-mint hover:bg-mint hover:text-darkGreen px-4 py-3 md:px-5 md:py-4 lg:px-6 lg:py-4",
+    lightGreen:
+      "border-lightGreen text-lightGreen hover:bg-lightGreen hover:text-darkGreen py-2 px-4 w-fit",
   },
 } as const;
 
@@ -35,6 +27,7 @@ interface GeneralButtonProps {
   variant: keyof typeof baseStyles;
   color: keyof (typeof variantStyles)["solid"];
   children: ReactNode;
+  center: boolean;
   className?: string;
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
   href?: string;
@@ -48,7 +41,8 @@ export const Button: React.FC<
     >
 > = ({
   variant = "solid",
-  color = "dark",
+  color = "mint",
+  center = false,
   className,
   icon: Icon,
   children,
@@ -78,12 +72,13 @@ export const ButtonLink: React.FC<
   color = "dark",
   children,
   href,
+  center = false,
   className,
   icon: Icon,
   ...props
 }) => (
   // I'm unsure whether we need an external vs internal differentiation
-  <Link href={href}>
+  <Link href={href} className={classNames(center ? " mx-auto" : "")}>
     <div
       className={classNames(
         baseStyles[variant],

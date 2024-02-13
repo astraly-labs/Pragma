@@ -1,5 +1,7 @@
 <!-- markdownlint-disable -->
+
 ![image](https://github.com/Astraly-Labs/Pragma/assets/12902455/45243fd4-5a1d-4b85-864f-2ceca50c7f79)
+
 <!-- markdownlint-restore -->
 
 [![Project license](https://img.shields.io/github/license/Astraly-Labs/Pragma.svg?style=flat-square)](LICENSE)

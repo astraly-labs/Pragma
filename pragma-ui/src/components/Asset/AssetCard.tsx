@@ -66,7 +66,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
     <Link href={`/details/${assetKeyToUrl(assetKey)}`} className="w-full">
       <div
         style={{ boxShadow: "5px 5px 15px 5px #151414" }}
-        className=" border-1 flex w-full cursor-pointer flex-row overflow-hidden rounded-lg  border-secondary bg-black shadow-lg hover:shadow-xl"
+        className=" border-1 border-secondary flex w-full cursor-pointer flex-row overflow-hidden  rounded-lg bg-black shadow-lg hover:shadow-xl"
       >
         <div className="mx-4 grid w-full max-w-full grid-cols-2 grid-rows-2 gap-y-3 py-4 font-sans text-white sm:grid-cols-3 sm:grid-rows-1">
           <div className="col-span-1 row-span-1 place-self-start font-sans">
@@ -74,8 +74,8 @@ const AssetCard: React.FC<AssetCardProps> = ({ assetKey }) => {
           </div>
           {content}
         </div>
-        <div className="flex w-12 flex-row items-center justify-center bg-dark sm:w-16 md:w-24">
-          <ChevronRightIcon className="w-8 text-grey" />
+        <div className="bg-dark flex w-12 flex-row items-center justify-center sm:w-16 md:w-24">
+          <ChevronRightIcon className="text-grey w-8" />
         </div>
       </div>
     </Link>

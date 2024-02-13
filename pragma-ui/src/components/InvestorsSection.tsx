@@ -40,7 +40,7 @@ const InvestorsSection = () => (
       {investors.map(({ name, src, href }) => (
         <div
           key={name}
-          className="group col-span-1 flex justify-center rounded-lg bg-dark px-4 py-8 sm:p-4"
+          className="bg-dark group col-span-1 flex justify-center rounded-lg px-4 py-8 sm:p-4"
         >
           <a href={href}>
             <img
