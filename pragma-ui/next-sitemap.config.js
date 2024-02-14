@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: process.env.SITE_URL || "https://pragmaoracle.com",
+  siteUrl: process.env.SITE_URL || "https://pragma.build",
   // ...other options
   generateRobotsTxt: true,
   changefreq: "weekly",

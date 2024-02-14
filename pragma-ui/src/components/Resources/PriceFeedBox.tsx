@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import { AssetPair, AssetT } from "../common/AssetBox";
+import classNames from "classnames";
 
 interface PriceFeedBoxProps {
   ChartComponent: React.ComponentType<any>;
@@ -21,6 +22,11 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
   handleAssetSelect,
   data,
 }) => {
+  const [isFront, setIsFront] = useState(false);
+
+  const handleClick = () => {
+    setIsFront(!isFront);
+  };
   return (
     <div className={styles.darkGreenBox}>
       <div className="my-auto w-10/12 items-center md:pb-20">
@@ -44,13 +50,23 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
         </ButtonLink>
       </div>
       <div className="relative flex w-full flex-col md:px-20 lg:px-0">
-        <div className={"w-full overflow-hidden sm:w-96 xl:w-xlarge"}>
+        <div
+          className={classNames(
+            "relative w-full overflow-hidden sm:w-96 xl:w-xlarge",
+            isFront ? styles.front : styles.back,
+            styles.transi
+          )}
+          onClick={handleClick}
+        >
           <ChartComponent assetPair={selectedAsset} />
         </div>
         <div
-          className={
-            "ml-auto w-full overflow-hidden py-8 backdrop-blur-md sm:w-96  sm:-translate-y-20 sm:py-0 xl:w-xlarge "
-          }
+          className={classNames(
+            "relative ml-auto w-full overflow-hidden py-8 backdrop-blur-md  sm:w-96 sm:-translate-y-20 sm:py-0 xl:w-xlarge",
+            isFront ? styles.back : styles.front,
+            styles.transi
+          )}
+          onClick={handleClick}
         >
           <AssetComponent
             assets={initialAssets}

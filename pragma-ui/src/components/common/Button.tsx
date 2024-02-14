@@ -4,9 +4,9 @@ import classNames from "classnames";
 
 const baseStyles = {
   solid:
-    "flex transition-colors	duration-300  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-widest hover:bg-transparent focus:outline-none",
+    "flex text-center transition-colors	duration-300  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-widest hover:bg-transparent focus:outline-none",
   outline:
-    "flex  cursor-pointer transition-colors	duration-300 items-center justify-center rounded-full border uppercase text-sm lg:tracking-widest focus:outline-none",
+    "flex text-center  cursor-pointer transition-colors	duration-300 items-center justify-center rounded-full border uppercase text-sm lg:tracking-widest focus:outline-none",
 } as const;
 const variantStyles = {
   solid: {

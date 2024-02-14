@@ -47,6 +47,20 @@
   width: 100%;
 }
 
+.front {
+  z-index: 2;
+  transform: scale(1.1);
+}
+
+.back {
+  z-index: 1;
+  transform: scale(1);
+}
+
+.transi{
+  transition: z-index 0.5s, transform 0.5s ease-in-out;
+}
+
 @media (max-width: 1024px) {
   .darkGreenBox {
     padding: 70px 50px;

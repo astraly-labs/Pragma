@@ -10,7 +10,7 @@
 <img src="https://img.shields.io/twitter/follow/PragmaOracle?style=social"/>
 </a> <a href="https://github.com/Astraly-Labs/Pragma">
 <img src="https://img.shields.io/github/stars/Astraly-Labs/Pragma?style=social"/>
-</a> <a href="https://docs.pragmaoracle.com/">
+</a> <a href="https://docs.pragma.build/">
 <img src="https://img.shields.io/badge/Documentation-Website-yellow"/> </a>
 
 # 🧩 Pragma: Provable Oracle 💚
@@ -24,7 +24,7 @@ to enable computational data feeds at scale!
 - [Pragma SDK](https://github.com/Astraly-Labs/pragma-sdk): SDK to interact with Pragma on Starknet or Pragma X. Written in Python.
 - [Pragma Contracts](https://github.com/Astraly-Labs/pragma-oracle): Source code of the Pragma contracts, written in Cairo.
 - [Pragma Hack](https://github.com/Astraly-Labs/pragma-hack): Template to kickstart your new DeFi protocol using Pragma.
-- [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragmaoracle.com`.
+- [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragma.build`.
 - [Pragma Indexer](https://github.com/Astraly-Labs/indexer-service): Indexer service written in rust to start/stop/manage indexers.
 
 ## 🌟 Features

@@ -11,6 +11,8 @@ import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   /**
@@ -68,6 +70,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#B5F0E5" />
       </Head>
+      <Analytics />
+      <SpeedInsights />
       <DefaultSeo
         titleTemplate="%s - Pragma - The network of zk-truth machines"
         defaultTitle="Pragma - The network of zk-truth machines"

@@ -101,12 +101,12 @@ export const DefaultCTASection = () => (
     title="Ready to get the data you need?"
     description="Leverage recent breakthroughs in zero-knowledge computation by using verifiable and composable data in your decentralized application."
     mainAction={{
-      href: "https://docs.pragmaoracle.com/docs/introduction",
+      href: "https://docs.pragma.build/docs/introduction",
       actionText: "Get started",
       icon: CodeIcon,
     }}
     secondaryAction={{
-      href: "mailto:support@pragmaoracle.com?body=Hi%20Pragma%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
+      href: "mailto:support@pragma.build?body=Hi%20Pragma%20Team,%0AWe%20would%20like%20to%20request%20the%20following%20assets:",
       actionText: "Request asset",
       icon: ChatIcon,
     }}
