@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./styles.module.scss";
 import GreenBox from "../common/GreenBox";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
