@@ -27,7 +27,7 @@ const CommandPallate: React.FC<CommandPallateProps> = ({ isOpen }) => {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         // AFAIK (isOpen) => !isOpen instead of !isOpen allows us to remove isOpen from the dependency array.
         // This prevents us from mounting and unmounting the event listeners on every render.
-        setSearch((isOpen) => !isOpen);
+        // setSearch((isOpen) => !isOpen);
       }
     }
     window.addEventListener("keydown", onKeydown);
