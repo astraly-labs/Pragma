@@ -191,6 +191,7 @@
       border-box;
   backdrop-filter: blur(12.5px);
   width: 100%;
+  transition: z-index 0.5s, transform 0.5s ease-in-out;
 }
 
 .assetBox {
@@ -202,6 +203,17 @@
   border-radius: 20px;
   border: 1px solid rgba(181, 240, 229, 0.12);
   background: rgba(27, 99, 82, 0.12);
+  transition: z-index 0.5s, transform 0.5s ease-in-out;
+}
+
+.front {
+  z-index: 2;
+  transform: scale(1.1);
+}
+
+.back {
+  z-index: 1;
+  transform: scale(1);
 }
 
 @media (max-width: 1024px) {
