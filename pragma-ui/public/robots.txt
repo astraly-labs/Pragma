@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://pragmaoracle.com
+Host: https://pragma.build
 
 # Sitemaps
-Sitemap: https://pragmaoracle.com/sitemap.xml
+Sitemap: https://pragma.build/sitemap.xml
