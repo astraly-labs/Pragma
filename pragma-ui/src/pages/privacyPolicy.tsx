@@ -26,25 +26,25 @@ const privacyPolicy = () => {
           read the following to learn more about our Privacy Policy. This
           Privacy Policy covers our treatment of Personal Information that we
           gather when you are accessing or using our Website and Services, but
-          does not apply to the practices of companies we don’t own or control,
-          or people that we don’t manage. When we mention the “Foundation,”
-          “we,” “us” or “our'' in this Privacy Policy, we are referring to ZkPad
-          SA and its subsidiaries and affiliates. By using or accessing the
-          Website and the Services in any manner, you acknowledge that you
-          accept the practices and policies outlined in this Privacy Policy, and
-          you hereby consent that we will collect, use, and share your
-          information in the following ways. We’re constantly trying to improve
-          our Website and Services, so we may need to change this Privacy Policy
-          from time to time. If we make changes, we will notify you by revising
-          the date at the top of this policy and, in some cases, we may provide
-          you with additional notice (such as adding a statement to our Website
-          or sending you a notification). We encourage you to review this
-          Privacy Policy regularly to stay informed about our information
-          practices and the choices available to you. Remember that your use of
-          our Website and Services is at all times subject to the Terms of
-          Service, which incorporates this Privacy Policy. Any terms we use in
-          this Privacy Policy without defining them have the definitions given
-          to them in the Terms of Service.
+          does not apply to the practices of companies we don&apos;t own or
+          control, or people that we don&apos;t manage. When we mention the
+          “Foundation,” “we,” “us” or “our” in this Privacy Policy, we are
+          referring to ZkPad SA and its subsidiaries and affiliates. By using or
+          accessing the Website and the Services in any manner, you acknowledge
+          that you accept the practices and policies outlined in this Privacy
+          Policy, and you hereby consent that we will collect, use, and share
+          your information in the following ways. We&apos;re constantly trying
+          to improve our Website and Services, so we may need to change this
+          Privacy Policy from time to time. If we make changes, we will notify
+          you by revising the date at the top of this policy and, in some cases,
+          we may provide you with additional notice (such as adding a statement
+          to our Website or sending you a notification). We encourage you to
+          review this Privacy Policy regularly to stay informed about our
+          information practices and the choices available to you. Remember that
+          your use of our Website and Services is at all times subject to the
+          Terms of Service, which incorporates this Privacy Policy. Any terms we
+          use in this Privacy Policy without defining them have the definitions
+          given to them in the Terms of Service.
           <br /> <br />
           <h5 className="text-mint">
             WHAT DOES THIS PRIVACY POLICY COVER?
@@ -88,8 +88,8 @@ const privacyPolicy = () => {
           communicate with us. The types of personal information we may collect
           include your name, email address, postal address, phone number, social
           media handle, and payment information, and any other information you
-          choose to provide. We may communicate with you if you’ve provided us
-          the means to do so. For example, if you’ve given us your email
+          choose to provide. We may communicate with you if you&apos;ve provided
+          us the means to do so. For example, if you&apos;ve given us your email
           address, we may email you about your use of the Services. Also, we may
           receive a confirmation when you open an email from us. This
           confirmation helps us make our communications with you more
@@ -105,19 +105,19 @@ const privacyPolicy = () => {
           record information on our server logs from your browser or device,
           which may include your IP address, geolocation data, device
           identification, “cookie” information, the type of browser and/or
-          device you’re using to access the Website, and the page or feature you
-          requested. “Cookies” are identifiers we transfer to your browser or
-          device that allow us to recognize your browser or device and tell us
-          how and when pages and features in our Services are visited and by how
-          many people. You may be able to change the preferences on your browser
-          or device to prevent or limit your device’s acceptance of cookies, but
-          this may prevent you from taking advantage of some of our features.
-          For more information about cookies and how to disable them, see the
-          Your Choices section below. We may use this data to improve the
-          Services – for example, this data can tell us how often users use a
-          particular feature of the Services or Website, and we can use that
-          knowledge to make the Services interesting to as many users as
-          possible. <br /> <br />
+          device you&apos;re using to access the Website, and the page or
+          feature you requested. “Cookies” are identifiers we transfer to your
+          browser or device that allow us to recognize your browser or device
+          and tell us how and when pages and features in our Services are
+          visited and by how many people. You may be able to change the
+          preferences on your browser or device to prevent or limit your
+          device&apos;s acceptance of cookies, but this may prevent you from
+          taking advantage of some of our features. For more information about
+          cookies and how to disable them, see the Your Choices section below.
+          We may use this data to improve the Services – for example, this data
+          can tell us how often users use a particular feature of the Services
+          or Website, and we can use that knowledge to make the Services
+          interesting to as many users as possible. <br /> <br />
           <span className="font-bold text-mint opacity-50">
             Information collected from other websites and do not track policy:
           </span>{" "}
@@ -181,7 +181,7 @@ const privacyPolicy = () => {
           disclosure of your Personal Information to such third parties.
           <br /> <br />
           <span className="font-bold text-mint opacity-50">
-            Information that’s been de-identified:
+            Information that&apos;s been de-identified:
           </span>{" "}
           We may de-identify your Personal Information so that you are not
           identified or identifiable as an individual, and provide that
@@ -196,7 +196,7 @@ const privacyPolicy = () => {
           <span className="font-bold text-mint opacity-50">
             Affiliated businesses:
           </span>{" "}
-          In certain situations, businesses or third party websites we’re
+          In certain situations, businesses or third party websites we&apos;re
           affiliated with may sell or provide products or services to you
           through the Website or in connection with the Services (either alone
           or jointly with us). You can recognize when an affiliated business is
@@ -206,7 +206,8 @@ const privacyPolicy = () => {
           over the policies and practices of third party websites or businesses
           as to privacy or anything else, so if you choose to take part in any
           transaction or service relating to an affiliated website or business,
-          please review all such business’ or websites’ policies. <br /> <br />
+          please review all such business&apos; or websites&apos; policies.{" "}
+          <br /> <br />
           <span className="font-bold text-mint opacity-50">Agents:</span> We
           employ other companies and people to perform tasks on our behalf and
           need to share your information with them to provide products or
@@ -224,7 +225,7 @@ const privacyPolicy = () => {
           email addresses of organizers and other members of groups within their
           networks, to easily communicate with and administer the groups.
           Therefore, we may ask if you want to share your email address with
-          your group’s Community Advocate.
+          your group&apos;s Community Advocate.
           <br /> <br />
           <span className="font-bold text-mint opacity-50">
             Business transfers:
@@ -422,13 +423,13 @@ const privacyPolicy = () => {
           </Link>{" "}
           . We will verify your request by asking you to provide information
           related to your recent interactions with us, such as information
-          provided on a form you’ve filled out. We will not discriminate against
-          you if you exercise your rights under the CCPA. If we receive your
-          request from an authorized agent, we may ask for evidence that you
-          have provided such agent with a power of attorney or that the agent
-          otherwise has valid written authority to submit requests to exercise
-          rights on your behalf. If you are an authorized agent seeking to make
-          a request, please contact us.
+          provided on a form you&apos;ve filled out. We will not discriminate
+          against you if you exercise your rights under the CCPA. If we receive
+          your request from an authorized agent, we may ask for evidence that
+          you have provided such agent with a power of attorney or that the
+          agent otherwise has valid written authority to submit requests to
+          exercise rights on your behalf. If you are an authorized agent seeking
+          to make a request, please contact us.
           <br /> <br />
           <h5 className="text-mint">
             DATA SUBJECT REQUESTS AND DATA RETENTION

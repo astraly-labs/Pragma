@@ -38,13 +38,13 @@ const terms = () => {
           that entity, and you represent and warrant that (a) you are an
           authorized representative of the entity with the authority to bind the
           entity to these Terms, and (b) you agree to these Terms on the
-          entity’s behalf. If you do not agree to these Terms or do not have
-          authority to bind your organization on whose behalf you are using the
-          Services to these Terms, you must not access or use our Website or the
-          Services. Please carefully review the disclosures and disclaimers set
-          forth in Section 8 in their entirety before accessing the Website, our
-          Services, or using any software developed by the Foundation. Please
-          refer to our privacy policy available at{" "}
+          entity&apos;s behalf. If you do not agree to these Terms or do not
+          have authority to bind your organization on whose behalf you are using
+          the Services to these Terms, you must not access or use our Website or
+          the Services. Please carefully review the disclosures and disclaimers
+          set forth in Section 8 in their entirety before accessing the Website,
+          our Services, or using any software developed by the Foundation.
+          Please refer to our privacy policy available at{" "}
           <Link
             className="text-mint underline"
             href={"https://pragma.build/privacyPolicy"}
@@ -218,22 +218,23 @@ const terms = () => {
           share, distribute or otherwise permit any third party to use the
           Website or the Services or otherwise use the Website or the Services
           in a manner that violates the Foundation License or any other
-          Open-Source Licenses. Any of the Foundation’s product or service
+          Open-Source Licenses. Any of the Foundation&apos;s product or service
           names, logos, and other marks used in the Website or as a part of the
-          Services, including the Foundation's name and logo are trademarks
+          Services, including the Foundation&apos;s name and logo are trademarks
           owned by the Foundation or its applicable licensors. You may generally
-          use the Foundation’s name and logo to refer to the Foundation’s
-          mission and activities provided that it does not in any way suggest or
-          imply partnership or collaboration with, sponsorship or approval by
-          the Foundation. You may also indicate the relationship of your
-          products and services to the Foundation’s mission and activities by
-          using an accurate descriptive term in connection with your product or
-          service. You may not use the Foundation’s name and logo in a manner
-          that may cause confusion with others or result in genericization. The
-          Foundation reserves its right to prohibit the use of the Foundation’s
-          marks by anyone at our sole discretion. Except as provided in the
-          foregoing, you may not copy, imitate or use the Foundation’s marks
-          without the Foundation’s (or the applicable licensor’s) prior written
+          use the Foundation&apos;s name and logo to refer to the
+          Foundation&apos;s mission and activities provided that it does not in
+          any way suggest or imply partnership or collaboration with,
+          sponsorship or approval by the Foundation. You may also indicate the
+          relationship of your products and services to the Foundation&apos;s
+          mission and activities by using an accurate descriptive term in
+          connection with your product or service. You may not use the
+          Foundation&apos;s name and logo in a manner that may cause confusion
+          with others or result in genericization. The Foundation reserves its
+          right to prohibit the use of the Foundation&apos;s marks by anyone at
+          our sole discretion. Except as provided in the foregoing, you may not
+          copy, imitate or use the Foundation&apos;s marks without the
+          Foundation&apos;s (or the applicable licensor&apos;s) prior written
           consent. The Foundation will be free to use, disclose, reproduce,
           license, and otherwise distribute and exploit any suggestions,
           comments, or other feedback provided by you to the Foundation with
@@ -321,7 +322,7 @@ const terms = () => {
           disable, temporarily or permanently, the Services offered by the
           Foundation, in whole or in part, for any reason whatsoever, including,
           but not limited to, as a result of a security incident, your violation
-          of these Terms or, in the Foundation’s good faith judgment, such
+          of these Terms or, in the Foundation&apos;s good faith judgment, such
           changes, suspension or termination are necessary for the protection of
           the Pragma Network. We will not be liable for any losses suffered by
           you resulting from any modification to any Services or from any
@@ -357,8 +358,8 @@ const terms = () => {
           representatives, suppliers, licensors and contractors (collectively,
           Protected Parties”) from any claim, demand, lawsuit, action,
           proceeding, investigation, liability, damage, loss, cost or expense,
-          including without limitation reasonable attorneys’ fees, arising out
-          of or relating to your use of, or conduct in connection with, the
+          including without limitation reasonable attorneys&apos; fees, arising
+          out of or relating to your use of, or conduct in connection with, the
           Website, Services, the Pragma Network or Pragma future Tokens,
           Distributed Ledger Technology assets associated with your Distributed
           Ledger Technology Address, any other digital assets, any Feedback or
@@ -452,8 +453,8 @@ const terms = () => {
           between users of Pragma open-source software or the Pragma Network.{" "}
           <br /> <br />
           <h5 className="text-mint">10. LIMITATION OF LIABILITY</h5> <br /> In
-          no event will the Protected Parties' aggregate liability arising out
-          of or in connection with the Website, the Services and the Pragma
+          no event will the Protected Parties&apos; aggregate liability arising
+          out of or in connection with the Website, the Services and the Pragma
           Network (and any of their content and functionality), any performance
           or non-performance of the Services, your Distributed Ledger Technology
           assets, other digital assets, Pragma future Tokens or any other
@@ -541,9 +542,9 @@ const terms = () => {
           any dispute and to grant any remedy that would otherwise be available
           in court, including the power to determine the question of
           arbitrability. The arbitrator may conduct only an individual
-          arbitration and may not consolidate more than one individual’s claims,
-          preside over any type of class or representative proceeding or preside
-          over any proceeding involving more than one individual. The
+          arbitration and may not consolidate more than one individual&apos;s
+          claims, preside over any type of class or representative proceeding or
+          preside over any proceeding involving more than one individual. The
           arbitrator, the Foundation, and you will maintain the confidentiality
           of any arbitration proceedings, judgments and awards, including, but
           not limited to, all information gathered, prepared and presented for
@@ -580,20 +581,20 @@ const terms = () => {
           unenforceable or unlawful for any reason, the unenforceable or
           unlawful provision will be severed from these Terms, severance of the
           unenforceable or unlawful provision will have no impact whatsoever on
-          the remainder of this Section 12 or the parties’ ability to compel
-          arbitration of any remaining claims on an individual basis under this
-          Section 12, and to the extent that any claims must therefore proceed
-          on a class, collective, consolidated, or representative basis, such
-          claims must be litigated in a civil court of competent jurisdiction
-          and not in arbitration, and the parties agree that litigation of those
-          claims will be stayed pending the outcome of any individual claims in
-          arbitration. Further, if any part of this Section 12 is found to
-          prohibit an individual claim seeking public injunctive relief, that
-          provision will have no effect to the extent such relief is allowed to
-          be sought out of arbitration, and the remainder of this Section 12
-          will be enforceable. By opting out of binding arbitration, you are
-          agreeing to resolve disputes in accordance with Section 12. <br />{" "}
-          <br />
+          the remainder of this Section 12 or the parties&apos; ability to
+          compel arbitration of any remaining claims on an individual basis
+          under this Section 12, and to the extent that any claims must
+          therefore proceed on a class, collective, consolidated, or
+          representative basis, such claims must be litigated in a civil court
+          of competent jurisdiction and not in arbitration, and the parties
+          agree that litigation of those claims will be stayed pending the
+          outcome of any individual claims in arbitration. Further, if any part
+          of this Section 12 is found to prohibit an individual claim seeking
+          public injunctive relief, that provision will have no effect to the
+          extent such relief is allowed to be sought out of arbitration, and the
+          remainder of this Section 12 will be enforceable. By opting out of
+          binding arbitration, you are agreeing to resolve disputes in
+          accordance with Section 12. <br /> <br />
           <h5 className="text-mint">13. GOVERNING LAW</h5> <br /> The
           interpretation and enforcement of these Terms, and any dispute related
           to these Terms, the Website or the Services, will be governed by and
@@ -736,12 +737,12 @@ const terms = () => {
             Services and Pragma Network evolve, we may be subject to new laws,
             and the application of existing laws to us might change. These laws
             and regulations are frequently costly to comply with and may divert
-            a significant portion of the Foundation’s attention and resources or
-            restrict the way the Pragma may operate. If we fail to comply with
-            these applicable laws or regulations, we could receive negative
-            publicity and be subject to significant liabilities which could
-            adversely impact the Website, Services, and the Pragma Network and
-            Pragma future Tokens. Additionally, Pragma node operators of the
+            a significant portion of the Foundation&apos;s attention and
+            resources or restrict the way the Pragma may operate. If we fail to
+            comply with these applicable laws or regulations, we could receive
+            negative publicity and be subject to significant liabilities which
+            could adversely impact the Website, Services, and the Pragma Network
+            and Pragma future Tokens. Additionally, Pragma node operators of the
             Pragma Network may be subject to industry specific laws and
             regulations or licensing requirements. If any of these parties fails
             to comply with any of these licensing requirements or other
@@ -857,15 +858,16 @@ const terms = () => {
           properly displayed and used. As the owner of its Marks, the Foundation
           has exclusive rights to use its Marks and is obligated to prevent
           others from using its Marks inappropriately. If use of the
-          Foundation’s Marks is authorized, it is expected that you will comply
-          in all respects with the requirements and conditions set forth in
-          these Guidelines and in any other guidelines promulgated by the
+          Foundation&apos;s Marks is authorized, it is expected that you will
+          comply in all respects with the requirements and conditions set forth
+          in these Guidelines and in any other guidelines promulgated by the
           Foundation. Nothing contained in these Guidelines should be construed
           as granting, by implication, estoppel, or otherwise, any license or
           right in and to the Marks or other intellectual property owned by the
-          Foundation. Unauthorized use of any of the Marks or the Foundation’s
-          other intellectual property may violate the law. All rights not
-          expressly granted herein are reserved by the Foundation. <br /> <br />
+          Foundation. Unauthorized use of any of the Marks or the
+          Foundation&apos;s other intellectual property may violate the law. All
+          rights not expressly granted herein are reserved by the Foundation.{" "}
+          <br /> <br />
           <h5 className="text-mint">PROHIBITED USE</h5> <br /> In order to
           ensure that you do not infringe on any the Marks, you must avoid doing
           any of the following without the prior written permission of the
