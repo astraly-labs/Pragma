@@ -83,6 +83,16 @@ const content: FooterColumn[] = [
         href: "mailto:support@pragma.build?body=Hi%Pragma-Team,",
         external: true,
       },
+      {
+        title: "Terms and Conditions",
+        href: "/terms",
+        external: false,
+      },
+      {
+        title: "Privacy Policy",
+        href: "/privacyPolicy",
+        external: false,
+      },
     ],
   },
 ];
