@@ -41,15 +41,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           content="width=device-width,initial-scale=1"
           key="viewport"
         />
-        <meta property="twitter:image" content="pragma-og-img.png"></meta>
-        <meta
-          property="twitter:title"
-          content="Pragma - The network of zk-truth machines"
-        ></meta>
-        <meta
-          property="twitter:description"
-          content="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
-        ></meta>
         <link rel="icon" type="image/ico" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
