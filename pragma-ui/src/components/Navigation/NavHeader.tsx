@@ -161,7 +161,12 @@ const NavHeader = () => {
             />
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex lg:w-0 lg:flex-1">
-            <ButtonLink center={false} variant="solid" color="mint" href="/">
+            <ButtonLink
+              center={false}
+              variant="solid"
+              color="mint"
+              href="https://docs.pragma.build"
+            >
               Start building
             </ButtonLink>
           </div>
@@ -225,7 +230,12 @@ const NavHeader = () => {
                   {item.name}
                 </a>
               ))} */}
-              <ButtonLink variant="solid" color="mint" center={true} href="/">
+              <ButtonLink
+                variant="solid"
+                color="mint"
+                center={true}
+                href="https://docs.pragma.build"
+              >
                 Start Building
               </ButtonLink>
             </div>
