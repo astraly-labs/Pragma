@@ -12,6 +12,8 @@ export const truncateAddress = (fullAddress: string) => {
   const end = address.slice(-4);
   return `${hex} ${start} ... ${end}`;
 };
+const MAINNET_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS =
+  "0x02a85bd616f912537c50a49a4076db02c00b29b2cdc8a197ce92ed1837fa875b";
 
 const GOERLI_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS =
   "0x36031daa264c24520b11d93af622c848b2499b66b41d611bac95e13cfca131a";
@@ -21,7 +23,7 @@ const GOERLI2_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS =
 
 export const getOracleProxyAddress = (network: Network): string => {
   if (network == "mainnet-alpha") {
-    throw new Error("Not deployed on mainnet yet");
+    return MAINNET_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS;
   } else if (network === "goerli-alpha") {
     return GOERLI_DEFAULT_ORACLE_CONTROLLER_CONTRACT_ADDRESS;
   } else if (network === "goerli2-alpha") {
