@@ -53,6 +53,14 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
+      image: "https://images.mirror-media.xyz/nft/eEUZgYdNzwr2agIKU6ts7.png",
+      date: "December 1st, 2023",
+      title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
+      description:
+        "We're thrilled to announce a new addition to our product suite – the Pragma API, with Starknet as its first user.",
+      link: "https://mirror.xyz/pragmagic.eth/6kLIyEzYanQNWn58tPfMpzIxehz7SZ3jM-sqJENy79k",
+    },
+    {
       image:
         "https://images.mirror-media.xyz/publication-images/zZert-yfY3OFeuCAhNcMP.jpeg?height=512&width=1024",
       date: "December 1st, 2023",
