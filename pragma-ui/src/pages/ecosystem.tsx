@@ -46,7 +46,7 @@ const EcosystemPage = () => {
           textButton2="Discover all ecosystem"
           linkButton2="https://defillama.com/oracles/Pragma"
         />
-        <StatsBox tve="+350,000,000" tvs="+35,000,000" />
+        <StatsBox tve="+500,000,000" tvs="+110,000,000" />
       </BoxContainer>
       <BoxContainer>
         <CustomerCarousel />
