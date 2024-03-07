@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   // Extract the 'pair' query parameter from the request
   const { pair = "btc/usd" } = req.query; // Default to 'btc/usd' if not specified
 
-  const apiUrl = `https://api.dev.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=1h`;
+  const apiUrl = `https://api.dev.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=1min`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {
