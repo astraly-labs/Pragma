@@ -51,8 +51,7 @@ const IndexPage = () => {
         console.log(data);
 
         const variation24h = data.data[0].open - data.data[96].open;
-        const relativeVariation24h =
-          (variation24h / data.data[96].open) * 100;
+        const relativeVariation24h = (variation24h / data.data[96].open) * 100;
 
         // Update your state with the new data
         const assetData = {
