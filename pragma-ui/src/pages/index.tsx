@@ -58,8 +58,7 @@ const IndexPage = () => {
           ticker: data.pair_id,
           lastPrice: data.data[0].open,
           variation24h,
-          relativeVariation24h:
-            variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
+          relativeVariation24h,
           priceData: data.data.reverse().map((d: any) => ({
             time: new Date(d.time).getTime() / 1000,
             value: parseInt(d.open) / 10 ** decimals,
