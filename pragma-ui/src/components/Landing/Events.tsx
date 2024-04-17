@@ -6,16 +6,10 @@ import EventBox from "../common/EventBox";
 
 const events = [
   {
-    name: "ETH Denver",
-    location: "Denver",
-    date: "23 FEB 2024",
-    link: "https://www.ethdenver.com/",
-  },
-  {
-    name: "The Mu",
-    location: "Buenos Aires",
-    date: "MARCH 2024",
-    link: "https://twitter.com/themu_xyz",
+    name: "Eth Prague",
+    location: "Prague",
+    date: "31 MAY 2024",
+    link: "https://ethprague.com/",
   },
   {
     name: "Eth CC",

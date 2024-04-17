@@ -32,6 +32,15 @@ const categories: Category[] = [
     avatar: "/assets/chads/brian.jpg",
   },
   {
+    logo: "/assets/ecosystem/vesu.png",
+    text: "Pragma's unique oracle design enabled us to build fail-safe price feeds in a fully immutable protocol. The additional data and tools available are extremely valuable to build resilient protocols and ultimately safeguard user funds.",
+    author: "Nils Bundi CEO",
+    integration:
+      "Vesu leverages Pragma composable and fully onchain infrastructure at its best in order to safely manage collateral, and enable new markets on Vesu.",
+    category: "lending",
+    avatar: "/assets/chads/nils.jpeg",
+  },
+  {
     logo: "/assets/ecosystem/nostra.png",
     text: "We are pleased to partner with the Pragma team and integrating their StarkNet native oracle to our Defi products.",
     author: "David Garai CEO",
@@ -48,7 +57,7 @@ const CustomerCarousel: React.FC = () => {
       naturalSlideWidth={648}
       naturalSlideHeight={460}
       visibleSlides={1}
-      totalSlides={2}
+      totalSlides={3}
       step={1}
       infinite={true}
       dragEnabled={false}
