@@ -7,6 +7,7 @@ import { getCurrency } from "../../../utils/mappings";
 import { assetKeyDisplayString } from "../Asset/AssetCard";
 import { GetValueResponseT } from "../../hooks/oracle";
 import { timeSinceUpdate } from "../../../utils/display";
+import Image from "next/image";
 
 const DECIMALS_TO_SHOW = 10;
 
@@ -91,7 +92,7 @@ const DetailDisplay: React.FC<DetailDisplayProps> = ({
         description="This price was aggregated on chain using the data provided by our publishers. You can find the exact details in the table below."
         toDisplay={priceContent}
         img={
-          <img
+          <Image
             src={`/assets/currencies/${currencySrc}`}
             className="h-6·w-6·invert-60"
             alt={currencyAlt}

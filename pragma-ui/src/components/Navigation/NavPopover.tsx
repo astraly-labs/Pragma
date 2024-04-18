@@ -4,6 +4,7 @@ import { Popover } from "@headlessui/react";
 import StyledTransition from "../common/StyledTransition";
 import styles from "./styles.module.scss";
 import Link from "next/link";
+import Image from "next/image";
 
 interface PopoverContent {
   name: string;
@@ -59,7 +60,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                     href={item.href}
                     className="-m-3 flex items-start rounded-lg p-3 hover:opacity-50"
                   >
-                    <img
+                    <Image
                       className="my-auto h-4 w-4 text-lightGreen"
                       src={item.icon}
                       alt={"logo"}

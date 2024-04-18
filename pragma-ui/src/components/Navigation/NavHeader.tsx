@@ -16,6 +16,7 @@ import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import classNames from "classnames";
 import NavPopover from "./NavPopover";
+import Image from "next/image";
 
 interface Resource {
   name: string;
@@ -123,10 +124,10 @@ const NavHeader = () => {
             <Link href="/">
               <div>
                 <span className="sr-only">Pragma</span>
-                <img
+                <Image
                   className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
                   src="/pragma-logo.png"
-                  alt="Pragma"
+                  alt="Logo"
                 />
               </div>
             </Link>
@@ -188,10 +189,10 @@ const NavHeader = () => {
             <div className="px-5 pb-6">
               <div className="absolute top-2 left-4 flex w-full items-center justify-between">
                 <div>
-                  <img
+                  <Image
                     className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
                     src="pragma-logo.png"
-                    alt="Pragma"
+                    alt="Logo"
                   />
                 </div>
                 <div className="my-auto mr-7">

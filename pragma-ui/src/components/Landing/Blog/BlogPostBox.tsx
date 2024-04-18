@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles.module.scss";
 import { ButtonLink } from "../../common/Button";
 import classNames from "classnames";
+import Image from "next/image";
 
 interface BlogPostBoxProps {
   image: string;
@@ -21,7 +22,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
   return (
     <div className={styles.blogBox}>
       <div className="w-full">
-        <img src={image} />
+        <Image src={image} alt="blogIllustration" />
       </div>
       <div className="flex h-full w-full flex-col justify-between p-6 pb-2 text-left">
         <div className="flex flex-col">
@@ -45,7 +46,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
           href={link}
           className="mb-6 mt-auto"
         >
-          Read more
+          Read article
         </ButtonLink>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import QuoteIcon from "../common/QuoteIcon";
 import { PublisherCardProps } from "./PublishersSection";
+import Image from "next/image";
 
 const PublisherCard: React.FC<PublisherCardProps> = ({
   src,
@@ -12,10 +13,10 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
     <figcaption className="relative flex flex-col items-center justify-between border-b border-slate-100 pb-6">
       {href ? (
         <a href={href}>
-          <img src={src} alt={`${name} logo`} className="h-12 w-auto" />
+          <Image src={src} alt={`${name} logo`} className="h-12 w-auto" />
         </a>
       ) : (
-        <img src={src} alt={`${name} logo`} className="h-12 w-auto" />
+        <Image src={src} alt={`${name} logo`} className="h-12 w-auto" />
       )}
     </figcaption>
     <div className="relative mt-6">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AssetKeyT } from "../../hooks/oracle";
 import { getLogoPath } from "../../../utils/mappings";
+import Image from "next/image";
 
 interface AssetLogoProps {
   assetKey: AssetKeyT;
@@ -12,7 +13,7 @@ const AssetLogo: React.FC<AssetLogoProps> = ({ assetKey, className }) => {
   // This stops the browser from sending GET requests.
   const [isError, setIsError] = useState(false);
   return (
-    <img
+    <Image
       src={isError ? "/assets/currencies/fallback.svg" : getLogoPath(assetKey)}
       alt={`${assetKey} logo`}
       className={className}

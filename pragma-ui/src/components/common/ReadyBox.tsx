@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
+import Image from "next/image";
 
 const ReadyBox = ({ version }) => {
   const [windowWidth, setWindowWidth] = useState(null);
@@ -82,11 +83,12 @@ const ReadyBox = ({ version }) => {
         </ButtonLink>
       )}
 
-      <img
+      <Image
         className={
           "absolute bottom-0 right-0 -z-10 mx-auto w-full lg:w-10/12 2xl:w-auto"
         }
         src={getImageSource()}
+        alt="vectorImage"
       />
     </div>
   );

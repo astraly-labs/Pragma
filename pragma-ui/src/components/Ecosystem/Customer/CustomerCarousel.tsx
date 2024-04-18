@@ -11,6 +11,7 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 
 interface Category {
   logo: string;
@@ -79,7 +80,7 @@ const CustomerCarousel: React.FC = () => {
                   {category.category}
                 </div>
                 <div className="w-48">
-                  <img src={category.logo} />
+                  <Image alt="companyLogo" src={category.logo} />
                 </div>
                 <GreenText className="text-center md:pb-32 md:text-left">
                   {category.integration}
@@ -88,7 +89,7 @@ const CustomerCarousel: React.FC = () => {
               <div className={styles.testimonialBox}>
                 <div className="text-lg text-lightGreen">{category.text}</div>
                 <div className="flex flex-row gap-4">
-                  <img
+                  <Image
                     src={category.avatar}
                     className={styles.avatar}
                     alt="avatar"

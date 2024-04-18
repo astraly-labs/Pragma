@@ -1,6 +1,7 @@
 import React from "react";
 import { Protocol } from "./ProtocolSection";
 import QuoteIcon from "../common/QuoteIcon";
+import Image from "next/image";
 
 const ProtocolCard: React.FC<Protocol> = ({
   name,
@@ -12,7 +13,7 @@ const ProtocolCard: React.FC<Protocol> = ({
   <figure className="hover:translate-x-y-2 bg-dark relative h-full rounded-lg p-6 shadow-xl shadow-slate-900/10">
     <figcaption className="relative flex flex-col items-center justify-between border-b border-slate-100 pb-6">
       <a href={href}>
-        <img src={src} alt={`${name} logo`} className="h-12 w-auto" />
+        <Image src={src} alt={`${name} logo`} className="h-12 w-auto" />
       </a>
     </figcaption>
     <div className="relative mt-6">

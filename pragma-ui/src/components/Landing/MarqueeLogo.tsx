@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Ecosystem {
   name: string;
@@ -120,7 +121,7 @@ const MarqueeLogo = () => {
             className="relative z-10 my-auto flex items-center justify-center"
             href={link}
           >
-            <img className="my-auto h-8 px-8" src={src} alt={name} />
+            <Image className="my-auto h-8 px-8" src={src} alt={name} />
           </Link>
         ))}
       </Marquee>
