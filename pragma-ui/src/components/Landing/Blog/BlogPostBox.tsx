@@ -22,7 +22,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
   return (
     <div className={styles.blogBox}>
       <div className="w-full">
-        <Image src={image} alt="blogIllustration" />
+        <img src={image} alt="blogIllustration" />
       </div>
       <div className="flex h-full w-full flex-col justify-between p-6 pb-2 text-left">
         <div className="flex flex-col">

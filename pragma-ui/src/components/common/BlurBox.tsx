@@ -36,7 +36,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
     <GreenText isAligned={false} className="mb-auto">
       {generalText}
     </GreenText>
-    <Image
+    <img
       className={styles.svgIllustration}
       src={urlSvg}
       alt="Illustration SVG"

@@ -139,7 +139,7 @@ const Footer = () => (
         <Link href="/">
           <div className="w-fit">
             <span className="sr-only">Pragma</span>
-            <Image
+            <img
               className="h-8 w-auto sm:h-10 md:h-10"
               src="/pragma-logo.png"
               alt="Logo"

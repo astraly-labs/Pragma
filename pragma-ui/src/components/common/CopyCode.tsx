@@ -34,7 +34,7 @@ const CopyButtonComponent = ({ textToCopy }) => {
             />
           </svg>
         ) : (
-          <Image src="/assets/vectors/copy.svg" className="pr-3" alt="Copy" />
+          <img src="/assets/vectors/copy.svg" className="pr-3" alt="Copy" />
         )}
         {isCopied ? "Copied!" : "Copy Code"}
       </Button>

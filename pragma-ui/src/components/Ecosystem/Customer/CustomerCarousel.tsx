@@ -80,7 +80,7 @@ const CustomerCarousel: React.FC = () => {
                   {category.category}
                 </div>
                 <div className="w-48">
-                  <Image alt="companyLogo" src={category.logo} />
+                  <img alt="companyLogo" src={category.logo} />
                 </div>
                 <GreenText className="text-center md:pb-32 md:text-left">
                   {category.integration}

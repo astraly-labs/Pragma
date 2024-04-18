@@ -21,12 +21,12 @@ const Testimonial = () => (
       </GreenText>
     </div>
     <div className="relative w-full lg:w-6/12">
-      <Image
+      <img
         alt="greenDot"
         src="/assets/vectors/lightDot.svg"
         className={styles.lightDot1}
       />
-      <Image
+      <img
         alt="greenDot"
         src="/assets/vectors/lightDot.svg"
         className={styles.lightDot2}

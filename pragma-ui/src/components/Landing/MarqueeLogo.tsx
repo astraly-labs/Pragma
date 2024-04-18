@@ -121,7 +121,7 @@ const MarqueeLogo = () => {
             className="relative z-10 my-auto flex items-center justify-center"
             href={link}
           >
-            <Image className="my-auto h-8 px-8" src={src} alt={name} />
+            <img className="my-auto h-8 px-8" src={src} alt={name} />
           </Link>
         ))}
       </Marquee>

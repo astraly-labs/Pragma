@@ -124,7 +124,7 @@ const NavHeader = () => {
             <Link href="/">
               <div>
                 <span className="sr-only">Pragma</span>
-                <Image
+                <img
                   className="h-6 w-auto sm:h-8 md:h-6 lg:h-8"
                   src="/pragma-logo.png"
                   alt="Logo"
