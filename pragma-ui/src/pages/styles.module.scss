@@ -1,31 +1,3 @@
 .bigScreen {
   max-width: 1700px;
 }
-
-.darkGreenBox {
-  display: flex;
-  padding: 56px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  align-self: stretch;
-  border-radius: 20px;
-  border: 1px solid transparent;
-  background: linear-gradient(#02201e, #02201e) padding-box,
-    linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 020%,
-        rgba(255, 255, 255, 0.06%) 050%,
-        rgba(255, 255, 255, 0.25) 080%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
-  backdrop-filter: blur(12.5px);
-}
-
-@media (max-width: 640px) {
-  .darkGreenBox {
-    padding: 24px 32px;
-  }
-}
