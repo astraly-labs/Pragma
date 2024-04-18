@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Button } from "./Button";
-import Image from "next/image";
 
 const CopyButtonComponent = ({ textToCopy }) => {
   const [isCopied, setIsCopied] = useState(false);

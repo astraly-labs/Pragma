@@ -11,7 +11,6 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 
 interface Category {
   logo: string;

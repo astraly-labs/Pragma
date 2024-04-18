@@ -84,4 +84,4 @@ const Assets = () => {
   );
 };
 
-export default AssetsPage;
+export default Assets;

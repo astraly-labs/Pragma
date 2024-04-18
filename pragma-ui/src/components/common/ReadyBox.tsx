@@ -3,7 +3,6 @@ import styles from "./styles.module.scss";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import GreenUpperText from "../common/GreenUpperText";
-import Image from "next/image";
 
 const ReadyBox = ({ version }) => {
   const [windowWidth, setWindowWidth] = useState(null);

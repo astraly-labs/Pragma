@@ -2,7 +2,6 @@ import React from "react";
 import styles from "../styles.module.scss";
 import { ButtonLink } from "../../common/Button";
 import classNames from "classnames";
-import Image from "next/image";
 
 interface BlogPostBoxProps {
   image: string;

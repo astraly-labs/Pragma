@@ -4,7 +4,6 @@ import classNames from "classnames";
 import GreenText from "../../common/GreenText";
 import GreenUpperText from "../../common/GreenUpperText";
 import TestimonialCarousel from "./TestimonialCarousel";
-import Image from "next/image";
 
 const Testimonial = () => (
   <div

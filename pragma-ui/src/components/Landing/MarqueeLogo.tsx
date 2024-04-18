@@ -3,7 +3,6 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
-import Image from "next/image";
 
 interface Ecosystem {
   name: string;

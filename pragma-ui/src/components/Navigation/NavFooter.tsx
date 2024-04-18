@@ -10,7 +10,6 @@ import InputComponent from "./EmailInput";
 import LightGreenUpper from "../common/LightGreenUpperText";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import Image from "next/image";
 
 interface FooterLink {
   title: string;

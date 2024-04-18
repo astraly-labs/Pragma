@@ -4,7 +4,6 @@ import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";
 import GreenText from "./GreenText";
 import { ButtonLink } from "./Button";
-import Image from "next/image";
 
 interface BlurBoxProps {
   firstText: string;
