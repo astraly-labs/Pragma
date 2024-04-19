@@ -85,7 +85,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://mirror.xyz/pragmagic.eth/_HKhpTGRG4SiCw6PS2vZ88Ssvgix_UVw2OMg3vD8O14",
     },
     {
-      image: "/assets/posts/longliveoraces.webp",
+      image: "/assets/posts/longliveoracles.webp",
       date: "August 21st, 2023",
       title: "Oracles are dead, Long live Oracles",
       description:
