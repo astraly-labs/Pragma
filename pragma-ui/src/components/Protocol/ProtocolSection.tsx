@@ -55,7 +55,7 @@ export const protocols: Protocol[] = [
   {
     name: "CANVAS",
     category: "Infrastructure",
-    src: "/assets/protocols/canvas.svg",
+    src: "/assets/ecosystem/canvas.svg",
     description:
       "CANVAS provides scalable infrastructure to access Web3. They have two main products: CANVAS Connect, a Layer 2 Scaling solution for DeFi transactions, and CANVAS Digital, a way to securely access and invest in DeFi and Web3.",
     href: "https://canvas.co/",

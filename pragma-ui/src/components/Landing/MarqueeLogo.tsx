@@ -13,7 +13,7 @@ interface Ecosystem {
 const ecosystem: Ecosystem[] = [
   {
     name: "canvas",
-    src: "/assets/ecosystem/canvas.png",
+    src: "/assets/ecosystem/canvas.svg",
     link: "https://canvas.co/",
   },
   {
@@ -48,7 +48,7 @@ const ecosystem: Ecosystem[] = [
   },
   {
     name: "avnu",
-    src: "/assets/ecosystem/avnu.svg",
+    src: "/assets/publishers/avnu.svg",
     link: "https://avnu.fi/",
   },
   {
@@ -58,17 +58,17 @@ const ecosystem: Ecosystem[] = [
   },
   {
     name: "propeller heads",
-    src: "/assets/ecosystem/propeller.svg",
+    src: "/assets/publishers/propeller.svg",
     link: "https://propellerheads.xyz/",
   },
   {
     name: "flowdesk",
-    src: "/assets/ecosystem/flowdesk.svg",
+    src: "/assets/publishers/flowdesk.svg",
     link: "https://flowdesk.co/",
   },
   {
     name: "skynet",
-    src: "/assets/ecosystem/skynet.svg",
+    src: "/assets/publishers/skynet.svg",
     link: "https://skynettrading.com/",
   },
   {

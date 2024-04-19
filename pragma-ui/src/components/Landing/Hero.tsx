@@ -4,8 +4,8 @@ import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import Lottie from "react-lottie-player";
-import animationHero from "../../../public/pragma_hero.json";
-import animationHeroMobile from "../../../public/pragma_hero_mobile.json";
+import animationHero from "../../../public/assets/lottie/pragma_hero.json";
+import animationHeroMobile from "../../../public/assets/lottie/pragma_hero_mobile.json";
 
 const Hero = () => {
   const [windowWidth, setWindowWidth] = useState(null);

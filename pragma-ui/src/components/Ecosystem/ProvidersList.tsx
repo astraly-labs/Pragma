@@ -5,17 +5,17 @@ import Image from "next/image";
 
 const providersData = [
   {
-    logo: "/assets/ecosystem/skynet.svg",
+    logo: "/assets/publishers/skynet.svg",
     description:
       "Skynet Trading is thrilled to be at the forefront of enhancing trust and accuracy in the crypto market, contributing our valuable data through Pragma's advanced zk-enabled technology, a pivotal step towards a more transparent and reliable digital asset ecosystem.",
   },
   {
-    logo: "/assets/ecosystem/flowdesk.svg",
+    logo: "/assets/publishers/flowdesk.svg",
     description:
       "We are happy to partner with Pragma as a data provider. Their verifiable computational feeds are a key component to support the next generation of Defi protocols and we are excited to take part in this project",
   },
   {
-    logo: "/assets/ecosystem/avnu.svg",
+    logo: "/assets/publishers/avnu.svg",
     description:
       "We're thrilled to provide our top-tier data from our solvers to help secure DeFi on Starknet",
   },
