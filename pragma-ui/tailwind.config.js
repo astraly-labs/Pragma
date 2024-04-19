@@ -40,6 +40,10 @@ module.exports = {
         60: ".6",
         75: ".75",
       },
+      screens: {
+        smolScreen: "380px",
+        // => @media (min-width: 640px) { ... }
+      },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },

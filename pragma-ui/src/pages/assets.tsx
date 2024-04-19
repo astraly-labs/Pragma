@@ -47,7 +47,7 @@ const dataProviders = [
   {
     image: "/path/to/image1.png",
     type: "Type 1",
-    ticker: "Ticker 1",
+    name: "Ticker 1",
     lastUpdated: "2024-04-10T12:00:00Z",
     price: 100,
     sources: 3,
