@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
 
 import "../styles/index.css";
 import NavFooter from "../components/Navigation/NavFooter";
-import CommandPallate from "../components/Navigation/CommandPalette";
-import { SearchContext } from "../providers/search";
 import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
@@ -28,7 +26,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   const provider = jsonRpcProvider({ rpc });
 
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
 
@@ -91,12 +88,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       />
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
         <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
-          <SearchContext.Provider value={setIsSearchOpen}>
-            <NavHeader />
-            <CommandPallate isOpen={isSearchOpen} />
-            <Component {...pageProps} key={router.asPath} />
-            <NavFooter />
-          </SearchContext.Provider>
+          <NavHeader />
+          <Component {...pageProps} key={router.asPath} />
+          <NavFooter />
         </div>
       </StarknetConfig>
     </>
