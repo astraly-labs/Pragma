@@ -82,6 +82,7 @@ const InputComponent: React.FC<InputProps> = ({
         <button
           className="ml-auto cursor-pointer rounded-full border border-LightGreenFooter	bg-transparent p-2 text-LightGreenFooter transition-colors duration-300 hover:bg-LightGreenFooter hover:text-darkGreen"
           onClick={handleButtonClick}
+          aria-label="Subscribe"
         >
           <ArrowRightIcon className="w-3 cursor-pointer" />
         </button>

@@ -141,7 +141,7 @@ const Footer = () => (
             <img
               className="h-8 w-auto sm:h-10 md:h-10"
               src="/pragma-logo.png"
-              alt="Pragma"
+              alt="Logo"
             />
           </div>
         </Link>

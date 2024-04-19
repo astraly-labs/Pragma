@@ -54,7 +54,7 @@ const TestimonialCarousel: React.FC = () => {
           <Slide index={index} key={index}>
             <div className={styles.testimonyBox} key={index}>
               <div className="w-48">
-                <img src={category.logo} />
+                <img alt="companyLogo" src={category.logo} />
               </div>
               <GreenText className="py-8 text-center md:text-left">
                 {category.text}

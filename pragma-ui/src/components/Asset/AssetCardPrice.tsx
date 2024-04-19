@@ -1,6 +1,7 @@
 import React from "react";
 import { AssetKeyT } from "../../hooks/oracle";
 import { getCurrency } from "../../../utils/mappings";
+import Image from "next/image";
 
 const DECIMALS_TO_SHOW = 5;
 
@@ -14,7 +15,7 @@ const AssetCardPrice: React.FC<AssetCardPriceProps> = ({ price, assetKey }) => {
   return (
     <>
       <div className="flex items-center">
-        <img
+        <Image
           src={`/assets/currencies/${src}`}
           className="mr-2 h-6 w-6 md:mr-3"
           alt={alt}

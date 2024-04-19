@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
+import Image from "next/image";
 
 const providersData = [
   {
@@ -28,7 +29,7 @@ const ProvidersList = () => (
   >
     {providersData.map((tab, index) => (
       <div className={styles.dpBox} key={index}>
-        <img src={tab.logo} className="h-8" alt="logo" />
+        <Image src={tab.logo} className="h-8" alt="logo" />
         {tab.description}
       </div>
     ))}

@@ -3,6 +3,7 @@ import classNames from "classnames";
 import GreenUpperText from "../common/GreenUpperText";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
+import Image from "next/image";
 
 const DataProviders = () => (
   <div
@@ -28,7 +29,7 @@ const DataProviders = () => (
       </ButtonLink>
     </div>
     <div className="relative flex w-full flex-col items-center justify-center overflow-hidden lg:w-6/12">
-      <img
+      <Image
         src="/assets/vectors/vector4.svg"
         alt="divider"
         className="absolute z-0 w-full"

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export interface SimpleLogo {
@@ -23,7 +24,7 @@ const LogoCloud: React.FC<LogoCloudProps> = ({ title, logos }) => (
       {logos.map(({ name, src, href }, i) => (
         <li key={i} className="basis-1/2 py-4 px-3 md:basis-1/4 lg:py-8">
           <a href={href}>
-            <img
+            <Image
               src={src}
               alt={name}
               className="mx-auto h-6 w-auto flex-shrink-0 md:h-10 lg:h-14"

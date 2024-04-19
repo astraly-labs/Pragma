@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import GreenText from "../common/GreenText";
+import Image from "next/image";
 
 const VerifRandBox = () => {
   return (
@@ -24,9 +25,10 @@ const VerifRandBox = () => {
           Integrate VRF
         </ButtonLink>
       </div>
-      <img
+      <Image
         className="items-center align-middle"
         src="/assets/vectors/verifRand.svg"
+        alt="Verifiable Randomness Illustration"
       />
     </div>
   );

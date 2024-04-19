@@ -33,6 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         )}
         value={inputValue}
         onChange={handleInputChange}
+        aria-label="Search"
       />
       <SearchIcon
         aria-hidden="true"

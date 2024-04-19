@@ -33,11 +33,16 @@ module.exports = {
         greenFooter: "#1B63521F",
         LightGreenFooter: "#B5F0E580",
         whiteTrans: "#FFFFFF26",
+        redDown: "#E52258",
       },
       invert: {
         25: ".25",
         60: ".6",
         75: ".75",
+      },
+      screens: {
+        smolScreen: "380px",
+        // => @media (min-width: 640px) { ... }
       },
       keyframes: {
         marquee: {

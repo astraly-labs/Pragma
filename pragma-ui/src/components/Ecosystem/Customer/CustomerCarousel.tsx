@@ -11,6 +11,7 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 
 interface Category {
   logo: string;
@@ -32,6 +33,15 @@ const categories: Category[] = [
     avatar: "/assets/chads/brian.jpg",
   },
   {
+    logo: "/assets/ecosystem/vesu.png",
+    text: "Pragma's unique oracle design enabled us to build fail-safe price feeds in a fully immutable protocol. The additional data and tools available are extremely valuable to build resilient protocols and ultimately safeguard user funds.",
+    author: "Nils Bundi CEO",
+    integration:
+      "Vesu leverages Pragma composable and fully onchain infrastructure at its best in order to safely manage collateral, and enable new markets on Vesu.",
+    category: "lending",
+    avatar: "/assets/chads/nils.jpeg",
+  },
+  {
     logo: "/assets/ecosystem/nostra.png",
     text: "We are pleased to partner with the Pragma team and integrating their StarkNet native oracle to our Defi products.",
     author: "David Garai CEO",
@@ -48,7 +58,7 @@ const CustomerCarousel: React.FC = () => {
       naturalSlideWidth={648}
       naturalSlideHeight={460}
       visibleSlides={1}
-      totalSlides={2}
+      totalSlides={3}
       step={1}
       infinite={true}
       dragEnabled={false}
@@ -70,7 +80,7 @@ const CustomerCarousel: React.FC = () => {
                   {category.category}
                 </div>
                 <div className="w-48">
-                  <img src={category.logo} />
+                  <img alt="companyLogo" src={category.logo} />
                 </div>
                 <GreenText className="text-center md:pb-32 md:text-left">
                   {category.integration}
@@ -79,7 +89,7 @@ const CustomerCarousel: React.FC = () => {
               <div className={styles.testimonialBox}>
                 <div className="text-lg text-lightGreen">{category.text}</div>
                 <div className="flex flex-row gap-4">
-                  <img
+                  <Image
                     src={category.avatar}
                     className={styles.avatar}
                     alt="avatar"

@@ -21,7 +21,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
   return (
     <div className={styles.blogBox}>
       <div className="w-full">
-        <img src={image} />
+        <img src={image} alt="blogIllustration" />
       </div>
       <div className="flex h-full w-full flex-col justify-between p-6 pb-2 text-left">
         <div className="flex flex-col">
@@ -45,7 +45,7 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
           href={link}
           className="mb-6 mt-auto"
         >
-          Read more
+          Read article
         </ButtonLink>
       </div>
     </div>

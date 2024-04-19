@@ -9,6 +9,7 @@ import classNames from "classnames";
 import { SpotEntry } from "../../hooks/oracle";
 import { getCurrency } from "../../../utils/mappings";
 import { capitalize, secondsToTime } from "../../../utils/display";
+import Image from "next/image";
 
 const MINUTES_ALLOWED = 30;
 const DECIMALS_TO_SHOW = 10;
@@ -65,7 +66,7 @@ const EntriesTable: React.FC<EntriesTableProps> = ({
       {
         header: () => (
           <div className="flex items-center">
-            <img
+            <Image
               src={`/assets/currencies/${currencySrc}`}
               alt={currencyAlt}
               className="mr-2 inline h-5 w-5 md:mr-3"
