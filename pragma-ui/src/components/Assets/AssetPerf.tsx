@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
+import Image from "next/image";
 
 const AssetPerf = ({ asset, isAsset }) => {
   return (
     <div className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}>
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
-        <img alt="AssetImage" src={asset.image} />
+        <Image height={30} width={30} alt="AssetImage" src={asset.image} />
         <div className="flex flex-col text-lg text-lightGreen">
           {isAsset ? asset.ticker : asset.name}{" "}
           <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
@@ -110,7 +111,7 @@ const AssetPerf = ({ asset, isAsset }) => {
       )}
       {isAsset ? (
         <div className="my-auto flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-          <img alt="Chart" src={asset.chart} />
+          <Image height={50} width={150} alt="Chart" src={asset.chart} />
         </div>
       ) : (
         ""
