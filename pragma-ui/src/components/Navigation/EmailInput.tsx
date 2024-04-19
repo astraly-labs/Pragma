@@ -4,6 +4,11 @@ import styles from "./styles.module.scss";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import LightGreenUpper from "../common/LightGreenUpperText";
 import PopupComponent from "../common/Popup";
+import MailerLite, {
+  CreateOrUpdateSubscriberParams,
+} from "@mailerlite/mailerlite-nodejs";
+
+require("dotenv").config();
 
 interface InputProps {
   placeholderText: string;
@@ -27,12 +32,32 @@ const InputComponent: React.FC<InputProps> = ({
     setIsCheckboxChecked(e.target.checked);
   };
 
+  const mailerlite = new MailerLite({
+    api_key: process.env.MAILER_API_KEY,
+  });
+
+  const handleSubmit = () => {
+    const params: CreateOrUpdateSubscriberParams = {
+      email: email,
+    };
+    mailerlite.subscribers
+      .createOrUpdate(params)
+      .then((response) => {
+        console.log(response.data);
+        setIsSubmitted(true); // Set to true if email is valid
+      })
+      .catch((error) => {
+        if (error.response) console.log(error.response.data);
+        setIsSubmitted(false); // Set to false if submission fails
+      });
+  };
+
   const validateEmail = () => {
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     const isValid = emailPattern.test(email);
     setIsValidEmail(isValid);
     if (isValid) {
-      setIsSubmitted(true); // Set to true if email is valid
+      handleSubmit();
     }
   };
 

@@ -38,17 +38,15 @@ const EcosystemPage = () => {
         const data = await response.json();
         console.log(data);
 
-        const variation24h = data.data[0].open - data.data[1440].open;
-        const relativeVariation24h =
-          (variation24h / data.data[1440].open) * 100;
+        const variation24h = data.data[0].open - data.data[96].open;
+        const relativeVariation24h = (variation24h / data.data[96].open) * 100;
 
         // Update your state with the new data
         const assetData = {
           ticker: data.pair_id,
           lastPrice: data.data[0].open,
           variation24h,
-          relativeVariation24h:
-            variation24h > 0 ? relativeVariation24h : -relativeVariation24h,
+          relativeVariation24h,
           priceData: data.data.reverse().map((d: any) => ({
             time: new Date(d.time).getTime() / 1000,
             value: parseInt(d.open) / 10 ** decimals,
