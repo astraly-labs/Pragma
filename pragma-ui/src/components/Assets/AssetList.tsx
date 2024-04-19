@@ -79,7 +79,7 @@ const AssetList = ({ options, isAsset, assets }) => {
       </div>
       <div className="w-full overflow-auto">
         {isAsset ? (
-          <div className={classNames(styles.assetBox, "")}>
+          <div className={styles.assetBox}>
             <div className="flex flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Pair
               <img
@@ -131,9 +131,7 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
           </div>
         ) : (
-          <div
-            className={classNames(styles.assetBox, "grid w-full grid-cols-7")}
-          >
+          <div className={styles.dpBox}>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Identifier
               <img
@@ -152,33 +150,33 @@ const AssetList = ({ options, isAsset, assets }) => {
               Type
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">
-              Reputation score
+              Reputation
               <img
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Nb feeds supported
+              Nb feeds
               <img
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Nb updates/day
+              Updates/day
               <img
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Nb total updates
+              Total updates
             </div>
           </div>
         )}
         {assets.map((asset, assetIdx) => (
-          <AssetPerf asset={asset} isAsset={isAsset} key={assetIdx} />
+          <AssetPerf isAsset={isAsset} asset={asset} key={assetIdx} />
         ))}
       </div>
     </div>

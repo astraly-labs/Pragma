@@ -45,32 +45,24 @@ const assets = [
 
 const dataProviders = [
   {
-    image: "/path/to/image1.png",
-    type: "Type 1",
-    name: "Ticker 1",
-    lastUpdated: "2024-04-10T12:00:00Z",
-    price: 100,
-    sources: 3,
-    variations: {
-      past1h: 5,
-      past24h: 10,
-      past7d: -2,
-    },
-    chart: "/path/to/chart1.png",
+    image: "/assets/publishers/pragma.svg",
+    type: "Third-party",
+    name: "Pragma",
+    lastUpdated: "2s ago",
+    reputationScore: "0.99",
+    nbFeeds: "6",
+    dailyUpdates: "3000",
+    totalUpdates: "50000",
   },
   {
-    image: "/path/to/image2.png",
-    type: "Type 2",
-    ticker: "Ticker 2",
-    lastUpdated: "2024-04-10T12:00:00Z",
-    price: 200,
-    sources: 5,
-    variations: {
-      past1h: 8,
-      past24h: 15,
-      past7d: 3,
-    },
-    chart: "/path/to/chart2.png",
+    image: "/assets/publishers/pragma.svg",
+    type: "Third-party",
+    name: "Pragma",
+    lastUpdated: "2s ago",
+    reputationScore: "0.99",
+    nbFeeds: "6",
+    dailyUpdates: "3000",
+    totalUpdates: "50000",
   },
 ];
 
@@ -91,7 +83,7 @@ const AssetsPage = () => {
         outlineButton={"Data Feeds"}
         outlineButtonLink={"#feeds"}
         illustrationLink={"/assets/vectors/chart.svg"}
-        illustrationSmallLink={"/assets/vectors/ecosystemSmall.svg"}
+        illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />
       <BoxContainer>
         <AssetList options={options} isAsset={true} assets={assets} />

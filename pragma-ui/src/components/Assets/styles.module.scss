@@ -40,6 +40,22 @@
   grid-auto-columns: minmax(130px,1fr);
 }
 
+.dpBox {
+  display: flex;
+  width: fit-content;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: left;
+  grid-gap: 10px;
+  padding-bottom: 16px;
+  padding-top: 24px;
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px,1fr);
+}
+
 
 .assetPerf {
   display: flex;
@@ -55,6 +71,22 @@
   grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(130px,1fr);
+}
+
+.dpPerf {
+  display: flex;
+  width: fit-content;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: left;
+  grid-gap: 10px;
+  padding-bottom: 12px;
+  padding-top: 12px;
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px,1fr);
 }
 
 

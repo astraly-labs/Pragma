@@ -4,11 +4,11 @@ import classNames from "classnames";
 
 const AssetPerf = ({ asset, isAsset }) => {
   return (
-    <div className={classNames(styles.assetPerf)}>
+    <div className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}>
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         <img alt="AssetImage" src={asset.image} />
         <div className="flex flex-col text-lg text-lightGreen">
-          {asset.ticker}{" "}
+          {isAsset ? asset.ticker : asset.name}{" "}
           <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
             {asset.type}
           </div>
@@ -18,65 +18,103 @@ const AssetPerf = ({ asset, isAsset }) => {
         {asset.lastUpdated}
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        {asset.sources}
+        {isAsset ? asset.sources : asset.type}
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        ${asset.price}
+        {isAsset ? "$" : ""}
+        {isAsset ? asset.price : asset.reputationScore}
       </div>
-      <div
-        className={classNames(
-          asset.variations.past1h > 0
-            ? "text-mint"
+      {isAsset ? (
+        ""
+      ) : (
+        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+          {asset.nbFeeds}
+        </div>
+      )}
+      {isAsset ? (
+        ""
+      ) : (
+        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+          {asset.dailyUpdates}
+        </div>
+      )}
+      {isAsset ? (
+        ""
+      ) : (
+        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+          {asset.totalUpdates}
+        </div>
+      )}
+      {isAsset ? (
+        <div
+          className={classNames(
+            asset.variations.past1h > 0
+              ? "text-mint"
+              : asset.variations.past1h === 0
+              ? "text-LightGreenFooter"
+              : "text-redDown",
+            "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
+          )}
+        >
+          {asset.variations.past1h > 0
+            ? "▲"
             : asset.variations.past1h === 0
-            ? "text-LightGreenFooter"
-            : "text-redDown",
-          "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
-        )}
-      >
-        {asset.variations.past1h > 0
-          ? "▲"
-          : asset.variations.past1h === 0
-          ? "-"
-          : "▼"}{" "}
-        {asset.variations.past1h}%
-      </div>
-      <div
-        className={classNames(
-          asset.variations.past24h > 0
-            ? "text-mint"
+            ? "-"
+            : "▼"}{" "}
+          {asset.variations.past1h}%
+        </div>
+      ) : (
+        ""
+      )}
+      {isAsset ? (
+        <div
+          className={classNames(
+            asset.variations.past24h > 0
+              ? "text-mint"
+              : asset.variations.past24h === 0
+              ? "text-LightGreenFooter"
+              : "text-redDown",
+            "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
+          )}
+        >
+          {asset.variations.past24h > 0
+            ? "▲"
             : asset.variations.past24h === 0
-            ? "text-LightGreenFooter"
-            : "text-redDown",
-          "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
-        )}
-      >
-        {asset.variations.past24h > 0
-          ? "▲"
-          : asset.variations.past24h === 0
-          ? "-"
-          : "▼"}{" "}
-        {asset.variations.past24h}%
-      </div>
-      <div
-        className={classNames(
-          asset.variations.past7d > 0
-            ? "text-mint"
+            ? "-"
+            : "▼"}{" "}
+          {asset.variations.past24h}%
+        </div>
+      ) : (
+        ""
+      )}
+      {isAsset ? (
+        <div
+          className={classNames(
+            asset.variations.past7d > 0
+              ? "text-mint"
+              : asset.variations.past7d === 0
+              ? "text-LightGreenFooter"
+              : "text-redDown",
+            "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
+          )}
+        >
+          {asset.variations.past7d > 0
+            ? "▲"
             : asset.variations.past7d === 0
-            ? "text-LightGreenFooter"
-            : "text-redDown",
-          "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
-        )}
-      >
-        {asset.variations.past7d > 0
-          ? "▲"
-          : asset.variations.past7d === 0
-          ? "-"
-          : "▼"}{" "}
-        {asset.variations.past7d}%
-      </div>
-      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-        <img alt="Chart" src={asset.chart} />
-      </div>
+            ? "-"
+            : "▼"}{" "}
+          {asset.variations.past7d}%
+        </div>
+      ) : (
+        ""
+      )}
+      {isAsset ? (
+        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+          <img alt="Chart" src={asset.chart} />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
