@@ -1,1 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"  xmlns:v="https://vecta.io/nano"><g clip-path="url(#A)"><path d="M11.998 0l-.161.547v15.869l.161.161 7.366-4.354L11.998 0z" fill="#343434"/><path d="M11.998 0L4.632 12.223l7.366 4.354V0z" fill="#8c8c8c"/><path d="M11.998 17.969l-.091.111v5.653l.091.265 7.371-10.38-7.371 4.352z" fill="#3c3c3b"/><path d="M11.998 23.998v-6.028l-7.366-4.352 7.366 10.38z" fill="#8c8c8c"/><path d="M11.999 16.579l7.366-4.354-7.366-3.348v7.702z" fill="#141414"/><path d="M4.632 12.225l7.366 4.354V8.877l-7.366 3.348z" fill="#393939"/></g><defs><clipPath id="A"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>
+<svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1738_6672)">
+<path d="M15.2079 0.5L15.0066 1.18366V21.0201L15.2079 21.2209L24.4155 15.7782L15.2079 0.5Z" fill="#B5F0E5"/>
+<path d="M15.2079 0.5L6 15.7782L15.2079 21.2209V11.5929V0.5Z" fill="#B5F0E5"/>
+<path d="M15.2082 22.9643L15.0947 23.1027V30.1687L15.2082 30.4999L24.4215 17.5244L15.2082 22.9643Z" fill="#B5F0E5"/>
+<path d="M15.2079 30.4999V22.9643L6 17.5244L15.2079 30.4999Z" fill="#B5F0E5"/>
+<path d="M15.208 21.2208L24.4157 15.7781L15.208 11.5928V21.2208Z" fill="#B5F0E5"/>
+<path d="M6 15.7781L15.2079 21.2208V11.5928L6 15.7781Z" fill="#B5F0E5"/>
+</g>
+<defs>
+<clipPath id="clip0_1738_6672">
+<rect width="30" height="30" fill="white" transform="translate(0 0.5)"/>
+</clipPath>
+</defs>
+</svg>

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import GreenUpperText from "../common/GreenUpperText";
 import Lottie from "react-lottie-player";
-import animationHero from "../../../public/pragma_scheme.json";
+import animationHero from "../../../public/assets/lottie/pragma_scheme.json";
 
 const Architecture = () => (
   <div className={classNames("align-center w-full", styles.darkGreenBox)}>

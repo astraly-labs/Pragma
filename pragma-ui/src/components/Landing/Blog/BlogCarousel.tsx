@@ -53,7 +53,7 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
-      image: "https://images.mirror-media.xyz/nft/eEUZgYdNzwr2agIKU6ts7.png",
+      image: "/assets/posts/pragmapi.webp",
       date: "December 1st, 2023",
       title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
       description:
@@ -61,8 +61,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://mirror.xyz/pragmagic.eth/6kLIyEzYanQNWn58tPfMpzIxehz7SZ3jM-sqJENy79k",
     },
     {
-      image:
-        "https://images.mirror-media.xyz/publication-images/zZert-yfY3OFeuCAhNcMP.jpeg?height=512&width=1024",
+      image: "/assets/posts/vrf.webp",
       date: "December 1st, 2023",
       title: "Introducing the Verifiable Random Function in Cairo 1",
       description:
@@ -70,8 +69,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://mirror.xyz/pragmagic.eth/AtrYK2CLU9uflovElf8pO1U2mjyspdMqjfTV9yizWeI",
     },
     {
-      image:
-        "https://images.mirror-media.xyz/publication-images/yDlZUg0hFCJuzPS_6wAri.jpeg?height=512&width=1024",
+      image: "/assets/posts/security.webp",
       date: "November 29th, 2023",
       title: "Exploring Pragma's Security",
       description:
@@ -79,7 +77,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://mirror.xyz/pragmagic.eth/I_sNYLA1RvJoFFvPPoL-aTp52r4XRe6Y2zpWqTIBelw",
     },
     {
-      image: "https://images.mirror-media.xyz/nft/RzZhNkJCO447zAbKTXPh6.png",
+      image: "/assets/posts/introducing.webp",
       date: "September 7th, 2023",
       title: "(RE)Introducing Pragma on Starknet",
       description:
@@ -87,7 +85,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://mirror.xyz/pragmagic.eth/_HKhpTGRG4SiCw6PS2vZ88Ssvgix_UVw2OMg3vD8O14",
     },
     {
-      image: "https://images.mirror-media.xyz/nft/gpEaXet0nQaanR_aWd_ED.png",
+      image: "/assets/posts/longliveoraces.webp",
       date: "August 21st, 2023",
       title: "Oracles are dead, Long live Oracles",
       description:

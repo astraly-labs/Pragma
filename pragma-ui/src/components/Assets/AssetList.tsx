@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import SearchBar from "../Navigation/SearchBar";
 import AssetPerf from "./AssetPerf";
+import Image from "next/image";
 
 const AssetList = ({ options, isAsset, assets }) => {
   const [selected, setSelected] = useState(options[0]);
@@ -26,8 +27,10 @@ const AssetList = ({ options, isAsset, assets }) => {
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
                 <span className="block truncate">{selected.name}</span>
-                <img
+                <Image
                   className="my-auto pl-2"
+                  height={16}
+                  width={16}
                   alt="arrowDown"
                   src="/assets/vectors/arrowDown.svg"
                 />
@@ -83,14 +86,18 @@ const AssetList = ({ options, isAsset, assets }) => {
           <div className={styles.assetBox}>
             <div className="flex flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Pair
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Last updated
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
@@ -98,7 +105,9 @@ const AssetList = ({ options, isAsset, assets }) => {
 
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Nb sources
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
@@ -108,21 +117,27 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               1H
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               24H
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               7D
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
@@ -135,14 +150,18 @@ const AssetList = ({ options, isAsset, assets }) => {
           <div className={styles.dpBox}>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Identifier
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Last update
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
@@ -152,21 +171,27 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">
               Reputation
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Nb feeds
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Updates/day
-              <img
+              <Image
+                height={16}
+                width={16}
                 alt="ArrowDownSmall"
                 src="/assets/vectors/arrowDownSmall.svg"
               />
