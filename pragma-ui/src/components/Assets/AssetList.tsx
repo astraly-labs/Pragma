@@ -39,15 +39,15 @@ const AssetList = ({ options, isAsset, assets }) => {
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="ring-1backdrop-blur absolute mt-1 max-h-60	w-full overflow-auto rounded-md	bg-green py-1 text-sm text-lightGreen focus:outline-none">
-                  {options.map((person, personIdx) => (
+                  {options.map((options, optionsIdx) => (
                     <Listbox.Option
-                      key={personIdx}
+                      key={optionsIdx}
                       className={({ active }) =>
                         `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
                           active ? "opacity-50 " : ""
                         }`
                       }
-                      value={person}
+                      value={options}
                     >
                       {({ selected }) => (
                         <>
@@ -56,10 +56,10 @@ const AssetList = ({ options, isAsset, assets }) => {
                               selected ? "font-medium" : "font-normal"
                             }`}
                           >
-                            {person.name}
+                            {options.name}
                           </span>
                           {selected ? (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"></span>
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
                           ) : null}
                         </>
                       )}
@@ -75,6 +75,7 @@ const AssetList = ({ options, isAsset, assets }) => {
         </div>
         <div className="sm:ml-auto">
           <SearchBar onInputChange={handleInputChange} />
+          <div className="hidden"> {filteredValue}</div>
         </div>
       </div>
       <div className="w-full overflow-auto">
