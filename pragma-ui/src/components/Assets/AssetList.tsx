@@ -2,10 +2,10 @@ import React, { Fragment, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
-import BoxContainer from "../common/BoxContainer";
 import SearchBar from "../Navigation/SearchBar";
+import AssetPerf from "./AssetPerf";
 
-const AssetList = ({ options, isAsset }) => {
+const AssetList = ({ options, isAsset, assets }) => {
   const [selected, setSelected] = useState(options[0]);
   const numberAssets = 1;
 
@@ -17,13 +17,13 @@ const AssetList = ({ options, isAsset }) => {
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
-      <h3 className="text-lightGreen">
+      <h3 className="pb-3 text-lightGreen">
         {isAsset ? "Price Feeds" : "Data Providers"}
       </h3>
-      <div className="flex w-full flex-row gap-3 pt-3">
+      <div className="flex w-full flex-row gap-3 py-3">
         <Listbox value={selected} onChange={setSelected}>
           <div className="relative">
-            <Listbox.Button className="relative flex w-auto	 cursor-default flex-row rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+            <Listbox.Button className="relative flex w-auto cursor-pointer flex-row rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
               <span className="block truncate">{selected.name}</span>
               <img
                 className="my-auto pl-2"
@@ -37,13 +37,13 @@ const AssetList = ({ options, isAsset }) => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto	rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none">
+              <Listbox.Options className="ring-1backdrop-blur absolute mt-1 max-h-60	w-full overflow-auto rounded-md	bg-green py-1 text-sm text-lightGreen focus:outline-none">
                 {options.map((person, personIdx) => (
                   <Listbox.Option
                     key={personIdx}
                     className={({ active }) =>
-                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                        active ? "bg-amber-100 text-amber-900" : "text-gray-900"
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
+                        active ? "opacity-50 " : ""
                       }`
                     }
                     value={person}
@@ -51,7 +51,7 @@ const AssetList = ({ options, isAsset }) => {
                     {({ selected }) => (
                       <>
                         <span
-                          className={`block truncate ${
+                          className={`block truncate text-lightGreen ${
                             selected ? "font-medium" : "font-normal"
                           }`}
                         >
@@ -75,6 +75,106 @@ const AssetList = ({ options, isAsset }) => {
           <SearchBar onInputChange={handleInputChange} />
         </div>
       </div>
+      {isAsset ? (
+        <div className={classNames(styles.assetBox, "grid w-full grid-cols-8")}>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Pair
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Last updated
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Nb sources
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Price
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            1H
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            24H
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            7D
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            7D chart
+          </div>
+        </div>
+      ) : (
+        <div className={classNames(styles.assetBox, "grid w-full grid-cols-7")}>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Identifier
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Last update
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Type
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">
+            Reputation score
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Nb feeds supported
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Nb updates/day
+            <img
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            Nb total updates
+          </div>
+        </div>
+      )}
+      {assets.map((asset, assetIdx) => (
+        <AssetPerf asset={asset} isAsset={isAsset} key={assetIdx} />
+      ))}
     </div>
   );
 };

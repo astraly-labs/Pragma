@@ -33,6 +33,7 @@ module.exports = {
         greenFooter: "#1B63521F",
         LightGreenFooter: "#B5F0E580",
         whiteTrans: "#FFFFFF26",
+        redDown: "#E52258",
       },
       invert: {
         25: ".25",
