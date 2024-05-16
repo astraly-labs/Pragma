@@ -12,7 +12,7 @@ const options = [
   { name: "v2 testnet" },
 ];
 
-const assets = [
+export const assets = [
   {
     image: "/assets/currencies/btc.svg",
     type: "Crypto",

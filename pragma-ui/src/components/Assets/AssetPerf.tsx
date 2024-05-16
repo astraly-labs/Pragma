@@ -2,10 +2,14 @@ import React from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Image from "next/image";
+import Link from "next/link";
 
 const AssetPerf = ({ asset, isAsset }) => {
   return (
-    <div className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}>
+    <Link
+      href={isAsset ? `/asset/${asset.ticker}` : `/provider/${asset.name}`}
+      className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}
+    >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         <Image height={30} width={30} alt="AssetImage" src={asset.image} />
         <div className="flex flex-col text-lg text-lightGreen">
@@ -116,7 +120,7 @@ const AssetPerf = ({ asset, isAsset }) => {
       ) : (
         ""
       )}
-    </div>
+    </Link>
   );
 };
 
