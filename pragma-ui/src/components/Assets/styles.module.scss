@@ -26,7 +26,7 @@
 
 .assetBox {
   display: flex;
-  width: fit-content;
+  width: 100%;
   flex-direction: row;
   align-items: flex-start;
   justify-content: left;
@@ -42,7 +42,7 @@
 
 .dpBox {
   display: flex;
-  width: fit-content;
+  width: 100%;
   flex-direction: row;
   align-items: flex-start;
   justify-content: left;
@@ -59,7 +59,7 @@
 
 .assetPerf {
   display: flex;
-  width: fit-content;
+  width: 100%;
   flex-direction: row;
   align-items: flex-start;
   justify-content: left;
@@ -75,7 +75,7 @@
 
 .dpPerf {
   display: flex;
-  width: fit-content;
+  width: 100%;
   flex-direction: row;
   align-items: flex-start;
   justify-content: left;
@@ -89,6 +89,21 @@
   grid-auto-columns: minmax(150px,1fr);
 }
 
+
+@media (max-width: 1400px) {
+  .assetBox {
+    width: fit-content;
+  }
+  .assetPerf {
+    width: fit-content;
+  }
+  .dpBox {
+    width: fit-content;
+  }
+  .dpPerf {
+    width: fit-content;
+  }
+}
 
 @media (max-width: 640px) {
   .darkGreenBox {
