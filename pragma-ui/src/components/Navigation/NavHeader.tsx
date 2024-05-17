@@ -41,6 +41,11 @@ const resources: Resource[] = [
     description: "Meet our data publishers.",
     href: "/resources",
   },
+  {
+    name: "Explorer",
+    description: "Meet our data publishers.",
+    href: "/resources",
+  },
 ];
 
 const additional = [
