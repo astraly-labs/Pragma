@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { assets } from "../assets";
+import { dataProviders } from "../assets";
 import BoxContainer from "../../components/common/BoxContainer";
 import classNames from "classnames";
 import styles from "../styles.module.scss";
@@ -11,25 +11,20 @@ import AssetChart from "../../components/Assets/AssetChart";
 import PriceComponent from "../../components/Assets/PriceComponent";
 import Checkpoints from "../../components/Assets/Checkpoints";
 
-interface Asset {
+interface DataProviders {
   image: string;
   type: string;
-  ticker: string;
+  name: string;
+  link: string;
   lastUpdated: string;
-  price: number;
-  sources: number;
-  variations: {
-    past1h: number;
-    past24h: number;
-    past7d: number;
-  };
-  chart: string;
-  ema: string;
-  macd: string;
+  reputationScore: number;
+  nbFeeds: number;
+  dailyUpdates: number;
+  totalUpdates: number;
 }
 
 interface Props {
-  asset: Asset;
+  dataP: DataProviders;
 }
 
 interface PriceComponents {
@@ -100,11 +95,11 @@ const checkpointComponents: CheckpointComponent[] = [
   },
 ];
 
-const AssetPage = ({ asset }: Props) => {
+const ProviderPage = ({ dataP }: Props) => {
   const router = useRouter();
 
   // Render loading state if asset is not yet fetched
-  if (!asset) {
+  if (!dataP) {
     return <div>Loading...</div>;
   }
 
@@ -134,18 +129,7 @@ const AssetPage = ({ asset }: Props) => {
         </button>
       </BoxContainer>
       <BoxContainer>
-        <AssetHeader isAsset={true} assets={asset} />
-      </BoxContainer>
-      <BoxContainer>
-        <AssetChart assets={asset} />
-      </BoxContainer>
-      <div className="w-full pb-5" />
-      <BoxContainer className="relative" modeOne={false}>
-        <PriceComponent components={priceComponents} />
-        {/* <div className="absolute top-0 left-2/4 z-0 h-full w-screen -translate-x-1/2 bg-lightBackground" /> */}
-      </BoxContainer>
-      <BoxContainer>
-        <Checkpoints components={checkpointComponents} />
+        <AssetHeader isAsset={false} assets={dataP} />
       </BoxContainer>
     </div>
   );
@@ -153,19 +137,19 @@ const AssetPage = ({ asset }: Props) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Generate paths for each asset's ticker
-  const paths = assets.map((asset) => ({
-    params: { ticker: asset.ticker },
+  const paths = dataProviders.map((dataP) => ({
+    params: { name: dataP.name },
   }));
   return { paths, fallback: false };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   // Fetch data for the specific asset based on its ticker
-  const ticker = params?.ticker;
-  const asset = assets.find((asset) => asset.ticker === ticker);
+  const name = params?.name;
+  const dataP = dataProviders.find((dataP) => dataP.name === name);
 
   // Pass the asset data as props to the component
-  return { props: { asset } };
+  return { props: { dataP } };
 };
 
-export default AssetPage;
+export default ProviderPage;

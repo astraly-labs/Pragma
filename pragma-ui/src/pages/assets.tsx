@@ -26,6 +26,8 @@ export const assets = [
       past7d: -2,
     },
     chart: "https://www.coingecko.com/coins/1/sparkline.svg",
+    ema: "soon",
+    macd: "soon",
   },
   {
     image: "/assets/currencies/sol.svg",
@@ -40,14 +42,17 @@ export const assets = [
       past7d: 4.3,
     },
     chart: "https://www.coingecko.com/coins/4128/sparkline.svg",
+    ema: "soon",
+    macd: "soon",
   },
 ];
 
-const dataProviders = [
+export const dataProviders = [
   {
     image: "/assets/publishers/pragma.svg",
     type: "Third-party",
-    name: "Pragma",
+    link: "https://flowdesk.co",
+    name: "Flowdesk",
     lastUpdated: "2s ago",
     reputationScore: "0.99",
     nbFeeds: "6",
@@ -57,6 +62,7 @@ const dataProviders = [
   {
     image: "/assets/publishers/pragma.svg",
     type: "Third-party",
+    link: "https://pragma.build",
     name: "Pragma",
     lastUpdated: "2s ago",
     reputationScore: "0.99",
