@@ -4,22 +4,6 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import DoubleText from "./DoubleText";
 
-interface BlurBoxProps {
-  ticker: string;
-  fullName: string;
-  title: string;
-  generalText: string;
-  textButton: string;
-  linkButton: string;
-  textButton2: string;
-  linkButton2: string;
-  className?: string;
-  props?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
-}
-
 const AssetHeader = ({ isAsset, assets }) => {
   return (
     <div
@@ -30,9 +14,9 @@ const AssetHeader = ({ isAsset, assets }) => {
     >
       <h2 className="my-auto flex flex-row items-center gap-4 text-lightGreen">
         <Image height={60} width={60} alt="arrowDown" src={assets.image} />
-        {assets.ticker}
+        {isAsset ? assets.ticker : assets.name}
       </h2>
-      <div className="flex flex-row gap-10 lg:gap-20">
+      <div className="flex flex-row gap-3 sm:gap-10 lg:gap-20">
         <div className="flex flex-col gap-4">
           <DoubleText bigText={`$${assets.price}`} smolText={"Price"} />
           <DoubleText bigText={assets.type} smolText={"Asset Type"} />

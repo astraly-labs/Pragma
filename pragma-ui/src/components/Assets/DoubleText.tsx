@@ -21,8 +21,10 @@ interface BlurBoxProps {
 const DoubleText = ({ bigText, smolText }) => {
   return (
     <div className={"flex flex-col"}>
-      <div className="text-lg tracking-wider text-lightGreen">{bigText}</div>
-      <div className="font-mono text-sm tracking-wider text-LightGreenFooter">
+      <div className="text-xs tracking-wider text-lightGreen sm:text-lg">
+        {bigText}
+      </div>
+      <div className="font-mono text-xs tracking-wider text-LightGreenFooter sm:text-sm">
         {smolText}
       </div>
     </div>

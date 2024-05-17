@@ -5,7 +5,7 @@ import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
 import AssetList from "../components/Assets/AssetList";
 
-const options = [
+export const options = [
   { name: "v1 mainnet" },
   { name: "v1 testnet" },
   { name: "API prod" },

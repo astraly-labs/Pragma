@@ -6,6 +6,7 @@ import classNames from "classnames";
 import styles from "../styles.module.scss";
 import Image from "next/image";
 import AssetHeader from "../../components/Assets/AssetHeader";
+import AssetChart from "../../components/Assets/AssetChart";
 
 interface Asset {
   image: string;
@@ -62,6 +63,12 @@ const AssetPage = ({ asset }: Props) => {
       </BoxContainer>
       <BoxContainer>
         <AssetHeader isAsset={true} assets={asset} />
+      </BoxContainer>
+      <BoxContainer className="relative">
+        <AssetChart assets={asset} />
+      </BoxContainer>
+      <BoxContainer className="relative" modeOne={false}>
+        <div className="absolute top-0 left-2/4 h-full	 w-screen -translate-x-1/2 bg-lightBackground" />
       </BoxContainer>
     </div>
   );
