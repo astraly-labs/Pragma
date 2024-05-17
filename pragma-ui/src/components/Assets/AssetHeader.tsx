@@ -17,12 +17,16 @@ const AssetHeader = ({ isAsset, assets }) => {
         <Image height={60} width={60} alt="arrowDown" src={assets.image} />
         <div className="flex flex-col">
           {isAsset ? assets.ticker : assets.name}
-          <Link
-            href={assets.link}
-            className="pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
-          >
-            {isAsset ? "" : assets.link}
-          </Link>
+          {isAsset ? (
+            ""
+          ) : (
+            <Link
+              href={assets.link}
+              className="pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
+            >
+              {assets.link}
+            </Link>
+          )}
           <div className="font-mono text-sm tracking-widest text-LightGreenFooter">
             {isAsset ? "" : assets.type}
           </div>

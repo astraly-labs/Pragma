@@ -7,9 +7,7 @@ import classNames from "classnames";
 import styles from "../styles.module.scss";
 import Image from "next/image";
 import AssetHeader from "../../components/Assets/AssetHeader";
-import AssetChart from "../../components/Assets/AssetChart";
-import PriceComponent from "../../components/Assets/PriceComponent";
-import Checkpoints from "../../components/Assets/Checkpoints";
+import PairReported from "../../components/Assets/PairReported";
 
 interface DataProviders {
   image: string;
@@ -27,71 +25,39 @@ interface Props {
   dataP: DataProviders;
 }
 
-interface PriceComponents {
-  publisher: string;
-  link: string;
-  source: string;
+interface PairsReported {
+  image: string;
+  type: string;
+  ticker: string;
+  lastUpdated: string;
   price: number;
-  hash: string;
-  lastUpdated: number;
+  dailyUpdates: number;
 }
 
-interface CheckpointComponent {
-  hash: string;
-  price: number;
-  date: string;
-  hour: string;
-  signer: string;
-}
-
-const priceComponents: PriceComponents[] = [
+const PairsReport: PairsReported[] = [
   {
-    publisher: "Publisher 1",
-    link: "https://pragma.build",
-    source: "Source 1",
-    price: 100,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849281,
+    image: "/assets/currencies/btc.svg",
+    type: "Crypto",
+    ticker: "BTCUSD",
+    lastUpdated: "<1s ago",
+    price: 62402,
+    dailyUpdates: 1000,
   },
   {
-    publisher: "Publisher 2",
-    source: "Source 2",
-    link: "https://pragma.build",
-    price: 200,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849381,
+    image: "/assets/currencies/sol.svg",
+    type: "Crypto",
+    ticker: "SOLUSD",
+    lastUpdated: "<1s ago",
+    price: 149,
+    dailyUpdates: 1000,
   },
   {
-    publisher: "Publisher 3",
-    link: "https://pragma.build",
-    source: "Source 3",
-    price: 300,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849481,
-  },
-];
-
-const checkpointComponents: CheckpointComponent[] = [
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
-  },
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
-  },
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
+    image: "/assets/currencies/eth.svg",
+    type: "Crypto",
+    ticker: "ETHUSD",
+    lastUpdated: "<1s ago",
+    price: 3078.21,
+    dailyUpdates: 1000,
   },
 ];
 
@@ -130,6 +96,9 @@ const ProviderPage = ({ dataP }: Props) => {
       </BoxContainer>
       <BoxContainer>
         <AssetHeader isAsset={false} assets={dataP} />
+      </BoxContainer>
+      <BoxContainer>
+        <PairReported components={PairsReport} />
       </BoxContainer>
     </div>
   );

@@ -5,43 +5,28 @@ import Link from "next/link";
 
 const PairReportedComp = ({ component }) => {
   return (
-    <div className={styles.priceComp}>
+    <div className={styles.pairComp}>
       <Link
-        href={`/provider/${component.publisher}`}
-        className="flex cursor-pointer flex-row gap-2 	 font-mono text-sm text-lightGreen md:tracking-wider"
+        href={`/asset/${component.ticker}`}
+        className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider"
       >
-        {component.publisher}
-        <Image
-          height={16}
-          width={16}
-          alt="Link"
-          src="/assets/vectors/outLink.svg"
-        />
+        <Image height={30} width={30} alt="AssetImage" src={component.image} />
+        <div className="flex flex-col text-lg text-lightGreen">
+          {component.ticker}
+          <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
+            {component.type}
+          </div>
+        </div>
       </Link>
-      <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        {component.source}
+      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+        {component.lastUpdated}
       </div>
 
-      <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {component.price}
       </div>
-      <Link
-        className=" flex cursor-pointer flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider"
-        href={`https://voyager.online/tx/${component.hash}`}
-      >
-        {component.hash}
-        <Image
-          height={16}
-          width={16}
-          alt="Link"
-          src="/assets/vectors/outLink.svg"
-        />
-      </Link>
-      <div className="flex flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider"></div>
-      <div className="flex flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider"></div>
-
-      <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        {component.lastUpdated}
+      <div className=" my-auto flex cursor-pointer flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+        {component.dailyUpdates}
       </div>
     </div>
   );

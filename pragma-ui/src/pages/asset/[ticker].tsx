@@ -29,7 +29,7 @@ interface Asset {
 }
 
 interface Props {
-  asset: Asset;
+  asset: Asset | null;
 }
 
 interface PriceComponents {

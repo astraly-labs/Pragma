@@ -26,8 +26,8 @@ export const assets = [
       past7d: -2,
     },
     chart: "https://www.coingecko.com/coins/1/sparkline.svg",
-    ema: "soon",
-    macd: "soon",
+    ema: "test",
+    macd: "test",
   },
   {
     image: "/assets/currencies/sol.svg",
@@ -42,8 +42,8 @@ export const assets = [
       past7d: 4.3,
     },
     chart: "https://www.coingecko.com/coins/4128/sparkline.svg",
-    ema: "soon",
-    macd: "soon",
+    ema: "test",
+    macd: "test",
   },
 ];
 

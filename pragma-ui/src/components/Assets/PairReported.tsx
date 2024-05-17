@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import PriceComponentComp from "./PriceComponentComp";
+import PairReportedComp from "./PairReportedComp";
 
 const PairReported = ({ components }) => {
   return (
@@ -13,29 +13,23 @@ const PairReported = ({ components }) => {
     >
       <h4 className="text-lightGreen">Price Components</h4>
       <div className="w-full overflow-x-scroll">
-        <div className={styles.priceComp}>
+        <div className={styles.pairComp}>
           <div className="flex flex-row gap-2	 font-mono text-xs text-LightGreenFooter md:tracking-wider">
-            Publisher
+            Price Feed
           </div>
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
-            Source
-          </div>
-
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
-            Price
-          </div>
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
-            Hash
-          </div>
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider"></div>
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider"></div>
-
           <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
             Last Updated
           </div>
+
+          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
+            Price Reported
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
+            24h Updates
+          </div>
         </div>
         {components.map((component, index) => (
-          <PriceComponentComp key={index} component={component} />
+          <PairReportedComp key={index} component={component} />
         ))}
       </div>
     </div>

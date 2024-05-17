@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://pragma.build</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>1</priority></url>
-<url><loc>https://pragma.build/assets</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/ecosystem</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/privacyPolicy</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/resources</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/terms</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/asset/BTCUSD</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/asset/SOLUSD</loc><lastmod>2024-05-17T15:53:02.142Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>1</priority></url>
+<url><loc>https://pragma.build/assets</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/ecosystem</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/privacyPolicy</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/resources</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/terms</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/provider/Flowdesk</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/provider/Pragma</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/asset/BTCUSD</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/asset/SOLUSD</loc><lastmod>2024-05-17T17:15:01.657Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
 </urlset>
