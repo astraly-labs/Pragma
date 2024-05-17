@@ -35,6 +35,17 @@
   background: var(--green-12, rgba(27, 99, 82, 0.12));
 }
 
+.greenBoxPrice {
+  display: flex;
+  padding: 36px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 20px;
+  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+  background: var(--green-12, rgba(27, 99, 82, 0.12));
+}
+
 .assetBox {
   display: flex;
   width: 100%;
@@ -100,6 +111,22 @@
   grid-auto-columns: minmax(150px,1fr);
 }
 
+.priceComp {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: left;
+  grid-gap: 10px;
+  padding-bottom: 16px;
+  padding-top: 16px;
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px,1fr);
+}
+
 
 @media (max-width: 1400px) {
   .assetBox {
@@ -112,6 +139,9 @@
     width: fit-content;
   }
   .dpPerf {
+    width: fit-content;
+  }
+  .priceComp {
     width: fit-content;
   }
 }
