@@ -1,8 +1,6 @@
 import React, { Fragment, useState } from "react";
 import classNames from "classnames";
-import styles from "./styles.module.scss";
 import Image from "next/image";
-import DoubleText from "./DoubleText";
 import { Listbox, Tab, Transition } from "@headlessui/react";
 import { options } from "../../pages/assets";
 import { ChartBox } from "../common/ChartBox";

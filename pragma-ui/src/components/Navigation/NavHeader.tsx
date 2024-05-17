@@ -20,7 +20,6 @@ import Image from "next/image";
 
 interface Resource {
   name: string;
-  description: string;
   href: string;
 }
 
@@ -28,23 +27,19 @@ interface Resource {
 const resources: Resource[] = [
   {
     name: "Ecosystem",
-    description: "Start using our data by reading our docs.",
     href: "/ecosystem",
   },
   {
     name: "Docs",
-    description: "Learn about what makes Pragma special.",
     href: "https://docs.pragma.build",
   },
   {
     name: "Resources",
-    description: "Meet our data publishers.",
     href: "/resources",
   },
   {
     name: "Explorer",
-    description: "Meet our data publishers.",
-    href: "/resources",
+    href: "/assets",
   },
 ];
 

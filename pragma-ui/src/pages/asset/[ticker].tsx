@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { assets } from "../assets";
 import BoxContainer from "../../components/common/BoxContainer";
@@ -29,7 +30,7 @@ interface Props {
   asset: Asset;
 }
 
-interface PriceComponent {
+interface PriceComponents {
   publisher: string;
   link: string;
   source: string;
@@ -46,7 +47,7 @@ interface CheckpointComponent {
   signer: string;
 }
 
-const priceComponents: PriceComponent[] = [
+const priceComponents: PriceComponents[] = [
   {
     publisher: "Publisher 1",
     link: "https://pragma.build",
@@ -99,7 +100,6 @@ const checkpointComponents: CheckpointComponent[] = [
 
 const AssetPage = ({ asset }: Props) => {
   const router = useRouter();
-  const { ticker } = router.query;
 
   // Render loading state if asset is not yet fetched
   if (!asset) {

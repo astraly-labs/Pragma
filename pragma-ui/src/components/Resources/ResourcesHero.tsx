@@ -2,7 +2,6 @@ import React from "react";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
-import Image from "next/image";
 
 const ResourcesHero = ({
   title,
@@ -14,12 +13,12 @@ const ResourcesHero = ({
 }) => {
   return (
     <div className="relative h-full w-full overflow-hidden py-10">
-      <Image
+      <img
         src={illustrationLink}
         alt="Illustration Hero"
         className="absolute bottom-0 right-0 hidden translate-y-10 md:block md:max-w-2xl lg:max-w-none"
       />
-      <Image
+      <img
         src={illustrationSmallLink}
         alt="Illustration Hero"
         className="absolute right-0 left-0 bottom-0 ml-auto mr-auto block w-full translate-y-20 sm:max-h-96 md:hidden"

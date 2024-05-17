@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import PriceComponentComp from "./PriceComponentComp";
 import CheckpointComp from "./CheckpointComp";
 
 const Checkpoints = ({ components }) => {
