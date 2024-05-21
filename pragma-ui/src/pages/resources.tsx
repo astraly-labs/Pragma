@@ -10,7 +10,8 @@ import { ChartBox } from "../components/common/ChartBox";
 import CompFeedBox from "../components/Resources/CompFeedBox";
 import VerifRandBox from "../components/Resources/VerifRandBox";
 import Blog from "../components/Landing/Blog/Blog";
-import { initialAssets } from ".";
+import { initialAssets, removeDuplicateTimestamps, timezone } from ".";
+import moment from "moment-timezone";
 
 const EcosystemPage = () => {
   const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);
@@ -35,23 +36,35 @@ const EcosystemPage = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        console.log(data);
+        const unorderedData = await response.json();
 
-        const variation24h = data.data[0].open - data.data[96].open;
-        const relativeVariation24h = (variation24h / data.data[96].open) * 100;
+        // TODO: remove hotfix
+        const data = removeDuplicateTimestamps(
+          unorderedData.data.sort(
+            (a, b) =>
+              moment.tz(b.time, timezone).valueOf() -
+              moment.tz(a.time, timezone).valueOf()
+          )
+        );
+
+        const priceData = data.reverse().map((d: any) => ({
+          time: (moment.tz(d.time, timezone).valueOf() / 1000).toString(),
+          value: parseInt(d.open) / 10 ** decimals,
+        }));
+        const lastIndex = data.length - 1;
+        const dayIndex = lastIndex - 96;
+        const variation24h = data[lastIndex].open - data[dayIndex].open;
+        const relativeVariation24h = (variation24h / data[dayIndex].open) * 100;
 
         // Update your state with the new data
         const assetData = {
-          ticker: data.pair_id,
-          lastPrice: data.data[0].open,
+          ticker: unorderedData.pair_id,
+          lastPrice: data[lastIndex].open,
           variation24h,
           relativeVariation24h,
-          priceData: data.data.reverse().map((d: any) => ({
-            time: new Date(d.time).getTime() / 1000,
-            value: parseInt(d.open) / 10 ** decimals,
-          })),
+          priceData,
         };
+
         setAllData((data) => [...data, assetData]);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -62,7 +75,7 @@ const EcosystemPage = () => {
       const asset = initialAssets[i];
       fetchData(asset.ticker, asset.decimals);
     }
-  }, []); // Dependency array is empty to run once on mount
+  }, []);
 
   useEffect(() => {
     // Update data when selected asset changes
