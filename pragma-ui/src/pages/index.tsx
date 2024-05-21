@@ -14,6 +14,7 @@ import { ChartBox } from "../components/common/ChartBox";
 import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
 import moment from "moment-timezone";
+import { UTCTimestamp } from "lightweight-charts";
 
 export const timezone = "Europe/London"; // Change this to your timezone
 
@@ -82,7 +83,7 @@ const IndexPage = () => {
         );
 
         const priceData = data.reverse().map((d: any) => ({
-          time: (moment.tz(d.time, timezone).valueOf() / 1000).toString(),
+          time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
           value: parseInt(d.open) / 10 ** decimals,
         }));
         const lastIndex = data.length - 1;

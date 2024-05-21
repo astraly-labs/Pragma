@@ -12,6 +12,7 @@ import VerifRandBox from "../components/Resources/VerifRandBox";
 import Blog from "../components/Landing/Blog/Blog";
 import { initialAssets, removeDuplicateTimestamps, timezone } from ".";
 import moment from "moment-timezone";
+import { UTCTimestamp } from "lightweight-charts";
 
 const EcosystemPage = () => {
   const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);
@@ -48,7 +49,7 @@ const EcosystemPage = () => {
         );
 
         const priceData = data.reverse().map((d: any) => ({
-          time: (moment.tz(d.time, timezone).valueOf() / 1000).toString(),
+          time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
           value: parseInt(d.open) / 10 ** decimals,
         }));
         const lastIndex = data.length - 1;

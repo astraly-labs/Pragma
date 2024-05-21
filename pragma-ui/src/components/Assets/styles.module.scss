@@ -23,7 +23,6 @@
   backdrop-filter: blur(12.5px);
 }
 
-
 .assetBox {
   display: flex;
   width: fit-content;
@@ -35,9 +34,9 @@
   padding-top: 24px;
   border-bottom: 1px solid rgba(217, 217, 217, 0.25);
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(130px,1fr);
+  grid-auto-columns: minmax(130px, 1fr);
 }
 
 .dpBox {
@@ -51,11 +50,10 @@
   padding-top: 24px;
   border-bottom: 1px solid rgba(217, 217, 217, 0.25);
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(150px,1fr);
+  grid-auto-columns: minmax(150px, 1fr);
 }
-
 
 .assetPerf {
   display: flex;
@@ -68,9 +66,9 @@
   padding-top: 12px;
   border-bottom: 1px solid rgba(217, 217, 217, 0.25);
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(130px,1fr);
+  grid-auto-columns: minmax(130px, 1fr);
 }
 
 .dpPerf {
@@ -84,11 +82,10 @@
   padding-top: 12px;
   border-bottom: 1px solid rgba(217, 217, 217, 0.25);
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(150px,1fr);
+  grid-auto-columns: minmax(150px, 1fr);
 }
-
 
 @media (max-width: 640px) {
   .darkGreenBox {
