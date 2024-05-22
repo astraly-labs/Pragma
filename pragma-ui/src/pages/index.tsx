@@ -13,6 +13,10 @@ import ReadyBox from "../components/common/ReadyBox";
 import { ChartBox } from "../components/common/ChartBox";
 import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
+import moment from "moment-timezone";
+import { UTCTimestamp } from "lightweight-charts";
+
+export const timezone = "Europe/London"; // Change this to your timezone
 
 export const initialAssets: AssetT[] = [
   { ticker: "BTC/USD", address: "0x0", decimals: 8 },
@@ -22,6 +26,26 @@ export const initialAssets: AssetT[] = [
   // { ticker: "ETH/STRK", address: "0x2", decimals: 18 },
   // { ticker: "DAI/USD", address: "0x2", decimals: 8 },
 ];
+
+/**
+ * Remove duplicate timestamps from an array of objects
+ * @param {Array} arr objects with a time field
+ * @return {Array} arr objects with unique timestamps
+ */
+export function removeDuplicateTimestamps(arr) {
+  const seenTimestamps = new Map();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const timestamp = moment.tz(obj.time, timezone).valueOf();
+    if (!seenTimestamps.has(timestamp)) {
+      seenTimestamps.set(timestamp, true);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
 
 const IndexPage = () => {
   const [windowWidth, setWindowWidth] = useState(null);
@@ -47,22 +71,33 @@ const IndexPage = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        console.log(data);
+        const unorderedData = await response.json();
 
-        const variation24h = data.data[0].open - data.data[96].open;
-        const relativeVariation24h = (variation24h / data.data[96].open) * 100;
+        // TODO: remove hotfix
+        const data = removeDuplicateTimestamps(
+          unorderedData.data.sort(
+            (a, b) =>
+              moment.tz(b.time, timezone).valueOf() -
+              moment.tz(a.time, timezone).valueOf()
+          )
+        );
+
+        const priceData = data.reverse().map((d: any) => ({
+          time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
+          value: parseInt(d.open) / 10 ** decimals,
+        }));
+        const lastIndex = data.length - 1;
+        const dayIndex = lastIndex - 96;
+        const variation24h = data[lastIndex].open - data[dayIndex].open;
+        const relativeVariation24h = (variation24h / data[dayIndex].open) * 100;
 
         // Update your state with the new data
         const assetData = {
-          ticker: data.pair_id,
-          lastPrice: data.data[0].open,
+          ticker: unorderedData.pair_id,
+          lastPrice: data[lastIndex].open,
           variation24h,
           relativeVariation24h,
-          priceData: data.data.reverse().map((d: any) => ({
-            time: new Date(d.time).getTime() / 1000,
-            value: parseInt(d.open) / 10 ** decimals,
-          })),
+          priceData,
         };
 
         setAllData((data) => [...data, assetData]);

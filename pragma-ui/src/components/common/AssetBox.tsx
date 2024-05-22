@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
+import { UTCTimestamp } from "lightweight-charts";
 
-type PriceDataPoint = { time: string; value: number };
+type PriceDataPoint = { time: UTCTimestamp; value: number };
 
 export interface AssetPair {
   ticker: string;
