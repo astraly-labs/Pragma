@@ -11,6 +11,7 @@ import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { DataProvider } from "../providers/data";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   /**
@@ -89,7 +90,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
         <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
           <NavHeader />
-          <Component {...pageProps} key={router.asPath} />
+          <DataProvider>
+            <Component {...pageProps} key={router.asPath} />
+          </DataProvider>
           <NavFooter />
         </div>
       </StarknetConfig>
