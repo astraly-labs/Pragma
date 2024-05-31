@@ -6,10 +6,10 @@ import BasicHero from "../components/Ecosystem/BasicHero";
 import AssetList from "../components/Assets/AssetList";
 
 export const options = [
-  { name: "v1 mainnet" },
   { name: "v1 testnet" },
-  { name: "API prod" },
-  { name: "v2 testnet" },
+  // { name: "v1 mainnet" },
+  // { name: "API prod" },
+  // { name: "v2 testnet" },
 ];
 
 export const assets = [
@@ -26,8 +26,8 @@ export const assets = [
       past7d: -2,
     },
     chart: "https://www.coingecko.com/coins/1/sparkline.svg",
-    ema: "test",
-    macd: "test",
+    ema: "soon",
+    macd: "soon",
   },
   {
     image: "/assets/currencies/sol.svg",
@@ -42,8 +42,8 @@ export const assets = [
       past7d: 4.3,
     },
     chart: "https://www.coingecko.com/coins/4128/sparkline.svg",
-    ema: "test",
-    macd: "test",
+    ema: "soon",
+    macd: "soon",
   },
 ];
 
@@ -54,7 +54,7 @@ export const dataProviders = [
     link: "https://flowdesk.co",
     name: "Flowdesk",
     lastUpdated: "2s ago",
-    reputationScore: "0.99",
+    reputationScore: "soon",
     nbFeeds: "6",
     dailyUpdates: "3000",
     totalUpdates: "50000",
@@ -65,7 +65,7 @@ export const dataProviders = [
     link: "https://pragma.build",
     name: "Pragma",
     lastUpdated: "2s ago",
-    reputationScore: "0.99",
+    reputationScore: "soon",
     nbFeeds: "6",
     dailyUpdates: "3000",
     totalUpdates: "50000",
