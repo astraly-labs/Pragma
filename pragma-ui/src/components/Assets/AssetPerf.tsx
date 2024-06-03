@@ -27,7 +27,7 @@ const AssetPerf = ({ asset, isAsset }) => {
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {isAsset ? "$" : ""}
-        {isAsset ? asset.price : asset.reputationScore}
+        {isAsset ? Number.parseFloat(asset.price).toFixed(2) : asset.reputationScore}
       </div>
       {isAsset ? (
         ""
@@ -56,16 +56,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past1h > 0
               ? "text-mint"
               : asset.variations.past1h === 0
-              ? "text-LightGreenFooter"
-              : "text-redDown",
+                ? "text-LightGreenFooter"
+                : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past1h > 0
             ? "▲"
             : asset.variations.past1h === 0
-            ? "-"
-            : "▼"}{" "}
+              ? "-"
+              : "▼"}{" "}
           {asset.variations.past1h}%
         </div>
       ) : (
@@ -77,16 +77,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past24h > 0
               ? "text-mint"
               : asset.variations.past24h === 0
-              ? "text-LightGreenFooter"
-              : "text-redDown",
+                ? "text-LightGreenFooter"
+                : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past24h > 0
             ? "▲"
             : asset.variations.past24h === 0
-            ? "-"
-            : "▼"}{" "}
+              ? "-"
+              : "▼"}{" "}
           {asset.variations.past24h}%
         </div>
       ) : (
@@ -98,16 +98,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past7d > 0
               ? "text-mint"
               : asset.variations.past7d === 0
-              ? "text-LightGreenFooter"
-              : "text-redDown",
+                ? "text-LightGreenFooter"
+                : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past7d > 0
             ? "▲"
             : asset.variations.past7d === 0
-            ? "-"
-            : "▼"}{" "}
+              ? "-"
+              : "▼"}{" "}
           {asset.variations.past7d}%
         </div>
       ) : (

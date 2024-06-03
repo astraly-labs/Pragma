@@ -8,7 +8,6 @@ import Image from "next/image";
 
 const AssetList = ({ options, isAsset, assets }) => {
   const [selected, setSelected] = useState(options[0]);
-  const numberAssets = 1;
 
   const [filteredValue, setFilteredValue] = useState("");
 
@@ -46,8 +45,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                     <Listbox.Option
                       key={optionsIdx}
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
-                          active ? "opacity-50 " : ""
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""
                         }`
                       }
                       value={options}
@@ -55,9 +53,8 @@ const AssetList = ({ options, isAsset, assets }) => {
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate text-lightGreen ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
+                            className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
+                              }`}
                           >
                             {options.name}
                           </span>
@@ -73,7 +70,7 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
-            {isAsset ? "Price Feeds" : "Data Providers"}: {numberAssets}
+            {isAsset ? "Price Feeds" : "Data Providers"}: {assets.length}
           </div>
         </div>
         <div className="sm:ml-auto">

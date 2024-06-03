@@ -5,6 +5,7 @@ import { Listbox, Tab, Transition } from "@headlessui/react";
 import { options } from "../../pages/assets";
 import { ChartBox } from "../common/ChartBox";
 import { AssetPair } from "../common/AssetBox";
+import { UTCTimestamp } from "lightweight-charts";
 
 interface Frames {
   frame: string;
@@ -20,7 +21,10 @@ const exampleAssetPair: AssetPair = {
     { time: "2022-04-11", value: 51000 },
     { time: "2022-04-12", value: 55000 },
     { time: "2022-04-13", value: 70000 },
-  ],
+  ].map(item => ({
+    ...item,
+    time: new Date(item.time).getTime() as UTCTimestamp,
+  })),
 };
 
 const AssetChart = ({ assets }) => {
@@ -66,8 +70,7 @@ const AssetChart = ({ assets }) => {
                   <Listbox.Option
                     key={optionsIdx}
                     className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
-                        active ? "opacity-50 " : ""
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""
                       }`
                     }
                     value={options}
@@ -75,9 +78,8 @@ const AssetChart = ({ assets }) => {
                     {({ selected }) => (
                       <>
                         <span
-                          className={`block truncate text-lightGreen ${
-                            selected ? "font-medium" : "font-normal"
-                          }`}
+                          className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
+                            }`}
                         >
                           {options.name}
                         </span>
