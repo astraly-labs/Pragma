@@ -6,9 +6,7 @@ import SearchBar from "../Navigation/SearchBar";
 import AssetPerf from "./AssetPerf";
 import Image from "next/image";
 
-const AssetList = ({ options, isAsset, assets }) => {
-  const [selected, setSelected] = useState(options[0]);
-
+const AssetList = ({ options, isAsset, assets, onSourceChange, selectedSource, loading }) => {
   const [filteredValue, setFilteredValue] = useState("");
 
   const handleInputChange = (value: string) => {
@@ -22,10 +20,10 @@ const AssetList = ({ options, isAsset, assets }) => {
       </h3>
       <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
         <div className="flex flex-col gap-3 smolScreen:flex-row">
-          <Listbox value={selected} onChange={setSelected}>
+          <Listbox value={selectedSource} onChange={onSourceChange}>
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
-                <span className="block truncate">{selected.name}</span>
+                <span className="block truncate">{selectedSource}</span>
                 <Image
                   className="my-auto pl-2"
                   height={16}
@@ -56,7 +54,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                             className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
                               }`}
                           >
-                            {options.name}
+                            {options}
                           </span>
                           {selected ? (
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
@@ -198,7 +196,12 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
           </div>
         )}
-        {assets.map((asset, assetIdx) => (
+        {loading && (
+          <div className="font-mono text-xs text-lightGreen">
+            Loading...
+          </div>
+        )}
+        {!loading && assets.map((asset, assetIdx) => (
           <AssetPerf isAsset={isAsset} asset={asset} key={assetIdx} />
         ))}
       </div>

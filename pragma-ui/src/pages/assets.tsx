@@ -9,10 +9,7 @@ import moment from "moment";
 import { COINGECKO_MAPPING_IDS } from "../utils/types";
 
 export const options = [
-  // { name: "v1 testnet" },
-  { name: "v1 mainnet" },
-  // { name: "API prod" },
-  // { name: "v2 testnet" },
+  "testnet", "mainnet", "offchain"
 ];
 
 export type AssetInfo = {
@@ -104,10 +101,10 @@ const AssetsPage = () => {
         illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />
       <BoxContainer>
-        <AssetList options={options} isAsset={true} assets={formattedAssets} />
+        <AssetList options={options} isAsset={true} assets={formattedAssets} onSourceChange={switchSource} selectedSource={currentSource} />
       </BoxContainer>
       <BoxContainer>
-        <AssetList options={options} isAsset={false} assets={dataProviders} />
+        <AssetList options={options} isAsset={false} assets={dataProviders} onSourceChange={switchSource} selectedSource={currentSource} />
       </BoxContainer>
     </div>
   );

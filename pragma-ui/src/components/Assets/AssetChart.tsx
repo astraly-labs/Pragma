@@ -50,7 +50,7 @@ const AssetChart = ({ assets }) => {
         <Listbox value={selected} onChange={setSelected}>
           <div className="relative md:w-auto">
             <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none sm:w-fit">
-              <span className="block truncate">{selected.name}</span>
+              <span className="block truncate">{selected}</span>
               <Image
                 className="my-auto pl-2"
                 height={16}
@@ -81,7 +81,7 @@ const AssetChart = ({ assets }) => {
                           className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
                             }`}
                         >
-                          {options.name}
+                          {options}
                         </span>
                         {selected ? (
                           <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
