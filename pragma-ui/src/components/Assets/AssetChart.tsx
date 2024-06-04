@@ -6,6 +6,7 @@ import { options } from "../../pages/assets";
 import { ChartBox } from "../common/ChartBox";
 import { AssetPair } from "../common/AssetBox";
 import { UTCTimestamp } from "lightweight-charts";
+import { useData } from "../../providers/data";
 
 interface Frames {
   frame: string;
@@ -28,7 +29,8 @@ const exampleAssetPair: AssetPair = {
 };
 
 const AssetChart = ({ assets }) => {
-  const [selected, setSelected] = useState(options[0]);
+
+  const { currentSource, switchSource } = useData();
 
   const [frames] = useState<Frames[]>([
     {
@@ -47,10 +49,10 @@ const AssetChart = ({ assets }) => {
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
       <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:gap-10">
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox value={currentSource} onChange={switchSource}>
           <div className="relative md:w-auto">
             <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none sm:w-fit">
-              <span className="block truncate">{selected}</span>
+              <span className="block truncate">{currentSource}</span>
               <Image
                 className="my-auto pl-2"
                 height={16}
