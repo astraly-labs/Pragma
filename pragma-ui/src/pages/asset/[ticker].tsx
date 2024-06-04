@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { assets } from "../assets";
 import BoxContainer from "../../components/common/BoxContainer";
 import classNames from "classnames";
 import styles from "../styles.module.scss";
@@ -10,6 +9,9 @@ import AssetHeader from "../../components/Assets/AssetHeader";
 import AssetChart from "../../components/Assets/AssetChart";
 import PriceComponent from "../../components/Assets/PriceComponent";
 import Checkpoints from "../../components/Assets/Checkpoints";
+import { initialAssets, useData } from "../../providers/data";
+import { COINGECKO_MAPPING_IDS } from "../../utils/types";
+import { truncateTxHash } from "../../utils";
 
 interface Asset {
   image: string;
@@ -29,7 +31,7 @@ interface Asset {
 }
 
 interface Props {
-  asset: Asset | null;
+  ticker: string;
 }
 
 interface PriceComponents {
@@ -48,33 +50,6 @@ interface CheckpointComponent {
   hour: string;
   signer: string;
 }
-
-const priceComponents: PriceComponents[] = [
-  {
-    publisher: "Publisher 1",
-    link: "https://pragma.build",
-    source: "Source 1",
-    price: 100,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849281,
-  },
-  {
-    publisher: "Publisher 2",
-    source: "Source 2",
-    link: "https://pragma.build",
-    price: 200,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849381,
-  },
-  {
-    publisher: "Publisher 3",
-    link: "https://pragma.build",
-    source: "Source 3",
-    price: 300,
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    lastUpdated: 1627849481,
-  },
-];
 
 const checkpointComponents: CheckpointComponent[] = [
   {
@@ -100,11 +75,51 @@ const checkpointComponents: CheckpointComponent[] = [
   },
 ];
 
-const AssetPage = ({ asset }: Props) => {
+const AssetPage = ({ ticker }: Props) => {
   const router = useRouter();
+  const { data, loading, error } = useData();
+  const [asset, setAsset] = useState<Asset | null>(null);
+  const [priceComponents, setPriceComponents] = useState<PriceComponents[]>([]);
 
-  // Render loading state if asset is not yet fetched
-  if (!asset) {
+  useEffect(() => {
+    if (data && ticker) {
+      const assetData = data[ticker];
+      if (assetData) {
+        const formattedAsset: Asset = {
+          image: `/assets/currencies/${ticker.toLowerCase().split('/')[0]}.svg`,
+          type: "Crypto",
+          ticker: ticker.replace('/', ''),
+          lastUpdated: new Date(assetData.last_updated_timestamp * 1000).toLocaleString(),
+          price: assetData.price,
+          sources: assetData.nb_sources_aggregated || 0,
+          variations: {
+            past1h: assetData.variations?.past1h || 0,
+            past24h: assetData.variations?.past24h || 0,
+            past7d: assetData.variations?.past7d || 0,
+          },
+          chart: `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[ticker.toLowerCase().split('/')[0]]}/sparkline.svg`,
+          ema: "soon",
+          macd: "soon",
+        };
+        setAsset(formattedAsset);
+
+        const assetComponents: PriceComponents[] = assetData.components.map((component: any) => {
+          return {
+            publisher: component.publisher,
+            link: component.link,
+            source: component.source,
+            price: Number.parseFloat(component.price).toFixed(0),
+            hash: truncateTxHash(component.tx_hash),
+            lastUpdated: new Date(component.timestamp * 1000).toLocaleString(),
+          };
+        });
+
+        setPriceComponents(assetComponents);
+      }
+    }
+  }, [data, ticker]);
+
+  if (loading || !asset) {
     return <div>Loading...</div>;
   }
 
@@ -134,7 +149,7 @@ const AssetPage = ({ asset }: Props) => {
         </button>
       </BoxContainer>
       <BoxContainer>
-        <AssetHeader isAsset={true} assets={asset} />
+        <AssetHeader isAsset={true} asset={asset} />
       </BoxContainer>
       <BoxContainer>
         <AssetChart assets={asset} />
@@ -153,19 +168,16 @@ const AssetPage = ({ asset }: Props) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Generate paths for each asset's ticker
-  const paths = assets.map((asset) => ({
+  const paths = initialAssets.map((asset) => ({
     params: { ticker: asset.ticker },
   }));
   return { paths, fallback: false };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  // Fetch data for the specific asset based on its ticker
+  // Pass the ticker as props to the component
   const ticker = params?.ticker;
-  const asset = assets.find((asset) => asset.ticker === ticker);
-
-  // Pass the asset data as props to the component
-  return { props: { asset } };
+  return { props: { ticker } };
 };
 
 export default AssetPage;

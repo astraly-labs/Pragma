@@ -5,7 +5,7 @@ import Image from "next/image";
 import DoubleText from "./DoubleText";
 import Link from "next/link";
 
-const AssetHeader = ({ isAsset, assets }) => {
+const AssetHeader = ({ isAsset, asset }) => {
   return (
     <div
       className={classNames(
@@ -14,65 +14,65 @@ const AssetHeader = ({ isAsset, assets }) => {
       )}
     >
       <h2 className="my-auto flex flex-row items-center gap-4 text-lightGreen">
-        <Image height={60} width={60} alt="arrowDown" src={assets.image} />
+        <Image height={60} width={60} alt="arrowDown" src={asset.image} />
         <div className="flex flex-col">
-          {isAsset ? assets.ticker : assets.name}
+          {isAsset ? asset.ticker : asset.name}
           {isAsset ? (
             ""
           ) : (
             <Link
-              href={assets.link}
+              href={asset.link}
               className="pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
             >
-              {assets.link}
+              {asset.link}
             </Link>
           )}
           <div className="font-mono text-sm tracking-widest text-LightGreenFooter">
-            {isAsset ? "" : assets.type}
+            {isAsset ? "" : asset.type}
           </div>
         </div>
       </h2>
       {isAsset ? (
         <div className="flex flex-row gap-3 sm:gap-10 lg:gap-20">
           <div className="flex flex-col gap-4">
-            <DoubleText bigText={`$${assets.price}`} smolText={"Price"} />
-            <DoubleText bigText={assets.type} smolText={"Asset Type"} />
+            <DoubleText bigText={`$${asset.price}`} smolText={"Price"} />
+            <DoubleText bigText={asset.type} smolText={"Asset Type"} />
           </div>
           <div className="flex flex-col gap-4">
-            <DoubleText bigText={assets.sources} smolText={"Nb Sources"} />
-            <DoubleText bigText={assets.ema} smolText={"1h EMA"} />
+            <DoubleText bigText={asset.sources} smolText={"Nb Sources"} />
+            <DoubleText bigText={asset.ema} smolText={"1h EMA"} />
           </div>
           <div className="flex flex-col gap-4">
             <DoubleText
-              bigText={assets.lastUpdated}
+              bigText={asset.lastUpdated}
               smolText={"Last Updated"}
             />
-            <DoubleText bigText={assets.macd} smolText={"1h MACD"} />
+            <DoubleText bigText={asset.macd} smolText={"1h MACD"} />
           </div>
         </div>
       ) : (
         <div className="flex flex-row gap-3 sm:gap-10 lg:gap-20">
           <div className="flex flex-col gap-4">
-            <DoubleText bigText={assets.nbFeeds} smolText={"Nb Feeds"} />
-            <DoubleText bigText={assets.type} smolText={"DP Type"} />
+            <DoubleText bigText={asset.nbFeeds} smolText={"Nb Feeds"} />
+            <DoubleText bigText={asset.type} smolText={"DP Type"} />
           </div>
           <div className="flex flex-col gap-4">
             <DoubleText
-              bigText={assets.reputationScore}
+              bigText={asset.reputationScore}
               smolText={"Reputation score"}
             />
             <DoubleText
-              bigText={assets.reputationScore}
+              bigText={asset.reputationScore}
               smolText={"24h updates"}
             />
           </div>
           <div className="flex flex-col gap-4">
             <DoubleText
-              bigText={assets.lastUpdated}
+              bigText={asset.lastUpdated}
               smolText={"Last Updated"}
             />
             <DoubleText
-              bigText={assets.totalUpdates}
+              bigText={asset.totalUpdates}
               smolText={"Total updates"}
             />
           </div>

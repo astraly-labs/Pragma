@@ -101,10 +101,10 @@ const AssetsPage = () => {
         illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />
       <BoxContainer>
-        <AssetList options={options} isAsset={true} assets={formattedAssets} onSourceChange={switchSource} selectedSource={currentSource} />
+        <AssetList options={options} isAsset={true} assets={formattedAssets} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
       </BoxContainer>
       <BoxContainer>
-        <AssetList options={options} isAsset={false} assets={dataProviders} onSourceChange={switchSource} selectedSource={currentSource} />
+        <AssetList options={options} isAsset={false} assets={dataProviders} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
       </BoxContainer>
     </div>
   );

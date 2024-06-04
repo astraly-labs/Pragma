@@ -23,7 +23,7 @@ const dataSources = {
     offchain: '/api/proxy',
 };
 
-const initialAssets: AssetT[] = [
+export const initialAssets: AssetT[] = [
     { ticker: "BTC/USD", address: "0x0", decimals: 8 },
     { ticker: "ETH/USD", address: "0x1", decimals: 8 },
     { ticker: "USDC/USD", address: "0x2", decimals: 6 },
