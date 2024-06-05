@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { dataProviders } from "../assets";
 import BoxContainer from "../../components/common/BoxContainer";
 import classNames from "classnames";
 import styles from "../styles.module.scss";
 import Image from "next/image";
 import AssetHeader from "../../components/Assets/AssetHeader";
 import PairReported from "../../components/Assets/PairReported";
+import { PublisherT, useData } from "../../providers/data";
+import moment from "moment";
+import { getPublisherType } from "../../utils";
 
 interface DataProviders {
   image: string;
@@ -21,10 +23,6 @@ interface DataProviders {
   totalUpdates: number;
 }
 
-interface Props {
-  dataP: DataProviders;
-}
-
 interface PairsReported {
   image: string;
   type: string;
@@ -34,38 +32,57 @@ interface PairsReported {
   dailyUpdates: number;
 }
 
-const PairsReport: PairsReported[] = [
-  {
-    image: "/assets/currencies/btc.svg",
-    type: "Crypto",
-    ticker: "BTCUSD",
-    lastUpdated: "<1s ago",
-    price: 62402,
-    dailyUpdates: 1000,
-  },
-  {
-    image: "/assets/currencies/sol.svg",
-    type: "Crypto",
-    ticker: "SOLUSD",
-    lastUpdated: "<1s ago",
-    price: 149,
-    dailyUpdates: 1000,
-  },
-  {
-    image: "/assets/currencies/eth.svg",
-    type: "Crypto",
-    ticker: "ETHUSD",
-    lastUpdated: "<1s ago",
-    price: 3078.21,
-    dailyUpdates: 1000,
-  },
-];
-
-const ProviderPage = ({ dataP }: Props) => {
+const ProviderPage = () => {
   const router = useRouter();
 
+  const { loading, publishers } = useData();
+  const [publisher, setPublisher] = useState<DataProviders | null>(null);
+  const [pairsReported, setPairsReported] = useState<PairsReported[]>([]);
+
+  useEffect(() => {
+    if (!publishers) {
+      router.push("/404");
+    }
+    // Find the publisher with the given name
+    const foundPublisher = publishers.find(
+      (publisher) => publisher.publisher.toLowerCase() === router.query.name.toLowerCase()
+    );
+    console.log(foundPublisher);
+    if (foundPublisher === undefined) {
+      setPublisher(null);
+    } else {
+      const lastUpdated = moment(foundPublisher.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+      setPublisher({
+        image: `/assets/publishers/${foundPublisher.publisher.toLowerCase()}.svg`,
+        type: getPublisherType(foundPublisher.type),
+        link: foundPublisher.website_url,
+        name: foundPublisher.publisher,
+        lastUpdated: lastUpdated,
+        reputationScore: null,
+        nbFeeds: foundPublisher.nb_feeds,
+        dailyUpdates: foundPublisher.daily_updates,
+        totalUpdates: foundPublisher.total_updates,
+      });
+
+      setPairsReported(
+        foundPublisher.components.map((component) => {
+          const lastUpdated = moment(component.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+          return {
+            image: `/assets/currencies/${component.pair_id.toLowerCase().split("/")[0]}.svg`,
+            type: "Crypto",
+            ticker: component.pair_id.replace("/", ""),
+            lastUpdated: lastUpdated,
+            price: Number.parseFloat(component.price),
+            dailyUpdates: 0,
+          };
+        })
+      );
+    }
+
+  }, [publishers]);
+
   // Render loading state if asset is not yet fetched
-  if (!dataP) {
+  if (loading || !publisher) {
     return <div>Loading...</div>;
   }
 
@@ -95,30 +112,13 @@ const ProviderPage = ({ dataP }: Props) => {
         </button>
       </BoxContainer>
       <BoxContainer>
-        <AssetHeader isAsset={false} assets={dataP} />
+        <AssetHeader isAsset={false} asset={publisher} />
       </BoxContainer>
       <BoxContainer>
-        <PairReported components={PairsReport} />
+        <PairReported components={pairsReported} />
       </BoxContainer>
     </div>
   );
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  // Generate paths for each asset's ticker
-  const paths = dataProviders.map((dataP) => ({
-    params: { name: dataP.name },
-  }));
-  return { paths, fallback: false };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  // Fetch data for the specific asset based on its ticker
-  const name = params?.name;
-  const dataP = dataProviders.find((dataP) => dataP.name === name);
-
-  // Pass the asset data as props to the component
-  return { props: { dataP } };
 };
 
 export default ProviderPage;

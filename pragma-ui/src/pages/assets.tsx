@@ -4,9 +4,10 @@ import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
 import AssetList from "../components/Assets/AssetList";
-import { useData } from "../providers/data";
+import { PublisherT, useData } from "../providers/data";
 import moment from "moment";
 import { COINGECKO_MAPPING_IDS } from "../utils/types";
+import { getPublisherType } from "../utils";
 
 export const options = [
   "testnet", "mainnet", "offchain"
@@ -29,30 +30,17 @@ export type AssetInfo = {
   macd: string;
 };
 
-export const dataProviders = [
-  {
-    image: "/assets/publishers/pragma.svg",
-    type: "Third-party",
-    link: "https://flowdesk.co",
-    name: "Flowdesk",
-    lastUpdated: "2s ago",
-    reputationScore: "soon",
-    nbFeeds: "6",
-    dailyUpdates: "3000",
-    totalUpdates: "50000",
-  },
-  {
-    image: "/assets/publishers/pragma.svg",
-    type: "Third-party",
-    link: "https://pragma.build",
-    name: "Pragma",
-    lastUpdated: "2s ago",
-    reputationScore: "soon",
-    nbFeeds: "6",
-    dailyUpdates: "3000",
-    totalUpdates: "50000",
-  },
-];
+export type DataProviderInfo = {
+  image: string;
+  type: string;
+  link: string;
+  name: string;
+  lastUpdated: string;
+  reputationScore: number | null;
+  nbFeeds: number;
+  dailyUpdates: number;
+  totalUpdates: number;
+};
 
 const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
   return Object.keys(data).map(ticker => {
@@ -77,10 +65,28 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
   });
 };
 
+const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
+  return publishers.map(publisher => {
+    const lastUpdated = moment(publisher.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+    return {
+      image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
+      type: getPublisherType(publisher.type),
+      link: publisher.website_url,
+      name: publisher.publisher,
+      lastUpdated: lastUpdated,
+      reputationScore: null,
+      nbFeeds: publisher.nb_feeds,
+      dailyUpdates: publisher.daily_updates,
+      totalUpdates: publisher.total_updates,
+    };
+  });
+}
+
 const AssetsPage = () => {
-  const { data, loading, error, switchSource, currentSource } = useData();
+  const { data, loading, error, switchSource, currentSource, publishers } = useData();
 
   const formattedAssets = formatAssets(data || {});
+  const formattedPublishers = formatPublishers(publishers || []);
 
   return (
     <div
@@ -104,7 +110,7 @@ const AssetsPage = () => {
         <AssetList options={options} isAsset={true} assets={formattedAssets} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
       </BoxContainer>
       <BoxContainer>
-        <AssetList options={options} isAsset={false} assets={dataProviders} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
+        <AssetList options={options} isAsset={false} assets={formattedPublishers} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
       </BoxContainer>
     </div>
   );

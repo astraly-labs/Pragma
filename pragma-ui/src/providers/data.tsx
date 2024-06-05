@@ -6,9 +6,27 @@ type AssetT = {
     decimals: number;
 };
 
+export type PublisherT = {
+    publisher: string;
+    website_url: string;
+    last_updated_timestamp: number;
+    type: number;
+    nb_feeds: number;
+    daily_updates: number;
+    total_updates: number;
+    components: {
+        pair_id: string;
+        last_updated_timestamp: number;
+        price: string;
+        source: string;
+        decimals: number;
+    }[];
+};
+
 type DataContextType = {
     assets: AssetT[];
     data: { [ticker: string]: any };
+    publishers: PublisherT[];
     loading: boolean;
     error: string | null;
     switchSource: (source: string) => void;
@@ -21,6 +39,8 @@ const dataSources = {
     testnet: '/api/onchain?network=testnet',
     mainnet: '/api/onchain?network=mainnet',
     offchain: '/api/proxy',
+    publishersTestnet: '/api/publishers?network=testnet&data_type=spot_entry',
+    publishersMainnet: '/api/publishers?network=mainnet&data_type=spot_entry'
 };
 
 export const initialAssets: AssetT[] = [
@@ -29,11 +49,13 @@ export const initialAssets: AssetT[] = [
     { ticker: "USDC/USD", address: "0x2", decimals: 6 },
     { ticker: "USDT/USD", address: "0x2", decimals: 6 },
     { ticker: "DAI/USD", address: "0x2", decimals: 8 },
+    { ticker: "STRK/USD", address: "0x2", decimals: 8 },
 ];
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
     const [assets] = useState<AssetT[]>(initialAssets);
     const [data, setData] = useState<{ [ticker: string]: any }>({});
+    const [publishers, setPublishers] = useState<PublisherT[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [source, setSource] = useState('mainnet');
@@ -44,15 +66,23 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         const results: { [ticker: string]: any } = {};
 
         try {
-            await Promise.all(assets.map(async (asset) => {
-                const response = await fetch(`${dataSources[source]}&pair=${asset.ticker}`);
-                if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
-                const result = await response.json();
-                results[asset.ticker] = result;
-            }));
+            const publisherUrl = dataSources[`publishers${source.charAt(0).toUpperCase() + source.slice(1)}`];
+            console.log(publisherUrl)
+            const [assetsResponse, publishersResponse] = await Promise.all([
+                Promise.all(assets.map(async (asset) => {
+                    const response = await fetch(`${dataSources[source]}&pair=${asset.ticker}`);
+                    if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
+                    const result = await response.json();
+                    results[asset.ticker] = result;
+                })),
+                fetch(publisherUrl)
+            ]);
+
+            const publishersData = await publishersResponse.json();
             setData(results);
+            setPublishers(publishersData);
         } catch (err) {
-            setError(err.message);
+            setError((err as Error).message);
         } finally {
             setLoading(false);
         }
@@ -71,7 +101,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <DataContext.Provider value={{ assets, data, loading, error, switchSource, currentSource: source }}>
+        <DataContext.Provider value={{ assets, data, publishers, loading, error, switchSource, currentSource: source }}>
             {children}
         </DataContext.Provider>
     );
