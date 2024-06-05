@@ -2,15 +2,16 @@ import React from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+import { truncateTxHash } from "../../utils";
 
 const CheckpointComp = ({ component }) => {
   return (
     <div className={styles.priceComp}>
       <Link
-        href={`/provider/${component.hash}`}
-        className="flex cursor-pointer flex-row gap-2 	 font-mono text-sm text-lightGreen md:tracking-wider"
+        href={`https://voyager.online/tx/${component.hash}`}
+        className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider"
       >
-        {component.hash}
+        {truncateTxHash(component.hash)}
         <Image
           height={16}
           width={16}
@@ -34,7 +35,7 @@ const CheckpointComp = ({ component }) => {
         className=" flex cursor-pointer flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider"
         href={`https://voyager.online/contract/${component.signer}`}
       >
-        {component.signer}
+        {truncateTxHash(component.signer)}
         <Image
           height={16}
           width={16}

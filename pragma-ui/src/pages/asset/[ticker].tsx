@@ -9,9 +9,8 @@ import AssetHeader from "../../components/Assets/AssetHeader";
 import AssetChart from "../../components/Assets/AssetChart";
 import PriceComponent from "../../components/Assets/PriceComponent";
 import Checkpoints from "../../components/Assets/Checkpoints";
-import { initialAssets, useData } from "../../providers/data";
+import { CheckpointT, initialAssets, useData } from "../../providers/data";
 import { COINGECKO_MAPPING_IDS } from "../../utils/types";
-import { truncateTxHash } from "../../utils";
 
 interface Asset {
   image: string;
@@ -51,35 +50,12 @@ interface CheckpointComponent {
   signer: string;
 }
 
-const checkpointComponents: CheckpointComponent[] = [
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
-  },
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
-  },
-  {
-    hash: "9dg8As93thNPse9gCVsda9fEV3rSz0372ADFADF3F",
-    price: 100,
-    date: "12 MAY 2023",
-    hour: "12:13",
-    signer: "0x47238...32A4",
-  },
-];
-
 const AssetPage = ({ ticker }: Props) => {
   const router = useRouter();
-  const { data, loading, error } = useData();
+  const { data, loading, checkpoints, error } = useData();
   const [asset, setAsset] = useState<Asset | null>(null);
   const [priceComponents, setPriceComponents] = useState<PriceComponents[]>([]);
+  const [checkpointComponents, setCheckpointComponents] = useState<CheckpointComponent[]>([]);
 
   useEffect(() => {
     if (data && ticker) {
@@ -109,15 +85,35 @@ const AssetPage = ({ ticker }: Props) => {
             link: component.link,
             source: component.source,
             price: Number.parseFloat(component.price).toFixed(0),
-            hash: truncateTxHash(component.tx_hash),
+            hash: component.tx_hash,
             lastUpdated: new Date(component.timestamp * 1000).toLocaleString(),
           };
         });
 
         setPriceComponents(assetComponents);
       }
+
     }
   }, [data, ticker]);
+
+  useEffect(() => {
+    if (checkpoints && ticker) {
+      const checkpointsData = checkpoints[ticker];
+      if (checkpointsData) {
+        const formattedCheckpoints: CheckpointComponent[] = checkpointsData.map((checkpoint: CheckpointT) => {
+          return {
+            hash: checkpoint.tx_hash,
+            price: Number.parseFloat(checkpoint.price),
+            date: new Date(checkpoint.timestamp * 1000).toLocaleDateString(),
+            hour: new Date(checkpoint.timestamp * 1000).toLocaleTimeString(),
+            signer: checkpoint.sender_address,
+          };
+        });
+
+        setCheckpointComponents(formattedCheckpoints);
+      }
+    }
+  }, [checkpoints, ticker]);
 
   if (loading || !asset) {
     return <div>Loading...</div>;
