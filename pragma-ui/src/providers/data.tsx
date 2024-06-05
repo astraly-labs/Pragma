@@ -43,7 +43,7 @@ type DataContextType = {
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-const dataSources = {
+export const dataSources = {
     testnet: '/api/onchain?network=testnet',
     mainnet: '/api/onchain?network=mainnet',
     offchain: '/api/proxy',
@@ -62,11 +62,11 @@ export const initialAssets: AssetT[] = [
     { ticker: "STRK/USD", address: "0x2", decimals: 8 },
 ];
 
-export const DataProvider = ({ children }: { children: ReactNode }) => {
+export const DataProvider = ({ children, initialData, initialPublishers, initialCheckpoints }: { children: ReactNode, initialData: { [ticker: string]: any }, initialPublishers: PublisherT[], initialCheckpoints: { [ticker: string]: CheckpointT[] } }) => {
     const [assets] = useState<AssetT[]>(initialAssets);
-    const [data, setData] = useState<{ [ticker: string]: any }>({});
-    const [publishers, setPublishers] = useState<PublisherT[]>([]);
-    const [checkpoints, setCheckpoints] = useState<{ [ticker: string]: CheckpointT[] }>({});
+    const [data, setData] = useState<{ [ticker: string]: any }>(initialData);
+    const [publishers, setPublishers] = useState<PublisherT[]>(initialPublishers);
+    const [checkpoints, setCheckpoints] = useState<{ [ticker: string]: CheckpointT[] }>(initialCheckpoints);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [source, setSource] = useState('mainnet');
@@ -75,12 +75,12 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setLoading(true);
         setError(null);
         const results: { [ticker: string]: any } = {};
-        const checkpoints: { [ticker: string]: CheckpointT[] } = {};
+        const checkpointsData: { [ticker: string]: CheckpointT[] } = {};
 
         try {
             const publisherUrl = dataSources[`publishers${source.charAt(0).toUpperCase() + source.slice(1)}`];
             const checkpointsUrl = dataSources[`checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`];
-            console.log(publisherUrl)
+
             const [assetsResponse, checkpointsResponse, publishersResponse] = await Promise.all([
                 Promise.all(assets.map(async (asset) => {
                     const response = await fetch(`${dataSources[source]}&pair=${asset.ticker}`);
@@ -92,7 +92,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
                     const response = await fetch(`${checkpointsUrl}&pair=${asset.ticker}`);
                     if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
                     const result = await response.json();
-                    checkpoints[asset.ticker] = result;
+                    checkpointsData[asset.ticker] = result;
                 })),
                 fetch(publisherUrl)
             ]);
@@ -100,7 +100,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             const publishersData = await publishersResponse.json();
 
             setData(results);
-            setCheckpoints(checkpoints);
+            setCheckpoints(checkpointsData);
             setPublishers(publishersData);
         } catch (err) {
             setError((err as Error).message);
@@ -110,8 +110,12 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }, [assets]);
 
     useEffect(() => {
-        fetchData(source);
-    }, [source, fetchData]);
+        if (!initialData || !initialPublishers || !initialCheckpoints) {
+            fetchData(source);
+        } else {
+            setLoading(false);
+        }
+    }, [source, fetchData, initialData, initialPublishers, initialCheckpoints]);
 
     const switchSource = (newSource: string) => {
         if (dataSources[newSource]) {

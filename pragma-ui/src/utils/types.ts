@@ -4,4 +4,5 @@ export const COINGECKO_MAPPING_IDS = {
     "eth": 279,
     "usdt": 325,
     "dai": 9956,
+    "strk": 26433,
 };

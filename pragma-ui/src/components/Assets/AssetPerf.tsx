@@ -7,7 +7,7 @@ import Link from "next/link";
 const AssetPerf = ({ asset, isAsset }) => {
   return (
     <Link
-      href={isAsset ? `/asset/${asset.ticker}` : `/provider/${asset.name}`}
+      href={isAsset ? `/asset/${encodeURIComponent(asset.ticker)}` : `/provider/${asset.name}`}
       className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}
     >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">

@@ -49,7 +49,7 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
     return {
       image: `/assets/currencies/${ticker.toLowerCase().split('/')[0]}.svg`,
       type: "Crypto",
-      ticker: ticker.replace('/', ''),
+      ticker,
       lastUpdated: lastUpdated,
       price: assetData.price,
       sources: assetData.nb_sources_aggregated,

@@ -11,9 +11,13 @@ import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { DataProvider } from "../providers/data";
+import { DataProvider, dataSources, initialAssets } from "../providers/data";
+import { GetServerSideProps } from "next";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+
+  const { initialData, initialPublishers, initialCheckpoints } = pageProps;
+
   /**
    * Generates RPC configuration for the specified chain.
    * @param {Chain} chain - The blockchain chain for which to generate RPC configuration.
@@ -90,7 +94,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
         <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
           <NavHeader />
-          <DataProvider>
+          <DataProvider initialData={initialData} initialPublishers={initialPublishers} initialCheckpoints={initialCheckpoints}>
             <Component {...pageProps} key={router.asPath} />
           </DataProvider>
           <NavFooter />
@@ -98,6 +102,44 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </StarknetConfig>
     </>
   );
+};
+
+const fetchData = async (source: string) => {
+  const results: { [ticker: string]: any } = {};
+  const checkpointsData: { [ticker: string]: any } = {};
+
+  const [assetsResponse, checkpointsResponse, publishersResponse] = await Promise.all([
+    Promise.all(initialAssets.map(async (asset) => {
+      const response = await fetch(`${dataSources[source]}&pair=${asset.ticker}`);
+      if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
+      const result = await response.json();
+      results[asset.ticker] = result;
+    })),
+    Promise.all(initialAssets.map(async (asset) => {
+      const response = await fetch(`${dataSources[`checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`]}&pair=${asset.ticker}`);
+      if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
+      const result = await response.json();
+      checkpointsData[asset.ticker] = result;
+    })),
+    fetch(dataSources[`publishers${source.charAt(0).toUpperCase() + source.slice(1)}`])
+  ]);
+
+  const publishersData = await publishersResponse.json();
+
+  return { results, publishersData, checkpointsData };
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const source = 'mainnet';  // Default source, you can change this based on some logic
+  const { results, publishersData, checkpointsData } = await fetchData(source);
+
+  return {
+    props: {
+      initialData: results,
+      initialPublishers: publishersData,
+      initialCheckpoints: checkpointsData,
+    },
+  };
 };
 
 export default MyApp;
