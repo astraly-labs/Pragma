@@ -7,13 +7,21 @@ import Link from "next/link";
 const AssetPerf = ({ asset, isAsset }) => {
   return (
     <Link
-      href={isAsset ? `/asset/${encodeURIComponent(asset.ticker)}` : `/provider/${asset.name}`}
+      href={
+        isAsset
+          ? `/asset/${encodeURIComponent(asset.ticker)}`
+          : `/provider/${asset.name}`
+      }
       className={classNames(isAsset ? styles.assetPerf : styles.dpPerf)}
     >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         <Image height={30} width={30} alt="AssetImage" src={asset.image} />
         <div className="flex flex-col text-lg text-lightGreen">
-          {isAsset ? asset.ticker : asset.name}{" "}
+          {isAsset
+            ? asset.ticker
+            : asset.name === "SKYNET_TRADING"
+            ? "SKYNET"
+            : asset.name}{" "}
           <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
             {asset.type}
           </div>
@@ -27,7 +35,9 @@ const AssetPerf = ({ asset, isAsset }) => {
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {isAsset ? "$" : ""}
-        {isAsset ? Number.parseFloat(asset.price).toFixed(2) : asset.reputationScore}
+        {isAsset
+          ? Number.parseFloat(asset.price).toFixed(2)
+          : asset.reputationScore}
       </div>
       {isAsset ? (
         ""
@@ -56,16 +66,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past1h > 0
               ? "text-mint"
               : asset.variations.past1h === 0
-                ? "text-LightGreenFooter"
-                : "text-redDown",
+              ? "text-LightGreenFooter"
+              : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past1h > 0
             ? "▲"
             : asset.variations.past1h === 0
-              ? "-"
-              : "▼"}{" "}
+            ? "-"
+            : "▼"}{" "}
           {asset.variations.past1h}%
         </div>
       ) : (
@@ -77,16 +87,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past24h > 0
               ? "text-mint"
               : asset.variations.past24h === 0
-                ? "text-LightGreenFooter"
-                : "text-redDown",
+              ? "text-LightGreenFooter"
+              : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past24h > 0
             ? "▲"
             : asset.variations.past24h === 0
-              ? "-"
-              : "▼"}{" "}
+            ? "-"
+            : "▼"}{" "}
           {asset.variations.past24h}%
         </div>
       ) : (
@@ -98,16 +108,16 @@ const AssetPerf = ({ asset, isAsset }) => {
             asset.variations.past7d > 0
               ? "text-mint"
               : asset.variations.past7d === 0
-                ? "text-LightGreenFooter"
-                : "text-redDown",
+              ? "text-LightGreenFooter"
+              : "text-redDown",
             "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
           )}
         >
           {asset.variations.past7d > 0
             ? "▲"
             : asset.variations.past7d === 0
-              ? "-"
-              : "▼"}{" "}
+            ? "-"
+            : "▼"}{" "}
           {asset.variations.past7d}%
         </div>
       ) : (

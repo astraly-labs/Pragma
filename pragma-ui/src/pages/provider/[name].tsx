@@ -17,7 +17,7 @@ interface DataProviders {
   name: string;
   link: string;
   lastUpdated: string;
-  reputationScore: number;
+  reputationScore: string;
   nbFeeds: number;
   dailyUpdates: number;
   totalUpdates: number;
@@ -45,20 +45,23 @@ const ProviderPage = () => {
     }
     // Find the publisher with the given name
     const foundPublisher = publishers.find(
-      (publisher) => publisher.publisher.toLowerCase() === router.query.name.toLowerCase()
+      (publisher) =>
+        publisher.publisher.toLowerCase() === router.query.name.toLowerCase()
     );
     console.log(foundPublisher);
     if (foundPublisher === undefined) {
       setPublisher(null);
     } else {
-      const lastUpdated = moment(foundPublisher.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+      const lastUpdated = moment(
+        foundPublisher.last_updated_timestamp * 1000
+      ).fromNow(); // Using moment.js to format time
       setPublisher({
         image: `/assets/publishers/${foundPublisher.publisher.toLowerCase()}.svg`,
         type: getPublisherType(foundPublisher.type),
         link: foundPublisher.website_url,
         name: foundPublisher.publisher,
         lastUpdated: lastUpdated,
-        reputationScore: null,
+        reputationScore: "soon",
         nbFeeds: foundPublisher.nb_feeds,
         dailyUpdates: foundPublisher.daily_updates,
         totalUpdates: foundPublisher.total_updates,
@@ -66,9 +69,13 @@ const ProviderPage = () => {
 
       setPairsReported(
         foundPublisher.components.map((component) => {
-          const lastUpdated = moment(component.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+          const lastUpdated = moment(
+            component.last_updated_timestamp * 1000
+          ).fromNow(); // Using moment.js to format time
           return {
-            image: `/assets/currencies/${component.pair_id.toLowerCase().split("/")[0]}.svg`,
+            image: `/assets/currencies/${
+              component.pair_id.toLowerCase().split("/")[0]
+            }.svg`,
             type: "Crypto",
             ticker: component.pair_id.replace("/", ""),
             lastUpdated: lastUpdated,
@@ -78,7 +85,6 @@ const ProviderPage = () => {
         })
       );
     }
-
   }, [publishers]);
 
   // Render loading state if asset is not yet fetched

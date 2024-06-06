@@ -9,9 +9,7 @@ import moment from "moment";
 import { COINGECKO_MAPPING_IDS } from "../utils/types";
 import { getPublisherType } from "../utils";
 
-export const options = [
-  "testnet", "mainnet", "offchain"
-];
+export const options = ["testnet", "mainnet", "offchain"];
 
 export type AssetInfo = {
   image: string;
@@ -36,18 +34,20 @@ export type DataProviderInfo = {
   link: string;
   name: string;
   lastUpdated: string;
-  reputationScore: number | null;
+  reputationScore: string | null;
   nbFeeds: number;
   dailyUpdates: number;
   totalUpdates: number;
 };
 
 const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
-  return Object.keys(data).map(ticker => {
+  return Object.keys(data).map((ticker) => {
     const assetData = data[ticker];
-    const lastUpdated = moment(assetData.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+    const lastUpdated = moment(
+      assetData.last_updated_timestamp * 1000
+    ).fromNow(); // Using moment.js to format time
     return {
-      image: `/assets/currencies/${ticker.toLowerCase().split('/')[0]}.svg`,
+      image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
       type: "Crypto",
       ticker,
       lastUpdated: lastUpdated,
@@ -58,7 +58,9 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
         past24h: assetData.variations?.past24h || 0,
         past7d: assetData.variations?.past7d || 0,
       },
-      chart: `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[ticker.toLowerCase().split('/')[0]]}/sparkline.svg`,
+      chart: `https://www.coingecko.com/coins/${
+        COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+      }/sparkline.svg`,
       ema: "soon",
       macd: "soon",
     };
@@ -66,24 +68,27 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
 };
 
 const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
-  return publishers.map(publisher => {
-    const lastUpdated = moment(publisher.last_updated_timestamp * 1000).fromNow(); // Using moment.js to format time
+  return publishers.map((publisher) => {
+    const lastUpdated = moment(
+      publisher.last_updated_timestamp * 1000
+    ).fromNow(); // Using moment.js to format time
     return {
       image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
       type: getPublisherType(publisher.type),
       link: publisher.website_url,
       name: publisher.publisher,
       lastUpdated: lastUpdated,
-      reputationScore: null,
+      reputationScore: "soon",
       nbFeeds: publisher.nb_feeds,
       dailyUpdates: publisher.daily_updates,
       totalUpdates: publisher.total_updates,
     };
   });
-}
+};
 
 const AssetsPage = () => {
-  const { data, loading, error, switchSource, currentSource, publishers } = useData();
+  const { data, loading, error, switchSource, currentSource, publishers } =
+    useData();
 
   const formattedAssets = formatAssets(data || {});
   const formattedPublishers = formatPublishers(publishers || []);
@@ -107,10 +112,24 @@ const AssetsPage = () => {
         illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />
       <BoxContainer>
-        <AssetList options={options} isAsset={true} assets={formattedAssets} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
+        <AssetList
+          options={options}
+          isAsset={true}
+          assets={formattedAssets}
+          onSourceChange={switchSource}
+          selectedSource={currentSource}
+          loading={loading}
+        />
       </BoxContainer>
       <BoxContainer>
-        <AssetList options={options} isAsset={false} assets={formattedPublishers} onSourceChange={switchSource} selectedSource={currentSource} loading={loading} />
+        <AssetList
+          options={options}
+          isAsset={false}
+          assets={formattedPublishers}
+          onSourceChange={switchSource}
+          selectedSource={currentSource}
+          loading={loading}
+        />
       </BoxContainer>
     </div>
   );
