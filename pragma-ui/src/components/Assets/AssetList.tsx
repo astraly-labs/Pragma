@@ -6,8 +6,31 @@ import SearchBar from "../Navigation/SearchBar";
 import AssetPerf from "./AssetPerf";
 import Image from "next/image";
 
-const AssetList = ({ options, isAsset, assets, onSourceChange, selectedSource, loading }) => {
+const AssetList = ({
+  options,
+  isAsset,
+  assets,
+  onSourceChange,
+  selectedSource,
+  loading,
+}) => {
   const [filteredValue, setFilteredValue] = useState("");
+  const elements = Array(5).fill({
+    image: `/assets/currencies/skynet_trading.svg`,
+    type: "Crypto",
+    ticker: "BTCUSD",
+    lastUpdated: "2sAGO",
+    price: "1000",
+    sources: "10",
+    variations: {
+      past1h: "10",
+      past24h: "-3",
+      past7d: "8",
+    },
+    chart: `https://www.coingecko.com/coins/SOL/sparkline.svg`,
+    ema: "soon",
+    macd: "soon",
+  });
 
   const handleInputChange = (value: string) => {
     setFilteredValue(value);
@@ -43,7 +66,8 @@ const AssetList = ({ options, isAsset, assets, onSourceChange, selectedSource, l
                     <Listbox.Option
                       key={optionsIdx}
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
+                          active ? "opacity-50 " : ""
                         }`
                       }
                       value={options}
@@ -51,8 +75,9 @@ const AssetList = ({ options, isAsset, assets, onSourceChange, selectedSource, l
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
-                              }`}
+                            className={`block truncate text-lightGreen ${
+                              selected ? "font-medium" : "font-normal"
+                            }`}
                           >
                             {options}
                           </span>
@@ -196,14 +221,24 @@ const AssetList = ({ options, isAsset, assets, onSourceChange, selectedSource, l
             </div>
           </div>
         )}
-        {loading && (
-          <div className="font-mono text-xs text-lightGreen">
-            Loading...
-          </div>
-        )}
-        {!loading && assets.map((asset, assetIdx) => (
-          <AssetPerf isAsset={isAsset} asset={asset} key={assetIdx} />
-        ))}
+        {loading &&
+          elements.map((element, index) => (
+            <AssetPerf
+              isAsset={true}
+              asset={element}
+              key={index}
+              loading={true}
+            />
+          ))}
+        {!loading &&
+          assets.map((asset, assetIdx) => (
+            <AssetPerf
+              isAsset={isAsset}
+              asset={asset}
+              key={assetIdx}
+              loading={false}
+            />
+          ))}
       </div>
     </div>
   );

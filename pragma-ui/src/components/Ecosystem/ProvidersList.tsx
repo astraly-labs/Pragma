@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const providersData = [
   {
-    logo: "/assets/publishers/skynet.svg",
+    logo: "/assets/publishers/skynet_trading.svg",
     description:
       "Skynet Trading is thrilled to be at the forefront of enhancing trust and accuracy in the crypto market, contributing our valuable data through Pragma's advanced zk-enabled technology, a pivotal step towards a more transparent and reliable digital asset ecosystem.",
   },
