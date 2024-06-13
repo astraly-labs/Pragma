@@ -34,9 +34,15 @@ const Checkpoints = ({ components }) => {
             Signer
           </div>
         </div>
-        {components.map((component, index) => (
-          <CheckpointComp key={index} component={component} />
-        ))}
+        {components.length > 0 ? (
+          components.map((component, index) => (
+            <CheckpointComp key={index} component={component} />
+          ))
+        ) : (
+          <div className="pt-4 font-mono tracking-wider text-lightGreen">
+            No checkpoints on this pair
+          </div>
+        )}
       </div>
     </div>
   );
