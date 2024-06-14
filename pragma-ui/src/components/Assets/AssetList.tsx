@@ -14,7 +14,6 @@ const AssetList = ({
   selectedSource,
   loading,
 }) => {
-  const [filteredValue, setFilteredValue] = useState("");
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
     type: "Crypto",
@@ -32,9 +31,19 @@ const AssetList = ({
     macd: "soon",
   });
 
+  const [filteredValue, setFilteredValue] = useState("");
+
   const handleInputChange = (value: string) => {
     setFilteredValue(value);
   };
+
+  const filteredAssets = assets.filter((asset) => {
+    if (isAsset) {
+      return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
+    } else {
+      return asset?.name?.toLowerCase().includes(filteredValue.toLowerCase());
+    }
+  });
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -231,14 +240,29 @@ const AssetList = ({
             />
           ))}
         {!loading &&
-          assets.map((asset, assetIdx) => (
-            <AssetPerf
-              isAsset={isAsset}
-              asset={asset}
-              key={assetIdx}
-              loading={false}
-            />
-          ))}
+          isAsset &&
+          filteredAssets
+            ?.sort((a, b) => a.ticker.localeCompare(b.ticker))
+            .map((asset, assetIdx) => (
+              <AssetPerf
+                isAsset={isAsset}
+                asset={asset}
+                key={assetIdx}
+                loading={false}
+              />
+            ))}
+        {!loading &&
+          !isAsset &&
+          filteredAssets
+            ?.sort((a, b) => a.name.localeCompare(b.ticker))
+            .map((asset, assetIdx) => (
+              <AssetPerf
+                isAsset={isAsset}
+                asset={asset}
+                key={assetIdx}
+                loading={false}
+              />
+            ))}
       </div>
     </div>
   );
