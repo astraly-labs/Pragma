@@ -263,12 +263,10 @@ const AssetList = ({
                 loading={false}
               />
             ))}
-        {filteredAssets.length === 0 ? (
+        {!loading && filteredAssets.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">
             No results for your search
           </div>
-        ) : (
-          <div></div>
         )}
       </div>
     </div>

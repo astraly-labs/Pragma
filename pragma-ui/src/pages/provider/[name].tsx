@@ -41,10 +41,15 @@ const ProviderPage = () => {
 
   useEffect(() => {
     if (!publishers) {
-      router.push("/404");
+      const timer = setTimeout(() => {
+        router.push("/404");
+      }, 20000); // 20 seconds delay
+
+      // Cleanup the timer if the component unmounts before the 10 seconds
+      return () => clearTimeout(timer);
     }
     // Find the publisher with the given name
-    const foundPublisher = publishers.find(
+    const foundPublisher = publishers?.find(
       (publisher) =>
         publisher.publisher.toLowerCase() === router.query.name.toLowerCase()
     );
@@ -89,7 +94,56 @@ const ProviderPage = () => {
 
   // Render loading state if asset is not yet fetched
   if (loading || !publisher) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        className={classNames(
+          "relative w-full overflow-x-hidden pt-24 md:pt-40",
+          styles.bigScreen
+        )}
+      >
+        <BoxContainer>
+          <button
+            onClick={() => {
+              // Go back to the previous page
+              router.back();
+            }}
+            className="flex w-full cursor-pointer items-center gap-2 text-left text-sm uppercase tracking-widest text-lightGreen"
+          >
+            <Image
+              className="my-auto pl-2"
+              height={30}
+              width={30}
+              alt="arrowDown"
+              src="/assets/vectors/prev.svg"
+            />
+            Back to feeds
+          </button>
+        </BoxContainer>
+        <BoxContainer>
+          <div
+            className={classNames(
+              "w-full flex-col justify-between gap-8 md:flex-row md:gap-5",
+              styles.greenBox
+            )}
+          >
+            <div className="flex flex-row gap-4">
+              <div className="my-auto  h-20 w-20 animate-pulse rounded-full bg-lightBlur"></div>
+              <div className="flex flex-col gap-2">
+                <div className="my-auto  h-10 w-28 animate-pulse rounded-full bg-lightBlur"></div>
+                <div className="my-auto  h-5 w-14 animate-pulse rounded-full bg-lightBlur"></div>
+              </div>
+            </div>
+            <div className="my-auto  h-20 w-full animate-pulse rounded-full bg-lightBlur md:w-80"></div>
+          </div>
+        </BoxContainer>
+        <BoxContainer>
+          <div className="my-auto  mt-8 h-80 w-full animate-pulse rounded-xl bg-lightBlur"></div>
+        </BoxContainer>
+        <BoxContainer>
+          <div className="my-auto  mt-8 h-80 w-full animate-pulse rounded-xl bg-lightBlur"></div>
+        </BoxContainer>
+      </div>
+    );
   }
 
   return (

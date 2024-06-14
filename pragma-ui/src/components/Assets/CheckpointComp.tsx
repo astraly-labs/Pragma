@@ -19,8 +19,6 @@ const CheckpointComp = ({ component }) => {
           src="/assets/vectors/outLink.svg"
         />
       </Link>
-      <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"></div>
-      <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"></div>
       <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {component.price}
       </div>
