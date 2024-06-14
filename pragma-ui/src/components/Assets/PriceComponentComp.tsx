@@ -39,11 +39,11 @@ const PriceComponentComp = ({ component }) => {
         />
       </Link>
       <div className="flex flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider"></div>
-      <div className="flex flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider"></div>
 
-      <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+      <div className="flex flex-row gap-2 overflow-auto font-mono text-sm text-lightGreen md:tracking-wider">
         {component.lastUpdated}
       </div>
+      <div className="flex flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider"></div>
     </div>
   );
 };

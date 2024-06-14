@@ -28,11 +28,10 @@ const PriceComponent = ({ components }) => {
             Hash
           </div>
           <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider"></div>
-          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider"></div>
-
           <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
             Last Updated
           </div>
+          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider"></div>
         </div>
         {components.map((component, index) => (
           <PriceComponentComp key={index} component={component} />

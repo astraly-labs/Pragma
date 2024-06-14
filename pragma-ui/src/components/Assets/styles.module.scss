@@ -118,9 +118,9 @@
   padding-top: 16px;
   border-bottom: 1px solid rgba(217, 217, 217, 0.25);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(150px, 1fr);
+  grid-auto-columns: minmax(200px, 1fr);
 }
 
 .pairComp {
