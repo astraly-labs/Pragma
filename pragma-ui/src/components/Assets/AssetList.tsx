@@ -132,7 +132,7 @@ const AssetList = ({
               />
             </div>
 
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Nb sources
               <Image
                 height={16}
@@ -195,7 +195,7 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Type
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">

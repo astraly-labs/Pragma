@@ -45,7 +45,7 @@ const AssetPerf = ({ asset, isAsset, loading }) => {
           <div>{asset.lastUpdated}</div>
         )}
       </div>
-      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+      <div className="my-auto flex translate-x-2 flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {loading ? (
           <div className="my-auto h-3 w-14 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
