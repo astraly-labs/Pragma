@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
-import BasicHero from "../components/Ecosystem/BasicHero";
 import AssetList from "../components/Assets/AssetList";
 import { PublisherT, useData } from "../providers/data";
 import moment from "moment";
 import { COINGECKO_MAPPING_IDS } from "../utils/types";
 import { getPublisherType } from "../utils";
+import AssetHero from "../components/common/AssetHero";
 
 export const options = ["testnet", "mainnet", "offchain"];
 
@@ -100,14 +100,14 @@ const AssetsPage = () => {
         styles.bigScreen
       )}
     >
-      <BasicHero
-        title={"Your gate to secure"}
-        greenTitle={"real-time market data"}
-        description={""}
+      <AssetHero
+        title={"Every asset"}
+        greenTitle={"priced the best way"}
+        description={
+          "Explore the assets supported by Pragma, priced in the most efficient way. Best pricing, no fluff."
+        }
         solidButton={"Read docs"}
         solidButtonLink={"https://docs.pragma.build"}
-        outlineButton={"Data Feeds"}
-        outlineButtonLink={"#feeds"}
         illustrationLink={"/assets/vectors/chart.svg"}
         illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />

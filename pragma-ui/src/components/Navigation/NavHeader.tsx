@@ -161,7 +161,8 @@ const NavHeader = () => {
               // callsToAction={callsToAction}
             />
           </Popover.Group>
-          <div className="hidden items-center justify-end md:flex lg:w-0 lg:flex-1">
+          <div className="hidden w-4 md:flex lg:hidden"></div>
+          <div className="hidden items-center justify-end lg:flex lg:w-0 lg:flex-1">
             <ButtonLink
               center={false}
               variant="solid"
