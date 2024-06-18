@@ -12,7 +12,7 @@ import Checkpoints from "../../components/Assets/Checkpoints";
 import { CheckpointT, initialAssets, useData } from "../../providers/data";
 import { COINGECKO_MAPPING_IDS } from "../../utils/types";
 
-interface Asset {
+export interface Asset {
   image: string;
   type: string;
   ticker: string;
@@ -66,7 +66,7 @@ const AssetPage = ({ ticker }: Props) => {
         const formattedAsset: Asset = {
           image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
           type: "Crypto",
-          ticker: ticker.replace("/", ""),
+          ticker,
           lastUpdated: new Date(
             assetData.last_updated_timestamp * 1000
           ).toLocaleString(),
@@ -77,9 +77,8 @@ const AssetPage = ({ ticker }: Props) => {
             past24h: assetData.variations?.past24h || 0,
             past7d: assetData.variations?.past7d || 0,
           },
-          chart: `https://www.coingecko.com/coins/${
-            COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
-          }/sparkline.svg`,
+          chart: `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+            }/sparkline.svg`,
           ema: "soon",
           macd: "soon",
         };
@@ -208,7 +207,7 @@ const AssetPage = ({ ticker }: Props) => {
         <AssetHeader isAsset={true} asset={asset} />
       </BoxContainer>
       <BoxContainer>
-        <AssetChart assets={asset} />
+        <AssetChart asset={asset} />
       </BoxContainer>
       <div className="w-full pb-5" />
       <BoxContainer className="relative" modeOne={false}>

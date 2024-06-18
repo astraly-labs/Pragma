@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
@@ -58,9 +58,8 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
         past24h: assetData.variations?.past24h || 0,
         past7d: assetData.variations?.past7d || 0,
       },
-      chart: `https://www.coingecko.com/coins/${
-        COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
-      }/sparkline.svg`,
+      chart: `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+        }/sparkline.svg`,
       ema: "soon",
       macd: "soon",
     };
@@ -90,8 +89,13 @@ const AssetsPage = () => {
   const { data, loading, error, switchSource, currentSource, publishers } =
     useData();
 
-  const formattedAssets = formatAssets(data || {});
-  const formattedPublishers = formatPublishers(publishers || []);
+  const [formattedAssets, setFormattedAssets] = useState<AssetInfo[]>([]);
+  const [formattedPublishers, setFormattedPublishers] = useState<DataProviderInfo[]>([]);
+
+  useEffect(() => {
+    setFormattedAssets(formatAssets(data || {}));
+    setFormattedPublishers(formatPublishers(publishers || []));
+  }, [data, publishers]);
 
   return (
     <div
