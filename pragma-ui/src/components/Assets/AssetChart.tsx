@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import Image from "next/image";
 import { Listbox, Tab, Transition } from "@headlessui/react";
@@ -7,45 +7,75 @@ import { ChartBox } from "../common/ChartBox";
 import { AssetPair } from "../common/AssetBox";
 import { UTCTimestamp } from "lightweight-charts";
 import { useData } from "../../providers/data";
+import { Asset } from "../../pages/asset/[ticker]";
+import moment from "moment";
+import { removeDuplicateTimestamps, timezone } from "../../pages";
 
 interface Frames {
   frame: string;
 }
 
-const exampleAssetPair: AssetPair = {
-  ticker: "BTCUSD",
-  lastPrice: 50000,
-  variation24h: 1000,
-  relativeVariation24h: 2,
-  priceData: [
-    { time: "2022-04-10", value: 49000 },
-    { time: "2022-04-11", value: 51000 },
-    { time: "2022-04-12", value: 55000 },
-    { time: "2022-04-13", value: 70000 },
-  ].map(item => ({
-    ...item,
-    time: new Date(item.time).getTime() as UTCTimestamp,
-  })),
-};
-
-const AssetChart = ({ assets }) => {
-
+const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
-
   const [frames] = useState<Frames[]>([
-    {
-      frame: "1hour",
-    },
-    {
-      frame: "1day",
-    },
-    {
-      frame: "1week",
-    },
-    {
-      frame: "1month",
-    },
+    { frame: "1min" },
+    { frame: "15min" },
+    { frame: "1h" },
+    { frame: "2h" },
   ]);
+  const [selectedFrame, setSelectedFrame] = useState("1min");
+
+  const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
+  const ws = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    if (asset === undefined) return;
+    // Establish WebSocket connection
+    ws.current = new WebSocket("wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe");
+
+    ws.current.onopen = () => {
+      console.log(selectedFrame, asset.ticker)
+      // Subscribe to data
+      ws.current?.send(JSON.stringify({
+        msg_type: "subscribe",
+        pair: asset.ticker,
+        network: "testnet",
+        interval: selectedFrame,
+      }));
+    };
+
+    ws.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      // On acknoledgement, do nothing
+      if (data.msg_type === "subscribe") return;
+
+      // TODO: remove hotfix
+      const unduplicatedData = removeDuplicateTimestamps(
+        data.sort(
+          (a, b) =>
+            moment.tz(b.time, timezone).valueOf() -
+            moment.tz(a.time, timezone).valueOf()
+        )
+      );
+
+      const priceData = unduplicatedData.reverse().map((d: any) => ({
+        time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
+        value: parseInt(d.open) / 10 ** 8,
+      }));
+      setAssetPair({
+        ticker: asset.ticker,
+        lastPrice: parseFloat(data[data.length - 1].close),
+        variation24h: 0,
+        relativeVariation24h: 0,
+        priceData
+      });
+    };
+
+    return () => {
+      ws.current?.close();
+    };
+  }, [asset, selectedFrame]);
+
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
       <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:gap-10">
@@ -67,27 +97,21 @@ const AssetChart = ({ assets }) => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="ring-backdrop-blur absolute z-10 mt-1 max-h-60 overflow-auto rounded-md	bg-green py-1 text-sm text-lightGreen focus:outline-none">
+              <Listbox.Options className="ring-backdrop-blur absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen focus:outline-none">
                 {options.map((options, optionsIdx) => (
                   <Listbox.Option
                     key={optionsIdx}
                     className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""
-                      }`
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""}`
                     }
                     value={options}
                   >
                     {({ selected }) => (
                       <>
-                        <span
-                          className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"
-                            }`}
-                        >
+                        <span className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"}`}>
                           {options}
                         </span>
-                        {selected ? (
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                        ) : null}
+                        {selected ? <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span> : null}
                       </>
                     )}
                   </Listbox.Option>
@@ -96,7 +120,9 @@ const AssetChart = ({ assets }) => {
             </Transition>
           </div>
         </Listbox>
-        <Tab.Group>
+        <Tab.Group onChange={(index) => {
+          setSelectedFrame(frames[index].frame);
+        }}>
           <Tab.List className="flex rounded-full bg-xlightBlur md:space-x-1">
             {frames.map((frame, index) => (
               <Tab
@@ -105,9 +131,7 @@ const AssetChart = ({ assets }) => {
                   classNames(
                     "w-full rounded-full p-2 px-3 py-3 text-sm font-medium leading-5 tracking-wider sm:px-8 sm:py-1",
                     "focus:outline-none ",
-                    selected
-                      ? "bg-mint text-darkGreen"
-                      : "text-lightGreen hover:text-white"
+                    selected ? "bg-mint text-darkGreen" : "text-lightGreen hover:text-white"
                   )
                 }
               >
@@ -118,10 +142,8 @@ const AssetChart = ({ assets }) => {
         </Tab.Group>
       </div>
       <ChartBox
-        colors={{
-          backgroundColor: "#00000000",
-        }}
-        assetPair={exampleAssetPair}
+        colors={{ backgroundColor: "#00000000" }}
+        assetPair={assetPair}
         box={false}
       />
     </div>

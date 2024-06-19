@@ -96,7 +96,7 @@ export const DataProvider = ({ children, initialData, initialPublishers, initial
                 })),
                 fetch(publisherUrl)
             ]);
-
+            if (!publishersResponse.ok) throw new Error('Failed to fetch publishers data');
             const publishersData = await publishersResponse.json();
 
             setData(results);
