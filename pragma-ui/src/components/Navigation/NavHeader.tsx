@@ -59,7 +59,7 @@ const additional = [
   {
     name: "Discord",
     description: "",
-    href: "https://discord.gg/nCFzztrPTa",
+    href: "https://discord.gg/M9aRZtZHU7",
     icon: "/assets/social/discord.svg",
   },
   {
