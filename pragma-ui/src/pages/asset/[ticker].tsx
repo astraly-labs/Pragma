@@ -52,7 +52,7 @@ interface CheckpointComponent {
 
 const AssetPage = ({ ticker }: Props) => {
   const router = useRouter();
-  const { data, loading, checkpoints, error } = useData();
+  const { data, loading, checkpoints } = useData();
   const [asset, setAsset] = useState<Asset | null>(null);
   const [priceComponents, setPriceComponents] = useState<PriceComponents[]>([]);
   const [checkpointComponents, setCheckpointComponents] = useState<
@@ -77,8 +77,9 @@ const AssetPage = ({ ticker }: Props) => {
             past24h: assetData.variations?.past24h || 0,
             past7d: assetData.variations?.past7d || 0,
           },
-          chart: `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
-            }/sparkline.svg`,
+          chart: `https://www.coingecko.com/coins/${
+            COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+          }/sparkline.svg`,
           ema: "soon",
           macd: "soon",
         };

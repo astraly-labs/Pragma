@@ -31,17 +31,21 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
   useEffect(() => {
     if (asset === undefined) return;
     // Establish WebSocket connection
-    ws.current = new WebSocket("wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe");
+    ws.current = new WebSocket(
+      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
+    );
 
     ws.current.onopen = () => {
-      console.log(selectedFrame, asset.ticker)
+      console.log(selectedFrame, asset.ticker);
       // Subscribe to data
-      ws.current?.send(JSON.stringify({
-        msg_type: "subscribe",
-        pair: asset.ticker,
-        network: "testnet",
-        interval: selectedFrame,
-      }));
+      ws.current?.send(
+        JSON.stringify({
+          msg_type: "subscribe",
+          pair: asset.ticker,
+          network: "testnet",
+          interval: selectedFrame,
+        })
+      );
     };
 
     ws.current.onmessage = (event) => {
@@ -67,7 +71,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
         lastPrice: parseFloat(data[data.length - 1].close),
         variation24h: 0,
         relativeVariation24h: 0,
-        priceData
+        priceData,
       });
     };
 
@@ -102,16 +106,24 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
                   <Listbox.Option
                     key={optionsIdx}
                     className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${active ? "opacity-50 " : ""}`
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
+                        active ? "opacity-50 " : ""
+                      }`
                     }
                     value={options}
                   >
                     {({ selected }) => (
                       <>
-                        <span className={`block truncate text-lightGreen ${selected ? "font-medium" : "font-normal"}`}>
+                        <span
+                          className={`block truncate text-lightGreen ${
+                            selected ? "font-medium" : "font-normal"
+                          }`}
+                        >
                           {options}
                         </span>
-                        {selected ? <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span> : null}
+                        {selected ? (
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                        ) : null}
                       </>
                     )}
                   </Listbox.Option>
@@ -120,9 +132,11 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
             </Transition>
           </div>
         </Listbox>
-        <Tab.Group onChange={(index) => {
-          setSelectedFrame(frames[index].frame);
-        }}>
+        <Tab.Group
+          onChange={(index) => {
+            setSelectedFrame(frames[index].frame);
+          }}
+        >
           <Tab.List className="flex rounded-full bg-xlightBlur md:space-x-1">
             {frames.map((frame, index) => (
               <Tab
@@ -131,7 +145,9 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
                   classNames(
                     "w-full rounded-full p-2 px-3 py-3 text-sm font-medium leading-5 tracking-wider sm:px-8 sm:py-1",
                     "focus:outline-none ",
-                    selected ? "bg-mint text-darkGreen" : "text-lightGreen hover:text-white"
+                    selected
+                      ? "bg-mint text-darkGreen"
+                      : "text-lightGreen hover:text-white"
                   )
                 }
               >

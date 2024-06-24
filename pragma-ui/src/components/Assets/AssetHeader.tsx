@@ -43,10 +43,7 @@ const AssetHeader = ({ isAsset, asset }) => {
             <DoubleText bigText={asset.ema} smolText={"1h EMA"} />
           </div>
           <div className="flex flex-col gap-4">
-            <DoubleText
-              bigText={asset.lastUpdated}
-              smolText={"Last Updated"}
-            />
+            <DoubleText bigText={asset.lastUpdated} smolText={"Last Updated"} />
             <DoubleText bigText={asset.macd} smolText={"1h MACD"} />
           </div>
         </div>
@@ -67,10 +64,7 @@ const AssetHeader = ({ isAsset, asset }) => {
             />
           </div>
           <div className="flex flex-col gap-4">
-            <DoubleText
-              bigText={asset.lastUpdated}
-              smolText={"Last Updated"}
-            />
+            <DoubleText bigText={asset.lastUpdated} smolText={"Last Updated"} />
             <DoubleText
               bigText={asset.totalUpdates}
               smolText={"Total updates"}

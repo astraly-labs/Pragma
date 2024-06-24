@@ -1,13 +1,12 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { GetStaticPaths, GetStaticProps } from "next";
 import BoxContainer from "../../components/common/BoxContainer";
 import classNames from "classnames";
 import styles from "../styles.module.scss";
 import Image from "next/image";
 import AssetHeader from "../../components/Assets/AssetHeader";
 import PairReported from "../../components/Assets/PairReported";
-import { PublisherT, useData } from "../../providers/data";
+import { useData } from "../../providers/data";
 import moment from "moment";
 import { getPublisherType } from "../../utils";
 
@@ -51,7 +50,8 @@ const ProviderPage = () => {
     // Find the publisher with the given name
     const foundPublisher = publishers?.find(
       (publisher) =>
-        publisher.publisher.toLowerCase() === router.query.name.toLowerCase()
+        publisher.publisher.toLowerCase() ===
+        (router.query.name as string).toLowerCase()
     );
     console.log(foundPublisher);
     if (foundPublisher === undefined) {
@@ -78,8 +78,9 @@ const ProviderPage = () => {
             component.last_updated_timestamp * 1000
           ).fromNow(); // Using moment.js to format time
           return {
-            image: `/assets/currencies/${component.pair_id.toLowerCase().split("/")[0]
-              }.svg`,
+            image: `/assets/currencies/${
+              component.pair_id.toLowerCase().split("/")[0]
+            }.svg`,
             type: "Crypto",
             ticker: component.pair_id.replace("/", ""),
             lastUpdated: lastUpdated,
