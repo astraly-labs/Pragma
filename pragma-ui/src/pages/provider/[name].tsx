@@ -78,14 +78,13 @@ const ProviderPage = () => {
             component.last_updated_timestamp * 1000
           ).fromNow(); // Using moment.js to format time
           return {
-            image: `/assets/currencies/${
-              component.pair_id.toLowerCase().split("/")[0]
-            }.svg`,
+            image: `/assets/currencies/${component.pair_id.toLowerCase().split("/")[0]
+              }.svg`,
             type: "Crypto",
             ticker: component.pair_id.replace("/", ""),
             lastUpdated: lastUpdated,
             price: Number.parseFloat(component.price),
-            dailyUpdates: 0,
+            dailyUpdates: component.daily_updates,
           };
         })
       );

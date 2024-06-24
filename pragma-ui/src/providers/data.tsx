@@ -20,6 +20,7 @@ export type PublisherT = {
         price: string;
         source: string;
         decimals: number;
+        daily_updates: number;
     }[];
 };
 
