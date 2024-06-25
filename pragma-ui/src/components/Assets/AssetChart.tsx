@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { Fragment, useState, useEffect, useRef, useMemo } from "react";
 import classNames from "classnames";
 import Image from "next/image";
 import { Listbox, Tab, Transition } from "@headlessui/react";
@@ -27,18 +27,23 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
 
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
   const ws = useRef<WebSocket | null>(null);
+  const wsInstance = useMemo(
+    () =>
+      typeof window !== "undefined"
+        ? new WebSocket(
+            "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
+          )
+        : null,
+    []
+  );
 
   useEffect(() => {
     if (asset === undefined) return;
-    // Establish WebSocket connection
-    ws.current = new WebSocket(
-      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
-    );
 
-    ws.current.onopen = () => {
+    wsInstance.onopen = () => {
       console.log(selectedFrame, asset.ticker);
       // Subscribe to data
-      ws.current?.send(
+      wsInstance?.send(
         JSON.stringify({
           msg_type: "subscribe",
           pair: asset.ticker,
@@ -48,7 +53,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       );
     };
 
-    ws.current.onmessage = (event) => {
+    wsInstance.onmessage = (event) => {
       const data = JSON.parse(event.data);
       // On acknoledgement, do nothing
       if (data.msg_type === "subscribe") return;
@@ -76,7 +81,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
     };
 
     return () => {
-      ws.current?.close();
+      wsInstance?.close();
     };
   }, [asset, selectedFrame]);
 
