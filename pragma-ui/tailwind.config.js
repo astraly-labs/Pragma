@@ -29,11 +29,13 @@ module.exports = {
         lightGreen: "#B5F0E5",
         mint: "#15FF81",
         lightBlur: "#B5F0E51F",
+        xlightBlur: "#FFFFFF0D",
         codeColor: "#98A2B3",
         greenFooter: "#1B63521F",
         LightGreenFooter: "#B5F0E580",
         whiteTrans: "#FFFFFF26",
         redDown: "#E52258",
+        lightBackground: "#0000001F",
       },
       invert: {
         25: ".25",

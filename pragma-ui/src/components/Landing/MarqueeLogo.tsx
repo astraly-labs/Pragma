@@ -68,7 +68,7 @@ const ecosystem: Ecosystem[] = [
   },
   {
     name: "skynet",
-    src: "/assets/publishers/skynet.svg",
+    src: "/assets/publishers/skynet_trading.svg",
     link: "https://skynettrading.com/",
   },
   {

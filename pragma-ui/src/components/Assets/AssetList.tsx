@@ -6,15 +6,44 @@ import SearchBar from "../Navigation/SearchBar";
 import AssetPerf from "./AssetPerf";
 import Image from "next/image";
 
-const AssetList = ({ options, isAsset, assets }) => {
-  const [selected, setSelected] = useState(options[0]);
-  const numberAssets = 1;
+const AssetList = ({
+  options,
+  isAsset,
+  assets,
+  onSourceChange,
+  selectedSource,
+  loading,
+}) => {
+  const elements = Array(5).fill({
+    image: `/assets/currencies/skynet_trading.svg`,
+    type: "Crypto",
+    ticker: "BTCUSD",
+    lastUpdated: "2sAGO",
+    price: "1000",
+    sources: "10",
+    variations: {
+      past1h: "10",
+      past24h: "-3",
+      past7d: "8",
+    },
+    chart: `https://www.coingecko.com/coins/SOL/sparkline.svg`,
+    ema: "soon",
+    macd: "soon",
+  });
 
   const [filteredValue, setFilteredValue] = useState("");
 
   const handleInputChange = (value: string) => {
     setFilteredValue(value);
   };
+
+  const filteredAssets = assets.filter((asset) => {
+    if (isAsset) {
+      return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
+    } else {
+      return asset?.name?.toLowerCase().includes(filteredValue.toLowerCase());
+    }
+  });
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -23,10 +52,10 @@ const AssetList = ({ options, isAsset, assets }) => {
       </h3>
       <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
         <div className="flex flex-col gap-3 smolScreen:flex-row">
-          <Listbox value={selected} onChange={setSelected}>
+          <Listbox value={selectedSource} onChange={onSourceChange}>
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
-                <span className="block truncate">{selected.name}</span>
+                <span className="block truncate">{selectedSource}</span>
                 <Image
                   className="my-auto pl-2"
                   height={16}
@@ -59,7 +88,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                               selected ? "font-medium" : "font-normal"
                             }`}
                           >
-                            {options.name}
+                            {options}
                           </span>
                           {selected ? (
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
@@ -73,7 +102,7 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
-            {isAsset ? "Price Feeds" : "Data Providers"}: {numberAssets}
+            {isAsset ? "Price Feeds" : "Data Providers"}: {assets.length}
           </div>
         </div>
         <div className="sm:ml-auto">
@@ -93,7 +122,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Last updated
               <Image
                 height={16}
@@ -103,7 +132,7 @@ const AssetList = ({ options, isAsset, assets }) => {
               />
             </div>
 
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Nb sources
               <Image
                 height={16}
@@ -157,7 +186,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Last update
               <Image
                 height={16}
@@ -166,7 +195,7 @@ const AssetList = ({ options, isAsset, assets }) => {
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Type
             </div>
             <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">
@@ -201,9 +230,44 @@ const AssetList = ({ options, isAsset, assets }) => {
             </div>
           </div>
         )}
-        {assets.map((asset, assetIdx) => (
-          <AssetPerf isAsset={isAsset} asset={asset} key={assetIdx} />
-        ))}
+        {loading &&
+          elements.map((element, index) => (
+            <AssetPerf
+              isAsset={true}
+              asset={element}
+              key={index}
+              loading={true}
+            />
+          ))}
+        {!loading &&
+          isAsset &&
+          filteredAssets
+            ?.sort((a, b) => a.ticker.localeCompare(b.ticker))
+            .map((asset, assetIdx) => (
+              <AssetPerf
+                isAsset={isAsset}
+                asset={asset}
+                key={assetIdx}
+                loading={false}
+              />
+            ))}
+        {!loading &&
+          !isAsset &&
+          filteredAssets
+            ?.sort((a, b) => a.name.localeCompare(b.ticker))
+            .map((asset, assetIdx) => (
+              <AssetPerf
+                isAsset={isAsset}
+                asset={asset}
+                key={assetIdx}
+                loading={false}
+              />
+            ))}
+        {!loading && filteredAssets.length === 0 && (
+          <div className="py-2 font-mono text-xs text-lightGreen">
+            No results for your search
+          </div>
+        )}
       </div>
     </div>
   );
