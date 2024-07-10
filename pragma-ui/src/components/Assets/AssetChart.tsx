@@ -26,62 +26,119 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
   const [selectedFrame, setSelectedFrame] = useState("1min");
 
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
-  const ws = useRef<WebSocket | null>(null);
-  const wsInstance = useMemo(
-    () =>
-      typeof window !== "undefined"
-        ? new WebSocket(
-            "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
-          )
-        : null,
-    []
-  );
 
   useEffect(() => {
     if (asset === undefined) return;
 
-    wsInstance.onopen = () => {
-      console.log(selectedFrame, asset.ticker);
-      // Subscribe to data
-      wsInstance?.send(
+    console.log(selectedFrame, asset.ticker);
+
+    const wsInstance = new WebSocket(
+      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
+    );
+
+    const subscribe = () => {
+      wsInstance.send(
         JSON.stringify({
           msg_type: "subscribe",
           pair: asset.ticker,
-          network: "testnet",
+          network: currentSource,
           interval: selectedFrame,
+          candles_to_get: 100,
         })
       );
     };
 
+    wsInstance.onopen = () => {
+      console.log("WebSocket connected");
+      subscribe();
+    };
+
     wsInstance.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      // On acknoledgement, do nothing
       if (data.msg_type === "subscribe") return;
 
-      // TODO: remove hotfix
-      const unduplicatedData = removeDuplicateTimestamps(
-        data.sort(
-          (a, b) =>
-            moment.tz(b.time, timezone).valueOf() -
-            moment.tz(a.time, timezone).valueOf()
-        )
-      );
+      setAssetPair((prevAssetPair) => {
+        let updatedPriceData = prevAssetPair?.priceData || [];
+        let lastPrice;
 
-      const priceData = unduplicatedData.reverse().map((d: any) => ({
-        time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
-        value: parseInt(d.open) / 10 ** 8,
-      }));
-      setAssetPair({
-        ticker: asset.ticker,
-        lastPrice: parseFloat(data[data.length - 1].close),
-        variation24h: 0,
-        relativeVariation24h: 0,
-        priceData,
+        if (Array.isArray(data) && data.length === 1) {
+          // Individual update
+          const newData = data[0];
+          lastPrice = parseInt(newData.open) / 10 ** 8;
+          const time = (moment.tz(newData.time, timezone).valueOf() /
+            1000) as UTCTimestamp;
+
+          if (
+            updatedPriceData.length > 0 &&
+            updatedPriceData[updatedPriceData.length - 1].time === time
+          ) {
+            console.log("Updating last price");
+            // Update last price if time is the same
+            updatedPriceData = [
+              ...updatedPriceData.slice(0, -1),
+              { time, value: lastPrice },
+            ];
+          } else {
+            console.log("Adding new data point");
+            // Add new data point
+            updatedPriceData = [
+              ...updatedPriceData,
+              { time, value: lastPrice },
+            ];
+          }
+        } else if (Array.isArray(data) && data.length > 1) {
+          // Bulk update
+          const unduplicatedData = removeDuplicateTimestamps(
+            data.sort(
+              (a, b) =>
+                moment.tz(b.time, timezone).valueOf() -
+                moment.tz(a.time, timezone).valueOf()
+            )
+          );
+
+          updatedPriceData = unduplicatedData.reverse().map((d: any) => ({
+            time: (moment.tz(d.time, timezone).valueOf() /
+              1000) as UTCTimestamp,
+            value: parseInt(d.open) / 10 ** 8,
+          }));
+
+          lastPrice = parseFloat(data[data.length - 1].close);
+        } else {
+          console.error("Unexpected data format:", data);
+          return prevAssetPair; // Return previous state if data format is unexpected
+        }
+
+        // Ensure the data is sorted
+        updatedPriceData.sort((a, b) => a.time - b.time);
+
+        console.log("Updated AssetPair:", {
+          ticker: asset.ticker,
+          lastPrice,
+          priceData: updatedPriceData,
+        });
+
+        return {
+          ticker: asset.ticker,
+          lastPrice,
+          variation24h: 0,
+          relativeVariation24h: 0,
+          priceData: updatedPriceData,
+        };
       });
     };
 
+    wsInstance.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    // Resubscribe when selectedFrame changes
+    if (wsInstance.readyState === WebSocket.OPEN) {
+      subscribe();
+    }
+
     return () => {
-      wsInstance?.close();
+      console.log("Closing WebSocket");
+      wsInstance.close();
     };
   }, [asset, selectedFrame]);
 

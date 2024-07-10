@@ -9,7 +9,7 @@ import { COINGECKO_MAPPING_IDS } from "../utils/types";
 import { getPublisherType } from "../utils";
 import AssetHero from "../components/common/AssetHero";
 
-export const options = ["testnet", "mainnet", "offchain"];
+export const options = ["testnet", "mainnet"];
 
 export type AssetInfo = {
   image: string;

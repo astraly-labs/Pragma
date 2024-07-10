@@ -33,7 +33,6 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("assetPair", assetPair);
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
