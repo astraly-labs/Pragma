@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef, useMemo } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import classNames from "classnames";
 import Image from "next/image";
 import { Listbox, Tab, Transition } from "@headlessui/react";
@@ -43,7 +43,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
           pair: asset.ticker,
           network: currentSource,
           interval: selectedFrame,
-          candles_to_get: 100,
+          candles_to_get: 1000,
         })
       );
     };
