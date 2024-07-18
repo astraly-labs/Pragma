@@ -20,7 +20,6 @@ import Image from "next/image";
 
 interface Resource {
   name: string;
-  description: string;
   href: string;
 }
 
@@ -28,18 +27,19 @@ interface Resource {
 const resources: Resource[] = [
   {
     name: "Ecosystem",
-    description: "Start using our data by reading our docs.",
     href: "/ecosystem",
   },
   {
     name: "Docs",
-    description: "Learn about what makes Pragma special.",
     href: "https://docs.pragma.build",
   },
   {
     name: "Resources",
-    description: "Meet our data publishers.",
     href: "/resources",
+  },
+  {
+    name: "Explorer",
+    href: "/assets",
   },
 ];
 
@@ -59,7 +59,7 @@ const additional = [
   {
     name: "Discord",
     description: "",
-    href: "https://discord.com/invite/N7sM7VzfJB",
+    href: "https://discord.gg/M9aRZtZHU7",
     icon: "/assets/social/discord.svg",
   },
   {
@@ -161,7 +161,8 @@ const NavHeader = () => {
               // callsToAction={callsToAction}
             />
           </Popover.Group>
-          <div className="hidden items-center justify-end md:flex lg:w-0 lg:flex-1">
+          <div className="hidden w-4 md:flex lg:hidden"></div>
+          <div className="hidden items-center justify-end lg:flex lg:w-0 lg:flex-1">
             <ButtonLink
               center={false}
               variant="solid"

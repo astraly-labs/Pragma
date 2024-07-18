@@ -5,6 +5,8 @@ import { AssetPair } from "./AssetBox";
 
 interface ChartBoxProps {
   assetPair: AssetPair;
+  box?: boolean;
+  className?: string;
   colors?: {
     backgroundColor?: string;
     lineColor?: string;
@@ -16,6 +18,8 @@ interface ChartBoxProps {
 
 export const ChartBox: React.FC<ChartBoxProps> = ({
   assetPair,
+  box = true,
+  className,
   colors = {},
 }) => {
   const {
@@ -29,7 +33,6 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("assetPair", assetPair);
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -94,9 +97,9 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   ]);
 
   return (
-    <div className={styles.chartBox}>
+    <div className={box ? styles.chartBox : className}>
       <div className="font-mono text-xs text-lightGreen">
-        {assetPair?.ticker ?? "LOADING..."}
+        {(box ? assetPair?.ticker : "") ?? "LOADING..."}
       </div>
       <div className={styles.chartLayout} ref={chartContainerRef} />
     </div>

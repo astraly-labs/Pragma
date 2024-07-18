@@ -54,7 +54,7 @@ const BlogCarousel: React.FC = () => {
   const BlogPosts: BlogPost[] = [
     {
       image: "/assets/posts/pragmapi.webp",
-      date: "December 1st, 2023",
+      date: "February 22nd, 2024",
       title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
       description:
         "We're thrilled to announce a new addition to our product suite – the Pragma API, with Starknet as its first user.",

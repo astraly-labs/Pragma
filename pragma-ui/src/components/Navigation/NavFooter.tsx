@@ -49,6 +49,11 @@ const content: FooterColumn[] = [
         external: false,
       },
       {
+        title: "Explorer",
+        href: "/assets",
+        external: false,
+      },
+      {
         title: "Ecosystem",
         href: "/ecosystem",
         external: false,

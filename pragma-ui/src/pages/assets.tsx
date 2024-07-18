@@ -1,72 +1,104 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
-import BasicHero from "../components/Ecosystem/BasicHero";
 import AssetList from "../components/Assets/AssetList";
+import { PublisherT, useData } from "../providers/data";
+import moment from "moment";
+import { COINGECKO_MAPPING_IDS } from "../utils/types";
+import { getPublisherType } from "../utils";
+import AssetHero from "../components/common/AssetHero";
 
-const options = [
-  { name: "v1 mainnet" },
-  { name: "v1 testnet" },
-  { name: "API prod" },
-  { name: "v2 testnet" },
-];
+export const options = ["testnet", "mainnet"];
 
-const assets = [
-  {
-    image: "/assets/currencies/btc.svg",
-    type: "Crypto",
-    ticker: "BTCUSD",
-    lastUpdated: "<1s ago",
-    price: 62402,
-    sources: 3,
-    variations: {
-      past1h: 0,
-      past24h: 10,
-      past7d: -2,
-    },
-    chart: "https://www.coingecko.com/coins/1/sparkline.svg",
-  },
-  {
-    image: "/assets/currencies/sol.svg",
-    type: "Crypto",
-    ticker: "SOLUSD",
-    lastUpdated: "2s ago",
-    price: 132.91,
-    sources: 10,
-    variations: {
-      past1h: -3.32,
-      past24h: -2.19,
-      past7d: 4.3,
-    },
-    chart: "https://www.coingecko.com/coins/4128/sparkline.svg",
-  },
-];
+export type AssetInfo = {
+  image: string;
+  type: string;
+  ticker: string;
+  lastUpdated: string;
+  price: number;
+  sources: number;
+  variations: {
+    past1h: number;
+    past24h: number;
+    past7d: number;
+  };
+  chart: string;
+  ema: string;
+  macd: string;
+};
 
-const dataProviders = [
-  {
-    image: "/assets/publishers/pragma.svg",
-    type: "Third-party",
-    name: "Pragma",
-    lastUpdated: "2s ago",
-    reputationScore: "0.99",
-    nbFeeds: "6",
-    dailyUpdates: "3000",
-    totalUpdates: "50000",
-  },
-  {
-    image: "/assets/publishers/pragma.svg",
-    type: "Third-party",
-    name: "Pragma",
-    lastUpdated: "2s ago",
-    reputationScore: "0.99",
-    nbFeeds: "6",
-    dailyUpdates: "3000",
-    totalUpdates: "50000",
-  },
-];
+export type DataProviderInfo = {
+  image: string;
+  type: string;
+  link: string;
+  name: string;
+  lastUpdated: string;
+  reputationScore: string | null;
+  nbFeeds: number;
+  dailyUpdates: number;
+  totalUpdates: number;
+};
+
+const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
+  return Object.keys(data).map((ticker) => {
+    const assetData = data[ticker];
+    const lastUpdated = moment(
+      assetData.last_updated_timestamp * 1000
+    ).fromNow(); // Using moment.js to format time
+    return {
+      image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
+      type: "Crypto",
+      ticker,
+      lastUpdated: lastUpdated,
+      price: assetData.price,
+      sources: assetData.nb_sources_aggregated,
+      variations: {
+        past1h: assetData.variations?.past1h || 0,
+        past24h: assetData.variations?.past24h || 0,
+        past7d: assetData.variations?.past7d || 0,
+      },
+      chart: `https://www.coingecko.com/coins/${
+        COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+      }/sparkline.svg`,
+      ema: "soon",
+      macd: "soon",
+    };
+  });
+};
+
+const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
+  return publishers.map((publisher) => {
+    const lastUpdated = moment(
+      publisher.last_updated_timestamp * 1000
+    ).fromNow(); // Using moment.js to format time
+    return {
+      image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
+      type: getPublisherType(publisher.type),
+      link: publisher.website_url,
+      name: publisher.publisher,
+      lastUpdated: lastUpdated,
+      reputationScore: "soon",
+      nbFeeds: publisher.nb_feeds,
+      dailyUpdates: publisher.daily_updates,
+      totalUpdates: publisher.total_updates,
+    };
+  });
+};
 
 const AssetsPage = () => {
+  const { data, loading, switchSource, currentSource, publishers } = useData();
+
+  const [formattedAssets, setFormattedAssets] = useState<AssetInfo[]>([]);
+  const [formattedPublishers, setFormattedPublishers] = useState<
+    DataProviderInfo[]
+  >([]);
+
+  useEffect(() => {
+    setFormattedAssets(formatAssets(data || {}));
+    setFormattedPublishers(formatPublishers(publishers || []));
+  }, [data, publishers]);
+
   return (
     <div
       className={classNames(
@@ -74,22 +106,36 @@ const AssetsPage = () => {
         styles.bigScreen
       )}
     >
-      <BasicHero
-        title={"Your gate to secure"}
-        greenTitle={"real-time market data"}
-        description={""}
+      <AssetHero
+        title={"Every asset"}
+        greenTitle={"priced the best way"}
+        description={
+          "Explore the assets supported by Pragma, priced in the most efficient way. Best pricing, no fluff."
+        }
         solidButton={"Read docs"}
         solidButtonLink={"https://docs.pragma.build"}
-        outlineButton={"Data Feeds"}
-        outlineButtonLink={"#feeds"}
         illustrationLink={"/assets/vectors/chart.svg"}
         illustrationSmallLink={"/assets/vectors/chartSmall.svg"}
       />
       <BoxContainer>
-        <AssetList options={options} isAsset={true} assets={assets} />
+        <AssetList
+          options={options}
+          isAsset={true}
+          assets={formattedAssets}
+          onSourceChange={switchSource}
+          selectedSource={currentSource}
+          loading={loading}
+        />
       </BoxContainer>
       <BoxContainer>
-        <AssetList options={options} isAsset={false} assets={dataProviders} />
+        <AssetList
+          options={options}
+          isAsset={false}
+          assets={formattedPublishers}
+          onSourceChange={switchSource}
+          selectedSource={currentSource}
+          loading={loading}
+        />
       </BoxContainer>
     </div>
   );
