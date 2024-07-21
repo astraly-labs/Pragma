@@ -17,13 +17,13 @@ interface Frames {
 
 const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
-  const [frames] = useState<Frames[]>([
-    { frame: "1min" },
-    { frame: "15min" },
-    { frame: "1h" },
-    { frame: "2h" },
-  ]);
-  const [selectedFrame, setSelectedFrame] = useState("1min");
+  // const [frames] = useState<Frames[]>([
+  //   { frame: "1min" },
+  //   { frame: "15min" },
+  //   { frame: "1h" },
+  //   { frame: "2h" },
+  // ]);
+  const [selectedFrame /*setSelectedFrame*/] = useState("1min");
 
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
 
@@ -194,7 +194,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
             </Transition>
           </div>
         </Listbox>
-        <Tab.Group
+        {/* <Tab.Group
           onChange={(index) => {
             setSelectedFrame(frames[index].frame);
           }}
@@ -217,7 +217,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
               </Tab>
             ))}
           </Tab.List>
-        </Tab.Group>
+        </Tab.Group> */}
       </div>
       <ChartBox
         colors={{ backgroundColor: "#00000000" }}
