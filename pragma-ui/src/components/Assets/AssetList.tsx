@@ -283,7 +283,7 @@ const AssetList = ({
               />
             </div>
             <div
-              onClick={() => requestSort("updatesPerDay")}
+              onClick={() => requestSort("dailyUpdates")}
               className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Updates/day
