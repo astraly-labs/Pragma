@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
@@ -32,8 +32,12 @@ const AssetList = ({
   });
 
   const [filteredValue, setFilteredValue] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
 
-  const handleInputChange = (value: string) => {
+  const handleInputChange = (value) => {
     setFilteredValue(value);
   };
 
@@ -44,6 +48,30 @@ const AssetList = ({
       return asset?.name?.toLowerCase().includes(filteredValue.toLowerCase());
     }
   });
+
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedAssets = useMemo(() => {
+    let sortableItems = [...filteredAssets];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [filteredAssets, sortConfig]);
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -71,15 +99,15 @@ const AssetList = ({
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="ring-1backdrop-blur absolute mt-1 max-h-60	w-full overflow-auto rounded-md	bg-green py-1 text-sm text-lightGreen focus:outline-none">
-                  {options.map((options, optionsIdx) => (
+                  {options.map((option, optionIdx) => (
                     <Listbox.Option
-                      key={optionsIdx}
+                      key={optionIdx}
                       className={({ active }) =>
                         `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
                           active ? "opacity-50 " : ""
                         }`
                       }
-                      value={options}
+                      value={option}
                     >
                       {({ selected }) => (
                         <>
@@ -88,7 +116,7 @@ const AssetList = ({
                               selected ? "font-medium" : "font-normal"
                             }`}
                           >
-                            {options}
+                            {option}
                           </span>
                           {selected ? (
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
@@ -113,7 +141,10 @@ const AssetList = ({
       <div className="w-full overflow-auto">
         {isAsset ? (
           <div className={styles.assetBox}>
-            <div className="flex flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("ticker")}
+              className="flex cursor-pointer flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Pair
               <Image
                 height={16}
@@ -122,7 +153,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex translate-x-2 flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("lastUpdated")}
+              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Last updated
               <Image
                 height={16}
@@ -131,8 +165,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-
-            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("sources")}
+              className="flex translate-x-2 cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Nb sources
               <Image
                 height={16}
@@ -141,10 +177,22 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("price")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Price
+              <Image
+                height={16}
+                width={16}
+                alt="ArrowDownSmall"
+                src="/assets/vectors/arrowDownSmall.svg"
+              />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("variations.past1h")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               1H
               <Image
                 height={16}
@@ -153,7 +201,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("variations.past24h")}
+              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               24H
               <Image
                 height={16}
@@ -162,7 +213,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("variations.past7d")}
+              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               7D
               <Image
                 height={16}
@@ -177,7 +231,10 @@ const AssetList = ({
           </div>
         ) : (
           <div className={styles.dpBox}>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("name")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Identifier
               <Image
                 height={16}
@@ -186,7 +243,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex translate-x-2 flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("lastUpdate")}
+              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Last update
               <Image
                 height={16}
@@ -198,7 +258,10 @@ const AssetList = ({
             <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Type
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter">
+            <div
+              onClick={() => requestSort("reputation")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter"
+            >
               Reputation
               <Image
                 height={16}
@@ -207,7 +270,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("nbFeeds")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Nb feeds
               <Image
                 height={16}
@@ -216,7 +282,10 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div
+              onClick={() => requestSort("updatesPerDay")}
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+            >
               Updates/day
               <Image
                 height={16}
@@ -240,30 +309,15 @@ const AssetList = ({
             />
           ))}
         {!loading &&
-          isAsset &&
-          filteredAssets
-            ?.sort((a, b) => a.ticker.localeCompare(b.ticker))
-            .map((asset, assetIdx) => (
-              <AssetPerf
-                isAsset={isAsset}
-                asset={asset}
-                key={assetIdx}
-                loading={false}
-              />
-            ))}
-        {!loading &&
-          !isAsset &&
-          filteredAssets
-            ?.sort((a, b) => a.name.localeCompare(b.ticker))
-            .map((asset, assetIdx) => (
-              <AssetPerf
-                isAsset={isAsset}
-                asset={asset}
-                key={assetIdx}
-                loading={false}
-              />
-            ))}
-        {!loading && filteredAssets.length === 0 && (
+          sortedAssets.map((asset, assetIdx) => (
+            <AssetPerf
+              isAsset={isAsset}
+              asset={asset}
+              key={assetIdx}
+              loading={false}
+            />
+          ))}
+        {!loading && sortedAssets.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">
             No results for your search
           </div>
