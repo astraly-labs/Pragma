@@ -23,7 +23,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
   //   { frame: "1h" },
   //   { frame: "2h" },
   // ]);
-  const [selectedFrame /*setSelectedFrame*/] = useState("1min");
+  const [selectedFrame /*setSelectedFrame*/] = useState("15min");
 
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
 
