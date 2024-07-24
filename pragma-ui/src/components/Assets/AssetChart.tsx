@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
-import classNames from "classnames";
 import Image from "next/image";
-import { Listbox, Tab, Transition } from "@headlessui/react";
+import { Listbox, Transition } from "@headlessui/react";
 import { options } from "../../pages/assets";
 import { ChartBox } from "../common/ChartBox";
 import { AssetPair } from "../common/AssetBox";
@@ -11,9 +10,9 @@ import { Asset } from "../../pages/asset/[ticker]";
 import moment from "moment";
 import { removeDuplicateTimestamps, timezone } from "../../pages";
 
-interface Frames {
-  frame: string;
-}
+// interface Frames {
+//   frame: string;
+// }
 
 const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
@@ -23,8 +22,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
   //   { frame: "1h" },
   //   { frame: "2h" },
   // ]);
-  const [selectedFrame /*setSelectedFrame*/] = useState("15min");
-
+  const [selectedFrame] = useState("15min");
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
 
   useEffect(() => {
@@ -140,7 +138,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       console.log("Closing WebSocket");
       wsInstance.close();
     };
-  }, [asset, selectedFrame]);
+  }, [asset, selectedFrame, currentSource]);
 
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">

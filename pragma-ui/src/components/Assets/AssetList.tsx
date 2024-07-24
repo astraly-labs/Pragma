@@ -58,7 +58,7 @@ const AssetList = ({
   };
 
   const sortedAssets = useMemo(() => {
-    let sortableItems = [...filteredAssets];
+    const sortableItems = [...filteredAssets];
     if (sortConfig.key !== null) {
       sortableItems.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
