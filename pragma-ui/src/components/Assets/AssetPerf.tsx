@@ -26,7 +26,7 @@ const AssetPerf = ({ asset, isAsset, loading }) => {
             <div className="my-auto h-2 w-8 animate-pulse rounded-full bg-lightBlur"></div>
           </div>
         ) : (
-          <div className="flex flex-col text-lg text-lightGreen">
+          <div className="text-md flex flex-col text-lightGreen">
             {isAsset
               ? asset.ticker
               : asset.name === "SKYNET_TRADING"
