@@ -15,17 +15,9 @@ import AssetBox, { AssetPair, AssetT } from "../components/common/AssetBox";
 import classNames from "classnames";
 import moment from "moment-timezone";
 import { UTCTimestamp } from "lightweight-charts";
+import { initialAssets } from "../providers/data";
 
 export const timezone = "Europe/London"; // Change this to your timezone
-
-export const initialAssets: AssetT[] = [
-  { ticker: "BTC/USD", address: "0x0", decimals: 8 },
-  { ticker: "ETH/USD", address: "0x1", decimals: 8 },
-  { ticker: "STRK/USD", address: "0x2", decimals: 8 },
-  { ticker: "USDC/USD", address: "0x2", decimals: 6 },
-  { ticker: "USDT/USD", address: "0x2", decimals: 6 },
-  // { ticker: "ETH/STRK", address: "0x2", decimals: 18 },
-];
 
 /**
  * Remove duplicate timestamps from an array of objects

@@ -10,9 +10,10 @@ import { ChartBox } from "../components/common/ChartBox";
 import CompFeedBox from "../components/Resources/CompFeedBox";
 import VerifRandBox from "../components/Resources/VerifRandBox";
 import Blog from "../components/Landing/Blog/Blog";
-import { initialAssets, removeDuplicateTimestamps, timezone } from ".";
+import { removeDuplicateTimestamps, timezone } from ".";
 import moment from "moment-timezone";
 import { UTCTimestamp } from "lightweight-charts";
+import { initialAssets } from "../providers/data";
 
 const EcosystemPage = () => {
   const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);

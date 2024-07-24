@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
-import classNames from "classnames";
 import Image from "next/image";
-import { Listbox, Tab, Transition } from "@headlessui/react";
+import { Listbox, Transition } from "@headlessui/react";
 import { options } from "../../pages/assets";
 import { ChartBox } from "../common/ChartBox";
 import { AssetPair } from "../common/AssetBox";
@@ -11,20 +10,19 @@ import { Asset } from "../../pages/asset/[ticker]";
 import moment from "moment";
 import { removeDuplicateTimestamps, timezone } from "../../pages";
 
-interface Frames {
-  frame: string;
-}
+// interface Frames {
+//   frame: string;
+// }
 
 const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
-  const [frames] = useState<Frames[]>([
-    { frame: "1min" },
-    { frame: "15min" },
-    { frame: "1h" },
-    { frame: "2h" },
-  ]);
-  const [selectedFrame, setSelectedFrame] = useState("1min");
-
+  // const [frames] = useState<Frames[]>([
+  //   { frame: "1min" },
+  //   { frame: "15min" },
+  //   { frame: "1h" },
+  //   { frame: "2h" },
+  // ]);
+  const [selectedFrame] = useState("15min");
   const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
 
   useEffect(() => {
@@ -140,7 +138,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       console.log("Closing WebSocket");
       wsInstance.close();
     };
-  }, [asset, selectedFrame]);
+  }, [asset, selectedFrame, currentSource]);
 
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
@@ -194,7 +192,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
             </Transition>
           </div>
         </Listbox>
-        <Tab.Group
+        {/* <Tab.Group
           onChange={(index) => {
             setSelectedFrame(frames[index].frame);
           }}
@@ -217,7 +215,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
               </Tab>
             ))}
           </Tab.List>
-        </Tab.Group>
+        </Tab.Group> */}
       </div>
       <ChartBox
         colors={{ backgroundColor: "#00000000" }}
