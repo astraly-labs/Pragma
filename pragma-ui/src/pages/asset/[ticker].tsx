@@ -70,7 +70,7 @@ const AssetPage = ({ ticker }: Props) => {
           lastUpdated: new Date(
             assetData.last_updated_timestamp * 1000
           ).toLocaleString(),
-          price: assetData.price,
+          price: parseInt(assetData.price, 16) / 10 ** assetData.decimals,
           sources: assetData.nb_sources_aggregated || 0,
           variations: {
             past1h: assetData.variations?.past1h || 0,

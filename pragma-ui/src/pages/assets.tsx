@@ -51,7 +51,7 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
       type: "Crypto",
       ticker,
       lastUpdated: lastUpdated,
-      price: assetData.price,
+      price: parseInt(assetData.price, 16) / 10 ** assetData.decimals,
       sources: assetData.nb_sources_aggregated,
       variations: {
         past1h: assetData.variations?.past1h || 0,
