@@ -61,7 +61,7 @@ const AssetPage = ({ ticker }: Props) => {
 
   useEffect(() => {
     if (data && ticker) {
-      const assetData = data[ticker];
+      const assetData = data[ticker][0];
       if (assetData) {
         const formattedAsset: Asset = {
           image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,

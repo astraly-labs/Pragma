@@ -17,7 +17,7 @@ const AssetList = ({
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
     type: "Crypto",
-    ticker: "BTCUSD",
+    ticker: "DAI%2FUSD",
     lastUpdated: "2sAGO",
     price: "1000",
     sources: "10",

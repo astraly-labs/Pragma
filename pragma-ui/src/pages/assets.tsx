@@ -19,9 +19,9 @@ export type AssetInfo = {
   price: number;
   sources: number;
   variations: {
-    past1h: number;
-    past24h: number;
-    past7d: number;
+    past1h: string | number;
+    past24h: string | number;
+    past7d: string | number;
   };
   chart: string;
   ema: string;
@@ -42,7 +42,7 @@ export type DataProviderInfo = {
 
 const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
   return Object.keys(data).map((ticker) => {
-    const assetData = data[ticker];
+    const assetData = data[ticker][0];
     const lastUpdated = moment(
       assetData.last_updated_timestamp * 1000
     ).fromNow(); // Using moment.js to format time
@@ -54,9 +54,9 @@ const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
       price: parseInt(assetData.price, 16) / 10 ** assetData.decimals,
       sources: assetData.nb_sources_aggregated,
       variations: {
-        past1h: assetData.variations?.past1h || 0,
-        past24h: assetData.variations?.past24h || 0,
-        past7d: assetData.variations?.past7d || 0,
+        past1h: (assetData.variations["1h"] * 100).toFixed(2) || 0,
+        past24h: (assetData.variations["1d"] * 100).toFixed(2) || 0,
+        past7d: (assetData.variations["1w"] * 100).toFixed(2) || 0,
       },
       chart: `https://www.coingecko.com/coins/${
         COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
