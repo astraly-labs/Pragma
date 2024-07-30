@@ -96,6 +96,14 @@ export const DataProvider = ({
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState("mainnet");
 
+  useEffect(() => {
+    // Update the source from localStorage after initial render
+    const storedSource = localStorage.getItem("dataSource");
+    if (storedSource && dataSources[storedSource]) {
+      setSource(storedSource);
+    }
+  }, []);
+
   const fetchData = useCallback(
     async (source: string) => {
       setLoading(true);
@@ -165,6 +173,7 @@ export const DataProvider = ({
   const switchSource = (newSource: string) => {
     if (dataSources[newSource]) {
       setSource(newSource);
+      localStorage.setItem("dataSource", newSource);
     } else {
       console.error("Invalid data source");
     }
