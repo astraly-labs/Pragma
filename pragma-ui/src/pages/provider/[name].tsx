@@ -94,7 +94,7 @@ const ProviderPage = () => {
             type: "Crypto",
             ticker: component.pair_id.replace("/", ""),
             lastUpdated: lastUpdated,
-            price: Number.parseFloat(component.price),
+            price: parseInt(component.price, 16),
             dailyUpdates: component.daily_updates,
           };
         })
