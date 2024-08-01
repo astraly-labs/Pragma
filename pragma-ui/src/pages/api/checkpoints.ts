@@ -21,20 +21,20 @@ export default async function handler(req, res) {
 
     if (apiResponse.ok) {
       const data = await apiResponse.json();
-      res.status(200).json(data);
+      return res.status(200).json(data);
     } else {
       // Handle errors from the external API
       // if the error message contains 'No checkpoints found', lets return an empty array
       const data = await apiResponse.json();
       if (data.message.includes("No checkpoints found")) {
-        res.status(200).json([]);
+        return res.status(200).json([]);
       }
-      res
+      return res
         .status(apiResponse.status)
         .json({ error: "Failed to fetch data from external API" });
     }
   } catch (error) {
     console.error("Error fetching external API:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }

@@ -114,7 +114,7 @@ const AssetPage = ({ ticker }: Props) => {
         setPriceComponents(assetComponents);
       }
     }
-  }, [data, ticker]);
+  }, [data, ticker, currentSource]);
 
   useEffect(() => {
     if (checkpoints && ticker) {
