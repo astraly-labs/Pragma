@@ -100,7 +100,7 @@ const ProviderPage = () => {
         })
       );
     }
-  }, [publishers, router, currentSource]);
+  }, [publishers, router]);
 
   // Render loading state if asset is not yet fetched
   if (loading || !publisher) {
