@@ -70,14 +70,12 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
             updatedPriceData.length > 0 &&
             updatedPriceData[updatedPriceData.length - 1].time === time
           ) {
-            console.log("Updating last price");
             // Update last price if time is the same
             updatedPriceData = [
               ...updatedPriceData.slice(0, -1),
               { time, value: lastPrice },
             ];
           } else {
-            console.log("Adding new data point");
             // Add new data point
             updatedPriceData = [
               ...updatedPriceData,
@@ -108,12 +106,6 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
 
         // Ensure the data is sorted
         updatedPriceData.sort((a, b) => a.time - b.time);
-
-        console.log("Updated AssetPair:", {
-          ticker: asset.ticker,
-          lastPrice,
-          priceData: updatedPriceData,
-        });
 
         return {
           ticker: asset.ticker,

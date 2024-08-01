@@ -42,7 +42,7 @@ export type DataProviderInfo = {
 
 const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
   return Object.keys(data).map((ticker) => {
-    const assetData = data[ticker][0];
+    const assetData = data[ticker];
     const lastUpdated = moment(
       assetData.last_updated_timestamp * 1000
     ).fromNow(); // Using moment.js to format time

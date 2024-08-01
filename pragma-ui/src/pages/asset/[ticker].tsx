@@ -52,7 +52,8 @@ interface CheckpointComponent {
 
 const AssetPage = ({ ticker }: Props) => {
   const router = useRouter();
-  const { data, loading, checkpoints } = useData();
+  const network = router.query.network as string;
+  const { data, loading, checkpoints, currentSource, switchSource } = useData();
   const [asset, setAsset] = useState<Asset | null>(null);
   const [priceComponents, setPriceComponents] = useState<PriceComponents[]>([]);
   const [checkpointComponents, setCheckpointComponents] = useState<
@@ -60,8 +61,18 @@ const AssetPage = ({ ticker }: Props) => {
   >([]);
 
   useEffect(() => {
+    if (
+      network &&
+      (network === "testnet" || network === "mainnet") &&
+      network !== currentSource
+    ) {
+      switchSource(network);
+    }
+  }, [network, currentSource, switchSource]);
+
+  useEffect(() => {
     if (data && ticker) {
-      const assetData = data[ticker][0];
+      const assetData = data[ticker];
       if (assetData) {
         const formattedAsset: Asset = {
           image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
@@ -103,7 +114,7 @@ const AssetPage = ({ ticker }: Props) => {
         setPriceComponents(assetComponents);
       }
     }
-  }, [data, ticker]);
+  }, [data, ticker, currentSource]);
 
   useEffect(() => {
     if (checkpoints && ticker) {

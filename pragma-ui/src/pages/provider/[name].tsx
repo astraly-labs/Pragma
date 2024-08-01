@@ -33,10 +33,21 @@ interface PairsReported {
 
 const ProviderPage = () => {
   const router = useRouter();
+  const { name, network } = router.query;
 
-  const { loading, publishers } = useData();
+  const { loading, publishers, switchSource, currentSource } = useData();
   const [publisher, setPublisher] = useState<DataProviders | null>(null);
   const [pairsReported, setPairsReported] = useState<PairsReported[]>([]);
+
+  useEffect(() => {
+    if (
+      network &&
+      (network === "testnet" || network === "mainnet") &&
+      network !== currentSource
+    ) {
+      switchSource(network);
+    }
+  }, [network, currentSource, switchSource]);
 
   useEffect(() => {
     if (!publishers) {
@@ -50,10 +61,9 @@ const ProviderPage = () => {
     // Find the publisher with the given name
     const foundPublisher = publishers?.find(
       (publisher) =>
-        publisher.publisher.toLowerCase() ===
-        (router.query.name as string).toLowerCase()
+        publisher.publisher.toLowerCase() === (name as string).toLowerCase()
     );
-    console.log(foundPublisher);
+
     if (foundPublisher === undefined) {
       setPublisher(null);
     } else {
@@ -90,7 +100,7 @@ const ProviderPage = () => {
         })
       );
     }
-  }, [publishers, router]);
+  }, [publishers, router, currentSource]);
 
   // Render loading state if asset is not yet fetched
   if (loading || !publisher) {
