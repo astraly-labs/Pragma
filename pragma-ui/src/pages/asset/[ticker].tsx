@@ -102,7 +102,7 @@ const AssetPage = ({ ticker }: Props) => {
               publisher: component.publisher,
               link: component.link,
               source: component.source,
-              price: Number.parseFloat(component.price).toFixed(0),
+              price: parseInt(component.price, 16) / 10 ** assetData.decimals,
               hash: component.tx_hash,
               lastUpdated: new Date(
                 component.timestamp * 1000
