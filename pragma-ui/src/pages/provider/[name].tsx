@@ -42,7 +42,7 @@ const ProviderPage = () => {
   useEffect(() => {
     if (
       network &&
-      (network === "testnet" || network === "mainnet") &&
+      (network === "sepolia" || network === "mainnet") &&
       network !== currentSource
     ) {
       switchSource(network);

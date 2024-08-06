@@ -6,7 +6,7 @@
  */
 export default async function handler(req, res) {
   // Extract the query parameters from the request
-  const { network = "testnet", pair = "btc/usd" } = req.query; // Default to 'testnet' & 'btc/usd' if not specified
+  const { network = "sepolia", pair = "btc/usd" } = req.query; // Default to 'sepolia' & 'btc/usd' if not specified
 
   const apiUrl = `https://api.dev.pragma.build/node/v1/onchain/${pair}?network=${network}&aggregation=median`;
   console.log(`Fetching data from ${apiUrl}`);

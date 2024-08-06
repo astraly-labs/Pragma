@@ -52,12 +52,12 @@ type DataContextType = {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const dataSources = {
-  testnet: "/api/onchain?network=sepolia",
+  sepolia: "/api/onchain?network=sepolia",
   mainnet: "/api/onchain?network=mainnet",
   offchain: "/api/proxy",
-  publishersTestnet: "/api/publishers?network=sepolia&dataType=spot_entry",
+  publishersSepolia: "/api/publishers?network=sepolia&dataType=spot_entry",
   publishersMainnet: "/api/publishers?network=mainnet&dataType=spot_entry",
-  checkpointsTestnet: "/api/checkpoints?network=sepolia",
+  checkpointsSepolia: "/api/checkpoints?network=sepolia",
   checkpointsMainnet: "/api/checkpoints?network=mainnet",
 };
 
