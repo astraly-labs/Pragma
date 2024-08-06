@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+import { dataSources } from "../../providers/data";
 
 const PairReportedComp = ({ component }) => {
   return (
@@ -18,6 +19,9 @@ const PairReportedComp = ({ component }) => {
           </div>
         </div>
       </Link>
+      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+        {component.source}
+      </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
         {component.lastUpdated}
       </div>

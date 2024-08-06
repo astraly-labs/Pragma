@@ -18,6 +18,9 @@ const PairReported = ({ components }) => {
             Price Feed
           </div>
           <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
+            Source
+          </div>
+          <div className="flex flex-row gap-2 font-mono text-xs text-LightGreenFooter md:tracking-wider">
             Last Updated
           </div>
 
