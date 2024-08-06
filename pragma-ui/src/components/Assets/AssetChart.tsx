@@ -1,34 +1,65 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
 import { options } from "../../pages/assets";
-import { ChartBox } from "../common/ChartBox";
-import { AssetPair } from "../common/AssetBox";
-import { UTCTimestamp } from "lightweight-charts";
+import { UTCTimestamp, createChart } from "lightweight-charts";
 import { useData } from "../../providers/data";
 import { Asset } from "../../pages/asset/[ticker]";
 import moment from "moment";
 import { removeDuplicateTimestamps, timezone } from "../../pages";
 
-// interface Frames {
-//   frame: string;
-// }
-
 const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
-  // const [frames] = useState<Frames[]>([
-  //   { frame: "1min" },
-  //   { frame: "15min" },
-  //   { frame: "1h" },
-  //   { frame: "2h" },
-  // ]);
   const [selectedFrame] = useState("15min");
-  const [assetPair, setAssetPair] = useState<AssetPair | undefined>(undefined);
+  const [, setAssetPair] = useState(undefined);
+  const chartContainerRef = useRef(null);
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (asset === undefined || !chartContainerRef.current) return;
+
+    console.log(selectedFrame, asset.ticker);
+
+    const chart = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: 400, // Adjust this value as needed
+      layout: {
+        background: { color: "#00000000" },
+        textColor: "white",
+      },
+      grid: {
+        vertLines: { color: "rgba(197, 203, 206, 0.1)" },
+        horzLines: { color: "rgba(197, 203, 206, 0.1)" },
+      },
+      timeScale: {
+        rightOffset: 12,
+        barSpacing: 3,
+        fixLeftEdge: true,
+        lockVisibleTimeRangeOnResize: true,
+        rightBarStaysOnScroll: true,
+        borderVisible: false,
+        borderColor: "#fff000",
+        visible: true,
+        timeVisible: true,
+        secondsVisible: false,
+      },
+    });
+
+    chart.applyOptions({
+      handleScroll: false,
+      handleScale: false,
+    });
+
+    const lineSeries = chart.addLineSeries({ color: "rgba(4, 255, 181, 1)" });
+    chartRef.current = { chart, lineSeries };
+
+    return () => {
+      chart.remove();
+    };
+  }, [asset]);
 
   useEffect(() => {
     if (asset === undefined) return;
-
-    console.log(selectedFrame, asset.ticker);
 
     const wsInstance = new WebSocket(
       "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
@@ -101,11 +132,16 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
           lastPrice = parseFloat(data[data.length - 1].close);
         } else {
           console.error("Unexpected data format:", data);
-          return prevAssetPair; // Return previous state if data format is unexpected
+          return prevAssetPair;
         }
 
         // Ensure the data is sorted
         updatedPriceData.sort((a, b) => a.time - b.time);
+
+        // Update the chart
+        if (chartRef.current) {
+          chartRef.current.lineSeries.setData(updatedPriceData);
+        }
 
         return {
           ticker: asset.ticker,
@@ -121,7 +157,6 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       console.error("WebSocket error:", error);
     };
 
-    // Resubscribe when selectedFrame changes
     if (wsInstance.readyState === WebSocket.OPEN) {
       subscribe();
     }
@@ -154,15 +189,15 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="ring-backdrop-blur absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen focus:outline-none">
-                {options.map((options, optionsIdx) => (
+                {options.map((option, optionIdx) => (
                   <Listbox.Option
-                    key={optionsIdx}
+                    key={optionIdx}
                     className={({ active }) =>
                       `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
                         active ? "opacity-50 " : ""
                       }`
                     }
-                    value={options}
+                    value={option}
                   >
                     {({ selected }) => (
                       <>
@@ -171,7 +206,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
                             selected ? "font-medium" : "font-normal"
                           }`}
                         >
-                          {options}
+                          {option}
                         </span>
                         {selected ? (
                           <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
@@ -184,36 +219,8 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
             </Transition>
           </div>
         </Listbox>
-        {/* <Tab.Group
-          onChange={(index) => {
-            setSelectedFrame(frames[index].frame);
-          }}
-        >
-          <Tab.List className="flex rounded-full bg-xlightBlur md:space-x-1">
-            {frames.map((frame, index) => (
-              <Tab
-                key={index}
-                className={({ selected }) =>
-                  classNames(
-                    "w-full rounded-full p-2 px-3 py-3 text-sm font-medium leading-5 tracking-wider sm:px-8 sm:py-1",
-                    "focus:outline-none ",
-                    selected
-                      ? "bg-mint text-darkGreen"
-                      : "text-lightGreen hover:text-white"
-                  )
-                }
-              >
-                {frame.frame}
-              </Tab>
-            ))}
-          </Tab.List>
-        </Tab.Group> */}
       </div>
-      <ChartBox
-        colors={{ backgroundColor: "#00000000" }}
-        assetPair={assetPair}
-        box={false}
-      />
+      <div ref={chartContainerRef} className="h-[400px] w-full" />
     </div>
   );
 };
