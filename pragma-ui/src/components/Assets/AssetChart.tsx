@@ -11,7 +11,7 @@ import { removeDuplicateTimestamps, timezone } from "../../pages";
 const AssetChart = ({ asset }: { asset: Asset }) => {
   const { currentSource, switchSource } = useData();
   const [selectedFrame] = useState("15min");
-  const [assetPair, setAssetPair] = useState(undefined);
+  const [, setAssetPair] = useState(undefined);
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -45,7 +45,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       },
     });
 
-    chart.timeScale().applyOptions({
+    chart.applyOptions({
       handleScroll: false,
       handleScale: false,
     });

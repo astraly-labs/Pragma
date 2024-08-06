@@ -1,8 +1,6 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
-import Link from "next/link";
-import { dataSources } from "../../providers/data";
 
 const PairReportedComp = ({ component }) => {
   return (

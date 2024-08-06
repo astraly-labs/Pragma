@@ -67,7 +67,6 @@ const PairReported = ({ components }) => {
       </div>
     </div>
   );
-  d;
 };
 
 export default PairReported;
