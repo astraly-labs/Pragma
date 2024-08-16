@@ -80,7 +80,7 @@ const content: FooterColumn[] = [
       },
       {
         title: "Press Kit",
-        href: "https://drive.google.com/drive/folders/1m_qM6GRPEbGN_78l9lHMkpT_rASzpcae?usp=share_link",
+        href: "https://buildonpragma.notion.site/Pragma-brand-kit-7a0505dd53874274819309d9a1f6ed3c?pvs=4",
         external: true,
       },
       {
