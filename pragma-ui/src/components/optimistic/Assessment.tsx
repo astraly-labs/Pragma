@@ -7,7 +7,7 @@ import Link from "next/link";
 const Assessment = ({ assessment, loading }) => {
   return (
     <div className={styles.assessment}>
-      <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
+      <div className="min-w-96 my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         {loading ? (
           <div className="my-auto  h-8 w-8 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
@@ -32,8 +32,6 @@ const Assessment = ({ assessment, loading }) => {
           </div>
         )}
       </div>
-      <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider"></div>
-      <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider"></div>
 
       <div className="my-auto flex translate-x-3 flex-row gap-2 font-mono text-xs text-lightGreen md:tracking-wider">
         {loading ? (
