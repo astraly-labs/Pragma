@@ -73,7 +73,7 @@ const Request = () => {
           </div>
         </BoxContainer>
         <BoxContainer>
-          <div className="flex w-full flex-col gap-10">
+          <div className="flex w-full flex-col gap-10 lg:w-8/12 xl:w-7/12">
             <div className="flex flex-col gap-3">
               <label
                 htmlFor="title"
