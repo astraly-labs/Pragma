@@ -3,14 +3,18 @@ import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
-import BlurBoxEcosystem from "../components/common/BlurBoxEcosystem";
-import StatsBox from "../components/Ecosystem/StatsBox";
-import CustomerCarousel from "../components/Ecosystem/Customer/CustomerCarousel";
-import DataProviders from "../components/Ecosystem/DataProviders";
-import ReadyBox from "../components/common/ReadyBox";
-import ProvidersList from "../components/Ecosystem/ProvidersList";
+import ActiveAssessments from "../components/optimistic/ActiveAssessments";
 
 const OptimisticPage = () => {
+  const assessments = Array(5).fill({
+    image: `/assets/currencies/skynet_trading.svg`,
+    title: "Is Biden the winner of the US election?",
+    timestamp: "2sAGO",
+    output: "1000",
+    bond: "10",
+    startDispute: "60min",
+    endDispute: `70min`,
+  });
   return (
     <div
       className={classNames(
@@ -30,9 +34,12 @@ const OptimisticPage = () => {
         outlineButtonLink={
           "https://docs.pragma.build/Resources/Cairo%201/optimistic-oracle/Overview"
         }
-        illustrationLink={"/assets/vectors/optimistic.svg"}
-        illustrationSmallLink={"/assets/vectors/optimistic.svg"}
+        illustrationLink={"/assets/vectors/ecosystem.svg"}
+        illustrationSmallLink={"/assets/vectors/ecosystem.svg"}
       />
+      <BoxContainer>
+        <ActiveAssessments assessments={assessments} loading={true} />
+      </BoxContainer>
     </div>
   );
 };
