@@ -3,7 +3,9 @@ import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 const currencies = [
   { id: 1, name: "USDC" },
@@ -43,6 +45,8 @@ const Request = () => {
     // Add your form submission logic here
   };
 
+  const router = useRouter();
+
   return (
     <div
       className={classNames(
@@ -55,7 +59,18 @@ const Request = () => {
       </BoxContainer>
       <form onSubmit={handleSubmit}>
         <BoxContainer>
-          <h3 className="pb-3 text-lightGreen">Submit a request</h3>
+          <div className="flex w-full flex-row gap-4">
+            <button
+              onClick={() => {
+                // Go back to the previous page
+                router.back();
+              }}
+              className="my-auto flex cursor-pointer items-center gap-2 rounded-full border border-lightGreen p-2 text-left text-sm uppercase tracking-widest text-lightGreen hover:bg-lightGreen hover:text-darkGreen"
+            >
+              <ArrowLeftIcon className="w-4" />
+            </button>
+            <h2 className=" text-lightGreen">Submit a request</h2>
+          </div>
         </BoxContainer>
         <BoxContainer>
           <div className="flex w-full flex-col gap-10">
