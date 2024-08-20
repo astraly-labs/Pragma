@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.4",
-    "@heroicons/react": "^1.0.6",
+    "@heroicons/react": "v1",
     "@mailerlite/mailerlite-nodejs": "^1.2.1",
     "@starknet-react/core": "^2.2.4",
     "@tanstack/react-table": "^8.5.30",

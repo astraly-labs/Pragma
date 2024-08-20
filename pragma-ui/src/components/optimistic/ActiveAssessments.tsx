@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import SearchBar from "../Navigation/SearchBar";
@@ -21,18 +21,23 @@ const ActiveAssessments = ({ assessments, loading }) => {
     setFilteredValue(value);
   };
 
+  const filteredAssessments = assessments.filter((assessment) => {
+    return assessment?.title
+      ?.toLowerCase()
+      .includes(filteredValue.toLowerCase());
+  });
+
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
       <h3 className="pb-3 text-lightGreen">Active Assessments</h3>
       <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
         <div className="flex flex-col gap-3 smolScreen:flex-row">
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
-            Nb active assessments: {assessments.length}
+            Nb active assessments: {filteredAssessments.length}
           </div>
         </div>
         <div className="sm:ml-auto">
           <SearchBar onInputChange={handleInputChange} />
-          <div className="hidden"> {filteredValue}</div>
         </div>
       </div>
       <div className="w-full overflow-auto">
@@ -56,17 +61,17 @@ const ActiveAssessments = ({ assessments, loading }) => {
 
         {loading &&
           elements.map((element, index) => (
-            <Assessment assessment={element} key={index} loading={false} />
+            <Assessment assessment={element} key={index} loading={true} />
           ))}
         {!loading &&
-          assessments.map((assessment, assetIdx) => (
+          filteredAssessments.map((assessment, assetIdx) => (
             <Assessment
               assessment={assessment}
               key={assetIdx}
               loading={false}
             />
           ))}
-        {!loading && assessments.length === 0 && (
+        {!loading && filteredAssessments.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">
             No assessments for your search
           </div>

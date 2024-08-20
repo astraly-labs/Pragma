@@ -7,7 +7,7 @@ import ActiveAssessments from "../components/optimistic/ActiveAssessments";
 
 const OptimisticPage = () => {
   const assessments = Array(5).fill({
-    image: `/assets/currencies/skynet_trading.svg`,
+    image: `/assets/vectors/optimist.svg`,
     title: "Is Biden the winner of the US election?",
     timestamp: "2sAGO",
     output: "1000",
@@ -29,7 +29,7 @@ const OptimisticPage = () => {
           "The Pragma Optimistic Oracle is built for you. Ask any question, get the answer onchain."
         }
         solidButton={"Make an assertion"}
-        solidButtonLink={"/assertion"}
+        solidButtonLink={"/request"}
         outlineButton={"Integrate"}
         outlineButtonLink={
           "https://docs.pragma.build/Resources/Cairo%201/optimistic-oracle/Overview"
@@ -38,7 +38,7 @@ const OptimisticPage = () => {
         illustrationSmallLink={"/assets/vectors/ecosystem.svg"}
       />
       <BoxContainer>
-        <ActiveAssessments assessments={assessments} loading={true} />
+        <ActiveAssessments assessments={assessments} loading={false} />
       </BoxContainer>
     </div>
   );
