@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import SearchBar from "../Navigation/SearchBar";
-import Image from "next/image";
+import AssessmentPopup from "./AssessmentPopup";
 import Assessment from "./Assessment";
 
 const ActiveAssessments = ({ assessments, loading }) => {
@@ -16,6 +16,7 @@ const ActiveAssessments = ({ assessments, loading }) => {
     endDispute: `70min`,
   });
   const [filteredValue, setFilteredValue] = useState("");
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   const handleInputChange = (value) => {
     setFilteredValue(value);
@@ -26,6 +27,14 @@ const ActiveAssessments = ({ assessments, loading }) => {
       ?.toLowerCase()
       .includes(filteredValue.toLowerCase());
   });
+
+  const handleAssessmentClick = (assessment) => {
+    setSelectedAssessment(assessment);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedAssessment(null);
+  };
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -62,16 +71,28 @@ const ActiveAssessments = ({ assessments, loading }) => {
           ))}
         {!loading &&
           filteredAssessments.map((assessment, assetIdx) => (
-            <Assessment
-              assessment={assessment}
+            <div
               key={assetIdx}
-              loading={false}
-            />
+              onClick={() => handleAssessmentClick(assessment)}
+              className="cursor-pointer"
+            >
+              <Assessment
+                assessment={assessment}
+                key={assetIdx}
+                loading={false}
+              />
+            </div>
           ))}
         {!loading && filteredAssessments.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">
             No assessments for your search
           </div>
+        )}
+        {selectedAssessment && (
+          <AssessmentPopup
+            assessment={selectedAssessment}
+            onClose={handleClosePopup}
+          />
         )}
       </div>
     </div>
