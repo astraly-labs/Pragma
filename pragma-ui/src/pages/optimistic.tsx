@@ -10,10 +10,11 @@ const OptimisticPage = () => {
     image: `/assets/vectors/optimist.svg`,
     title: "Is Biden the winner of the US election?",
     timestamp: "2sAGO",
-    output: "1000",
-    bond: "10",
-    startDispute: "60min",
-    endDispute: `70min`,
+    output: "TRUE",
+    bond: "100",
+    bondCurrency: "usdc",
+    startDispute: "1724046160",
+    endDispute: `1724478160`,
   });
   return (
     <div
