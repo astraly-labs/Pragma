@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 const currencies = [
   { id: 1, name: "USDC" },
   { id: 2, name: "STRK" },
-  { id: 3, name: "AUSD" },
 ];
 
 const Request = () => {
