@@ -6,11 +6,24 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import WalletConnection from "../components/common/WalletConnection";
+import { OO_CONTRACT_ADDRESS, CURRENCIES } from "./constants";
+import { useAccount, useContractWrite, useContractRead,useWaitForTransaction } from "@starknet-react/core";
+import OOAbi from "../abi/OO.json";
 
-const currencies = [
-  { id: 1, name: "USDC" },
-  { id: 2, name: "STRK" },
-];
+const generateTimestamp = () => {
+  const currentTimestamp = new Date();
+  return `${currentTimestamp.getDate().toString().padStart(2, '0')}/${(currentTimestamp.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}/${currentTimestamp.getFullYear()}, ${currentTimestamp
+    .getHours()
+    .toString()
+    .padStart(2, '0')}:${currentTimestamp
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+};
+
 
 const Request = () => {
   const [formData, setFormData] = useState({
@@ -18,18 +31,21 @@ const Request = () => {
     description: "",
     timestamp: "",
     bond: "",
-    currency: currencies[0],
+    currency: CURRENCIES[0],
     challengePeriod: "",
     expirationTime: "",
   });
+  const { address ,isConnected} = useAccount();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+
+
 
   const handleCurrencyChange = (selectedCurrency) => {
     setFormData((prevState) => ({
@@ -38,11 +54,57 @@ const Request = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add your form submission logic here
-  };
+    // Get minimum bond
+    const { data: minimumBond, isBondLoading: isMinimumBondLoading } = useContractRead({
+      address: OO_CONTRACT_ADDRESS,
+      abi: OOAbi,
+      functionName: 'get_minimum_bond',
+      args: [CURRENCIES[0].address],
+      watch: true,
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+      // Check if the address is connected
+    if (!address) {
+      alert('Please connect your wallet first');
+      return;
+    }
+  
+      // Check if all required fields are filled
+      const requiredFields = ["title", "description", "bond"];
+      for (const field of requiredFields) {
+        if (!formData[field]) {
+          alert(`Please complete the ${field} field.`);
+          return;
+        }
+      }
+  
+      // Ensure bond is greater than or equal to minimumBond
+      if (minimumBond && Number(formData.bond) < Number(minimumBond)) {
+        alert(
+          `The bond must be greater than or equal to the minimum bond: ${minimumBond}`
+        );
+        return;
+      }
+  
+      const currentTimestamp = generateTimestamp();
+
+      const submissionData = {
+        ...formData,
+        timestamp: currentTimestamp,
+      };
+
+      console.log("Form submitted:", submissionData);
+
+
+      setFormData((prevState) => ({
+        ...prevState,
+        timestamp:currentTimestamp ,
+      }));
+  
+    };
 
   const router = useRouter();
 
@@ -56,7 +118,6 @@ const Request = () => {
       <BoxContainer>
         <div className="pb-20"></div>
       </BoxContainer>
-      <form onSubmit={handleSubmit}>
         <BoxContainer>
           <div className="flex w-full flex-row gap-4">
             <button
@@ -70,6 +131,7 @@ const Request = () => {
             </button>
             <h2 className=" text-lightGreen">Submit a request</h2>
           </div>
+            <WalletConnection/>
         </BoxContainer>
         <BoxContainer>
           <div className="flex w-full flex-col gap-10 lg:w-8/12 xl:w-7/12">
@@ -109,7 +171,7 @@ const Request = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-3">
+            {/* <div className="flex flex-col gap-3">
               <label
                 htmlFor="timestamp"
                 className="block pb-3 text-xl tracking-wider text-lightGreen"
@@ -124,7 +186,7 @@ const Request = () => {
                 onChange={handleInputChange}
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-3">
               <label
@@ -139,10 +201,33 @@ const Request = () => {
                 name="bond"
                 value={formData.bond}
                 onChange={handleInputChange}
-                placeholder="Enter bond amount"
+                placeholder= {isMinimumBondLoading ? (
+                  "Loading minimum bond..."
+                ) : (
+                  `Minimum bond: ${minimumBond}`
+                )}
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
             </div>
+            <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      id="useMinimumBond"
+      name="useMinimumBond"
+      onChange={(e) => {
+        if (e.target.checked && minimumBond) {
+          setFormData((prev) => ({
+            ...prev,
+            bond: minimumBond.toString(), // Ensure bond is a string
+          }));
+        }
+      }}
+      className="rounded bg-lightBlur text-lightGreen focus:outline-none"
+    />
+    <label htmlFor="useMinimumBond" className="text-sm text-lightGreen">
+      Use minimum bond
+    </label>
+  </div>
 
             <div className="flex flex-col gap-3">
               <label
@@ -173,7 +258,7 @@ const Request = () => {
                     leaveTo="opacity-0"
                   >
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-darkGreen py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {currencies.map((currency) => (
+                      {CURRENCIES.map((currency) => (
                         <Listbox.Option
                           key={currency.id}
                           className={({ active }) =>
@@ -204,7 +289,7 @@ const Request = () => {
               </Listbox>
             </div>
 
-            <div className="flex flex-col gap-3">
+            {/* <div className="flex flex-col gap-3">
               <label
                 htmlFor="challengePeriod"
                 className="block pb-3 text-xl tracking-wider text-lightGreen"
@@ -220,9 +305,9 @@ const Request = () => {
                 placeholder="Enter challenge period (e.g., 3 days)"
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
-            </div>
+            </div> */}
 
-            <div className="flex flex-col gap-3">
+            {/* <div className="flex flex-col gap-3">
               <label
                 htmlFor="expirationTime"
                 className="block pb-3 text-xl tracking-wider text-lightGreen"
@@ -237,19 +322,19 @@ const Request = () => {
                 onChange={handleInputChange}
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-3">
               <button
                 type="submit"
                 className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                onClick={handleSubmit}
               >
                 Submit Request
               </button>
             </div>
           </div>
         </BoxContainer>
-      </form>
     </div>
   );
 };

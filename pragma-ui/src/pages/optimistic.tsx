@@ -4,8 +4,20 @@ import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
 import ActiveAssessments from "../components/optimistic/ActiveAssessments";
+import StarknetProvider from "../components/Provider/StarknetProvider";
+import { InjectedConnector, publicProvider, StarknetConfig } from '@starknet-react/core';
+import { WebWalletConnector } from 'starknetkit/webwallet';
+import { ArgentMobileConnector } from 'starknetkit/argentMobile';
 
 const OptimisticPage = () => {
+
+  const connectors = [
+    new InjectedConnector({ options: {id: "braavos", name: "Braavos" }}),
+    new InjectedConnector({ options: {id: "argentX", name: "Argent X" }}), 
+    new WebWalletConnector({ url: "https://web.argent.xyz" }),
+    new ArgentMobileConnector(),
+]
+
   const assessments = Array(5).fill({
     image: `/assets/vectors/optimist.svg`,
     title: "Is Biden the winner of the US election?",
@@ -26,6 +38,8 @@ The resolution source will be the video of the second night of the DNC., res_dat
     endDispute: `1724478160`,
   });
   return (
+    <StarknetProvider connectors={connectors}>
+
     <div
       className={classNames(
         "relative w-full overflow-x-hidden",
@@ -51,6 +65,7 @@ The resolution source will be the video of the second night of the DNC., res_dat
         <ActiveAssessments assessments={assessments} loading={false} />
       </BoxContainer>
     </div>
+    </StarknetProvider>
   );
 };
 

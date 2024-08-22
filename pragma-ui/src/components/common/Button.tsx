@@ -30,6 +30,7 @@ interface GeneralButtonProps {
   center: boolean;
   className?: string;
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+  onClick?: () => void,
   href?: string;
 }
 
@@ -46,14 +47,16 @@ export const Button: React.FC<
   className,
   icon: Icon,
   children,
+  onClick,
   ...props
 }) => (
   <button
     className={classNames(
       baseStyles[variant],
       variantStyles[variant][color],
-      className
+      className,
     )}
+    onClick= {onClick}
     {...props}
   >
     {Icon && <Icon className="mr-2 h-5 w-5" />}
