@@ -167,7 +167,7 @@ const IndexPage = () => {
           generalText="Your smart contracts are decentralized, transparent and composable. The data you’re using to feed them should have the same properties. Start integrating Pragma’s price feed now and unlock the power of verifiable data."
           urlSvg={getImageSource1()}
           textButton="Integrate Now"
-          linkButton="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          linkButton="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
           <ChartBox assetPair={selectedAsset} />
@@ -186,7 +186,7 @@ const IndexPage = () => {
           generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
           urlSvg={getImageSource2()}
           textButton="Start Building"
-          linkButton="https://docs.pragma.build/Resources/Cairo%201/computational-feeds/what-are-computational-feeds"
+          linkButton="https://docs.pragma.build/Resources/Starknet/computational-feeds/what-are-computational-feeds"
         />
       </BoxContainer>
       <BoxContainer>

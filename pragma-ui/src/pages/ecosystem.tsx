@@ -30,7 +30,7 @@ const EcosystemPage = () => {
         }
         outlineButton={"integrate now"}
         outlineButtonLink={
-          "https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          "https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
         }
         illustrationLink={"/assets/vectors/ecosystem.svg"}
         illustrationSmallLink={"/assets/vectors/ecosystemSmall.svg"}
@@ -42,7 +42,7 @@ const EcosystemPage = () => {
           title="Projects already use verifiable data."
           generalText="10+ projects already switched to verifiable data using Pragma. You’re next?"
           textButton="Integrate now"
-          linkButton="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          linkButton="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
           textButton2="Discover all ecosystem"
           linkButton2="https://defillama.com/oracles/Pragma"
         />

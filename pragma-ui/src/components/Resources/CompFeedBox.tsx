@@ -18,7 +18,7 @@ const CompFeedBox = () => {
         <ButtonLink
           variant="outline"
           color="mint"
-          href="https://docs.pragma.build/Resources/Cairo%201/computational-feeds/what-are-computational-feeds"
+          href="https://docs.pragma.build/Resources/Starknet/computational-feeds/what-are-computational-feeds"
           center={false}
           className="w-fit"
         >
