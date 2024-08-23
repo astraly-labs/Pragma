@@ -75,7 +75,7 @@ const content: FooterColumn[] = [
       // },
       {
         title: "Blog",
-        href: "https://mirror.xyz/pragmagic.eth",
+        href: "https://blog.pragma.build/",
         external: true,
       },
       {
@@ -122,7 +122,7 @@ export interface SocialMedia {
 //   {
 //     name: "Medium",
 //     src: "/assets/social/medium.svg",
-//     href: "https://mirror.xyz/pragmagic.eth",
+//     href: "https://blog.pragma.build/",
 //   },
 //   {
 //     name: "Discord",

@@ -77,7 +77,7 @@ const additional = [
   {
     name: "Blog",
     description: "",
-    href: "https://mirror.xyz/pragmagic.eth",
+    href: "https://blog.pragma.build/",
     icon: "/assets/social/medium.svg",
   },
   // {
