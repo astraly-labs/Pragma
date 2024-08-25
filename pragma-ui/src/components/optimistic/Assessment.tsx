@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
+import { Item } from "../../pages/optimistic";
+import { findCurrencyNameByAddress } from "../../utils";
 
-const Assessment = ({ assessment, loading }) => {
+
+interface AssessmentProps {
+  assessment: Item,
+  loading: boolean,
+}
+const Assessment: React.FC<AssessmentProps> = ({ assessment, loading }) => {
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
     if (!loading) {
       const updateProgressAndTime = () => {
-        const start = assessment.startDispute * 1000; // Convert to milliseconds
-        const end = assessment.endDispute * 1000; // Convert to milliseconds
+        const start = new Date(assessment.timestamp); 
+        const start_timestamp = Math.floor(start.getTime());
+        const end =  new Date(assessment.expiration_time)
+        const end_timestamp = Math.floor(end.getTime())
         const now = Date.now();
-        const total = end - start;
-        const current = now - start;
+        const total = end_timestamp - start_timestamp;
+        const current = now - start_timestamp;
         const calculatedProgress = Math.min(
           Math.max((current / total) * 100, 0),
           100
@@ -21,7 +30,7 @@ const Assessment = ({ assessment, loading }) => {
         setProgress(calculatedProgress);
 
         // Calculate time left
-        const remaining = end - now;
+        const remaining = end_timestamp - now;
         if (remaining > 0) {
           const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
           const hours = Math.floor(
@@ -57,7 +66,7 @@ const Assessment = ({ assessment, loading }) => {
             height={30}
             width={30}
             alt="AssetImage"
-            src={assessment.image}
+            src={assessment.image ? assessment.image: '/assets/vectors/optimist.svg'}
           />
         )}
         {loading ? (
@@ -69,7 +78,7 @@ const Assessment = ({ assessment, loading }) => {
           <div className="text-md flex flex-col text-lightGreen">
             {assessment.title}
             <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
-              {formatDate(assessment.startDispute)}
+              {assessment.timestamp}
             </div>
           </div>
         )}
@@ -79,7 +88,7 @@ const Assessment = ({ assessment, loading }) => {
         {loading ? (
           <div className="my-auto h-3 w-24 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
-          <div>{assessment.output}</div>
+          <div>{assessment.identifier}</div>
         )}
       </div>
       <div className="my-auto flex translate-x-2 flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
@@ -91,9 +100,9 @@ const Assessment = ({ assessment, loading }) => {
               alt="Bond Currency"
               width={17}
               height={17}
-              src={`/assets/currencies/${assessment.bondCurrency}.svg`}
+              src={`/assets/currencies/${findCurrencyNameByAddress(assessment.currency)}.svg`}
             />
-            <div>{assessment.bond}</div>
+            <div>{Number(assessment.bond)/1000000000000000000}</div>
           </>
         )}
       </div>

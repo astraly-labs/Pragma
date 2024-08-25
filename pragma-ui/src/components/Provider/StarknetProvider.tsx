@@ -21,7 +21,7 @@ export default function StarknetProvider({children,
         new ArgentMobileConnector(),
     ]
 }: StarknetProviderProps) {
-    const chains = [sepolia, mainnet];
+    const chains = [sepolia,mainnet];
 
     return (
         <StarknetConfig

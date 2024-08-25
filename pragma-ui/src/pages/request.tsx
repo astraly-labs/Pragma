@@ -6,10 +6,12 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { CallData, byteArray } from 'starknet';
 import WalletConnection from "../components/common/WalletConnection";
 import { OO_CONTRACT_ADDRESS, CURRENCIES } from "./constants";
-import { useAccount, useContractWrite, useContractRead,useWaitForTransaction } from "@starknet-react/core";
+import { useAccount, useContractWrite, useContractRead,useNetwork,useWaitForTransaction } from "@starknet-react/core";
 import OOAbi from "../abi/OO.json";
+import { uint256, shortString } from "starknet";
 
 const generateTimestamp = () => {
   const currentTimestamp = new Date();
@@ -25,18 +27,31 @@ const generateTimestamp = () => {
 };
 
 
+function buildAssertion(title: string, description: string, timestamp: string): string {
+  return `An assertion was published at ${timestamp}. The title of the assertion is: ${title}, the description is: ${description}.`;
+}
+
+
 const Request = () => {
+  const { address ,isConnected} = useAccount();
+  const [network, setNetwork] = useState<string>('sepolia');
+  const NETWORKS = ['sepolia', 'mainnet'];
+  const IDENTIFIER= 'ASSERT_TRUTH';
+  const currency = CURRENCIES[network];
+  const {} = useNetwork();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [assertion, setAssertion] = useState<string|undefined>(undefined);
+  const [assertHash, setAssertHash] = useState<string | undefined>();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     timestamp: "",
     bond: "",
-    currency: CURRENCIES[0],
+    currency: currency[0],
     challengePeriod: "",
     expirationTime: "",
   });
-  const { address ,isConnected} = useAccount();
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
@@ -53,17 +68,41 @@ const Request = () => {
       currency: selectedCurrency,
     }));
   };
+  
+  // Get minimum bond
+  const { data: minimumBond, isLoading: isMinimumBondLoading } = useContractRead({
+    address: network =='sepolia'? OO_CONTRACT_ADDRESS.sepolia: OO_CONTRACT_ADDRESS.mainnet,
+    abi: OOAbi,
+    functionName: 'get_minimum_bond',
+    args: [formData.currency.address],
+    watch: true,
+  });
 
-    // Get minimum bond
-    const { data: minimumBond, isBondLoading: isMinimumBondLoading } = useContractRead({
-      address: OO_CONTRACT_ADDRESS,
-      abi: OOAbi,
-      functionName: 'get_minimum_bond',
-      args: [CURRENCIES[0].address],
-      watch: true,
+
+  const minimumBondString = minimumBond?.toString();
+  const { writeAsync: approveAndAssert } = useContractWrite({
+    calls: address && assertion && minimumBondString ? [
+      {
+        contractAddress: currency[0].address,
+        entrypoint: 'approve',
+        calldata: [network == 'sepolia'? OO_CONTRACT_ADDRESS.sepolia: OO_CONTRACT_ADDRESS.mainnet, uint256.bnToUint256(minimumBondString).low, uint256.bnToUint256(minimumBondString).high]
+      },
+      {
+        contractAddress: network == 'sepolia'? OO_CONTRACT_ADDRESS.sepolia: OO_CONTRACT_ADDRESS.mainnet,
+        entrypoint: 'assert_truth',
+        calldata: CallData.compile([byteArray.byteArrayFromString(assertion), address, 0, 0, formData.challengePeriod, formData.currency.address, uint256.bnToUint256(formData.bond).low,uint256.bnToUint256(formData.bond).high ,shortString.encodeShortString(IDENTIFIER),0, 0])
+      }
+    ] : undefined
+  });  
+    // Wait for assert transaction
+    const { isLoading: isAssertLoading, isError: isAssertError, error: assertError } = useWaitForTransaction({
+      hash: assertHash,
+      watch: true
     });
+  
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
       e.preventDefault();
 
       // Check if the address is connected
@@ -73,7 +112,7 @@ const Request = () => {
     }
   
       // Check if all required fields are filled
-      const requiredFields = ["title", "description", "bond"];
+      const requiredFields = ["title", "description", "bond", "challengePeriod"];
       for (const field of requiredFields) {
         if (!formData[field]) {
           alert(`Please complete the ${field} field.`);
@@ -103,6 +142,34 @@ const Request = () => {
         ...prevState,
         timestamp:currentTimestamp ,
       }));
+
+      setAssertion(buildAssertion(formData.title, formData.description, formData.timestamp)); 
+
+      try {
+        // Approve and Assert in a single transaction
+        const result = await approveAndAssert();
+        console.log('Transaction hash:', result.transaction_hash);
+        setAssertHash(result.transaction_hash);
+    
+        const timeout = 120000; // 2 minutes timeout
+        const startTime = Date.now();
+  
+        while (isAssertLoading && Date.now() - startTime < timeout) {
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+        }
+  
+        if (isAssertError) {
+          throw new Error(`Transaction failed: ${assertError?.message}`);
+        }
+    
+        alert('Assertion submitted successfully!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`Failed to process the assertion. Reason: ${error}`);
+      } finally {
+        setIsProcessing(false);
+        setAssertHash(undefined);
+      }
   
     };
 
@@ -119,7 +186,7 @@ const Request = () => {
         <div className="pb-20"></div>
       </BoxContainer>
         <BoxContainer>
-          <div className="flex w-full flex-row gap-4">
+          <div className="flex w-[70%] flex-row gap-4">
             <button
               onClick={() => {
                 // Go back to the previous page
@@ -131,7 +198,60 @@ const Request = () => {
             </button>
             <h2 className=" text-lightGreen">Submit a request</h2>
           </div>
-            <WalletConnection/>
+          <div className="flex">
+              <Listbox
+                value={network}
+                onChange={setNetwork}
+              >
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative flex w-full cursor-pointer  gap-x-2 flex-row rounded-full bg-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+                    <span className="pr-4 block truncate">
+                      {network}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-darkGreen py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {NETWORKS.map((current_network) => (
+                        <Listbox.Option
+                          key={current_network}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-2 pr-4 ${
+                              active
+                                ? "bg-lightGreen text-darkGreen"
+                                : "text-lightGreen"
+                            }`
+                          }
+                          value={current_network}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {current_network}
+                              </span>
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
+            <WalletConnection network={network}/>
         </BoxContainer>
         <BoxContainer>
           <div className="flex w-full flex-col gap-10 lg:w-8/12 xl:w-7/12">
@@ -164,7 +284,7 @@ const Request = () => {
                 id="description"
                 name="description"
                 value={formData.description}
-                onChange={handleInputChange}
+                onChange={e => handleInputChange}
                 placeholder="Enter request description"
                 className="w-full rounded-md bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
                 rows={4}
@@ -187,6 +307,67 @@ const Request = () => {
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
             </div> */}
+
+
+            <div className="flex flex-col gap-3">
+              <label
+                htmlFor="currency"
+                className="block pb-3 text-xl tracking-wider text-lightGreen"
+              >
+                Currency
+              </label>
+              <Listbox
+                value={formData.currency}
+                onChange={handleCurrencyChange}
+              >
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative flex w-full cursor-pointer  flex-row rounded-full bg-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+                    <span className="block truncate">
+                      {formData.currency.name}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-darkGreen py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {currency.map((currency) => (
+                        <Listbox.Option
+                          key={currency.id}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                              active
+                                ? "bg-lightGreen text-darkGreen"
+                                : "text-lightGreen"
+                            }`
+                          }
+                          value={currency}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {currency.name}
+                              </span>
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
 
             <div className="flex flex-col gap-3">
               <label
@@ -231,66 +412,6 @@ const Request = () => {
 
             <div className="flex flex-col gap-3">
               <label
-                htmlFor="currency"
-                className="block pb-3 text-xl tracking-wider text-lightGreen"
-              >
-                Currency
-              </label>
-              <Listbox
-                value={formData.currency}
-                onChange={handleCurrencyChange}
-              >
-                <div className="relative mt-1">
-                  <Listbox.Button className="relative flex w-full cursor-pointer  flex-row rounded-full bg-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
-                    <span className="block truncate">
-                      {formData.currency.name}
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-darkGreen py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {CURRENCIES.map((currency) => (
-                        <Listbox.Option
-                          key={currency.id}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                              active
-                                ? "bg-lightGreen text-darkGreen"
-                                : "text-lightGreen"
-                            }`
-                          }
-                          value={currency}
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${
-                                  selected ? "font-medium" : "font-normal"
-                                }`}
-                              >
-                                {currency.name}
-                              </span>
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-            </div>
-
-            {/* <div className="flex flex-col gap-3">
-              <label
                 htmlFor="challengePeriod"
                 className="block pb-3 text-xl tracking-wider text-lightGreen"
               >
@@ -302,10 +423,10 @@ const Request = () => {
                 name="challengePeriod"
                 value={formData.challengePeriod}
                 onChange={handleInputChange}
-                placeholder="Enter challenge period (e.g., 3 days)"
+                placeholder="Enter challenge period (in seconds)"
                 className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
               />
-            </div> */}
+            </div>
 
             {/* <div className="flex flex-col gap-3">
               <label
@@ -330,7 +451,7 @@ const Request = () => {
                 className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
                 onClick={handleSubmit}
               >
-                Submit Request
+                {!isProcessing ? 'Submit Request': 'Processing...'}
               </button>
             </div>
           </div>

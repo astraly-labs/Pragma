@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { useConnect, useAccount,useDisconnect } from "@starknet-react/core";
 import { useStarknetkitConnectModal } from "starknetkit";
 import { Button, ButtonLink } from "./Button";
-export default function WalletConnection() {
+
+
+
+interface AssetBoxProps {
+  network: String
+}
+export default function WalletConnection({network}) {
     const { address ,isConnected} = useAccount();
     const [isOpen, setIsOpen] = useState(false);
     const {disconnect} = useDisconnect();
@@ -27,8 +33,7 @@ export default function WalletConnection() {
           console.error("Error connecting wallet:", error);
         }
         }
-      const onClick = async(e) => {
-        e.preventDefault();
+      const onClick = () => {
         connectWallet();
         toggleModal();
       }
@@ -37,12 +42,11 @@ export default function WalletConnection() {
         {!isConnected ? 
              <Button  
              variant="solid" color="mint" center={false}
-             onClick={(e) =>onClick(e)}>
+             onClick={() => onClick()}>
         Connect Wallet
             </Button>
         :
-        <Button onClick={(e) => {
-                  e.preventDefault();
+        <Button onClick={() => {
                   disconnect();
                   toggleModal();
                 }} variant="solid" color="grey" center={false}>

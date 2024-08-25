@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import SearchBar from "../Navigation/SearchBar";
@@ -6,31 +6,46 @@ import AssessmentPopup from "./AssessmentPopup";
 import Assessment from "./Assessment";
 import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { OO_CONTRACT_ADDRESS, ORACLE_ANCILLARY_ADDRESS, CURRENCIES } from "../../pages/constants";
+import { useAccount, useContractWrite, useContractRead,useNetwork,useWaitForTransaction } from "@starknet-react/core";
+import AncillaryABI from "../../abi/Ancillary.json";
+import { uint256, shortString } from "starknet";
+import dotenv from 'dotenv';
 
-const ActiveAssessments = ({ assessments, loading }) => {
+dotenv.config();
+
+
+const NUMERICAL_TRUE = 1000000000000000000;
+
+const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange, onLoadMore, hasMore }) => {
   const options = ["Active", "Settled", "Disputed"];
-  const elements = Array(5).fill({
-    image: `/assets/vectors/optimist.svg`,
-    title: "Is Biden the winner of the US election?",
-    timestamp: "2sAGO",
-    output: "1000",
-    bond: "10",
-    startDispute: "60min",
-    endDispute: `70min`,
-  });
-  const [filteredValue, setFilteredValue] = useState("");
+  
+  const [filteredValue, setFilteredValue] = useState<string|undefined>(undefined);
+  const { address ,isConnected} = useAccount();
+  const [network, setNetwork] = useState<string>('sepolia');
+  const currency = CURRENCIES[network];
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedOption, setSelectedOption] = useState(options[0]);
-
+  const [disputeHash, setDisputeHash] = useState<string | undefined>();
+  const [pushPriceHash, setPushPriceHash] = useState<string |undefined>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [requestId, setRequestId] = useState<number | null>(null);
+  
   const handleInputChange = (value) => {
-    setFilteredValue(value);
+    setFilteredValue(value || undefined);
   };
 
-  const filteredAssessments = assessments.filter((assessment) => {
-    return assessment?.title
-      ?.toLowerCase()
-      .includes(filteredValue.toLowerCase());
-  });
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+    onAssertionTypeChange(option);
+  };
+
+  const filteredAssessments = filteredValue
+  ? assessments.filter((assessment) =>
+      assessment?.title?.toLowerCase().includes(filteredValue.toLowerCase())
+    )
+  : assessments;
 
   const handleAssessmentClick = (assessment) => {
     setSelectedAssessment(assessment);
@@ -39,6 +54,189 @@ const ActiveAssessments = ({ assessments, loading }) => {
   const handleClosePopup = () => {
     setSelectedAssessment(null);
   };
+
+
+   // Settle assertion
+   const { writeAsync: settleAssertion} = useContractWrite({
+    calls:  [{
+        contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia: OO_CONTRACT_ADDRESS.mainnet,
+        entrypoint: 'settle_assertion',
+        calldata: [] 
+      }]
+    
+  });
+
+  const { data: owner } = useContractRead({
+    address: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+    abi: AncillaryABI,
+    functionName: 'owner',
+    args: [],
+    watch: true,
+  });
+// Dispute assertion
+const { writeAsync: approveAndDispute } = useContractWrite({
+  calls: [
+    {
+      contractAddress: currency[0].address,
+      entrypoint: 'approve',
+      calldata: []
+    },
+    {
+      contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+      entrypoint: 'dispute_assertion',
+      calldata: []
+    }
+  ]
+});
+
+    // Push price to ancillary
+    const { writeAsync: push_price} = useContractWrite({
+      calls:  [{
+          contractAddress: network == 'sepolia'? ORACLE_ANCILLARY_ADDRESS.sepolia :ORACLE_ANCILLARY_ADDRESS.mainnet ,
+          entrypoint: 'push_price',
+          calldata: [] 
+        }]
+      
+    });
+
+
+// Wait for dispute transaction
+const { isLoading: isDisputeLoading, isError: isDisputeError, error: disputeError } = useWaitForTransaction({
+  hash: disputeHash,
+  watch: true
+});
+
+  // Wait for resolve transaction
+  const { isLoading: isResolveLoading, isError: isResolveError, error: resolveError } = useWaitForTransaction({
+    hash: pushPriceHash,
+    watch: true
+  });
+
+
+const handleSettle = async (assertionId: number) => {
+
+  try {
+    await settleAssertion({
+      calls: [
+        {
+          contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+          entrypoint: 'settle_assertion',
+          calldata: [assertionId.toString()]
+        }
+      ]
+    });
+    console.log(`Settled assertion with ID: ${assertionId}`);
+    // fetchData();
+  } catch (error) {
+    console.error('Error settling assertion:', error);
+  }
+};
+
+const handleDispute = async (assertionId: number, bond: string) => {
+  console.log(`Disputing item with ID: ${assertionId}`);
+
+  if (!address) {
+    alert('Please connect your wallet first');
+    return;
+  }
+
+  try {
+    const result = await approveAndDispute({
+      calls: [
+        {
+          contractAddress: currency[0].address,
+          entrypoint: 'approve',
+          calldata: [OO_CONTRACT_ADDRESS, uint256.bnToUint256(bond).low, uint256.bnToUint256(bond).high]
+        },
+        {
+          contractAddress: OO_CONTRACT_ADDRESS,
+          entrypoint: 'dispute_assertion',
+          calldata: [assertionId.toString(), address]
+        }
+      ]
+    });
+
+    console.log('Transaction hash:', result.transaction_hash);
+    setDisputeHash(result.transaction_hash);
+
+    const timeout = 120000; // 2 minutes timeout
+    const startTime = Date.now();
+
+    while (isDisputeLoading && Date.now() - startTime < timeout) {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+    }
+
+    if (isDisputeError) {
+      throw new Error(`Transaction failed: ${disputeError?.message}`);
+    }
+
+    alert('Assertion disputed successfully!');
+    // fetchData();
+  } catch (error) {
+    console.error('Error disputing assertion:', error);
+    alert('Failed to dispute the assertion. Check console for details.');
+  } finally {
+    setDisputeHash(undefined);
+  }
+};
+
+
+const handleResolveDispute = async(assertionId: number, request_id: number, resolution: boolean) => {
+  console.log(`Resolve dispute item with ID: ${assertionId}`);
+
+
+  try {
+
+    let resolutionInt = resolution ? NUMERICAL_TRUE: 0;
+
+    const result = await push_price({
+      calls:  [{
+        contractAddress: network == 'sepolia' ?  ORACLE_ANCILLARY_ADDRESS.sepolia : ORACLE_ANCILLARY_ADDRESS.mainnet,
+        entrypoint: 'push_price_by_request_id',
+        calldata: [request_id, resolutionInt] 
+      }]
+    }); 
+     console.log('Transaction hash:', result.transaction_hash);
+    setPushPriceHash(result.transaction_hash);  
+
+    const timeout = 120000; // 2 minutes timeout
+    const startTime = Date.now();
+
+    while (isResolveLoading && Date.now() - startTime < timeout) {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+    }
+
+    if (isResolveError) {
+      throw new Error(`Transaction failed: ${resolveError?.message}`);
+    }
+
+    handleSettle(assertionId);
+
+  } catch (error) {
+    console.error('Error resolving assertion:', error);
+  }finally {
+    setPushPriceHash(undefined);
+  }
+}
+
+
+const openModal = (assertion_id: number, request_id: number) => {
+  if (owner == address) {
+    setSelectedItem(assertion_id);
+    setRequestId(request_id);
+    setIsModalOpen(true);
+  } else {
+    console.log(owner?.toString(16));
+    alert('Must be the owner');
+  }
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setSelectedItem(null);
+  setRequestId(null);
+};
+ 
 
   return (
     <>
@@ -51,7 +249,7 @@ const ActiveAssessments = ({ assessments, loading }) => {
             <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
               Nb assessments: {filteredAssessments.length}
             </div>
-            <Listbox value={selectedOption} onChange={setSelectedOption}>
+            <Listbox value={selectedOption} onChange={handleOptionChange}>
               <div className="relative w-full md:w-auto">
                 <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
                   <span className="block truncate">{selectedOption}</span>
@@ -111,7 +309,7 @@ const ActiveAssessments = ({ assessments, loading }) => {
               Assertion
             </div>
             <div className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Output{" "}
+              Identifier{" "}
             </div>
             <div className="flex translate-x-2 cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Bond
@@ -120,31 +318,48 @@ const ActiveAssessments = ({ assessments, loading }) => {
               Challenge Period
             </div>
           </div>
-
-          {loading &&
-            elements.map((element, index) => (
-              <Assessment assessment={element} key={index} loading={true} />
-            ))}
           {!loading &&
-            filteredAssessments.map((assessment, assetIdx) => (
-              <div
-                key={assetIdx}
-                onClick={() => handleAssessmentClick(assessment)}
-                className="cursor-pointer"
-              >
-                <Assessment
-                  assessment={assessment}
-                  key={assetIdx}
-                  loading={false}
-                />
-              </div>
+            filteredAssessments.map((element, index) => (
+              <Assessment assessment={element} key={index} loading={loading} />
             ))}
-          {!loading && filteredAssessments.length === 0 && (
+          {!loading && (
+    filteredValue
+      ? filteredAssessments.map((assessment, assetIdx) => (
+        <div
+          key={assetIdx}
+          onClick={() => handleAssessmentClick(assessment)}
+          className="cursor-pointer"
+        >
+          {/* Render assessment details here */}
+        </div>
+      ))
+    : assessments.map((assessment, assetIdx) => (
+        <div
+          key={assetIdx}
+          onClick={() => handleAssessmentClick(assessment)}
+          className="cursor-pointer"
+        >
+          {/* Render assessment details here */}
+        </div>
+      ))
+)}
+          {!loading && filteredValue && filteredAssessments.length === 0 && (
             <div className="py-2 font-mono text-xs text-lightGreen">
               No assessments for your search
             </div>
           )}
         </div>
+        {hasMore && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={onLoadMore}
+              className="bg-lightGreen text-green py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-200"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )}
       </div>{" "}
       {selectedAssessment && (
         <AssessmentPopup

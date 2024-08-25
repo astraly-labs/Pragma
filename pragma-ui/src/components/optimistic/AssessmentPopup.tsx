@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { XIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { ClockIcon, InformationCircleIcon } from "@heroicons/react/outline";
+import { Item } from "../../pages/optimistic";
 
 interface AssessmentPopupProps {
-  assessment: any; // Replace 'any' with your actual Assessment type
+  assessment: Item; // Replace 'any' with your actual Assessment type
   onClose: () => void;
 }
 
@@ -18,11 +19,13 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
   useEffect(() => {
     const updateProgressAndTime = () => {
-      const start = assessment.startDispute * 1000; // Convert to milliseconds
-      const end = assessment.endDispute * 1000; // Convert to milliseconds
+      const start = new Date(assessment.timestamp); 
+      const start_timestamp = Math.floor(start.getTime());
+      const end =  new Date(assessment.expiration_time)
+      const end_timestamp = Math.floor(end.getTime())
       const now = Date.now();
-      const total = end - start;
-      const current = now - start;
+      const total = end_timestamp - start_timestamp;
+      const current = now - start_timestamp;
       const calculatedProgress = Math.min(
         Math.max((current / total) * 100, 0),
         100
@@ -30,7 +33,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       setProgress(calculatedProgress);
 
       // Calculate time left
-      const remaining = end - now;
+      const remaining = end_timestamp - now;
       if (remaining > 0) {
         const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
@@ -96,10 +99,10 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           </p>
           <p>
             <div className="text-mint">Challenge period ends</div>{" "}
-            {assessment.endDispute}
+            {assessment.expiration_time}
           </p>
           <p>
-            <div className="text-mint">Result</div> {assessment.output}
+            <div className="text-mint">Result</div> {assessment.identifier}
           </p>
           <p>
             <div className="text-mint">Bond</div> {assessment.bond}
@@ -110,11 +113,11 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           </div>
           <p>
             <div className="text-mint">Start challenge period</div>{" "}
-            {assessment.startDispute}
+            {assessment.timestamp}
           </p>
           <p>
             <div className="text-mint">End challenge period</div>{" "}
-            {assessment.endDispute}
+            {assessment.expiration_time}
           </p>
           <>
             <div className="h-1 w-40 rounded-full bg-lightBlur">
