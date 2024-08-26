@@ -24,9 +24,26 @@ export function hexToUtf8(hex: string): string {
 
 
 export function extractTitleFromClaim(claim: string): string | null {
-  const titleRegex = /The title of the assertion is: (.*?), the description/;
-  const match = claim.match(titleRegex);
-  return match ? match[1] : null;
+  // Trim the claim and remove any leading/trailing whitespace
+  const trimmedClaim = claim.trim();
+
+  // Try different regex patterns
+  const patterns = [
+    /The title of the assertion is:\s*(.*?)\s*,\s*the description/i,
+    /title of the assertion is:\s*(.*?)\s*(?:,|$)/i,
+    /assertion is:\s*(.*?)\s*(?:,|$)/i
+  ];
+
+  for (const pattern of patterns) {
+    const match = trimmedClaim.match(pattern);
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+  }
+
+  // If no match is found, return the entire claim up to the first period or comma
+  const fallbackMatch = trimmedClaim.match(/^(.*?)(?:[.,]|$)/);
+  return fallbackMatch ? fallbackMatch[1].trim() : null;
 }
 
 

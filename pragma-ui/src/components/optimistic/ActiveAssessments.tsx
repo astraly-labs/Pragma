@@ -11,6 +11,8 @@ import { useAccount, useContractWrite, useContractRead,useNetwork,useWaitForTran
 import AncillaryABI from "../../abi/Ancillary.json";
 import { uint256, shortString } from "starknet";
 import dotenv from 'dotenv';
+import { ChevronDownIcon } from "@heroicons/react/outline";
+import NetworkSelection from "../common/NetworkSelection";
 
 dotenv.config();
 
@@ -19,10 +21,11 @@ const NUMERICAL_TRUE = 1000000000000000000;
 
 const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange, onLoadMore, hasMore }) => {
   const options = ["Active", "Settled", "Disputed"];
-  
+  const NETWORKS = ['sepolia', 'mainnet'];
   const [filteredValue, setFilteredValue] = useState<string|undefined>(undefined);
   const { address ,isConnected} = useAccount();
   const [network, setNetwork] = useState<string>('sepolia');
+  console.log(network);
   const currency = CURRENCIES[network];
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -298,6 +301,7 @@ const closeModal = () => {
                 </Transition>
               </div>
             </Listbox>
+            <NetworkSelection setNetwork={setNetwork} />
           </div>
           <div className="sm:ml-auto">
             <SearchBar onInputChange={handleInputChange} />
@@ -320,9 +324,9 @@ const closeModal = () => {
           </div>
           {!loading &&
             filteredAssessments.map((element, index) => (
-              <Assessment assessment={element} key={index} loading={loading} />
+              <Assessment assessment={element} key={index} loading={loading} onClick={() => handleAssessmentClick(element)}/>
             ))}
-          {!loading && (
+          {/* {!loading && (
     filteredValue
       ? filteredAssessments.map((assessment, assetIdx) => (
         <div
@@ -330,7 +334,6 @@ const closeModal = () => {
           onClick={() => handleAssessmentClick(assessment)}
           className="cursor-pointer"
         >
-          {/* Render assessment details here */}
         </div>
       ))
     : assessments.map((assessment, assetIdx) => (
@@ -339,11 +342,10 @@ const closeModal = () => {
           onClick={() => handleAssessmentClick(assessment)}
           className="cursor-pointer"
         >
-          {/* Render assessment details here */}
         </div>
       ))
-)}
-          {!loading && filteredValue && filteredAssessments.length === 0 && (
+)} */}
+          {!loading && filteredAssessments.length === 0 && (
             <div className="py-2 font-mono text-xs text-lightGreen">
               No assessments for your search
             </div>
@@ -351,19 +353,19 @@ const closeModal = () => {
         </div>
         {hasMore && (
           <div className="flex justify-center mt-4">
-            <button
+            <div
               onClick={onLoadMore}
-              className="bg-lightGreen text-green py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-200"
-              disabled={loading}
-            >
+              className={`text-light-green underline cursor-pointer hover:opacity-50 transition-colors duration-200 ${loading ? "cursor-wait" : ""}`}
+              >
               {loading ? "Loading..." : "Load More"}
-            </button>
+            </div>
           </div>
         )}
       </div>{" "}
       {selectedAssessment && (
         <AssessmentPopup
           assessment={selectedAssessment}
+          network = {network}
           onClose={handleClosePopup}
         />
       )}

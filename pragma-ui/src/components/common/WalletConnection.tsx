@@ -7,7 +7,7 @@ import { Button, ButtonLink } from "./Button";
 
 
 interface AssetBoxProps {
-  network: String
+  network?: String
 }
 export default function WalletConnection({network}) {
     const { address ,isConnected} = useAccount();

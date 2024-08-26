@@ -21,9 +21,10 @@ export interface Item {
   dispute_id: number;
   currency:string,
   expiration_time: string, 
-  image: string, 
+  image?: string, 
   identifier: string, 
 }
+
 const OptimisticPage = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,8 +32,8 @@ const OptimisticPage = () => {
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const INITIAL_LIMIT = 5;
-  const LOAD_MORE_LIMIT = 5;
+  const INITIAL_LIMIT = 2;
+  const LOAD_MORE_LIMIT = 2;
 
   const connectors = [
     new InjectedConnector({ options: {id: "braavos", name: "Braavos" }}),
@@ -55,10 +56,9 @@ const fetchData = useCallback(async (type: string, pageNumber: number, loadMore:
     const API_URL = `${process.env.API_URL || 'http://0.0.0.0:3000/node/v1/optimistic/assertions'}?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
     const response = await axios.get(API_URL);
     const assertions = response.data.assertions;
-    
     const newItems = assertions.map((assertion: any) => ({
       assertion_id: assertion.assertion_id,
-      title: hexToUtf8(assertion.claim),
+      title: extractTitleFromClaim(hexToUtf8(assertion.claim)),
       description: extractDescriptionFromClaim(hexToUtf8(assertion.claim)),
       status: assertion.status,
       timestamp: assertion.timestamp,
@@ -71,7 +71,7 @@ const fetchData = useCallback(async (type: string, pageNumber: number, loadMore:
     if (loadMore) {
       setItems(prevItems => [...prevItems, ...newItems]);
     } else {
-      setItems(newItems);
+        setItems(newItems);
     }
 
     setHasMore(newItems.length >= limit);
