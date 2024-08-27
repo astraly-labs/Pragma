@@ -76,6 +76,11 @@ const ecosystem: Ecosystem[] = [
     src: "/assets/ecosystem/starkware.svg",
     link: "https://starkware.co/",
   },
+  {
+    name: "symbiotic",
+    src: "/assets/ecosystem/symbiotic.svg",
+    link: "https://symbiotic.fi/",
+  },
 ];
 
 const MarqueeLogo = () => {
