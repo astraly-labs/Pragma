@@ -53,6 +53,14 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
+      image: "/assets/posts/pragmaxvesu.webp",
+      date: "August 26th, 2024",
+      title: "Vesu's vault - Pragma's shield",
+      description:
+        "Pragma Oracle is excited to announce its integration with Vesu, a key addition to our...",
+      link: "https://blog.pragma.build/vesus-vault-pragmas-shield/",
+    },
+    {
       image: "/assets/posts/pragmapi.webp",
       date: "February 22nd, 2024",
       title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
@@ -85,7 +93,7 @@ const BlogCarousel: React.FC = () => {
       link: "https://blog.pragma.build/re-introducing-pragma-on-starknet/",
     },
     {
-      image: "/assets/posts/longliveoraces.webp",
+      image: "/assets/posts/longliveoracles.webp",
       date: "August 21st, 2023",
       title: "Oracles are dead, Long live Oracles",
       description:
