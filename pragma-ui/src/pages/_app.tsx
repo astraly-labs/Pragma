@@ -13,7 +13,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { DataProvider, dataSources, initialAssets } from "../providers/data";
 import { GetServerSideProps } from "next";
-
+import {QueryClientProvider,QueryClient} from '@tanstack/react-query';
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { initialData, initialPublishers, initialCheckpoints } = pageProps;
 
@@ -29,12 +29,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }
 
   const provider = jsonRpcProvider({ rpc });
+  const queryClient = new QueryClient()
+
 
   // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
   const router = useRouter();
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Head>
         <meta charSet="UTF-8" key="charset" />
         <meta
@@ -103,7 +105,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <NavFooter />
         </div>
       </StarknetConfig>
-    </>
+    </QueryClientProvider>
   );
 };
 
