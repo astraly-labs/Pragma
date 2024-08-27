@@ -8,6 +8,7 @@ import { useAccount, useContractWrite, useContractRead,useWaitForTransaction } f
 import { OO_CONTRACT_ADDRESS, CURRENCIES,ORACLE_ANCILLARY_ADDRESS } from '../../pages/constants';
 import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
+import AncillaryABI from "../../abi/Ancillary.json";
 
 
 interface AssessmentPopupProps {
@@ -134,16 +135,27 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     const { writeAsync: approveAndDispute } = useContractWrite({
       calls: [
         {
-          contractAddress: currency.address,
+          contractAddress: currency[0].address,
           entrypoint: 'approve',
-          calldata: []
+          calldata: [network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet, uint256.bnToUint256(assessment.bond).low, uint256.bnToUint256(assessment.bond).high]
         },
         {
-          contractAddress: OO_CONTRACT_ADDRESS,
+          contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
           entrypoint: 'dispute_assertion',
           calldata: []
         }
       ]
+    });
+
+    const { data: owner } = useContractRead({
+      address:
+        network == "sepolia"
+          ? OO_CONTRACT_ADDRESS.sepolia
+          : OO_CONTRACT_ADDRESS.mainnet,
+      abi: AncillaryABI,
+      functionName: "owner",
+      args: [],
+      watch: true,
     });
             // Wait for dispute transaction
   const { isLoading: isDisputeLoading, isError: isDisputeError, error: disputeError } = useWaitForTransaction({
@@ -152,7 +164,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   });
 
     // Wait for resolve transaction
-    const { isLoading: isResolveLoading, isError: isResolveError, error: resolveError } = useWaitForTransaction({
+    const { isLoading: isResolveLoading, isError: isResolveError, error: resolveError, isSuccess: resolveSuccess } = useWaitForTransaction({
       hash: pushPriceHash,
       watch: true
     });
@@ -186,14 +198,14 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
     try {
       const result = await approveAndDispute({
-        calls: [
+        calls: bond && [
           {
-            contractAddress: currency.address,
+            contractAddress: currency[0].address,
             entrypoint: 'approve',
-            calldata: [OO_CONTRACT_ADDRESS, uint256.bnToUint256(bond).low, uint256.bnToUint256(bond).high]
+            calldata: [network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet, uint256.bnToUint256(bond).low, uint256.bnToUint256(bond).high]
           },
           {
-            contractAddress: OO_CONTRACT_ADDRESS,
+            contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
             entrypoint: 'dispute_assertion',
             calldata: [assertionId.toString(), address]
           }
@@ -219,7 +231,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       fetchData();
     } catch (error) {
       console.error('Error disputing assertion:', error);
-      alert('Failed to dispute the assertion. Check console for details.');
+      alert(`Failed to dispute the assertion ${error}`);
     } finally {
       setDisputeHash(undefined);
     }
@@ -227,26 +239,34 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
   
 
-  const handleResolveDispute = async(assertionId: number, request_id: number, resolution: boolean) => {
+  const handleResolveDispute = async(assertionId: number, request_id: string, resolution: boolean) => {
     console.log(`Resolve dispute item with ID: ${assertionId}`);
 
+    if (!address) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    if (owner != address){
+      alert('Not the owner');
+      return;
+    }
 
     try {
 
       let resolutionInt = resolution ? 1000000000000000000: 0;
-
       const result = await push_price({
         calls:  [{
           contractAddress: network === 'sepolia' ? ORACLE_ANCILLARY_ADDRESS.sepolia: ORACLE_ANCILLARY_ADDRESS.mainnet,
           entrypoint: 'push_price_by_request_id',
-          calldata: [request_id, resolutionInt] 
+          calldata: [request_id.toString(), uint256.bnToUint256(resolutionInt).low, uint256.bnToUint256(resolutionInt).high] 
         }]
       }); 
        console.log('Transaction hash:', result.transaction_hash);
       setPushPriceHash(result.transaction_hash);  
 
-      const timeout = 120000; // 2 minutes timeout
-      const startTime = Date.now();
+      let timeout = 120000; // 2 minutes timeout
+      let startTime = Date.now();
 
       while (isResolveLoading && Date.now() - startTime < timeout) {
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
@@ -256,6 +276,12 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         throw new Error(`Transaction failed: ${resolveError?.message}`);
       }
 
+      // wait for success
+      timeout = 160000; // 2 minutes timeout
+      startTime = Date.now();
+      while (resolveSuccess && Date.now() - startTime < timeout) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+      }
       handleSettle(assertionId);
 
     } catch (error) {
@@ -413,14 +439,14 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         <button
         type="submit"
         className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-        onClick={() => handleResolveDispute(assessment.assertion_id, Number(resolutionItem.dispute_id), true)}
+        onClick={() => handleResolveDispute(assessment.assertion_id,resolutionItem.dispute_id, true)}
        >
         Resolve True
      </button>
      <button
         type="submit"
         className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-        onClick={() => handleResolveDispute(assessment.assertion_id, Number(resolutionItem.dispute_id), false)}
+        onClick={() => handleResolveDispute(assessment.assertion_id, resolutionItem.dispute_id, false)}
        >
         Resolve False
      </button>

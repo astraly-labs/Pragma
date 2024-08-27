@@ -100,7 +100,7 @@ const OptimisticPage = () => {
       if (page === 1) {
         fetchData(assertionType, 1, false);
       }
-    }, 30000);
+    }, 3000);
     return () => clearInterval(intervalId);
   }, [assertionType, fetchData, page]);
 
