@@ -5,7 +5,9 @@ import React, {
   useEffect,
   useCallback,
   ReactNode,
+  useMemo,
 } from "react";
+import {useQueries, useQuery} from "@tanstack/react-query";
 
 type AssetT = {
   ticker: string;
@@ -87,13 +89,7 @@ export const DataProvider = ({
   initialCheckpoints: { [ticker: string]: CheckpointT[] };
 }) => {
   const [assets] = useState<AssetT[]>(initialAssets);
-  const [data, setData] = useState<{ [ticker: string]: any }>(initialData);
   const [publishers, setPublishers] = useState<PublisherT[]>(initialPublishers);
-  const [checkpoints, setCheckpoints] = useState<{
-    [ticker: string]: CheckpointT[];
-  }>(initialCheckpoints);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState("mainnet");
 
   useEffect(() => {
@@ -104,71 +100,70 @@ export const DataProvider = ({
     }
   }, []);
 
-  const fetchData = useCallback(
-    async (source: string) => {
-      setLoading(true);
-      setError(null);
-      const results: { [ticker: string]: any } = {};
-      const checkpointsData: { [ticker: string]: CheckpointT[] } = {};
+ 
+  const fetchAssetData = async (asset: AssetT) => {
+    const response = await fetch(`${dataSources[source]}&pair=${asset.ticker}`);
+    if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
+    return response.json();
+  };
 
-      try {
-        const publisherUrl =
-          dataSources[
-            `publishers${source.charAt(0).toUpperCase() + source.slice(1)}`
-          ];
-        const checkpointsUrl =
-          dataSources[
-            `checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`
-          ];
+  const fetchCheckpoints = async (asset: AssetT) => {
+    const checkpointsUrl = dataSources[`checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`];
+    const response = await fetch(`${checkpointsUrl}&pair=${asset.ticker}`);
+    if (!response.ok) throw new Error(`Failed to fetch checkpoints for ${asset.ticker}`);
+    return response.json();
+  };
 
-        const [, , publishersResponse] = await Promise.all([
-          Promise.all(
-            assets.map(async (asset) => {
-              const response = await fetch(
-                `${dataSources[source]}&pair=${asset.ticker}`
-              );
-              if (!response.ok)
-                throw new Error(`Failed to fetch data for ${asset.ticker}`);
-              const result = await response.json();
-              results[asset.ticker] = result;
-            })
-          ),
-          Promise.all(
-            assets.map(async (asset) => {
-              const response = await fetch(
-                `${checkpointsUrl}&pair=${asset.ticker}`
-              );
-              if (!response.ok)
-                throw new Error(`Failed to fetch data for ${asset.ticker}`);
-              const result = await response.json();
-              checkpointsData[asset.ticker] = result;
-            })
-          ),
-          fetch(publisherUrl),
-        ]);
-        if (!publishersResponse.ok)
-          throw new Error("Failed to fetch publishers data");
-        const publishersData = await publishersResponse.json();
+  const fetchPublishers = async () => {
+    const publisherUrl = dataSources[`publishers${source.charAt(0).toUpperCase() + source.slice(1)}`];
+    const response = await fetch(publisherUrl);
+    if (!response.ok) throw new Error("Failed to fetch publishers data");
+    return response.json();
+  };
 
-        setData(results);
-        setCheckpoints(checkpointsData);
-        setPublishers(publishersData);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [assets]
-  );
+  const assetQueries = useQueries({
+    queries: assets.map((asset) => ({
+      queryKey: ['asset', asset.ticker, source],
+      queryFn: () => fetchAssetData(asset),
+      initialData: initialData?.[asset.ticker],
+    })),
+  });
 
-  useEffect(() => {
-    if (!initialData || !initialPublishers || !initialCheckpoints) {
-      fetchData(source);
-    } else {
-      setLoading(false);
-    }
-  }, [source, fetchData, initialData, initialPublishers, initialCheckpoints]);
+  const checkpointQueries = useQueries({
+    queries: assets.map((asset) => ({
+      queryKey: ['checkpoints', asset.ticker, source],
+      queryFn: () => fetchCheckpoints(asset),
+      initialData: initialCheckpoints?.[asset.ticker],
+    })),
+  });
+
+  const publishersQuery = useQuery({
+    queryKey: ['publishers', source],
+    queryFn: fetchPublishers,
+    initialData: initialPublishers,
+  });
+
+  const data = useMemo(() => {
+    return assets.reduce((acc, asset, index) => {
+      acc[asset.ticker] = assetQueries[index].data;
+      return acc;
+    }, {} as { [ticker: string]: any });
+  }, [assets, assetQueries]);
+
+  const checkpoints = useMemo(() => {
+    return assets.reduce((acc, asset, index) => {
+      acc[asset.ticker] = checkpointQueries[index].data;
+      return acc;
+    }, {} as { [ticker: string]: CheckpointT[] });
+  }, [assets, checkpointQueries]);
+
+  const loading = assetQueries.some((query) => query.isLoading) ||
+    checkpointQueries.some((query) => query.isLoading) ||
+    publishersQuery.isLoading;
+
+  const error = assetQueries.find((query) => query.error)?.error?.message ||
+    checkpointQueries.find((query) => query.error)?.error?.message ||
+    publishersQuery.error?.message || null;
 
   const switchSource = (newSource: string) => {
     if (dataSources[newSource]) {
