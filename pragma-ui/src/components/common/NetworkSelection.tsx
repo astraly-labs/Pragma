@@ -1,76 +1,70 @@
-import React, {useState} from "react";
+import React, { Fragment, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 
-const NetworkSelection = ({
-    setNetwork, 
+const NetworkSelection = ({ setNetwork }) => {
+  const NETWORKS = ["sepolia", "mainnet"];
+  const [definedNetwork, setDefinedNetwork] = useState<string>("sepolia");
 
-}) => {
-    const NETWORKS = ["sepolia", "mainnet"];
-    const [definedNetwork, setDefinedNetwork] = useState<string>("sepolia");
-
-    const setConfigurationNetwork = (network) => {
-        setDefinedNetwork(network);
-        setNetwork(network);
-    }
+  const setConfigurationNetwork = (network) => {
+    setDefinedNetwork(network);
+    setNetwork(network);
+  };
   return (
-    <div className="flex">
-              <Listbox
-                value={definedNetwork}
-                onChange={setConfigurationNetwork}
+    <Listbox value={definedNetwork} onChange={setConfigurationNetwork}>
+      <div className="relative">
+        <Listbox.Button className="relative flex cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+          <span className="block truncate">{definedNetwork}</span>
+          <Image
+            className="my-auto pl-2"
+            height={16}
+            width={16}
+            alt="arrowDown"
+            src="/assets/vectors/arrowDown.svg"
+          />
+        </Listbox.Button>
+        <Transition
+          as={Fragment}
+          leave="transition ease-in duration-100"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto	rounded-md bg-green py-1	text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+            {NETWORKS.map((current_network, networkIdx) => (
+              <Listbox.Option
+                key={networkIdx}
+                className={({ active }) =>
+                  `relative cursor-pointer select-none py-2 pl-4 pr-4 text-lightGreen ${
+                    active ? "opacity-50 " : ""
+                  }`
+                }
+                value={current_network}
               >
-                <div className="relative mt-1">
-                  <Listbox.Button className="relative flex w-full cursor-pointer  gap-x-2 flex-row rounded-full bg-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
-                    <span className="pr-4 block truncate">
-                      {definedNetwork}
+                {({ selected }) => (
+                  <>
+                    <span
+                      className={`block truncate text-lightGreen ${
+                        selected ? "font-medium" : "font-normal"
+                      }`}
+                    >
+                      {current_network}
                     </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-darkGreen py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {NETWORKS.map((current_network) => (
-                        <Listbox.Option
-                          key={current_network}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-2 pr-4 ${
-                              active
-                                ? "bg-lightGreen text-darkGreen"
-                                : "text-lightGreen"
-                            }`
-                          }
-                          value={current_network}
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${
-                                  selected ? "font-medium" : "font-normal"
-                                }`}
-                              >
-                                {current_network}
-                              </span>
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-            </div>
+                    {selected ? (
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                    ) : null}
+                  </>
+                )}
+              </Listbox.Option>
+            ))}
+          </Listbox.Options>
+        </Transition>
+      </div>
+    </Listbox>
   );
 };
 

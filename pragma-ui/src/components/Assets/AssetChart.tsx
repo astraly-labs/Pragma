@@ -188,7 +188,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="ring-backdrop-blur absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen focus:outline-none">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
                 {options.map((option, optionIdx) => (
                   <Listbox.Option
                     key={optionIdx}
