@@ -21,22 +21,15 @@ import {
 import AncillaryABI from "../../abi/Ancillary.json";
 import { uint256, shortString } from "starknet";
 import dotenv from "dotenv";
-import { ChevronDownIcon } from "@heroicons/react/outline";
 import NetworkSelection from "../common/NetworkSelection";
 
 dotenv.config();
 
 const NUMERICAL_TRUE = 1000000000000000000;
+const ITEMS_PER_PAGE = 10;
 
-const ActiveAssessments = ({
-  assessments,
-  loading,
-  onAssertionTypeChange,
-  onLoadMore,
-  hasMore,
-}) => {
+const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
   const options = ["Active", "Settled", "Disputed"];
-  const NETWORKS = ["sepolia", "mainnet"];
   const [filteredValue, setFilteredValue] = useState<string | undefined>(
     undefined
   );
@@ -51,6 +44,8 @@ const ActiveAssessments = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [requestId, setRequestId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedComponents, setPaginatedComponents] = useState([]);
 
   const handleInputChange = (value) => {
     setFilteredValue(value || undefined);
@@ -286,6 +281,156 @@ const ActiveAssessments = ({
     setRequestId(null);
   };
 
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    setPaginatedComponents(assessments.slice(startIndex, endIndex));
+  }, [currentPage, assessments]);
+
+  const totalPages = Math.ceil(assessments.length / ITEMS_PER_PAGE);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={classNames(
+              "mx-1 rounded-full px-4 py-2",
+              currentPage === i
+                ? "bg-lightGreen text-darkGreen"
+                : " border border-lightGreen text-lightGreen"
+            )}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else if (currentPage <= 3) {
+      // Beginning: 1 2 3 ... last
+      for (let i = 1; i <= 3; i++) {
+        pageNumbers.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={classNames(
+              "mx-1 rounded-full px-4 py-2",
+              currentPage === i
+                ? "bg-lightGreen text-darkGreen"
+                : "border border-lightGreen text-lightGreen"
+            )}
+          >
+            {i}
+          </button>
+        );
+      }
+      pageNumbers.push(
+        <span key="ellipsis" className="mx-1 px-2 text-lightGreen">
+          ...
+        </span>
+      );
+      pageNumbers.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className={classNames(
+            "mx-1 rounded-full border border-lightGreen py-2 text-lightGreen",
+            totalPages > 9 ? "px-3" : "px-4"
+          )}
+        >
+          {totalPages}
+        </button>
+      );
+    } else if (currentPage >= totalPages - 2) {
+      // End: 1 ... last-2 last-1 last
+      pageNumbers.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className="mx-1 rounded-full border border-lightGreen px-4 py-2 text-lightGreen"
+        >
+          1
+        </button>
+      );
+      pageNumbers.push(
+        <span key="ellipsis" className="mx-1 px-2 text-lightGreen">
+          ...
+        </span>
+      );
+      for (let i = totalPages - 2; i <= totalPages; i++) {
+        pageNumbers.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={classNames(
+              "mx-1 rounded-full py-2",
+              currentPage === i
+                ? "bg-lightGreen text-darkGreen"
+                : "border border-lightGreen text-lightGreen",
+              i > 9 ? "px-3" : "px-4"
+            )}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else {
+      // Middle: 1 ... x ... last
+      pageNumbers.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className="mx-1 rounded-full border border-lightGreen px-4 py-2 text-lightGreen"
+        >
+          1
+        </button>
+      );
+      pageNumbers.push(
+        <span key="ellipsis1" className="mx-1 px-2 text-lightGreen">
+          ...
+        </span>
+      );
+      pageNumbers.push(
+        <button
+          key={currentPage}
+          onClick={() => handlePageChange(currentPage)}
+          className={classNames(
+            "mx-1 rounded-full border border-lightGreen bg-lightGreen py-2 text-darkGreen",
+            currentPage > 9 ? "px-3" : "px-4"
+          )}
+        >
+          {currentPage}
+        </button>
+      );
+      pageNumbers.push(
+        <span key="ellipsis2" className="mx-1 px-2 text-lightGreen">
+          ...
+        </span>
+      );
+      pageNumbers.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className={classNames(
+            "mx-1 rounded-full border border-lightGreen py-2 text-lightGreen",
+            totalPages > 9 ? "px-3" : "px-4"
+          )}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pageNumbers;
+  };
+
   return (
     <>
       <div
@@ -367,15 +512,39 @@ const ActiveAssessments = ({
               Challenge Period
             </div>
           </div>
-          {!loading &&
-            filteredAssessments.map((element, index) => (
-              <Assessment
-                assessment={element}
-                key={index}
-                loading={loading}
-                onClick={() => handleAssessmentClick(element)}
-              />
-            ))}
+          {filteredAssessments.length > 0 ? (
+            <>
+              {paginatedComponents.map((element, index) => (
+                <Assessment
+                  assessment={element}
+                  key={index}
+                  loading={loading}
+                  onClick={() => handleAssessmentClick(element)}
+                />
+              ))}
+              {filteredAssessments.length > ITEMS_PER_PAGE && (
+                <div className="mt-4 flex items-center justify-center">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="mx-1 rounded px-3 py-1 text-lightGreen disabled:opacity-20"
+                  >
+                    &lt;
+                  </button>
+                  {renderPageNumbers()}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="mx-1 rounded px-3 py-1 text-lightGreen disabled:opacity-20"
+                  >
+                    &gt;
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div></div>
+          )}
           {/* {!loading && (
     filteredValue
       ? filteredAssessments.map((assessment, assetIdx) => (
@@ -401,18 +570,6 @@ const ActiveAssessments = ({
             </div>
           )}
         </div>
-        {hasMore && (
-          <div className="mt-4 flex justify-center">
-            <div
-              onClick={onLoadMore}
-              className={`text-light-green cursor-pointer underline transition-colors duration-200 hover:opacity-50 ${
-                loading ? "cursor-wait" : ""
-              }`}
-            >
-              {loading ? "Loading..." : "Load More"}
-            </div>
-          </div>
-        )}
       </div>{" "}
       {selectedAssessment && (
         <AssessmentPopup
