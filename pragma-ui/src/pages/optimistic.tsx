@@ -18,6 +18,8 @@ import {
   extractTitleFromClaim,
 } from "../utils";
 import axios from "axios";
+import {keepPreviousData, useQuery} from "@tanstack/react-query";
+
 
 export interface Item {
   assertion_id: number;
@@ -34,8 +36,6 @@ export interface Item {
 }
 
 const OptimisticPage = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [assertionType, setAssertionType] = useState<string>("active");
   const [page, setPage] = useState<number>(1);
 
@@ -49,65 +49,44 @@ const OptimisticPage = () => {
     new ArgentMobileConnector(),
   ];
 
+  const fetchAssertions = async ({ queryKey }) => {
+    const [_, type, pageNumber] = queryKey;
+    const limit = pageNumber === 1 ? INITIAL_LIMIT : LOAD_MORE_LIMIT;
+    const API_URL = `${
+      process.env.API_URL ||
+      "http://0.0.0.0:3000/node/v1/optimistic/assertions"
+    }?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
+    
+    const response = await axios.get(API_URL);
+    return response.data.assertions.map((assertion: any) => ({
+      assertion_id: assertion.assertion_id,
+      title: extractTitleFromClaim(hexToUtf8(assertion.claim)),
+      description: extractDescriptionFromClaim(hexToUtf8(assertion.claim)),
+      status: assertion.status,
+      timestamp: assertion.timestamp,
+      bond: assertion.bond,
+      dispute_id: assertion.dispute_id,
+      currency: assertion.currency,
+      expiration_time: assertion.expiration_time,
+      identifier: hexToUtf8(assertion.identifier),
+    }));
+  };
+
+  const { data: items = [], isLoading, error } = useQuery({
+    queryKey:['assertions', assertionType, page],
+    queryFn: fetchAssertions,
+    refetchInterval: 3000,
+    placeholderData: keepPreviousData,
+  }
+  );
+
   const handleAssertionTypeChange = (newType: string) => {
     setAssertionType(newType.toLowerCase());
     setPage(1);
-    fetchData(newType.toLowerCase(), 1);
   };
 
-  const fetchData = useCallback(
-    async (type: string, pageNumber: number, loadMore: boolean = false) => {
-      try {
-        setLoading(true);
-        const limit = pageNumber === 1 ? INITIAL_LIMIT : LOAD_MORE_LIMIT;
-        const API_URL = `${
-          process.env.API_URL ||
-          "http://0.0.0.0:3000/node/v1/optimistic/assertions"
-        }?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
-        const response = await axios.get(API_URL);
-        const assertions = response.data.assertions;
-        const newItems = assertions.map((assertion: any) => ({
-          assertion_id: assertion.assertion_id,
-          title: extractTitleFromClaim(hexToUtf8(assertion.claim)),
-          description: extractDescriptionFromClaim(hexToUtf8(assertion.claim)),
-          status: assertion.status,
-          timestamp: assertion.timestamp,
-          bond: assertion.bond,
-          dispute_id: assertion.dispute_id,
-          currency: assertion.currency,
-          expiration_time: assertion.expiration_time,
-          identifier: hexToUtf8(assertion.identifier),
-        }));
-        if (loadMore) {
-          setItems((prevItems) => [...prevItems, ...newItems]);
-        } else {
-          setItems(newItems);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    },
-    [INITIAL_LIMIT, LOAD_MORE_LIMIT]
-  );
-  useEffect(() => {
-    if (page === 1) {
-      fetchData(assertionType, 1, false);
-    }
-    const intervalId = setInterval(() => {
-      if (page === 1) {
-        fetchData(assertionType, 1, false);
-      }
-    }, 3000);
-    return () => clearInterval(intervalId);
-  }, [assertionType, fetchData, page]);
-
   const handleLoadMore = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    fetchData(assertionType, nextPage, true);
+    setPage((prevPage) => prevPage + 1);
   };
 
   return (
@@ -136,9 +115,12 @@ const OptimisticPage = () => {
         <BoxContainer>
           <ActiveAssessments
             assessments={items}
-            loading={loading}
+            loading={isLoading}
             onAssertionTypeChange={handleAssertionTypeChange}
           />
+           {!isLoading && items.length >= INITIAL_LIMIT && (
+            <button onClick={handleLoadMore}>Load More</button>
+          )}
         </BoxContainer>
       </div>
     </StarknetProvider>
