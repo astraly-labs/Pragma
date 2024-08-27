@@ -6,10 +6,11 @@ import {
   networkId,
 } from "../../services/wallet.service";
 import { getOracleProxyAddress } from "../../services/address.service";
-import InputComponent from "./EmailInput";
+// import InputComponent from "./EmailInput";
 import LightGreenUpper from "../common/LightGreenUpperText";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
+import { ChevronRightIcon } from "@heroicons/react/outline";
 
 interface FooterLink {
   title: string;
@@ -182,10 +183,14 @@ const Footer = () => (
           </nav>
         ))}
         <div className="col-span-4 max-w-md">
-          <div className="pb-3 text-lg text-lightGreen">
-            Subscribe to our mailing list
-          </div>
-          <InputComponent placeholderText="Email address" />
+          <Link
+            href="https://blog.pragma.build/#/portal"
+            className="flex flex-row pb-3 text-sm tracking-wider text-lightGreen"
+          >
+            Subscribe to our mailing list{" "}
+            <ChevronRightIcon className="my-auto h-6 w-6 pl-2" />
+          </Link>
+          {/* <InputComponent placeholderText="Email address" /> */}
         </div>
       </div>
       <LightGreenUpper className="mt-4 pt-3 text-left md:mt-10 md:pt-10">
