@@ -18,7 +18,7 @@ import {
   extractTitleFromClaim,
 } from "../utils";
 import axios from "axios";
-import {keepPreviousData, useQuery} from "@tanstack/react-query";
+import {keepPreviousData, useQuery, QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 
 export interface Item {
@@ -38,6 +38,7 @@ export interface Item {
 const OptimisticPage = () => {
   const [assertionType, setAssertionType] = useState<string>("active");
   const [page, setPage] = useState<number>(1);
+  const queryClient = new QueryClient()
 
   const INITIAL_LIMIT = 2;
   const LOAD_MORE_LIMIT = 2;
@@ -90,6 +91,7 @@ const OptimisticPage = () => {
   };
 
   return (
+    <QueryClientProvider client={queryClient}>
     <StarknetProvider connectors={connectors}>
       <div
         className={classNames(
@@ -124,6 +126,7 @@ const OptimisticPage = () => {
         </BoxContainer>
       </div>
     </StarknetProvider>
+    </QueryClientProvider>
   );
 };
 

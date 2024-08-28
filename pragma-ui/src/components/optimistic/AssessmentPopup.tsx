@@ -9,7 +9,7 @@ import { OO_CONTRACT_ADDRESS, CURRENCIES,ORACLE_ANCILLARY_ADDRESS } from '../../
 import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 
 
 interface AssessmentPopupProps {
@@ -141,46 +141,24 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       args: [],
       watch: true,
     });
-            // Wait for dispute transaction
-  const { isLoading: isDisputeLoading, isError: isDisputeError, error: disputeError } = useWaitForTransaction({
-    hash: disputeHash,
-    watch: true
-  });
 
-    // Wait for resolve transaction
-    const { isLoading: isResolveLoading, isError: isResolveError, error: resolveError, isSuccess: resolveSuccess } = useWaitForTransaction({
-      hash: pushPriceHash,
-      watch: true
-    });
-  const handleSettle = async (assertionId: number) => {
+ 
+    const settleMutation = useMutation({
+      mutationFn: (assertionId: number) => settleAssertion({
+        calls: [{
+          contractAddress: network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+          entrypoint: 'settle_assertion',
+          calldata: [assertionId.toString()]
+        }]
+      }),
+      onSuccess: () => {
+          queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+        },
+  } );
 
-    try {
-      await settleAssertion({
-        calls: [
-          {
-            contractAddress:  network == 'sepolia' ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet ,
-            entrypoint: 'settle_assertion',
-            calldata: [assertionId.toString()]
-          }
-        ]
-      });
-      console.log(`Settled assertion with ID: ${assertionId}`);
-    } catch (error) {
-      console.error('Error settling assertion:', error);
-    }
-  };
-
-
-  const handleDispute = async (assertionId: number, bond: string) => {
-    console.log(`Disputing item with ID: ${assertionId}`);
-
-    if (!address) {
-      alert('Please connect your wallet first');
-      return;
-    }
-
-    try {
-      const result = await approveAndDispute({
+  const disputeMutation = useMutation({
+     mutationFn: ({ assertionId, bond }: { assertionId: number; bond: string }) => 
+      approveAndDispute({
         calls: bond && [
           {
             contractAddress: currency[0].address,
@@ -193,85 +171,56 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
             calldata: [assertionId.toString(), address]
           }
         ]
-      });
-
-
-      console.log('Transaction hash:', result.transaction_hash);
-      setDisputeHash(result.transaction_hash);
-
-      const timeout = 120000; // 2 minutes timeout
-      const startTime = Date.now();
-
-      while (isDisputeLoading && Date.now() - startTime < timeout) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-      }
-
-      if (isDisputeError) {
-        throw new Error(`Transaction failed: ${disputeError?.message}`);
-      }
-
-      alert('Assertion disputed successfully!');
-    } catch (error) {
-      console.error('Error disputing assertion:', error);
-      alert(`Failed to dispute the assertion ${error}`);
-    } finally {
-      setDisputeHash(undefined);
+      }),
+      onSuccess: () => {
+        queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+      },
     }
+  );
+
+  const resolveDisputeMutation = useMutation({
+    mutationFn: ({ assertionId, request_id, resolution }: { assertionId: number; request_id: string; resolution: boolean }) => {
+      let resolutionInt = resolution ? 1000000000000000000 : 0;
+      return push_price({
+        calls: [{
+          contractAddress: network === 'sepolia' ? ORACLE_ANCILLARY_ADDRESS.sepolia : ORACLE_ANCILLARY_ADDRESS.mainnet,
+          entrypoint: 'push_price_by_request_id',
+          calldata: [request_id.toString(), uint256.bnToUint256(resolutionInt).low, uint256.bnToUint256(resolutionInt).high]
+        }]
+      });
+    },
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+        settleMutation.mutate(variables.assertionId);
+      },
+    }
+  );
+
+  // Handlers
+  const handleSettle = (assertionId: number) => {
+    settleMutation.mutate(assertionId);
   };
 
-  
-
-  const handleResolveDispute = async(assertionId: number, request_id: string, resolution: boolean) => {
-    console.log(`Resolve dispute item with ID: ${assertionId}`);
-
+  const handleDispute = (assertionId: number, bond: string) => {
     if (!address) {
       alert('Please connect your wallet first');
       return;
     }
+    disputeMutation.mutate({ assertionId, bond });
+  };
 
-    if (owner != address){
+  const handleResolveDispute = (assertionId: number, request_id: string, resolution: boolean) => {
+    if (!address) {
+      alert('Please connect your wallet first');
+      return;
+    }
+    if (owner != address) {
       alert('Not the owner');
       return;
     }
+    resolveDisputeMutation.mutate({ assertionId, request_id, resolution });
+  };
 
-    try {
-
-      let resolutionInt = resolution ? 1000000000000000000: 0;
-      const result = await push_price({
-        calls:  [{
-          contractAddress: network === 'sepolia' ? ORACLE_ANCILLARY_ADDRESS.sepolia: ORACLE_ANCILLARY_ADDRESS.mainnet,
-          entrypoint: 'push_price_by_request_id',
-          calldata: [request_id.toString(), uint256.bnToUint256(resolutionInt).low, uint256.bnToUint256(resolutionInt).high] 
-        }]
-      }); 
-       console.log('Transaction hash:', result.transaction_hash);
-      setPushPriceHash(result.transaction_hash);  
-
-      let timeout = 120000; // 2 minutes timeout
-      let startTime = Date.now();
-
-      while (isResolveLoading && Date.now() - startTime < timeout) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-      }
-
-      if (isResolveError) {
-        throw new Error(`Transaction failed: ${resolveError?.message}`);
-      }
-
-      // wait for success
-      timeout = 160000; // 2 minutes timeout
-      startTime = Date.now();
-      while (resolveSuccess && Date.now() - startTime < timeout) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-      }
-      handleSettle(assertionId);
-
-    } catch (error) {
-      console.error('Error resolving assertion:', error);
-    }finally {
-      setPushPriceHash(undefined);
-    }
-  }
 
 
 
