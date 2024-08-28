@@ -89,7 +89,6 @@ export const DataProvider = ({
   initialCheckpoints: { [ticker: string]: CheckpointT[] };
 }) => {
   const [assets] = useState<AssetT[]>(initialAssets);
-  const [publishers, setPublishers] = useState<PublisherT[]>(initialPublishers);
   const [source, setSource] = useState("mainnet");
 
   useEffect(() => {
@@ -143,6 +142,18 @@ export const DataProvider = ({
     initialData: initialPublishers,
   });
 
+  const loading = assetQueries.some((query) => query.isLoading) ||
+  checkpointQueries.some((query) => query.isLoading) ||
+  publishersQuery.isLoading;
+
+  const error = assetQueries.find((query) => query.error)?.error?.message ||
+  checkpointQueries.find((query) => query.error)?.error?.message ||
+  publishersQuery.error?.message || null;
+
+  const publishers = useMemo(() => {
+    return publishersQuery.data || [];
+  }, [publishersQuery.data]);
+
   const data = useMemo(() => {
     return assets.reduce((acc, asset, index) => {
       acc[asset.ticker] = assetQueries[index].data;
@@ -157,14 +168,6 @@ export const DataProvider = ({
     }, {} as { [ticker: string]: CheckpointT[] });
   }, [assets, checkpointQueries]);
 
-  const loading = assetQueries.some((query) => query.isLoading) ||
-    checkpointQueries.some((query) => query.isLoading) ||
-    publishersQuery.isLoading;
-
-  const error = assetQueries.find((query) => query.error)?.error?.message ||
-    checkpointQueries.find((query) => query.error)?.error?.message ||
-    publishersQuery.error?.message || null;
-
   const switchSource = (newSource: string) => {
     if (dataSources[newSource]) {
       setSource(newSource);
@@ -173,7 +176,6 @@ export const DataProvider = ({
       console.error("Invalid data source");
     }
   };
-
   return (
     <DataContext.Provider
       value={{

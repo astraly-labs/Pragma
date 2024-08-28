@@ -9,6 +9,7 @@ import { OO_CONTRACT_ADDRESS, CURRENCIES,ORACLE_ANCILLARY_ADDRESS } from '../../
 import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
+import {useQuery} from "@tanstack/react-query";
 
 
 interface AssessmentPopupProps {
@@ -40,36 +41,19 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const [timeLeft, setTimeLeft] = useState("");
   const currency = CURRENCIES[network];
   const { address } = useAccount();
-  const [resolutionItem, setResolutionItem] = useState<ResolutionDetails>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [pushPriceHash, setPushPriceHash] = useState<string |undefined>();
   const [disputeHash, setDisputeHash] = useState<string | undefined>();
 
-
-
-
-  const fetchData = async () => {
-    try {
+  const { data: resolutionItem, isLoading } = useQuery<ResolutionDetails, Error>({
+    queryKey: ['assertionDetails', assessment.assertion_id],
+    queryFn: async () => {
       const API_URL = `${process.env.API_URL || 'http://0.0.0.0:3000/node/v1/optimistic/assertions'}/${assessment.assertion_id}`;
       const response = await axios.get(API_URL);
-      const assertion = response.data;
-      setResolutionItem({
-        domain_id : assertion.domain_id, 
-        asserter: assertion.asserter, 
-        disputer: assertion.disputer, 
-        disputed: assertion.disputed, 
-        dispute_id: assertion.dispute_id, 
-        callback_recipient: assertion.callback_recipient,
-        caller: assertion.caller, 
-        settled: assertion.settled, 
-        settle_caller: assertion.settle_caller, 
-        settlement_resolution: assertion.settlement_resolution,
-      })
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching assertion details:', error);      
+      return response.data;
     }
-  };
+  }
+  );
+
 
   useEffect(() => {
     const updateProgressAndTime = () => {
@@ -181,7 +165,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         ]
       });
       console.log(`Settled assertion with ID: ${assertionId}`);
-      fetchData();
     } catch (error) {
       console.error('Error settling assertion:', error);
     }
@@ -228,7 +211,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       }
 
       alert('Assertion disputed successfully!');
-      fetchData();
     } catch (error) {
       console.error('Error disputing assertion:', error);
       alert(`Failed to dispute the assertion ${error}`);
@@ -296,7 +278,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   useEffect(() => {
     // Trigger the animation after the component is mounted
     setIsVisible(true);
-    fetchData();
   }, []);
 
   const handleClose = () => {

@@ -88,17 +88,11 @@ const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
 
 const AssetsPage = () => {
   const { data, loading, switchSource, currentSource, publishers } = useData();
-
-  const [formattedAssets, setFormattedAssets] = useState<AssetInfo[]>([]);
-  const [formattedPublishers, setFormattedPublishers] = useState<
-    DataProviderInfo[]
-  >([]);
-
-  useEffect(() => {
-    setFormattedAssets(formatAssets(data || {}));
-    setFormattedPublishers(formatPublishers(publishers || []));
-  }, [data, publishers]);
-
+  if (loading) {
+    return <div>Loading...</div>;  // TODO: DISPLAY PROPER LOADING
+  }
+  const formattedAssets = formatAssets(data);
+  const formattedPublishers = formatPublishers(publishers);
   return (
     <div
       className={classNames(
@@ -124,7 +118,7 @@ const AssetsPage = () => {
           assets={formattedAssets}
           onSourceChange={switchSource}
           selectedSource={currentSource}
-          loading={loading}
+          loading={false}
         />
       </BoxContainer>
       <BoxContainer>
@@ -134,7 +128,7 @@ const AssetsPage = () => {
           assets={formattedPublishers}
           onSourceChange={switchSource}
           selectedSource={currentSource}
-          loading={loading}
+          loading={false}
         />
       </BoxContainer>
     </div>
