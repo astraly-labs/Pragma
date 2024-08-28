@@ -41,8 +41,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const [timeLeft, setTimeLeft] = useState("");
   const currency = CURRENCIES[network];
   const { address } = useAccount();
-  const [pushPriceHash, setPushPriceHash] = useState<string |undefined>();
-  const [disputeHash, setDisputeHash] = useState<string | undefined>();
 
   const { data: resolutionItem, isLoading } = useQuery<ResolutionDetails, Error>({
     queryKey: ['assertionDetails', assessment.assertion_id],

@@ -299,23 +299,6 @@ const Request = () => {
             />
           </div>
 
-          {/* <div className="flex flex-col gap-3">
-              <label
-                htmlFor="timestamp"
-                className="block pb-3 text-xl tracking-wider text-lightGreen"
-              >
-                Timestamp
-              </label>
-              <input
-                type="datetime-local"
-                id="timestamp"
-                name="timestamp"
-                value={formData.timestamp}
-                onChange={handleInputChange}
-                className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
-              />
-            </div> */}
-
           <div className="flex flex-col gap-3">
             <label
               htmlFor="currency"

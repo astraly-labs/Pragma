@@ -41,9 +41,6 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [disputeHash, setDisputeHash] = useState<string | undefined>();
   const [pushPriceHash, setPushPriceHash] = useState<string | undefined>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
-  const [requestId, setRequestId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginatedComponents, setPaginatedComponents] = useState([]);
 
@@ -264,22 +261,6 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
     }
   };
 
-  const openModal = (assertion_id: number, request_id: number) => {
-    if (owner == address) {
-      setSelectedItem(assertion_id);
-      setRequestId(request_id);
-      setIsModalOpen(true);
-    } else {
-      console.log(owner?.toString(16));
-      alert("Must be the owner");
-    }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
-    setRequestId(null);
-  };
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
