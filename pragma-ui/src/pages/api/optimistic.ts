@@ -6,7 +6,7 @@
  */
 export default async function handler(req, res) {
     // Extract the query parameters from the request
-    const { status = "active", page = "1", limit = "5" } = req.query; // Default to 'sepolia' & 'btc/usd' if not specified
+    const { status = "active", page = "1", limit = "5" } = req.query;
   
     const apiUrl = `https://api.dev.pragma.build/node/v1/optimistic/assertions?status=${status}&page=${page}&limit=${limit}`;
     console.log(`Fetching data from ${apiUrl}`);
