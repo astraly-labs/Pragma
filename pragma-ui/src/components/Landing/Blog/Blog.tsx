@@ -14,7 +14,7 @@ const Blog = () => (
         center={false}
         variant="outline"
         color="mint"
-        href="https://mirror.xyz/pragmagic.eth"
+        href="https://blog.pragma.build/"
         className="hidden h-fit w-fit md:block"
       >
         Read All
@@ -25,7 +25,7 @@ const Blog = () => (
       center={true}
       variant="outline"
       color="mint"
-      href="https://mirror.xyz/pragmagic.eth"
+      href="https://blog.pragma.build/"
       className="mt-8 block w-fit md:hidden"
     >
       Read All

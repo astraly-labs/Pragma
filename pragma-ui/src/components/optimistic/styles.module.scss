@@ -1,0 +1,54 @@
+.darkGreenBox {
+  display: flex;
+  padding: 56px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(#02201e, #02201e) padding-box,
+    linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.25) 020%,
+        rgba(255, 255, 255, 0.06%) 050%,
+        rgba(255, 255, 255, 0.25) 080%,
+        rgba(255, 255, 255, 0.205) 100%
+      )
+      border-box;
+  backdrop-filter: blur(12.5px);
+}
+
+.assessment {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 650px repeat(auto-fill, minmax(170px, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(170px, 1fr);
+  align-items: flex-start;
+  justify-content: left;
+  gap: 10px;
+  padding-bottom: 12px;
+  padding-top: 12px;
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.assessment > div:first-child {
+  min-width: 650px;
+}
+
+.assessment > div:not(:first-child) {
+  min-width: 170px;
+}
+
+@media (max-width: 1400px) {
+  .assessment {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 640px) {
+  .darkGreenBox {
+    padding: 24px 32px;
+  }
+}

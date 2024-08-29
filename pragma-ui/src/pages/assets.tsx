@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
@@ -88,17 +88,8 @@ const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
 
 const AssetsPage = () => {
   const { data, loading, switchSource, currentSource, publishers } = useData();
-
-  const [formattedAssets, setFormattedAssets] = useState<AssetInfo[]>([]);
-  const [formattedPublishers, setFormattedPublishers] = useState<
-    DataProviderInfo[]
-  >([]);
-
-  useEffect(() => {
-    setFormattedAssets(formatAssets(data || {}));
-    setFormattedPublishers(formatPublishers(publishers || []));
-  }, [data, publishers]);
-
+  const formattedAssets = loading ? [] : formatAssets(data);
+  const formattedPublishers = loading ? [] : formatPublishers(publishers);
   return (
     <div
       className={classNames(

@@ -53,12 +53,20 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
+      image: "/assets/posts/pragmaxvesu.webp",
+      date: "August 26th, 2024",
+      title: "Vesu's vault - Pragma's shield",
+      description:
+        "Pragma Oracle is excited to announce its integration with Vesu, a key addition to our...",
+      link: "https://blog.pragma.build/vesus-vault-pragmas-shield/",
+    },
+    {
       image: "/assets/posts/pragmapi.webp",
       date: "February 22nd, 2024",
       title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
       description:
         "We're thrilled to announce a new addition to our product suite – the Pragma API, with Starknet as its first user.",
-      link: "https://mirror.xyz/pragmagic.eth/6kLIyEzYanQNWn58tPfMpzIxehz7SZ3jM-sqJENy79k",
+      link: "https://blog.pragma.build/pragma-empowers-starknet-sequencer-with-the-launch-of-the-api/",
     },
     {
       image: "/assets/posts/vrf.webp",
@@ -66,7 +74,7 @@ const BlogCarousel: React.FC = () => {
       title: "Introducing the Verifiable Random Function in Cairo 1",
       description:
         "We are thrilled to announce the first phase of Pragma VRF, leveraging verifiable random functions to generate onchain verifiable randomness. Pragma VRF will greatly help...",
-      link: "https://mirror.xyz/pragmagic.eth/AtrYK2CLU9uflovElf8pO1U2mjyspdMqjfTV9yizWeI",
+      link: "https://blog.pragma.build/introducing-the-verifiable-random-function-vrf-in-cairo-1/",
     },
     {
       image: "/assets/posts/security.webp",
@@ -74,7 +82,7 @@ const BlogCarousel: React.FC = () => {
       title: "Exploring Pragma's Security",
       description:
         "We're thrilled to (officially) announce our bounty program on Immunefi, offering up to $50,000 for discovering vulnerabilities in our smart contracts. If you're proficient in Cairo and keen on assisting us in securing our Oracle...",
-      link: "https://mirror.xyz/pragmagic.eth/I_sNYLA1RvJoFFvPPoL-aTp52r4XRe6Y2zpWqTIBelw",
+      link: "https://blog.pragma.build/exploring-pragmas-security/",
     },
     {
       image: "/assets/posts/introducing.webp",
@@ -82,15 +90,15 @@ const BlogCarousel: React.FC = () => {
       title: "(RE)Introducing Pragma on Starknet",
       description:
         "Pragma is the leading Oracle on Starknet. It provides off-chain data to all DeFi happening on Starknet. Pragma is built from the ground up to remove any trust assumptions...",
-      link: "https://mirror.xyz/pragmagic.eth/_HKhpTGRG4SiCw6PS2vZ88Ssvgix_UVw2OMg3vD8O14",
+      link: "https://blog.pragma.build/re-introducing-pragma-on-starknet/",
     },
     {
-      image: "/assets/posts/longliveoraces.webp",
+      image: "/assets/posts/longliveoracles.webp",
       date: "August 21st, 2023",
       title: "Oracles are dead, Long live Oracles",
       description:
         "For as long as blockchains have been programmable, developers have attempted to bring data on-chain. Blockchains offer amazing properties, especially in terms of transparency, immutability, and openness...",
-      link: "https://mirror.xyz/pragmagic.eth/Hq509KXkqmdsWK7niszCXW-XaVc1WfmQBMUqjjrx2eY",
+      link: "https://blog.pragma.build/oracles-are-dead-long-live-oracles/",
     },
   ];
 
