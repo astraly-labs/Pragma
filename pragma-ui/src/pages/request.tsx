@@ -65,7 +65,7 @@ const Request = () => {
     challengePeriod: "",
     expirationTime: "",
   });
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)  => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
