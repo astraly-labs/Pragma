@@ -54,6 +54,7 @@ const Request = () => {
   const [assertion, setAssertion] = useState<string | undefined>(undefined);
   const [assertHash, setAssertHash] = useState<string | undefined>();
   const [calls, setCalls] = useState<any[] | undefined>(undefined);
+  const ONE_DOLLAR_FEE = 1000000000000000000
 
 
   const [formData, setFormData] = useState({
@@ -106,7 +107,7 @@ const Request = () => {
           entrypoint: "approve",
           calldata: [
             network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
-            uint256.bnToUint256(formData.bond).low,
+            uint256.bnToUint256(formData.bond + ONE_DOLLAR_FEE).low ,
             uint256.bnToUint256(formData.bond).high,
           ],
         },
