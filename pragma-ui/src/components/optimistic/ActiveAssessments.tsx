@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import SearchBar from "../Navigation/SearchBar";
@@ -6,26 +6,11 @@ import AssessmentPopup from "./AssessmentPopup";
 import Assessment from "./Assessment";
 import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
-import {
-  OO_CONTRACT_ADDRESS,
-  ORACLE_ANCILLARY_ADDRESS,
-  CURRENCIES,
-} from "../../pages/constants";
-import {
-  useAccount,
-  useContractWrite,
-  useContractRead,
-  useNetwork,
-  useWaitForTransaction,
-} from "@starknet-react/core";
-import AncillaryABI from "../../abi/Ancillary.json";
-import { uint256, shortString } from "starknet";
 import dotenv from "dotenv";
 import NetworkSelection from "../common/NetworkSelection";
 
 dotenv.config();
 
-const NUMERICAL_TRUE = 1000000000000000000;
 const ITEMS_PER_PAGE = 10;
 
 const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
@@ -33,13 +18,9 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
   const [filteredValue, setFilteredValue] = useState<string | undefined>(
     undefined
   );
-  const { address, isConnected } = useAccount();
   const [network, setNetwork] = useState<string>("sepolia");
-  const currency = CURRENCIES[network];
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedOption, setSelectedOption] = useState(options[0]);
-  const [disputeHash, setDisputeHash] = useState<string | undefined>();
-  const [pushPriceHash, setPushPriceHash] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
   const [paginatedComponents, setPaginatedComponents] = useState([]);
 
@@ -64,200 +45,6 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
 
   const handleClosePopup = () => {
     setSelectedAssessment(null);
-  };
-
-  // Settle assertion
-  const { writeAsync: settleAssertion } = useContractWrite({
-    calls: [
-      {
-        contractAddress:
-          network == "sepolia"
-            ? OO_CONTRACT_ADDRESS.sepolia
-            : OO_CONTRACT_ADDRESS.mainnet,
-        entrypoint: "settle_assertion",
-        calldata: [],
-      },
-    ],
-  });
-
-  const { data: owner } = useContractRead({
-    address:
-      network == "sepolia"
-        ? OO_CONTRACT_ADDRESS.sepolia
-        : OO_CONTRACT_ADDRESS.mainnet,
-    abi: AncillaryABI,
-    functionName: "owner",
-    args: [],
-    watch: true,
-  });
-  // Dispute assertion
-  const { writeAsync: approveAndDispute } = useContractWrite({
-    calls: [
-      {
-        contractAddress: currency[0].address,
-        entrypoint: "approve",
-        calldata: [],
-      },
-      {
-        contractAddress:
-          network == "sepolia"
-            ? OO_CONTRACT_ADDRESS.sepolia
-            : OO_CONTRACT_ADDRESS.mainnet,
-        entrypoint: "dispute_assertion",
-        calldata: [],
-      },
-    ],
-  });
-
-  // Push price to ancillary
-  const { writeAsync: push_price } = useContractWrite({
-    calls: [
-      {
-        contractAddress:
-          network == "sepolia"
-            ? ORACLE_ANCILLARY_ADDRESS.sepolia
-            : ORACLE_ANCILLARY_ADDRESS.mainnet,
-        entrypoint: "push_price",
-        calldata: [],
-      },
-    ],
-  });
-
-  // Wait for dispute transaction
-  const {
-    isLoading: isDisputeLoading,
-    isError: isDisputeError,
-    error: disputeError,
-  } = useWaitForTransaction({
-    hash: disputeHash,
-    watch: true,
-  });
-
-  // Wait for resolve transaction
-  const {
-    isLoading: isResolveLoading,
-    isError: isResolveError,
-    error: resolveError,
-  } = useWaitForTransaction({
-    hash: pushPriceHash,
-    watch: true,
-  });
-
-  const handleSettle = async (assertionId: number) => {
-    try {
-      await settleAssertion({
-        calls: [
-          {
-            contractAddress:
-              network == "sepolia"
-                ? OO_CONTRACT_ADDRESS.sepolia
-                : OO_CONTRACT_ADDRESS.mainnet,
-            entrypoint: "settle_assertion",
-            calldata: [assertionId.toString()],
-          },
-        ],
-      });
-      console.log(`Settled assertion with ID: ${assertionId}`);
-      // fetchData();
-    } catch (error) {
-      console.error("Error settling assertion:", error);
-    }
-  };
-
-  const handleDispute = async (assertionId: number, bond: string) => {
-    console.log(`Disputing item with ID: ${assertionId}`);
-
-    if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
-
-    try {
-      const result = await approveAndDispute({
-        calls: [
-          {
-            contractAddress: currency[0].address,
-            entrypoint: "approve",
-            calldata: [
-              OO_CONTRACT_ADDRESS,
-              uint256.bnToUint256(bond).low,
-              uint256.bnToUint256(bond).high,
-            ],
-          },
-          {
-            contractAddress: OO_CONTRACT_ADDRESS,
-            entrypoint: "dispute_assertion",
-            calldata: [assertionId.toString(), address],
-          },
-        ],
-      });
-
-      console.log("Transaction hash:", result.transaction_hash);
-      setDisputeHash(result.transaction_hash);
-
-      const timeout = 120000; // 2 minutes timeout
-      const startTime = Date.now();
-
-      while (isDisputeLoading && Date.now() - startTime < timeout) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
-      }
-
-      if (isDisputeError) {
-        throw new Error(`Transaction failed: ${disputeError?.message}`);
-      }
-
-      alert("Assertion disputed successfully!");
-      // fetchData();
-    } catch (error) {
-      console.error("Error disputing assertion:", error);
-      alert("Failed to dispute the assertion. Check console for details.");
-    } finally {
-      setDisputeHash(undefined);
-    }
-  };
-
-  const handleResolveDispute = async (
-    assertionId: number,
-    request_id: number,
-    resolution: boolean
-  ) => {
-    console.log(`Resolve dispute item with ID: ${assertionId}`);
-
-    try {
-      let resolutionInt = resolution ? NUMERICAL_TRUE : 0;
-
-      const result = await push_price({
-        calls: [
-          {
-            contractAddress:
-              network == "sepolia"
-                ? ORACLE_ANCILLARY_ADDRESS.sepolia
-                : ORACLE_ANCILLARY_ADDRESS.mainnet,
-            entrypoint: "push_price_by_request_id",
-            calldata: [request_id, resolutionInt],
-          },
-        ],
-      });
-      console.log("Transaction hash:", result.transaction_hash);
-      setPushPriceHash(result.transaction_hash);
-
-      const timeout = 120000; // 2 minutes timeout
-      const startTime = Date.now();
-
-      while (isResolveLoading && Date.now() - startTime < timeout) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
-      }
-
-      if (isResolveError) {
-        throw new Error(`Transaction failed: ${resolveError?.message}`);
-      }
-
-      handleSettle(assertionId);
-    } catch (error) {
-      console.error("Error resolving assertion:", error);
-    } finally {
-      setPushPriceHash(undefined);
-    }
   };
 
   useEffect(() => {

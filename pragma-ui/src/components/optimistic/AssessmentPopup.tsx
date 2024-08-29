@@ -8,7 +8,6 @@ import {
   useAccount,
   useContractWrite,
   useContractRead,
-  useWaitForTransaction,
 } from "@starknet-react/core";
 import {
   OO_CONTRACT_ADDRESS,
@@ -67,12 +66,12 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   useEffect(() => {
     const updateProgressAndTime = () => {
       const start = new Date(assessment.timestamp);
-      const start_timestamp = Math.floor(start.getTime());
+      const startTimestamp = Math.floor(start.getTime());
       const end = new Date(assessment.expiration_time);
-      const end_timestamp = Math.floor(end.getTime());
+      const endTimestamp = Math.floor(end.getTime());
       const now = Date.now();
-      const total = end_timestamp - start_timestamp;
-      const current = now - start_timestamp;
+      const total = endTimestamp - startTimestamp;
+      const current = now - startTimestamp;
       const calculatedProgress = Math.min(
         Math.max((current / total) * 100, 0),
         100
@@ -80,7 +79,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       setProgress(calculatedProgress);
 
       // Calculate time left
-      const remaining = end_timestamp - now;
+      const remaining = endTimestamp - now;
       if (remaining > 0) {
         const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
@@ -101,9 +100,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     return () => clearInterval(timer);
   }, [assessment]);
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleDateString();
-  };
   // Settle assertion
   const { writeAsync: settleAssertion } = useContractWrite({
     calls: [
@@ -119,7 +115,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   });
 
   // Push price to ancillary
-  const { writeAsync: push_price } = useContractWrite({
+  const { writeAsync: pushPrice } = useContractWrite({
     calls: [
       {
         contractAddress:
@@ -230,15 +226,15 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const resolveDisputeMutation = useMutation({
     mutationFn: ({
       assertionId,
-      request_id,
+      requestId,
       resolution,
     }: {
       assertionId: number;
-      request_id: string;
+      requestId: string;
       resolution: boolean;
     }) => {
-      let resolutionInt = resolution ? 1000000000000000000 : 0;
-      return push_price({
+      const resolutionInt = resolution ? 1000000000000000000 : 0;
+      return pushPrice({
         calls: [
           {
             contractAddress:
@@ -247,7 +243,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                 : ORACLE_ANCILLARY_ADDRESS.mainnet,
             entrypoint: "push_price_by_request_id",
             calldata: [
-              request_id.toString(),
+              requestId.toString(),
               uint256.bnToUint256(resolutionInt).low,
               uint256.bnToUint256(resolutionInt).high,
             ],
@@ -278,7 +274,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
   const handleResolveDispute = (
     assertionId: number,
-    request_id: string,
+    requestId: string,
     resolution: boolean
   ) => {
     if (!address) {
@@ -289,7 +285,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       alert("Not the owner");
       return;
     }
-    resolveDisputeMutation.mutate({ assertionId, request_id, resolution });
+    resolveDisputeMutation.mutate({ assertionId, requestId, resolution });
   };
 
   useEffect(() => {
@@ -421,7 +417,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         <div className="flex items-center justify-start space-x-4 py-4 pl-12">
           {!isLoading && !resolutionItem.settled && (
             <>
-              <WalletConnection network={network} />
+              <WalletConnection />
               <button
                 type="submit"
                 className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"

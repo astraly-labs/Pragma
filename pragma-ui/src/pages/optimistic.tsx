@@ -1,15 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
 import ActiveAssessments from "../components/optimistic/ActiveAssessments";
 import StarknetProvider from "../components/Provider/StarknetProvider";
-import {
-  InjectedConnector,
-  publicProvider,
-  StarknetConfig,
-} from "@starknet-react/core";
+import { InjectedConnector } from "@starknet-react/core";
 import { WebWalletConnector } from "starknetkit/webwallet";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import {
@@ -55,7 +51,7 @@ const OptimisticPage = () => {
   ];
 
   const fetchAssertions = async ({ queryKey }) => {
-    const [_, type, pageNumber] = queryKey;
+    const [type, pageNumber] = queryKey;
     const limit = pageNumber === 1 ? INITIAL_LIMIT : LOAD_MORE_LIMIT;
     const API_URL = `/api/optimistic?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
     const response = await axios.get(API_URL);
@@ -73,11 +69,7 @@ const OptimisticPage = () => {
     }));
   };
 
-  const {
-    data: items = [],
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: items = [], isLoading } = useQuery({
     queryKey: ["assertions", assertionType, page],
     queryFn: fetchAssertions,
     refetchInterval: 3000,

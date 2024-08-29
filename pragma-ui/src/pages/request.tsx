@@ -4,7 +4,6 @@ import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { CallData, byteArray } from "starknet";
 import WalletConnection from "../components/common/WalletConnection";
@@ -13,13 +12,17 @@ import {
   useAccount,
   useContractWrite,
   useContractRead,
-  useNetwork,
   useWaitForTransaction,
 } from "@starknet-react/core";
 import OOAbi from "../abi/OO.json";
 import { uint256, shortString } from "starknet";
 import NetworkSelection from "../components/common/NetworkSelection";
 
+/**
+ * Generates a formatted timestamp string in the format `DD/MM/YYYY, HH:MM`.
+ *
+ * @return {string} A formatted string representing the current date and time.
+ */
 const generateTimestamp = () => {
   const currentTimestamp = new Date();
   return `${currentTimestamp.getDate().toString().padStart(2, "0")}/${(
@@ -35,6 +38,14 @@ const generateTimestamp = () => {
     .padStart(2, "0")}`;
 };
 
+/**
+ * Builds an assertion string using the provided title, description, and timestamp.
+ *
+ * @param {string} title - The title of the assertion.
+ * @param {string} description - The description of the assertion.
+ * @param {string} timestamp - The timestamp of when the assertion was created.
+ * @return {string} A formatted assertion string.
+ */
 function buildAssertion(
   title: string,
   description: string,
@@ -42,16 +53,19 @@ function buildAssertion(
 ): string {
   return `An assertion was published at ${timestamp}. The title of the assertion is: ${title}, the description is: ${description}.`;
 }
-
+/**
+ * A React component that provides a form for submitting requests, interacting with the Starknet blockchain.
+ * Users can submit assertions with specific titles, descriptions, bonds, and other details.
+ *
+ * @component
+ * @return {JSX.Element} The rendered component.
+ */
 const Request = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const [network, setNetwork] = useState<string>("sepolia");
-  const NETWORKS = ["sepolia", "mainnet"];
   const IDENTIFIER = "ASSERT_TRUTH";
   const currency = CURRENCIES[network];
-  const {} = useNetwork();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [assertion, setAssertion] = useState<string | undefined>(undefined);
   const [assertHash, setAssertHash] = useState<string | undefined>();
   const [calls, setCalls] = useState<any[] | undefined>(undefined);
   const ONE_DOLLAR_FEE = 1000000000000000000;
@@ -110,7 +124,6 @@ const Request = () => {
         formData.description,
         currentTimestamp
       );
-      setAssertion(newAssertion);
 
       const newCalls = [
         {
@@ -214,10 +227,6 @@ const Request = () => {
       timestamp: currentTimestamp,
     }));
 
-    setAssertion(
-      buildAssertion(formData.title, formData.description, formData.timestamp)
-    );
-
     try {
       const result = await approveAndAssert();
       console.log("Transaction hash:", result.transaction_hash);
@@ -274,7 +283,7 @@ const Request = () => {
           </div>
           <div className="relative flex flex-row gap-3 pb-4 md:ml-auto md:items-center md:justify-center md:pb-0">
             <NetworkSelection setNetwork={setNetwork} />
-            <WalletConnection network={network} />
+            <WalletConnection />
           </div>
         </div>
       </BoxContainer>

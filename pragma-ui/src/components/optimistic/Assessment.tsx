@@ -63,10 +63,6 @@ const Assessment: React.FC<AssessmentProps> = ({
     }
   }, [assessment, loading]);
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleDateString();
-  };
-
   return (
     <div className={styles.assessment}>
       <div

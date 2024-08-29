@@ -1,5 +1,5 @@
 /**
- * Handles HTTP requests to fetch candlestick data for a specified pair from an external API.
+ * Handles HTTP requests to fetch the assertions from an external API.
  * @param {IncomingMessage} req - The HTTP request object.
  * @param {ServerResponse} res - The HTTP response object.
  * @return {Promise<void>} A Promise that resolves when the response is sent.

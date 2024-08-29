@@ -1,13 +1,14 @@
-"use client";
 import React, { useState } from "react";
 import { useConnect, useAccount, useDisconnect } from "@starknet-react/core";
 import { useStarknetkitConnectModal } from "starknetkit";
-import { Button, ButtonLink } from "./Button";
+import { Button } from "./Button";
 
-interface AssetBoxProps {
-  network?: String;
-}
-export default function WalletConnection({ network }) {
+/**
+ * A wallet connection component
+ * @component
+ * @return {JSX.Element} The rendered component.
+ */
+export default function WalletConnection() {
   const { address, isConnected } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const { disconnect } = useDisconnect();

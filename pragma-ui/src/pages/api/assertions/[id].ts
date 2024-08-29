@@ -1,7 +1,11 @@
-// pages/api/assertions/[id].js
-
 import { NextApiRequest, NextApiResponse } from "next";
 
+/**
+ * Handles HTTP requests to fetch the assertion details from an external API.
+ * @param {IncomingMessage} req - The HTTP request object.
+ * @param {ServerResponse} res - The HTTP response object.
+ * @return {Promise<void>} A Promise that resolves when the response is sent.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
