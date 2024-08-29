@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
@@ -53,6 +53,8 @@ const Request = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [assertion, setAssertion] = useState<string | undefined>(undefined);
   const [assertHash, setAssertHash] = useState<string | undefined>();
+  const [calls, setCalls] = useState<any[] | undefined>(undefined);
+
 
   const [formData, setFormData] = useState({
     title: "",
@@ -77,7 +79,7 @@ const Request = () => {
       currency: selectedCurrency,
     }));
   };
-
+  
   // Get minimum bond
   const { data: minimumBond, isLoading: isMinimumBondLoading } =
     useContractRead({
@@ -91,44 +93,51 @@ const Request = () => {
       watch: true,
     });
 
-  const minimumBondString = minimumBond?.toString();
+
+  useEffect(() => {
+    if (address && formData.title && formData.description && formData.bond && formData.challengePeriod && formData.currency) {
+      const currentTimestamp = generateTimestamp();
+      const newAssertion = buildAssertion(formData.title, formData.description, currentTimestamp);
+      setAssertion(newAssertion);
+  
+      const newCalls = [
+        {
+          contractAddress: formData.currency.address,
+          entrypoint: "approve",
+          calldata: [
+            network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+            uint256.bnToUint256(formData.bond).low,
+            uint256.bnToUint256(formData.bond).high,
+          ],
+        },
+        {
+          contractAddress: network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+          entrypoint: "assert_truth",
+          calldata: CallData.compile([
+            byteArray.byteArrayFromString(newAssertion),
+            address,
+            0,
+            0,
+            formData.challengePeriod,
+            formData.currency.address,
+            uint256.bnToUint256(formData.bond).low,
+            uint256.bnToUint256(formData.bond).high,
+            shortString.encodeShortString(IDENTIFIER),
+            0,
+            0,
+          ]),
+        },
+      ];
+      setCalls(newCalls);
+      console.log("Calls updated:", newCalls);
+    } else {
+      setCalls(undefined);
+      console.log("Calls reset to undefined");
+    }
+  }, [address, formData, network]);
+
   const { writeAsync: approveAndAssert } = useContractWrite({
-    calls:
-      address && assertion && minimumBondString
-        ? [
-            {
-              contractAddress: currency[0].address,
-              entrypoint: "approve",
-              calldata: [
-                network == "sepolia"
-                  ? OO_CONTRACT_ADDRESS.sepolia
-                  : OO_CONTRACT_ADDRESS.mainnet,
-                uint256.bnToUint256(minimumBondString).low,
-                uint256.bnToUint256(minimumBondString).high,
-              ],
-            },
-            {
-              contractAddress:
-                network == "sepolia"
-                  ? OO_CONTRACT_ADDRESS.sepolia
-                  : OO_CONTRACT_ADDRESS.mainnet,
-              entrypoint: "assert_truth",
-              calldata: CallData.compile([
-                byteArray.byteArrayFromString(assertion),
-                address,
-                0,
-                0,
-                formData.challengePeriod,
-                formData.currency.address,
-                uint256.bnToUint256(formData.bond).low,
-                uint256.bnToUint256(formData.bond).high,
-                shortString.encodeShortString(IDENTIFIER),
-                0,
-                0,
-              ]),
-            },
-          ]
-        : undefined,
+    calls: calls,
   });
   // Wait for assert transaction
   const {
@@ -149,6 +158,12 @@ const Request = () => {
       return;
     }
 
+    if (!calls) {
+      console.log("Calls are not ready yet");
+      alert("Please wait a moment and try again. If the issue persists, refresh the page.");
+      return;
+    }
+    
     // Check if all required fields are filled
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
@@ -185,7 +200,7 @@ const Request = () => {
     );
 
     try {
-      // Approve and Assert in a single transaction
+
       const result = await approveAndAssert();
       console.log("Transaction hash:", result.transaction_hash);
       setAssertHash(result.transaction_hash);
@@ -214,6 +229,7 @@ const Request = () => {
   };
 
   const router = useRouter();
+
 
   return (
     <div
