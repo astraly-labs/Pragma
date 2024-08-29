@@ -53,11 +53,7 @@ const OptimisticPage = () => {
   const fetchAssertions = async ({ queryKey }) => {
     const [_, type, pageNumber] = queryKey;
     const limit = pageNumber === 1 ? INITIAL_LIMIT : LOAD_MORE_LIMIT;
-    const API_URL = `${
-      process.env.API_URL ||
-      "http://0.0.0.0:3000/node/v1/optimistic/assertions"
-    }?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
-    
+    const API_URL = `/api/assertions?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
     const response = await axios.get(API_URL);
     return response.data.assertions.map((assertion: any) => ({
       assertion_id: assertion.assertion_id,

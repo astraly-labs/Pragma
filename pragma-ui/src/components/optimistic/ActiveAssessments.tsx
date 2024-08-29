@@ -35,7 +35,6 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
   );
   const { address, isConnected } = useAccount();
   const [network, setNetwork] = useState<string>("sepolia");
-  console.log(network);
   const currency = CURRENCIES[network];
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedOption, setSelectedOption] = useState(options[0]);

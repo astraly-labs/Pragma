@@ -9,7 +9,7 @@ import { OO_CONTRACT_ADDRESS, CURRENCIES,ORACLE_ANCILLARY_ADDRESS } from '../../
 import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 
 
 interface AssessmentPopupProps {
@@ -41,12 +41,13 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const [timeLeft, setTimeLeft] = useState("");
   const currency = CURRENCIES[network];
   const { address } = useAccount();
+  const queryClient = useQueryClient();
+
 
   const { data: resolutionItem, isLoading } = useQuery<ResolutionDetails, Error>({
     queryKey: ['assertionDetails', assessment.assertion_id],
     queryFn: async () => {
-      const API_URL = `${process.env.API_URL || 'http://0.0.0.0:3000/node/v1/optimistic/assertions'}/${assessment.assertion_id}`;
-      const response = await axios.get(API_URL);
+      const response = await axios.get(`/api/assertions/${assessment.assertion_id}`);
       return response.data;
     }
   }
@@ -150,7 +151,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         }]
       }),
       onSuccess: () => {
-          queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+          queryClient.invalidateQueries({queryKey:['assertionDetails', assessment.assertion_id]});
         },
   } );
 
@@ -171,7 +172,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         ]
       }),
       onSuccess: () => {
-        queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+        queryClient.invalidateQueries({queryKey:['assertionDetails', assessment.assertion_id]});
       },
     }
   );
@@ -188,7 +189,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       });
     },
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries(['assertionDetails', assessment.assertion_id]);
+        queryClient.invalidateQueries({queryKey:['assertionDetails', assessment.assertion_id]});
         settleMutation.mutate(variables.assertionId);
       },
     }
