@@ -260,7 +260,6 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
     }
   };
 
-
   useEffect(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;

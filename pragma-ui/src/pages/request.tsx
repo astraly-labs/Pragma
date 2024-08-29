@@ -54,8 +54,7 @@ const Request = () => {
   const [assertion, setAssertion] = useState<string | undefined>(undefined);
   const [assertHash, setAssertHash] = useState<string | undefined>();
   const [calls, setCalls] = useState<any[] | undefined>(undefined);
-  const ONE_DOLLAR_FEE = 1000000000000000000
-
+  const ONE_DOLLAR_FEE = 1000000000000000000;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -66,7 +65,9 @@ const Request = () => {
     challengePeriod: "",
     expirationTime: "",
   });
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)  => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -80,7 +81,7 @@ const Request = () => {
       currency: selectedCurrency,
     }));
   };
-  
+
   // Get minimum bond
   const { data: minimumBond, isLoading: isMinimumBondLoading } =
     useContractRead({
@@ -94,25 +95,40 @@ const Request = () => {
       watch: true,
     });
 
-
   useEffect(() => {
-    if (address && formData.title && formData.description && formData.bond && formData.challengePeriod && formData.currency) {
+    if (
+      address &&
+      formData.title &&
+      formData.description &&
+      formData.bond &&
+      formData.challengePeriod &&
+      formData.currency
+    ) {
       const currentTimestamp = generateTimestamp();
-      const newAssertion = buildAssertion(formData.title, formData.description, currentTimestamp);
+      const newAssertion = buildAssertion(
+        formData.title,
+        formData.description,
+        currentTimestamp
+      );
       setAssertion(newAssertion);
-  
+
       const newCalls = [
         {
           contractAddress: formData.currency.address,
           entrypoint: "approve",
           calldata: [
-            network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
-            uint256.bnToUint256(formData.bond + ONE_DOLLAR_FEE).low ,
+            network == "sepolia"
+              ? OO_CONTRACT_ADDRESS.sepolia
+              : OO_CONTRACT_ADDRESS.mainnet,
+            uint256.bnToUint256(formData.bond + ONE_DOLLAR_FEE).low,
             uint256.bnToUint256(formData.bond).high,
           ],
         },
         {
-          contractAddress: network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+          contractAddress:
+            network == "sepolia"
+              ? OO_CONTRACT_ADDRESS.sepolia
+              : OO_CONTRACT_ADDRESS.mainnet,
           entrypoint: "assert_truth",
           calldata: CallData.compile([
             byteArray.byteArrayFromString(newAssertion),
@@ -161,10 +177,12 @@ const Request = () => {
 
     if (!calls) {
       console.log("Calls are not ready yet");
-      alert("Please wait a moment and try again. If the issue persists, refresh the page.");
+      alert(
+        "Please wait a moment and try again. If the issue persists, refresh the page."
+      );
       return;
     }
-    
+
     // Check if all required fields are filled
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
@@ -201,7 +219,6 @@ const Request = () => {
     );
 
     try {
-
       const result = await approveAndAssert();
       console.log("Transaction hash:", result.transaction_hash);
       setAssertHash(result.transaction_hash);
@@ -230,7 +247,6 @@ const Request = () => {
   };
 
   const router = useRouter();
-
 
   return (
     <div

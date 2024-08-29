@@ -18,8 +18,12 @@ import {
   extractTitleFromClaim,
 } from "../utils";
 import axios from "axios";
-import {keepPreviousData, useQuery, QueryClient, QueryClientProvider} from "@tanstack/react-query";
-
+import {
+  keepPreviousData,
+  useQuery,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 export interface Item {
   assertion_id: number;
@@ -38,7 +42,7 @@ export interface Item {
 const OptimisticPage = () => {
   const [assertionType, setAssertionType] = useState<string>("active");
   const [page, setPage] = useState<number>(1);
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   const INITIAL_LIMIT = 2;
   const LOAD_MORE_LIMIT = 2;
@@ -69,13 +73,16 @@ const OptimisticPage = () => {
     }));
   };
 
-  const { data: items = [], isLoading, error } = useQuery({
-    queryKey:['assertions', assertionType, page],
+  const {
+    data: items = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["assertions", assertionType, page],
     queryFn: fetchAssertions,
     refetchInterval: 3000,
     placeholderData: keepPreviousData,
-  }
-  );
+  });
 
   const handleAssertionTypeChange = (newType: string) => {
     setAssertionType(newType.toLowerCase());
@@ -88,40 +95,40 @@ const OptimisticPage = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-    <StarknetProvider connectors={connectors}>
-      <div
-        className={classNames(
-          "relative w-full overflow-x-hidden",
-          styles.bigScreen
-        )}
-      >
-        <BasicHero
-          title={"Propose, ask"}
-          greenTitle={"dispute"}
-          description={
-            "The Pragma Optimistic Oracle is built for you. Ask any question, get the answer onchain."
-          }
-          solidButton={"Make an assertion"}
-          solidButtonLink={"/request"}
-          outlineButton={"Integrate"}
-          outlineButtonLink={
-            "https://docs.pragma.build/Resources/Cairo%201/optimistic-oracle/Overview"
-          }
-          illustrationLink={"/assets/vectors/ecosystem.svg"}
-          illustrationSmallLink={"/assets/vectors/ecosystem.svg"}
-        />
-        <BoxContainer>
-          <ActiveAssessments
-            assessments={items}
-            loading={isLoading}
-            onAssertionTypeChange={handleAssertionTypeChange}
-          />
-           {!isLoading && items.length >= INITIAL_LIMIT && (
-            <button onClick={handleLoadMore}>Load More</button>
+      <StarknetProvider connectors={connectors}>
+        <div
+          className={classNames(
+            "relative w-full overflow-x-hidden",
+            styles.bigScreen
           )}
-        </BoxContainer>
-      </div>
-    </StarknetProvider>
+        >
+          <BasicHero
+            title={"Propose, ask"}
+            greenTitle={"dispute"}
+            description={
+              "The Pragma Optimistic Oracle is built for you. Ask any question, get the answer onchain."
+            }
+            solidButton={"Make an assertion"}
+            solidButtonLink={"/request"}
+            outlineButton={"Integrate"}
+            outlineButtonLink={
+              "https://docs.pragma.build/Resources/Cairo%201/optimistic-oracle/Overview"
+            }
+            illustrationLink={"/assets/vectors/ecosystem.svg"}
+            illustrationSmallLink={"/assets/vectors/ecosystem.svg"}
+          />
+          <BoxContainer>
+            <ActiveAssessments
+              assessments={items}
+              loading={isLoading}
+              onAssertionTypeChange={handleAssertionTypeChange}
+            />
+            {!isLoading && items.length >= INITIAL_LIMIT && (
+              <button onClick={handleLoadMore}>Load More</button>
+            )}
+          </BoxContainer>
+        </div>
+      </StarknetProvider>
     </QueryClientProvider>
   );
 };
