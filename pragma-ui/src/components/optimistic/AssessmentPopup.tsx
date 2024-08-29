@@ -13,7 +13,7 @@ import {
   OO_CONTRACT_ADDRESS,
   CURRENCIES,
   ORACLE_ANCILLARY_ADDRESS,
-} from "../../pages/constants";
+} from "../../utils/constants";
 import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";

@@ -7,7 +7,7 @@ import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { CallData, byteArray } from "starknet";
 import WalletConnection from "../components/common/WalletConnection";
-import { OO_CONTRACT_ADDRESS, CURRENCIES } from "./constants";
+import { OO_CONTRACT_ADDRESS, CURRENCIES } from "../utils/constants";
 import {
   useAccount,
   useContractWrite,

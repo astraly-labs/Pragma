@@ -1,4 +1,4 @@
-import { CURRENCIES } from "../pages/constants";
+import { CURRENCIES } from "./constants";
 
 /**
  * Truncates a transaction hash to a shorter format.
