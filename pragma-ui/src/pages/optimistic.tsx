@@ -81,9 +81,9 @@ const OptimisticPage = () => {
     setPage(1);
   };
 
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+  // const handleLoadMore = () => {
+  //   setPage((prevPage) => prevPage + 1);
+  // };
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -115,9 +115,6 @@ const OptimisticPage = () => {
               loading={isLoading}
               onAssertionTypeChange={handleAssertionTypeChange}
             />
-            {!isLoading && items.length >= INITIAL_LIMIT && (
-              <button onClick={handleLoadMore}>Load More</button>
-            )}
           </BoxContainer>
         </div>
       </StarknetProvider>
