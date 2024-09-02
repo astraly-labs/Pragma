@@ -204,60 +204,62 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
       >
         <h3 className="pb-3 text-lightGreen">Assessments</h3>
         <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
-          <div className="flex flex-col gap-3 smolScreen:flex-row">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
-              Nb assessments: {filteredAssessments.length}
+              Count: {filteredAssessments.length}
             </div>
-            <Listbox value={selectedOption} onChange={handleOptionChange}>
-              <div className="relative w-full md:w-auto">
-                <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
-                  <span className="block truncate">{selectedOption}</span>
-                  <Image
-                    className="my-auto pl-2"
-                    height={16}
-                    width={16}
-                    alt="arrowDown"
-                    src="/assets/vectors/arrowDown.svg"
-                  />
-                </Listbox.Button>
-                <Transition
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                    {options.map((option, optionIdx) => (
-                      <Listbox.Option
-                        key={optionIdx}
-                        className={({ active }) =>
-                          `relative cursor-pointer select-none py-2 pl-2 pr-4 text-lightGreen ${
-                            active ? "opacity-50 " : ""
-                          }`
-                        }
-                        value={option}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate text-lightGreen ${
-                                selected ? "font-medium" : "font-normal"
-                              }`}
-                            >
-                              {option}
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </Listbox>
-            <NetworkSelection setNetwork={setNetwork} />
+            <div className="flex gap-3">
+              <Listbox value={selectedOption} onChange={handleOptionChange}>
+                <div className="relative w-full md:w-auto">
+                  <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+                    <span className="block truncate">{selectedOption}</span>
+                    <Image
+                      className="my-auto pl-2"
+                      height={16}
+                      width={16}
+                      alt="arrowDown"
+                      src="/assets/vectors/arrowDown.svg"
+                    />
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+                      {options.map((option, optionIdx) => (
+                        <Listbox.Option
+                          key={optionIdx}
+                          className={({ active }) =>
+                            `relative cursor-pointer select-none py-2 pl-2 pr-4 text-lightGreen ${
+                              active ? "opacity-50 " : ""
+                            }`
+                          }
+                          value={option}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate text-lightGreen ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {option}
+                              </span>
+                              {selected ? (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+              <NetworkSelection setNetwork={setNetwork} />
+            </div>
           </div>
           <div className="sm:ml-auto">
             <SearchBar onInputChange={handleInputChange} />
