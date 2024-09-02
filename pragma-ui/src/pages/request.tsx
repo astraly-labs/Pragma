@@ -4,22 +4,25 @@ import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import { ArrowLeftIcon, ChevronDownIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { CallData, byteArray } from "starknet";
 import WalletConnection from "../components/common/WalletConnection";
-import { OO_CONTRACT_ADDRESS, CURRENCIES } from "./constants";
+import { OO_CONTRACT_ADDRESS, CURRENCIES } from "../utils/constants";
 import {
   useAccount,
   useContractWrite,
   useContractRead,
-  useNetwork,
   useWaitForTransaction,
 } from "@starknet-react/core";
 import OOAbi from "../abi/OO.json";
 import { uint256, shortString } from "starknet";
 import NetworkSelection from "../components/common/NetworkSelection";
 
+/**
+ * Generates a formatted timestamp string in the format `DD/MM/YYYY, HH:MM`.
+ *
+ * @return {string} A formatted string representing the current date and time.
+ */
 const generateTimestamp = () => {
   const currentTimestamp = new Date();
   return `${currentTimestamp.getDate().toString().padStart(2, "0")}/${(
@@ -35,6 +38,14 @@ const generateTimestamp = () => {
     .padStart(2, "0")}`;
 };
 
+/**
+ * Builds an assertion string using the provided title, description, and timestamp.
+ *
+ * @param {string} title - The title of the assertion.
+ * @param {string} description - The description of the assertion.
+ * @param {string} timestamp - The timestamp of when the assertion was created.
+ * @return {string} A formatted assertion string.
+ */
 function buildAssertion(
   title: string,
   description: string,
@@ -42,19 +53,22 @@ function buildAssertion(
 ): string {
   return `An assertion was published at ${timestamp}. The title of the assertion is: ${title}, the description is: ${description}.`;
 }
-
+/**
+ * A React component that provides a form for submitting requests, interacting with the Starknet blockchain.
+ * Users can submit assertions with specific titles, descriptions, bonds, and other details.
+ *
+ * @component
+ * @return {JSX.Element} The rendered component.
+ */
 const Request = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const [network, setNetwork] = useState<string>("sepolia");
-  const NETWORKS = ["sepolia", "mainnet"];
   const IDENTIFIER = "ASSERT_TRUTH";
   const currency = CURRENCIES[network];
-  const {} = useNetwork();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [assertion, setAssertion] = useState<string | undefined>(undefined);
   const [assertHash, setAssertHash] = useState<string | undefined>();
   const [calls, setCalls] = useState<any[] | undefined>(undefined);
-
+  const ONE_DOLLAR_FEE = 1000000000000000000;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -65,7 +79,9 @@ const Request = () => {
     challengePeriod: "",
     expirationTime: "",
   });
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)  => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -79,7 +95,6 @@ const Request = () => {
       currency: selectedCurrency,
     }));
   };
-  
   // Get minimum bond
   const { data: minimumBond, isLoading: isMinimumBondLoading } =
     useContractRead({
@@ -93,25 +108,39 @@ const Request = () => {
       watch: true,
     });
 
-
   useEffect(() => {
-    if (address && formData.title && formData.description && formData.bond && formData.challengePeriod && formData.currency) {
+    if (
+      address &&
+      formData.title &&
+      formData.description &&
+      formData.bond &&
+      formData.challengePeriod &&
+      formData.currency
+    ) {
       const currentTimestamp = generateTimestamp();
-      const newAssertion = buildAssertion(formData.title, formData.description, currentTimestamp);
-      setAssertion(newAssertion);
-  
+      const newAssertion = buildAssertion(
+        formData.title,
+        formData.description,
+        currentTimestamp
+      );
+
       const newCalls = [
         {
           contractAddress: formData.currency.address,
           entrypoint: "approve",
           calldata: [
-            network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
-            uint256.bnToUint256(formData.bond).low,
+            network == "sepolia"
+              ? OO_CONTRACT_ADDRESS.sepolia
+              : OO_CONTRACT_ADDRESS.mainnet,
+            uint256.bnToUint256(formData.bond + ONE_DOLLAR_FEE).low,
             uint256.bnToUint256(formData.bond).high,
           ],
         },
         {
-          contractAddress: network == "sepolia" ? OO_CONTRACT_ADDRESS.sepolia : OO_CONTRACT_ADDRESS.mainnet,
+          contractAddress:
+            network == "sepolia"
+              ? OO_CONTRACT_ADDRESS.sepolia
+              : OO_CONTRACT_ADDRESS.mainnet,
           entrypoint: "assert_truth",
           calldata: CallData.compile([
             byteArray.byteArrayFromString(newAssertion),
@@ -160,10 +189,12 @@ const Request = () => {
 
     if (!calls) {
       console.log("Calls are not ready yet");
-      alert("Please wait a moment and try again. If the issue persists, refresh the page.");
+      alert(
+        "Please wait a moment and try again. If the issue persists, refresh the page."
+      );
       return;
     }
-    
+
     // Check if all required fields are filled
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
@@ -195,12 +226,7 @@ const Request = () => {
       timestamp: currentTimestamp,
     }));
 
-    setAssertion(
-      buildAssertion(formData.title, formData.description, formData.timestamp)
-    );
-
     try {
-
       const result = await approveAndAssert();
       console.log("Transaction hash:", result.transaction_hash);
       setAssertHash(result.transaction_hash);
@@ -230,7 +256,6 @@ const Request = () => {
 
   const router = useRouter();
 
-
   return (
     <div
       className={classNames(
@@ -257,7 +282,7 @@ const Request = () => {
           </div>
           <div className="relative flex flex-row gap-3 pb-4 md:ml-auto md:items-center md:justify-center md:pb-0">
             <NetworkSelection setNetwork={setNetwork} />
-            <WalletConnection network={network} />
+            <WalletConnection />
           </div>
         </div>
       </BoxContainer>
@@ -298,23 +323,6 @@ const Request = () => {
               rows={4}
             />
           </div>
-
-          {/* <div className="flex flex-col gap-3">
-              <label
-                htmlFor="timestamp"
-                className="block pb-3 text-xl tracking-wider text-lightGreen"
-              >
-                Timestamp
-              </label>
-              <input
-                type="datetime-local"
-                id="timestamp"
-                name="timestamp"
-                value={formData.timestamp}
-                onChange={handleInputChange}
-                className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
-              />
-            </div> */}
 
           <div className="flex flex-col gap-3">
             <label

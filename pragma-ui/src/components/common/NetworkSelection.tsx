@@ -1,10 +1,5 @@
 import React, { Fragment, useState } from "react";
-import styles from "./styles.module.scss";
-import classNames from "classnames";
-import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
 import { Listbox, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 
 const NetworkSelection = ({ setNetwork }) => {
@@ -35,7 +30,7 @@ const NetworkSelection = ({ setNetwork }) => {
           leaveTo="opacity-0"
         >
           <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto	rounded-md bg-green py-1	text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-            {NETWORKS.map((current_network, networkIdx) => (
+            {NETWORKS.map((currentNetwork, networkIdx) => (
               <Listbox.Option
                 key={networkIdx}
                 className={({ active }) =>
@@ -43,7 +38,7 @@ const NetworkSelection = ({ setNetwork }) => {
                     active ? "opacity-50 " : ""
                   }`
                 }
-                value={current_network}
+                value={currentNetwork}
               >
                 {({ selected }) => (
                   <>
@@ -52,7 +47,7 @@ const NetworkSelection = ({ setNetwork }) => {
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {current_network}
+                      {currentNetwork}
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>

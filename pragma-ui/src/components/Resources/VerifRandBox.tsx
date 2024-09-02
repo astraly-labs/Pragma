@@ -18,7 +18,7 @@ const VerifRandBox = () => {
         <ButtonLink
           variant="outline"
           color="mint"
-          href="https://docs.pragma.build/Resources/Cairo%201/randomness/randomness"
+          href="https://docs.pragma.build/Resources/Starknet/randomness/randomness"
           center={false}
           className="w-fit"
         >

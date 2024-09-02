@@ -65,7 +65,7 @@ const ReadyBox = ({ version }) => {
           center={false}
           variant="solid"
           color="mint"
-          href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          href="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
           className={"mb-40 md:mb-0"}
         >
           Start building

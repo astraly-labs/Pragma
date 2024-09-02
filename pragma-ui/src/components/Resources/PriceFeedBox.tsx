@@ -42,7 +42,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
         <ButtonLink
           variant="outline"
           color="mint"
-          href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+          href="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
           center={false}
           className="w-fit"
         >

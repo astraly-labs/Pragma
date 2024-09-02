@@ -54,9 +54,9 @@ export const Button: React.FC<
     className={classNames(
       baseStyles[variant],
       variantStyles[variant][color],
-      className,
+      className
     )}
-    onClick= {onClick}
+    onClick={onClick}
     {...props}
   >
     {Icon && <Icon className="mr-2 h-5 w-5" />}

@@ -87,7 +87,7 @@ const Hero = () => {
             center={true}
             color="mint"
             variant="solid"
-            href="https://docs.pragma.build/GettingStarted/Consuming%20Data%20Feed"
+            href="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
           >
             Start Building
           </ButtonLink>
