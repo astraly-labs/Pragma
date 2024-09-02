@@ -265,7 +265,7 @@ const Request = () => {
       );
     } catch (error) {
       console.error("Error:", error);
-      alert(`Failed to process the assertion. Reason: ${error}`);
+      showPopup("Failure", `Failed to process the assertion. Reason: ${error}`);
     } finally {
       setIsProcessing(false);
       setAssertHash(undefined);
