@@ -18,6 +18,7 @@ import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { utcToLocalTime } from "../../utils";
 
 interface AssessmentPopupProps {
   assessment: Item; // Replace 'any' with your actual Assessment type
@@ -49,6 +50,8 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const currency = CURRENCIES[network];
   const { address } = useAccount();
   const queryClient = useQueryClient();
+  const { full: time } = utcToLocalTime(assessment.timestamp);
+  const { full: expiryTime } = utcToLocalTime(assessment.expiration_time);
 
   const { data: resolutionItem, isLoading } = useQuery<
     ResolutionDetails,
@@ -65,9 +68,10 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
   useEffect(() => {
     const updateProgressAndTime = () => {
-      const start = new Date(assessment.timestamp);
+      const start = new Date(assessment.timestamp + "Z");
       const startTimestamp = Math.floor(start.getTime());
-      const end = new Date(assessment.expiration_time);
+      console.log(startTimestamp);
+      const end = new Date(assessment.expiration_time + "Z");
       const endTimestamp = Math.floor(end.getTime());
       const now = Date.now();
       const total = endTimestamp - startTimestamp;
@@ -99,7 +103,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
 
     return () => clearInterval(timer);
   }, [assessment]);
-
   // Settle assertion
   const { writeAsync: settleAssertion } = useContractWrite({
     calls: [
@@ -344,7 +347,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
               </p>
               <p>
                 <div className="text-mint">Challenge period ends</div>{" "}
-                {assessment.expiration_time}
+                {expiryTime}
               </p>
               <p>
                 <div className="text-mint">Result</div> {assessment.identifier}
@@ -357,12 +360,11 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                 <h5>Timeline</h5>
               </div>
               <p>
-                <div className="text-mint">Start challenge period</div>{" "}
-                {assessment.timestamp}
+                <div className="text-mint">Start challenge period</div> {time}
               </p>
               <p>
                 <div className="text-mint">End challenge period</div>{" "}
-                {assessment.expiration_time}
+                {expiryTime}
               </p>
               <>
                 <div className="h-1 w-40 rounded-full bg-lightBlur">

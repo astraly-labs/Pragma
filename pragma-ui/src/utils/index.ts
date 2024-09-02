@@ -1,4 +1,6 @@
 import { CURRENCIES } from "./constants";
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 /**
  * Truncates a transaction hash to a shorter format.
@@ -92,4 +94,22 @@ export const findCurrencyNameByAddress = (
     }
   }
   return undefined;
+};
+
+export const utcToLocalTime = (utcDateString: string) => {
+  const utcDate = new Date(utcDateString + "Z"); // Adds 'Z' to indicate UTC time
+
+  // eslint-disable-next-line new-cap
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const localDate = toZonedTime(utcDate, timeZone);
+
+  const formattedDate = format(localDate, "yyyy-MM-dd");
+  const formattedTime = format(localDate, "HH:mm:ss");
+
+  return {
+    date: formattedDate,
+    time: formattedTime,
+    full: `${formattedDate}, ${formattedTime}`,
+  };
 };

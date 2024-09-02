@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { Item } from "../../pages/optimistic";
-import { findCurrencyNameByAddress } from "../../utils";
+import { findCurrencyNameByAddress, utcToLocalTime } from "../../utils";
 
 interface AssessmentProps {
   assessment: Item;
@@ -19,28 +19,26 @@ const Assessment: React.FC<AssessmentProps> = ({
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState("");
 
+  const { full } = utcToLocalTime(assessment.timestamp);
+
   useEffect(() => {
-    if (!loading && assessment) {
-      const updateProgressAndTime = () => {
-        const start = new Date(assessment.timestamp).getTime();
-        const end = new Date(assessment.expiration_time).getTime();
-        const now = Date.now();
+    const updateProgressAndTime = () => {
+      const start = new Date(assessment.timestamp);
+      const startTimestamp = Math.floor(start.getTime());
+      const end = new Date(assessment.expiration_time);
+      const endTimestamp = Math.floor(end.getTime());
+      const now = Date.now();
+      const total = endTimestamp - startTimestamp;
+      const current = now - startTimestamp;
+      const calculatedProgress = Math.min(
+        Math.max((current / total) * 100, 0),
+        100
+      );
+      setProgress(calculatedProgress);
 
-        if (now >= end) {
-          setProgress(100);
-          setTimeLeft("Ended");
-          return true; // Signal to stop the interval
-        }
-
-        const total = end - start;
-        const current = now - start;
-        const calculatedProgress = Math.min(
-          Math.max((current / total) * 100, 0),
-          100
-        );
-        setProgress(calculatedProgress);
-
-        const remaining = end - now;
+      // Calculate time left
+      const remaining = endTimestamp - now;
+      if (remaining > 0) {
         const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
           (remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -49,19 +47,16 @@ const Assessment: React.FC<AssessmentProps> = ({
           (remaining % (1000 * 60 * 60)) / (1000 * 60)
         );
         setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+      } else {
+        setTimeLeft("Ended");
+      }
+    };
 
-        return false; // Signal to continue the interval
-      };
+    updateProgressAndTime();
+    const timer = setInterval(updateProgressAndTime, 1000); // Update every second
 
-      if (updateProgressAndTime()) return; // If already ended, don't set interval
-
-      const timer = setInterval(() => {
-        if (updateProgressAndTime()) clearInterval(timer);
-      }, 5000); // Update every 5 seconds
-
-      return () => clearInterval(timer);
-    }
-  }, [assessment, loading]);
+    return () => clearInterval(timer);
+  }, [assessment]);
 
   return (
     <div className={styles.assessment}>
@@ -92,7 +87,7 @@ const Assessment: React.FC<AssessmentProps> = ({
           <div className="text-md flex flex-col text-lightGreen">
             {assessment.title}
             <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
-              {assessment.timestamp}
+              {full}
             </div>
           </div>
         )}
@@ -116,7 +111,7 @@ const Assessment: React.FC<AssessmentProps> = ({
               height={17}
               src={`/assets/currencies/${findCurrencyNameByAddress(
                 assessment.currency
-              )}.svg`}
+              ).toLowerCase()}.svg`}
             />
             <div>{Number(assessment.bond) / 1000000000000000000}</div>
           </>
