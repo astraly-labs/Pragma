@@ -8,6 +8,7 @@ import {
   useAccount,
   useContractWrite,
   useContractRead,
+  useNetwork,
 } from "@starknet-react/core";
 import {
   OO_CONTRACT_ADDRESS,
@@ -49,9 +50,12 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const [timeLeft, setTimeLeft] = useState("");
   const currency = CURRENCIES[network];
   const { address } = useAccount();
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [isNetworkMismatch, setIsNetworkMismatch] = useState(false);
   const queryClient = useQueryClient();
   const { full: time } = utcToLocalTime(assessment.timestamp);
   const { full: expiryTime } = utcToLocalTime(assessment.expiration_time);
+  const { chain } = useNetwork();
 
   const { data: resolutionItem, isLoading } = useQuery<
     ResolutionDetails,
@@ -65,6 +69,21 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       return response.data;
     },
   });
+
+  useEffect(() => {
+    setIsWalletConnected(!!address);
+  }, [address]);
+
+  useEffect(() => {
+    if (isWalletConnected && chain) {
+      setIsNetworkMismatch(
+        (network === "sepolia" && chain.network !== "sepolia") ||
+          (network === "mainnet" && chain.network !== "mainnet")
+      );
+    } else {
+      setIsNetworkMismatch(false);
+    }
+  }, [isWalletConnected, chain, network]);
 
   useEffect(() => {
     const updateProgressAndTime = () => {
@@ -417,9 +436,18 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           </div>
         )}
         <div className="flex items-center justify-start space-x-4 py-4 pl-12">
-          {!isLoading && !resolutionItem.settled && (
-            <>
-              <WalletConnection />
+          {!isWalletConnected && <WalletConnection />}
+          {isNetworkMismatch && (
+            <div className="font-bold text-redDown">
+              Please change network to{" "}
+              {chain.network === "sepolia" ? "Mainnet" : "Testnet"}
+            </div>
+          )}
+
+          {isWalletConnected &&
+            !isNetworkMismatch &&
+            !isLoading &&
+            !resolutionItem.settled && (
               <button
                 type="submit"
                 className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
@@ -427,49 +455,58 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
               >
                 Settle
               </button>
-            </>
-          )}
-          {!isLoading && !resolutionItem.disputed && !resolutionItem.settled && (
-            <button
-              type="submit"
-              className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-              onClick={() =>
-                handleDispute(assessment.assertion_id, assessment.bond)
-              }
-            >
-              Dispute
-            </button>
-          )}
-          {!isLoading && resolutionItem.disputed && !resolutionItem.settled && (
-            <>
+            )}
+
+          {isWalletConnected &&
+            !isNetworkMismatch &&
+            !isLoading &&
+            !resolutionItem.disputed &&
+            !resolutionItem.settled && (
               <button
                 type="submit"
                 className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
                 onClick={() =>
-                  handleResolveDispute(
-                    assessment.assertion_id,
-                    resolutionItem.dispute_id,
-                    true
-                  )
+                  handleDispute(assessment.assertion_id, assessment.bond)
                 }
               >
-                Resolve True
+                Dispute
               </button>
-              <button
-                type="submit"
-                className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-                onClick={() =>
-                  handleResolveDispute(
-                    assessment.assertion_id,
-                    resolutionItem.dispute_id,
-                    false
-                  )
-                }
-              >
-                Resolve False
-              </button>
-            </>
-          )}
+            )}
+
+          {isWalletConnected &&
+            !isNetworkMismatch &&
+            !isLoading &&
+            resolutionItem.disputed &&
+            !resolutionItem.settled && (
+              <>
+                <button
+                  type="submit"
+                  className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                  onClick={() =>
+                    handleResolveDispute(
+                      assessment.assertion_id,
+                      resolutionItem.dispute_id,
+                      true
+                    )
+                  }
+                >
+                  Resolve True
+                </button>
+                <button
+                  type="submit"
+                  className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                  onClick={() =>
+                    handleResolveDispute(
+                      assessment.assertion_id,
+                      resolutionItem.dispute_id,
+                      false
+                    )
+                  }
+                >
+                  Resolve False
+                </button>
+              </>
+            )}
         </div>
       </div>
     </div>

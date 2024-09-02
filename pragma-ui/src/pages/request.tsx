@@ -13,10 +13,12 @@ import {
   useContractWrite,
   useContractRead,
   useWaitForTransaction,
+  useNetwork,
 } from "@starknet-react/core";
 import OOAbi from "../abi/OO.json";
 import { uint256, shortString } from "starknet";
 import NetworkSelection from "../components/common/NetworkSelection";
+import PopupComponent from "../components/common/Popup";
 
 /**
  * Generates a formatted timestamp string in the format `DD/MM/YYYY, HH:MM`.
@@ -69,6 +71,18 @@ const Request = () => {
   const [assertHash, setAssertHash] = useState<string | undefined>();
   const [calls, setCalls] = useState<any[] | undefined>(undefined);
   const ONE_DOLLAR_FEE = 1000000000000000000;
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [isNetworkMismatch, setIsNetworkMismatch] = useState(false);
+  const { chain } = useNetwork();
+
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupContent, setPopupContent] = useState({ title: "", text: "" });
+  const [popupKey, setPopupKey] = useState(0);
+
+  const showPopup = (title, text) => {
+    setPopupContent({ title, text });
+    setPopupKey((prevKey) => prevKey + 1);
+  };
 
   const [formData, setFormData] = useState({
     title: "",
@@ -183,15 +197,7 @@ const Request = () => {
 
     // Check if the address is connected
     if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
-
-    if (!calls) {
-      console.log("Calls are not ready yet");
-      alert(
-        "Please wait a moment and try again. If the issue persists, refresh the page."
-      );
+      showPopup("Wallet Not Connected", "Please connect your wallet first");
       return;
     }
 
@@ -199,16 +205,27 @@ const Request = () => {
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
       if (!formData[field]) {
-        alert(`Please complete the ${field} field.`);
+        showPopup("Incomplete Form", `Please complete the ${field} field.`);
         return;
       }
     }
 
     // Ensure bond is greater than or equal to minimumBond
     if (minimumBond && Number(formData.bond) < Number(minimumBond)) {
-      alert(
+      showPopup(
+        "Invalid Bond",
         `The bond must be greater than or equal to the minimum bond: ${minimumBond}`
       );
+
+      return;
+    }
+    if (!calls) {
+      console.log("Calls are not ready yet");
+      showPopup(
+        "Not Ready",
+        "Please wait a moment and try again. If the issue persists, refresh the page."
+      );
+
       return;
     }
 
@@ -239,10 +256,11 @@ const Request = () => {
       }
 
       if (isAssertError) {
-        throw new Error(`Transaction failed: ${assertError?.message}`);
+        showPopup("Failure", `Transaction failed: ${assertError?.message}`);
+        throw new Error();
       }
-
-      alert(
+      showPopup(
+        "Success",
         `Assertion submitted successfully, with tx hash: ${result.transaction_hash}`
       );
     } catch (error) {
@@ -253,6 +271,23 @@ const Request = () => {
       setAssertHash(undefined);
     }
   };
+
+  useEffect(() => {
+    setIsWalletConnected(!!address);
+  }, [address]);
+
+  useEffect(() => {
+    if (isWalletConnected && chain) {
+      console.log(chain.network);
+      setIsNetworkMismatch(
+        (network === "sepolia" && chain.network !== "sepolia") ||
+          (network === "mainnet" && chain.network !== "mainnet")
+      );
+      console.log(network);
+    } else {
+      setIsNetworkMismatch(false);
+    }
+  }, [isWalletConnected, chain, network, address]);
 
   const router = useRouter();
 
@@ -458,6 +493,8 @@ const Request = () => {
             </div> */}
 
           <div className="flex flex-col gap-3">
+            {!isWalletConnected && <WalletConnection />}
+
             <button
               type="submit"
               className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
@@ -465,8 +502,21 @@ const Request = () => {
             >
               {!isProcessing ? "Submit Request" : "Processing..."}
             </button>
+            {isNetworkMismatch && (
+              <div className="font-bold text-redDown">
+                Please change network to{" "}
+                {chain.network === "sepolia" ? "Mainnet" : "Testnet"}
+              </div>
+            )}
           </div>
         </div>
+        {popupContent.title && (
+          <PopupComponent
+            key={popupKey}
+            title={popupContent.title}
+            text={popupContent.text}
+          />
+        )}
       </BoxContainer>
     </div>
   );
