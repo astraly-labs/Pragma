@@ -76,11 +76,15 @@ const Request = () => {
   const { chain } = useNetwork();
 
   const [popupVisible, setPopupVisible] = useState(false);
-  const [popupContent, setPopupContent] = useState({ title: "", text: "" });
+  const [popupContent, setPopupContent] = useState({
+    title: "",
+    text: "",
+    txhash: "",
+  });
   const [popupKey, setPopupKey] = useState(0);
 
-  const showPopup = (title, text) => {
-    setPopupContent({ title, text });
+  const showPopup = (title, text, txhash) => {
+    setPopupContent({ title, text, txhash });
     setPopupKey((prevKey) => prevKey + 1);
   };
 
@@ -195,9 +199,19 @@ const Request = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if challenge period is at least 7200 seconds
+    if (parseInt(formData.challengePeriod) < 7200) {
+      showPopup(
+        "Invalid Challenge Period",
+        "The challenge period must be at least 7200 seconds (2 hours).",
+        ""
+      );
+      return;
+    }
+
     // Check if the address is connected
     if (!address) {
-      showPopup("Wallet Not Connected", "Please connect your wallet first");
+      showPopup("Wallet Not Connected", "Please connect your wallet first", "");
       return;
     }
 
@@ -205,7 +219,7 @@ const Request = () => {
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
       if (!formData[field]) {
-        showPopup("Incomplete Form", `Please complete the ${field} field.`);
+        showPopup("Incomplete Form", `Please complete the ${field} field.`, "");
         return;
       }
     }
@@ -214,7 +228,8 @@ const Request = () => {
     if (minimumBond && Number(formData.bond) < Number(minimumBond)) {
       showPopup(
         "Invalid Bond",
-        `The bond must be greater than or equal to the minimum bond: ${minimumBond}`
+        `The bond must be greater than or equal to the minimum bond: ${minimumBond}`,
+        ""
       );
 
       return;
@@ -223,7 +238,8 @@ const Request = () => {
       console.log("Calls are not ready yet");
       showPopup(
         "Not Ready",
-        "Please wait a moment and try again. If the issue persists, refresh the page."
+        "Please wait a moment and try again. If the issue persists, refresh the page.",
+        ""
       );
 
       return;
@@ -256,16 +272,21 @@ const Request = () => {
       }
 
       if (isAssertError) {
-        showPopup("Failure", `Transaction failed: ${assertError?.message}`);
+        showPopup("Failure", `Transaction failed: ${assertError?.message}`, "");
         throw new Error();
       }
       showPopup(
         "Success",
-        `Assertion submitted successfully, with tx hash: ${result.transaction_hash}`
+        `Assertion submitted successfully`,
+        `${result.transaction_hash}`
       );
     } catch (error) {
       console.error("Error:", error);
-      showPopup("Failure", `Failed to process the assertion. Reason: ${error}`);
+      showPopup(
+        "Failure",
+        `Failed to process the assertion. Reason: ${error}`,
+        ""
+      );
     } finally {
       setIsProcessing(false);
       setAssertHash(undefined);
@@ -465,12 +486,12 @@ const Request = () => {
               Challenge Period Duration
             </label>
             <input
-              type="text"
+              type="number"
               id="challengePeriod"
               name="challengePeriod"
               value={formData.challengePeriod}
               onChange={handleInputChange}
-              placeholder="Enter challenge period (in seconds)"
+              placeholder="Enter challenge period (minimum 7200 seconds)"
               className="w-full rounded-full bg-lightBlur px-4 py-2 text-lightGreen placeholder-lightGreen focus:outline-none"
             />
           </div>
@@ -515,6 +536,7 @@ const Request = () => {
             key={popupKey}
             title={popupContent.title}
             text={popupContent.text}
+            txHash={popupContent.txhash}
           />
         )}
       </BoxContainer>
