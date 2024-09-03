@@ -35,7 +35,7 @@ const Toast: React.FC<ToastProps> = ({
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsVisible(false);
-    }, 4000000);
+    }, 4000);
 
     return () => clearTimeout(timeout);
   }, []);

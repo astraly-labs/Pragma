@@ -20,6 +20,7 @@ import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { utcToLocalTime } from "../../utils";
+import Toast, { ToastType } from "../common/Toast";
 
 interface AssessmentPopupProps {
   assessment: Item; // Replace 'any' with your actual Assessment type
@@ -56,6 +57,13 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const { full: time } = utcToLocalTime(assessment.timestamp);
   const { full: expiryTime } = utcToLocalTime(assessment.expiration_time);
   const { chain } = useNetwork();
+  const [toastKey, setToastKey] = useState(0);
+  const [toastContent, setToastContent] = useState({
+    title: "",
+    text: "",
+    type: "success" as ToastType,
+    txHash: "",
+  });
 
   const { data: resolutionItem, isLoading } = useQuery<
     ResolutionDetails,
@@ -69,6 +77,16 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       return response.data;
     },
   });
+
+  const showToast = (
+    title: string,
+    text: string,
+    type: ToastType = "success",
+    txHash?: string
+  ) => {
+    setToastContent({ title, text, type, txHash });
+    setToastKey((prevKey) => prevKey + 1);
+  };
 
   useEffect(() => {
     setIsWalletConnected(!!address);
@@ -200,10 +218,19 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           },
         ],
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["assertionDetails", assessment.assertion_id],
       });
+      showToast(
+        "Success",
+        "Assertion settled successfully",
+        "success",
+        data.transaction_hash
+      );
+    },
+    onError: (error) => {
+      showToast("Error", `Failed to settle assertion: ${error}`, "fail");
     },
   });
 
@@ -238,10 +265,19 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           },
         ],
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["assertionDetails", assessment.assertion_id],
       });
+      showToast(
+        "Success",
+        "Assertion disputed successfully",
+        "success",
+        data.transaction_hash
+      );
+    },
+    onError: (error) => {
+      showToast("Error", `Failed to dispute assertion: ${error}`, "fail");
     },
   });
 
@@ -287,10 +323,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   };
 
   const handleDispute = (assertionId: number, bond: string) => {
-    if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
     disputeMutation.mutate({ assertionId, bond });
   };
 
@@ -299,12 +331,8 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     requestId: string,
     resolution: boolean
   ) => {
-    if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
     if (owner != address) {
-      alert("Not the owner");
+      showToast("Error", "Address not authorized", "fail");
       return;
     }
     resolveDisputeMutation.mutate({ assertionId, requestId, resolution });
@@ -509,6 +537,15 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
             )}
         </div>
       </div>
+      {toastContent.title && (
+        <Toast
+          key={toastKey}
+          title={toastContent.title}
+          text={toastContent.text}
+          type={toastContent.type}
+          txHash={toastContent.txHash}
+        />
+      )}
     </div>
   );
 };

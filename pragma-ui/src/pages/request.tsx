@@ -535,14 +535,15 @@ const Request = () => {
 
           <div className="flex flex-col gap-3">
             {!isWalletConnected && <WalletConnection />}
-
-            <button
-              type="submit"
-              className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-              onClick={handleSubmit}
-            >
-              {!isProcessing ? "Submit Request" : "Processing..."}
-            </button>
+            {isWalletConnected && (
+              <button
+                type="submit"
+                className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                onClick={handleSubmit}
+              >
+                {!isProcessing ? "Submit Request" : "Processing..."}
+              </button>
+            )}
             {isNetworkMismatch && (
               <div className="font-bold text-redDown">
                 Please change network to{" "}
