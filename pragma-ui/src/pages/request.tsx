@@ -18,7 +18,7 @@ import {
 import OOAbi from "../abi/OO.json";
 import { uint256, shortString } from "starknet";
 import NetworkSelection from "../components/common/NetworkSelection";
-import PopupComponent from "../components/common/Popup";
+import Toast, { ToastType } from "../components/common/Toast";
 
 /**
  * Generates a formatted timestamp string in the format `DD/MM/YYYY, HH:MM`.
@@ -75,17 +75,18 @@ const Request = () => {
   const [isNetworkMismatch, setIsNetworkMismatch] = useState(false);
   const { chain } = useNetwork();
 
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [popupContent, setPopupContent] = useState({
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastContent, setToastContent] = useState({
     title: "",
     text: "",
     txhash: "",
+    type: "" as ToastType,
   });
-  const [popupKey, setPopupKey] = useState(0);
+  const [toastKey, setToastKey] = useState(0);
 
-  const showPopup = (title, text, txhash) => {
-    setPopupContent({ title, text, txhash });
-    setPopupKey((prevKey) => prevKey + 1);
+  const showToast = (title, text, txhash, type) => {
+    setToastContent({ title, text, txhash, type });
+    setToastKey((prevKey) => prevKey + 1);
   };
 
   const [formData, setFormData] = useState({
@@ -199,19 +200,14 @@ const Request = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if challenge period is at least 7200 seconds
-    if (parseInt(formData.challengePeriod) < 7200) {
-      showPopup(
-        "Invalid Challenge Period",
-        "The challenge period must be at least 7200 seconds (2 hours).",
-        ""
-      );
-      return;
-    }
-
     // Check if the address is connected
     if (!address) {
-      showPopup("Wallet Not Connected", "Please connect your wallet first", "");
+      showToast(
+        "Wallet Not Connected",
+        "Please connect your wallet first",
+        "",
+        "fail"
+      );
       return;
     }
 
@@ -219,27 +215,44 @@ const Request = () => {
     const requiredFields = ["title", "description", "bond", "challengePeriod"];
     for (const field of requiredFields) {
       if (!formData[field]) {
-        showPopup("Incomplete Form", `Please complete the ${field} field.`, "");
+        showToast(
+          "Incomplete Form",
+          `Please complete the ${field} field.`,
+          "",
+          "fail"
+        );
         return;
       }
     }
 
     // Ensure bond is greater than or equal to minimumBond
     if (minimumBond && Number(formData.bond) < Number(minimumBond)) {
-      showPopup(
+      showToast(
         "Invalid Bond",
         `The bond must be greater than or equal to the minimum bond: ${minimumBond}`,
-        ""
+        "",
+        "fail"
       );
 
       return;
     }
+    // Check if challenge period is at least 7200 seconds
+    if (parseInt(formData.challengePeriod) < 7200) {
+      showToast(
+        "Invalid Challenge Period",
+        "The challenge period must be at least 7200 seconds (2 hours).",
+        "",
+        "fail"
+      );
+      return;
+    }
     if (!calls) {
       console.log("Calls are not ready yet");
-      showPopup(
+      showToast(
         "Not Ready",
         "Please wait a moment and try again. If the issue persists, refresh the page.",
-        ""
+        "",
+        "fail"
       );
 
       return;
@@ -272,20 +285,27 @@ const Request = () => {
       }
 
       if (isAssertError) {
-        showPopup("Failure", `Transaction failed: ${assertError?.message}`, "");
+        showToast(
+          "Failure",
+          `Transaction failed: ${assertError?.message}`,
+          "",
+          "fail"
+        );
         throw new Error();
       }
-      showPopup(
+      showToast(
         "Success",
         `Assertion submitted successfully`,
-        `${result.transaction_hash}`
+        `${result.transaction_hash}`,
+        "success"
       );
     } catch (error) {
       console.error("Error:", error);
-      showPopup(
+      showToast(
         "Failure",
-        `Failed to process the assertion. Reason: ${error}`,
-        ""
+        `Failed to process the assertion. ${error}`,
+        "",
+        "fail"
       );
     } finally {
       setIsProcessing(false);
@@ -531,12 +551,13 @@ const Request = () => {
             )}
           </div>
         </div>
-        {popupContent.title && (
-          <PopupComponent
-            key={popupKey}
-            title={popupContent.title}
-            text={popupContent.text}
-            txHash={popupContent.txhash}
+        {toastContent.title && (
+          <Toast
+            key={toastKey}
+            title={toastContent.title}
+            text={toastContent.text}
+            txHash={toastContent.txhash}
+            type={toastContent.type}
           />
         )}
       </BoxContainer>
