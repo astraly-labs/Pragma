@@ -623,8 +623,29 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
             </div>
           </>
         ) : (
-          <div className="py-2 font-mono text-xs text-lightGreen">
-            Fetching ...
+          <div className="flex flex-col">
+            <div className="sticky top-0 flex	 items-center justify-between bg-lightBlur px-10 py-4 backdrop-blur">
+              <div className="flex flex-row gap-4">
+                <div className="my-auto  h-8 w-8 animate-pulse rounded-full bg-lightBlur"></div>
+                <div className="my-auto  h-4 w-40 animate-pulse rounded-full bg-lightBlur"></div>
+              </div>
+              <button
+                onClick={handleClose}
+                className="rounded-full border border-lightGreen p-2 text-lightGreen hover:bg-lightGreen hover:text-darkGreen"
+              >
+                <XIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="space-y-4 p-5 md:p-10">
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="my-auto h-60 w-full animate-pulse rounded-2xl bg-lightBlur md:w-3/4"></div>
+                <div className="my-auto h-60 w-full animate-pulse rounded-2xl bg-lightBlur md:w-1/4"></div>
+              </div>
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="my-auto h-60 w-full animate-pulse rounded-2xl bg-lightBlur md:w-1/2"></div>
+                <div className="my-auto h-60 w-full animate-pulse rounded-2xl bg-lightBlur md:w-1/2"></div>
+              </div>
+            </div>
           </div>
         )}
       </div>
