@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { XIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { ClockIcon, InformationCircleIcon } from "@heroicons/react/outline";
@@ -58,6 +58,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const { full: expiryTime } = utcToLocalTime(assessment.expiration_time);
   const { chain } = useNetwork();
   const [toastKey, setToastKey] = useState(0);
+  const popupRef = useRef<HTMLDivElement>(null);
   const [toastContent, setToastContent] = useState({
     title: "",
     text: "",
@@ -339,8 +340,22 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   };
 
   useEffect(() => {
-    // Trigger the animation after the component is mounted
     setIsVisible(true);
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
   }, []);
 
   const handleClose = () => {
@@ -349,9 +364,16 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 w-screen">
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div
-        className={`transform bg-darkGreen text-lightGreen shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+          isVisible ? "opacity-50" : "pointer-events-none opacity-0"
+        }`}
+        onClick={handleClose}
+      ></div>
+      <div
+        ref={popupRef}
+        className={`relative w-full bg-darkGreen text-lightGreen shadow-lg transition-transform duration-300 ease-in-out ${
           isVisible ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ maxHeight: "70vh", overflowY: "auto" }}
