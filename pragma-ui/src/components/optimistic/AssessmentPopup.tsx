@@ -347,6 +347,18 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
         popupRef.current &&
         !popupRef.current.contains(event.target as Node)
       ) {
+        // Check if the click is on the StarkNet Kit modal or its children
+        const walletModal = document.getElementById(
+          "starknetkit-modal-container"
+        );
+
+        if (
+          walletModal &&
+          (walletModal === event.target ||
+            walletModal.contains(event.target as Node))
+        ) {
+          return; // Don't close if click is on StarkNet Kit modal
+        }
         handleClose();
       }
     };
@@ -445,7 +457,10 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                     <h5>Actions</h5>
                   </div>
                   {!isWalletConnected && (
-                    <div className="m-auto flex flex-col gap-3 text-center">
+                    <div
+                      data-testid="wallet-modal"
+                      className="m-auto flex flex-col gap-3 text-center"
+                    >
                       Connect your wallet
                       <WalletConnection />
                     </div>
