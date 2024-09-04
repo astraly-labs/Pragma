@@ -3,7 +3,7 @@ import React, { ChangeEvent, useState } from "react";
 import styles from "./styles.module.scss";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import LightGreenUpper from "../common/LightGreenUpperText";
-import PopupComponent from "../common/Popup";
+import Toast from "../common/Toast";
 import MailerLite, {
   CreateOrUpdateSubscriberParams,
 } from "@mailerlite/mailerlite-nodejs";
@@ -89,7 +89,7 @@ const InputComponent: React.FC<InputProps> = ({
       </div>
       {!isValidEmail && <p style={{ color: "red" }}>Invalid email format</p>}
       {isSubmitted && (
-        <PopupComponent
+        <Toast
           title="Email submitted successfully"
           text="You will now start recieving emails from Pragma."
         />

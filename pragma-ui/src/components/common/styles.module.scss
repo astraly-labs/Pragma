@@ -142,28 +142,28 @@
   width: 100%;
 }
 
-/* PopupComponent.css */
+/* Toast.css */
 
-.popup {
+.toast {
   position: fixed;
+  max-width: 400px;
+  min-width: 300px;
   bottom: 20px;
   right: 20px;
-  padding: 40px;
   border: 0.5px solid rgba(181, 240, 229, 0.12);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12.5px);
   z-index: 100;
 }
 
 .close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
   cursor: pointer;
   color: #b5f0e5;
   border-radius: 100%;
   padding: 5px;
+  height: fit-content;
+  margin-left: auto;
 }
 
 .close:hover {
@@ -251,6 +251,10 @@
   .darkGreenBox {
     margin: 40px;
   }
+
+  .toast {
+    max-width: 300px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -274,5 +278,8 @@
   }
   .chartBox {
     padding: 24px;
+  }
+  .toast {
+    max-width: 250px;
   }
 }

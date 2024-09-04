@@ -40,9 +40,6 @@ const OptimisticPage = () => {
   const [page, setPage] = useState<number>(1);
   const queryClient = new QueryClient();
 
-  const INITIAL_LIMIT = 2;
-  const LOAD_MORE_LIMIT = 2;
-
   const connectors = [
     new InjectedConnector({ options: { id: "braavos", name: "Braavos" } }),
     new InjectedConnector({ options: { id: "argentX", name: "Argent X" } }),
@@ -52,7 +49,7 @@ const OptimisticPage = () => {
 
   const fetchAssertions = async ({ queryKey }) => {
     const [, type, pageNumber] = queryKey;
-    const limit = pageNumber === 1 ? INITIAL_LIMIT : LOAD_MORE_LIMIT;
+    const limit = 50;
     const API_URL = `/api/optimistic?status=${type.toLowerCase()}&page=${pageNumber}&limit=${limit}`;
     const response = await axios.get(API_URL);
     return response.data.assertions.map((assertion: any) => ({

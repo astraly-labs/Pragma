@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { XIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { ClockIcon, InformationCircleIcon } from "@heroicons/react/outline";
@@ -8,6 +8,7 @@ import {
   useAccount,
   useContractWrite,
   useContractRead,
+  useNetwork,
 } from "@starknet-react/core";
 import {
   OO_CONTRACT_ADDRESS,
@@ -18,7 +19,8 @@ import { uint256 } from "starknet";
 import WalletConnection from "../common/WalletConnection";
 import AncillaryABI from "../../abi/Ancillary.json";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { utcToLocalTime } from "../../utils";
+import { findCurrencyNameByAddress, utcToLocalTime } from "../../utils";
+import Toast, { ToastType } from "../common/Toast";
 
 interface AssessmentPopupProps {
   assessment: Item; // Replace 'any' with your actual Assessment type
@@ -49,9 +51,20 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   const [timeLeft, setTimeLeft] = useState("");
   const currency = CURRENCIES[network];
   const { address } = useAccount();
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [isNetworkMismatch, setIsNetworkMismatch] = useState(false);
   const queryClient = useQueryClient();
   const { full: time } = utcToLocalTime(assessment.timestamp);
   const { full: expiryTime } = utcToLocalTime(assessment.expiration_time);
+  const { chain } = useNetwork();
+  const [toastKey, setToastKey] = useState(0);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [toastContent, setToastContent] = useState({
+    title: "",
+    text: "",
+    type: "success" as ToastType,
+    txHash: "",
+  });
 
   const { data: resolutionItem, isLoading } = useQuery<
     ResolutionDetails,
@@ -65,6 +78,31 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       return response.data;
     },
   });
+
+  const showToast = (
+    title: string,
+    text: string,
+    type: ToastType = "success",
+    txHash?: string
+  ) => {
+    setToastContent({ title, text, type, txHash });
+    setToastKey((prevKey) => prevKey + 1);
+  };
+
+  useEffect(() => {
+    setIsWalletConnected(!!address);
+  }, [address]);
+
+  useEffect(() => {
+    if (isWalletConnected && chain) {
+      setIsNetworkMismatch(
+        (network === "sepolia" && chain.network !== "sepolia") ||
+          (network === "mainnet" && chain.network !== "mainnet")
+      );
+    } else {
+      setIsNetworkMismatch(false);
+    }
+  }, [isWalletConnected, chain, network]);
 
   useEffect(() => {
     const updateProgressAndTime = () => {
@@ -181,10 +219,19 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           },
         ],
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["assertionDetails", assessment.assertion_id],
       });
+      showToast(
+        "Success",
+        "Assertion settled successfully",
+        "success",
+        data.transaction_hash
+      );
+    },
+    onError: (error) => {
+      showToast("Error", `Failed to settle assertion: ${error}`, "fail");
     },
   });
 
@@ -219,10 +266,19 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
           },
         ],
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["assertionDetails", assessment.assertion_id],
       });
+      showToast(
+        "Success",
+        "Assertion disputed successfully",
+        "success",
+        data.transaction_hash
+      );
+    },
+    onError: (error) => {
+      showToast("Error", `Failed to dispute assertion: ${error}`, "fail");
     },
   });
 
@@ -268,10 +324,6 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   };
 
   const handleDispute = (assertionId: number, bond: string) => {
-    if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
     disputeMutation.mutate({ assertionId, bond });
   };
 
@@ -280,20 +332,42 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     requestId: string,
     resolution: boolean
   ) => {
-    if (!address) {
-      alert("Please connect your wallet first");
-      return;
-    }
     if (owner != address) {
-      alert("Not the owner");
+      showToast("Error", "Address not authorized", "fail");
       return;
     }
     resolveDisputeMutation.mutate({ assertionId, requestId, resolution });
   };
 
   useEffect(() => {
-    // Trigger the animation after the component is mounted
     setIsVisible(true);
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        // Check if the click is on the StarkNet Kit modal or its children
+        const walletModal = document.getElementById(
+          "starknetkit-modal-container"
+        );
+
+        if (
+          walletModal &&
+          (walletModal === event.target ||
+            walletModal.contains(event.target as Node))
+        ) {
+          return; // Don't close if click is on StarkNet Kit modal
+        }
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
   }, []);
 
   const handleClose = () => {
@@ -302,16 +376,23 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 w-screen">
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div
-        className={`transform bg-darkGreen text-lightGreen shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+          isVisible ? "opacity-50" : "pointer-events-none opacity-0"
+        }`}
+        onClick={handleClose}
+      ></div>
+      <div
+        ref={popupRef}
+        className={`relative w-full bg-darkGreen text-lightGreen shadow-lg transition-transform duration-300 ease-in-out ${
           isVisible ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ maxHeight: "70vh", overflowY: "auto" }}
       >
         {!isLoading ? (
           <>
-            <div className="sticky top-0 mb-4 flex	 items-center justify-between bg-lightBlur px-10 py-4 backdrop-blur">
+            <div className="sticky top-0 flex	 items-center justify-between bg-lightBlur px-10 py-4 backdrop-blur">
               <div className="flex flex-row gap-3">
                 <Image
                   width={25}
@@ -332,83 +413,213 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                 <XIcon className="h-4 w-4" />
               </button>
             </div>
-            <div className="space-y-4  px-10 pb-5">
-              <div className="flex flex-row gap-3">
-                <InformationCircleIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
-                <h5>Assertion</h5>
-              </div>
-              <p>
-                <div className="text-mint">Description</div>{" "}
-                {assessment.description}
-              </p>
-              <p>
-                <div className="text-mint">Assertion Id</div>{" "}
-                {assessment.assertion_id}
-              </p>
-              <p>
-                <div className="text-mint">Challenge period ends</div>{" "}
-                {expiryTime}
-              </p>
-              <p>
-                <div className="text-mint">Result</div> {assessment.identifier}
-              </p>
-              <p>
-                <div className="text-mint">Bond</div> {assessment.bond}
-              </p>
-              <div className="flex flex-row gap-3">
-                <ClockIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
-                <h5>Timeline</h5>
-              </div>
-              <p>
-                <div className="text-mint">Start challenge period</div> {time}
-              </p>
-              <p>
-                <div className="text-mint">End challenge period</div>{" "}
-                {expiryTime}
-              </p>
-              <>
-                <div className="h-1 w-40 rounded-full bg-lightBlur">
-                  <div
-                    className="h-1 rounded-full bg-mint transition-all duration-500 ease-out"
-                    style={{
-                      width: timeLeft === "Ended" ? "100%" : `${progress}%`,
-                    }}
-                  ></div>
+            <div className="space-y-4 p-5 md:p-10">
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="flex w-full flex-wrap space-y-4 rounded-2xl border border-whiteTrans bg-greenFooter p-4 md:w-3/4 md:p-10">
+                  <div className="flex w-full flex-row items-center gap-3">
+                    <InformationCircleIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
+                    <h5>Assertion</h5>
+                  </div>
+                  <p className="mr-8 w-fit">
+                    <div className=" text-mint">Description</div>{" "}
+                    {assessment.description}
+                  </p>
+                  <p className="flex w-full flex-col flex-wrap overflow-auto">
+                    <div className="text-mint">Assertion Id</div>{" "}
+                    {assessment.assertion_id}
+                  </p>
+                  <p className="mr-8">
+                    <div className="text-mint">Challenge period ends</div>{" "}
+                    {expiryTime}
+                  </p>
+                  <p className="mr-8">
+                    <div className="text-mint">Result</div>{" "}
+                    {assessment.identifier}
+                  </p>
+                  <p className="mr-8">
+                    <div className="text-mint">Bond</div>{" "}
+                    <div className="flex flex-row gap-2">
+                      <Image
+                        alt="Bond Currency"
+                        width={17}
+                        height={17}
+                        src={`/assets/currencies/${findCurrencyNameByAddress(
+                          assessment.currency
+                        ).toLowerCase()}.svg`}
+                      />
+                      {assessment.bond}
+                    </div>
+                  </p>
                 </div>
-                <div className="mt-1 text-xs">Left: {timeLeft}</div>
-              </>
-              <div className="flex flex-row gap-3">
-                <InformationCircleIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
-                <h5>Details</h5>
+                <div className="flex w-full flex-wrap items-start justify-start space-y-4 rounded-2xl border border-whiteTrans bg-xlightBlur p-4 md:w-1/4 md:p-10">
+                  <div className="flex w-full flex-row items-center gap-3">
+                    <InformationCircleIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
+                    <h5>Actions</h5>
+                  </div>
+                  {!isWalletConnected && (
+                    <div
+                      data-testid="wallet-modal"
+                      className="m-auto flex flex-col gap-3 text-center"
+                    >
+                      Connect your wallet
+                      <WalletConnection />
+                    </div>
+                  )}
+                  {isNetworkMismatch && (
+                    <div className="w-full text-center font-bold text-redDown">
+                      Please change network to{" "}
+                      {chain.network === "sepolia" ? "Mainnet" : "Testnet"}
+                    </div>
+                  )}
+
+                  {isWalletConnected &&
+                    !isNetworkMismatch &&
+                    !isLoading &&
+                    !resolutionItem.settled && (
+                      <div className="m-auto flex w-full flex-col items-center gap-3 text-center text-mint">
+                        You are connected with
+                        <WalletConnection />
+                      </div>
+                    )}
+
+                  <div className="flex w-full flex-wrap items-center justify-center gap-4">
+                    {isWalletConnected &&
+                      !isNetworkMismatch &&
+                      !isLoading &&
+                      !resolutionItem.settled && (
+                        <button
+                          type="submit"
+                          className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                          onClick={() => handleSettle(assessment.assertion_id)}
+                        >
+                          Settle
+                        </button>
+                      )}
+
+                    {isWalletConnected &&
+                      !isNetworkMismatch &&
+                      !isLoading &&
+                      !resolutionItem.disputed &&
+                      !resolutionItem.settled && (
+                        <button
+                          type="submit"
+                          className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                          onClick={() =>
+                            handleDispute(
+                              assessment.assertion_id,
+                              assessment.bond
+                            )
+                          }
+                        >
+                          Dispute
+                        </button>
+                      )}
+                  </div>
+                  {isWalletConnected &&
+                    !isNetworkMismatch &&
+                    !isLoading &&
+                    resolutionItem.disputed &&
+                    !resolutionItem.settled && (
+                      <div className="flex w-full flex-wrap items-center justify-center gap-4">
+                        <button
+                          type="submit"
+                          className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                          onClick={() =>
+                            handleResolveDispute(
+                              assessment.assertion_id,
+                              resolutionItem.dispute_id,
+                              true
+                            )
+                          }
+                        >
+                          True
+                        </button>
+                        <button
+                          type="submit"
+                          className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
+                          onClick={() =>
+                            handleResolveDispute(
+                              assessment.assertion_id,
+                              resolutionItem.dispute_id,
+                              false
+                            )
+                          }
+                        >
+                          False
+                        </button>
+                      </div>
+                    )}
+                </div>
               </div>
-              <p>
-                <div className="text-mint">Asserter</div>{" "}
-                {resolutionItem.asserter}
-              </p>
-              <p>
-                <div className="text-mint">Disputed</div>
-                {resolutionItem.disputed ? "True" : "False"}
-              </p>
-              <p>
-                <div className="text-mint">Disputer</div>
-                {resolutionItem.disputer}
-              </p>
-              <p>
-                <div className="text-mint">Dispute Id</div>
-                {resolutionItem.dispute_id}
-              </p>
-              <p>
-                <div className="text-mint">Settled</div>
-                {resolutionItem.settled ? "True" : "False"}
-              </p>
-              <p>
-                <div className="text-mint">Settled caller</div>
-                {resolutionItem.settle_caller}
-              </p>
-              <p>
-                <div className="text-mint">Settlement Resolution</div>
-                {resolutionItem.settlement_resolution}
-              </p>
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="flex w-full flex-wrap space-y-4 rounded-2xl border border-whiteTrans bg-lightBackground p-4 md:w-1/2 md:p-10">
+                  <div className="flex w-full flex-row items-center gap-3">
+                    <ClockIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
+                    <h5>Timeline</h5>
+                  </div>
+                  <p className=" mr-8">
+                    <div className="text-mint">Start challenge period</div>{" "}
+                    {time}
+                  </p>
+                  <p className=" mr-8">
+                    <div className="text-mint">End challenge period</div>{" "}
+                    {expiryTime}
+                  </p>
+                  <div className="flex w-full flex-col items-center justify-center">
+                    <div className="h-1 w-full rounded-full bg-lightBlur">
+                      <div
+                        className="h-1 rounded-full bg-mint transition-all duration-500 ease-out"
+                        style={{
+                          width: timeLeft === "Ended" ? "100%" : `${progress}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <div className="mt-1 text-xs">Left: {timeLeft}</div>
+                  </div>
+                </div>
+                <div className="flex w-full flex-wrap space-y-4 rounded-2xl border border-whiteTrans bg-greenFooter p-4 md:w-1/2 md:p-10">
+                  <div className="flex flex-row items-center gap-3">
+                    <InformationCircleIcon className=" my-auto h-6 w-6 rounded-full text-lightGreen" />
+                    <h5>Details</h5>
+                  </div>
+                  <p className="flex w-full flex-col flex-wrap overflow-auto">
+                    <div className="text-mint">Asserter</div>
+                    {resolutionItem.asserter}
+                  </p>
+                  <p className="mr-8">
+                    <div className="text-mint">Disputed</div>
+                    {resolutionItem.disputed ? "True" : "False"}
+                  </p>
+                  {resolutionItem.disputed && (
+                    <p className="mr-8">
+                      <div className="text-mint">Disputer</div>
+                      {resolutionItem.disputer}
+                    </p>
+                  )}
+                  {resolutionItem.disputed && (
+                    <p className="mr-8">
+                      <div className="text-mint">Dispute Id</div>
+                      {resolutionItem.dispute_id}
+                    </p>
+                  )}
+                  <p className="mr-8">
+                    <div className="text-mint">Settled</div>
+                    {resolutionItem.settled ? "True" : "False"}
+                  </p>
+                  {resolutionItem.settled && (
+                    <p className="mr-8">
+                      <div className="text-mint">Settled caller</div>
+                      {resolutionItem.settle_caller}
+                    </p>
+                  )}
+                  {resolutionItem.settled && (
+                    <p className="mr-8">
+                      <div className="text-mint">Settlement Resolution</div>
+                      {resolutionItem.settlement_resolution}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </>
         ) : (
@@ -416,62 +627,16 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
             Fetching ...
           </div>
         )}
-        <div className="flex items-center justify-start space-x-4 py-4 pl-12">
-          {!isLoading && !resolutionItem.settled && (
-            <>
-              <WalletConnection />
-              <button
-                type="submit"
-                className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-                onClick={() => handleSettle(assessment.assertion_id)}
-              >
-                Settle
-              </button>
-            </>
-          )}
-          {!isLoading && !resolutionItem.disputed && !resolutionItem.settled && (
-            <button
-              type="submit"
-              className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-              onClick={() =>
-                handleDispute(assessment.assertion_id, assessment.bond)
-              }
-            >
-              Dispute
-            </button>
-          )}
-          {!isLoading && resolutionItem.disputed && !resolutionItem.settled && (
-            <>
-              <button
-                type="submit"
-                className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-                onClick={() =>
-                  handleResolveDispute(
-                    assessment.assertion_id,
-                    resolutionItem.dispute_id,
-                    true
-                  )
-                }
-              >
-                Resolve True
-              </button>
-              <button
-                type="submit"
-                className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
-                onClick={() =>
-                  handleResolveDispute(
-                    assessment.assertion_id,
-                    resolutionItem.dispute_id,
-                    false
-                  )
-                }
-              >
-                Resolve False
-              </button>
-            </>
-          )}
-        </div>
       </div>
+      {toastContent.title && (
+        <Toast
+          key={toastKey}
+          title={toastContent.title}
+          text={toastContent.text}
+          type={toastContent.type}
+          txHash={toastContent.txHash}
+        />
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { Item } from "../../pages/optimistic";
 import { findCurrencyNameByAddress, utcToLocalTime } from "../../utils";
+import classNames from "classnames";
 
 interface AssessmentProps {
   assessment: Item;
@@ -59,11 +60,14 @@ const Assessment: React.FC<AssessmentProps> = ({
   }, [assessment]);
 
   return (
-    <div className={styles.assessment}>
-      <div
-        className="min-w-96 my-auto flex cursor-pointer flex-row gap-4 text-LightGreenFooter hover:opacity-50 md:tracking-wider"
-        onClick={onClick}
-      >
+    <div
+      className={classNames(
+        styles.assessment,
+        "cursor-pointer hover:opacity-70"
+      )}
+      onClick={onClick}
+    >
+      <div className="min-w-96 my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         {loading ? (
           <div className="my-auto h-8 w-8 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
