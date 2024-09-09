@@ -103,6 +103,8 @@ const mobileResources = [
 
 const NavHeader = () => {
   const [isHidden, setIsHidden] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   return (
     <Popover
       className={classNames(styles.bigScreen, "absolute w-full py-8 px-3")}
@@ -155,11 +157,17 @@ const NavHeader = () => {
                 {resource.name}
               </Link>
             ))}
-            <NavPopover
-              buttonName="Community"
-              content={additional}
-              // callsToAction={callsToAction}
-            />
+            <div
+              onMouseEnter={() => setIsPopoverOpen(true)}
+              onMouseLeave={() => setIsPopoverOpen(false)}
+            >
+              <NavPopover
+                buttonName="Community"
+                content={additional}
+                // callsToAction={callsToAction}
+                isOpen={isPopoverOpen}
+              />
+            </div>
           </Popover.Group>
           <div className="hidden w-4 md:flex lg:hidden"></div>
           <div className="hidden items-center justify-end lg:flex lg:w-0 lg:flex-1">

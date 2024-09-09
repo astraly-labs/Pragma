@@ -21,11 +21,13 @@ interface PopoverContent {
 interface NavPopoverProps {
   buttonName: string;
   content: PopoverContent[];
+  isOpen: boolean;
 }
 
 const NavPopover: React.FC<NavPopoverProps> = ({
   buttonName,
   content,
+  isOpen,
   // callsToAction,
 }) => (
   <Popover className="relative text-lightGreen">
@@ -41,12 +43,16 @@ const NavPopover: React.FC<NavPopoverProps> = ({
         </Popover.Button>
 
         <StyledTransition
+          show={isOpen}
           enterFrom="translate-y-1"
           enterTo="translate-y-0"
           leaveFrom="translate-y-0"
           leaveTo="translate-y-1"
         >
-          <Popover.Panel className="absolute -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
+          <Popover.Panel
+            static
+            className="absolute -ml-4 mt-3 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2"
+          >
             <div
               className={classNames(
                 "border-1 overflow-hidden	rounded-2xl bg-lightBlur shadow-lg ring-1 ring-white ring-opacity-5",
@@ -64,6 +70,8 @@ const NavPopover: React.FC<NavPopoverProps> = ({
                       className="my-auto h-4 w-4 text-lightGreen"
                       src={item.icon}
                       alt={"logo"}
+                      height={10}
+                      width={10}
                     />
                     <div className="ml-4">
                       <p className="text-base font-medium text-white">
