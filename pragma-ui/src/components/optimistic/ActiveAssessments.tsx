@@ -267,7 +267,7 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
         </div>
         <div className="w-full overflow-auto">
           <div className={styles.assessment}>
-            <div className="flex cursor-pointer flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Assertion
             </div>
             <div className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider">

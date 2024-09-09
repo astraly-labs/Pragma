@@ -53,6 +53,30 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
+      image: "/assets/posts/OO.webp",
+      date: "September 9th, 2024",
+      title: "Announcing the Pragma Optimistic Oracle",
+      description:
+        "We're thrilled to announce the release of version 1 of our optimistic oracle on...",
+      link: "https://blog.pragma.build/announcing-the-pragma-optimistic-oracle/",
+    },
+    {
+      image: "/assets/posts/LiqBot.webp",
+      date: "September 5th, 2024",
+      title: "Announcing the Open-Source Liquidation Bot for Vesu",
+      description:
+        "We're thrilled to announce that we've developed a fully open-source liquidation bot...",
+      link: "https://blog.pragma.build/announcing-the-open-source-liquidation-bot-for-vesu/",
+    },
+    {
+      image: "/assets/posts/merkle.webp",
+      date: "August 30th, 2024",
+      title: "I have a Merkle",
+      description:
+        "In collaboration with DOPP, Pragma is excited to introduce our new product:...",
+      link: "https://blog.pragma.build/i-have-a-merkle/",
+    },
+    {
       image: "/assets/posts/pragmaxvesu.webp",
       date: "August 26th, 2024",
       title: "Vesu's vault - Pragma's shield",

@@ -36,7 +36,6 @@
   align-items: center;
   flex: 1 0 0;
   align-self: stretch;
-  height: 90vh;
 }
 
 .input {
@@ -130,7 +129,6 @@
 }
 
 .popoverPanel {
-  border: 1px solid transparent;
   background: linear-gradient(#082f28e6, #082f28e6) padding-box,
     linear-gradient(
         90deg,
