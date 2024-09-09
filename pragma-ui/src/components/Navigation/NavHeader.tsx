@@ -45,13 +45,13 @@ const products = [
     name: "Explorer",
     description: "Explore Pragma's assets and data",
     href: "/assets",
-    icon: "/assets/products/explorer.svg",
+    icon: "/assets/vectors/explorer.svg",
   },
   {
     name: "Optimistic Oracle",
     description: "Pragma's Optimistic Oracle solution",
     href: "/optimistic",
-    icon: "/assets/products/optimistic.svg",
+    icon: "/assets/vectors/optimistic.svg",
   },
 ];
 
@@ -198,6 +198,7 @@ const NavHeader = () => {
                 buttonName="Products"
                 content={products}
                 isOpen={isProductsPopoverOpen}
+                description="Discover the different interfaces to interact with Pragma."
               />
             </div>
             <div
@@ -209,6 +210,7 @@ const NavHeader = () => {
                 content={additional}
                 // callsToAction={callsToAction}
                 isOpen={isCommunityPopoverOpen}
+                description="Join the Pragma community on any of those channels"
               />
             </div>
           </Popover.Group>
