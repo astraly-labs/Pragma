@@ -167,16 +167,34 @@ const fetchData = async (source: string) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const source = "mainnet"; // Default source, you can change this based on some logic
-  const { results, publishersData, checkpointsData } = await fetchData(source);
+  try {
+    const source = "mainnet"; // Default source, you can change this based on some logic
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/fetchData?source=${source}`
+    );
 
-  return {
-    props: {
-      initialData: results,
-      initialPublishers: publishersData,
-      initialCheckpoints: checkpointsData,
-    },
-  };
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const { results, publishersData, checkpointsData } = await response.json();
+
+    return {
+      props: {
+        initialData: results,
+        initialPublishers: publishersData,
+        initialCheckpoints: checkpointsData,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        initialData: {},
+        initialPublishers: {},
+        initialCheckpoints: {},
+      },
+    };
+  }
 };
-
 export default React.memo(MyApp);
