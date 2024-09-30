@@ -19,6 +19,7 @@ import OOAbi from "../abi/OO.json";
 import { uint256, shortString } from "starknet";
 import NetworkSelection from "../components/common/NetworkSelection";
 import Toast, { ToastType } from "../components/common/Toast";
+import Image from "next/image";
 
 /**
  * Generates a formatted timestamp string in the format `DD/MM/YYYY, HH:MM`.
@@ -515,9 +516,12 @@ const Request = () => {
               id="details"
               className="relative scroll-mt-8 rounded-xl border border-whiteTrans bg-greenFooter p-6 md:p-8"
             >
-              <img
+              <Image
+                height={24}
+                width={24}
+                alt="lightDot"
                 src="/assets/vectors/lightDot.svg"
-                className="absolute top-0 right-10 h-6 w-6 -translate-y-3"
+                className="absolute top-0 right-10 -translate-y-3"
               />
               <h3 className="mb-6 text-2xl font-bold text-mint">
                 General information
@@ -567,7 +571,10 @@ const Request = () => {
               id="currency"
               className="relative scroll-mt-8 overflow-hidden rounded-xl border border-whiteTrans bg-lightBackground p-6 pb-24 md:px-8 md:pt-8"
             >
-              <img
+              <Image
+                height={24}
+                width={24}
+                alt="Currency"
                 src={"/assets/vectors/opCurrency.svg"}
                 className="absolute bottom-0 right-0 w-full"
               />
@@ -635,10 +642,6 @@ const Request = () => {
               id="bond"
               className="relative scroll-mt-8 overflow-hidden rounded-xl border border-whiteTrans bg-greenFooter p-6 md:px-8 md:pt-8"
             >
-              <img
-                src={"/assets/ceorstv / opBond.svg"}
-                className="absolute right-0 top-0 z-0 w-full translate-x-16 -translate-y-20"
-              />
               <h3 className="z-20 mb-6 text-2xl font-bold text-mint">Bond</h3>
               <div className="z-20 space-y-6">
                 <div className="flex flex-col gap-3">
@@ -699,9 +702,12 @@ const Request = () => {
               id="challengePeriod"
               className="relative scroll-mt-8 rounded-xl border border-whiteTrans bg-lightBackground p-6 md:px-8 md:pt-8"
             >
-              <img
+              <Image
+                height={24}
+                width={24}
+                alt="lightDot"
                 src="/assets/vectors/lightDot.svg"
-                className="absolute bottom-0 left-10 h-6 w-6 translate-y-3"
+                className="absolute bottom-0 left-10 translate-y-3"
               />
               <h3 className="mb-6 text-2xl font-bold text-mint">
                 Challenge Period

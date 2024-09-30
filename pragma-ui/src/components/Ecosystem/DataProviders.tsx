@@ -31,6 +31,8 @@ const DataProviders = () => (
     <div className="relative flex w-full flex-col items-center justify-center overflow-hidden lg:w-6/12">
       <Image
         src="/assets/vectors/vector4.svg"
+        height={900}
+        width={400}
         alt="divider"
         className="absolute z-0 w-full"
       />

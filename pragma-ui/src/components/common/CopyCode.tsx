@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Button } from "./Button";
+import Image from "next/image";
 
 const CopyButtonComponent = ({ textToCopy }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -33,7 +34,13 @@ const CopyButtonComponent = ({ textToCopy }) => {
             />
           </svg>
         ) : (
-          <img src="/assets/vectors/copy.svg" className="pr-3" alt="Copy" />
+          <Image
+            src="/assets/vectors/copy.svg"
+            width={30}
+            height={30}
+            className="pr-3"
+            alt="Copy"
+          />
         )}
         {isCopied ? "Copied!" : "Copy Code"}
       </Button>

@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
+import Image from "next/image";
 
 const AssetHero = ({
   title,
@@ -15,18 +16,24 @@ const AssetHero = ({
 }) => {
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <img
+      <Image
         src={illustrationLink}
+        height={400}
+        width={900}
         alt="Illustration Hero"
         className="absolute bottom-0 right-0 hidden lg:block"
       />
-      <img
+      <Image
         src={illustrationSmallLink}
+        height={400}
+        width={800}
         alt="Illustration Hero"
         className="absolute right-0 bottom-0 ml-auto mr-auto hidden w-full translate-y-48 opacity-60 md:block lg:hidden"
       />
-      <img
+      <Image
         src={illustrationSmallLink}
+        height={400}
+        width={900}
         alt="Illustration Hero"
         className="absolute right-0 left-0 bottom-0 ml-auto mr-auto  block w-full translate-y-10 opacity-60 md:hidden"
       />

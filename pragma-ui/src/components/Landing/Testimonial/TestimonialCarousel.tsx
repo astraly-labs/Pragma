@@ -11,6 +11,7 @@ import {
 } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 
 interface Category {
   logo: string;
@@ -54,7 +55,12 @@ const TestimonialCarousel: React.FC = () => {
           <Slide index={index} key={index}>
             <div className={styles.testimonyBox} key={index}>
               <div className="w-48">
-                <img alt="companyLogo" src={category.logo} />
+                <Image
+                  height={40}
+                  width={150}
+                  alt="companyLogo"
+                  src={category.logo}
+                />
               </div>
               <GreenText className="py-8 text-center md:text-left">
                 {category.text}
