@@ -194,7 +194,7 @@ const Request = () => {
         }
       });
     };
-  }, []);
+  }, [sectionRefs]);
 
   useEffect(() => {
     if (

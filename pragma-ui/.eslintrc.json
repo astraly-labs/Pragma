@@ -4,9 +4,10 @@
     "es2021": true
   },
   "extends": [
+    "next",
+    "next/core-web-vitals",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
     "google",
     "prettier"
   ],
@@ -19,6 +20,11 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "prettier/prettier": "error",
     "prettier/singleQuote": 0,
