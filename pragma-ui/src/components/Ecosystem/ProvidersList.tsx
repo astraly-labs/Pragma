@@ -29,7 +29,13 @@ const ProvidersList = () => (
   >
     {providersData.map((tab, index) => (
       <div className={styles.dpBox} key={index}>
-        <Image src={tab.logo} className="h-8" alt="logo" />
+        <Image
+          src={tab.logo}
+          height={32}
+          width={120}
+          className="h-8"
+          alt="logo"
+        />
         {tab.description}
       </div>
     ))}

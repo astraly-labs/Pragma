@@ -339,6 +339,11 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     resolveDisputeMutation.mutate({ assertionId, requestId, resolution });
   };
 
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300); // Wait for the animation to finish before calling onClose
+  };
+
   useEffect(() => {
     setIsVisible(true);
 
@@ -368,12 +373,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, []);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(onClose, 300); // Wait for the animation to finish before calling onClose
-  };
+  }, [handleClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">

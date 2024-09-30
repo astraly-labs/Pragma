@@ -2,18 +2,25 @@ import React from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
+import dynamic from "next/dynamic";
 
 import "../styles/index.css";
-import NavFooter from "../components/Navigation/NavFooter";
 import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { DataProvider, dataSources, initialAssets } from "../providers/data";
+import { DataProvider } from "../providers/data";
 import { GetServerSideProps } from "next";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+// Dynamically import components with heavy computations or less critical UI elements
+const DynamicNavFooter = dynamic(
+  () => import("../components/Navigation/NavFooter"),
+  { ssr: false }
+);
+
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { initialData, initialPublishers, initialCheckpoints } = pageProps;
 
@@ -101,67 +108,42 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           >
             <Component {...pageProps} key={router.asPath} />
           </DataProvider>
-          <NavFooter />
+          <DynamicNavFooter />
         </div>
       </StarknetConfig>
     </QueryClientProvider>
   );
 };
 
-const fetchData = async (source: string) => {
-  const results: { [ticker: string]: any } = {};
-  const checkpointsData: { [ticker: string]: any } = {};
-
-  const [, , publishersResponse] = await Promise.all([
-    Promise.all(
-      initialAssets.map(async (asset) => {
-        const response = await fetch(
-          `${dataSources[source]}&pair=${asset.ticker}`
-        );
-        if (!response.ok)
-          throw new Error(`Failed to fetch data for ${asset.ticker}`);
-        const result = await response.json();
-        results[asset.ticker] = result;
-      })
-    ),
-    Promise.all(
-      initialAssets.map(async (asset) => {
-        const response = await fetch(
-          `${
-            dataSources[
-              `checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`
-            ]
-          }&pair=${asset.ticker}`
-        );
-        if (!response.ok)
-          throw new Error(`Failed to fetch data for ${asset.ticker}`);
-        const result = await response.json();
-        checkpointsData[asset.ticker] = result;
-      })
-    ),
-    fetch(
-      dataSources[
-        `publishers${source.charAt(0).toUpperCase() + source.slice(1)}`
-      ]
-    ),
-  ]);
-
-  const publishersData = await publishersResponse.json();
-
-  return { results, publishersData, checkpointsData };
-};
-
 export const getServerSideProps: GetServerSideProps = async () => {
-  const source = "mainnet"; // Default source, you can change this based on some logic
-  const { results, publishersData, checkpointsData } = await fetchData(source);
+  try {
+    const source = "mainnet"; // Default source, you can change this based on some logic
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/fetchData?source=${source}`
+    );
 
-  return {
-    props: {
-      initialData: results,
-      initialPublishers: publishersData,
-      initialCheckpoints: checkpointsData,
-    },
-  };
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const { results, publishersData, checkpointsData } = await response.json();
+
+    return {
+      props: {
+        initialData: results,
+        initialPublishers: publishersData,
+        initialCheckpoints: checkpointsData,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        initialData: {},
+        initialPublishers: {},
+        initialCheckpoints: {},
+      },
+    };
+  }
 };
-
-export default MyApp;
+export default React.memo(MyApp);

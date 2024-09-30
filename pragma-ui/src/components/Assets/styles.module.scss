@@ -23,29 +23,6 @@
   backdrop-filter: blur(12.5px);
 }
 
-.greenBox {
-  display: flex;
-  padding: 36px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  align-self: stretch;
-  border-radius: 20px;
-  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
-  background: var(--green-12, rgba(27, 99, 82, 0.12));
-}
-
-.greenBoxPrice {
-  display: flex;
-  padding: 36px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 20px;
-  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
-  background: var(--green-12, rgba(27, 99, 82, 0.12));
-}
-
 .assetBox {
   display: flex;
   width: 100%;

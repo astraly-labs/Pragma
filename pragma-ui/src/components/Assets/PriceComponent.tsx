@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
+import sharedStyles from "../../pages/styles.module.scss";
 import PriceComponentComp from "./PriceComponentComp";
 
 const PriceComponent = ({ components }) => {
@@ -8,7 +9,7 @@ const PriceComponent = ({ components }) => {
     <div
       className={classNames(
         "z-1 w-full flex-col justify-between gap-0",
-        styles.greenBoxPrice
+        sharedStyles.greenBox
       )}
     >
       <h4 className="text-lightGreen">Price Components</h4>

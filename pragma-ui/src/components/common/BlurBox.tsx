@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";
 import GreenText from "./GreenText";
 import { ButtonLink } from "./Button";
+import Image from "next/image";
 
 interface BlurBoxProps {
   firstText: string;
@@ -35,8 +36,10 @@ const BlurBox: React.FC<BlurBoxProps> = ({
     <GreenText isAligned={false} className="mb-auto">
       {generalText}
     </GreenText>
-    <img
+    <Image
       className={styles.svgIllustration}
+      height={400}
+      width={900}
       src={urlSvg}
       alt="Illustration SVG"
     />

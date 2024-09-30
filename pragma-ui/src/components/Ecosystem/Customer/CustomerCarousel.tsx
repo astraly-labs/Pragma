@@ -80,7 +80,12 @@ const CustomerCarousel: React.FC = () => {
                   {category.category}
                 </div>
                 <div className="w-48">
-                  <img alt="companyLogo" src={category.logo} />
+                  <Image
+                    width={140}
+                    height={30}
+                    alt="companyLogo"
+                    src={category.logo}
+                  />
                 </div>
                 <GreenText className="text-center md:pb-32 md:text-left">
                   {category.integration}
@@ -91,6 +96,8 @@ const CustomerCarousel: React.FC = () => {
                 <div className="flex flex-row gap-4">
                   <Image
                     src={category.avatar}
+                    height={48}
+                    width={48}
                     className={styles.avatar}
                     alt="avatar"
                   />

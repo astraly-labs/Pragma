@@ -29,9 +29,14 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
   };
   return (
     <div className={styles.darkGreenBox}>
-      <div className="my-auto w-10/12 items-center md:pb-20">
-        <h2 className="mb-4 text-lightGreen">Data Feeds</h2>
-        <GreenText isAligned={false} className="mb-10">
+      <div className="my-auto w-full items-center md:pb-20 lg:w-10/12">
+        <h2 className="mb-4 text-center text-lightGreen lg:text-left">
+          Data Feeds
+        </h2>
+        <GreenText
+          isAligned={false}
+          className="mb-10 text-center  lg:text-left"
+        >
           Data feeds are the most secure means of obtaining price information on
           Starknet, and soon, everywhere. Pragma harnesses its network of data
           providers, including market makers, centralized and decentralized
@@ -44,7 +49,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
           color="mint"
           href="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
           center={false}
-          className="w-fit"
+          className="mr-auto ml-auto w-fit lg:ml-0"
         >
           Integrate Feeds
         </ButtonLink>
@@ -62,7 +67,7 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
         </div>
         <div
           className={classNames(
-            "relative ml-auto w-full overflow-hidden py-8 backdrop-blur-md  sm:w-96 sm:-translate-y-20 sm:py-0 xl:w-xlarge",
+            "relative ml-auto w-full overflow-hidden py-8 sm:w-96  sm:-translate-y-20 sm:py-0 lg:backdrop-blur-md xl:w-xlarge",
             isFront ? styles.back : styles.front,
             styles.transi
           )}

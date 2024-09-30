@@ -56,7 +56,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
     return () => {
       chart.remove();
     };
-  }, [asset]);
+  }, [asset, selectedFrame]);
 
   useEffect(() => {
     if (asset === undefined) return;

@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import styles from "./styles.module.scss";
+import sharedStyles from "../../pages/styles.module.scss";
 import Image from "next/image";
 import DoubleText from "./DoubleText";
 import Link from "next/link";
@@ -9,8 +9,8 @@ const AssetHeader = ({ isAsset, asset }) => {
   return (
     <div
       className={classNames(
-        "w-full flex-col justify-between gap-8 md:flex-row md:gap-5",
-        styles.greenBox
+        "w-full flex-col justify-between gap-8 self-stretch md:flex-row md:gap-5	",
+        sharedStyles.greenBox
       )}
     >
       <h2 className="my-auto flex flex-row items-center gap-4 text-lightGreen">

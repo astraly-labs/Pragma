@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
+import sharedStyles from "../../pages/styles.module.scss";
 import PairReportedComp from "./PairReportedComp";
 import SearchBar from "../Navigation/SearchBar";
 
@@ -27,7 +28,7 @@ const PairReported = ({ components }) => {
     <div
       className={classNames(
         "z-1 w-full flex-col justify-between gap-0",
-        styles.greenBoxPrice
+        sharedStyles.greenBox
       )}
     >
       <div className="flex w-full flex-col gap-3 py-3 sm:flex-row">
