@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import styles from "./styles.module.scss";
+import styles from "../components/Navigation/styles.module.scss";
 import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";

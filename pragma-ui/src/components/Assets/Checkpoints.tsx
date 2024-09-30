@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
+import sharedStyles from "../../pages/styles.module.scss";
 import CheckpointComp from "./CheckpointComp";
 
 const ITEMS_PER_PAGE = 10;
@@ -163,7 +164,7 @@ const Checkpoints = ({ components }) => {
     <div
       className={classNames(
         "z-1 w-full flex-col justify-between gap-0",
-        styles.greenBoxPrice
+        sharedStyles.greenBox
       )}
     >
       <h4 className="text-lightGreen">Checkpoints</h4>

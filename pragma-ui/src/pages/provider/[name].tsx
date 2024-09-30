@@ -133,7 +133,7 @@ const ProviderPage = () => {
         <BoxContainer>
           <div
             className={classNames(
-              "w-full flex-col justify-between gap-8 md:flex-row md:gap-5",
+              "w-full flex-col justify-between gap-8 self-stretch md:flex-row md:gap-5",
               styles.greenBox
             )}
           >
