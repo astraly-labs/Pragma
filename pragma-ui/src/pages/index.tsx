@@ -7,6 +7,7 @@ import moment from "moment-timezone";
 import { UTCTimestamp } from "lightweight-charts";
 import { initialAssets } from "../providers/data";
 import { useQuery } from "@tanstack/react-query";
+import { AssetT } from "../components/common/AssetBox";
 
 // Non-lazy loaded components
 import Hero from "../components/Landing/Hero";
@@ -40,7 +41,7 @@ const ReadyBox = dynamic(() => import("../components/common/ReadyBox"), {
 export const timezone = "Europe/London";
 
 // Move this function outside of the component
-const removeDuplicateTimestamps = (arr) => {
+export const removeDuplicateTimestamps = (arr) => {
   const seenTimestamps = new Set();
   return arr.filter((obj) => {
     const timestamp = moment.tz(obj.time, timezone).valueOf();
