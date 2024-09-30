@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
