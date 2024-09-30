@@ -11,6 +11,11 @@ const fetchAssetData = async (asset: any, dataType: string) => {
   return response.json();
 };
 
+/**
+ * API handler for fetching asset data, checkpoint data, and publisher data.
+ * @param {NextApiRequest} req - The incoming request object.
+ * @param {NextApiResponse} res - The response object.
+ * @return {Promise<void>} */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

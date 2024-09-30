@@ -11,7 +11,7 @@ import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { DataProvider, dataSources, initialAssets } from "../providers/data";
+import { DataProvider } from "../providers/data";
 import { GetServerSideProps } from "next";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
@@ -113,57 +113,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </StarknetConfig>
     </QueryClientProvider>
   );
-};
-
-const fetchData = async (source: string) => {
-  const fetchAssetData = async (asset: any, dataType: string) => {
-    const url = `${dataSources[dataType]}${
-      dataType.includes("checkpoints") ? "&pair=" : ""
-    }${asset.ticker}`;
-    const response = await fetch(url);
-    if (!response.ok)
-      throw new Error(`Failed to fetch ${dataType} data for ${asset.ticker}`);
-    return response.json();
-  };
-
-  try {
-    const [assetResults, checkpointResults, publishersResponse] =
-      await Promise.all([
-        Promise.all(
-          initialAssets.map((asset) => fetchAssetData(asset, source))
-        ),
-        Promise.all(
-          initialAssets.map((asset) =>
-            fetchAssetData(
-              asset,
-              `checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`
-            )
-          )
-        ),
-        fetch(
-          dataSources[
-            `publishers${source.charAt(0).toUpperCase() + source.slice(1)}`
-          ]
-        ),
-      ]);
-
-    const publishersData = await publishersResponse.json();
-
-    const results = Object.fromEntries(
-      initialAssets.map((asset, index) => [asset.ticker, assetResults[index]])
-    );
-    const checkpointsData = Object.fromEntries(
-      initialAssets.map((asset, index) => [
-        asset.ticker,
-        checkpointResults[index],
-      ])
-    );
-
-    return { results, publishersData, checkpointsData };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return { results: {}, publishersData: {}, checkpointsData: {} };
-  }
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
