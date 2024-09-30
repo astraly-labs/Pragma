@@ -116,46 +116,54 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 };
 
 const fetchData = async (source: string) => {
-  const results: { [ticker: string]: any } = {};
-  const checkpointsData: { [ticker: string]: any } = {};
+  const fetchAssetData = async (asset: any, dataType: string) => {
+    const url = `${dataSources[dataType]}${
+      dataType.includes("checkpoints") ? "&pair=" : ""
+    }${asset.ticker}`;
+    const response = await fetch(url);
+    if (!response.ok)
+      throw new Error(`Failed to fetch ${dataType} data for ${asset.ticker}`);
+    return response.json();
+  };
 
-  const [, , publishersResponse] = await Promise.all([
-    Promise.all(
-      initialAssets.map(async (asset) => {
-        const response = await fetch(
-          `${dataSources[source]}&pair=${asset.ticker}`
-        );
-        if (!response.ok)
-          throw new Error(`Failed to fetch data for ${asset.ticker}`);
-        const result = await response.json();
-        results[asset.ticker] = result;
-      })
-    ),
-    Promise.all(
-      initialAssets.map(async (asset) => {
-        const response = await fetch(
-          `${
-            dataSources[
+  try {
+    const [assetResults, checkpointResults, publishersResponse] =
+      await Promise.all([
+        Promise.all(
+          initialAssets.map((asset) => fetchAssetData(asset, source))
+        ),
+        Promise.all(
+          initialAssets.map((asset) =>
+            fetchAssetData(
+              asset,
               `checkpoints${source.charAt(0).toUpperCase() + source.slice(1)}`
-            ]
-          }&pair=${asset.ticker}`
-        );
-        if (!response.ok)
-          throw new Error(`Failed to fetch data for ${asset.ticker}`);
-        const result = await response.json();
-        checkpointsData[asset.ticker] = result;
-      })
-    ),
-    fetch(
-      dataSources[
-        `publishers${source.charAt(0).toUpperCase() + source.slice(1)}`
-      ]
-    ),
-  ]);
+            )
+          )
+        ),
+        fetch(
+          dataSources[
+            `publishers${source.charAt(0).toUpperCase() + source.slice(1)}`
+          ]
+        ),
+      ]);
 
-  const publishersData = await publishersResponse.json();
+    const publishersData = await publishersResponse.json();
 
-  return { results, publishersData, checkpointsData };
+    const results = Object.fromEntries(
+      initialAssets.map((asset, index) => [asset.ticker, assetResults[index]])
+    );
+    const checkpointsData = Object.fromEntries(
+      initialAssets.map((asset, index) => [
+        asset.ticker,
+        checkpointResults[index],
+      ])
+    );
+
+    return { results, publishersData, checkpointsData };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { results: {}, publishersData: {}, checkpointsData: {} };
+  }
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
