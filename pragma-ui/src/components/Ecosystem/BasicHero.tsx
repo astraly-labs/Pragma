@@ -34,12 +34,10 @@ const BasicHero = ({
       />
       <div className={classNames("flex w-full")}>
         <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 pb-32 text-center md:mx-0 md:w-8/12 md:justify-start md:py-8 md:pl-20 md:text-left lg:my-32 lg:w-5/12">
-          <h1 className=" pt-32">
-            <span className="relative text-lightGreen md:whitespace-nowrap">
-              <span className={styles.heading}>{title}</span>
-            </span>
+          <h1 className="pt-32 text-lightGreen md:whitespace-nowrap">
+            {title}
             <br />
-            <span className={styles.verifiable}>{greenTitle}</span>
+            <span className="text-mint">{greenTitle}</span>
           </h1>
           <GreenText isAligned={false} className="hidden md:block">
             {description}

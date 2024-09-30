@@ -217,28 +217,6 @@
   transform: scale(1);
 }
 
-.verifiable {
-  color: #15ff81;
-  font-size: 60px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: 72px;
-  letter-spacing: -1.2px;
-}
-
-.heading {
-  color: #b5f0e5;
-  text-align: center;
-  text-decoration-line: none !important;
-  /* Headline/H1 */
-  font-size: 60px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: 72px;
-  /* 120% */
-  letter-spacing: -1.2px;
-}
-
 @media (max-width: 1024px) {
   .blurBox {
     min-width: unset !important;

@@ -3,12 +3,6 @@
   border-bottom: #15ff81 solid 1px;
 }
 
-.heading {
-  color: #b5f0e5;
-  text-align: center;
-  text-decoration-line: none !important;
-}
-
 .videoBg {
   width: 100%;
   height: fit-content;
@@ -206,14 +200,6 @@
 }
 
 @media (max-width: 640px) {
-  .heading {
-    font-size: 40px;
-    line-height: 48px;
-  }
-  .verifiable {
-    font-size: 40px;
-    line-height: 48px;
-  }
   .boxMarquee {
     margin: 12px;
   }
