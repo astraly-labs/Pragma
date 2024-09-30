@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Ecosystem {
   name: string;
@@ -35,11 +36,6 @@ const ecosystem: Ecosystem[] = [
     name: "starknet",
     src: "/assets/ecosystem/starknet.png",
     link: "https://starknet.io/",
-  },
-  {
-    name: "hashstack",
-    src: "/assets/ecosystem/hashstack.png",
-    link: "https://hashstack.finance/",
   },
   {
     name: "nostra",
@@ -125,7 +121,13 @@ const MarqueeLogo = () => {
             className="relative z-10 my-auto flex items-center justify-center"
             href={link}
           >
-            <img className="my-auto h-8 px-8" src={src} alt={name} />
+            <Image
+              width={200}
+              height={40}
+              className="my-auto h-8 px-8"
+              src={src}
+              alt={name}
+            />
           </Link>
         ))}
       </Marquee>
