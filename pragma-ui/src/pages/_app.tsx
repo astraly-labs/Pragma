@@ -2,9 +2,9 @@ import React from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
+import dynamic from "next/dynamic";
 
 import "../styles/index.css";
-import NavFooter from "../components/Navigation/NavFooter";
 import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
 import Head from "next/head";
 import NavHeader from "../components/Navigation/NavHeader";
@@ -14,6 +14,13 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { DataProvider, dataSources, initialAssets } from "../providers/data";
 import { GetServerSideProps } from "next";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+// Dynamically import components with heavy computations or less critical UI elements
+const DynamicNavFooter = dynamic(
+  () => import("../components/Navigation/NavFooter"),
+  { ssr: false }
+);
+
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { initialData, initialPublishers, initialCheckpoints } = pageProps;
 
@@ -101,7 +108,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           >
             <Component {...pageProps} key={router.asPath} />
           </DataProvider>
-          <NavFooter />
+          <DynamicNavFooter />
         </div>
       </StarknetConfig>
     </QueryClientProvider>
@@ -164,4 +171,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default MyApp;
+export default React.memo(MyApp);
