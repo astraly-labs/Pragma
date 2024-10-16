@@ -3,7 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
 
 const NetworkSelection = ({ setNetwork }) => {
-  const NETWORKS = ["sepolia", "mainnet"];
+  const NETWORKS = ["sepolia", "mainnet","pragmaDevnet"];
   const [definedNetwork, setDefinedNetwork] = useState<string>("sepolia");
 
   const setConfigurationNetwork = (network) => {

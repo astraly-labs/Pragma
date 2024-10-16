@@ -55,6 +55,7 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const dataSources = {
   sepolia: "/api/onchain?network=sepolia",
   mainnet: "/api/onchain?network=mainnet",
+  pragmaDevnet: "/api/onchain?network=pragma_devnet",
   offchain: "/api/proxy",
   publishersSepolia: "/api/publishers?network=sepolia&dataType=spot_entry",
   publishersMainnet: "/api/publishers?network=mainnet&dataType=spot_entry",
