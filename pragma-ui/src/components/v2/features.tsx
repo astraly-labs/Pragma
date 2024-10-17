@@ -1,9 +1,5 @@
 import React from "react";
-import classNames from "classnames";
-import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
 import Image from "next/image";
-import styles from "./styles.module.scss";
 
 const Features = () => {
   return (
