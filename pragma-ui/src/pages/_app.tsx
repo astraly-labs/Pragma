@@ -23,6 +23,11 @@ const DynamicNavFooter = dynamic(
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { initialData, initialPublishers, initialCheckpoints } = pageProps;
+  const router = useRouter();
+
+  // Define a custom background for a specific route
+  const isSpecialPage = router.pathname === "/v2"; // Replace with your specific page path
+  const backgroundColor = isSpecialPage ? "bg-black" : "bg-darkGreen";
 
   /**
    * Generates RPC configuration for the specified chain.
@@ -37,9 +42,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   const provider = jsonRpcProvider({ rpc });
   const queryClient = new QueryClient();
-
-  // Needed because of the following bug: https://github.com/vercel/next.js/issues/9992
-  const router = useRouter();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -99,7 +101,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         }}
       />
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
-        <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
+        <div
+          className={`text-sans flex min-h-screen flex-col items-center justify-start ${backgroundColor}`}
+        >
           <NavHeader />
           <DataProvider
             initialData={initialData}

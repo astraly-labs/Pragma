@@ -8,6 +8,7 @@ import { UTCTimestamp } from "lightweight-charts";
 import { initialAssets } from "../providers/data";
 import { useQuery } from "@tanstack/react-query";
 import { AssetT } from "../components/common/AssetBox";
+import { debounce } from "lodash"; // or implement your own debounce function
 
 // Non-lazy loaded components
 import Hero from "../components/Landing/Hero";
@@ -40,17 +41,17 @@ const ReadyBox = dynamic(() => import("../components/common/ReadyBox"), {
 
 export const timezone = "Europe/London";
 
-// Move this function outside of the component
 export const removeDuplicateTimestamps = (arr) => {
   const seenTimestamps = new Set();
-  return arr.filter((obj) => {
+  const result = [];
+  for (const obj of arr) {
     const timestamp = moment.tz(obj.time, timezone).valueOf();
     if (!seenTimestamps.has(timestamp)) {
       seenTimestamps.add(timestamp);
-      return true;
+      result.push(obj);
     }
-    return false;
-  });
+  }
+  return result;
 };
 
 const fetchAssetData = async (pairId: string, decimals: number) => {
@@ -115,7 +116,10 @@ const IndexPage = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       setWindowWidth(window.innerWidth);
-      const handleResize = () => setWindowWidth(window.innerWidth);
+      const handleResize = debounce(
+        () => setWindowWidth(window.innerWidth),
+        250
+      );
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }
