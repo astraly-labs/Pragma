@@ -20,7 +20,7 @@ const V2Hero = ({
         alt="Illustration Hero"
         layout="fill"
         objectFit="cover"
-        className="absolute top-0 left-0 hidden md:block"
+        className="absolute top-0 left-1/2 block w-full -translate-x-1/2 md:w-10/12 lg:w-9/12 xl:w-8/12"
       />
       <div className={classNames("flex h-full w-full")}>
         <div className={styles.gradV2}></div>

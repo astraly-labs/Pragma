@@ -13,7 +13,7 @@ const Join = () => {
         alt="Illustration Hero"
         layout="fill"
         objectFit="cover"
-        className="absolute top-0 left-0 hidden opacity-50 md:block"
+        className="absolute top-0 left-0 block opacity-50"
       />
       <div className={classNames("flex h-full w-full")}>
         <div className={styles.gradJoin}></div>
