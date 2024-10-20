@@ -72,14 +72,13 @@ const Hero = () => {
       >
         <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 py-24 text-center md:mx-0 md:w-8/12 md:py-8 lg:my-24 lg:w-6/12">
           <h1 className="pt-32 text-lightGreen md:whitespace-nowrap">
-            The Internet is now
+            The open infrastructure for
             <br />
-            <span className={styles.verifiable}>verifiable</span>
+            <span className={styles.verifiable}>oracles</span>
           </h1>
           <GreenText isAligned={true}>
-            Pragma is the first zk-oracle, providing access to internet data
-            from blockchains in a verifiable way. Star(k)t building more
-            efficient and safer applications now.
+            Pragma is the open and permissionless infrastructure for oracles,
+            enabling anyone to deploy optimized oracles for any application.
           </GreenText>
           <ButtonLink
             center={true}

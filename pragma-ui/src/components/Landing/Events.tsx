@@ -6,16 +6,16 @@ import EventBox from "../common/EventBox";
 
 const events = [
   {
-    name: "Eth CC",
-    location: "Brussels",
-    date: "8 JUL 2024",
-    link: "https://www.ethcc.io/",
+    name: "Campus",
+    location: "Punta Cana",
+    date: "3 NOV 2024",
+    link: "https://www.campuspuntacana.com/apply",
   },
   {
-    name: "Token 2049",
-    location: "Singapore",
-    date: "18 SEP 2024",
-    link: "https://www.asia.token2049.com/",
+    name: "DevCon",
+    location: "Thailand",
+    date: "12 NOV 2024",
+    link: "https://devcon.org/en/",
   },
 ];
 
