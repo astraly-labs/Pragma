@@ -28,6 +28,10 @@ interface Resource {
 // List of resources displayed directly in the nav
 const resources: Resource[] = [
   {
+    name: "Pragma v2",
+    href: "/v2",
+  },
+  {
     name: "Ecosystem",
     href: "/ecosystem",
   },
@@ -188,7 +192,17 @@ const NavHeader = () => {
               <Link
                 href={resource.href}
                 key={resource.name}
-                className="text-base font-medium text-lightGreen transition-colors duration-300 hover:text-white"
+                className={`${
+                  resource.name === "Pragma v2" ? "text-bold text-purple" : ""
+                } text-base font-medium text-lightGreen transition-colors duration-300 hover:text-white`}
+                style={
+                  resource.name === "Pragma v2"
+                    ? {
+                        textShadow:
+                          "0px 0px 67px rgba(137, 44, 255, 1), 0px 0px 14px rgba(255, 255, 255, 0.25)",
+                      }
+                    : {}
+                }
               >
                 {resource.name}
               </Link>
@@ -268,17 +282,22 @@ const NavHeader = () => {
               <div className="mx-auto mt-6 items-center justify-center">
                 <nav className="grid items-center justify-center gap-y-8">
                   {[...mobileResources, ...resources].map((resource) => (
-                    <Link
-                      key={resource.name}
-                      href={resource.href}
-                      className="-m-3 flex items-center justify-center rounded-md p-3 text-center"
-                    >
-                      <span className="font-medium text-lightGreen hover:text-white">
-                        {resource.name}
-                      </span>
-                    </Link>
+                    <div className="relative" key={resource.name}>
+                      <Link
+                        href={resource.href}
+                        className="-m-3 flex items-center justify-center rounded-md p-3 text-center"
+                      >
+                        <span className="font-medium text-lightGreen hover:text-white">
+                          {resource.name}
+                        </span>
+                      </Link>
+                      {resource.name === "v2" && (
+                        <span className="absolute top-0 right-2 mt-[-5px] rounded-full bg-purple px-2 py-0.5 text-xs text-white">
+                          New
+                        </span>
+                      )}
+                    </div>
                   ))}
-
                   {/* Products Popover */}
                   <div className="flex flex-col items-center justify-center">
                     <button

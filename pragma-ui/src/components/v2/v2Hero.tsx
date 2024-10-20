@@ -24,7 +24,7 @@ const V2Hero = ({
       />
       <div className={classNames("flex h-full w-full")}>
         <div className={styles.gradV2}></div>
-        <header className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center justify-center space-y-8 px-4 text-center">
+        <header className="relative mx-auto flex w-full max-w-4xl flex-col items-center justify-center space-y-8 px-4 text-center">
           <div className="text-sm uppercase text-lightGreen">Introducing</div>
           <h1 className="text-4xl font-semibold text-lightGreen md:whitespace-nowrap md:text-6xl">
             {title}{" "}
