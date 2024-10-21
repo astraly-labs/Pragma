@@ -1,0 +1,22 @@
+.gradV2 {
+  background: linear-gradient(
+    360deg,
+    #080808 25.92%,
+    rgba(8, 8, 8, 0) 64.35%,
+    #080808 100%
+  );
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.gradV2 {
+  background: radial-gradient(50% 57.44% at 50% 47.74%, rgba(8, 8, 8, 0) 38.5%, #080808 100%);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}

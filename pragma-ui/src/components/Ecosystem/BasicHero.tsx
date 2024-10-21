@@ -1,8 +1,8 @@
 import React from "react";
-import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
+import Image from "next/image";
 
 const BasicHero = ({
   title,
@@ -17,24 +17,26 @@ const BasicHero = ({
 }) => {
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <img
+      <Image
         src={illustrationLink}
         alt="Illustration Hero"
+        width={900}
+        height={400}
         className="absolute bottom-0 right-0 hidden md:block"
       />
-      <img
+      <Image
         src={illustrationSmallLink}
         alt="Illustration Hero"
+        width={900}
+        height={400}
         className="absolute right-0 left-0 bottom-0 ml-auto mr-auto block w-full md:hidden"
       />
       <div className={classNames("flex w-full")}>
         <header className="z-1 relative mx-5 flex flex-col justify-center space-y-10 pb-32 text-center md:mx-0 md:w-8/12 md:justify-start md:py-8 md:pl-20 md:text-left lg:my-32 lg:w-5/12">
-          <h1 className=" pt-32">
-            <span className="relative text-lightGreen md:whitespace-nowrap">
-              <span className={styles.heading}>{title}</span>
-            </span>
+          <h1 className="pt-32 text-lightGreen md:whitespace-nowrap">
+            {title}
             <br />
-            <span className={styles.verifiable}>{greenTitle}</span>
+            <span className="text-mint">{greenTitle}</span>
           </h1>
           <GreenText isAligned={false} className="hidden md:block">
             {description}

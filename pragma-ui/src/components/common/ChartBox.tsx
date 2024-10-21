@@ -99,7 +99,9 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   return (
     <div className={box ? styles.chartBox : className}>
       <div className="font-mono text-xs text-lightGreen">
-        {(box ? assetPair?.ticker : "") ?? "LOADING..."}
+        {(box ? assetPair?.ticker : "") ?? (
+          <div className="absolute left-1/2 top-1/2 z-10 h-5/6 w-10/12 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-md bg-lightBlur"></div>
+        )}
       </div>
       <div className={styles.chartLayout} ref={chartContainerRef} />
     </div>

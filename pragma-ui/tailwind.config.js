@@ -36,6 +36,8 @@ module.exports = {
         whiteTrans: "#FFFFFF26",
         redDown: "#E52258",
         lightBackground: "#0000001F",
+        purple: "rgba(162, 129, 255, 1)",
+        black: "rgba(8, 8, 8, 1)",
       },
       invert: {
         25: ".25",

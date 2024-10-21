@@ -11,6 +11,7 @@ import LightGreenUpper from "../common/LightGreenUpperText";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import { ChevronRightIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 
 interface FooterLink {
   title: string;
@@ -144,7 +145,9 @@ const Footer = () => (
         <Link href="/">
           <div className="w-fit">
             <span className="sr-only">Pragma</span>
-            <img
+            <Image
+              height={40}
+              width={150}
               className="h-8 w-auto sm:h-10 md:h-10"
               src="/pragma-logo.png"
               alt="Logo"

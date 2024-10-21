@@ -4,6 +4,7 @@ import classNames from "classnames";
 import GreenText from "../../common/GreenText";
 import GreenUpperText from "../../common/GreenUpperText";
 import TestimonialCarousel from "./TestimonialCarousel";
+import Image from "next/image";
 
 const Testimonial = () => (
   <div
@@ -20,12 +21,16 @@ const Testimonial = () => (
       </GreenText>
     </div>
     <div className="relative w-full lg:w-6/12">
-      <img
+      <Image
+        width={40}
+        height={40}
         alt="greenDot"
         src="/assets/vectors/lightDot.svg"
         className={styles.lightDot1}
       />
-      <img
+      <Image
+        width={40}
+        height={40}
         alt="greenDot"
         src="/assets/vectors/lightDot.svg"
         className={styles.lightDot2}

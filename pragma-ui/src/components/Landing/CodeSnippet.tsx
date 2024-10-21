@@ -1,11 +1,11 @@
 import React from "react";
-import GreenBox from "../common/GreenBox";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 import CopyButtonComponent from "../common/CopyCode";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import cb from "./cb";
+import sharedStyles from "../../pages/styles.module.scss";
 
 interface Category {
   title: string;
@@ -63,7 +63,12 @@ export default function CodeSnippet() {
   );`;
 
   return (
-    <GreenBox className="relative w-full pb-40 lg:w-5/12">
+    <div
+      className={classNames(
+        sharedStyles.greenBox,
+        "relative h-auto w-full pb-40 lg:min-h-[650px] lg:w-5/12"
+      )}
+    >
       <div className=" w-full">
         <Tab.Group>
           <Tab.List className="flex rounded-full bg-lightBlur md:space-x-1">
@@ -159,6 +164,6 @@ export default function CodeSnippet() {
           </Tab.Panels>
         </Tab.Group>
       </div>
-    </GreenBox>
+    </div>
   );
 }
