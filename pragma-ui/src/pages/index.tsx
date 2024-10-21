@@ -8,7 +8,7 @@ import { UTCTimestamp } from "lightweight-charts";
 import { initialAssets } from "../providers/data";
 import { useQuery } from "@tanstack/react-query";
 import { AssetT } from "../components/common/AssetBox";
-import { debounce } from "lodash"; // or implement your own debounce function
+import { debounce } from "lodash";
 
 // Non-lazy loaded components
 import Hero from "../components/Landing/Hero";

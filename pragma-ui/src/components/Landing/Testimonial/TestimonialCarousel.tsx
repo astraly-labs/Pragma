@@ -35,6 +35,11 @@ const categories: Category[] = [
     text: "The Pragma team has attracted fantastic data partners and Pragma is already one of the leading protocols on StarkNet. I am excited to see them leverage zk-technology to build out their vision of decentralized, transparent and composable data feeds.",
     author: "Uri Kolodny ex-CEO",
   },
+  {
+    logo: "/assets/ecosystem/vesu.png",
+    text: "  Pragma’s fully on-chain oracle is essential for our permissionless money markets. The open-source liquidation bot we built together is a prime example of how this collaboration strengthens Vesu & the entire Starknet ecosystem.",
+    author: "Nils Bundi, co-founder",
+  },
 ];
 
 const TestimonialCarousel: React.FC = () => {
@@ -43,7 +48,7 @@ const TestimonialCarousel: React.FC = () => {
       naturalSlideWidth={648}
       naturalSlideHeight={460}
       visibleSlides={1}
-      totalSlides={3}
+      totalSlides={4}
       step={1}
       infinite={true}
       dragEnabled={false}
