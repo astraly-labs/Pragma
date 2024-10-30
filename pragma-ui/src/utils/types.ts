@@ -8,4 +8,5 @@ export const COINGECKO_MAPPING_IDS = {
   wsteth: 18834,
   wbtc: 7598,
   lords: 22171,
+  ekubo: 37715,
 };

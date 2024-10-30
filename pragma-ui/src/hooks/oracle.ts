@@ -17,6 +17,7 @@ export const AssetKeys = [
   "USDT/USD",
   "USDC/USD",
   "LORDS/USD",
+  "EKUBO/USD",
 ];
 
 // prettier-ignore

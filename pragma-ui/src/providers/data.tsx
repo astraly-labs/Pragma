@@ -72,6 +72,7 @@ export const initialAssets: AssetT[] = [
   { ticker: "WSTETH/USD", address: "0x2", decimals: 8 },
   { ticker: "WBTC/USD", address: "0x2", decimals: 8 },
   { ticker: "LORDS/USD", address: "0x2", decimals: 8 },
+  { ticker: "EKUBO/USD", address: "0x2", decimals: 8 },
   // { ticker: "ZEND/USD", address: "0x2", decimals: 8 },
   // { ticker: "NSTR/USD", address: "0x2", decimals: 8 },
 ];
