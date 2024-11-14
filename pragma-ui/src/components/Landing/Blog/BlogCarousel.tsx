@@ -53,6 +53,14 @@ const BlogCarousel: React.FC = () => {
 
   const BlogPosts: BlogPost[] = [
     {
+      image: "/assets/posts/v2.webp",
+      date: "October 21st, 2024",
+      title: "Introducing Pragma v.2",
+      description:
+        "Today marks a major milestone for Pragma with the release of version 2 of our...",
+      link: "https://blog.pragma.build/introducing-pragma-v-2/",
+    },
+    {
       image: "/assets/posts/OO.webp",
       date: "September 9th, 2024",
       title: "Announcing the Pragma Optimistic Oracle",
