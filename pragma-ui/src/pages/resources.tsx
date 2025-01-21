@@ -40,28 +40,31 @@ const EcosystemPage = () => {
         }
         const unorderedData = await response.json();
 
-        // TODO: remove hotfix
-        const data = removeDuplicateTimestamps(
-          unorderedData.data.sort(
-            (a, b) =>
-              moment.tz(b.time, timezone).valueOf() -
-              moment.tz(a.time, timezone).valueOf()
-          )
-        );
+        // Process and sort data in a single pass
+        const processedData = Array.from(
+          unorderedData.data.reduce((map, item) => {
+            const timestamp = moment.tz(item.time, timezone).valueOf();
+            // Keep only the latest entry for each timestamp
+            map.set(timestamp, item);
+            return map;
+          }, new Map())
+        )
+          .sort(([timeA], [timeB]) => timeB - timeA)
+          .map(([, item]) => item);
 
-        const priceData = data.reverse().map((d: any) => ({
+        const priceData = processedData.reverse().map((d: any) => ({
           time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
           value: parseInt(d.open) / 10 ** decimals,
         }));
-        const lastIndex = data.length - 1;
+        const lastIndex = processedData.length - 1;
         const dayIndex = lastIndex - 96;
-        const variation24h = data[lastIndex].open - data[dayIndex].open;
-        const relativeVariation24h = (variation24h / data[dayIndex].open) * 100;
+        const variation24h = processedData[lastIndex].open - processedData[dayIndex].open;
+        const relativeVariation24h = (variation24h / processedData[dayIndex].open) * 100;
 
         // Update your state with the new data
         const assetData = {
           ticker: unorderedData.pair_id,
-          lastPrice: data[lastIndex].open,
+          lastPrice: processedData[lastIndex].open,
           variation24h,
           relativeVariation24h,
           priceData,
@@ -99,7 +102,7 @@ const EcosystemPage = () => {
       <ResourcesHero
         title={"Build, build, build"}
         description={
-          "If you want to learn more about Pragma, start to build or work on new ideas, you’re in the right place"
+          "If you want to learn more about Pragma, start to build or work on new ideas, you're in the right place"
         }
         solidButton={"Read docs"}
         solidButtonLink={"https://docs.pragma.build"}
