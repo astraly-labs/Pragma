@@ -5,8 +5,10 @@ import classNames from "classnames";
 import BasicHero from "../components/Ecosystem/BasicHero";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import WalletConnection from "../components/common/WalletConnection";
+import { useRouter } from "next/router";
 
 const OaasPage = () => {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMethod, setLoginMethod] = useState(null);
 
@@ -40,6 +42,10 @@ const OaasPage = () => {
     console.log("Disconnected");
   };
 
+  const handleLaunchOracle = () => {
+    router.push("/oracle/new");
+  };
+
   return (
     <GoogleOAuthProvider clientId="493446366695-u34o4hmm4o4oth63i5cv6riu5fekc3k7.apps.googleusercontent.com">
       <div
@@ -53,26 +59,26 @@ const OaasPage = () => {
             <h1 className="w-full text-center text-lightGreen">
               Launch your oracle
             </h1>
-            <div className="flex flex-col items-center justify-center p-4 pt-10 md:flex-row">
+            <div className="flex flex-col items-center justify-center gap-4 pt-10 md:flex-row">
               {!isLoggedIn ? (
                 <>
                   <GoogleLogin
                     onSuccess={handleLoginSuccess}
                     onError={handleLoginError}
                   />
-                  <WalletConnection
-                    onSuccess={() => {
-                      setIsLoggedIn(true);
-                      setLoginMethod("starknet");
-                      localStorage.setItem("isLoggedIn", "true");
-                      localStorage.setItem("loginMethod", "starknet");
-                    }}
-                  />
                 </>
               ) : (
-                <div>
-                  <p>User is connected via {loginMethod}</p>
-                  <button onClick={handleDisconnect} className="mt-4">
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={handleLaunchOracle}
+                    className="rounded-full bg-mint px-4 py-2 text-darkGreen"
+                  >
+                    Launch your oracle
+                  </button>
+                  <button
+                    onClick={handleDisconnect}
+                    className="mt-4 rounded-full border border-mint px-4 py-2 text-mint"
+                  >
                     Disconnect
                   </button>
                 </div>

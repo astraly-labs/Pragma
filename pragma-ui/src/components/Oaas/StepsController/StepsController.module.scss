@@ -1,0 +1,139 @@
+@import "../constants";
+
+.container {
+    display: flex;
+    flex-direction: row;
+    padding-inline: 180px;
+    padding-top: 24px;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        justify-content: unset;
+        padding: 16px 16px 0px;
+    }
+}
+
+.formContainer {
+    margin-left: 72px;
+    width: 100%;
+    height: 100%;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        margin-top: unset;
+        margin: auto;
+        width: 100%;
+        height: unset;
+    }
+}
+
+.title {
+    margin-bottom: 0;
+    font-size: 24px;
+    color: #B5F0E5;
+}
+
+.buttonsContainer {
+    margin-top: 36px;
+    display: flex;
+}
+
+.nextButton {
+    background: #15FF81;
+    padding: 8px 24px;
+    border-radius: 27px;
+    border: unset;
+    color: #042420;
+}
+
+.backButton {
+    font-size: 12px;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: #15FF81;
+    margin-left: 24px;
+}
+
+.stepsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin-top: 36px;
+}
+
+.step {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    flex-direction: row;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        width: fit-content;
+        flex-direction: column;
+    }
+}
+
+.circleContainer {
+    width: 56px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 100%;
+    border: 4px solid #B5F0E5;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.circleIn {
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    background: #B5F0E5;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.circleActive {
+    background: #15FF81;
+    border: 4px solid #15FF81
+}
+
+.circleInActive {
+    background-color: #B5F0E5;
+}
+
+.stem {
+    display: block;
+    width: 4px;
+    height: 56px;
+    background: #B5F0E5;
+    margin-block: 4px;
+    border-radius: 16px;
+
+}
+
+.stemActive {
+    background-color: #15FF81;
+}
+
+.indicatorContainer {
+    @media only screen and (max-width: ($media-query-mobile - 1)) {
+        display: none;
+    }
+}

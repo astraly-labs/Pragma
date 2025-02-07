@@ -39,8 +39,11 @@
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.2",
     "react-google-login": "^5.2.2",
+    "react-inlinesvg": "^4.1.8",
     "react-lottie-player": "^1.5.6",
+    "react-router-dom": "^7.1.5",
     "react-syntax-highlighter": "^15.5.0",
+    "reactstrap": "^9.2.3",
     "sass": "^1.69.7",
     "starknet": "^6.7.0",
     "starknetkit": "^1.1.9"
