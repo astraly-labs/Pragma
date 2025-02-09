@@ -3,10 +3,6 @@ import StepsController from "./StepsController/StepsController";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
-import {
-  checkIsValidFormSteps,
-  updateErrorsFormSteps,
-} from "./manageValidation";
 import styles from "./Form.module.scss";
 
 const SpotForm = () => {
@@ -28,25 +24,18 @@ const SpotForm = () => {
       );
   };
 
-  const manageNextStepValidation = (step) => {
-    const isValid = checkIsValidFormSteps({ formData, step });
-    if (!isValid) {
-      updateErrorsFormSteps({
-        formData,
-        step,
-        setValidationError,
-      });
-      return false;
-    }
-
-    if (step === 3 && isValid) {
-      handleSubmit();
-    }
-    return true;
-  };
-
   const handleSubmit = () => {
     alert("The form is valid. You can now submit the data: to the server.");
+  };
+
+  const manageNextStepValidation = (currentStep) => {
+    if (currentStep === 0 && !formData.type) {
+      if (!validationError.includes("type")) {
+        setValidationError([...validationError, "type"]);
+      }
+      return false;
+    }
+    return true;
   };
 
   const steps = [
@@ -56,7 +45,7 @@ const SpotForm = () => {
   ];
 
   return (
-    <div className="pt-40">
+    <div className="min-h-screen w-full pt-40">
       <div className={styles.container}>
         <StepsController
           manageNextStepValidation={manageNextStepValidation}

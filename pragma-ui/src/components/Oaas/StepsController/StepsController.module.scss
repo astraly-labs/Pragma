@@ -3,7 +3,6 @@
 .container {
     display: flex;
     flex-direction: row;
-    padding-inline: 180px;
     padding-top: 24px;
 
     @media only screen and (max-width: ($media-query-tablet - 1)) {
@@ -34,7 +33,13 @@
 .buttonsContainer {
     margin-top: 36px;
     display: flex;
+    gap: 16px;
 }
+
+.errorMessage {
+    color: red;
+    margin-top: 10px;
+  }
 
 .nextButton {
     background: #15FF81;
@@ -59,77 +64,44 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    margin-top: 36px;
 }
 
 .step {
     display: flex;
     width: 100%;
+    min-width: 200px;
     height: fit-content;
     flex-direction: row;
 
     @media only screen and (max-width: ($media-query-tablet - 1)) {
         width: fit-content;
         flex-direction: column;
+        min-width: 100px;
     }
 }
 
-.circleContainer {
-    width: 56px;
-    height: 100%;
+.stepContent {
     display: flex;
-    flex-direction: column;
     align-items: center;
-}
-
-.circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 100%;
-    border: 4px solid #B5F0E5;
-
+    font-size: 25px;
+    color: #B5F0E5;
     @media only screen and (max-width: ($media-query-tablet - 1)) {
-        width: 36px;
-        height: 36px;
+        font-size: 16px;
     }
 }
 
-.circleIn {
-    width: 24px;
-    height: 24px;
-    border-radius: 100%;
-    background: #B5F0E5;
-
-    @media only screen and (max-width: ($media-query-tablet - 1)) {
-        width: 20px;
-        height: 20px;
-    }
+.activeStep {
+    color: #15FF81;
 }
 
-.circleActive {
-    background: #15FF81;
-    border: 4px solid #15FF81
+.stepNumber {
+    margin-right: 8px;
 }
 
-.circleInActive {
-    background-color: #B5F0E5;
-}
-
-.stem {
-    display: block;
-    width: 4px;
-    height: 56px;
-    background: #B5F0E5;
-    margin-block: 4px;
-    border-radius: 16px;
-
-}
-
-.stemActive {
-    background-color: #15FF81;
+.checkmark {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
 }
 
 .indicatorContainer {

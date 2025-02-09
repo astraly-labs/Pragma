@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
-import BoxContainer from "../components/common/BoxContainer";
 import classNames from "classnames";
-import BasicHero from "../components/Ecosystem/BasicHero";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import WalletConnection from "../components/common/WalletConnection";
 import { useRouter } from "next/router";
 import V2Hero from "../components/v2/v2Hero";
 import { Button } from "../components/common/Button";

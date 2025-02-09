@@ -13,9 +13,7 @@ const NewOraclePage = () => {
       )}
     >
       <BoxContainer>
-        <div className="flex w-full flex-col items-center justify-center py-10">
-          <Form />
-        </div>
+        <Form />
       </BoxContainer>
     </div>
   );

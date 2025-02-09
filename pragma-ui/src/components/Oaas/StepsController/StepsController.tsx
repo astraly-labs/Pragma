@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import Button from "../Button/Button";
 import StepsIndicator from "./StepsIndicator";
 import styles from "./StepsController.module.scss";
+import { Button } from "../../common/Button";
 
 const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
   const [step, setStep] = useState(1);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onNextStep = () => {
-    if (step !== stepsAmount) {
-      setStep(step + 1);
+    if (manageNextStepValidation(step)) {
+      if (step !== stepsAmount) {
+        setStep(step + 1);
+        setErrorMessage(""); // Clear error message on successful validation
+      }
+    } else {
+      setErrorMessage("Please select an option before proceeding.");
     }
   };
 
@@ -21,19 +27,23 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
         <div> {steps[step - 1]}</div>
         <div className={styles.buttonsContainer}>
           <Button
-            className={styles.nextButton}
             onClick={() => onNextStep()}
             title={step !== stepsAmount ? "Next step" : "Send form"}
-            ariaLabel={step !== stepsAmount ? "Next step" : "Send form"}
+            aria-label={step !== stepsAmount ? "Next step" : "Send form"}
+            variant="solid"
+            color="mint"
+            center={true}
           >
             {step !== stepsAmount ? "Next" : "Send"}
           </Button>
           {step !== 1 && (
             <Button
-              className={styles.backButton}
               onClick={() => setStep(step - 1)}
               title="Previous step"
-              ariaLabel="Previous step"
+              aria-label="Previous step"
+              variant="outline"
+              color="mint"
+              center={true}
             >
               Back
             </Button>

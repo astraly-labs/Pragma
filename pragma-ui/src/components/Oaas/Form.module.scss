@@ -1,21 +1,5 @@
 @import "./constants";
 
-%inputStyles {
-    color: $grey-2;
-    font-family: Roboto;
-    font-size: 16px;
-    letter-spacing: 0;
-    line-height: 19px;
-}
-
-%placeholder {
-    color: $grey-3;
-    font-family: Roboto;
-    font-size: 16px;
-    letter-spacing: 0;
-    line-height: 19px;
-}
-
 .title {
     margin-bottom: 0;
     font-size: 24px;
@@ -54,46 +38,6 @@
     }
 }
 
-.input {
-    width: 397px;
-    height: 56px;
-    border-radius: 27px;
-    border: 1px solid $grey-3;
-    padding-left: 23px;
-    @extend %inputStyles;
-
-    @media only screen and (max-width: ($media-query-tablet - 1)) {
-        max-width: 90%;
-    }
-}
-
-
-.input:focus,
-.textarea:focus {
-    box-shadow: none !important;
-    border: 2px solid $grey-3;
-}
-
-.input::placeholder {
-    @extend %placeholder;
-}
-
-.textareaContainer {
-    grid-column: 1 / 3;
-    @extend %inputStyles;
-
-    @media only screen and (max-width: ($media-query-tablet - 1)) {
-        grid-column: unset;
-        width: 100%;
-    }
-}
-
-.textareaContainer {
-    textarea::placeholder {
-        @extend %placeholder;
-    }
-}
-
 .textarea {
     width: 397px;
     border-radius: 27px;
@@ -128,6 +72,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
 }
 
 .asterisk {

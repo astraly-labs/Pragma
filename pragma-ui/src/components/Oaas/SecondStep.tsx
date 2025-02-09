@@ -1,11 +1,9 @@
 import React from "react";
-import cx from "classnames";
-import { Input } from "reactstrap";
 import styles from "./Form.module.scss";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 
-const SecondStep = ({ validationError, formData, handleFieldChange }) => {
+const SecondStep = ({ formData, handleFieldChange }) => {
   const getOracleContent = (type) => {
     switch (type) {
       case "api":

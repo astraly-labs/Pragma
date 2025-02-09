@@ -24,7 +24,10 @@ const FirstStep = ({ formData, handleFieldChange }) => {
               name="type"
               value={type.id}
               checked={formData.type === type.id}
-              onChange={(e) => handleFieldChange("type", e.target.value, false)}
+              onChange={(e) => {
+                console.log("Selected type:", e.target.value);
+                handleFieldChange("type", e.target.value, true);
+              }}
             />
             <label
               className="border- flex cursor-pointer flex-col rounded-lg border p-10 peer-checked:border-mint"
