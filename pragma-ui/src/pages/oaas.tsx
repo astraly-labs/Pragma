@@ -6,6 +6,8 @@ import BasicHero from "../components/Ecosystem/BasicHero";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import WalletConnection from "../components/common/WalletConnection";
 import { useRouter } from "next/router";
+import V2Hero from "../components/v2/v2Hero";
+import { Button } from "../components/common/Button";
 
 const OaasPage = () => {
   const router = useRouter();
@@ -54,11 +56,16 @@ const OaasPage = () => {
           styles.bigScreen
         )}
       >
-        <BoxContainer>
-          <div className="flex h-screen w-full flex-col items-center justify-center">
-            <h1 className="w-full text-center text-lightGreen">
-              Launch your oracle
-            </h1>
+        <V2Hero
+          title={"Launch your"}
+          purpleTitle={"oracle"}
+          description={
+            "Permissionlessly launch your feed, in minutes. Jump in now."
+          }
+          solidButton={"Read docs"}
+          solidButtonLink={"https://docs.pragma.build/"}
+          illustrationLink={"/assets/vectors/Nodes.svg"}
+          customButton={
             <div className="flex flex-col items-center justify-center gap-4 pt-10 md:flex-row">
               {!isLoggedIn ? (
                 <>
@@ -68,24 +75,30 @@ const OaasPage = () => {
                   />
                 </>
               ) : (
-                <div className="flex flex-col gap-2">
-                  <button
+                <div className="flex flex-col">
+                  <Button
                     onClick={handleLaunchOracle}
                     className="rounded-full bg-mint px-4 py-2 text-darkGreen"
+                    variant="solid"
+                    color="mint"
+                    center={true}
                   >
                     Launch your oracle
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={handleDisconnect}
                     className="mt-4 rounded-full border border-mint px-4 py-2 text-mint"
+                    variant="outline"
+                    color="mint"
+                    center={true}
                   >
                     Disconnect
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
-          </div>
-        </BoxContainer>
+          }
+        ></V2Hero>
       </div>
     </GoogleOAuthProvider>
   );

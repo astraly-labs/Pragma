@@ -3,11 +3,54 @@ import cx from "classnames";
 import { Input } from "reactstrap";
 import styles from "./Form.module.scss";
 
-const ThirdStep = ({ validationError, formData, handleFieldChange }) => {
+const ThirdStep = ({ formData, handleFieldChange }) => {
   const getOracleContent = (type) => {
     switch (type) {
       case "api":
-        return <h2 className={styles.title}>Sources</h2>;
+        return (
+          <div>
+            {" "}
+            <h3 className="mb-5 text-lg font-medium text-lightGreen">
+              Choose data sources:
+            </h3>
+            <ul className="grid w-full gap-6 md:grid-cols-1">
+              {mockDataList.map((item, index) => (
+                <li key={index}>
+                  <input
+                    type="checkbox"
+                    id={`option-${index}`}
+                    name="data-source"
+                    value={item.source}
+                    className="peer hidden"
+                    onChange={() => handleCheckboxChange(item.pair)}
+                  />
+                  <label
+                    htmlFor={`option-${index}`}
+                    className="flex w-full cursor-pointer flex-col items-center justify-between rounded-lg border border-lightGreen p-5 text-lightGreen hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint"
+                  >
+                    <div className="flex flex-col">
+                      <img
+                        src={`/assets/publishers/${item.logo}`}
+                        alt={`${item.source} logo`}
+                        className="mb-2 h-7 w-7"
+                      />
+                      <div className="w-full text-lg font-semibold">
+                        {item.source}
+                      </div>
+                      <div className="w-full text-sm">
+                        {item.pair} - Price: {item.price}
+                      </div>
+                      <div className="w-full text-sm">
+                        2% Depth: {item.depth2Percent}, 10% Depth:{" "}
+                        {item.depth10Percent}
+                      </div>
+                    </div>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
       case "centralized":
         return (
           <div className={styles.centralizedContent}>
@@ -83,47 +126,17 @@ const ThirdStep = ({ validationError, formData, handleFieldChange }) => {
 
   console.log(mockDataList);
 
+  const handleCheckboxChange = (pair) => {
+    handleFieldChange({
+      ...formData,
+      selectedPairs: formData.selectedPairs.includes(pair)
+        ? formData.selectedPairs.filter((p) => p !== pair)
+        : [...formData.selectedPairs, pair],
+    });
+  };
+
   return (
-    <div className={styles.container}>
-      <h3 className="mb-5 text-lg font-medium text-lightGreen">
-        Choose data sources:
-      </h3>
-      <ul className="grid w-full gap-6 md:grid-cols-1">
-        {mockDataList.map((item, index) => (
-          <li key={index}>
-            <input
-              type="checkbox"
-              id={`option-${index}`}
-              name="data-source"
-              value={item.source}
-              className="peer hidden"
-            />
-            <label
-              htmlFor={`option-${index}`}
-              className="flex w-full cursor-pointer flex-col items-center justify-between rounded-lg border border-lightGreen p-5 text-lightGreen hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint"
-            >
-              <div className="flex flex-col">
-                <img
-                  src={`/assets/publishers/${item.logo}`}
-                  alt={`${item.source} logo`}
-                  className="mb-2 h-7 w-7"
-                />
-                <div className="w-full text-lg font-semibold">
-                  {item.source}
-                </div>
-                <div className="w-full text-sm">
-                  {item.pair} - Price: {item.price}
-                </div>
-                <div className="w-full text-sm">
-                  2% Depth: {item.depth2Percent}, 10% Depth:{" "}
-                  {item.depth10Percent}
-                </div>
-              </div>
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div className={styles.container}> {getOracleContent(formData.type)}</div>
   );
 };
 

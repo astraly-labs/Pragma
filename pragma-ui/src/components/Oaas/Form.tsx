@@ -17,6 +17,7 @@ const SpotForm = () => {
     baseCurrency: "",
     quoteCurrency: "",
     network: "",
+    selectedPairs: [],
   });
 
   const handleFieldChange = (name, value, isRequired) => {
@@ -49,21 +50,9 @@ const SpotForm = () => {
   };
 
   const steps = [
-    <FirstStep
-      formData={formData}
-      validationError={validationError}
-      handleFieldChange={handleFieldChange}
-    />,
-    <SecondStep
-      formData={formData}
-      validationError={validationError}
-      handleFieldChange={handleFieldChange}
-    />,
-    <ThirdStep
-      formData={formData}
-      validationError={validationError}
-      handleFieldChange={handleFieldChange}
-    />,
+    <FirstStep formData={formData} handleFieldChange={handleFieldChange} />,
+    <SecondStep formData={formData} handleFieldChange={handleFieldChange} />,
+    <ThirdStep formData={formData} handleFieldChange={handleFieldChange} />,
   ];
 
   return (
