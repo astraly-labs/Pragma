@@ -1,7 +1,6 @@
 import React from "react";
-import cx from "classnames";
-import { Input } from "reactstrap";
 import styles from "./Form.module.scss";
+import classNames from "classnames";
 
 const ThirdStep = ({ formData, handleFieldChange }) => {
   const getOracleContent = (type) => {
@@ -9,10 +8,21 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
       case "api":
         return (
           <div>
-            {" "}
-            <h3 className="mb-5 text-lg font-medium text-lightGreen">
-              Choose data sources:
-            </h3>
+            <h2 className={styles.title}>Choose data sources</h2>
+            <p className="mb-4 max-w-xl text-justify text-sm text-gray-500">
+              Please select the data sources you wish to include. We've included
+              depth metrics, and will soon provide you with a full dashboard of
+              information to make the best choice for your use case. If you need
+              help to select the sources, please{" "}
+              <a
+                href="https://t.me/BGLabs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-mint"
+              >
+                reach out to us.
+              </a>{" "}
+            </p>
             <ul className="grid w-full gap-6 md:grid-cols-1">
               {mockDataList.map((item, index) => (
                 <li key={index}>
@@ -26,22 +36,33 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                   />
                   <label
                     htmlFor={`option-${index}`}
-                    className="flex w-full cursor-pointer flex-col items-center justify-between rounded-lg border border-lightGreen p-5 text-lightGreen hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint"
+                    className={classNames(
+                      "flex w-full max-w-xl cursor-pointer flex-col justify-between rounded-lg border text-lightGreen",
+                      "hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint",
+                      styles.darkGreenBox
+                    )}
                   >
-                    <div className="flex flex-col">
-                      <img
-                        src={`/assets/publishers/${item.logo}`}
-                        alt={`${item.source} logo`}
-                        className="mb-2 h-7 w-7"
-                      />
-                      <div className="w-full text-lg font-semibold">
-                        {item.source}
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex flex-row gap-2">
+                        <img
+                          src={`/assets/publishers/${item.logo}`}
+                          alt={`${item.source} logo`}
+                          className="my-auto h-8 w-8"
+                        />
+                        <div className="my-auto w-full text-lg font-bold">
+                          {item.source}
+                        </div>
+                      </div>
+                      <div className="w-full text-sm font-medium">
+                        {item.pair} - Price:{" "}
+                        <span className="font-semibold">{item.price}</span>
                       </div>
                       <div className="w-full text-sm">
-                        {item.pair} - Price: {item.price}
+                        <span className="font-semibold">2% Depth:</span>{" "}
+                        {item.depth2Percent}
                       </div>
                       <div className="w-full text-sm">
-                        2% Depth: {item.depth2Percent}, 10% Depth:{" "}
+                        <span className="font-semibold">10% Depth:</span>{" "}
                         {item.depth10Percent}
                       </div>
                     </div>
@@ -91,36 +112,28 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
       depth10Percent: "100,000$",
     },
     {
-      pair: "BTC/USD",
-      source: "Saturn",
-      logo: "saturn.svg",
-      price: "50,000$",
-      depth2Percent: "500,000$",
-      depth10Percent: "5,000,000$",
+      pair: "ETH/USD",
+      source: "Jupiter",
+      logo: "jup.png",
+      price: "1$",
+      depth2Percent: "10,000$",
+      depth10Percent: "100,000$",
     },
     {
-      pair: "LTC/USD",
-      source: "Mars",
-      logo: "mars.svg",
-      price: "200$",
-      depth2Percent: "20,000$",
-      depth10Percent: "200,000$",
+      pair: "ETH/USD",
+      source: "Jupiter",
+      logo: "jup.png",
+      price: "1$",
+      depth2Percent: "10,000$",
+      depth10Percent: "100,000$",
     },
     {
-      pair: "XRP/USD",
-      source: "Venus",
-      logo: "venus.svg",
-      price: "0.5$",
-      depth2Percent: "5,000$",
-      depth10Percent: "50,000$",
-    },
-    {
-      pair: "ADA/USD",
-      source: "Mercury",
-      logo: "mercury.svg",
-      price: "1.2$",
-      depth2Percent: "12,000$",
-      depth10Percent: "120,000$",
+      pair: "ETH/USD",
+      source: "Jupiter",
+      logo: "jup.png",
+      price: "1$",
+      depth2Percent: "10,000$",
+      depth10Percent: "100,000$",
     },
   ];
 
@@ -136,7 +149,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
   };
 
   return (
-    <div className={styles.container}> {getOracleContent(formData.type)}</div>
+    <div className={styles.container}>{getOracleContent(formData.type)}</div>
   );
 };
 

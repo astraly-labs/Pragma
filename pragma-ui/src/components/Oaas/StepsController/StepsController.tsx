@@ -12,6 +12,7 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
       if (step !== stepsAmount) {
         setStep(step + 1);
         setErrorMessage(""); // Clear error message on successful validation
+        window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
       }
     } else {
       setErrorMessage("Please select an option before proceeding.");
@@ -38,7 +39,10 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
           </Button>
           {step !== 1 && (
             <Button
-              onClick={() => setStep(step - 1)}
+              onClick={() => {
+                setStep(step - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
+              }}
               title="Previous step"
               aria-label="Previous step"
               variant="outline"

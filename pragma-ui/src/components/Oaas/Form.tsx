@@ -10,8 +10,8 @@ const SpotForm = () => {
   const [formData, setFormData] = useState({
     type: "",
     assetAddress: "",
-    baseCurrency: "",
-    quoteCurrency: "",
+    tokenName: "",
+    ticker: "",
     network: "",
     selectedPairs: [],
   });
