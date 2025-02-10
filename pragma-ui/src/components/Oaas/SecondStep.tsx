@@ -1,9 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 
 const SecondStep = ({ formData, handleFieldChange }) => {
+  const [error, setError] = useState("");
+
+  // Add validation function
+  const validateFields = () => {
+    if (formData.type === "api") {
+      if (!formData.network) {
+        setError("Please select a network");
+        return false;
+      }
+      if (!formData.assetAddress) {
+        setError("Please enter an asset address");
+        return false;
+      }
+      if (!formData.tokenName) {
+        setError("Please enter a token name");
+        return false;
+      }
+      if (!formData.ticker) {
+        setError("Please enter a ticker");
+        return false;
+      }
+    }
+    setError("");
+    return true;
+  };
+
+  // Add useEffect to expose validation method
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.validateStep2 = validateFields;
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        delete window.validateStep2;
+      }
+    };
+  }, [formData]);
+
   const getOracleContent = (type) => {
     switch (type) {
       case "api":
@@ -125,13 +163,38 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                 Provide the official name of the token. This will be used to
                 help us scrape the sources available for the token.
               </p>
-              <input
-                type="text"
-                value={formData.tokenName}
-                onChange={(e) => handleFieldChange("tokenName", e.target.value)}
-                placeholder="bitcoin, ethereum, etc."
-                className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.tokenName}
+                  onChange={(e) =>
+                    handleFieldChange("tokenName", e.target.value)
+                  }
+                  placeholder="bitcoin, ethereum, etc."
+                  className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
+                />
+                {formData.tokenName && (
+                  <button
+                    onClick={() => handleFieldChange("tokenName", "")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-5 w-5 text-lightGreen hover:text-mint"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="flex max-w-xl flex-col">
@@ -139,14 +202,38 @@ const SecondStep = ({ formData, handleFieldChange }) => {
               <p className="mb-2 text-sm text-gray-500">
                 Enter the ticker symbol, e.g., BTC, ETH.
               </p>
-              <input
-                type="text"
-                value={formData.ticker}
-                onChange={(e) => handleFieldChange("ticker", e.target.value)}
-                placeholder="BTC, ETH, etc."
-                className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.ticker}
+                  onChange={(e) => handleFieldChange("ticker", e.target.value)}
+                  placeholder="BTC, ETH, etc."
+                  className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
+                />
+                {formData.ticker && (
+                  <button
+                    onClick={() => handleFieldChange("ticker", "")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-5 w-5 text-lightGreen hover:text-mint"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
+            {error && <div className="text-sm text-red-500">{error}</div>}
           </div>
         );
       case "centralized":

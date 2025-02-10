@@ -29,12 +29,20 @@ const SpotForm = () => {
   };
 
   const manageNextStepValidation = (currentStep) => {
-    if (currentStep === 0 && !formData.type) {
+    if (currentStep === 1 && !formData.type) {
       if (!validationError.includes("type")) {
         setValidationError([...validationError, "type"]);
       }
       return false;
     }
+
+    if (currentStep === 2) {
+      if (window.validateStep2) {
+        return window.validateStep2();
+      }
+      return false;
+    }
+
     return true;
   };
 

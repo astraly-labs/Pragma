@@ -12,7 +12,7 @@ const FirstStep = ({ formData, handleFieldChange }) => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Select oracle type</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex max-w-xl flex-col gap-4">
         <div
           className={`cursor-pointer rounded-lg bg-lightBlur p-4 ${
             formData.type === "api" ? "border-2 border-mint" : ""
