@@ -8,8 +8,9 @@ import moment from "moment";
 import { COINGECKO_MAPPING_IDS } from "../utils/types";
 import { getPublisherType } from "../utils";
 import AssetHero from "../components/common/AssetHero";
+import { useRouter } from "next/router";
 
-export const options = ["sepolia", "mainnet"];
+export const options = ["sepolia", "mainnet", "api"];
 
 export type AssetInfo = {
   image: string;
@@ -88,6 +89,25 @@ const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
 
 const AssetsPage = () => {
   const { data, loading, switchSource, currentSource, publishers } = useData();
+  const router = useRouter();
+  const sourceParam = router.query.source as string;
+
+  // If there's a source parameter and it's valid, switch to it on mount
+  React.useEffect(() => {
+    if (
+      sourceParam &&
+      options.includes(sourceParam) &&
+      sourceParam !== currentSource
+    ) {
+      switchSource(sourceParam);
+    }
+  }, [sourceParam, currentSource, switchSource]);
+
+  const handleSourceChange = (newSource: string) => {
+    router.push(`/assets?source=${newSource}`, undefined, { shallow: true });
+    switchSource(newSource);
+  };
+
   const formattedAssets = loading ? [] : formatAssets(data);
   const formattedPublishers = loading ? [] : formatPublishers(publishers);
   return (
@@ -113,21 +133,23 @@ const AssetsPage = () => {
           options={options}
           isAsset={true}
           assets={formattedAssets}
-          onSourceChange={switchSource}
+          onSourceChange={handleSourceChange}
           selectedSource={currentSource}
           loading={loading}
         />
       </BoxContainer>
-      <BoxContainer>
-        <AssetList
-          options={options}
-          isAsset={false}
-          assets={formattedPublishers}
-          onSourceChange={switchSource}
-          selectedSource={currentSource}
-          loading={loading}
-        />
-      </BoxContainer>
+      {currentSource !== "api" && (
+        <BoxContainer>
+          <AssetList
+            options={options}
+            isAsset={false}
+            assets={formattedPublishers}
+            onSourceChange={handleSourceChange}
+            selectedSource={currentSource}
+            loading={loading}
+          />
+        </BoxContainer>
+      )}
     </div>
   );
 };

@@ -58,12 +58,12 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                         <span className="font-semibold">{item.price}</span>
                       </div>
                       <div className="w-full text-sm">
-                        <span className="font-semibold">2% Depth:</span>{" "}
-                        {item.depth2Percent}
+                        <span className="font-semibold">+2% Depth:</span>{" "}
+                        {item.depthPlus2Percent}
                       </div>
                       <div className="w-full text-sm">
-                        <span className="font-semibold">10% Depth:</span>{" "}
-                        {item.depth10Percent}
+                        <span className="font-semibold">-2% Depth:</span>{" "}
+                        {item.depthMinus2Percent}
                       </div>
                     </div>
                   </label>
@@ -104,36 +104,36 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
 
   const mockDataList = [
     {
-      pair: "ETH/USD",
-      source: "Jupiter",
-      logo: "jup.png",
-      price: "1$",
-      depth2Percent: "10,000$",
-      depth10Percent: "100,000$",
+      pair: "TRUMP/USD",
+      source: "OKX",
+      logo: "okx.png",
+      price: "$15.74",
+      depthPlus2Percent: "$1,127,515",
+      depthMinus2Percent: "$1,183,795",
     },
     {
-      pair: "ETH/USD",
-      source: "Jupiter",
-      logo: "jup.png",
-      price: "1$",
-      depth2Percent: "10,000$",
-      depth10Percent: "100,000$",
+      pair: "TRUMP/USD",
+      source: "Binance",
+      logo: "binance.webp",
+      price: "15.68$",
+      depthPlus2Percent: "$1,850,716",
+      depthMinus2Percent: "$4,372,277",
     },
     {
-      pair: "ETH/USD",
+      pair: "TRUMP/USD",
       source: "Jupiter",
       logo: "jup.png",
-      price: "1$",
-      depth2Percent: "10,000$",
-      depth10Percent: "100,000$",
+      price: "15.83$",
+      depthPlus2Percent: "$4,490,004",
+      depthMinus2Percent: "5,723,200$",
     },
     {
-      pair: "ETH/USD",
+      pair: "TRUMP/USD",
       source: "Jupiter",
       logo: "jup.png",
       price: "1$",
-      depth2Percent: "10,000$",
-      depth10Percent: "100,000$",
+      depthPlus2Percent: "10,000$",
+      depthMinus2Percent: "100,000$",
     },
   ];
 

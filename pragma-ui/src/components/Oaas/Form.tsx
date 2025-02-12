@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import StepsController from "./StepsController/StepsController";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
@@ -6,7 +7,9 @@ import ThirdStep from "./ThirdStep";
 import styles from "./Form.module.scss";
 
 const SpotForm = () => {
+  const router = useRouter();
   const [validationError, setValidationError] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
     assetAddress: "",
@@ -15,6 +18,10 @@ const SpotForm = () => {
     network: "",
     selectedPairs: [],
   });
+
+  const handleClick = () => {
+    router.push("/assets?source=sepolia");
+  };
 
   const handleFieldChange = (name, value, isRequired) => {
     setFormData({ ...formData, [name]: value });
@@ -25,7 +32,7 @@ const SpotForm = () => {
   };
 
   const handleSubmit = () => {
-    alert("The form is valid. You can now submit the data: to the server.");
+    setShowSuccess(true);
   };
 
   const manageNextStepValidation = (currentStep) => {
@@ -41,6 +48,10 @@ const SpotForm = () => {
         return window.validateStep2();
       }
       return false;
+    }
+
+    if (currentStep === 3) {
+      handleSubmit();
     }
 
     return true;
@@ -61,6 +72,24 @@ const SpotForm = () => {
           stepsAmount={3}
         />
       </div>
+
+      {/* Success Popup */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-lightBlur bg-opacity-50">
+          <div className="rounded-lg bg-darkGreen p-8 text-center">
+            <h3 className="mb-4 text-2xl text-mint">Success!</h3>
+            <p className="mb-6 text-lightGreen">
+              Your oracle has been successfully created.
+            </p>
+            <button
+              onClick={handleClick}
+              className="rounded-full bg-mint px-6 py-2 text-darkGreen hover:bg-opacity-90"
+            >
+              Check dashboard
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
