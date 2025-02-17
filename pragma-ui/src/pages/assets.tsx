@@ -42,30 +42,32 @@ export type DataProviderInfo = {
 };
 
 const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
-  return Object.keys(data).map((ticker) => {
-    const assetData = data[ticker];
-    const lastUpdated = moment(
-      assetData.last_updated_timestamp * 1000
-    ).fromNow(); // Using moment.js to format time
-    return {
-      image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
-      type: "Crypto",
-      ticker,
-      lastUpdated: lastUpdated,
-      price: parseInt(assetData.price, 16) / 10 ** assetData.decimals,
-      sources: assetData.nb_sources_aggregated,
-      variations: {
-        past1h: (assetData.variations["1h"] * 100).toFixed(2) || 0,
-        past24h: (assetData.variations["1d"] * 100).toFixed(2) || 0,
-        past7d: (assetData.variations["1w"] * 100).toFixed(2) || 0,
-      },
-      chart: `https://www.coingecko.com/coins/${
-        COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
-      }/sparkline.svg`,
-      ema: "soon",
-      macd: "soon",
-    };
-  });
+  return Object.keys(data)
+    .filter((ticker) => data[ticker]) // Filter out undefined/null entries
+    .map((ticker) => {
+      const assetData = data[ticker];
+      const lastUpdated = moment(
+        assetData.last_updated_timestamp * 1000
+      ).fromNow(); // Using moment.js to format time
+      return {
+        image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
+        type: "Crypto",
+        ticker,
+        lastUpdated: lastUpdated,
+        price: parseInt(assetData.price, 16) / 10 ** assetData.decimals,
+        sources: assetData.nb_sources_aggregated,
+        variations: {
+          past1h: (assetData.variations["1h"] * 100).toFixed(2) || 0,
+          past24h: (assetData.variations["1d"] * 100).toFixed(2) || 0,
+          past7d: (assetData.variations["1w"] * 100).toFixed(2) || 0,
+        },
+        chart: `https://www.coingecko.com/coins/${
+          COINGECKO_MAPPING_IDS[ticker.toLowerCase().split("/")[0]]
+        }/sparkline.svg`,
+        ema: "soon",
+        macd: "soon",
+      };
+    });
 };
 
 const formatPublishers = (publishers: PublisherT[]): DataProviderInfo[] => {
