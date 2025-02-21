@@ -43,21 +43,21 @@ const SecondStep = ({ formData, handleFieldChange }) => {
   // Add submit function
   const handleSubmit = async () => {
     if (!validateFields()) {
-      return;
+      return false;
     }
 
     // Check if user is logged in
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     if (!isLoggedIn) {
       setError("Please login first");
-      return;
+      return false;
     }
 
     // Get the API token
     const token = localStorage.getItem("apiToken");
     if (!token) {
       setError("Authentication token not found. Please login again.");
-      return;
+      return false;
     }
 
     setIsSubmitting(true);
@@ -81,16 +81,71 @@ const SecondStep = ({ formData, handleFieldChange }) => {
       );
 
       if (response.data) {
-        // Handle success - you might want to pass this up to the parent component
+        // Initialize sources and selectedPairs arrays
+        handleFieldChange('sources', []);
+        handleFieldChange('selectedPairs', []);
         handleFieldChange('submitSuccess', true);
+        
+        // Start polling in the background
+        pollForSources(formData.ticker.toUpperCase());
+        
         setIsSubmitting(false);
         return true;
       }
+      return false;
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add token');
       setIsSubmitting(false);
       return false;
     }
+  };
+
+  // Function to poll for sources
+  const pollForSources = async (ticker: string) => {
+    const maxAttempts = 10; // 10 seconds
+    const interval = 1000; // 1 second
+    const token = localStorage.getItem("apiToken");
+    let allSources = [];
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        console.log(`Polling attempt ${attempt + 1} of ${maxAttempts}`);
+        
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_TOKEN_API_URL || 'http://localhost:8002'}/v1/sources/${ticker}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+
+        if (response.data && Array.isArray(response.data.sources)) {
+          // Update allSources with any new sources
+          const newSources = response.data.sources;
+          
+          // Add any new sources that aren't already in allSources
+          newSources.forEach(newSource => {
+            if (!allSources.some(existing => 
+              existing.source?.id === newSource.source?.id
+            )) {
+              allSources.push(newSource);
+            }
+          });
+
+          // Update form data with all sources found so far
+          handleFieldChange('sources', allSources);
+          console.log("Updated sources:", allSources, "Total sources:", allSources.length);
+        }
+      } catch (error) {
+        console.error("Polling error:", error);
+      }
+
+      // Wait for the interval before next attempt
+      await new Promise(resolve => setTimeout(resolve, interval));
+    }
+
+    console.log("Polling completed. Total sources found:", allSources.length);
   };
 
   // Add useEffect to expose validation and submit methods
@@ -152,7 +207,7 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                       leaveTo="opacity-0"
                     >
                       <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full cursor-pointer overflow-auto rounded-md bg-greenFooter py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-sm focus:outline-none sm:text-sm">
-                        {["Solana", "Base", "Bnb", "Starknet"].map(
+                        {["Ethereum", "Solana", "Base", "Bnb", "Starknet"].map(
                           (network) => (
                             <Listbox.Option
                               key={network}

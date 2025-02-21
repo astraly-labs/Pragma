@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Form.module.scss";
 import classNames from "classnames";
 
 const ThirdStep = ({ formData, handleFieldChange }) => {
+  const [pollingStartTime] = useState(Date.now());
+  const [timeElapsed, setTimeElapsed] = useState(0);
+
+  useEffect(() => {
+    // Initialize selectedPairs if not already set
+    if (!formData.selectedPairs) {
+      handleFieldChange('selectedPairs', []);
+    }
+
+    // Update time elapsed every second
+    const timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - pollingStartTime) / 1000);
+      if (elapsed <= 10) { // Only update for the first 10 seconds
+        setTimeElapsed(elapsed);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Log whenever sources change
+  useEffect(() => {
+    console.log("[Debug] Sources updated:", formData.sources?.length, "sources");
+  }, [formData.sources]);
+
   const getOracleContent = (type) => {
     switch (type) {
       case "api":
@@ -10,9 +35,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
           <div>
             <h2 className={styles.title}>Choose data sources</h2>
             <p className="mb-4 max-w-xl text-justify text-sm text-gray-500">
-              Please select the data sources you wish to include. We've included
-              depth metrics, and will soon provide you with a full dashboard of
-              information to make the best choice for your use case. If you need
+              Please select the data sources you wish to include. These are the available sources for your token. If you need
               help to select the sources, please{" "}
               <a
                 href="https://t.me/BGLabs"
@@ -23,53 +46,107 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                 reach out to us.
               </a>{" "}
             </p>
-            <ul className="grid w-full gap-6 md:grid-cols-1">
-              {mockDataList.map((item, index) => (
-                <li key={index}>
-                  <input
-                    type="checkbox"
-                    id={`option-${index}`}
-                    name="data-source"
-                    value={item.source}
-                    className="peer hidden"
-                    onChange={() => handleCheckboxChange(item.pair)}
-                  />
-                  <label
-                    htmlFor={`option-${index}`}
-                    className={classNames(
-                      "flex w-full max-w-xl cursor-pointer flex-col justify-between rounded-lg border text-lightGreen",
-                      "hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint",
-                      styles.darkGreenBox
-                    )}
-                  >
-                    <div className="flex flex-col space-y-2">
-                      <div className="flex flex-row gap-2">
-                        <img
-                          src={`/assets/publishers/${item.logo}`}
-                          alt={`${item.source} logo`}
-                          className="my-auto h-8 w-8"
+            {formData.sources && Array.isArray(formData.sources) && formData.sources.length > 0 ? (
+              <>
+                <div className="mb-4 flex max-w-xl items-center gap-4">
+                  <div className="text-sm text-mint">
+                    Found {formData.sources.length} source{formData.sources.length > 1 ? 's' : ''}
+                  </div>
+                  {timeElapsed < 10 && (
+                    <>
+                      <div className="h-1 flex-1 rounded-full bg-darkGreen">
+                        <div 
+                          className="h-1 rounded-full bg-mint transition-all duration-200" 
+                          style={{ width: `${(timeElapsed / 10) * 100}%` }}
                         />
-                        <div className="my-auto w-full text-lg font-bold">
-                          {item.source}
-                        </div>
                       </div>
-                      <div className="w-full text-sm font-medium">
-                        {item.pair} - Price:{" "}
-                        <span className="font-semibold">{item.price}</span>
+                      <div className="text-sm text-gray-500">
+                        {10 - timeElapsed}s
                       </div>
-                      <div className="w-full text-sm">
-                        <span className="font-semibold">+2% Depth:</span>{" "}
-                        {item.depthPlus2Percent}
+                    </>
+                  )}
+                </div>
+                <ul className="grid w-full gap-6 md:grid-cols-1">
+                  {formData.sources.map((sourceData, index) => {
+                    // Make sure we have a valid source object
+                    if (!sourceData?.source?.name) {
+                      console.log("Invalid source data:", sourceData);
+                      return null;
+                    }
+
+                    const { source } = sourceData;
+
+                    return (
+                      <li key={source.id} className="animate-fadeIn">
+                        <input
+                          type="checkbox"
+                          id={`option-${source.id}`}
+                          name="data-source"
+                          value={source.name}
+                          className="peer hidden"
+                          onChange={() => handleCheckboxChange(source.name)}
+                          checked={formData.selectedPairs?.includes(source.name)}
+                        />
+                        <label
+                          htmlFor={`option-${source.id}`}
+                          className={classNames(
+                            "flex w-full max-w-xl cursor-pointer flex-col justify-between rounded-lg border text-lightGreen",
+                            "hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint",
+                            styles.darkGreenBox
+                          )}
+                        >
+                          <div className="flex flex-col space-y-2 p-4">
+                            <div className="flex flex-row gap-2">
+                              <div className="my-auto flex h-8 w-8 items-center justify-center rounded-full bg-darkGreen text-mint">
+                                {source.name.charAt(0).toUpperCase()}
+                              </div>
+                              <div className="my-auto w-full text-lg font-bold">
+                                {source.name.charAt(0).toUpperCase() + source.name.slice(1)}
+                              </div>
+                            </div>
+                            <div className="w-full text-sm">
+                              {source.url && (
+                                <a 
+                                  href={source.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-mint hover:text-mint-dark"
+                                >
+                                  Visit Exchange
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            ) : (
+              <div className="max-w-xl rounded-lg border border-mint/20 bg-darkGreen/50 p-4 text-center">
+                {timeElapsed < 10 ? (
+                  <>
+                    <div className="mb-3 text-lightGreen">Searching for available sources...</div>
+                    <div className="flex items-center gap-4">
+                      <div className="h-1 flex-1 rounded-full bg-darkGreen">
+                        <div 
+                          className="h-1 rounded-full bg-mint transition-all duration-200" 
+                          style={{ width: `${(timeElapsed / 10) * 100}%` }}
+                        />
                       </div>
-                      <div className="w-full text-sm">
-                        <span className="font-semibold">-2% Depth:</span>{" "}
-                        {item.depthMinus2Percent}
+                      <div className="text-sm text-gray-500">
+                        {10 - timeElapsed}s
                       </div>
                     </div>
-                  </label>
-                </li>
-              ))}
-            </ul>
+                  </>
+                ) : (
+                  <div className="text-sm text-gray-500">
+                    No sources found for this token yet. Please try again later or contact support.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       case "centralized":
@@ -102,50 +179,12 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
     }
   };
 
-  const mockDataList = [
-    {
-      pair: "TRUMP/USD",
-      source: "OKX",
-      logo: "okx.png",
-      price: "$15.74",
-      depthPlus2Percent: "$1,127,515",
-      depthMinus2Percent: "$1,183,795",
-    },
-    {
-      pair: "TRUMP/USD",
-      source: "Binance",
-      logo: "binance.webp",
-      price: "15.68$",
-      depthPlus2Percent: "$1,850,716",
-      depthMinus2Percent: "$4,372,277",
-    },
-    {
-      pair: "TRUMP/USD",
-      source: "Jupiter",
-      logo: "jup.png",
-      price: "15.83$",
-      depthPlus2Percent: "$4,490,004",
-      depthMinus2Percent: "5,723,200$",
-    },
-    {
-      pair: "TRUMP/USD",
-      source: "Jupiter",
-      logo: "jup.png",
-      price: "1$",
-      depthPlus2Percent: "10,000$",
-      depthMinus2Percent: "100,000$",
-    },
-  ];
-
-  console.log(mockDataList);
-
-  const handleCheckboxChange = (pair) => {
-    handleFieldChange({
-      ...formData,
-      selectedPairs: formData.selectedPairs.includes(pair)
-        ? formData.selectedPairs.filter((p) => p !== pair)
-        : [...formData.selectedPairs, pair],
-    });
+  const handleCheckboxChange = (sourceName) => {
+    const newSelectedPairs = formData.selectedPairs?.includes(sourceName)
+      ? formData.selectedPairs.filter((p) => p !== sourceName)
+      : [...(formData.selectedPairs || []), sourceName];
+    
+    handleFieldChange("selectedPairs", newSelectedPairs);
   };
 
   return (

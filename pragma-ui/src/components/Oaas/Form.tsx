@@ -17,6 +17,7 @@ const SpotForm = () => {
     ticker: "",
     network: "",
     selectedPairs: [],
+    sources: [],
   });
 
   const handleClick = () => {
@@ -48,7 +49,7 @@ const SpotForm = () => {
         const isValid = window.validateStep2();
         if (!isValid) return false;
         
-        // If validation passes, submit the token
+        // If validation passes, submit the token and wait for sources
         const success = await window.submitStep2();
         return success;
       }
