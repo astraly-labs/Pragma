@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 
 const AssetPerf = ({ asset, isAsset, loading }) => {
+  const [priceChangeClass, setPriceChangeClass] = useState(styles.priceNormal);
+  const prevPriceRef = useRef(asset?.price);
+
+  useEffect(() => {
+    if (!loading && asset?.price !== undefined && prevPriceRef.current !== undefined) {
+      if (asset.price > prevPriceRef.current) {
+        setPriceChangeClass(styles.priceUp);
+      } else if (asset.price < prevPriceRef.current) {
+        setPriceChangeClass(styles.priceDown);
+      }
+      prevPriceRef.current = asset.price;
+
+      // Reset to normal color after animation
+      const timer = setTimeout(() => {
+        setPriceChangeClass(styles.priceNormal);
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+  }, [asset?.price, loading]);
+
   return (
     <Link
       href={
@@ -52,16 +73,16 @@ const AssetPerf = ({ asset, isAsset, loading }) => {
           <div>{isAsset ? asset.sources : asset.type}</div>
         )}
       </div>
-      <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
+      <div className="my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider">
         {loading ? (
           <div className="my-auto h-3 w-20 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
-          <>
+          <div className={priceChangeClass}>
             {isAsset ? "$" : ""}
             {isAsset
               ? Number.parseFloat(asset.price).toFixed(2)
               : asset.reputationScore}
-          </>
+          </div>
         )}
       </div>
       {loading ? (

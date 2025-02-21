@@ -157,3 +157,18 @@
     padding: 24px 32px;
   }
 }
+
+.priceNormal {
+  color: #c4f8e2;
+  transition: color 0.05s ease-in;
+}
+
+.priceUp {
+  color: #00ff9d !important;
+  transition: color 0.05s ease-in;
+}
+
+.priceDown {
+  color: #ff4646 !important;
+  transition: color 0.05s ease-in;
+}
