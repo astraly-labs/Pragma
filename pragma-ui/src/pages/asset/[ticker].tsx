@@ -96,22 +96,26 @@ const AssetPage = ({ ticker }: Props) => {
         };
         setAsset(formattedAsset);
 
-        const assetComponents: PriceComponents[] = assetData.components.map(
-          (component: any) => {
-            return {
-              publisher: component.publisher,
-              link: component.link,
-              source: component.source,
-              price: parseInt(component.price, 16) / 10 ** assetData.decimals,
-              hash: component.tx_hash,
-              lastUpdated: new Date(
-                component.timestamp * 1000
-              ).toLocaleString(),
-            };
-          }
-        );
-
-        setPriceComponents(assetComponents);
+        // Only process components if they exist (not API source)
+        if (currentSource !== 'api' && assetData.components) {
+          const assetComponents: PriceComponents[] = assetData.components.map(
+            (component: any) => {
+              return {
+                publisher: component.publisher,
+                link: component.link,
+                source: component.source,
+                price: parseInt(component.price, 16) / 10 ** assetData.decimals,
+                hash: component.tx_hash,
+                lastUpdated: new Date(
+                  component.timestamp * 1000
+                ).toLocaleString(),
+              };
+            }
+          );
+          setPriceComponents(assetComponents);
+        } else {
+          setPriceComponents([]); // Empty array for API source
+        }
       }
     }
   }, [data, ticker, currentSource]);
@@ -200,7 +204,6 @@ const AssetPage = ({ ticker }: Props) => {
       <BoxContainer>
         <button
           onClick={() => {
-            // Go back to the previous page
             router.back();
           }}
           className="flex w-full cursor-pointer items-center gap-2 text-left text-sm uppercase tracking-widest text-lightGreen"
@@ -222,13 +225,16 @@ const AssetPage = ({ ticker }: Props) => {
         <AssetChart asset={asset} />
       </BoxContainer>
       <div className="w-full pb-5" />
-      <BoxContainer className="relative" modeOne={false}>
-        <PriceComponent components={priceComponents} />
-        {/* <div className="absolute top-0 left-2/4 z-0 h-full w-screen -translate-x-1/2 bg-lightBackground" /> */}
-      </BoxContainer>
-      <BoxContainer>
-        <Checkpoints components={checkpointComponents} />
-      </BoxContainer>
+      {currentSource !== 'api' && (
+        <>
+          <BoxContainer className="relative" modeOne={false}>
+            <PriceComponent components={priceComponents} />
+          </BoxContainer>
+          <BoxContainer>
+            <Checkpoints components={checkpointComponents} />
+          </BoxContainer>
+        </>
+      )}
     </div>
   );
 };
