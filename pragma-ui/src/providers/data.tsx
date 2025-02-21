@@ -65,6 +65,9 @@ export const dataSources = {
 export const initialAssets: AssetT[] = [
   { ticker: "BTC/USD", address: "0x0", decimals: 8 },
   { ticker: "ETH/USD", address: "0x1", decimals: 8 },
+  { ticker: "STRK/USD", address: "0x1", decimals: 8 },
+  // { ticker: "WBTC/USD", address: "0x1", decimals: 8 },
+  // { ticker: "DAI/USD", address: "0x1", decimals: 8 },
 ];
 
 export const DataProvider = ({
