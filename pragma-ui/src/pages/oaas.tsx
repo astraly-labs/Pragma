@@ -5,11 +5,13 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/router";
 import V2Hero from "../components/v2/v2Hero";
 import { Button } from "../components/common/Button";
+import axios from "axios";
 
 const OaasPage = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMethod, setLoginMethod] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // Check local storage for login status and method
@@ -21,16 +23,31 @@ const OaasPage = () => {
     }
   }, []);
 
-  const handleLoginSuccess = (credentialResponse) => {
-    console.log("Login Success:", credentialResponse);
-    setIsLoggedIn(true);
-    setLoginMethod("google");
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("loginMethod", "google");
+  const handleLoginSuccess = async (credentialResponse) => {
+    try {
+      // Exchange Google token for our API JWT
+      const response = await axios.post('/api/auth/token', {
+        credential: credentialResponse.credential
+      });
+
+      if (response.data?.token) {
+        setIsLoggedIn(true);
+        setLoginMethod("google");
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("loginMethod", "google");
+        localStorage.setItem("apiToken", response.data.token);
+        setError("");
+      }
+    } catch (err) {
+      console.error("Login Failed:", err);
+      setError(err.response?.data?.error || "Failed to login");
+      setIsLoggedIn(false);
+    }
   };
 
   const handleLoginError = () => {
     console.error("Login Failed");
+    setError("Failed to login with Google");
   };
 
   const handleDisconnect = () => {
@@ -38,6 +55,8 @@ const OaasPage = () => {
     setLoginMethod(null);
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("loginMethod");
+    localStorage.removeItem("apiToken");
+    setError("");
     console.log("Disconnected");
   };
 
@@ -46,7 +65,7 @@ const OaasPage = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="493446366695-u34o4hmm4o4oth63i5cv6riu5fekc3k7.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="559183025008-25hfk1gn99qkb2g4uml5e3kesf603314.apps.googleusercontent.com">
       <div
         className={classNames(
           "relative w-full overflow-x-hidden",
@@ -70,6 +89,7 @@ const OaasPage = () => {
                     onSuccess={handleLoginSuccess}
                     onError={handleLoginError}
                   />
+                  {error && <div className="text-sm text-red-500">{error}</div>}
                 </>
               ) : (
                 <div className="flex flex-col">

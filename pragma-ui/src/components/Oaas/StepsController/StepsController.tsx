@@ -6,16 +6,25 @@ import { Button } from "../../common/Button";
 const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
   const [step, setStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
 
-  const onNextStep = () => {
-    if (manageNextStepValidation(step)) {
-      if (step !== stepsAmount) {
-        setStep(step + 1);
-        setErrorMessage(""); // Clear error message on successful validation
-        window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
+  const onNextStep = async () => {
+    setIsValidating(true);
+    try {
+      const isValid = await manageNextStepValidation(step);
+      if (isValid) {
+        if (step !== stepsAmount) {
+          setStep(step + 1);
+          setErrorMessage(""); // Clear error message on successful validation
+          window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
+        }
+      } else {
+        setErrorMessage("Please complete all required fields before proceeding.");
       }
-    } else {
-      setErrorMessage("Please select an option before proceeding.");
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again.");
+    } finally {
+      setIsValidating(false);
     }
   };
 
@@ -26,6 +35,9 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
       </div>
       <div className={styles.formContainer}>
         <div> {steps[step - 1]}</div>
+        {errorMessage && (
+          <div className="mt-4 text-sm text-red-500">{errorMessage}</div>
+        )}
         <div className={styles.buttonsContainer}>
           <Button
             onClick={() => onNextStep()}
@@ -34,8 +46,14 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
             variant="solid"
             color="mint"
             center={true}
+            disabled={isValidating}
           >
-            {step !== stepsAmount ? "Next" : "Send"}
+            {isValidating 
+              ? "Processing..." 
+              : step !== stepsAmount 
+                ? "Next" 
+                : "Send"
+            }
           </Button>
           {step !== 1 && (
             <Button
@@ -48,6 +66,7 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
               variant="outline"
               color="mint"
               center={true}
+              disabled={isValidating}
             >
               Back
             </Button>

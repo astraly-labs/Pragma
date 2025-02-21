@@ -35,7 +35,7 @@ const SpotForm = () => {
     setShowSuccess(true);
   };
 
-  const manageNextStepValidation = (currentStep) => {
+  const manageNextStepValidation = async (currentStep) => {
     if (currentStep === 1 && !formData.type) {
       if (!validationError.includes("type")) {
         setValidationError([...validationError, "type"]);
@@ -44,8 +44,13 @@ const SpotForm = () => {
     }
 
     if (currentStep === 2) {
-      if (window.validateStep2) {
-        return window.validateStep2();
+      if (window.validateStep2 && window.submitStep2) {
+        const isValid = window.validateStep2();
+        if (!isValid) return false;
+        
+        // If validation passes, submit the token
+        const success = await window.submitStep2();
+        return success;
       }
       return false;
     }

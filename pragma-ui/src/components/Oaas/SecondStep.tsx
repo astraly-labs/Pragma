@@ -2,9 +2,19 @@ import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import axios from "axios";
+
+// Extend Window interface to include our custom properties
+declare global {
+  interface Window {
+    validateStep2?: () => boolean;
+    submitStep2?: () => Promise<boolean>;
+  }
+}
 
 const SecondStep = ({ formData, handleFieldChange }) => {
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Add validation function
   const validateFields = () => {
@@ -30,14 +40,69 @@ const SecondStep = ({ formData, handleFieldChange }) => {
     return true;
   };
 
-  // Add useEffect to expose validation method
+  // Add submit function
+  const handleSubmit = async () => {
+    if (!validateFields()) {
+      return;
+    }
+
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      setError("Please login first");
+      return;
+    }
+
+    // Get the API token
+    const token = localStorage.getItem("apiToken");
+    if (!token) {
+      setError("Authentication token not found. Please login again.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post('/api/tokens/add', 
+        {
+          token_config: {
+            ticker: formData.ticker.toUpperCase(),
+            name: formData.tokenName,
+            coingecko_id: formData.tokenName.toLowerCase(),
+            addresses: {
+              [formData.network.toLowerCase()]: formData.assetAddress
+            }
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      if (response.data) {
+        // Handle success - you might want to pass this up to the parent component
+        handleFieldChange('submitSuccess', true);
+        setIsSubmitting(false);
+        return true;
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to add token');
+      setIsSubmitting(false);
+      return false;
+    }
+  };
+
+  // Add useEffect to expose validation and submit methods
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.validateStep2 = validateFields;
+      window.submitStep2 = handleSubmit;
     }
     return () => {
       if (typeof window !== "undefined") {
         delete window.validateStep2;
+        delete window.submitStep2;
       }
     };
   }, [formData]);
@@ -234,6 +299,9 @@ const SecondStep = ({ formData, handleFieldChange }) => {
               </div>
             </div>
             {error && <div className="text-sm text-red-500">{error}</div>}
+            {isSubmitting && (
+              <div className="text-sm text-mint">Adding token...</div>
+            )}
           </div>
         );
       case "centralized":
