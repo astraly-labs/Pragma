@@ -12,6 +12,12 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
       handleFieldChange('selectedPairs', []);
     }
 
+    // When sources are available, select all of them by default if no selections have been made yet
+    if (formData.sources?.length > 0 && (!formData.selectedPairs || formData.selectedPairs.length === 0)) {
+      const allSourceNames = formData.sources.map(sourceData => sourceData.source.name);
+      handleFieldChange('selectedPairs', allSourceNames);
+    }
+
     // Update time elapsed every second
     const timer = setInterval(() => {
       const elapsed = Math.floor((Date.now() - pollingStartTime) / 1000);
@@ -78,21 +84,11 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
 
                     return (
                       <li key={source.id} className="animate-fadeIn">
-                        <input
-                          type="checkbox"
-                          id={`option-${source.id}`}
-                          name="data-source"
-                          value={source.name}
-                          className="peer hidden"
-                          onChange={() => handleCheckboxChange(source.name)}
-                          checked={formData.selectedPairs?.includes(source.name)}
-                        />
-                        <label
-                          htmlFor={`option-${source.id}`}
+                        <div
                           className={classNames(
-                            "flex w-full max-w-xl cursor-pointer flex-col justify-between rounded-lg border text-lightGreen",
-                            "hover:bg-whiteTrans peer-checked:border-mint peer-checked:text-mint",
-                            styles.darkGreenBox
+                            "flex w-full max-w-xl flex-col justify-between rounded-lg border text-lightGreen",
+                            styles.darkGreenBox,
+                            sourceData.is_active && "border-mint bg-whiteTrans"
                           )}
                         >
                           <div className="flex flex-col space-y-2 p-4">
@@ -117,7 +113,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                               )}
                             </div>
                           </div>
-                        </label>
+                        </div>
                       </li>
                     );
                   })}
@@ -177,14 +173,6 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
           </div>
         );
     }
-  };
-
-  const handleCheckboxChange = (sourceName) => {
-    const newSelectedPairs = formData.selectedPairs?.includes(sourceName)
-      ? formData.selectedPairs.filter((p) => p !== sourceName)
-      : [...(formData.selectedPairs || []), sourceName];
-    
-    handleFieldChange("selectedPairs", newSelectedPairs);
   };
 
   return (

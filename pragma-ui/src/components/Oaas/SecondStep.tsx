@@ -16,6 +16,13 @@ const SecondStep = ({ formData, handleFieldChange }) => {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Initialize network to Unknown if not set
+  useEffect(() => {
+    if (!formData.network) {
+      handleFieldChange("network", "Unknown");
+    }
+  }, []);
+
   // Add validation function
   const validateFields = () => {
     if (formData.type === "api") {
@@ -23,9 +30,11 @@ const SecondStep = ({ formData, handleFieldChange }) => {
         setError("Please select a network");
         return false;
       }
-      if (!formData.assetAddress) {
-        setError("Please enter an asset address");
-        return false;
+      if (formData.network !== "Unknown") {
+        if (!formData.assetAddress) {
+          setError("Please enter an asset address");
+          return false;
+        }
       }
       if (!formData.tokenName) {
         setError("Please enter a token name");
@@ -62,16 +71,22 @@ const SecondStep = ({ formData, handleFieldChange }) => {
 
     setIsSubmitting(true);
     try {
+      const tokenConfig = {
+        ticker: formData.ticker.toUpperCase(),
+        name: formData.tokenName,
+        coingecko_id: formData.tokenName.toLowerCase(),
+      };
+
+      // Only add addresses if network is not Unknown
+      if (formData.network !== "Unknown") {
+        tokenConfig["addresses"] = {
+          [formData.network.toLowerCase()]: formData.assetAddress
+        };
+      }
+
       const response = await axios.post('/api/tokens/add', 
         {
-          token_config: {
-            ticker: formData.ticker.toUpperCase(),
-            name: formData.tokenName,
-            coingecko_id: formData.tokenName.toLowerCase(),
-            addresses: {
-              [formData.network.toLowerCase()]: formData.assetAddress
-            }
-          }
+          token_config: tokenConfig
         },
         {
           headers: {
@@ -186,13 +201,13 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                   network.
                 </p>
                 <Listbox
-                  value={formData.network}
+                  value={formData.network || "Unknown"}
                   onChange={(value) => handleFieldChange("network", value)}
                 >
                   <div className="relative">
                     <Listbox.Button className="relative flex w-full cursor-pointer flex-row rounded-full bg-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
                       <span className="block truncate">
-                        {formData.network || "Select a network"}
+                        {formData.network || "Unknown"}
                       </span>
                       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronDownIcon
@@ -207,7 +222,7 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                       leaveTo="opacity-0"
                     >
                       <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full cursor-pointer overflow-auto rounded-md bg-greenFooter py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-sm focus:outline-none sm:text-sm">
-                        {["Ethereum", "Solana", "Base", "Bnb", "Starknet"].map(
+                        {["Unknown", "Ethereum", "Solana", "Base", "Bnb", "Starknet"].map(
                           (network) => (
                             <Listbox.Option
                               key={network}
@@ -235,44 +250,48 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                   </div>
                 </Listbox>
               </div>
-              <label className="pb-2 pt-4 font-semibold text-lightGreen">
-                Asset Address
-              </label>
-              <p className="mb-4 max-w-xl text-sm text-gray-500">
-                Enter the address of the asset you want to track.
-              </p>
-              <div className="relative max-w-xl">
-                <input
-                  type="text"
-                  value={formData.assetAddress}
-                  onChange={(e) =>
-                    handleFieldChange("assetAddress", e.target.value)
-                  }
-                  placeholder="0x..."
-                  className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
-                />
-                {formData.assetAddress && (
-                  <button
-                    onClick={() => handleFieldChange("assetAddress", "")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-5 w-5 text-lightGreen hover:text-mint"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
+              {formData.network !== "Unknown" && (
+                <div className="flex flex-col">
+                  <label className="pb-2 pt-4 font-semibold text-lightGreen">
+                    Asset Address
+                  </label>
+                  <p className="mb-4 max-w-xl text-sm text-gray-500">
+                    Enter the address of the asset you want to track.
+                  </p>
+                  <div className="relative max-w-xl">
+                    <input
+                      type="text"
+                      value={formData.assetAddress}
+                      onChange={(e) =>
+                        handleFieldChange("assetAddress", e.target.value)
+                      }
+                      placeholder="0x..."
+                      className="w-full rounded-full bg-lightBlur px-6 py-2 text-lightGreen placeholder-lightGreen placeholder-opacity-50 focus:outline-none"
+                    />
+                    {formData.assetAddress && (
+                      <button
+                        onClick={() => handleFieldChange("assetAddress", "")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-5 w-5 text-lightGreen hover:text-mint"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex max-w-xl flex-col">
