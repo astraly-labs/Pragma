@@ -6,9 +6,9 @@
 
 [![Project license](https://img.shields.io/github/license/Astraly-Labs/Pragma.svg?style=flat-square)](LICENSE)
 [![Pull Requests welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square)](https://github.com/Astraly-Labs/Pragma/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
-<a href="https://twitter.com/PragmaOracle">
+<a href="https://x.com/PragmaOracle">
 <img src="https://img.shields.io/twitter/follow/PragmaOracle?style=social"/>
-</a> <a href="https://github.com/Astraly-Labs/Pragma">
+</a> <a href="https://github.com/astraly-labs/Pragma/stargazers">
 <img src="https://img.shields.io/github/stars/Astraly-Labs/Pragma?style=social"/>
 </a> <a href="https://docs.pragma.build/">
 <img src="https://img.shields.io/badge/Documentation-Website-yellow"/> </a>
