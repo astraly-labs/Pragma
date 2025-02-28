@@ -21,7 +21,7 @@ const SpotForm = () => {
   });
 
   const handleClick = () => {
-    router.push("/assets?source=sepolia");
+    router.push("/assets?source=api");
   };
 
   const handleFieldChange = (name, value, isRequired) => {

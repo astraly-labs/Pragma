@@ -55,6 +55,15 @@ const SecondStep = ({ formData, handleFieldChange }) => {
       return false;
     }
 
+    // If the token was already successfully submitted and we have sources
+    if (formData.submitSuccess && formData.sources?.length > 0) {
+      // Reset sources array to trigger polling UI in ThirdStep
+      handleFieldChange('sources', []);
+      // Start polling again
+      pollForSources(formData.ticker.toUpperCase());
+      return true;
+    }
+
     // Check if user is logged in
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     if (!isLoggedIn) {
