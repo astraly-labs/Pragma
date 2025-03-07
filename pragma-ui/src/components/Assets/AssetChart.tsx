@@ -23,6 +23,14 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
     chart: ReturnType<typeof createChart>;
     lineSeries: ReturnType<ReturnType<typeof createChart>["addLineSeries"]>;
   } | null>(null);
+  const [chartType, setChartType] = useState<"candlestick" | "line">("line");
+  const [timeframe, setTimeframe] = useState<"1m" | "1h" | "1d" | "1w">("1h");
+  const [showHistorical, setShowHistorical] = useState(false);
+  
+  // Skip chart creation if asset has an error
+  if (asset?.error || asset?.isUnsupported) {
+    return null;
+  }
 
   //
   // 1) Create the chart only once on mount
