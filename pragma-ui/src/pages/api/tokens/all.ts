@@ -28,6 +28,13 @@ export default async function handler(
     if (apiResponse.ok) {
       const data = await apiResponse.json();
       console.log("API response successful, token count:", data.tokens?.length || 0);
+      
+      // Log the first few tokens for debugging
+      if (data.tokens && data.tokens.length > 0) {
+        console.log("First 5 tokens:", data.tokens.slice(0, 5).map((t: any) => t.ticker).join(", "));
+        console.log("Last 5 tokens:", data.tokens.slice(-5).map((t: any) => t.ticker).join(", "));
+      }
+      
       return res.status(200).json(data);
     } else {
       const errorText = await apiResponse.text();

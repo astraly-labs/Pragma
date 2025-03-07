@@ -111,6 +111,8 @@ export const DataProvider = ({
   useEffect(() => {
     if (availableTokens) {
       console.log("Updating assets with:", availableTokens.length, "tokens");
+      console.log("Available tokens:", availableTokens.map(t => t.ticker).join(", "));
+      
       const newAssets = availableTokens.map(token => {
         // Check if the ticker already has /USD suffix
         const ticker = token.ticker.includes('/USD') ? token.ticker : token.ticker + "/USD";
@@ -120,6 +122,8 @@ export const DataProvider = ({
           decimals: token.decimals || 8
         };
       });
+      console.log("Setting assets:", newAssets.length, "assets");
+      console.log("Asset tickers:", newAssets.map(a => a.ticker).join(", "));
       setAssets(newAssets);
     }
   }, [availableTokens, source]);
@@ -192,6 +196,15 @@ export const DataProvider = ({
         .getReader();
 
       let buffer = '';
+      let initialDataReceived = false;
+      let streamPromiseResolve: () => void;
+      let streamPromiseReject: (error: Error) => void;
+      
+      // Create a promise that will resolve when we get initial data or error
+      const streamPromise = new Promise<void>((resolve, reject) => {
+        streamPromiseResolve = resolve;
+        streamPromiseReject = reject;
+      });
 
       const processStream = async () => {
         try {
@@ -212,13 +225,13 @@ export const DataProvider = ({
               if (line.startsWith('data:')) {
                 try {
                   const jsonStr = line.slice(5).trim();
-                  console.log(`[${asset.ticker}] Received data:`, jsonStr.substring(0, 50));
-                  
                   const data = JSON.parse(jsonStr);
                   
-                  // Skip the initial connection message
+                  // Skip the initial connection message but mark as received
                   if (data.connected) {
                     console.log(`[${asset.ticker}] Initial connection established`);
+                    initialDataReceived = true;
+                    streamPromiseResolve();
                     continue;
                   }
 
@@ -240,14 +253,15 @@ export const DataProvider = ({
                           isUnsupported: true
                         } 
                       }));
+                      if (!initialDataReceived) {
+                        streamPromiseReject(new Error(data.error));
+                      }
                     }
                     continue;
                   }
 
                   // Check if we have a valid price update
                   if (data.price && data.timestamp) {
-                    console.log(`[${asset.ticker}] Valid price update:`, data.price);
-                    
                     const formattedData = {
                       ...data,
                       nb_sources_aggregated: data.num_sources_aggregated || 1,
@@ -256,6 +270,10 @@ export const DataProvider = ({
                     };
                     
                     setStreamingData((prev) => ({ ...prev, [asset.ticker]: formattedData }));
+                    if (!initialDataReceived) {
+                      initialDataReceived = true;
+                      streamPromiseResolve();
+                    }
                   } else if (Array.isArray(data) && data.length > 0 && data[0].price) {
                     // Handle array of price updates (historical data)
                     const formattedData = {
@@ -266,9 +284,16 @@ export const DataProvider = ({
                       variations: { "1h": 0, "1d": 0, "1w": 0 },
                     };
                     setStreamingData((prev) => ({ ...prev, [asset.ticker]: formattedData }));
+                    if (!initialDataReceived) {
+                      initialDataReceived = true;
+                      streamPromiseResolve();
+                    }
                   }
                 } catch (e) {
                   console.error(`[${asset.ticker}] Failed to parse data:`, e, line.slice(5).trim().substring(0, 50));
+                  if (!initialDataReceived) {
+                    streamPromiseReject(e);
+                  }
                 }
               }
             }
@@ -282,11 +307,24 @@ export const DataProvider = ({
               error: `Stream error: ${error.message || 'Unknown error'}`
             } 
           }));
+          if (!initialDataReceived) {
+            streamPromiseReject(error);
+          }
         }
       };
 
-      // Start processing without awaiting it
-      processStream();
+      // Start processing the stream
+      processStream().catch(error => {
+        console.error(`[${asset.ticker}] Unhandled stream error:`, error);
+        if (!initialDataReceived) {
+          streamPromiseReject(error);
+        }
+      });
+
+      // Wait for initial data or error
+      await streamPromise;
+      console.log(`[${asset.ticker}] Stream initialization complete`);
+
     } catch (error) {
       console.error(`[${asset.ticker}] Failed to start stream:`, error);
       // Set default data for this asset with error
@@ -301,18 +339,97 @@ export const DataProvider = ({
           error: `Failed to start stream: ${error.message || 'Unknown error'}`
         } 
       }));
+      throw error; // Rethrow so the caller knows the stream failed to initialize
     }
   };
 
   // Manage streams when source or assets change
   useEffect(() => {
     if (source === 'api') {
+      let mounted = true;
+      
       // Clear existing streams
       setStreamingData({});
+      
       // Start new streams for all assets
-      assets.forEach((asset) => {
-        startStreaming(asset);
+      console.log(`Starting streams for ${assets.length} assets`);
+      console.log(`Asset tickers: ${assets.map(a => a.ticker).join(", ")}`);
+
+      // Process assets in batches to avoid overwhelming the browser
+      const batchSize = 5; // Reduced batch size for better performance
+      const startStreamsInBatches = async () => {
+        console.log(`Starting streams for ${assets.length} supported assets out of ${assets.length} total`);
+        
+        // Initialize loading state for all assets
+        setStreamingData(prev => {
+          const newState = { ...prev };
+          assets.forEach(asset => {
+            newState[asset.ticker] = {
+              price: "0x0",
+              decimals: asset.decimals,
+              last_updated_timestamp: Math.floor(Date.now() / 1000),
+              nb_sources_aggregated: 0,
+              variations: { "1h": 0, "1d": 0, "1w": 0 },
+              loading: true
+            };
+          });
+          return newState;
+        });
+
+        for (let i = 0; i < assets.length; i += batchSize) {
+          if (!mounted) break;
+
+          const batch = assets.slice(i, i + batchSize);
+          console.log(`Starting batch ${Math.floor(i/batchSize) + 1} with ${batch.length} assets: ${batch.map(a => a.ticker).join(", ")}`);
+          
+          // Start streams for this batch in parallel and wait for them to initialize
+          await Promise.all(
+            batch.map(async (asset) => {
+              try {
+                await startStreaming(asset);
+                if (mounted) {
+                  setStreamingData(prev => ({
+                    ...prev,
+                    [asset.ticker]: {
+                      ...(prev[asset.ticker] || {}),
+                      loading: false
+                    }
+                  }));
+                }
+              } catch (error) {
+                console.error(`Error starting stream for ${asset.ticker}:`, error);
+                if (mounted) {
+                  setStreamingData(prev => ({
+                    ...prev,
+                    [asset.ticker]: {
+                      ...(prev[asset.ticker] || {}),
+                      loading: false,
+                      error: error.message
+                    }
+                  }));
+                }
+              }
+            })
+          );
+          
+          // Small delay between batches to avoid overwhelming the browser
+          if (i + batchSize < assets.length && mounted) {
+            console.log(`Waiting before starting next batch...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+        
+        console.log(`All ${assets.length} streams started`);
+      };
+      
+      startStreamsInBatches().catch(error => {
+        console.error("Error starting streams in batches:", error);
       });
+
+      // Cleanup function
+      return () => {
+        mounted = false;
+      };
     } else {
       setStreamingData({});
     }
@@ -325,6 +442,22 @@ export const DataProvider = ({
       
       if (!streamData) {
         console.log(`No streaming data for ${asset.ticker}, returning default`);
+        
+        // Check if we've already tried to stream this asset
+        const isStreamStarted = assets.some(a => a.ticker === asset.ticker);
+        
+        // If we haven't tried to stream this asset yet, start streaming it
+        if (isStreamStarted && !streamingData[asset.ticker]) {
+          console.log(`Starting stream for ${asset.ticker} on demand`);
+          try {
+            startStreaming(asset).catch(error => {
+              console.error(`Error starting stream for ${asset.ticker}:`, error);
+            });
+          } catch (error) {
+            console.error(`Failed to start stream for ${asset.ticker}:`, error);
+          }
+        }
+        
         return {
           price: "0x0",
           decimals: asset.decimals || 8,
@@ -417,7 +550,25 @@ export const DataProvider = ({
 
   const data = useMemo(() => {
     if (source === 'api') {
-      return streamingData;
+      // For API source, we need to make sure all assets are included in the data
+      // even if they don't have streaming data yet
+      const result: { [ticker: string]: any } = { ...streamingData };
+      
+      // Add default data for assets that don't have streaming data yet
+      assets.forEach(asset => {
+        if (!result[asset.ticker]) {
+          result[asset.ticker] = {
+            price: "0x0",
+            decimals: asset.decimals || 8,
+            last_updated_timestamp: Math.floor(Date.now() / 1000),
+            nb_sources_aggregated: 0,
+            variations: { "1h": 0, "1d": 0, "1w": 0 },
+            loading: true // Flag to indicate that data is still loading
+          };
+        }
+      });
+      
+      return result;
     }
     return assets.reduce((acc, asset, index) => {
       acc[asset.ticker] = assetQueries[index].data;
