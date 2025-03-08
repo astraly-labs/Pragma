@@ -6,16 +6,31 @@ interface ExtendedNextApiResponse extends NextApiResponse {
 
 export default async function handler(req: NextApiRequest, res: ExtendedNextApiResponse) {
   const {
-    pair = "STRK/USD",
+    pairs: rawPairs,
     interval = "1s",
     aggregation = "median",
     historical_prices = "10",
   } = req.query;
 
-  // Remove "/USD" suffix if present for the API request
-  const cleanPair = typeof pair === 'string' ? pair.split('/')[0] : pair;
+  // Handle pairs parameter which could be string, string[] or undefined
+  let pairs: string[];
+  if (typeof rawPairs === 'string') {
+    pairs = [rawPairs];
+  } else if (Array.isArray(rawPairs)) {
+    pairs = rawPairs;
+  } else {
+    res.status(400).json({ error: "pairs parameter is required" });
+    return;
+  }
+
+  // Clean pairs (remove /USD suffix if present)
+  const cleanPairs = pairs.map(pair => 
+    typeof pair === 'string' ? pair.split('/')[0] : pair
+  );
   
-  const apiUrl = `https://ws.dev.pragma.build/node/v1/data/${cleanPair}/USD/stream?interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
+  // Construct URL with multiple pairs
+  const pairsQuery = cleanPairs.map(pair => `pairs[]=${encodeURIComponent(pair)}/USD`).join('&');
+  const apiUrl = `https://api .devnet.pragma.build/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {
@@ -29,18 +44,13 @@ export default async function handler(req: NextApiRequest, res: ExtendedNextApiR
       },
     });
 
-    // Handle error responses from the API
     if (!apiResponse.ok || !apiResponse.body) {
       console.error(`API response not OK: ${apiResponse.status} ${apiResponse.statusText}`);
-      
       try {
-        // Try to get the response content as text first
         const textResponse = await apiResponse.text();
         console.error(`Error response: ${textResponse.substring(0, 200)}...`);
-        
-        // Return a simple error response
         res.status(apiResponse.status || 500).json({ 
-          error: `Failed to fetch data for ${pair}`,
+          error: `Failed to fetch data for pairs: ${pairs.join(', ')}`,
           status: apiResponse.status,
           statusText: apiResponse.statusText
         });
@@ -57,6 +67,10 @@ export default async function handler(req: NextApiRequest, res: ExtendedNextApiR
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       "Connection": "keep-alive",
+      // Add CORS headers for local development
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers": "Content-Type",
     });
     console.log("Stream headers set");
 
@@ -71,10 +85,7 @@ export default async function handler(req: NextApiRequest, res: ExtendedNextApiR
     const decoder = new TextDecoder();
     console.log("Stream reader and decoder set up");
 
-    // We need to handle the case where the API is already sending data in SSE format
-    // with "data: " prefix
     let buffer = '';
-
     while (true) {
       const { value, done } = await reader.read();
       if (done) {
@@ -83,29 +94,18 @@ export default async function handler(req: NextApiRequest, res: ExtendedNextApiR
       }
 
       const chunk = decoder.decode(value, { stream: true });
+      buffer += chunk;
       
-      // Check if the chunk already has the "data: " prefix
-      if (chunk.trim().startsWith('data:')) {
-        // The API is already sending SSE formatted data, just pass it through
-        console.log(`Received SSE chunk, passing through: ${chunk.substring(0, 50)}...`);
-        res.write(chunk);
+      // Split on double newlines (SSE message boundary)
+      const messages = buffer.split('\n\n');
+      buffer = messages.pop() || ''; // Keep the last incomplete message in the buffer
+      
+      for (const message of messages) {
+        if (!message.trim()) continue;
+        
+        // Pass through the SSE message as is
+        res.write(message + '\n\n');
         flush();
-      } else {
-        // Normal JSON data, format it as SSE
-        try {
-          console.log(`Received JSON chunk: ${chunk.substring(0, 100)}...`);
-          // Parse the chunk as JSON to properly format it as an SSE event
-          const data = JSON.parse(chunk);
-          
-          // Format as a proper SSE event
-          res.write(`data: ${JSON.stringify(data)}\n\n`);
-          flush();
-        } catch (e) {
-          console.error(`Error parsing chunk as JSON: ${e}`);
-          // If the chunk isn't valid JSON, send it as a message
-          res.write(`data: ${JSON.stringify({ error: "Invalid JSON", raw: chunk })}\n\n`);
-          flush();
-        }
       }
     }
 

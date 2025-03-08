@@ -173,7 +173,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
     if (!asset || currentSource === "api") return;
 
     let wsInstance: WebSocket | null = new WebSocket(
-      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe"
+      "wss://ws.devnet.pragma.build/node/v1/onchain/ohlc/subscribe"
     );
 
     wsInstance.onopen = () => {
