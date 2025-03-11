@@ -1,0 +1,111 @@
+@import "../constants";
+
+.container {
+    display: flex;
+    flex-direction: row;
+    padding-top: 24px;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        justify-content: unset;
+        padding: 16px 16px 0px;
+    }
+}
+
+.formContainer {
+    margin-left: 72px;
+    width: 100%;
+    height: 100%;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        margin-top: unset;
+        margin: auto;
+        width: 100%;
+        height: unset;
+    }
+}
+
+.title {
+    margin-bottom: 0;
+    font-size: 24px;
+    color: #B5F0E5;
+}
+
+.buttonsContainer {
+    margin-top: 36px;
+    display: flex;
+    gap: 16px;
+}
+
+.errorMessage {
+    color: red;
+    margin-top: 10px;
+  }
+
+.nextButton {
+    background: #15FF81;
+    padding: 8px 24px;
+    border-radius: 27px;
+    border: unset;
+    color: #042420;
+}
+
+.backButton {
+    font-size: 12px;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: #15FF81;
+    margin-left: 24px;
+}
+
+.stepsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.step {
+    display: flex;
+    width: 100%;
+    min-width: 200px;
+    height: fit-content;
+    flex-direction: row;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        width: fit-content;
+        flex-direction: column;
+        min-width: 100px;
+    }
+}
+
+.stepContent {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    color: #B5F0E5;
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        font-size: 16px;
+    }
+}
+
+.activeStep {
+    color: #15FF81;
+}
+
+.stepNumber {
+    margin-right: 8px;
+}
+
+.checkmark {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.indicatorContainer {
+    @media only screen and (max-width: ($media-query-mobile - 1)) {
+        display: none;
+    }
+}

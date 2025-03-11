@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
 import dynamic from "next/dynamic";
+import { SessionProvider } from "next-auth/react";
 
 import "../styles/index.css";
 import { StarknetConfig, voyager, jsonRpcProvider } from "@starknet-react/core";
@@ -44,78 +45,84 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Head>
-        <meta charSet="UTF-8" key="charset" />
-        <meta
-          name="viewport"
-          content="width=device-width,initial-scale=1"
-          key="viewport"
+    <SessionProvider session={pageProps.session}>
+      <QueryClientProvider client={queryClient}>
+        <Head>
+          <meta charSet="UTF-8" key="charset" />
+          <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1"
+            key="viewport"
+          />
+          <link rel="icon" type="image/ico" href="/favicon.ico" />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+          />
+          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#B5F0E5" />
+        </Head>
+        <Analytics />
+        <SpeedInsights />
+        <DefaultSeo
+          titleTemplate="%s - Pragma - The network of zk-truth machines"
+          defaultTitle="Pragma - The network of zk-truth machines"
+          description="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
+          canonical="https://www.pragma.build"
+          openGraph={{
+            url: "https://www.pragma.build",
+            title: "Pragma - The network of zk-truth machines",
+            description:
+              "Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines.",
+            images: [
+              {
+                url: "https://www.pragma.build/pragma-og-img.png",
+                width: 1200,
+                height: 630,
+                alt: "Pragma",
+                type: "image/png",
+              },
+            ],
+            site_name: "Pragma",
+          }}
+          twitter={{
+            site: "@pragmaoracle",
+            cardType: "summary_large_image",
+          }}
         />
-        <link rel="icon" type="image/ico" href="/favicon.ico" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#B5F0E5" />
-      </Head>
-      <Analytics />
-      <SpeedInsights />
-      <DefaultSeo
-        titleTemplate="%s - Pragma - The network of zk-truth machines"
-        defaultTitle="Pragma - The network of zk-truth machines"
-        description="Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines."
-        canonical="https://www.pragma.build"
-        openGraph={{
-          url: "https://www.pragma.build",
-          title: "Pragma - The network of zk-truth machines",
-          description:
-            "Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines.",
-          images: [
-            {
-              url: "https://www.pragma.build/pragma-og-img.png",
-              width: 1200,
-              height: 630,
-              alt: "Pragma",
-              type: "image/png",
-            },
-          ],
-          site_name: "Pragma",
-        }}
-        twitter={{
-          site: "@pragmaoracle",
-          cardType: "summary_large_image",
-        }}
-      />
-      <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
-        <div
-          className={`text-sans flex min-h-screen flex-col items-center justify-start ${backgroundColor}`}
+        <StarknetConfig
+          chains={[sepolia]}
+          provider={provider}
+          explorer={voyager}
         >
-          <NavHeader />
-          <DataProvider
-            initialData={initialData}
-            initialPublishers={initialPublishers}
-            initialCheckpoints={initialCheckpoints}
+          <div
+            className={`text-sans flex min-h-screen flex-col items-center justify-start ${backgroundColor}`}
           >
-            <Component {...pageProps} key={router.asPath} />
-          </DataProvider>
-          <DynamicNavFooter />
-        </div>
-      </StarknetConfig>
-    </QueryClientProvider>
+            <NavHeader />
+            <DataProvider
+              initialData={initialData}
+              initialPublishers={initialPublishers}
+              initialCheckpoints={initialCheckpoints}
+            >
+              <Component {...pageProps} key={router.asPath} />
+            </DataProvider>
+            <DynamicNavFooter />
+          </div>
+        </StarknetConfig>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 };
 

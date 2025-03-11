@@ -98,7 +98,7 @@ const AssetList = ({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto	rounded-md bg-green py-1	text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
                   {options.map((option, optionIdx) => (
                     <Listbox.Option
                       key={optionIdx}
@@ -155,7 +155,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("lastUpdated")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Last updated
               <Image
@@ -167,7 +167,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("sources")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Nb sources
               <Image
@@ -189,45 +189,49 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div
-              onClick={() => requestSort("variations.past1h")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              1H
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("variations.past24h")}
-              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              24H
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("variations.past7d")}
-              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              7D
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              7D chart
-            </div>
+            {selectedSource !== 'api' && (
+              <>
+                <div
+                  onClick={() => requestSort("variations.past1h")}
+                  className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  1H
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div
+                  onClick={() => requestSort("variations.past24h")}
+                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  24H
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div
+                  onClick={() => requestSort("variations.past7d")}
+                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  7D
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+                  7D chart
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className={styles.dpBox}>
@@ -245,7 +249,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("lastUpdate")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Last update
               <Image
@@ -255,7 +259,7 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Type
             </div>
             <div
@@ -306,6 +310,7 @@ const AssetList = ({
               asset={element}
               key={index}
               loading={true}
+              currentSource={selectedSource}
             />
           ))}
         {!loading &&
@@ -315,6 +320,7 @@ const AssetList = ({
               asset={asset}
               key={assetIdx}
               loading={false}
+              currentSource={selectedSource}
             />
           ))}
         {!loading && sortedAssets.length === 0 && (

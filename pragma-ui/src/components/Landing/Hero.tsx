@@ -3,9 +3,12 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
-import Lottie from "react-lottie-player";
 import animationHero from "../../../public/assets/lottie/pragma_hero.json";
 import animationHeroMobile from "../../../public/assets/lottie/pragma_hero_mobile.json";
+
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const Hero = () => {
   const [windowWidth, setWindowWidth] = useState(null);
