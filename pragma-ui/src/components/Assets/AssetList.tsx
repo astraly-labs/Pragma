@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Fragment, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
@@ -13,7 +15,7 @@ const AssetList = ({
   onSourceChange,
   selectedSource,
   loading,
-}) => {
+}: any) => {
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
     type: "Crypto",
@@ -37,11 +39,11 @@ const AssetList = ({
     direction: "ascending",
   });
 
-  const handleInputChange = (value) => {
+  const handleInputChange = (value: any) => {
     setFilteredValue(value);
   };
 
-  const filteredAssets = assets.filter((asset) => {
+  const filteredAssets = assets.filter((asset: any) => {
     if (isAsset) {
       return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
     } else {
@@ -49,7 +51,7 @@ const AssetList = ({
     }
   });
 
-  const requestSort = (key) => {
+  const requestSort = (key: any) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
@@ -61,11 +63,13 @@ const AssetList = ({
     const sortableItems = [...filteredAssets];
     if (sortConfig.key !== null) {
       sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? 1 : -1;
+        if (sortConfig.key) {
+          if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === "ascending" ? -1 : 1;
+          }
+          if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === "ascending" ? 1 : -1;
+          }
         }
         return 0;
       });
@@ -82,7 +86,7 @@ const AssetList = ({
         <div className="flex flex-col gap-3 smolScreen:flex-row">
           <Listbox value={selectedSource} onChange={onSourceChange}>
             <div className="relative w-full md:w-auto">
-              <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+              <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none">
                 <span className="block truncate">{selectedSource}</span>
                 <Image
                   className="my-auto pl-2"
@@ -99,7 +103,7 @@ const AssetList = ({
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                  {options.map((option, optionIdx) => (
+                  {options.map((option: any, optionIdx: number) => (
                     <Listbox.Option
                       key={optionIdx}
                       className={({ active }) =>
@@ -129,7 +133,7 @@ const AssetList = ({
               </Transition>
             </div>
           </Listbox>
-          <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
+          <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
             {isAsset ? "Price Feeds" : "Data Providers"}: {assets.length}
           </div>
         </div>
@@ -189,7 +193,7 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            {selectedSource !== 'api' && (
+            {selectedSource !== "api" && (
               <>
                 <div
                   onClick={() => requestSort("variations.past1h")}
