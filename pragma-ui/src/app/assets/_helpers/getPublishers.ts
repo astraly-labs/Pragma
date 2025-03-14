@@ -14,7 +14,9 @@ export const getPublishers = async (
     source.slice(1)) as keyof typeof dataSources;
 
   const publisherUrl = dataSources[formattedSource];
-  const response = await fetch(publisherUrl);
+  const response = await fetch(`http://localhost:3000/${publisherUrl}`);
+
+  console.log({ response });
 
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");

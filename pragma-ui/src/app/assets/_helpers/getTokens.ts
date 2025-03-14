@@ -11,7 +11,9 @@ const sortTokens = (tokens: Token[]) => {
 
 export const getTokens = async (source?: string): Promise<AssetInfo[]> => {
   if (source === "api") {
-    const response = await fetch(dataSources.tokensApi);
+    const response = await fetch(
+      `http://localhost:3000/${dataSources.tokensApi}`
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch available tokens");

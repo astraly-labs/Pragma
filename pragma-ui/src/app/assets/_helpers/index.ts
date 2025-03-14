@@ -104,6 +104,10 @@ export const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
 export const formatPublishers = (
   publishers: PublisherT[]
 ): DataProviderInfo[] => {
+  if (!publishers || publishers?.length <= 0) {
+    return [];
+  }
+
   return publishers.map((publisher) => {
     const lastUpdated = moment(
       publisher.last_updated_timestamp * 1000

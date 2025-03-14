@@ -52,3 +52,22 @@ export type Publisher = {
     daily_updates: number;
   }[];
 };
+
+export type AssetT = {
+  ticker: string;
+  address: string;
+  decimals: number;
+};
+
+export type StreamData = {
+  price: string;
+  decimals: number;
+  last_updated_timestamp: number;
+  nb_sources_aggregated: number;
+  variations: {
+    "1h": number;
+    "1d": number;
+    "1w": number;
+  };
+  loading: boolean;
+};

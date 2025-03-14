@@ -38,7 +38,6 @@ const PublishersTable = ({
     <AssetList
       options={options}
       assets={publishers}
-      onSourceChange={() => {}}
       selectedSource={source}
       loading={isPublishersLoadingData}
     />

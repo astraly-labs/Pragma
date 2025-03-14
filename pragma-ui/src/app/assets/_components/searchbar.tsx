@@ -1,14 +1,12 @@
 import { ChangeEvent, useState } from "react";
-import { SearchIcon } from "@heroicons/react/outline";
-import styles from "./styles.module.scss";
-
 import classNames from "classnames";
+import { SearchIcon } from "@heroicons/react/outline";
 
 type SearchBarProps = {
   onInputChange: (value: string) => void;
 };
 
-const SearchBar = ({ onInputChange }: SearchBarProps) => {
+export const SearchBar = ({ onInputChange }: SearchBarProps) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +23,10 @@ const SearchBar = ({ onInputChange }: SearchBarProps) => {
     >
       <input
         className={classNames(
-          styles.inputSearch,
           "absolute bottom-0 left-0 h-full w-full rounded-full bg-transparent pl-6 text-lightGreen",
-          inputValue ? "backdrop-blur-3xl" : ""
+          {
+            "backdrop-blur-3xl": inputValue,
+          }
         )}
         value={inputValue}
         onChange={handleInputChange}
@@ -41,5 +40,3 @@ const SearchBar = ({ onInputChange }: SearchBarProps) => {
     </button>
   );
 };
-
-export default SearchBar;

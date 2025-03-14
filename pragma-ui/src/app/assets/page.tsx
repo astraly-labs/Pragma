@@ -14,9 +14,6 @@ export const options = ["sepolia", "mainnet", "api"];
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const source = (await searchParams).source as string;
 
-  const initialtokens = await getTokens(source);
-  const initialPublishers = await getPublishers(source);
-
   return (
     <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
       <AssetHero
@@ -28,27 +25,43 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         illustrationLink="/assets/vectors/chart.svg"
         illustrationSmallLink="/assets/vectors/chartSmall.svg"
       />
-      <BoxContainer>
-        <Suspense fallback={<>Loading...</>}>
-          <AssetsTable
-            options={options}
-            source={source}
-            initialTokens={initialtokens}
-          />
-        </Suspense>
-      </BoxContainer>
+      <Suspense fallback={<>Loading...</>}>
+        <Tokens source={source} />
+      </Suspense>
       {source !== "api" && (
-        <BoxContainer>
-          <Suspense fallback={<>Loading...</>}>
-            <PublishersTable
-              options={options}
-              source={source}
-              initialPublishers={initialPublishers}
-            />
-          </Suspense>
-        </BoxContainer>
+        <Suspense fallback={<>Loading...</>}>
+          <Publishers source={source} />
+        </Suspense>
       )}
     </div>
+  );
+};
+
+const Tokens = async ({ source }: { source: string }) => {
+  const initialtokens = await getTokens(source);
+
+  return (
+    <BoxContainer>
+      <AssetsTable
+        options={options}
+        source={source}
+        initialTokens={initialtokens}
+      />
+    </BoxContainer>
+  );
+};
+
+const Publishers = async ({ source }: { source: string }) => {
+  const initialPublishers = await getPublishers(source);
+
+  return (
+    <BoxContainer>
+      <PublishersTable
+        options={options}
+        source={source}
+        initialPublishers={initialPublishers}
+      />
+    </BoxContainer>
   );
 };
 
