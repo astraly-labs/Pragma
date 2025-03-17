@@ -14,17 +14,15 @@ export const getPublishers = async (
     source.slice(1)) as keyof typeof dataSources;
 
   const publisherUrl = dataSources[formattedSource];
-  const response = await fetch(`http://localhost:3000/${publisherUrl}`);
-
-  console.log({ response });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_PUBLIC_URL}/${publisherUrl}`
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");
   }
 
-  const publishers: {
-    data: Publisher[];
-  } = await response.json();
+  const publishers: Publisher[] = await response.json();
 
-  return formatPublishers(publishers.data);
+  return formatPublishers(publishers);
 };

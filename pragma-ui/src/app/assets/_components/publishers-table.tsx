@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getPublishers } from "@/app/assets/_helpers/getPublishers";
 import { DataProviderInfo } from "@/app/assets/_types";
-import AssetList from "@/components/Assets/AssetList";
+import { PublisherList } from "./publisher-list";
 
 type PublishersTableProps = {
   initialPublishers: DataProviderInfo[];
@@ -35,10 +35,11 @@ const PublishersTable = ({
     isLoadingPublishers || isFetchingPublishers || isRefecthingPublishers;
 
   return (
-    <AssetList
+    <PublisherList
       options={options}
-      assets={publishers}
+      publishers={publishers}
       selectedSource={source}
+      isAsset={false}
       loading={isPublishersLoadingData}
     />
   );

@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const apiResponse = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.API_KEY, // Securely manage your API key
+        "x-api-key": process.env.API_KEY!, // Securely manage your API key
       },
     });
 

@@ -9,7 +9,7 @@ import PublishersTable from "./_components/publishers-table";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export const options = ["sepolia", "mainnet", "api"];
+const options = ["sepolia", "mainnet", "api"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const source = (await searchParams).source as string;

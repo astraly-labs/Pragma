@@ -1,25 +1,12 @@
 import { dataSources } from "@/lib/endpoints";
-import { AssetInfo } from "../_types";
-import { Dispatch, SetStateAction } from "react";
+import { AssetInfo, AssetT } from "../_types";
 
 type GetAssets = {
   source: string;
-  asset: AssetInfo;
-  assets: AssetInfo[];
+  asset: AssetT;
+  assets: AssetT[];
   streamingData: any;
-  startStreaming: (
-    assets: AssetInfo[],
-    setStreamingData: (
-      value: SetStateAction<{
-        [ticker: string]: any;
-      }>
-    ) => void
-  ) => Promise<void>;
-  setStreamingData: Dispatch<
-    SetStateAction<{
-      [ticker: string]: any;
-    }>
-  >;
+  startStreaming: () => Promise<void>;
 };
 
 export const getAssets = async ({
@@ -28,7 +15,6 @@ export const getAssets = async ({
   assets,
   streamingData,
   startStreaming,
-  setStreamingData,
 }: GetAssets) => {
   if (source === "api") {
     const streamData = streamingData[asset.ticker];
@@ -39,9 +25,7 @@ export const getAssets = async ({
       if (isStreamStarted && !streamingData[asset.ticker]) {
         console.log(`Starting stream for ${asset.ticker} on demand`);
         try {
-          startStreaming([asset], setStreamingData).catch((error) => {
-            console.error(`Error starting stream for ${asset.ticker}:`, error);
-          });
+          startStreaming();
         } catch (error) {
           console.error(`Failed to start stream for ${asset.ticker}:`, error);
         }

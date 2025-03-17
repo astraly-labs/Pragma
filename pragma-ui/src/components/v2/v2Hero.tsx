@@ -13,7 +13,7 @@ const V2Hero = ({
   solidButtonLink,
   illustrationLink,
   customButton,
-}) => {
+}: any) => {
   return (
     <div className="relative h-[70vh] w-full overflow-hidden lg:h-screen">
       <Image

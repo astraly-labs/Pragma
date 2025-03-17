@@ -78,6 +78,7 @@ export const AssetPerf = ({
           ? "#" // Disable link for unsupported assets
           : `/provider/${isAsset ? asset.ticker : asset.name}`
       }
+      scroll={false}
       className={classNames(
         isAsset ? styles.assetPerf : styles.dpPerf,
         hasError && "opacity-70", // Reduce opacity for error assets

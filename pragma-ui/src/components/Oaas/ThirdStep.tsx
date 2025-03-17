@@ -10,7 +10,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
 
   const restartPolling = () => {
     // Reset sources to trigger UI refresh
-    handleFieldChange('sources', []);
+    handleFieldChange("sources", []);
     // Reset time elapsed
     setTimeElapsed(0);
     // Reset polling start time
@@ -23,62 +23,72 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
     const maxAttempts = POLLING_DURATION; // 30 seconds
     const interval = 1000; // 1 second
     const token = localStorage.getItem("apiToken");
-    let allSources = [];
+    let allSources: any[] = [];
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         console.log(`Polling attempt ${attempt + 1} of ${maxAttempts}`);
-        
+
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_TOKEN_API_URL || 'http://localhost:8002'}/v1/sources/${ticker}`,
+          `${
+            process.env.NEXT_PUBLIC_TOKEN_API_URL || "http://localhost:8002"
+          }/v1/sources/${ticker}`,
           {
             headers: {
-              'Authorization': `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
         if (response.data && Array.isArray(response.data.sources)) {
           // Update allSources with any new sources
           const newSources = response.data.sources;
-          
+
           // Add any new sources that aren't already in allSources
-          newSources.forEach(newSource => {
-            if (!allSources.some(existing => 
-              existing.source?.id === newSource.source?.id
-            )) {
+          newSources.forEach((newSource) => {
+            if (
+              !allSources.some(
+                (existing) => existing.source?.id === newSource.source?.id
+              )
+            ) {
               allSources.push(newSource);
             }
           });
 
           // Update form data with all sources found so far
-          handleFieldChange('sources', allSources);
+          handleFieldChange("sources", allSources);
         }
       } catch (error) {
         console.error("Polling error:", error);
       }
 
       // Wait for the interval before next attempt
-      await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise((resolve) => setTimeout(resolve, interval));
     }
   };
 
   useEffect(() => {
     // Initialize selectedPairs if not already set
     if (!formData.selectedPairs) {
-      handleFieldChange('selectedPairs', []);
+      handleFieldChange("selectedPairs", []);
     }
 
     // When sources are available, select all of them by default if no selections have been made yet
-    if (formData.sources?.length > 0 && (!formData.selectedPairs || formData.selectedPairs.length === 0)) {
-      const allSourceNames = formData.sources.map(sourceData => sourceData.source.name);
-      handleFieldChange('selectedPairs', allSourceNames);
+    if (
+      formData.sources?.length > 0 &&
+      (!formData.selectedPairs || formData.selectedPairs.length === 0)
+    ) {
+      const allSourceNames = formData.sources.map(
+        (sourceData) => sourceData.source.name
+      );
+      handleFieldChange("selectedPairs", allSourceNames);
     }
 
     // Update time elapsed every second
     const timer = setInterval(() => {
       const elapsed = Math.floor((Date.now() - pollingStartTime) / 1000);
-      if (elapsed <= POLLING_DURATION) { // Only update for the first 30 seconds
+      if (elapsed <= POLLING_DURATION) {
+        // Only update for the first 30 seconds
         setTimeElapsed(elapsed);
       }
     }, 1000);
@@ -88,7 +98,11 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
 
   // Log whenever sources change
   useEffect(() => {
-    console.log("[Debug] Sources updated:", formData.sources?.length, "sources");
+    console.log(
+      "[Debug] Sources updated:",
+      formData.sources?.length,
+      "sources"
+    );
   }, [formData.sources]);
 
   const getOracleContent = (type) => {
@@ -102,15 +116,27 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                 onClick={restartPolling}
                 className="flex items-center gap-2 rounded-full border border-mint px-4 py-2 text-sm text-mint hover:bg-mint hover:text-darkGreen"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
                 </svg>
                 Refresh Sources
               </button>
             </div>
             <p className="mb-4 max-w-xl text-justify text-sm text-gray-500">
-              Please select the data sources you wish to include. These are the available sources for your token. If you need
-              help to select the sources, please{" "}
+              Please select the data sources you wish to include. These are the
+              available sources for your token. If you need help to select the
+              sources, please{" "}
               <a
                 href="https://t.me/BGLabs"
                 target="_blank"
@@ -120,18 +146,23 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                 reach out to us.
               </a>{" "}
             </p>
-            {formData.sources && Array.isArray(formData.sources) && formData.sources.length > 0 ? (
+            {formData.sources &&
+            Array.isArray(formData.sources) &&
+            formData.sources.length > 0 ? (
               <>
                 <div className="mb-4 flex max-w-xl items-center gap-4">
                   <div className="text-sm text-mint">
-                    Found {formData.sources.length} source{formData.sources.length > 1 ? 's' : ''}
+                    Found {formData.sources.length} source
+                    {formData.sources.length > 1 ? "s" : ""}
                   </div>
                   {timeElapsed < POLLING_DURATION && (
                     <>
                       <div className="h-1 flex-1 rounded-full bg-darkGreen">
-                        <div 
-                          className="h-1 rounded-full bg-mint transition-all duration-200" 
-                          style={{ width: `${(timeElapsed / POLLING_DURATION) * 100}%` }}
+                        <div
+                          className="h-1 rounded-full bg-mint transition-all duration-200"
+                          style={{
+                            width: `${(timeElapsed / POLLING_DURATION) * 100}%`,
+                          }}
                         />
                       </div>
                       <div className="text-sm text-gray-500">
@@ -165,14 +196,15 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                                 {source.name.charAt(0).toUpperCase()}
                               </div>
                               <div className="my-auto w-full text-lg font-bold">
-                                {source.name.charAt(0).toUpperCase() + source.name.slice(1)}
+                                {source.name.charAt(0).toUpperCase() +
+                                  source.name.slice(1)}
                               </div>
                             </div>
                             <div className="w-full text-sm">
                               {source.url && (
-                                <a 
-                                  href={source.url} 
-                                  target="_blank" 
+                                <a
+                                  href={source.url}
+                                  target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-mint hover:text-mint-dark"
                                 >
@@ -191,12 +223,16 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
               <div className="max-w-xl rounded-lg border border-mint/20 bg-darkGreen/50 p-4 text-center">
                 {timeElapsed < POLLING_DURATION ? (
                   <>
-                    <div className="mb-3 text-lightGreen">Searching for available sources...</div>
+                    <div className="mb-3 text-lightGreen">
+                      Searching for available sources...
+                    </div>
                     <div className="flex items-center gap-4">
                       <div className="h-1 flex-1 rounded-full bg-darkGreen">
-                        <div 
-                          className="h-1 rounded-full bg-mint transition-all duration-200" 
-                          style={{ width: `${(timeElapsed / POLLING_DURATION) * 100}%` }}
+                        <div
+                          className="h-1 rounded-full bg-mint transition-all duration-200"
+                          style={{
+                            width: `${(timeElapsed / POLLING_DURATION) * 100}%`,
+                          }}
                         />
                       </div>
                       <div className="text-sm text-gray-500">
@@ -206,7 +242,8 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                   </>
                 ) : (
                   <div className="text-sm text-gray-500">
-                    No sources found for this token yet. Please try again later or contact support.
+                    No sources found for this token yet. Please try again later
+                    or contact support.
                   </div>
                 )}
               </div>

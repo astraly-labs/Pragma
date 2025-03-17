@@ -35,38 +35,40 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   useEffect(() => {
     const handleResize = () => {
       if (chartContainerRef.current) {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+        chart!.applyOptions({ width: chartContainerRef.current.clientWidth });
       }
     };
 
-    const chart = createChart(chartContainerRef.current, {
-      layout: {
-        background: { type: ColorType.Solid, color: backgroundColor },
-        textColor: "#B5F0E5",
-        fontFamily: "IBM Plex Mono",
-        fontSize: 12,
-      },
-      rightPriceScale: {
-        borderVisible: false,
-      },
-      timeScale: {
-        borderVisible: false,
-        secondsVisible: true,
-      },
-      grid: {
-        vertLines: {
-          visible: false,
+    const chart =
+      chartContainerRef.current &&
+      createChart(chartContainerRef.current, {
+        layout: {
+          background: { type: ColorType.Solid, color: backgroundColor },
+          textColor: "#B5F0E5",
+          fontFamily: "IBM Plex Mono",
+          fontSize: 12,
         },
-        horzLines: {
-          color: "#B5F0E51F",
+        rightPriceScale: {
+          borderVisible: false,
         },
-      },
-      width: chartContainerRef.current?.clientWidth ?? 300,
-      height: 300,
-    });
-    chart.timeScale().fitContent();
+        timeScale: {
+          borderVisible: false,
+          secondsVisible: true,
+        },
+        grid: {
+          vertLines: {
+            visible: false,
+          },
+          horzLines: {
+            color: "#B5F0E51F",
+          },
+        },
+        width: chartContainerRef.current?.clientWidth ?? 300,
+        height: 300,
+      });
+    chart!.timeScale().fitContent();
 
-    const newSeries = chart.addAreaSeries({
+    const newSeries = chart!.addAreaSeries({
       lineColor: lineColor,
       topColor: areaTopColor,
       bottomColor: areaBottomColor,

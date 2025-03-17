@@ -5,40 +5,26 @@ import styles from "@/components/Assets/styles.module.scss";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { AssetInfo, DataProviderInfo } from "@/app/assets/_types";
+import { DataProviderInfo } from "@/app/assets/_types";
 import { SearchBar } from "./searchbar";
 import { AssetPerf } from "./asset-perf";
 import { useRouter } from "next/navigation";
 
-type AssetListProps =
-  | {
-      options: string[];
-      assets: AssetInfo[];
-      isAsset: true;
-      selectedSource?: string;
-      loading: boolean;
-    }
-  | {
-      options: string[];
-      isAsset: false;
-      assets: DataProviderInfo[];
-      selectedSource?: string;
-      loading: boolean;
-    };
+type PublisherListProps = {
+  options: string[];
+  isAsset: false;
+  publishers: DataProviderInfo[];
+  selectedSource?: string;
+  loading: boolean;
+};
 
-function isDataProviderInfo(
-  asset: AssetInfo | DataProviderInfo
-): asset is DataProviderInfo {
-  return (asset as DataProviderInfo).link !== undefined;
-}
-
-const AssetList = ({
+export const PublisherList = ({
   options,
   isAsset,
-  assets,
+  publishers,
   selectedSource,
   loading,
-}: AssetListProps) => {
+}: PublisherListProps) => {
   const router = useRouter();
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
@@ -67,7 +53,7 @@ const AssetList = ({
     setFilteredValue(value);
   };
 
-  const filteredAssets = assets.filter((asset: any) => {
+  const filteredAssets = publishers.filter((asset: any) => {
     if (isAsset) {
       return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
     } else {
@@ -168,7 +154,7 @@ const AssetList = ({
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-            {isAsset ? "Price Feeds" : "Data Providers"}: {assets!.length}
+            {isAsset ? "Price Feeds" : "Data Providers"}: {publishers!.length}
           </div>
         </div>
         <div className="sm:ml-auto">
@@ -354,21 +340,12 @@ const AssetList = ({
         {!loading &&
           sortedAssets.map((asset: any, assetIdx) => (
             <Fragment key={`asset-${assetIdx}`}>
-              {isDataProviderInfo(asset) ? (
-                <AssetPerf
-                  asset={asset}
-                  isAsset={false}
-                  loading={loading}
-                  currentSource={selectedSource}
-                />
-              ) : (
-                <AssetPerf
-                  asset={asset}
-                  isAsset={true}
-                  loading={loading}
-                  currentSource={selectedSource}
-                />
-              )}
+              <AssetPerf
+                asset={asset}
+                isAsset={false}
+                loading={loading}
+                currentSource={selectedSource}
+              />
             </Fragment>
           ))}
         {!loading && sortedAssets.length === 0 && (
@@ -380,5 +357,3 @@ const AssetList = ({
     </div>
   );
 };
-
-export default AssetList;
