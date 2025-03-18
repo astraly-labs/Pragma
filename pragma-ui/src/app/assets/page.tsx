@@ -12,7 +12,7 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 const options = ["sepolia", "mainnet", "api"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
-  const source = (await searchParams).source as string;
+  const source = ((await searchParams).source as string) || options[1];
 
   return (
     <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
