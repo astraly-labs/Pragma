@@ -29,7 +29,6 @@ export default function Error({
       />
       <BoxContainer>
         <h2 className="text-white">Something went wrong!</h2>
-        <p className="text-white">{error.message}</p>
         <Button
           center={false}
           color="mint"
