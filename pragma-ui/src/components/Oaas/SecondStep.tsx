@@ -58,7 +58,7 @@ const SecondStep = ({ formData, handleFieldChange }) => {
     // If the token was already successfully submitted and we have sources
     if (formData.submitSuccess && formData.sources?.length > 0) {
       // Reset sources array to trigger polling UI in ThirdStep
-      handleFieldChange('sources', []);
+      handleFieldChange("sources", []);
       // Start polling again
       pollForSources(formData.ticker.toUpperCase());
       return true;
@@ -89,36 +89,37 @@ const SecondStep = ({ formData, handleFieldChange }) => {
       // Only add addresses if network is not Unknown
       if (formData.network !== "Unknown") {
         tokenConfig["addresses"] = {
-          [formData.network.toLowerCase()]: formData.assetAddress
+          [formData.network.toLowerCase()]: formData.assetAddress,
         };
       }
 
-      const response = await axios.post('/api/tokens/add', 
+      const response = await axios.post(
+        "/api/tokens/add",
         {
-          token_config: tokenConfig
+          token_config: tokenConfig,
         },
         {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       if (response.data) {
         // Initialize sources and selectedPairs arrays
-        handleFieldChange('sources', []);
-        handleFieldChange('selectedPairs', []);
-        handleFieldChange('submitSuccess', true);
-        
+        handleFieldChange("sources", []);
+        handleFieldChange("selectedPairs", []);
+        handleFieldChange("submitSuccess", true);
+
         // Start polling in the background
         pollForSources(formData.ticker.toUpperCase());
-        
+
         setIsSubmitting(false);
         return true;
       }
       return false;
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to add token');
+      setError(err.response?.data?.error || "Failed to add token");
       setIsSubmitting(false);
       return false;
     }
@@ -129,44 +130,53 @@ const SecondStep = ({ formData, handleFieldChange }) => {
     const maxAttempts = 10; // 10 seconds
     const interval = 1000; // 1 second
     const token = localStorage.getItem("apiToken");
-    let allSources = [];
+    let allSources: any[] = [];
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         console.log(`Polling attempt ${attempt + 1} of ${maxAttempts}`);
-        
+
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_TOKEN_API_URL || 'http://localhost:8002'}/v1/sources/${ticker}`,
+          `${
+            process.env.NEXT_PUBLIC_TOKEN_API_URL || "http://localhost:8002"
+          }/v1/sources/${ticker}`,
           {
             headers: {
-              'Authorization': `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
         if (response.data && Array.isArray(response.data.sources)) {
           // Update allSources with any new sources
           const newSources = response.data.sources;
-          
+
           // Add any new sources that aren't already in allSources
-          newSources.forEach(newSource => {
-            if (!allSources.some(existing => 
-              existing.source?.id === newSource.source?.id
-            )) {
+          newSources.forEach((newSource) => {
+            if (
+              !allSources.some(
+                (existing) => existing.source?.id === newSource.source?.id
+              )
+            ) {
               allSources.push(newSource);
             }
           });
 
           // Update form data with all sources found so far
-          handleFieldChange('sources', allSources);
-          console.log("Updated sources:", allSources, "Total sources:", allSources.length);
+          handleFieldChange("sources", allSources);
+          console.log(
+            "Updated sources:",
+            allSources,
+            "Total sources:",
+            allSources.length
+          );
         }
       } catch (error) {
         console.error("Polling error:", error);
       }
 
       // Wait for the interval before next attempt
-      await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise((resolve) => setTimeout(resolve, interval));
     }
 
     console.log("Polling completed. Total sources found:", allSources.length);
@@ -231,29 +241,34 @@ const SecondStep = ({ formData, handleFieldChange }) => {
                       leaveTo="opacity-0"
                     >
                       <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full cursor-pointer overflow-auto rounded-md bg-greenFooter py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-sm focus:outline-none sm:text-sm">
-                        {["Unknown", "Ethereum", "Solana", "Base", "Bnb", "Starknet"].map(
-                          (network) => (
-                            <Listbox.Option
-                              key={network}
-                              className={({ active }) =>
-                                `relative cursor-pointer select-none py-2 pl-6 pr-4 ${
-                                  active ? "text-mint" : "text-lightGreen"
-                                }`
-                              }
-                              value={network}
-                            >
-                              {({ selected }) => (
-                                <span
-                                  className={`block truncate ${
-                                    selected ? "font-medium" : "font-normal"
-                                  }`}
-                                >
-                                  {network}
-                                </span>
-                              )}
-                            </Listbox.Option>
-                          )
-                        )}
+                        {[
+                          "Unknown",
+                          "Ethereum",
+                          "Solana",
+                          "Base",
+                          "Bnb",
+                          "Starknet",
+                        ].map((network) => (
+                          <Listbox.Option
+                            key={network}
+                            className={({ active }) =>
+                              `relative cursor-pointer select-none py-2 pl-6 pr-4 ${
+                                active ? "text-mint" : "text-lightGreen"
+                              }`
+                            }
+                            value={network}
+                          >
+                            {({ selected }) => (
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {network}
+                              </span>
+                            )}
+                          </Listbox.Option>
+                        ))}
                       </Listbox.Options>
                     </Transition>
                   </div>

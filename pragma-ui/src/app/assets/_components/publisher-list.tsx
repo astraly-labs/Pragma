@@ -1,21 +1,31 @@
 "use client";
 
 import React, { Fragment, useMemo, useState } from "react";
-import styles from "./styles.module.scss";
+import styles from "@/components/Assets/styles.module.scss";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
-import SearchBar from "../Navigation/SearchBar";
-import AssetPerf from "./AssetPerf";
 import Image from "next/image";
+import { DataProviderInfo } from "@/app/assets/_types";
+import { SearchBar } from "./searchbar";
+import { AssetPerf } from "./asset-perf";
+import { useRouter } from "next/navigation";
 
-const AssetList = ({
+type PublisherListProps = {
+  options: string[];
+  isAsset: false;
+  publishers: DataProviderInfo[];
+  selectedSource?: string;
+  loading: boolean;
+};
+
+export const PublisherList = ({
   options,
   isAsset,
-  assets,
-  onSourceChange,
+  publishers,
   selectedSource,
   loading,
-}: any) => {
+}: PublisherListProps) => {
+  const router = useRouter();
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
     type: "Crypto",
@@ -43,7 +53,7 @@ const AssetList = ({
     setFilteredValue(value);
   };
 
-  const filteredAssets = assets.filter((asset: any) => {
+  const filteredAssets = publishers.filter((asset: any) => {
     if (isAsset) {
       return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
     } else {
@@ -84,7 +94,14 @@ const AssetList = ({
       </h3>
       <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
         <div className="flex flex-col gap-3 smolScreen:flex-row">
-          <Listbox value={selectedSource} onChange={onSourceChange}>
+          <Listbox
+            value={selectedSource}
+            onChange={(value) =>
+              router.push(`/assets?source=${value}`, {
+                scroll: false,
+              })
+            }
+          >
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none">
                 <span className="block truncate">{selectedSource}</span>
@@ -103,7 +120,7 @@ const AssetList = ({
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                  {options.map((option: any, optionIdx: number) => (
+                  {options.map((option, optionIdx) => (
                     <Listbox.Option
                       key={optionIdx}
                       className={({ active }) =>
@@ -116,15 +133,18 @@ const AssetList = ({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate text-lightGreen ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
+                            className={classNames(
+                              "block truncate font-normal text-lightGreen",
+                              {
+                                "font-medium": selected,
+                              }
+                            )}
                           >
                             {option}
                           </span>
-                          {selected ? (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                          ) : null}
+                          {selected && (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" />
+                          )}
                         </>
                       )}
                     </Listbox.Option>
@@ -134,7 +154,7 @@ const AssetList = ({
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-            {isAsset ? "Price Feeds" : "Data Providers"}: {assets.length}
+            {isAsset ? "Price Feeds" : "Data Providers"}: {publishers!.length}
           </div>
         </div>
         <div className="sm:ml-auto">
@@ -318,14 +338,15 @@ const AssetList = ({
             />
           ))}
         {!loading &&
-          sortedAssets.map((asset, assetIdx) => (
-            <AssetPerf
-              isAsset={isAsset}
-              asset={asset}
-              key={assetIdx}
-              loading={false}
-              currentSource={selectedSource}
-            />
+          sortedAssets.map((asset: any, assetIdx) => (
+            <Fragment key={`asset-${assetIdx}`}>
+              <AssetPerf
+                asset={asset}
+                isAsset={false}
+                loading={loading}
+                currentSource={selectedSource}
+              />
+            </Fragment>
           ))}
         {!loading && sortedAssets.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">
@@ -336,5 +357,3 @@ const AssetList = ({
     </div>
   );
 };
-
-export default AssetList;

@@ -22,7 +22,7 @@ export default async function handler(
     const apiResponse = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.API_KEY,
+        "x-api-key": process.env.API_KEY!,
       },
     });
 

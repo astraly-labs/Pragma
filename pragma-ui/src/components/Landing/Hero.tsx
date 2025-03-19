@@ -6,12 +6,12 @@ import { ButtonLink } from "../common/Button";
 import animationHero from "../../../public/assets/lottie/pragma_hero.json";
 import animationHeroMobile from "../../../public/assets/lottie/pragma_hero_mobile.json";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const Lottie = dynamic(() => import('react-lottie-player'), { ssr: false });
+const Lottie = dynamic(() => import("react-lottie-player"), { ssr: false });
 
 const Hero = () => {
-  const [windowWidth, setWindowWidth] = useState(null);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
   useEffect(() => {
     // Check if the window object is available
@@ -31,7 +31,7 @@ const Hero = () => {
 
   // Define different image sources based on screen size
   const getImageSource = () => {
-    if (windowWidth < 640) {
+    if (windowWidth && windowWidth < 640) {
       return animationHeroMobile;
     } else {
       return animationHero;

@@ -9,7 +9,7 @@ const StepsIndicator = ({ step, stepsAmount }) => {
   const stepLabels = ["Oracle type", "Assets", "Sources"];
 
   const getStepsIndicator = () => {
-    const stepsAmountArray = [];
+    const stepsAmountArray: any[] = [];
     for (let i = 1; i <= stepsAmount; i++) {
       stepsAmountArray.push(i);
     }

@@ -10,7 +10,7 @@ import axios from "axios";
 const OaasPage = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginMethod, setLoginMethod] = useState(null);
+  const [loginMethod, setLoginMethod] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -26,8 +26,8 @@ const OaasPage = () => {
   const handleLoginSuccess = async (credentialResponse) => {
     try {
       // Exchange Google token for our API JWT
-      const response = await axios.post('/api/auth/token', {
-        credential: credentialResponse.credential
+      const response = await axios.post("/api/auth/token", {
+        credential: credentialResponse.credential,
       });
 
       if (response.data?.token) {

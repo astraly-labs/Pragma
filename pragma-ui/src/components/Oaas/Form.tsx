@@ -8,7 +8,7 @@ import styles from "./Form.module.scss";
 
 const SpotForm = () => {
   const router = useRouter();
-  const [validationError, setValidationError] = useState([]);
+  const [validationError, setValidationError] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
@@ -48,7 +48,7 @@ const SpotForm = () => {
       if (window.validateStep2 && window.submitStep2) {
         const isValid = window.validateStep2();
         if (!isValid) return false;
-        
+
         // If validation passes, submit the token and wait for sources
         const success = await window.submitStep2();
         return success;

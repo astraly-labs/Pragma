@@ -84,16 +84,14 @@ export function extractDescriptionFromClaim(claim: string): string | null {
  * @param {string} address - The address of the currency.
  * @return {string | undefined} The name of the currency if found, otherwise undefined.
  */
-export const findCurrencyNameByAddress = (
-  address: string
-): string | undefined => {
+export const findCurrencyNameByAddress = (address: string): string => {
   for (const network in CURRENCIES) {
     if (Object.prototype.hasOwnProperty.call(CURRENCIES, network)) {
       const currency = CURRENCIES[network].find((c) => c.address === address);
       if (currency) return currency.name;
     }
   }
-  return undefined;
+  return "";
 };
 
 export const utcToLocalTime = (utcDateString: string) => {
