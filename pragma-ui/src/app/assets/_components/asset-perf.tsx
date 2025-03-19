@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/components/Assets/styles.module.scss";
 import { AssetInfo, DataProviderInfo } from "../_types";
+import { getPublisherType } from "../_helpers/getPublisherType";
 
 type AssetPerfProps =
   | {
@@ -132,7 +134,12 @@ export const AssetPerf = ({
           <div className=" my-auto h-3 w-24 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
           <div className={isUnsupported ? "text-redDown" : "text-lightGreen"}>
-            {asset.lastUpdated}
+            {isAsset
+              ? asset.lastUpdated
+              : formatDistanceToNow(
+                  new Date(Number(asset.lastUpdated) * 1000),
+                  { addSuffix: true }
+                )}
           </div>
         )}
       </div>
@@ -140,7 +147,9 @@ export const AssetPerf = ({
         {loading ? (
           <div className="my-auto h-3 w-14 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
-          <div>{isAsset ? asset.sources : asset.type}</div>
+          <div>
+            {isAsset ? asset.sources : getPublisherType(Number(asset.type))}
+          </div>
         )}
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider">

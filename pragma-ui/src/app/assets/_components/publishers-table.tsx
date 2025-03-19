@@ -29,6 +29,7 @@ const PublishersTable = ({
     },
     initialData: initialPublishers,
     enabled: source !== "api",
+    refetchOnWindowFocus: false,
   });
 
   const isPublishersLoadingData =

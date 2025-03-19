@@ -100,28 +100,3 @@ export const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
       };
     });
 };
-
-export const formatPublishers = (
-  publishers: PublisherT[]
-): DataProviderInfo[] => {
-  if (!publishers || publishers?.length <= 0) {
-    return [];
-  }
-
-  return publishers.map((publisher) => {
-    const lastUpdated = moment(
-      publisher.last_updated_timestamp * 1000
-    ).fromNow(); // Using moment.js to format time
-    return {
-      image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
-      type: getPublisherType(publisher.type),
-      link: publisher.website_url,
-      name: publisher.publisher,
-      lastUpdated: lastUpdated,
-      reputationScore: "soon",
-      nbFeeds: publisher.nb_feeds,
-      dailyUpdates: publisher.daily_updates,
-      totalUpdates: publisher.total_updates,
-    };
-  });
-};

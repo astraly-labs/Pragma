@@ -41,6 +41,7 @@ export const AssetsTable = ({
     initialData: initialTokens,
     retry: 1,
     retryDelay: 1000,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

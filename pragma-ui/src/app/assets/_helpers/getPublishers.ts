@@ -1,6 +1,4 @@
-import { dataSources } from "@/lib/endpoints";
-import { DataProviderInfo, Publisher } from "@/app/assets/_types";
-import { formatPublishers } from ".";
+import { DataProviderInfo } from "@/app/assets/_types";
 
 export const getPublishers = async (
   source?: string
@@ -9,20 +7,15 @@ export const getPublishers = async (
     return [];
   }
 
-  const formattedSource = ("publishers" +
-    source.charAt(0).toUpperCase() +
-    source.slice(1)) as keyof typeof dataSources;
-
-  const publisherUrl = dataSources[formattedSource];
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_PUBLIC_URL}/${publisherUrl}`
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publishers?network=${source}&data_type=spot_entry`
   );
 
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");
   }
 
-  const publishers: Publisher[] = await response.json();
+  const publishers: DataProviderInfo[] = await response.json();
 
-  return formatPublishers(publishers);
+  return publishers;
 };
