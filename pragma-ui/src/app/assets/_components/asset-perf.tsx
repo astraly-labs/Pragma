@@ -27,6 +27,7 @@ export const AssetPerf = ({
 }: AssetPerfProps) => {
   const [priceChangeClass, setPriceChangeClass] = useState(styles.priceNormal);
   const prevPriceRef = useRef(isAsset ? asset?.price : 0);
+  const [imageError, setImageError] = useState(false);
 
   // Check if we're using the API source
   const isApiSource = currentSource === "api";
@@ -92,9 +93,21 @@ export const AssetPerf = ({
     >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         {loading ? (
-          <div className="my-auto  h-8 w-8 animate-pulse rounded-full bg-lightBlur"></div>
+          <div className="my-auto h-8 w-8 animate-pulse rounded-full bg-lightBlur" />
+        ) : asset.image && !imageError ? (
+          <Image
+            height={30}
+            width={30}
+            alt="AssetImage"
+            src={asset.image}
+            onError={() => setImageError(true)}
+          />
         ) : (
-          <Image height={30} width={30} alt="AssetImage" src={asset.image} />
+          <div className="my-auto size-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
+            <span className="self-center">
+              {isAsset ? asset.ticker[0] : asset.name[0]}
+            </span>
+          </div>
         )}
         {loading ? (
           <div className="flex flex-col text-lg text-lightGreen">

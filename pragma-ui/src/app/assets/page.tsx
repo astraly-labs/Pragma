@@ -6,6 +6,8 @@ import { getTokens } from "./_helpers/getTokens";
 import { getPublishers } from "./_helpers/getPublishers";
 import { AssetsTable } from "./_components/assets-table";
 import PublishersTable from "./_components/publishers-table";
+import { PublisherList } from "./_components/publisher-list";
+import AssetList from "./_components/asset-list";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -25,14 +27,38 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         illustrationLink="/assets/vectors/chart.svg"
         illustrationSmallLink="/assets/vectors/chartSmall.svg"
       />
-      <Suspense fallback={<>Loading...</>}>
-        <Tokens source={source} />
-      </Suspense>
-      {source !== "api" && (
-        <Suspense fallback={<>Loading...</>}>
-          <Publishers source={source} />
+      <BoxContainer>
+        <Suspense
+          fallback={
+            <AssetList
+              options={options}
+              assets={[]}
+              selectedSource={source}
+              isAsset={false}
+              loading
+            />
+          }
+        >
+          <Tokens source={source} />
         </Suspense>
-      )}
+      </BoxContainer>
+      <BoxContainer>
+        {source !== "api" && (
+          <Suspense
+            fallback={
+              <PublisherList
+                options={options}
+                publishers={[]}
+                selectedSource={source}
+                isAsset={false}
+                loading
+              />
+            }
+          >
+            <Publishers source={source} />
+          </Suspense>
+        )}
+      </BoxContainer>
     </div>
   );
 };
@@ -41,13 +67,11 @@ const Tokens = async ({ source }: { source: string }) => {
   const initialtokens = await getTokens(source);
 
   return (
-    <BoxContainer>
-      <AssetsTable
-        options={options}
-        source={source}
-        initialTokens={initialtokens}
-      />
-    </BoxContainer>
+    <AssetsTable
+      options={options}
+      source={source}
+      initialTokens={initialtokens}
+    />
   );
 };
 
@@ -55,13 +79,11 @@ const Publishers = async ({ source }: { source: string }) => {
   const initialPublishers = await getPublishers(source);
 
   return (
-    <BoxContainer>
-      <PublishersTable
-        options={options}
-        source={source}
-        initialPublishers={initialPublishers}
-      />
-    </BoxContainer>
+    <PublishersTable
+      options={options}
+      source={source}
+      initialPublishers={initialPublishers}
+    />
   );
 };
 
