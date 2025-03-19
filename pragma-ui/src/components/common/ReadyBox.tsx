@@ -6,7 +6,7 @@ import GreenUpperText from "../common/GreenUpperText";
 import Image from "next/image";
 
 const ReadyBox = ({ version }) => {
-  const [windowWidth, setWindowWidth] = useState(null);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
   useEffect(() => {
     // Check if the window object is available
@@ -25,7 +25,7 @@ const ReadyBox = ({ version }) => {
   }, []);
 
   const getImageSource = () => {
-    if (windowWidth < 640) {
+    if (windowWidth && windowWidth < 640) {
       return "/assets/vectors/vector5bis.svg";
     } else {
       return "/assets/vectors/vector5.svg";

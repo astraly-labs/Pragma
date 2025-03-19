@@ -33,7 +33,7 @@ const InputComponent: React.FC<InputProps> = ({
   };
 
   const mailerlite = new MailerLite({
-    api_key: process.env.MAILER_API_KEY,
+    api_key: process.env.MAILER_API_KEY!,
   });
 
   const handleSubmit = () => {

@@ -60,7 +60,7 @@ const ActiveAssessments = ({ assessments, loading, onAssertionTypeChange }) => {
   };
 
   const renderPageNumbers = () => {
-    const pageNumbers = [];
+    const pageNumbers: any[] = [];
 
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {

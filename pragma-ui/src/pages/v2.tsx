@@ -22,7 +22,7 @@ const v2 = () => (
       solidButton={"Read docs"}
       solidButtonLink={"https://docs.pragma.build/"}
       illustrationLink={"/assets/vectors/Nodes.svg"}
-    ></V2Hero>
+    />
     <BoxContainer>
       <video
         className=" w-full rounded-3xl border border-lightGreen" // Adjust styles as needed

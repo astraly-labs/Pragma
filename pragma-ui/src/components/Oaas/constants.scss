@@ -1,0 +1,30 @@
+$media-query-mobile: 872px;
+$media-query-tablet: 1120px;
+
+@mixin formLabel {
+	color: $grey-4;
+	font-family: Roboto;
+	font-size: 13px;
+	line-height: normal;
+	letter-spacing: normal;
+}
+
+@mixin formLabelError {
+	color: $red;
+	font-family: Roboto;
+	font-size: 12px;
+	letter-spacing: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 14px;
+}
+
+$white: #ffffff;
+$grey-2: #1B1B1F;
+$grey-3: #bcbcbc;
+$grey-4: #818181;
+$grey-13: #f5f5f5;
+$blue-main: #2E63B4;
+$red: #b0001f;
+$dark-purple: #00184A;

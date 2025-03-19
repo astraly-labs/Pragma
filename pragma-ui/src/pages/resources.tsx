@@ -16,7 +16,9 @@ import { UTCTimestamp } from "lightweight-charts";
 import { initialAssets } from "../providers/data";
 
 const EcosystemPage = () => {
-  const [selectedAsset, setSelectedAsset] = useState<AssetPair>(null);
+  const [selectedAsset, setSelectedAsset] = useState<AssetPair | undefined>(
+    undefined
+  );
 
   const [allData, setAllData] = useState<AssetPair[]>([]); // Initialize state with empty array
 
@@ -107,14 +109,16 @@ const EcosystemPage = () => {
         illustrationSmallLink={"/assets/vectors/resourcesSmall.svg"}
       />
       <BoxContainer>
-        <PriceFeedBox
-          ChartComponent={ChartBox}
-          AssetComponent={AssetBox}
-          selectedAsset={selectedAsset}
-          initialAssets={initialAssets}
-          handleAssetSelect={handleAssetSelect}
-          data={allData}
-        />
+        {selectedAsset && (
+          <PriceFeedBox
+            ChartComponent={ChartBox}
+            AssetComponent={AssetBox}
+            selectedAsset={selectedAsset}
+            initialAssets={initialAssets}
+            handleAssetSelect={handleAssetSelect}
+            data={allData}
+          />
+        )}
       </BoxContainer>
       <BoxContainer>
         <CompFeedBox />

@@ -85,7 +85,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
     type: ToastType = "success",
     txHash?: string
   ) => {
-    setToastContent({ title, text, type, txHash });
+    setToastContent({ title, text, type, txHash: txHash || "" });
     setToastKey((prevKey) => prevKey + 1);
   };
 
@@ -244,7 +244,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
       bond: string;
     }) =>
       approveAndDispute({
-        calls: bond && [
+        calls: [
           {
             contractAddress: currency[0].address,
             entrypoint: "approve",
@@ -262,7 +262,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                 ? OO_CONTRACT_ADDRESS.sepolia
                 : OO_CONTRACT_ADDRESS.mainnet,
             entrypoint: "dispute_assertion",
-            calldata: [assertionId.toString(), address],
+            calldata: address ? [assertionId.toString(), address] : [],
           },
         ],
       }),
@@ -475,7 +475,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                   {isWalletConnected &&
                     !isNetworkMismatch &&
                     !isLoading &&
-                    !resolutionItem.settled && (
+                    !resolutionItem?.settled && (
                       <div className="m-auto flex w-full flex-col items-center gap-3 text-center text-mint">
                         You are connected with
                         <WalletConnection />
@@ -486,7 +486,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                     {isWalletConnected &&
                       !isNetworkMismatch &&
                       !isLoading &&
-                      !resolutionItem.settled && (
+                      !resolutionItem?.settled && (
                         <button
                           type="submit"
                           className="w-fit rounded-full border border-darkGreen bg-mint py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
@@ -499,8 +499,8 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                     {isWalletConnected &&
                       !isNetworkMismatch &&
                       !isLoading &&
-                      !resolutionItem.disputed &&
-                      !resolutionItem.settled && (
+                      !resolutionItem?.disputed &&
+                      !resolutionItem?.settled && (
                         <button
                           type="submit"
                           className="w-fit rounded-full border border-darkGreen bg-lightGreen py-4 px-6 text-sm uppercase tracking-wider text-darkGreen transition-colors hover:border-mint hover:bg-darkGreen hover:text-mint"
@@ -518,8 +518,8 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                   {isWalletConnected &&
                     !isNetworkMismatch &&
                     !isLoading &&
-                    resolutionItem.disputed &&
-                    !resolutionItem.settled && (
+                    resolutionItem?.disputed &&
+                    !resolutionItem?.settled && (
                       <div className="flex w-full flex-wrap items-center justify-center gap-4">
                         <button
                           type="submit"
@@ -527,7 +527,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                           onClick={() =>
                             handleResolveDispute(
                               assessment.assertion_id,
-                              resolutionItem.dispute_id,
+                              resolutionItem?.dispute_id as string,
                               true
                             )
                           }
@@ -540,7 +540,7 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                           onClick={() =>
                             handleResolveDispute(
                               assessment.assertion_id,
-                              resolutionItem.dispute_id,
+                              resolutionItem?.dispute_id as string,
                               false
                             )
                           }
@@ -584,38 +584,38 @@ const AssessmentPopup: React.FC<AssessmentPopupProps> = ({
                   </div>
                   <p className="flex w-full flex-col flex-wrap overflow-auto">
                     <div className="text-mint">Asserter</div>
-                    {resolutionItem.asserter}
+                    {resolutionItem?.asserter}
                   </p>
                   <p className="mr-8">
                     <div className="text-mint">Disputed</div>
-                    {resolutionItem.disputed ? "True" : "False"}
+                    {resolutionItem?.disputed ? "True" : "False"}
                   </p>
-                  {resolutionItem.disputed && (
+                  {resolutionItem?.disputed && (
                     <p className="mr-8">
                       <div className="text-mint">Disputer</div>
-                      {resolutionItem.disputer}
+                      {resolutionItem?.disputer}
                     </p>
                   )}
-                  {resolutionItem.disputed && (
+                  {resolutionItem?.disputed && (
                     <p className="mr-8">
                       <div className="text-mint">Dispute Id</div>
-                      {resolutionItem.dispute_id}
+                      {resolutionItem?.dispute_id}
                     </p>
                   )}
                   <p className="mr-8">
                     <div className="text-mint">Settled</div>
-                    {resolutionItem.settled ? "True" : "False"}
+                    {resolutionItem?.settled ? "True" : "False"}
                   </p>
-                  {resolutionItem.settled && (
+                  {resolutionItem?.settled && (
                     <p className="mr-8">
                       <div className="text-mint">Settled caller</div>
-                      {resolutionItem.settle_caller}
+                      {resolutionItem?.settle_caller}
                     </p>
                   )}
-                  {resolutionItem.settled && (
+                  {resolutionItem?.settled && (
                     <p className="mr-8">
                       <div className="text-mint">Settlement Resolution</div>
-                      {resolutionItem.settlement_resolution}
+                      {resolutionItem?.settlement_resolution}
                     </p>
                   )}
                 </div>

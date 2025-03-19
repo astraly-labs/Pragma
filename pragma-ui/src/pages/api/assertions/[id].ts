@@ -16,13 +16,13 @@ export default async function handler(
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const apiUrl = `https://api.dev.pragma.build/node/v1/optimistic/assertions/${id}`;
+  const apiUrl = `https://api.devnet.pragma.build/node/v1/optimistic/assertions/${id}`;
 
   try {
     const apiResponse = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.API_KEY,
+        "x-api-key": process.env.API_KEY!,
       },
     });
 

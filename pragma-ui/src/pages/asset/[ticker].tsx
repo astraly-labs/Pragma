@@ -9,8 +9,9 @@ import AssetHeader from "../../components/Assets/AssetHeader";
 import AssetChart from "../../components/Assets/AssetChart";
 import PriceComponent from "../../components/Assets/PriceComponent";
 import Checkpoints from "../../components/Assets/Checkpoints";
-import { CheckpointT, initialAssets, useData } from "../../providers/data";
+import { CheckpointT, useData } from "../../providers/data";
 import { COINGECKO_MAPPING_IDS } from "../../utils/types";
+import { defaultAssets } from "../api/fetchData";
 
 export interface Asset {
   image: string;
@@ -27,6 +28,8 @@ export interface Asset {
   chart: string;
   ema: string;
   macd: string;
+  error?: string;
+  isUnsupported?: boolean;
 }
 
 interface Props {
@@ -74,6 +77,30 @@ const AssetPage = ({ ticker }: Props) => {
     if (data && ticker) {
       const assetData = data[ticker];
       if (assetData) {
+        // Check if this is an unsupported asset
+        if (assetData.error) {
+          const formattedAsset: Asset = {
+            image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
+            type: "Crypto",
+            ticker,
+            lastUpdated: assetData.isUnsupported ? "Unsupported asset" : "Error fetching data",
+            price: 0,
+            sources: 0,
+            variations: {
+              past1h: 0,
+              past24h: 0,
+              past7d: 0,
+            },
+            chart: "",
+            ema: "N/A",
+            macd: "N/A",
+            error: assetData.error,
+            isUnsupported: assetData.isUnsupported
+          };
+          setAsset(formattedAsset);
+          return;
+        }
+
         const formattedAsset: Asset = {
           image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
           type: "Crypto",
@@ -96,22 +123,26 @@ const AssetPage = ({ ticker }: Props) => {
         };
         setAsset(formattedAsset);
 
-        const assetComponents: PriceComponents[] = assetData.components.map(
-          (component: any) => {
-            return {
-              publisher: component.publisher,
-              link: component.link,
-              source: component.source,
-              price: parseInt(component.price, 16) / 10 ** assetData.decimals,
-              hash: component.tx_hash,
-              lastUpdated: new Date(
-                component.timestamp * 1000
-              ).toLocaleString(),
-            };
-          }
-        );
-
-        setPriceComponents(assetComponents);
+        // Only process components if they exist (not API source)
+        if (currentSource !== 'api' && assetData.components) {
+          const assetComponents: PriceComponents[] = assetData.components.map(
+            (component: any) => {
+              return {
+                publisher: component.publisher,
+                link: component.link,
+                source: component.source,
+                price: parseInt(component.price, 16) / 10 ** assetData.decimals,
+                hash: component.tx_hash,
+                lastUpdated: new Date(
+                  component.timestamp * 1000
+                ).toLocaleString(),
+              };
+            }
+          );
+          setPriceComponents(assetComponents);
+        } else {
+          setPriceComponents([]); // Empty array for API source
+        }
       }
     }
   }, [data, ticker, currentSource]);
@@ -200,7 +231,6 @@ const AssetPage = ({ ticker }: Props) => {
       <BoxContainer>
         <button
           onClick={() => {
-            // Go back to the previous page
             router.back();
           }}
           className="flex w-full cursor-pointer items-center gap-2 text-left text-sm uppercase tracking-widest text-lightGreen"
@@ -218,24 +248,50 @@ const AssetPage = ({ ticker }: Props) => {
       <BoxContainer>
         <AssetHeader isAsset={true} asset={asset} />
       </BoxContainer>
-      <BoxContainer>
-        <AssetChart asset={asset} />
-      </BoxContainer>
-      <div className="w-full pb-5" />
-      <BoxContainer className="relative" modeOne={false}>
-        <PriceComponent components={priceComponents} />
-        {/* <div className="absolute top-0 left-2/4 z-0 h-full w-screen -translate-x-1/2 bg-lightBackground" /> */}
-      </BoxContainer>
-      <BoxContainer>
-        <Checkpoints components={checkpointComponents} />
-      </BoxContainer>
+      
+      {asset?.isUnsupported ? (
+        <BoxContainer>
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <div className="mb-4 text-2xl font-bold text-redDown">Unsupported Asset</div>
+            <div className="text-lg text-lightGreen">
+              This asset is not currently supported by the Pragma API.
+            </div>
+          </div>
+        </BoxContainer>
+      ) : asset?.error ? (
+        <BoxContainer>
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <div className="mb-4 text-2xl font-bold text-redDown">Error</div>
+            <div className="text-lg text-lightGreen">
+              There was an error fetching data for this asset: {asset.error}
+            </div>
+          </div>
+        </BoxContainer>
+      ) : (
+        <>
+          <BoxContainer>
+            <AssetChart asset={asset} />
+          </BoxContainer>
+          <div className="w-full pb-5" />
+          {currentSource !== 'api' && (
+            <>
+              <BoxContainer className="relative" modeOne={false}>
+                <PriceComponent components={priceComponents} />
+              </BoxContainer>
+              <BoxContainer>
+                <Checkpoints components={checkpointComponents} />
+              </BoxContainer>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Generate paths for each asset's ticker
-  const paths = initialAssets.map((asset) => ({
+  const paths = defaultAssets.map((asset) => ({
     params: { ticker: asset.ticker },
   }));
   return { paths, fallback: false };

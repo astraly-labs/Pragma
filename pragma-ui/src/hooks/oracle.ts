@@ -41,21 +41,19 @@ export type GetValueResponseT = {
 export interface GetValueHookT {
   oracleResponse: GetValueResponseT | undefined;
   loading: boolean;
-  error: Error;
+  error: Error | null;
 }
 
 export const useOracleGetValue = (assetKey: AssetKeyT): GetValueHookT => {
   const { contract } = useOracleContract();
   const arg = strToHexFelt(assetKey);
   const { data, isLoading, error } = useContractRead({
-    address: contract.address,
-    abi: contract.abi,
+    address: contract?.address,
+    abi: contract?.abi,
     functionName: "get_data_median",
     args: [new CairoCustomEnum({ SpotEntry: arg })],
   });
   const realData = data ? data : undefined;
-  console.log(contract.address);
-  console.log(data);
 
   if (error !== null) {
     console.error(
@@ -108,8 +106,8 @@ export const useOracleGetEntries = (assetKey: AssetKeyT) => {
     isLoading: loading,
     error,
   } = useContractRead({
-    address: contract.address,
-    abi: contract.abi,
+    address: contract?.address,
+    abi: contract?.abi,
     functionName: "get_data_median_for_sources",
     args: [new CairoCustomEnum({ SpotEntry: arg }), sources],
   });

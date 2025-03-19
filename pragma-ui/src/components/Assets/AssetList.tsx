@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Fragment, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
@@ -13,7 +15,7 @@ const AssetList = ({
   onSourceChange,
   selectedSource,
   loading,
-}) => {
+}: any) => {
   const elements = Array(5).fill({
     image: `/assets/currencies/skynet_trading.svg`,
     type: "Crypto",
@@ -37,11 +39,11 @@ const AssetList = ({
     direction: "ascending",
   });
 
-  const handleInputChange = (value) => {
+  const handleInputChange = (value: any) => {
     setFilteredValue(value);
   };
 
-  const filteredAssets = assets.filter((asset) => {
+  const filteredAssets = assets.filter((asset: any) => {
     if (isAsset) {
       return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
     } else {
@@ -49,7 +51,7 @@ const AssetList = ({
     }
   });
 
-  const requestSort = (key) => {
+  const requestSort = (key: any) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
@@ -61,11 +63,13 @@ const AssetList = ({
     const sortableItems = [...filteredAssets];
     if (sortConfig.key !== null) {
       sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? 1 : -1;
+        if (sortConfig.key) {
+          if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === "ascending" ? -1 : 1;
+          }
+          if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === "ascending" ? 1 : -1;
+          }
         }
         return 0;
       });
@@ -82,7 +86,7 @@ const AssetList = ({
         <div className="flex flex-col gap-3 smolScreen:flex-row">
           <Listbox value={selectedSource} onChange={onSourceChange}>
             <div className="relative w-full md:w-auto">
-              <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none">
+              <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none">
                 <span className="block truncate">{selectedSource}</span>
                 <Image
                   className="my-auto pl-2"
@@ -98,8 +102,8 @@ const AssetList = ({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto	rounded-md bg-green py-1	text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                  {options.map((option, optionIdx) => (
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+                  {options.map((option: any, optionIdx: number) => (
                     <Listbox.Option
                       key={optionIdx}
                       className={({ active }) =>
@@ -129,7 +133,7 @@ const AssetList = ({
               </Transition>
             </div>
           </Listbox>
-          <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen md:w-auto">
+          <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
             {isAsset ? "Price Feeds" : "Data Providers"}: {assets.length}
           </div>
         </div>
@@ -155,7 +159,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("lastUpdated")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Last updated
               <Image
@@ -167,7 +171,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("sources")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Nb sources
               <Image
@@ -189,45 +193,49 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div
-              onClick={() => requestSort("variations.past1h")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              1H
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("variations.past24h")}
-              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              24H
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("variations.past7d")}
-              className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              7D
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              7D chart
-            </div>
+            {selectedSource !== "api" && (
+              <>
+                <div
+                  onClick={() => requestSort("variations.past1h")}
+                  className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  1H
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div
+                  onClick={() => requestSort("variations.past24h")}
+                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  24H
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div
+                  onClick={() => requestSort("variations.past7d")}
+                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+                >
+                  7D
+                  <Image
+                    height={16}
+                    width={16}
+                    alt="ArrowDownSmall"
+                    src="/assets/vectors/arrowDownSmall.svg"
+                  />
+                </div>
+                <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+                  7D chart
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className={styles.dpBox}>
@@ -245,7 +253,7 @@ const AssetList = ({
             </div>
             <div
               onClick={() => requestSort("lastUpdate")}
-              className="flex translate-x-2 cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
             >
               Last update
               <Image
@@ -255,7 +263,7 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            <div className="flex translate-x-2 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+            <div className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               Type
             </div>
             <div
@@ -306,6 +314,7 @@ const AssetList = ({
               asset={element}
               key={index}
               loading={true}
+              currentSource={selectedSource}
             />
           ))}
         {!loading &&
@@ -315,6 +324,7 @@ const AssetList = ({
               asset={asset}
               key={assetIdx}
               loading={false}
+              currentSource={selectedSource}
             />
           ))}
         {!loading && sortedAssets.length === 0 && (

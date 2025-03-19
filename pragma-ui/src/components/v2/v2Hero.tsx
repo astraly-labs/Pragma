@@ -12,7 +12,8 @@ const V2Hero = ({
   solidButton,
   solidButtonLink,
   illustrationLink,
-}) => {
+  customButton,
+}: any) => {
   return (
     <div className="relative h-[70vh] w-full overflow-hidden lg:h-screen">
       <Image
@@ -42,15 +43,19 @@ const V2Hero = ({
             {description}
           </GreenText>
           <div className="flex flex-col items-center gap-6 md:flex-row">
-            <ButtonLink
-              center={true}
-              color="mint"
-              variant="solid"
-              href={solidButtonLink}
-              className="w-fit"
-            >
-              {solidButton}
-            </ButtonLink>
+            {customButton ? (
+              customButton
+            ) : (
+              <ButtonLink
+                center={true}
+                color="mint"
+                variant="solid"
+                href={solidButtonLink}
+                className="w-fit"
+              >
+                {solidButton}
+              </ButtonLink>
+            )}
           </div>
         </header>
       </div>
