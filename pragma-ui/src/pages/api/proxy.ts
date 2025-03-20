@@ -8,14 +8,14 @@ export default async function handler(req, res) {
   // Extract the 'pair' query parameter from the request
   const { pair = "btc/usd" } = req.query; // Default to 'btc/usd' if not specified
 
-  const apiUrl = `https://api.dev.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=15min`;
+  const apiUrl = `https://api.devnet.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=15min`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {
     const apiResponse = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.API_KEY, // Securely manage your API key
+        "x-api-key": process.env.API_KEY!, // Securely manage your API key
       },
     });
 

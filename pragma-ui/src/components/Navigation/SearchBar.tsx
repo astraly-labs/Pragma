@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { SearchIcon } from "@heroicons/react/outline";
 import styles from "./styles.module.scss";
 
 import classNames from "classnames";
 
-interface SearchBarProps {
+type SearchBarProps = {
   onInputChange: (value: string) => void;
-}
+};
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  onInputChange,
-}: SearchBarProps) => {
+const SearchBar = ({ onInputChange }: SearchBarProps) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);
     onInputChange(value);
@@ -28,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <input
         className={classNames(
           styles.inputSearch,
-          "absolute left-0 bottom-0 h-full w-full rounded-full bg-transparent pl-6 text-lightGreen",
+          "absolute bottom-0 left-0 h-full w-full rounded-full bg-transparent pl-6 text-lightGreen",
           inputValue ? "backdrop-blur-3xl" : ""
         )}
         value={inputValue}

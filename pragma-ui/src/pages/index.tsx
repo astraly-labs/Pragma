@@ -43,7 +43,7 @@ export const timezone = "Europe/London";
 
 export const removeDuplicateTimestamps = (arr) => {
   const seenTimestamps = new Set();
-  const result = [];
+  const result: any[] = [];
   for (const obj of arr) {
     const timestamp = moment.tz(obj.time, timezone).valueOf();
     if (!seenTimestamps.has(timestamp)) {
@@ -88,7 +88,7 @@ const fetchAssetData = async (pairId: string, decimals: number) => {
 };
 
 const IndexPage = () => {
-  const [windowWidth, setWindowWidth] = useState(null);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(
     initialAssets[0]
   );
@@ -128,11 +128,11 @@ const IndexPage = () => {
   const getImageSource = useMemo(
     () => ({
       1:
-        windowWidth < 640
+        windowWidth && windowWidth < 640
           ? "/assets/vectors/vector1bis.svg"
           : "/assets/vectors/vector1.svg",
       2:
-        windowWidth < 640
+        windowWidth && windowWidth < 640
           ? "/assets/vectors/vector2bis.svg"
           : "/assets/vectors/vector2.svg",
     }),
@@ -160,7 +160,7 @@ const IndexPage = () => {
           linkButton="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
         />
         <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
-          <ChartBox assetPair={selectedAsset} />
+          {selectedAsset && <ChartBox assetPair={selectedAsset} />}
           <AssetBox
             assets={initialAssets}
             onAssetSelect={setSelectedAssetPair}

@@ -8,14 +8,14 @@ export default async function handler(req, res) {
   // Extract the query parameters from the request
   const { network = "sepolia", pair = "btc/usd" } = req.query; // Default to 'sepolia' & 'btc/usd' if not specified
 
-  const apiUrl = `https://api.dev.pragma.build/node/v1/onchain/checkpoints/${pair}?network=${network}&aggregation=median`;
+  const apiUrl = `https://api.devnet.pragma.build/node/v1/onchain/checkpoints/${pair}?network=${network}&aggregation=median`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {
     const apiResponse = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.API_KEY, // Securely manage your API key
+        "x-api-key": process.env.API_KEY!, // Securely manage your API key
       },
     });
 

@@ -1,0 +1,104 @@
+@import "./constants";
+
+.darkGreenBox {
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background: linear-gradient(#02201e, #02201e) padding-box,
+      linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.25) 0%,
+          rgba(255, 255, 255, 0.25) 020%,
+          rgba(255, 255, 255, 0.06%) 050%,
+          rgba(255, 255, 255, 0.25) 080%,
+          rgba(255, 255, 255, 0.205) 100%
+        )
+        border-box;
+    backdrop-filter: blur(12.5px);
+  }
+
+.title {
+    margin-bottom: 0;
+    font-size: 24px;
+    color: #B5F0E5;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        margin-bottom: 16px;
+    }
+}
+
+.fieldLabel {
+    @include formLabel;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    margin-left: 18px;
+    color: $grey-2;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 150%;
+    border-radius: 8px;
+    display: block;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        margin-left: 15px;
+        color: $grey-4;
+        font-size: 13px;
+        letter-spacing: 0;
+        line-height: 15px;
+        position: absolute;
+        margin-top: -6px;
+        padding: 0 8px;
+        background: $white;
+        z-index: 1;
+    }
+}
+
+.textarea {
+    width: 397px;
+    border-radius: 27px;
+    border: 1px solid $grey-3;
+    height: 185px !important;
+    resize: unset;
+    padding-top: 20px;
+    padding-left: 23px;
+    color: $grey-2;
+    font-family: Roboto;
+    font-size: 16px;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        max-width: 90% !important;
+    }
+}
+
+.inputError {
+    border: 1px solid $red;
+}
+
+.formItem {
+    position: relative;
+
+    @media only screen and (max-width: ($media-query-tablet - 1)) {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.asterisk {
+    color: $red
+}
