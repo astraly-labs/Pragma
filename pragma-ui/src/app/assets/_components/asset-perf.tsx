@@ -152,7 +152,7 @@ export const AssetPerf = ({
           <div className={priceChangeClass}>
             {isAsset ? "$" : ""}
             {isAsset
-              ? Number.parseFloat(String(asset.price)).toFixed(2)
+              ? Number.parseFloat(String(asset.price)).toFixed(3)
               : asset.reputationScore}
           </div>
         )}
