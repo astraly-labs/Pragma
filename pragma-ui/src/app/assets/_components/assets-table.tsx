@@ -176,9 +176,9 @@ export const AssetsTable = ({
     }
 
     return tokens.reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index].data;
+      acc[asset.ticker] = assetQueries[index]?.data ?? {};
       return acc;
-    });
+    }, {});
   }, [source, tokens, assetQueries, streamingData]);
 
   const formattedAssets = isTokensLoadingData
