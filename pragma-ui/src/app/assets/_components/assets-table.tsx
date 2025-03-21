@@ -27,6 +27,8 @@ export const AssetsTable = ({
     {}
   );
 
+  console.log({ initialTokens, assets });
+
   const {
     data: tokens,
     isLoading: isLoadingTokens,
@@ -177,9 +179,9 @@ export const AssetsTable = ({
     }
 
     return tokens.reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index].data;
+      acc[asset.ticker] = assetQueries[index]?.data ?? {};
       return acc;
-    });
+    }, {});
   }, [source, tokens, assetQueries, streamingData]);
 
   const formattedAssets = isTokensLoadingData
@@ -192,7 +194,6 @@ export const AssetsTable = ({
   return (
     <AssetList
       options={options}
-      isAsset
       assets={formattedAssets.filter((asset) => asset.ticker.includes("/USD"))}
       selectedSource={source}
       loading={isTokensLoadingData}

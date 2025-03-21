@@ -40,7 +40,6 @@ const PublishersTable = ({
       options={options}
       publishers={publishers}
       selectedSource={source}
-      isAsset={false}
       loading={isPublishersLoadingData}
     />
   );

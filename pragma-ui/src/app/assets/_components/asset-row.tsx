@@ -1,34 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/components/Assets/styles.module.scss";
-import { AssetInfo, DataProviderInfo } from "../_types";
-import { getPublisherType } from "../_helpers/getPublisherType";
+import { AssetInfo } from "@/app/assets/_types";
 
-type AssetPerfProps =
-  | {
-      asset: AssetInfo;
-      isAsset: true;
-      loading: boolean;
-      currentSource?: string;
-    }
-  | {
-      asset: DataProviderInfo;
-      isAsset: false;
-      loading: boolean;
-      currentSource?: string;
-    };
+type AssetRowProps = {
+  asset: AssetInfo;
+  loading: boolean;
+  currentSource?: string;
+};
 
-export const AssetPerf = ({
+export const AssetRow = ({
   asset,
-  isAsset,
   loading,
   currentSource = "",
-}: AssetPerfProps) => {
+}: AssetRowProps) => {
   const [priceChangeClass, setPriceChangeClass] = useState(styles.priceNormal);
-  const prevPriceRef = useRef(isAsset ? asset?.price : 0);
+  const prevPriceRef = useRef(asset.price);
   const [imageError, setImageError] = useState(false);
 
   // Check if we're using the API source
@@ -37,7 +26,6 @@ export const AssetPerf = ({
   useEffect(() => {
     if (
       !loading &&
-      isAsset &&
       asset?.price !== undefined &&
       prevPriceRef.current !== undefined
     ) {
@@ -58,38 +46,35 @@ export const AssetPerf = ({
   }, [asset, loading]);
 
   // Check if asset has an error
-  const hasError = isAsset ? asset?.error !== undefined : undefined;
-  const isUnsupported = isAsset ? asset?.isUnsupported === true : false;
+  const hasError = asset?.error !== undefined;
+  const isUnsupported = asset?.isUnsupported;
 
   const renderIcon = () => {
-    if (isAsset) {
-      return Number(asset.variations.past1h) > 0
-        ? "▲"
-        : asset.variations.past1h === 0
-        ? "-"
-        : "▼";
-    }
+    return Number(asset.variations.past1h) > 0
+      ? "▲"
+      : asset.variations.past1h === 0
+      ? "-"
+      : "▼";
   };
 
-  // For unsupported assets, we'll still show the asset but with error indicators
   return (
     <Link
       href={
-        isAsset && !hasError
+        !hasError
           ? `/asset/${encodeURIComponent(asset.ticker)}`
-          : isAsset && hasError
-          ? "#" // Disable link for unsupported assets
-          : `/provider/${isAsset ? asset.ticker : asset.name}`
+          : hasError
+          ? "#"
+          : `/provider/${asset.ticker}`
       }
       scroll={false}
       className={classNames(
-        isAsset ? styles.assetPerf : styles.dpPerf,
-        hasError && "opacity-70", // Reduce opacity for error assets
-        isApiSource && isAsset && styles.assetPerfApi // Add a class for API source
+        styles.assetPerf,
+        hasError && "opacity-70",
+        isApiSource && styles.assetPerfApi
       )}
       onClick={(e) => {
-        if (hasError && isAsset) {
-          e.preventDefault(); // Prevent navigation for unsupported assets
+        if (hasError) {
+          e.preventDefault();
         }
       }}
     >
@@ -106,9 +91,7 @@ export const AssetPerf = ({
           />
         ) : (
           <div className="my-auto size-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
-            <span className="self-center">
-              {isAsset ? asset.ticker[0] : asset.name[0]}
-            </span>
+            <span className="self-center">{asset.ticker[0]}</span>
           </div>
         )}
         {loading ? (
@@ -118,11 +101,7 @@ export const AssetPerf = ({
           </div>
         ) : (
           <div className="text-md flex flex-col text-lightGreen">
-            {isAsset
-              ? asset.ticker
-              : asset.name === "SKYNET_TRADING"
-              ? "SKYNET"
-              : asset.name}{" "}
+            {asset.ticker}{" "}
             <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
               {asset.type}
             </div>
@@ -134,12 +113,7 @@ export const AssetPerf = ({
           <div className=" my-auto h-3 w-24 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
           <div className={isUnsupported ? "text-redDown" : "text-lightGreen"}>
-            {isAsset
-              ? asset.lastUpdated
-              : formatDistanceToNow(
-                  new Date(Number(asset.lastUpdated) * 1000),
-                  { addSuffix: true }
-                )}
+            {asset.lastUpdated}
           </div>
         )}
       </div>
@@ -147,9 +121,7 @@ export const AssetPerf = ({
         {loading ? (
           <div className="my-auto h-3 w-14 animate-pulse rounded-full bg-lightBlur"></div>
         ) : (
-          <div>
-            {isAsset ? asset.sources : getPublisherType(Number(asset.type))}
-          </div>
+          <div>{asset.sources}</div>
         )}
       </div>
       <div className="my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider">
@@ -159,49 +131,18 @@ export const AssetPerf = ({
           <div className="text-redDown">N/A</div>
         ) : (
           <div className={priceChangeClass}>
-            {isAsset ? "$" : ""}
-            {isAsset
-              ? Number.parseFloat(String(asset.price)).toFixed(2)
-              : asset.reputationScore}
+            ${Number.parseFloat(String(asset.price)).toFixed(2)}
           </div>
         )}
       </div>
-      {loading ? (
-        <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-      ) : isAsset ? (
-        ""
-      ) : (
-        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-          {asset.nbFeeds}
-        </div>
-      )}
-      {loading ? (
-        <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-      ) : isAsset ? (
-        ""
-      ) : (
-        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-          {asset.dailyUpdates}
-        </div>
-      )}
-      {loading ? (
-        <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-      ) : isAsset ? (
-        ""
-      ) : (
-        <div className="my-auto flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-          {asset.totalUpdates}
-        </div>
-      )}
-      {/* Hide variation columns for API source */}
       {!isApiSource && (
         <>
           {loading ? (
             <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-          ) : isAsset && !hasError ? (
+          ) : !hasError ? (
             <div
               className={classNames(
-                isAsset && Number(asset.variations.past1h) > 0
+                Number(asset.variations.past1h) > 0
                   ? "text-mint"
                   : asset.variations.past1h === 0
                   ? "text-LightGreenFooter"
@@ -211,19 +152,17 @@ export const AssetPerf = ({
             >
               {renderIcon()} {asset.variations.past1h}%
             </div>
-          ) : isAsset && hasError ? (
+          ) : hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
               N/A
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
           {loading ? (
             <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur" />
-          ) : isAsset && !hasError ? (
+          ) : !hasError ? (
             <div
               className={classNames(
-                isAsset && Number(asset.variations.past24h) > 0
+                Number(asset.variations.past24h) > 0
                   ? "text-mint"
                   : asset.variations.past24h === 0
                   ? "text-LightGreenFooter"
@@ -234,20 +173,18 @@ export const AssetPerf = ({
               {renderIcon()}
               {asset.variations.past24h}%
             </div>
-          ) : isAsset && hasError ? (
+          ) : hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
               N/A
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
 
           {loading ? (
             <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-          ) : isAsset && !hasError ? (
+          ) : !hasError ? (
             <div
               className={classNames(
-                isAsset && Number(asset.variations.past7d) > 0
+                Number(asset.variations.past7d) > 0
                   ? "text-mint"
                   : asset.variations.past7d === 0
                   ? "text-LightGreenFooter"
@@ -258,26 +195,22 @@ export const AssetPerf = ({
               {renderIcon()}
               {asset.variations.past7d}%
             </div>
-          ) : isAsset && hasError ? (
+          ) : hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
               N/A
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
           {loading ? (
             <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
-          ) : isAsset && !hasError ? (
+          ) : !hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
               <Image height={50} width={150} alt="Chart" src={asset.chart} />
             </div>
-          ) : isAsset && hasError ? (
+          ) : hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
               N/A
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
         </>
       )}
     </Link>

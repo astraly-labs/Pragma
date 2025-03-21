@@ -34,7 +34,6 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
               options={options}
               assets={[]}
               selectedSource={source}
-              isAsset={false}
               loading
             />
           }
@@ -50,7 +49,6 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
                 options={options}
                 publishers={[]}
                 selectedSource={source}
-                isAsset={false}
                 loading
               />
             }
