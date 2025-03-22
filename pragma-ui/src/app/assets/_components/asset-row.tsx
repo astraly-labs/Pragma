@@ -61,7 +61,7 @@ export const AssetRow = ({
     <Link
       href={
         !hasError
-          ? `/asset/${encodeURIComponent(asset.ticker)}`
+          ? `/asset/${encodeURIComponent(asset.ticker).replace("%2F", "-")}`
           : hasError
           ? "#"
           : `/provider/${asset.ticker}`

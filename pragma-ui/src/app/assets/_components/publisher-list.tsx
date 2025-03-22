@@ -51,9 +51,14 @@ export const PublisherList = ({
     setFilteredValue(value);
   };
 
-  const filteredAssets = publishers.filter((asset: any) => {
-    return asset?.name?.toLowerCase().includes(filteredValue.toLowerCase());
-  });
+  const filteredAssets =
+    publishers && publishers.length >= 0
+      ? publishers.filter((asset: any) => {
+          return asset?.name
+            ?.toLowerCase()
+            .includes(filteredValue.toLowerCase());
+        })
+      : [];
 
   const requestSort = (key: any) => {
     let direction = "ascending";

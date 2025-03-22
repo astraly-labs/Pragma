@@ -27,8 +27,6 @@ export const AssetsTable = ({
     {}
   );
 
-  console.log({ initialTokens, assets });
-
   const {
     data: tokens,
     isLoading: isLoadingTokens,
