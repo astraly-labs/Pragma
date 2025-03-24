@@ -1,19 +1,12 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import classNames from "classnames";
 import styles from "@/pages/styles.module.scss";
 import { AssetHeader } from "./_components/asset-header";
-import { DEFAULT_ASSETS, SUPPORTED_SOURCES } from "@/lib/constants";
+import { SUPPORTED_SOURCES } from "@/lib/constants";
 import BoxContainer from "@/components/common/BoxContainer";
 import Link from "next/link";
-import {
-  AssetInfo,
-  CheckpointComponent,
-  PriceComponents,
-} from "@/app/assets/_types";
 import { getCheckpoints } from "./_helpers/getCheckpoints";
 import { notFound } from "next/navigation";
-import { getAssets } from "@/app/assets/_helpers/getAssets";
 import { getAsset } from "./_helpers/getAsset";
 import { AssetChart } from "./_components/asset-chart";
 import { Checkpoints } from "./_components/checkpoints";
@@ -44,11 +37,10 @@ const AssetPage = async (props: AssetPageProps) => {
     source: network,
   });
 
-  // @TODO: fix the backend response
-  // const checkpoint = await getCheckpoints({
-  //   ticker,
-  //   source: network,
-  // });
+  const checkpoints = await getCheckpoints({
+    ticker,
+    source: network,
+  });
 
   return (
     <div
@@ -105,13 +97,13 @@ const AssetPage = async (props: AssetPageProps) => {
           <div className="w-full pb-5" />
           {network !== "api" && (
             <>
-              <BoxContainer className="relative" modeOne={false}>
-                {/* <Price components={priceComponents} /> */}
-                Price goes here
-              </BoxContainer>
-              {/* <BoxContainer>
-                <Checkpoints components={checkpoint} />
+              {/* // @TODO: missing from internal API */}
+              {/* <BoxContainer className="relative" modeOne={false}>
+                <Price components={priceComponents} />
               </BoxContainer> */}
+              <BoxContainer>
+                <Checkpoints components={checkpoints} />
+              </BoxContainer>
             </>
           )}
         </>

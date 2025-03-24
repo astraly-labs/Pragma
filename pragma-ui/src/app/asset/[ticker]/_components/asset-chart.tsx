@@ -4,7 +4,7 @@ import React, { Fragment, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
 import { UTCTimestamp, createChart } from "lightweight-charts";
-import moment from "moment";
+import moment from "moment-timezone";
 import { AssetInfo } from "@/app/assets/_types";
 import { removeDuplicateTimestamps, timezone } from "../_helpers/utils";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
@@ -35,7 +35,9 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   }
 
   const handleSourceChange = (newSource: string) => {
-    router.push(`/asset/${asset.ticker}?network=${newSource}`);
+    router.push(
+      `/asset/${asset.ticker.replace("/", "-")}?network=${newSource}`
+    );
   };
 
   //
@@ -212,6 +214,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
           );
           updatedPriceData = [{ time, value }];
         } else {
+          console.log({ wsData });
           const sorted = wsData.sort(
             (a: any, b: any) =>
               moment.tz(a.time, timezone).valueOf() -
@@ -276,7 +279,9 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
     const { lineSeries, chart } = chartRef.current;
 
     // Historical data
+    // @TODO: missing from internal API
     if (Array.isArray(assetData?.historical)) {
+      // @TODO: missing from internal API
       const historicalData: PricePoint[] = assetData?.historical
         .map((point: any) => {
           const rawTime =
@@ -284,6 +289,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
               ? Math.floor(point.timestamp / 1000)
               : point.timestamp;
           const value = Number(
+            // @TODO: missing from internal API
             (parseInt(point.price, 16) / 10 ** assetData?.decimals).toFixed(3)
           );
 
@@ -334,6 +340,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       const value = Number(
         (
           parseInt(String(assetData.price), 16) /
+          // @TODO: missing from internal API
           10 ** assetData.decimals
         ).toFixed(3)
       );

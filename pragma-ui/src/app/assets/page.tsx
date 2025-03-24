@@ -8,6 +8,8 @@ import { AssetsTable } from "./_components/assets-table";
 import PublishersTable from "./_components/publishers-table";
 import { PublisherList } from "./_components/publisher-list";
 import AssetList from "./_components/asset-list";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { CustomError } from "./_components/custom-error";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -43,18 +45,20 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
       </BoxContainer>
       <BoxContainer>
         {source !== "api" && (
-          <Suspense
-            fallback={
-              <PublisherList
-                options={options}
-                publishers={[]}
-                selectedSource={source}
-                loading
-              />
-            }
-          >
-            <Publishers source={source} />
-          </Suspense>
+          <ErrorBoundary errorComponent={CustomError}>
+            <Suspense
+              fallback={
+                <PublisherList
+                  options={options}
+                  publishers={[]}
+                  selectedSource={source}
+                  loading
+                />
+              }
+            >
+              <Publishers source={source} />
+            </Suspense>
+          </ErrorBoundary>
         )}
       </BoxContainer>
     </div>

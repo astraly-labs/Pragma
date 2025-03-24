@@ -22,7 +22,7 @@ export const getCheckpoints = async ({ source, ticker }: GetCheckpoints) => {
     throw new Error(`Failed to fetch checkpoints for ${ticker}`);
   }
 
-  const data: Checkpoint = await response.json();
+  const data: Checkpoint[] = await response.json();
 
   return data;
 };

@@ -4,7 +4,7 @@ import { Token, AssetT } from "@/app/assets/_types";
 export const getTokens = async (source?: string): Promise<AssetT[]> => {
   if (source === "api") {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_PUBLIC_URL}/${dataSources.tokensApi}`
+      `${process.env.NEXT_PUBLIC_INTERNAL_API}/tokens/all`
     );
 
     if (!response.ok) {
