@@ -1,18 +1,44 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./styles.module.scss";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
+import styles from "@/components/Assets/styles.module.scss";
+import { AssetInfo, DataProviderInfo } from "../_types";
 
-const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
+type AssetPerfProps =
+  | {
+      asset: AssetInfo;
+      isAsset: true;
+      loading: boolean;
+      currentSource?: string;
+    }
+  | {
+      asset: DataProviderInfo;
+      isAsset: false;
+      loading: boolean;
+      currentSource?: string;
+    };
+
+export const AssetPerf = ({
+  asset,
+  isAsset,
+  loading,
+  currentSource = "",
+}: AssetPerfProps) => {
   const [priceChangeClass, setPriceChangeClass] = useState(styles.priceNormal);
-  const prevPriceRef = useRef(asset?.price);
+  const prevPriceRef = useRef(isAsset ? asset?.price : 0);
+  const [imageError, setImageError] = useState(false);
 
   // Check if we're using the API source
-  const isApiSource = currentSource === 'api';
+  const isApiSource = currentSource === "api";
 
   useEffect(() => {
-    if (!loading && asset?.price !== undefined && prevPriceRef.current !== undefined) {
+    if (
+      !loading &&
+      isAsset &&
+      asset?.price !== undefined &&
+      prevPriceRef.current !== undefined
+    ) {
       if (asset.price > prevPriceRef.current) {
         setPriceChangeClass(styles.priceUp);
       } else if (asset.price < prevPriceRef.current) {
@@ -27,11 +53,21 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [asset?.price, loading]);
+  }, [asset, loading]);
 
   // Check if asset has an error
-  const hasError = asset?.error !== undefined;
-  const isUnsupported = asset?.isUnsupported === true;
+  const hasError = isAsset ? asset?.error !== undefined : undefined;
+  const isUnsupported = isAsset ? asset?.isUnsupported === true : false;
+
+  const renderIcon = () => {
+    if (isAsset) {
+      return Number(asset.variations.past1h) > 0
+        ? "▲"
+        : asset.variations.past1h === 0
+        ? "-"
+        : "▼";
+    }
+  };
 
   // For unsupported assets, we'll still show the asset but with error indicators
   return (
@@ -41,8 +77,9 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
           ? `/asset/${encodeURIComponent(asset.ticker)}`
           : isAsset && hasError
           ? "#" // Disable link for unsupported assets
-          : `/provider/${asset.name}`
+          : `/provider/${isAsset ? asset.ticker : asset.name}`
       }
+      scroll={false}
       className={classNames(
         isAsset ? styles.assetPerf : styles.dpPerf,
         hasError && "opacity-70", // Reduce opacity for error assets
@@ -56,9 +93,21 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
     >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
         {loading ? (
-          <div className="my-auto  h-8 w-8 animate-pulse rounded-full bg-lightBlur"></div>
+          <div className="my-auto h-8 w-8 animate-pulse rounded-full bg-lightBlur" />
+        ) : asset.image && !imageError ? (
+          <Image
+            height={30}
+            width={30}
+            alt="AssetImage"
+            src={asset.image}
+            onError={() => setImageError(true)}
+          />
         ) : (
-          <Image height={30} width={30} alt="AssetImage" src={asset.image} />
+          <div className="my-auto h-8 w-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
+            <span className="self-center">
+              {isAsset ? asset.ticker[0] : asset.name[0]}
+            </span>
+          </div>
         )}
         {loading ? (
           <div className="flex flex-col text-lg text-lightGreen">
@@ -66,7 +115,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
             <div className="my-auto h-2 w-8 animate-pulse rounded-full bg-lightBlur"></div>
           </div>
         ) : (
-          <div className="text-md flex flex-col text-lightGreen">
+          <div className="text-md flex flex-col text-lightGreen overflow-hidden text-ellipsis max-w-20">
             {isAsset
               ? asset.ticker
               : asset.name === "SKYNET_TRADING"
@@ -103,7 +152,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
           <div className={priceChangeClass}>
             {isAsset ? "$" : ""}
             {isAsset
-              ? Number.parseFloat(asset.price).toFixed(3)
+              ? Number.parseFloat(String(asset.price)).toFixed(2)
               : asset.reputationScore}
           </div>
         )}
@@ -143,7 +192,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
           ) : isAsset && !hasError ? (
             <div
               className={classNames(
-                asset.variations.past1h > 0
+                isAsset && Number(asset.variations.past1h) > 0
                   ? "text-mint"
                   : asset.variations.past1h === 0
                   ? "text-LightGreenFooter"
@@ -151,12 +200,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {asset.variations.past1h > 0
-                ? "▲"
-                : asset.variations.past1h === 0
-                ? "-"
-                : "▼"}{" "}
-              {asset.variations.past1h}%
+              {renderIcon()} {asset.variations.past1h}%
             </div>
           ) : isAsset && hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
@@ -166,11 +210,11 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
             ""
           )}
           {loading ? (
-            <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur"></div>
+            <div className="my-auto h-3  w-12 animate-pulse rounded-full bg-lightBlur" />
           ) : isAsset && !hasError ? (
             <div
               className={classNames(
-                asset.variations.past24h > 0
+                isAsset && Number(asset.variations.past24h) > 0
                   ? "text-mint"
                   : asset.variations.past24h === 0
                   ? "text-LightGreenFooter"
@@ -178,11 +222,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {asset.variations.past24h > 0
-                ? "▲"
-                : asset.variations.past24h === 0
-                ? "-"
-                : "▼"}{" "}
+              {renderIcon()}
               {asset.variations.past24h}%
             </div>
           ) : isAsset && hasError ? (
@@ -198,7 +238,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
           ) : isAsset && !hasError ? (
             <div
               className={classNames(
-                asset.variations.past7d > 0
+                isAsset && Number(asset.variations.past7d) > 0
                   ? "text-mint"
                   : asset.variations.past7d === 0
                   ? "text-LightGreenFooter"
@@ -206,11 +246,7 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {asset.variations.past7d > 0
-                ? "▲"
-                : asset.variations.past7d === 0
-                ? "-"
-                : "▼"}{" "}
+              {renderIcon()}
               {asset.variations.past7d}%
             </div>
           ) : isAsset && hasError ? (
@@ -238,5 +274,3 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
     </Link>
   );
 };
-
-export default AssetPerf;

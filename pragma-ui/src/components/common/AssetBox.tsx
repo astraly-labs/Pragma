@@ -60,7 +60,7 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
               <div className="text-left">{asset.ticker}</div>
               <div className="text-left">
                 {data
-                  ? (data[index]?.lastPrice / 10 ** asset.decimals).toFixed(2)
+                  ? (data[index]?.lastPrice / 10 ** asset.decimals).toFixed(3)
                   : 0}
               </div>
               <div className="text-left">
@@ -71,7 +71,7 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
                   : 0}
               </div>
               <div className="text-left">
-                {data ? data[index]?.relativeVariation24h.toFixed(2) : 0}%
+                {data ? data[index]?.relativeVariation24h.toFixed(3) : 0}%
               </div>
             </button>
           ))}
