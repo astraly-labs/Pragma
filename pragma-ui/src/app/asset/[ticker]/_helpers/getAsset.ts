@@ -1,4 +1,5 @@
 import { AssetInfo } from "@/pages/deprecated-assets";
+import { getEncodedTicker } from "./getEncodedTicker";
 
 type GetAsset = {
   source?: string;
@@ -6,10 +7,7 @@ type GetAsset = {
 };
 
 export const getAsset = async ({ source, ticker }: GetAsset) => {
-  const base = ticker.split("%2F")[0].toLowerCase();
-  const quote = ticker.split("%2F")[1].toLowerCase();
-
-  const encodedTicker = encodeURIComponent(`${base}/${quote}`);
+  const encodedTicker = getEncodedTicker(ticker);
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`

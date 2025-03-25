@@ -131,7 +131,7 @@ export const AssetRow = ({
           <div className="text-redDown">N/A</div>
         ) : (
           <div className={priceChangeClass}>
-            ${Number.parseFloat(String(asset.price)).toFixed(2)}
+            ${Number.parseFloat(String(asset.price)).toFixed(3)}
           </div>
         )}
       </div>

@@ -19,11 +19,13 @@ type AssetPageProps = {
   params: Params;
 };
 
+const DEFAULT_SOURCE = SUPPORTED_SOURCES[2];
+
 const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const network = (searchParams.network as string) || SUPPORTED_SOURCES[2];
+  const network = (searchParams.network as string) || DEFAULT_SOURCE;
   const tickerParam = params.ticker;
 
   if (!tickerParam || typeof tickerParam !== "string") {
