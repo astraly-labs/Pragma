@@ -80,10 +80,14 @@ const AssetPage = ({ ticker }: Props) => {
         // Check if this is an unsupported asset
         if (assetData.error) {
           const formattedAsset: Asset = {
-            image: `/assets/currencies/${ticker.toLowerCase().split("/")[0]}.svg`,
+            image: `/assets/currencies/${
+              ticker.toLowerCase().split("/")[0]
+            }.svg`,
             type: "Crypto",
             ticker,
-            lastUpdated: assetData.isUnsupported ? "Unsupported asset" : "Error fetching data",
+            lastUpdated: assetData.isUnsupported
+              ? "Unsupported asset"
+              : "Error fetching data",
             price: 0,
             sources: 0,
             variations: {
@@ -95,7 +99,7 @@ const AssetPage = ({ ticker }: Props) => {
             ema: "N/A",
             macd: "N/A",
             error: assetData.error,
-            isUnsupported: assetData.isUnsupported
+            isUnsupported: assetData.isUnsupported,
           };
           setAsset(formattedAsset);
           return;
@@ -124,7 +128,7 @@ const AssetPage = ({ ticker }: Props) => {
         setAsset(formattedAsset);
 
         // Only process components if they exist (not API source)
-        if (currentSource !== 'api' && assetData.components) {
+        if (currentSource !== "api" && assetData.components) {
           const assetComponents: PriceComponents[] = assetData.components.map(
             (component: any) => {
               return {
@@ -248,11 +252,13 @@ const AssetPage = ({ ticker }: Props) => {
       <BoxContainer>
         <AssetHeader isAsset={true} asset={asset} />
       </BoxContainer>
-      
+
       {asset?.isUnsupported ? (
         <BoxContainer>
           <div className="flex flex-col items-center justify-center p-8 text-center">
-            <div className="mb-4 text-2xl font-bold text-redDown">Unsupported Asset</div>
+            <div className="mb-4 text-2xl font-bold text-redDown">
+              Unsupported Asset
+            </div>
             <div className="text-lg text-lightGreen">
               This asset is not currently supported by the Pragma API.
             </div>
@@ -273,7 +279,7 @@ const AssetPage = ({ ticker }: Props) => {
             <AssetChart asset={asset} />
           </BoxContainer>
           <div className="w-full pb-5" />
-          {currentSource !== 'api' && (
+          {currentSource !== "api" && (
             <>
               <BoxContainer className="relative" modeOne={false}>
                 <PriceComponent components={priceComponents} />
