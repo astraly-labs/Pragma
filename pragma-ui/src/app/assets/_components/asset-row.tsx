@@ -61,7 +61,10 @@ export const AssetRow = ({
     <Link
       href={
         !hasError
-          ? `/asset/${encodeURIComponent(asset.ticker).replace("%2F", "-")}`
+          ? `/asset/${encodeURIComponent(asset.ticker).replace(
+              "%2F",
+              "-"
+            )}?network=mainnet`
           : hasError
           ? "#"
           : `/provider/${asset.ticker}`
@@ -90,7 +93,7 @@ export const AssetRow = ({
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="my-auto size-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
+          <div className="my-auto h-8 w-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
             <span className="self-center">{asset.ticker[0]}</span>
           </div>
         )}
@@ -100,7 +103,7 @@ export const AssetRow = ({
             <div className="my-auto h-2 w-8 animate-pulse rounded-full bg-lightBlur"></div>
           </div>
         ) : (
-          <div className="text-md flex flex-col text-lightGreen">
+          <div className="text-md flex flex-col text-lightGreen overflow-hidden text-ellipsis max-w-20">
             {asset.ticker}{" "}
             <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
               {asset.type}

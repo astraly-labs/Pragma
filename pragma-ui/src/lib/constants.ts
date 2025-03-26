@@ -18,3 +18,5 @@ export const DEFAULT_ASSETS = [
 ];
 
 export const SUPPORTED_SOURCES = ["api", "mainnet"];
+
+export const TIME_ZONE = "Europe/London";

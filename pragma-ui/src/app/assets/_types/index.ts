@@ -15,6 +15,16 @@ export type AssetInfo = {
   macd: string;
   error?: string;
   isUnsupported?: boolean;
+  decimals?: number;
+  components?: Price[];
+};
+
+export type Price = {
+  publisher: string;
+  source: string;
+  price: string;
+  tx_hash: string;
+  timestamp: number;
 };
 
 export type DataProviderInfo = {

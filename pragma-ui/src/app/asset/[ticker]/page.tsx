@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { getAsset } from "./_helpers/getAsset";
 import { AssetChart } from "./_components/asset-chart";
 import { Checkpoints } from "./_components/checkpoints";
+import { PriceTable } from "./_components/price-table";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -99,10 +100,14 @@ const AssetPage = async (props: AssetPageProps) => {
           <div className="w-full pb-5" />
           {network !== "api" && (
             <>
-              {/* // @TODO: missing from internal API */}
-              {/* <BoxContainer className="relative" modeOne={false}>
-                <Price components={priceComponents} />
-              </BoxContainer> */}
+              {asset.components && asset.decimals && (
+                <BoxContainer className="relative" modeOne={false}>
+                  <PriceTable
+                    components={asset.components}
+                    decimals={asset.decimals}
+                  />
+                </BoxContainer>
+              )}
               <BoxContainer>
                 <Checkpoints components={checkpoints} />
               </BoxContainer>

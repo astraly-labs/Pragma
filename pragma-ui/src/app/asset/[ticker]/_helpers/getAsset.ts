@@ -1,4 +1,4 @@
-import { AssetInfo } from "@/pages/deprecated-assets";
+import { AssetInfo } from "@/app/assets/_types";
 import { getEncodedTicker } from "./getEncodedTicker";
 
 type GetAsset = {

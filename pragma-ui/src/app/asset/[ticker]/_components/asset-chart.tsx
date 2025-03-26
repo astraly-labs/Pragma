@@ -1,19 +1,18 @@
 "use client";
 
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
-import { UTCTimestamp, createChart } from "lightweight-charts";
+import {
+  createChart,
+  ColorType,
+  LineStyle,
+  PriceScaleMode,
+} from "lightweight-charts";
 import moment from "moment-timezone";
 import { AssetInfo } from "@/app/assets/_types";
-import { removeDuplicateTimestamps, timezone } from "../_helpers/utils";
-import { SUPPORTED_SOURCES } from "@/lib/constants";
+import { SUPPORTED_SOURCES, TIME_ZONE } from "@/lib/constants";
 import { useRouter } from "next/navigation";
-
-type PricePoint = {
-  time: UTCTimestamp;
-  value: number;
-};
 
 type AssetChartProps = {
   asset: AssetInfo;
@@ -22,14 +21,9 @@ type AssetChartProps = {
 
 export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   const router = useRouter();
-  const [selectedFrame] = useState("15min");
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<{
-    chart: ReturnType<typeof createChart>;
-    lineSeries: ReturnType<ReturnType<typeof createChart>["addLineSeries"]>;
-  } | null>(null);
+  const chartRef = useRef<any>(null);
 
-  // Skip chart creation if asset has an error
   if (asset?.error || asset?.isUnsupported) {
     return null;
   }
@@ -40,37 +34,48 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
     );
   };
 
-  //
-  // 1) Create the chart only once on mount
-  //
   useEffect(() => {
-    if (!chartContainerRef.current || chartRef.current) return;
+    if (!chartContainerRef.current) return;
+
+    if (chartRef.current) {
+      chartRef.current.remove();
+      chartRef.current = null;
+    }
 
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height: 350,
       layout: {
-        background: { color: "#00000000" },
+        background: {
+          type: ColorType.Solid,
+          color: "transparent",
+        },
         textColor: "#c4f8e2",
         fontFamily: "Inter, sans-serif",
       },
       grid: {
-        vertLines: { color: "rgba(197, 203, 206, 0.3)" },
-        horzLines: { color: "rgba(197, 203, 206, 0.3)" },
+        vertLines: {
+          color: "rgba(197, 203, 206, 0.3)",
+          style: LineStyle.Solid,
+        },
+        horzLines: {
+          color: "rgba(197, 203, 206, 0.3)",
+          style: LineStyle.Solid,
+        },
       },
       crosshair: {
-        mode: 1,
+        mode: 0, // Crosshair mode
         vertLine: {
           color: "#c4f8e2",
           width: 1,
-          style: 3,
+          style: LineStyle.Dashed,
           visible: true,
           labelVisible: true,
         },
         horzLine: {
           color: "#c4f8e2",
           width: 1,
-          style: 3,
+          style: LineStyle.Dashed,
           visible: true,
           labelVisible: true,
         },
@@ -86,34 +91,15 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
         visible: true,
         timeVisible: true,
         secondsVisible: false,
-        tickMarkFormatter: (time: number) => {
-          return moment(time * 1000).format("HH:mm:ss");
-        },
       },
       rightPriceScale: {
         borderVisible: false,
-        visible: true,
+        mode: PriceScaleMode.Normal,
+        autoScale: false,
         scaleMargins: {
           top: 0.1,
           bottom: 0.3,
         },
-        autoScale: false,
-        mode: 1,
-        alignLabels: true,
-        borderColor: "rgba(197, 203, 206, 0.3)",
-        ticksVisible: true,
-        entireTextOnly: true,
-      },
-      handleScale: {
-        mouseWheel: true,
-        pinch: true,
-        axisPressedMouseMove: true,
-      },
-      handleScroll: {
-        mouseWheel: true,
-        pressedMouseMove: true,
-        horzTouchDrag: true,
-        vertTouchDrag: true,
       },
     });
 
@@ -122,18 +108,6 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       lineWidth: 2,
       crosshairMarkerVisible: true,
       lastValueVisible: true,
-      priceLineVisible: true,
-      baseLineVisible: false,
-      autoscaleInfoProvider: () => ({
-        priceRange: {
-          minMove: 0.001,
-          defaultPriceScale: {
-            autoScale: false,
-            invertScale: false,
-            alignLabels: true,
-          },
-        },
-      }),
       priceFormat: {
         type: "price",
         precision: 3,
@@ -141,240 +115,71 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       },
     });
 
-    // Store references
-    chartRef.current = { chart, lineSeries };
-
-    // Resize logic
     const handleResize = () => {
-      if (!chartRef.current || !chartContainerRef.current) return;
-      const { clientWidth } = chartContainerRef.current;
-      chartRef.current.chart.applyOptions({
-        width: clientWidth,
+      if (!chartContainerRef.current) return;
+
+      chart.applyOptions({
+        width: chartContainerRef.current.clientWidth,
         height: 350,
       });
-
-      // Ensure the chart maintains its view on resize
-      chartRef.current.chart.timeScale().scrollToPosition(0, false);
     };
 
-    // Initial sizing
-    handleResize();
-
-    // Observe container size changes
     const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(chartContainerRef.current);
+    if (chartContainerRef.current) {
+      resizeObserver.observe(chartContainerRef.current);
+    }
 
-    // Cleanup on unmount
-    return () => {
-      resizeObserver.disconnect();
-      if (chartRef.current) {
-        chartRef.current.chart.remove();
-      }
-      chartRef.current = null;
-    };
-  }, []);
-
-  //
-  // 2) Handle WebSocket data for non-API sources
-  //
-  useEffect(() => {
-    if (!asset || currentSource === "api") return;
-
-    let wsInstance: WebSocket | null = new WebSocket(
-      "wss://ws.devnet.pragma.build/node/v1/onchain/ohlc/subscribe"
-    );
-
-    wsInstance.onopen = () => {
-      console.log("WebSocket connected");
-      if (wsInstance) {
-        wsInstance.send(
-          JSON.stringify({
-            msg_type: "subscribe",
-            pair: asset.ticker,
-            network: currentSource,
-            interval: selectedFrame,
-            candles_to_get: 1000,
-          })
-        );
-      }
+    chartRef.current = {
+      chart,
+      lineSeries,
+      resizeObserver,
+      remove() {
+        resizeObserver.disconnect();
+        chart.remove();
+      },
     };
 
-    wsInstance.onmessage = (event) => {
-      const wsData = JSON.parse(event.data);
-      if (wsData.msg_type === "subscribe") return;
-
-      let updatedPriceData: PricePoint[] = [];
-      if (Array.isArray(wsData) && wsData.length > 0) {
-        if (wsData.length === 1) {
-          const newData = wsData[0];
-          const time = (moment.tz(newData.time, timezone).valueOf() /
-            1000) as UTCTimestamp;
-          const value = Number(
-            (parseInt(newData.open, 10) / 10 ** 8).toFixed(3)
-          );
-          updatedPriceData = [{ time, value }];
-        } else {
-          console.log({ wsData });
-          const sorted = wsData.sort(
-            (a: any, b: any) =>
-              moment.tz(a.time, timezone).valueOf() -
-              moment.tz(b.time, timezone).valueOf()
-          );
-          const unduplicatedData = removeDuplicateTimestamps(sorted);
-          updatedPriceData = unduplicatedData.map((d: any) => ({
-            time: (moment.tz(d.time, timezone).valueOf() /
-              1000) as UTCTimestamp,
-            value: Number((parseInt(d.open, 10) / 10 ** 8).toFixed(3)),
-          }));
-        }
-      }
-
-      if (chartRef.current && updatedPriceData.length > 0) {
-        const currentData = chartRef.current.lineSeries.data() as PricePoint[];
-        const merged = [...currentData, ...updatedPriceData].sort(
-          (a, b) => a.time - b.time
-        );
-
-        chartRef.current.lineSeries.setData(merged);
-
-        // Update the visible range to show new data
-        const timeScale = chartRef.current.chart.timeScale();
-        timeScale.fitContent();
-
-        // Update price scale with latest value
-        const lastValue = updatedPriceData[updatedPriceData.length - 1].value;
-        const priceRange = lastValue * 0.0005; // 0.05% range
-        chartRef.current.lineSeries.applyOptions({
-          autoscaleInfoProvider: () => ({
-            priceRange: {
-              minValue: lastValue - priceRange,
-              maxValue: lastValue + priceRange,
-            },
-          }),
-        });
-      }
-    };
-
-    wsInstance.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    return () => {
-      console.log("Closing WebSocket");
-      if (wsInstance) {
-        wsInstance.close();
-      }
-      wsInstance = null;
-    };
-  }, [asset, currentSource, selectedFrame]);
-
-  //
-  // 3) Handle SSE / API data from the DataProvider
-  //
-  useEffect(() => {
-    if (!asset?.ticker || currentSource !== "api" || !asset) return;
-    if (!chartRef.current) return;
-
-    const assetData = asset;
-    const { lineSeries, chart } = chartRef.current;
-
-    // Historical data
-    // @TODO: missing from internal API
-    if (Array.isArray(assetData?.historical)) {
-      // @TODO: missing from internal API
-      const historicalData: PricePoint[] = assetData?.historical
-        .map((point: any) => {
-          const rawTime =
-            point.timestamp.toString().length > 10
-              ? Math.floor(point.timestamp / 1000)
-              : point.timestamp;
-          const value = Number(
-            // @TODO: missing from internal API
-            (parseInt(point.price, 16) / 10 ** assetData?.decimals).toFixed(3)
-          );
-
-          return {
-            time: rawTime as UTCTimestamp,
-            value,
-          };
-        })
-        .filter((p) => !isNaN(p.value))
-        .sort((a, b) => a.time - b.time);
+    if (asset?.historical && asset.decimals) {
+      const historicalData = asset.historical
+        .map((point: any) => ({
+          time: moment.tz(point.timestamp, TIME_ZONE).valueOf() / 1000,
+          value: Number(
+            (parseInt(point.price, 16) / 10 ** Number(asset.decimals)).toFixed(
+              3
+            )
+          ),
+        }))
+        .filter((p: any) => !isNaN(p.value));
 
       if (historicalData.length > 0) {
         lineSeries.setData(historicalData);
-
-        // Calculate price range
-        const prices = historicalData.map((d) => d.value);
-        const lastPrice = prices[prices.length - 1];
-        const priceRange = lastPrice * 0.0005; // 0.05% range
-
-        // Set fixed price range around the last price
-        chart.priceScale("right").applyOptions({
-          autoScale: false,
-          scaleMargins: { top: 0.1, bottom: 0.3 },
-        });
-
-        // Set the visible price range
-        lineSeries.applyOptions({
-          autoscaleInfoProvider: () => ({
-            priceRange: {
-              minValue: lastPrice - priceRange,
-              maxValue: lastPrice + priceRange,
-            },
-          }),
-        });
-
-        // Show all data points
         chart.timeScale().fitContent();
       }
     }
 
-    // Latest point update
-    if (assetData.lastUpdated && assetData.price) {
-      const rawTime =
-        assetData.lastUpdated.toString().length > 10
-          ? Math.floor(Number(assetData.lastUpdated) / 1000)
-          : assetData.lastUpdated;
+    return () => {
+      resizeObserver.disconnect();
+      chart.remove();
+      chartRef.current = null;
+    };
+  }, [asset?.ticker]);
 
-      const value = Number(
-        (
-          parseInt(String(assetData.price), 16) /
-          // @TODO: missing from internal API
-          10 ** assetData.decimals
-        ).toFixed(3)
-      );
-      if (!isNaN(value) && value > 0) {
-        // Update with new point
-        lineSeries.update({
-          time: rawTime as UTCTimestamp,
-          value,
-        });
+  useEffect(() => {
+    if (!chartRef.current || !asset?.price || !asset.decimals) return;
 
-        // Update price scale to keep centered around latest price
-        const priceRange = value * 0.0005; // 0.05% range
-        lineSeries.applyOptions({
-          autoscaleInfoProvider: () => ({
-            priceRange: {
-              minValue: value - priceRange,
-              maxValue: value + priceRange,
-            },
-          }),
-        });
+    const { lineSeries } = chartRef.current;
 
-        // Ensure we can see the latest updates
-        const timeScale = chart.timeScale();
-        const visibleRange = timeScale.getVisibleLogicalRange();
-        if (visibleRange !== null) {
-          const newRange = {
-            from: visibleRange.from,
-            to: visibleRange.to + 1,
-          };
-          timeScale.setVisibleLogicalRange(newRange);
-        }
-      }
+    const newPoint = {
+      time: moment.tz(asset.lastUpdated, TIME_ZONE).valueOf() / 1000,
+      value: Number(
+        (parseInt(String(asset.price), 16) / 10 ** asset.decimals).toFixed(3)
+      ),
+    };
+
+    if (!isNaN(newPoint.value)) {
+      lineSeries.update(newPoint);
     }
-  }, [asset?.ticker, currentSource]);
+  }, [asset?.ticker]);
 
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
@@ -434,7 +239,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
 
       <div
         ref={chartContainerRef}
-        className="min-h-[400px] w-full rounded-xl border border-lightBlur bg-darkGreen p-8"
+        className="min-h-[400px] w-full rounded-xl border border-lightBlur bg-darkGreen p-8 overflow-hidden"
       />
     </div>
   );
