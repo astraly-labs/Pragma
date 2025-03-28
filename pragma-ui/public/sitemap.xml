@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://pragma.build</loc><lastmod>2025-03-19T22:26:20.591Z</lastmod><changefreq>weekly</changefreq><priority>1</priority></url>
-<url><loc>https://pragma.build/deprecated-assets</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/ecosystem</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/oaas</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/optimistic</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/oracle/new</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/privacyPolicy</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/request</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/resources</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/terms</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/v2</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/asset/BTC%2FUSD</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/asset/ETH%2FUSD</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://pragma.build/asset/STRK%2FUSD</loc><lastmod>2025-03-19T22:26:20.592Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build</loc><lastmod>2025-03-28T00:27:35.066Z</lastmod><changefreq>weekly</changefreq><priority>1</priority></url>
+<url><loc>https://pragma.build/ecosystem</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/oaas</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/oracle/new</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/privacyPolicy</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/request</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/resources</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://pragma.build/terms</loc><lastmod>2025-03-28T00:27:35.067Z</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
 </urlset>
