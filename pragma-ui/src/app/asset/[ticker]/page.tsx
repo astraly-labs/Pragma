@@ -95,7 +95,6 @@ const AssetPage = async (props: AssetPageProps) => {
         <>
           <BoxContainer>
             <AssetChart asset={asset} currentSource={network} />
-            Chart goes here
           </BoxContainer>
           <div className="w-full pb-5" />
           {network !== "api" && (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
 import {
@@ -8,11 +8,14 @@ import {
   ColorType,
   LineStyle,
   PriceScaleMode,
+  UTCTimestamp,
 } from "lightweight-charts";
 import moment from "moment-timezone";
 import { AssetInfo } from "@/app/assets/_types";
 import { SUPPORTED_SOURCES, TIME_ZONE } from "@/lib/constants";
 import { useRouter } from "next/navigation";
+import { useEventSourceQuery } from "../_helpers/useEventSourceQuery";
+import { PriceData } from "../_types";
 
 type AssetChartProps = {
   asset: AssetInfo;
@@ -23,6 +26,17 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   const router = useRouter();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<any>(null);
+  const [historical, setHistorical] = useState<PriceData[]>([]);
+
+  useEventSourceQuery({
+    queryKey: "ASSET",
+    eventName: "historical",
+    url: `${
+      process.env.NEXT_PUBLIC_INTERNAL_API
+    }/data/multi/stream?pairs=${asset.ticker.toLowerCase()}&interval=100ms&aggregation=median&historical_prices=10`,
+    setHistorical,
+    historical,
+  });
 
   if (asset?.error || asset?.isUnsupported) {
     return null;
@@ -139,10 +153,11 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       },
     };
 
-    if (asset?.historical && asset.decimals) {
-      const historicalData = asset.historical
-        .map((point: any) => ({
-          time: moment.tz(point.timestamp, TIME_ZONE).valueOf() / 1000,
+    if (historical && asset.decimals) {
+      const historicalData = historical
+        .map((point) => ({
+          time: (moment.tz(point.timestamp, TIME_ZONE).valueOf() /
+            1000) as UTCTimestamp,
           value: Number(
             (parseInt(point.price, 16) / 10 ** Number(asset.decimals)).toFixed(
               3
