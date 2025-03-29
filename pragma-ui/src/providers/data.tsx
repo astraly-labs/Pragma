@@ -17,7 +17,6 @@ export const initialAssets = [
   { ticker: "AAVE/USD", address: "0x1", decimals: 18 },
 ];
 
-
 type AssetT = {
   ticker: string;
   address: string;
@@ -86,7 +85,9 @@ export const DataProvider = ({
 }) => {
   const [assets, setAssets] = useState<AssetT[]>([]);
   const [source, setSource] = useState("mainnet");
-  const [streamingData, setStreamingData] = useState<{ [ticker: string]: any }>({});
+  const [streamingData, setStreamingData] = useState<{ [ticker: string]: any }>(
+    {}
+  );
 
   // Fetch available tokens when source changes
   const { data: availableTokens, isLoading: isLoadingTokens } = useQuery({
@@ -141,10 +142,7 @@ export const DataProvider = ({
         };
       });
       console.log("Setting assets:", newAssets.length, "assets");
-      console.log(
-        "Asset tickers:",
-        newAssets.map((a) => a.ticker).join(", ")
-      );
+      console.log("Asset tickers:", newAssets.map((a) => a.ticker).join(", "));
       setAssets(newAssets);
     }
   }, [availableTokens, source]);
@@ -159,10 +157,12 @@ export const DataProvider = ({
 
   // Function to start streaming for all assets
   const startStreaming = async (assets: AssetT[]) => {
-    const pairs = assets.map(asset => asset.ticker);
-    const url = `/api/stream?${pairs.map(pair => `pairs=${encodeURIComponent(pair)}`).join('&')}&interval=1s&aggregation=median&historical_prices=10`;
-    console.log(`Starting stream for ${pairs.length} pairs:`, pairs.join(', '));
-    console.log('Stream URL:', url);
+    const pairs = assets.map((asset) => asset.ticker);
+    const url = `/api/stream?${pairs
+      .map((pair) => `pairs=${encodeURIComponent(pair)}`)
+      .join("&")}&interval=1s&aggregation=median&historical_prices=10`;
+    console.log(`Starting stream for ${pairs.length} pairs:`, pairs.join(", "));
+    console.log("Stream URL:", url);
 
     try {
       const response = await fetch(url, {
@@ -172,15 +172,19 @@ export const DataProvider = ({
       });
 
       if (!response.ok || !response.body) {
-        console.error(`Failed to fetch data:`, response.status, response.statusText);
+        console.error(
+          `Failed to fetch data:`,
+          response.status,
+          response.statusText
+        );
         try {
           const errorData = await response.json();
           console.error(`Error details:`, errorData);
-          
+
           // Set error state for all assets
-          setStreamingData(prev => {
+          setStreamingData((prev) => {
             const newState = { ...prev };
-            assets.forEach(asset => {
+            assets.forEach((asset) => {
               newState[asset.ticker] = {
                 price: "0x0",
                 decimals: asset.decimals,
@@ -188,15 +192,15 @@ export const DataProvider = ({
                 nb_sources_aggregated: 0,
                 variations: { "1h": 0, "1d": 0, "1w": 0 },
                 error: errorData.error || "Failed to fetch data",
-                loading: false
+                loading: false,
               };
             });
             return newState;
           });
         } catch (parseError) {
-          setStreamingData(prev => {
+          setStreamingData((prev) => {
             const newState = { ...prev };
-            assets.forEach(asset => {
+            assets.forEach((asset) => {
               newState[asset.ticker] = {
                 price: "0x0",
                 decimals: asset.decimals,
@@ -204,13 +208,15 @@ export const DataProvider = ({
                 nb_sources_aggregated: 0,
                 variations: { "1h": 0, "1d": 0, "1w": 0 },
                 error: `Error: ${response.status} ${response.statusText}`,
-                loading: false
+                loading: false,
               };
             });
             return newState;
           });
         }
-        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch data: ${response.status} ${response.statusText}`
+        );
       }
 
       console.log(`Stream connected successfully`);
@@ -231,7 +237,7 @@ export const DataProvider = ({
       // Set a timeout for initial data
       const timeoutId = setTimeout(() => {
         if (!initialDataReceived) {
-          streamPromiseReject(new Error('Timeout waiting for initial data'));
+          streamPromiseReject(new Error("Timeout waiting for initial data"));
         }
       }, 10000); // 10 second timeout
 
@@ -244,14 +250,16 @@ export const DataProvider = ({
               break;
             }
 
-            const lines = value.split('\n');
+            const lines = value.split("\n");
 
             for (const line of lines) {
               if (!line.trim()) continue;
 
-              if (line.startsWith('data:')) {
+              if (line.startsWith("data:")) {
                 try {
                   const jsonStr = line.slice(5).trim();
+                  if (!jsonStr) return;
+
                   const data = JSON.parse(jsonStr);
 
                   // Handle initial connection message
@@ -267,7 +275,10 @@ export const DataProvider = ({
                   if (data.error) {
                     console.error(`Stream error:`, data.error);
                     // Don't fail the stream for individual asset errors
-                    if (!initialDataReceived && data.error.includes("entry not found")) {
+                    if (
+                      !initialDataReceived &&
+                      data.error.includes("entry not found")
+                    ) {
                       // If we haven't received any data yet and this is just a missing asset,
                       // don't fail the whole stream
                       continue;
@@ -278,24 +289,25 @@ export const DataProvider = ({
                   // Handle array of price updates
                   if (Array.isArray(data)) {
                     const updates: { [ticker: string]: any } = {};
-                    
-                    data.forEach(update => {
+
+                    data.forEach((update) => {
                       if (update.pair_id && update.price && update.timestamp) {
                         updates[update.pair_id] = {
                           price: update.price,
                           decimals: update.decimals,
                           last_updated_timestamp: update.timestamp / 1000,
-                          nb_sources_aggregated: update.num_sources_aggregated || 1,
+                          nb_sources_aggregated:
+                            update.num_sources_aggregated || 1,
                           variations: { "1h": 0, "1d": 0, "1w": 0 },
-                          loading: false
+                          loading: false,
                         };
                       }
                     });
 
                     if (Object.keys(updates).length > 0) {
-                      setStreamingData(prev => ({
+                      setStreamingData((prev) => ({
                         ...prev,
-                        ...updates
+                        ...updates,
                       }));
 
                       if (!initialDataReceived) {
@@ -306,7 +318,11 @@ export const DataProvider = ({
                     }
                   }
                 } catch (e) {
-                  console.error(`Failed to parse data:`, e, `Raw data: ${line.slice(5).trim().substring(0, 200)}`);
+                  console.error(
+                    `Failed to parse data:`,
+                    e,
+                    `Raw data: ${line.slice(5).trim().substring(0, 200)}`
+                  );
                   // Don't reject for parse errors unless we haven't received any data yet
                   if (!initialDataReceived) {
                     clearTimeout(timeoutId);
@@ -326,7 +342,7 @@ export const DataProvider = ({
         }
       };
 
-      processStream().catch(error => {
+      processStream().catch((error) => {
         console.error(`Unhandled stream error:`, error);
         clearTimeout(timeoutId);
         if (!initialDataReceived) {
@@ -343,20 +359,21 @@ export const DataProvider = ({
         console.error(`Stream initialization failed:`, error);
         throw error;
       }
-
     } catch (error: any) {
       console.error(`Failed to start stream:`, error);
-      setStreamingData(prev => {
+      setStreamingData((prev) => {
         const newState = { ...prev };
-        assets.forEach(asset => {
+        assets.forEach((asset) => {
           newState[asset.ticker] = {
             price: "0x0",
             decimals: asset.decimals,
             last_updated_timestamp: Math.floor(Date.now() / 1000),
             nb_sources_aggregated: 0,
             variations: { "1h": 0, "1d": 0, "1w": 0 },
-            error: `Failed to start stream: ${error.message || "Unknown error"}`,
-            loading: false
+            error: `Failed to start stream: ${
+              error.message || "Unknown error"
+            }`,
+            loading: false,
           };
         });
         return newState;
@@ -372,21 +389,21 @@ export const DataProvider = ({
       let retryCount = 0;
       const maxRetries = 3;
       const retryDelay = 5000; // 5 seconds
-      
+
       // Clear existing streams
       setStreamingData({});
-      
+
       // Initialize loading state for all assets
-      setStreamingData(prev => {
+      setStreamingData((prev) => {
         const newState = { ...prev };
-        assets.forEach(asset => {
+        assets.forEach((asset) => {
           newState[asset.ticker] = {
             price: "0x0",
             decimals: asset.decimals,
             last_updated_timestamp: Math.floor(Date.now() / 1000),
             nb_sources_aggregated: 0,
             variations: { "1h": 0, "1d": 0, "1w": 0 },
-            loading: true
+            loading: true,
           };
         });
         return newState;
@@ -397,21 +414,24 @@ export const DataProvider = ({
         try {
           await startStreaming(assets);
         } catch (error) {
-          console.error(`Stream error (attempt ${retryCount + 1}/${maxRetries}):`, error);
+          console.error(
+            `Stream error (attempt ${retryCount + 1}/${maxRetries}):`,
+            error
+          );
           if (mounted && retryCount < maxRetries) {
             retryCount++;
             console.log(`Retrying in ${retryDelay}ms...`);
-            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
             return startStreamWithRetry();
           } else {
             if (mounted) {
-              setStreamingData(prev => {
+              setStreamingData((prev) => {
                 const newState = { ...prev };
-                assets.forEach(asset => {
+                assets.forEach((asset) => {
                   newState[asset.ticker] = {
                     ...(prev[asset.ticker] || {}),
                     loading: false,
-                    error: `Failed after ${maxRetries} attempts: ${error.message}`
+                    error: `Failed after ${maxRetries} attempts: ${error.message}`,
                   };
                 });
                 return newState;
@@ -423,7 +443,7 @@ export const DataProvider = ({
       };
 
       // Start the stream with retry logic
-      startStreamWithRetry().catch(error => {
+      startStreamWithRetry().catch((error) => {
         console.error("All retry attempts failed:", error);
       });
 
@@ -446,7 +466,10 @@ export const DataProvider = ({
           console.log(`Starting stream for ${asset.ticker} on demand`);
           try {
             startStreaming([asset]).catch((error) => {
-              console.error(`Error starting stream for ${asset.ticker}:`, error);
+              console.error(
+                `Error starting stream for ${asset.ticker}:`,
+                error
+              );
             });
           } catch (error) {
             console.error(`Failed to start stream for ${asset.ticker}:`, error);
@@ -492,9 +515,7 @@ export const DataProvider = ({
     }
     const checkpointsUrl =
       dataSources[
-        "checkpoints" +
-          source.charAt(0).toUpperCase() +
-          source.slice(1)
+        "checkpoints" + source.charAt(0).toUpperCase() + source.slice(1)
       ];
     const url = `${checkpointsUrl}&pair=${encodeURIComponent(asset.ticker)}`;
     console.log(`[${asset.ticker}] Fetching checkpoints from:`, url);
@@ -511,9 +532,7 @@ export const DataProvider = ({
     }
     const publisherUrl =
       dataSources[
-        "publishers" +
-          source.charAt(0).toUpperCase() +
-          source.slice(1)
+        "publishers" + source.charAt(0).toUpperCase() + source.slice(1)
       ];
     console.log("Fetching publishers from:", publisherUrl);
     const response = await fetch(publisherUrl);
