@@ -31,8 +31,8 @@ export const useEventSourceQuery = ({
     });
   };
 
-  return useQuery({
-    queryKey: [queryKey],
-    queryFn: fetchData,
-  });
+  // return useQuery({
+  //   queryKey: [queryKey],
+  //   queryFn: fetchData,
+  // });
 };
