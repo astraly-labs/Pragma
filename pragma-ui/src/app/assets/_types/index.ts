@@ -15,6 +15,16 @@ export type AssetInfo = {
   macd: string;
   error?: string;
   isUnsupported?: boolean;
+  decimals?: number;
+  components?: Price[];
+};
+
+export type Price = {
+  publisher: string;
+  source: string;
+  price: string;
+  tx_hash: string;
+  timestamp: number;
 };
 
 export type DataProviderInfo = {
@@ -70,4 +80,40 @@ export type StreamData = {
     "1w": number;
   };
   loading: boolean;
+};
+
+export type PriceComponents = {
+  publisher: string;
+  link: string;
+  source: string;
+  price: number;
+  hash: string;
+  lastUpdated: number;
+};
+
+export type CheckpointComponent = {
+  hash: string;
+  price: number;
+  date: string;
+  hour: string;
+  signer: string;
+};
+
+export type Checkpoint = {
+  image: string;
+  type: string;
+  ticker: string;
+  lastUpdated: string;
+  price: number;
+  sources: number;
+  variations: {
+    past1h: number;
+    past24h: number;
+    past7d: number;
+  };
+  chart: string;
+  ema: string;
+  macd: string;
+  error: string;
+  isUnsupported: boolean;
 };

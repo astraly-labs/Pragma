@@ -5,36 +5,20 @@ import styles from "@/components/Assets/styles.module.scss";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { AssetInfo, DataProviderInfo } from "@/app/assets/_types";
+import { AssetInfo } from "@/app/assets/_types";
 import { SearchBar } from "./searchbar";
-import { AssetPerf } from "./asset-perf";
 import { useRouter } from "next/navigation";
+import { AssetRow } from "./asset-row";
 
-type AssetListProps =
-  | {
-      options: string[];
-      assets: AssetInfo[];
-      isAsset: true;
-      selectedSource?: string;
-      loading: boolean;
-    }
-  | {
-      options: string[];
-      isAsset: false;
-      assets: DataProviderInfo[];
-      selectedSource?: string;
-      loading: boolean;
-    };
-
-function isDataProviderInfo(
-  asset: AssetInfo | DataProviderInfo
-): asset is DataProviderInfo {
-  return (asset as DataProviderInfo).link !== undefined;
-}
+type AssetListProps = {
+  options: string[];
+  assets: AssetInfo[];
+  selectedSource?: string;
+  loading: boolean;
+};
 
 const AssetList = ({
   options,
-  isAsset,
   assets,
   selectedSource,
   loading,
@@ -68,11 +52,7 @@ const AssetList = ({
   };
 
   const filteredAssets = assets.filter((asset: any) => {
-    if (isAsset) {
-      return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
-    } else {
-      return asset?.name?.toLowerCase().includes(filteredValue.toLowerCase());
-    }
+    return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
   });
 
   const requestSort = (key: any) => {
@@ -103,9 +83,7 @@ const AssetList = ({
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
-      <h3 className="pb-3 text-lightGreen">
-        {isAsset ? "Price Feeds" : "Data Providers"}
-      </h3>
+      <h3 className="pb-3 text-lightGreen">Price Feeds</h3>
       <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
         <div className="flex flex-col gap-3 smolScreen:flex-row">
           <Listbox
@@ -168,7 +146,7 @@ const AssetList = ({
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-            {isAsset ? "Price Feeds" : "Data Providers"}: {assets!.length}
+            Price Feeds: {assets!.length}
           </div>
         </div>
         <div className="sm:ml-auto">
@@ -177,174 +155,102 @@ const AssetList = ({
         </div>
       </div>
       <div className="w-full overflow-auto">
-        {isAsset ? (
-          <div className={styles.assetBox}>
-            <div
-              onClick={() => requestSort("ticker")}
-              className="flex cursor-pointer flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Pair
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("lastUpdated")}
-              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Last updated
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("sources")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Nb sources
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("price")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Price
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            {selectedSource !== "api" && (
-              <>
-                <div
-                  onClick={() => requestSort("variations.past1h")}
-                  className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-                >
-                  1H
-                  <Image
-                    height={16}
-                    width={16}
-                    alt="ArrowDownSmall"
-                    src="/assets/vectors/arrowDownSmall.svg"
-                  />
-                </div>
-                <div
-                  onClick={() => requestSort("variations.past24h")}
-                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-                >
-                  24H
-                  <Image
-                    height={16}
-                    width={16}
-                    alt="ArrowDownSmall"
-                    src="/assets/vectors/arrowDownSmall.svg"
-                  />
-                </div>
-                <div
-                  onClick={() => requestSort("variations.past7d")}
-                  className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-                >
-                  7D
-                  <Image
-                    height={16}
-                    width={16}
-                    alt="ArrowDownSmall"
-                    src="/assets/vectors/arrowDownSmall.svg"
-                  />
-                </div>
-                <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-                  7D chart
-                </div>
-              </>
-            )}
+        <div className={styles.assetBox}>
+          <div
+            onClick={() => requestSort("ticker")}
+            className="flex cursor-pointer flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+          >
+            Pair
+            <Image
+              height={16}
+              width={16}
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
           </div>
-        ) : (
-          <div className={styles.dpBox}>
-            <div
-              onClick={() => requestSort("name")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Identifier
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("lastUpdate")}
-              className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Last update
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Type
-            </div>
-            <div
-              onClick={() => requestSort("reputation")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter"
-            >
-              Reputation
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("nbFeeds")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Nb feeds
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div
-              onClick={() => requestSort("dailyUpdates")}
-              className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-            >
-              Updates/day
-              <Image
-                height={16}
-                width={16}
-                alt="ArrowDownSmall"
-                src="/assets/vectors/arrowDownSmall.svg"
-              />
-            </div>
-            <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-              Total updates
-            </div>
+          <div
+            onClick={() => requestSort("lastUpdated")}
+            className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+          >
+            Last updated
+            <Image
+              height={16}
+              width={16}
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
           </div>
-        )}
+          <div
+            onClick={() => requestSort("sources")}
+            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+          >
+            Nb sources
+            <Image
+              height={16}
+              width={16}
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          <div
+            onClick={() => requestSort("price")}
+            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+          >
+            Price
+            <Image
+              height={16}
+              width={16}
+              alt="ArrowDownSmall"
+              src="/assets/vectors/arrowDownSmall.svg"
+            />
+          </div>
+          {selectedSource !== "api" && (
+            <>
+              <div
+                onClick={() => requestSort("variations.past1h")}
+                className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              >
+                1H
+                <Image
+                  height={16}
+                  width={16}
+                  alt="ArrowDownSmall"
+                  src="/assets/vectors/arrowDownSmall.svg"
+                />
+              </div>
+              <div
+                onClick={() => requestSort("variations.past24h")}
+                className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              >
+                24H
+                <Image
+                  height={16}
+                  width={16}
+                  alt="ArrowDownSmall"
+                  src="/assets/vectors/arrowDownSmall.svg"
+                />
+              </div>
+              <div
+                onClick={() => requestSort("variations.past7d")}
+                className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
+              >
+                7D
+                <Image
+                  height={16}
+                  width={16}
+                  alt="ArrowDownSmall"
+                  src="/assets/vectors/arrowDownSmall.svg"
+                />
+              </div>
+              <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
+                7D chart
+              </div>
+            </>
+          )}
+        </div>
         {loading &&
           elements.map((element, index) => (
-            <AssetPerf
-              isAsset={true}
+            <AssetRow
               asset={element}
               key={index}
               loading={true}
@@ -353,23 +259,12 @@ const AssetList = ({
           ))}
         {!loading &&
           sortedAssets.map((asset: any, assetIdx) => (
-            <Fragment key={`asset-${assetIdx}`}>
-              {isDataProviderInfo(asset) ? (
-                <AssetPerf
-                  asset={asset}
-                  isAsset={false}
-                  loading={loading}
-                  currentSource={selectedSource}
-                />
-              ) : (
-                <AssetPerf
-                  asset={asset}
-                  isAsset={true}
-                  loading={loading}
-                  currentSource={selectedSource}
-                />
-              )}
-            </Fragment>
+            <AssetRow
+              asset={asset}
+              key={`asset-${assetIdx}`}
+              loading={loading}
+              currentSource={selectedSource}
+            />
           ))}
         {!loading && sortedAssets.length === 0 && (
           <div className="py-2 font-mono text-xs text-lightGreen">

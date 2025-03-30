@@ -41,6 +41,7 @@ export const AssetsTable = ({
     initialData: initialTokens,
     retry: 1,
     retryDelay: 1000,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -191,7 +192,6 @@ export const AssetsTable = ({
   return (
     <AssetList
       options={options}
-      isAsset
       assets={formattedAssets.filter((asset) => asset.ticker.includes("/USD"))}
       selectedSource={source}
       loading={isTokensLoadingData}

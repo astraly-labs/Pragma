@@ -1,4 +1,6 @@
-import React, { Fragment, useState, useEffect, useRef, useMemo } from "react";
+"use client";
+
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Listbox, Transition } from "@headlessui/react";
 import {
@@ -6,22 +8,45 @@ import {
   ColorType,
   LineStyle,
   PriceScaleMode,
+  UTCTimestamp,
 } from "lightweight-charts";
-import { useData } from "../../providers/data";
-import { Asset } from "../../pages/asset/[ticker]";
 import moment from "moment-timezone";
-import { timezone } from "../../pages";
+import { AssetInfo } from "@/app/assets/_types";
+import { SUPPORTED_SOURCES, TIME_ZONE } from "@/lib/constants";
+import { useRouter } from "next/navigation";
+import { useEventSourceQuery } from "../_helpers/useEventSourceQuery";
+import { PriceData } from "../_types";
 
-import { options } from "../../pages/deprecated-assets";
+type AssetChartProps = {
+  asset: AssetInfo;
+  currentSource: string;
+};
 
-const AssetChart = ({ asset }: { asset: Asset }) => {
-  const { currentSource, switchSource, data } = useData();
+export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
+  const router = useRouter();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<any>(null);
+  const [historical, setHistorical] = useState<PriceData[]>([]);
+
+  useEventSourceQuery({
+    queryKey: "ASSET",
+    eventName: "historical",
+    url: `${
+      process.env.NEXT_PUBLIC_INTERNAL_API
+    }/data/multi/stream?pairs=${asset.ticker.toLowerCase()}&interval=100ms&aggregation=median&historical_prices=10`,
+    setHistorical,
+    historical,
+  });
 
   if (asset?.error || asset?.isUnsupported) {
     return null;
   }
+
+  const handleSourceChange = (newSource: string) => {
+    router.push(
+      `/asset/${asset.ticker.replace("/", "-")}?network=${newSource}`
+    );
+  };
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -128,15 +153,15 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       },
     };
 
-    if (data?.[asset.ticker]?.historical) {
-      const historicalData = data[asset.ticker].historical
-        .map((point: any) => ({
-          time: moment.tz(point.timestamp, timezone).valueOf() / 1000,
+    if (historical && asset.decimals) {
+      const historicalData = historical
+        .map((point) => ({
+          time: (moment.tz(point.timestamp, TIME_ZONE).valueOf() /
+            1000) as UTCTimestamp,
           value: Number(
-            (
-              parseInt(point.price, 16) /
-              10 ** data[asset.ticker].decimals
-            ).toFixed(3)
+            (parseInt(point.price, 16) / 10 ** Number(asset.decimals)).toFixed(
+              3
+            )
           ),
         }))
         .filter((p: any) => !isNaN(p.value));
@@ -152,32 +177,30 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
       chart.remove();
       chartRef.current = null;
     };
-  }, [asset?.ticker, data]);
+  }, [asset?.ticker]);
 
   useEffect(() => {
-    if (!chartRef.current || !data?.[asset.ticker]?.price) return;
+    if (!chartRef.current || !asset?.price || !asset.decimals) return;
 
     const { lineSeries } = chartRef.current;
-    const assetData = data[asset.ticker];
 
     const newPoint = {
-      time:
-        moment.tz(assetData.last_updated_timestamp, timezone).valueOf() / 1000,
+      time: moment.tz(asset.lastUpdated, TIME_ZONE).valueOf() / 1000,
       value: Number(
-        (parseInt(assetData.price, 16) / 10 ** assetData.decimals).toFixed(3)
+        (parseInt(String(asset.price), 16) / 10 ** asset.decimals).toFixed(3)
       ),
     };
 
     if (!isNaN(newPoint.value)) {
       lineSeries.update(newPoint);
     }
-  }, [asset?.ticker, data]);
+  }, [asset?.ticker]);
 
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
       {currentSource !== "api" && (
         <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:gap-10">
-          <Listbox value={currentSource} onChange={switchSource}>
+          <Listbox value={currentSource} onChange={handleSourceChange}>
             <div className="relative md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none sm:w-fit">
                 <span className="block truncate">{currentSource}</span>
@@ -196,7 +219,7 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                  {options.map((option, idx) => (
+                  {SUPPORTED_SOURCES.map((option, idx) => (
                     <Listbox.Option
                       key={idx}
                       className={({ active }) =>
@@ -236,5 +259,3 @@ const AssetChart = ({ asset }: { asset: Asset }) => {
     </div>
   );
 };
-
-export default AssetChart;
