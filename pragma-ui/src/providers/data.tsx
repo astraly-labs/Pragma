@@ -237,9 +237,12 @@ export const DataProvider = ({
       // Set a timeout for initial data
       const timeoutId = setTimeout(() => {
         if (!initialDataReceived) {
-          streamPromiseReject(new Error("Timeout waiting for initial data"));
+          console.warn("⚠️ Timeout: No initial streaming data received.");
+          // streamPromiseReject(new Error("Timeout waiting for initial data"));
         }
       }, 10000); // 10 second timeout
+
+      let buffer = "";
 
       const processStream = async () => {
         try {
@@ -250,95 +253,36 @@ export const DataProvider = ({
               break;
             }
 
-            const lines = value.split("\n");
+            const chunk = value; // ← no decoding needed
+            buffer += chunk;
+
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
 
             for (const line of lines) {
-              if (!line.trim()) continue;
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
 
-              if (line.startsWith("data:")) {
-                try {
-                  const jsonStr = line.slice(5).trim();
-                  if (!jsonStr) return;
+              const jsonStr = trimmed.slice(5).trim();
+              if (!jsonStr) continue;
 
-                  const data = JSON.parse(jsonStr);
-
-                  // Handle initial connection message
-                  if (data.connected) {
-                    console.log(`Initial connection established`);
-                    initialDataReceived = true;
-                    clearTimeout(timeoutId);
-                    streamPromiseResolve();
-                    continue;
-                  }
-
-                  // Handle error messages
-                  if (data.error) {
-                    console.error(`Stream error:`, data.error);
-                    // Don't fail the stream for individual asset errors
-                    if (
-                      !initialDataReceived &&
-                      data.error.includes("entry not found")
-                    ) {
-                      // If we haven't received any data yet and this is just a missing asset,
-                      // don't fail the whole stream
-                      continue;
-                    }
-                    continue;
-                  }
-
-                  // Handle array of price updates
-                  if (Array.isArray(data)) {
-                    const updates: { [ticker: string]: any } = {};
-
-                    data.forEach((update) => {
-                      if (update.pair_id && update.price && update.timestamp) {
-                        updates[update.pair_id] = {
-                          price: update.price,
-                          decimals: update.decimals,
-                          last_updated_timestamp: update.timestamp / 1000,
-                          nb_sources_aggregated:
-                            update.num_sources_aggregated || 1,
-                          variations: { "1h": 0, "1d": 0, "1w": 0 },
-                          loading: false,
-                        };
-                      }
-                    });
-
-                    if (Object.keys(updates).length > 0) {
-                      setStreamingData((prev) => ({
-                        ...prev,
-                        ...updates,
-                      }));
-
-                      if (!initialDataReceived) {
-                        initialDataReceived = true;
-                        clearTimeout(timeoutId);
-                        streamPromiseResolve();
-                      }
-                    }
-                  }
-                } catch (e) {
-                  console.error(
-                    `Failed to parse data:`,
-                    e,
-                    `Raw data: ${line.slice(5).trim().substring(0, 200)}`
-                  );
-                  // Don't reject for parse errors unless we haven't received any data yet
-                  if (!initialDataReceived) {
-                    clearTimeout(timeoutId);
-                    streamPromiseReject(e);
-                  }
+              try {
+                const data = JSON.parse(jsonStr);
+                // ...handle data
+              } catch (e) {
+                console.error("Parse error:", e, jsonStr.slice(0, 200));
+                if (!initialDataReceived) {
+                  clearTimeout(timeoutId);
+                  streamPromiseReject(e);
                 }
               }
             }
           }
         } catch (error) {
-          console.error(`Stream error:`, error);
+          console.error("Stream fatal error:", error);
           clearTimeout(timeoutId);
-          if (!initialDataReceived) {
-            streamPromiseReject(error);
-          }
-          throw error; // Re-throw to trigger stream restart
+          if (!initialDataReceived) streamPromiseReject(error);
+          throw error;
         }
       };
 

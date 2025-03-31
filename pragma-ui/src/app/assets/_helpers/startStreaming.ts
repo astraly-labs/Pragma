@@ -7,7 +7,6 @@ export const startStreaming = async (
   assets: AssetT[],
   setStreamingData: (value: SetStateAction<{ [ticker: string]: any }>) => void
 ) => {
-  // Abort any existing stream before starting a new one
   if (activeStreamController) {
     console.log("Aborting previous stream...");
     activeStreamController.abort();
@@ -25,7 +24,7 @@ export const startStreaming = async (
 
   let retryCount = 0;
   const maxRetries = 5;
-  const retryDelay = 3000; // 3 seconds
+  const retryDelay = 3000;
 
   const connectStream = async () => {
     if (signal.aborted) {
@@ -36,7 +35,7 @@ export const startStreaming = async (
     try {
       const response = await fetch(url, {
         headers: { Accept: "text/event-stream" },
-        signal, // Attach abort signal
+        signal,
       });
 
       if (!response.ok || !response.body) {
@@ -53,6 +52,13 @@ export const startStreaming = async (
 
       let jsonBuffer = "";
       let initialDataReceived = false;
+
+      const timeoutId = setTimeout(() => {
+        if (!initialDataReceived) {
+          console.warn("⏰ Timeout: No initial data received.");
+          // You can show fallback UI or silently skip
+        }
+      }, 10000); // 10s timeout
 
       const processStream = async () => {
         try {
@@ -73,60 +79,63 @@ export const startStreaming = async (
             jsonBuffer = lines.pop() || ""; // Save last incomplete line
 
             for (const line of lines) {
-              if (!line.trim()) continue;
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
 
-              if (line.startsWith("data:")) {
-                try {
-                  const jsonStr = line.slice(5).trim();
-                  if (!jsonStr) continue;
-                  const data = JSON.parse(jsonStr);
+              const jsonStr = trimmed.slice(5).trim();
+              if (!jsonStr) continue;
 
-                  if (data.connected) {
-                    console.log("Stream connection confirmed.");
-                    initialDataReceived = true;
-                    continue;
-                  }
+              try {
+                const data = JSON.parse(jsonStr);
 
-                  if (data.error) {
-                    console.error("Stream error:", data.error);
-                    continue;
-                  }
-
-                  if (Array.isArray(data)) {
-                    const updates: { [ticker: string]: any } = {};
-
-                    data.forEach((update) => {
-                      if (update.pair_id && update.price && update.timestamp) {
-                        updates[update.pair_id] = {
-                          price: update.price,
-                          decimals: update.decimals,
-                          last_updated_timestamp: update.timestamp / 1000,
-                          nb_sources_aggregated:
-                            update.num_sources_aggregated || 1,
-                          variations: { "1h": 0, "1d": 0, "1w": 0 },
-                          loading: false,
-                        };
-                      }
-                    });
-
-                    if (Object.keys(updates).length > 0) {
-                      setStreamingData((prev) => ({
-                        ...prev,
-                        ...updates,
-                      }));
-                    }
-                  }
-                } catch (e) {
-                  console.error("Failed to parse data:", e);
+                if (data.connected) {
+                  console.log("✅ Stream connection confirmed.");
+                  initialDataReceived = true;
+                  continue;
                 }
+
+                if (data.error) {
+                  console.error("Stream error:", data.error);
+                  continue;
+                }
+
+                if (Array.isArray(data)) {
+                  const updates: { [ticker: string]: any } = {};
+
+                  data.forEach((update) => {
+                    if (update.pair_id && update.price && update.timestamp) {
+                      updates[update.pair_id] = {
+                        price: update.price,
+                        decimals: update.decimals,
+                        last_updated_timestamp: update.timestamp / 1000,
+                        nb_sources_aggregated:
+                          update.num_sources_aggregated || 1,
+                        variations: { "1h": 0, "1d": 0, "1w": 0 },
+                        loading: false,
+                      };
+                    }
+                  });
+
+                  if (Object.keys(updates).length > 0) {
+                    setStreamingData((prev) => ({
+                      ...prev,
+                      ...updates,
+                    }));
+                    initialDataReceived = true;
+                  }
+                }
+              } catch (e: any) {
+                console.error("❌ Failed to parse JSON:", e.message);
+                console.warn("Raw (truncated):", jsonStr.slice(0, 300));
+                // Don’t reject or crash — continue streaming
               }
             }
           }
         } catch (error: any) {
           if (error.name === "AbortError") {
-            console.warn("Stream aborted (expected behavior).");
+            console.warn("Stream aborted.");
           } else {
-            console.error("Stream error:", error);
+            console.error("Stream read error:", error);
           }
         }
       };
@@ -134,7 +143,7 @@ export const startStreaming = async (
       processStream();
     } catch (error: any) {
       if (error.name === "AbortError") {
-        console.warn("Stream fetch aborted (expected).");
+        console.warn("Stream fetch aborted.");
         return;
       }
 
@@ -160,7 +169,7 @@ export const startStreaming = async (
         console.warn(`Reconnecting... (${retryCount}/${maxRetries})`);
         setTimeout(connectStream, retryDelay);
       } else {
-        console.error("Max retries reached. Stopping stream.");
+        console.error("Max retries reached. Giving up.");
       }
     }
   };

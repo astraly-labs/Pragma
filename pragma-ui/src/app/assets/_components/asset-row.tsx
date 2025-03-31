@@ -69,7 +69,7 @@ export const AssetRow = ({
           ? "#"
           : `/provider/${asset.ticker}`
       }
-      scroll={false}
+      prefetch
       className={classNames(
         styles.assetPerf,
         hasError && "opacity-70",
