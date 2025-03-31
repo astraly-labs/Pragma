@@ -170,32 +170,30 @@ const IndexPage = () => {
           />
         </div>
       </BoxContainer>
-      <Suspense fallback={<div>Loading...</div>}>
-        <BoxContainer>
-          <CodeSnippet />
-          <BlurBox
-            firstText="Start Building"
-            title="Integrate existing feeds, or build new ones."
-            generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
-            urlSvg={getImageSource[2]}
-            textButton="Start Building"
-            linkButton="https://docs.pragma.build/Resources/Starknet/computational-feeds/what-are-computational-feeds"
-          />
-        </BoxContainer>
-        <BoxContainer>
-          <Architecture />
-        </BoxContainer>
-        <BoxContainer>
-          <Testimonial />
-        </BoxContainer>
-        <Blog />
-        <BoxContainer>
-          <Events />
-        </BoxContainer>
-        <BoxContainer>
-          <ReadyBox version={true} />
-        </BoxContainer>
-      </Suspense>
+      <BoxContainer>
+        <CodeSnippet />
+        <BlurBox
+          firstText="Start Building"
+          title="Integrate existing feeds, or build new ones."
+          generalText="A few lines to integrate any existing data feed, a few more if you want to create a new feed using our raw data."
+          urlSvg={getImageSource[2]}
+          textButton="Start Building"
+          linkButton="https://docs.pragma.build/Resources/Starknet/computational-feeds/what-are-computational-feeds"
+        />
+      </BoxContainer>
+      <BoxContainer>
+        <Architecture />
+      </BoxContainer>
+      <BoxContainer>
+        <Testimonial />
+      </BoxContainer>
+      <Blog />
+      <BoxContainer>
+        <Events />
+      </BoxContainer>
+      <BoxContainer>
+        <ReadyBox version={true} />
+      </BoxContainer>
     </div>
   );
 };
