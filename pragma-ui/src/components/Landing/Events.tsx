@@ -1,8 +1,7 @@
-import React from "react";
-import GreenUpperText from "../common/GreenUpperText";
 import classNames from "classnames";
-import GreenText from "../common/GreenText";
-import EventBox from "../common/EventBox";
+import GreenUpperText from "@/components/common/GreenUpperText";
+import GreenText from "@/components/common/GreenText";
+import EventBox from "@/components/common/EventBox";
 
 const events = [
   {

@@ -1,10 +1,9 @@
-import React from "react";
-import styles from "../styles.module.scss";
-import classNames from "classnames";
-import GreenText from "../../common/GreenText";
-import GreenUpperText from "../../common/GreenUpperText";
-import TestimonialCarousel from "./TestimonialCarousel";
 import Image from "next/image";
+import classNames from "classnames";
+import styles from "@/pages/styles.module.scss";
+import GreenText from "@/components/common/GreenText";
+import GreenUpperText from "@/components/common/GreenUpperText";
+import TestimonialCarousel from "./TestimonialCarousel";
 
 const Testimonial = () => (
   <div

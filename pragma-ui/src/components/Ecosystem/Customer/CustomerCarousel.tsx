@@ -1,7 +1,3 @@
-import React from "react";
-import GreenText from "../../common/GreenText";
-import GreenUpperText from "../../common/GreenUpperText";
-import styles from "../styles.module.scss";
 import {
   CarouselProvider,
   Slider,
@@ -12,6 +8,9 @@ import {
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import Image from "next/image";
+import GreenText from "@/components/common/GreenText";
+import GreenUpperText from "@/components/common/GreenUpperText";
+import styles from "../styles.module.scss";
 
 interface Category {
   logo: string;
@@ -52,7 +51,7 @@ const categories: Category[] = [
   },
 ];
 
-const CustomerCarousel: React.FC = () => {
+const CustomerCarousel = () => {
   return (
     <CarouselProvider
       naturalSlideWidth={648}

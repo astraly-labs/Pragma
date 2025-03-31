@@ -1,10 +1,9 @@
-import React from "react";
-import styles from "./styles.module.scss";
 import classNames from "classnames";
-import GreenText from "../common/GreenText";
-import GreenUpperText from "../common/GreenUpperText";
+import styles from "./styles.module.scss";
+import GreenText from "@/components/common/GreenText";
+import GreenUpperText from "@/components/common/GreenUpperText";
 import Lottie from "react-lottie-player";
-import animationHero from "../../../public/assets/lottie/pragma_scheme.json";
+import animationHero from "@/../public/assets/lottie/pragma_scheme.json";
 
 const Architecture = () => (
   <div className={classNames("align-center w-full", styles.darkGreenBox)}>

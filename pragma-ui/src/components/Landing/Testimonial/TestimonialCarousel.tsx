@@ -1,6 +1,7 @@
-import React from "react";
-import GreenText from "../../common/GreenText";
-import GreenUpperText from "../../common/GreenUpperText";
+"use client";
+
+import GreenText from "@/components/common/GreenText";
+import GreenUpperText from "@/components/common/GreenUpperText";
 import styles from "../styles.module.scss";
 import {
   CarouselProvider,
@@ -42,7 +43,7 @@ const categories: Category[] = [
   },
 ];
 
-const TestimonialCarousel: React.FC = () => {
+const TestimonialCarousel = () => {
   return (
     <CarouselProvider
       naturalSlideWidth={648}
