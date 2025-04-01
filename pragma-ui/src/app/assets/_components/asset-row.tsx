@@ -20,7 +20,6 @@ export const AssetRow = ({
   const prevPriceRef = useRef(asset.price);
   const [imageError, setImageError] = useState(false);
 
-  // Check if we're using the API source
   const isApiSource = currentSource === "api";
 
   useEffect(() => {
@@ -45,16 +44,11 @@ export const AssetRow = ({
     }
   }, [asset, loading]);
 
-  // Check if asset has an error
   const hasError = asset?.error !== undefined;
   const isUnsupported = asset?.isUnsupported;
 
-  const renderIcon = () => {
-    return Number(asset.variations.past1h) > 0
-      ? "▲"
-      : asset.variations.past1h === 0
-      ? "-"
-      : "▼";
+  const renderIcon = (value: number) => {
+    return value > 0 ? "▲" : value === 0 ? "-" : "▼";
   };
 
   return (
@@ -82,6 +76,7 @@ export const AssetRow = ({
       }}
     >
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
+        {/* Avatar: Keep fixed 8x8 */}
         {loading ? (
           <div className="my-auto h-8 w-8 animate-pulse rounded-full bg-lightBlur" />
         ) : asset.image && !imageError ? (
@@ -93,24 +88,26 @@ export const AssetRow = ({
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="my-auto h-8 w-8 rounded-full bg-lightBlur text-center inline-flex justify-center">
-            <span className="self-center">{asset.ticker[0]}</span>
+          <div className="flex-none h-8 w-8 rounded-full bg-lightBlur flex items-center justify-center text-sm">
+            <span>{asset.ticker[0]}</span>
           </div>
         )}
+
         {loading ? (
           <div className="flex flex-col text-lg text-lightGreen">
-            <div className="my-auto mb-1 h-3 w-14 animate-pulse rounded-full bg-lightBlur"></div>{" "}
-            <div className="my-auto h-2 w-8 animate-pulse rounded-full bg-lightBlur"></div>
+            <div className="my-auto mb-1 h-3 w-14 animate-pulse rounded-full bg-lightBlur" />
+            <div className="my-auto h-2 w-8 animate-pulse rounded-full bg-lightBlur" />
           </div>
         ) : (
-          <div className="text-md flex flex-col text-lightGreen overflow-hidden text-ellipsis max-w-20">
-            {asset.ticker}{" "}
-            <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
+          <div className="flex flex-col text-lightGreen flex-shrink min-w-0">
+            <span className="text-md font-medium truncate">{asset.ticker}</span>
+            <span className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
               {asset.type}
-            </div>
+            </span>
           </div>
         )}
       </div>
+
       <div className="my-auto flex flex-row gap-2 font-mono text-xs md:tracking-wider">
         {loading ? (
           <div className=" my-auto h-3 w-24 animate-pulse rounded-full bg-lightBlur"></div>
@@ -134,7 +131,7 @@ export const AssetRow = ({
           <div className="text-redDown">N/A</div>
         ) : (
           <div className={priceChangeClass}>
-            ${Number.parseFloat(String(asset.price)).toFixed(3)}
+            ${Number.parseFloat(String(asset.price)).toFixed(5)}
           </div>
         )}
       </div>
@@ -153,7 +150,8 @@ export const AssetRow = ({
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {renderIcon()} {asset.variations.past1h}%
+              {renderIcon(Number(asset.variations.past1h))}{" "}
+              {asset.variations.past1h}%
             </div>
           ) : hasError ? (
             <div className="my-auto flex flex-row gap-2 font-mono text-sm text-redDown md:tracking-wider">
@@ -173,7 +171,7 @@ export const AssetRow = ({
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {renderIcon()}
+              {renderIcon(Number(asset.variations.past24h))}
               {asset.variations.past24h}%
             </div>
           ) : hasError ? (
@@ -195,7 +193,7 @@ export const AssetRow = ({
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
-              {renderIcon()}
+              {renderIcon(Number(asset.variations.past7d))}
               {asset.variations.past7d}%
             </div>
           ) : hasError ? (

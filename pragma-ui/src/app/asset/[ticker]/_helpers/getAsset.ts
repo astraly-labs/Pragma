@@ -13,10 +13,6 @@ export const getAsset = async ({ source, ticker }: GetAsset) => {
     `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`
   );
 
-  console.log({
-    url: `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`,
-  });
-
   if (!response.ok) {
     throw new Error(`Failed to fetch ${encodedTicker} asset`);
   }
