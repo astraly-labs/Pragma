@@ -99,7 +99,7 @@
   border-radius: 20px;
   border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
   background: var(--green-12, rgba(27, 99, 82, 0.12));
-  width: full;
+  width: 100%;
   height: 100%;
 }
 
@@ -144,7 +144,7 @@
 
 .carouselWrapper {
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .carouselWrap {

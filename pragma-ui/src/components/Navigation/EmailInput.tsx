@@ -1,24 +1,19 @@
 import classNames from "classnames";
 import React, { ChangeEvent, useState } from "react";
+import MailerLite, {
+  CreateOrUpdateSubscriberParams,
+} from "@mailerlite/mailerlite-nodejs";
 import styles from "./styles.module.scss";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import LightGreenUpper from "../common/LightGreenUpperText";
 import Toast from "../common/Toast";
-import MailerLite, {
-  CreateOrUpdateSubscriberParams,
-} from "@mailerlite/mailerlite-nodejs";
-
-require("dotenv").config();
 
 interface InputProps {
   placeholderText: string;
   className?: string;
 }
 
-const InputComponent: React.FC<InputProps> = ({
-  placeholderText,
-  className,
-}) => {
+const InputComponent = ({ placeholderText, className }: InputProps) => {
   const [email, setEmail] = useState<string>("");
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(false);
@@ -44,11 +39,11 @@ const InputComponent: React.FC<InputProps> = ({
       .createOrUpdate(params)
       .then((response) => {
         console.log(response.data);
-        setIsSubmitted(true); // Set to true if email is valid
+        setIsSubmitted(true);
       })
       .catch((error) => {
         if (error.response) console.log(error.response.data);
-        setIsSubmitted(false); // Set to false if submission fails
+        setIsSubmitted(false);
       });
   };
 

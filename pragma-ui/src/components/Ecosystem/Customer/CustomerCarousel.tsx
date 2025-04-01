@@ -1,16 +1,13 @@
-import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import Image from "next/image";
+import styles from "../styles.module.scss";
 import GreenText from "@/components/common/GreenText";
 import GreenUpperText from "@/components/common/GreenUpperText";
-import styles from "../styles.module.scss";
+import classNames from "classnames";
 
 interface Category {
   logo: string;
@@ -52,65 +49,86 @@ const categories: Category[] = [
 ];
 
 const CustomerCarousel = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
   return (
-    <CarouselProvider
-      naturalSlideWidth={648}
-      naturalSlideHeight={460}
-      visibleSlides={1}
-      totalSlides={3}
-      step={1}
-      infinite={true}
-      dragEnabled={false}
-      isIntrinsicHeight={true}
-      className={styles.carouselWrapper}
+    <div
+      className={classNames(styles.carouselWrapper, "relative overflow-hidden")}
     >
-      <Slider className="w-full" classNameAnimation={styles.noTransition}>
-        {categories.map((category, index) => (
-          <Slide index={index} key={index}>
-            <div className={styles.customerBox} key={index}>
-              <ButtonBack className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
-                <ArrowLeftIcon className="w-5" />
-              </ButtonBack>
-              <ButtonNext className="absolute left-1/2 bottom-6  translate-x-1/4 cursor-pointer rounded-full	 border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
-                <ArrowRightIcon className="w-5" />
-              </ButtonNext>
-              <div className="flex w-full flex-col gap-6 md:w-6/12">
-                <div className="w-fit rounded-full bg-lightBlur px-4 py-2 text-xs uppercase tracking-widest text-lightGreen">
-                  {category.category}
+      <div ref={emblaRef} className="overflow-hidden">
+        <div className="flex">
+          {categories.map((category, index) => (
+            <div key={index} className="flex-shrink-0 w-full px-4">
+              <div className={classNames(styles.customerBox, "relative")}>
+                {/* Navigation Buttons */}
+                <button
+                  onClick={scrollPrev}
+                  className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0"
+                >
+                  <ArrowLeftIcon className="w-5" />
+                </button>
+                <button
+                  onClick={scrollNext}
+                  className="absolute left-1/2 bottom-6 translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0"
+                >
+                  <ArrowRightIcon className="w-5" />
+                </button>
+
+                {/* Content */}
+                <div className="flex w-full flex-col gap-6 md:w-6/12">
+                  <div className="w-fit rounded-full bg-lightBlur px-4 py-2 text-xs uppercase tracking-widest text-lightGreen">
+                    {category.category}
+                  </div>
+                  <div className="w-48">
+                    <Image
+                      width={140}
+                      height={30}
+                      alt="companyLogo"
+                      src={category.logo}
+                    />
+                  </div>
+                  <GreenText className="text-center md:pb-32 md:text-left">
+                    {category.integration}
+                  </GreenText>
                 </div>
-                <div className="w-48">
-                  <Image
-                    width={140}
-                    height={30}
-                    alt="companyLogo"
-                    src={category.logo}
-                  />
+
+                <div className={styles.testimonialBox}>
+                  <div className="text-lg text-lightGreen">{category.text}</div>
+                  <div className="flex flex-row gap-4 pt-6">
+                    <Image
+                      src={category.avatar}
+                      height={48}
+                      width={48}
+                      className={styles.avatar}
+                      alt="avatar"
+                    />
+                    <GreenUpperText className="flex items-center">
+                      {category.author}
+                    </GreenUpperText>
+                  </div>
                 </div>
-                <GreenText className="text-center md:pb-32 md:text-left">
-                  {category.integration}
-                </GreenText>
+
+                <div className="block h-10 md:hidden" />
               </div>
-              <div className={styles.testimonialBox}>
-                <div className="text-lg text-lightGreen">{category.text}</div>
-                <div className="flex flex-row gap-4">
-                  <Image
-                    src={category.avatar}
-                    height={48}
-                    width={48}
-                    className={styles.avatar}
-                    alt="avatar"
-                  />
-                  <GreenUpperText className="flex items-center">
-                    {category.author}
-                  </GreenUpperText>
-                </div>
-              </div>
-              <div className="block h-10 md:hidden" />
             </div>
-          </Slide>
-        ))}
-      </Slider>
-    </CarouselProvider>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

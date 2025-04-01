@@ -10,10 +10,11 @@ import { ChartBox } from "../components/common/ChartBox";
 import CompFeedBox from "../components/Resources/CompFeedBox";
 import VerifRandBox from "../components/Resources/VerifRandBox";
 import Blog from "../components/Landing/Blog/Blog";
-import { removeDuplicateTimestamps, timezone } from ".";
 import moment from "moment-timezone";
 import { UTCTimestamp } from "lightweight-charts";
 import { initialAssets } from "../providers/data";
+import { removeDuplicateTimestamps } from "@/app/(marketing)/_helpers/remove-duplicate-timestamps";
+import { TIME_ZONE } from "@/lib/constants";
 
 const EcosystemPage = () => {
   const [selectedAsset, setSelectedAsset] = useState<AssetPair | undefined>(
@@ -37,7 +38,9 @@ const EcosystemPage = () => {
         // This URL is now pointing to your Next.js API route (the proxy)
         const url = `/api/proxy?pair=${pairId}`;
         const response = await fetch(url);
+
         if (!response.ok) {
+          return;
           throw new Error("Network response was not ok");
         }
         const unorderedData = await response.json();
@@ -46,13 +49,13 @@ const EcosystemPage = () => {
         const data = removeDuplicateTimestamps(
           unorderedData.data.sort(
             (a, b) =>
-              moment.tz(b.time, timezone).valueOf() -
-              moment.tz(a.time, timezone).valueOf()
+              moment.tz(b.time, TIME_ZONE).valueOf() -
+              moment.tz(a.time, TIME_ZONE).valueOf()
           )
         );
 
         const priceData = data.reverse().map((d: any) => ({
-          time: (moment.tz(d.time, timezone).valueOf() / 1000) as UTCTimestamp,
+          time: (moment.tz(d.time, TIME_ZONE).valueOf() / 1000) as UTCTimestamp,
           value: parseInt(d.open) / 10 ** decimals,
         }));
         const lastIndex = data.length - 1;

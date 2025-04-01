@@ -18,21 +18,15 @@ const EcosystemPage = () => {
       )}
     >
       <BasicHero
-        title={"Meet and join our"}
-        greenTitle={"ecosystem"}
-        description={
-          "World-class builders already work on Pragma. If you’re an app builder, a data provider, an open-source contributor, or a smart person, join us in our mission "
-        }
-        solidButton={"become a publisher"}
-        solidButtonLink={
-          "mailto:support@pragma.build?body=Hi%Pragma-Team,%I%want%to%become%a%publisher"
-        }
-        outlineButton={"integrate now"}
-        outlineButtonLink={
-          "https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
-        }
-        illustrationLink={"/assets/vectors/ecosystem.svg"}
-        illustrationSmallLink={"/assets/vectors/ecosystemSmall.svg"}
+        title="Meet and join our"
+        greenTitle="ecosystem"
+        description="World-class builders already work on Pragma. If you’re an app builder, a data provider, an open-source contributor, or a smart person, join us in our mission "
+        solidButton="become a publisher"
+        solidButtonLink="mailto:support@pragma.build?body=Hi%Pragma-Team,%I%want%to%become%a%publisher"
+        outlineButton="integrate now"
+        outlineButtonLink="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
+        illustrationLink="/assets/vectors/ecosystem.svg"
+        illustrationSmallLink="/assets/vectors/ecosystemSmall.svg"
       />
       <BoxContainer>
         <BlurBoxEcosystem

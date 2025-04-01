@@ -116,10 +116,10 @@ const IndexPage = () => {
       <BoxContainer>
         <Architecture />
       </BoxContainer>
-      {/* <BoxContainer>
+      <BoxContainer>
         <Testimonial />
-      </BoxContainer> */}
-      {/* <Blog /> */}
+      </BoxContainer>
+      <Blog />
       <BoxContainer>
         <Events />
       </BoxContainer>

@@ -1,16 +1,10 @@
-import React from "react";
-import classNames from "classnames";
-import GreenUpperText from "../common/GreenUpperText";
-import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
 import Image from "next/image";
+import GreenUpperText from "@/components/common/GreenUpperText";
+import GreenText from "@/components/common/GreenText";
+import { ButtonLink } from "@/components/common/Button";
 
 const DataProviders = () => (
-  <div
-    className={classNames(
-      "flex w-full flex-col gap-14 overflow-hidden py-14 lg:flex-row lg:py-28 lg:px-10 xl:gap-28"
-    )}
-  >
+  <div className="flex w-full flex-col gap-14 overflow-hidden py-14 lg:flex-row lg:py-28 lg:px-10 xl:gap-28">
     <div className="flex w-full flex-col items-center justify-center md:items-start lg:w-6/12">
       <GreenUpperText className="pb-3">Data Providers</GreenUpperText>
       <h2 className="pb-6 text-lightGreen">Data you can trust</h2>

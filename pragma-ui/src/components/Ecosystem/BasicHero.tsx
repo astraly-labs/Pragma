@@ -1,8 +1,19 @@
-import React from "react";
-import classNames from "classnames";
-import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
 import Image from "next/image";
+import classNames from "classnames";
+import GreenText from "@/components/common/GreenText";
+import { ButtonLink } from "@/components/common/Button";
+
+type BasicHeroProps = {
+  title: string;
+  greenTitle: string;
+  description: string;
+  solidButton: string;
+  solidButtonLink: string;
+  outlineButton: string;
+  outlineButtonLink: string;
+  illustrationLink: string;
+  illustrationSmallLink: string;
+};
 
 const BasicHero = ({
   title,
@@ -14,7 +25,7 @@ const BasicHero = ({
   outlineButtonLink,
   illustrationLink,
   illustrationSmallLink,
-}) => {
+}: BasicHeroProps) => {
   return (
     <div className="relative h-full w-full overflow-hidden">
       <Image

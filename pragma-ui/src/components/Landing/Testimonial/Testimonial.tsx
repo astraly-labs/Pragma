@@ -20,20 +20,6 @@ const Testimonial = () => (
       </GreenText>
     </div>
     <div className="relative w-full lg:w-6/12">
-      <Image
-        width={40}
-        height={40}
-        alt="greenDot"
-        src="/assets/vectors/lightDot.svg"
-        className={styles.lightDot1}
-      />
-      <Image
-        width={40}
-        height={40}
-        alt="greenDot"
-        src="/assets/vectors/lightDot.svg"
-        className={styles.lightDot2}
-      />
       <TestimonialCarousel />
     </div>
   </div>
