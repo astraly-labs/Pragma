@@ -1,8 +1,6 @@
 import moment from "moment";
 
-import { PublisherT } from "@/providers/data";
-import { getPublisherType } from "@/utils";
-import { AssetInfo, DataProviderInfo } from "../_types";
+import { AssetInfo } from "../_types";
 import { COINGECKO_MAPPING_IDS } from "@/utils/types";
 
 export const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
@@ -47,9 +45,7 @@ export const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
       }
 
       // Get the base currency symbol (e.g., "BTC" from "BTC/USD")
-      const baseCurrency = ticker
-        .split("/")[0]
-        .toLowerCase() as keyof typeof COINGECKO_MAPPING_IDS;
+      const baseCurrency = ticker.split("/")[0].toLowerCase();
 
       // Handle price - it could be a hex string or a number
       let price = 0;
@@ -99,29 +95,4 @@ export const formatAssets = (data: { [ticker: string]: any }): AssetInfo[] => {
         isUnsupported: assetData.isUnsupported,
       };
     });
-};
-
-export const formatPublishers = (
-  publishers: PublisherT[]
-): DataProviderInfo[] => {
-  if (!publishers || publishers?.length <= 0) {
-    return [];
-  }
-
-  return publishers.map((publisher) => {
-    const lastUpdated = moment(
-      publisher.last_updated_timestamp * 1000
-    ).fromNow(); // Using moment.js to format time
-    return {
-      image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
-      type: getPublisherType(publisher.type),
-      link: publisher.website_url,
-      name: publisher.publisher,
-      lastUpdated: lastUpdated,
-      reputationScore: "soon",
-      nbFeeds: publisher.nb_feeds,
-      dailyUpdates: publisher.daily_updates,
-      totalUpdates: publisher.total_updates,
-    };
-  });
 };

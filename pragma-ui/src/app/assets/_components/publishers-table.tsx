@@ -29,6 +29,7 @@ const PublishersTable = ({
     },
     initialData: initialPublishers,
     enabled: source !== "api",
+    refetchOnWindowFocus: false,
   });
 
   const isPublishersLoadingData =
@@ -39,7 +40,6 @@ const PublishersTable = ({
       options={options}
       publishers={publishers}
       selectedSource={source}
-      isAsset={false}
       loading={isPublishersLoadingData}
     />
   );

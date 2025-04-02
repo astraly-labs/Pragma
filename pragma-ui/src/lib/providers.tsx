@@ -17,6 +17,7 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: Infinity,
+        refetchOnWindowFocus: false,
       },
     },
   });
