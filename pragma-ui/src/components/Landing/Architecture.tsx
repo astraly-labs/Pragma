@@ -1,12 +1,14 @@
-import classNames from "classnames";
+"use client";
+
+import Lottie from "react-lottie-player";
 import styles from "./styles.module.scss";
 import GreenText from "@/components/common/GreenText";
 import GreenUpperText from "@/components/common/GreenUpperText";
-import Lottie from "react-lottie-player";
 import animationHero from "@/../public/assets/lottie/pragma_scheme.json";
+import { cn } from "@/lib/utils";
 
 const Architecture = () => (
-  <div className={classNames("align-center w-full", styles.darkGreenBox)}>
+  <div className={cn("align-center w-full", styles.darkGreenBox)}>
     <GreenUpperText className="mx-auto pb-3">Our Architecture</GreenUpperText>
     <h2 className="mx-auto pb-6 text-lightGreen">The first provable oracle</h2>
     <GreenText isAligned={true} className="mx-auto max-w-3xl pb-10">

@@ -7,12 +7,14 @@ import CopyButtonComponent from "../common/CopyCode";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import cb from "./cb";
 import sharedStyles from "@/pages/styles.module.scss";
+import { useHasMounted } from "@/lib/has-mounted";
 
 interface Category {
   title: string;
 }
 
 export default function CodeSnippet() {
+  const hasMounted = useHasMounted();
   const [categories] = useState<Category[]>([
     {
       title: "Price Feed",
@@ -58,6 +60,10 @@ export default function CodeSnippet() {
       request_id: u64,
       random_words: Span<felt252>
   );`;
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <div

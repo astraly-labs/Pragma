@@ -1,32 +1,34 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { ReactNode, useState } from "react";
+import { cn } from "@/lib/utils";
 import styles from "./styles.module.scss";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import { AssetPair, AssetT } from "../common/AssetBox";
-import classNames from "classnames";
+
+import { ChartBox } from "@/components/common/ChartBox";
+import AssetBox from "@/components/common/AssetBox";
 
 interface PriceFeedBoxProps {
-  ChartComponent: React.ComponentType<any>;
-  AssetComponent: React.ComponentType<any>;
   selectedAsset: AssetPair;
   initialAssets: AssetT[];
   handleAssetSelect: (asset: AssetT) => void;
   data: AssetPair[];
 }
 
-const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
-  ChartComponent,
-  AssetComponent,
+const PriceFeedBox = ({
   selectedAsset,
   initialAssets,
   handleAssetSelect,
   data,
-}) => {
+}: PriceFeedBoxProps) => {
   const [isFront, setIsFront] = useState(false);
 
   const handleClick = () => {
     setIsFront(!isFront);
   };
+
   return (
     <div className={styles.darkGreenBox}>
       <div className="my-auto w-full items-center md:pb-20 lg:w-10/12">
@@ -56,24 +58,24 @@ const PriceFeedBox: React.FC<PriceFeedBoxProps> = ({
       </div>
       <div className="relative flex w-full flex-col md:px-20 lg:px-0">
         <div
-          className={classNames(
+          className={cn(
             "relative w-full overflow-hidden sm:w-96 xl:w-xlarge",
             isFront ? styles.front : styles.back,
             styles.transi
           )}
           onClick={handleClick}
         >
-          <ChartComponent assetPair={selectedAsset} />
+          <ChartBox assetPair={selectedAsset} />
         </div>
         <div
-          className={classNames(
+          className={cn(
             "relative ml-auto w-full overflow-hidden py-8 sm:w-96  sm:-translate-y-20 sm:py-0 lg:backdrop-blur-md xl:w-xlarge",
             isFront ? styles.back : styles.front,
             styles.transi
           )}
           onClick={handleClick}
         >
-          <AssetComponent
+          <AssetBox
             assets={initialAssets}
             onAssetSelect={handleAssetSelect}
             data={data.sort((a, b) => a.ticker.localeCompare(b.ticker))}

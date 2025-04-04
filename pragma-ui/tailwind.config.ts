@@ -1,9 +1,10 @@
-/** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");
+import plugin from "tailwindcss/plugin";
 
-module.exports = {
-  important: true,
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       fontFamily: {
@@ -13,6 +14,11 @@ module.exports = {
       lineHeight: {
         loose: "3.75rem",
       },
+      invert: {
+        25: ".25",
+        60: ".6",
+        75: ".75",
+      },
       animation: {
         blob: "blob 9s infinite",
         marquee: "marquee 30s linear infinite",
@@ -21,32 +27,8 @@ module.exports = {
       width: {
         xlarge: "450px",
       },
-      colors: {
-        transparent: "transparent",
-        white: "#ffffff",
-        darkGreen: "#042420",
-        green: "#00473880",
-        lightGreen: "#B5F0E5",
-        mint: "#15FF81",
-        lightBlur: "#B5F0E51F",
-        xlightBlur: "#FFFFFF0D",
-        codeColor: "#98A2B3",
-        greenFooter: "#1B63521F",
-        LightGreenFooter: "#B5F0E580",
-        whiteTrans: "#FFFFFF26",
-        redDown: "#E52258",
-        lightBackground: "#0000001F",
-        purple: "rgba(162, 129, 255, 1)",
-        black: "rgba(8, 8, 8, 1)",
-      },
-      invert: {
-        25: ".25",
-        60: ".6",
-        75: ".75",
-      },
       screens: {
         smolScreen: "380px",
-        // => @media (min-width: 640px) { ... }
       },
       keyframes: {
         marquee: {
@@ -72,10 +54,73 @@ module.exports = {
           },
         },
       },
+      colors: {
+        // @TODO: to be removed
+        darkGreen: "#042420",
+        green: "#00473880",
+        lightGreen: "#B5F0E5",
+        mint: "#15FF81",
+        lightBlur: "#B5F0E51F",
+        xlightBlur: "#FFFFFF0D",
+        codeColor: "#98A2B3",
+        greenFooter: "#1B63521F",
+        LightGreenFooter: "#B5F0E580",
+        whiteTrans: "#FFFFFF26",
+        redDown: "#E52258",
+        lightBackground: "#0000001F",
+        purple: "rgba(162, 129, 255, 1)",
+
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
     },
   },
-
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [
+    require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
     plugin(function ({ addBase }) {
       addBase({
@@ -126,3 +171,5 @@ module.exports = {
     }),
   ],
 };
+
+export default config;

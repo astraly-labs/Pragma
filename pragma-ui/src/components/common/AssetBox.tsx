@@ -82,7 +82,7 @@ const AssetBox = ({ assets, onAssetSelect, data }: AssetBoxProps) => {
             No assets for your search
           </div>
         ) : (
-          <div></div>
+          <div />
         )}
       </div>
     </div>

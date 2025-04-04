@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Popover } from "@headlessui/react";
@@ -28,10 +30,6 @@ interface Resource {
 // List of resources displayed directly in the nav
 const resources: Resource[] = [
   {
-    name: "Pragma v2",
-    href: "/v2",
-  },
-  {
     name: "Ecosystem",
     href: "/ecosystem",
   },
@@ -51,12 +49,6 @@ const products = [
     description: "Explore Pragma's assets and data",
     href: "/assets",
     icon: "/assets/vectors/explorer.svg",
-  },
-  {
-    name: "Optimistic Oracle",
-    description: "Pragma's Optimistic Oracle solution",
-    href: "/optimistic",
-    icon: "/assets/vectors/optimistic.svg",
   },
 ];
 

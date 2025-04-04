@@ -1,10 +1,9 @@
 import { SetStateAction } from "react";
-import { AssetT } from "../_types";
 
 let activeStreamController: AbortController | null = null;
 
 export const startStreaming = async (
-  assets: AssetT[],
+  ticker: string,
   setStreamingData: (value: SetStateAction<{ [ticker: string]: any }>) => void
 ) => {
   if (activeStreamController) {
@@ -15,13 +14,11 @@ export const startStreaming = async (
   activeStreamController = new AbortController();
   const { signal } = activeStreamController;
 
-  const pairs = assets.map((asset) => asset.ticker);
-
-  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/data/multi/stream?${pairs
-    .map((pair) => `pairs=${encodeURIComponent(pair)}`)
-    .join("&")}&interval=100ms&aggregation=median&historical_prices=10`;
-
-  console.log(`Starting stream for:`, pairs.join(", "));
+  const url = `${
+    process.env.NEXT_PUBLIC_INTERNAL_API
+  }/data/multi/stream?pairs=${encodeURIComponent(
+    ticker
+  )}&interval=100ms&aggregation=median&historical_prices=10`;
 
   let retryCount = 0;
   const maxRetries = 5;
@@ -149,21 +146,6 @@ export const startStreaming = async (
       }
 
       console.error("Failed to start stream:", error);
-      setStreamingData((prev) => {
-        const newState = { ...prev };
-        assets.forEach((asset) => {
-          newState[asset.ticker] = {
-            price: "0x0",
-            decimals: asset.decimals,
-            last_updated_timestamp: Math.floor(Date.now() / 1000),
-            nb_sources_aggregated: 0,
-            variations: { "1h": 0, "1d": 0, "1w": 0 },
-            error: `Stream error: ${error.message || "Unknown error"}`,
-            loading: false,
-          };
-        });
-        return newState;
-      });
 
       if (retryCount < maxRetries) {
         retryCount++;

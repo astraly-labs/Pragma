@@ -68,7 +68,7 @@ const AssetPage = async (props: AssetPageProps) => {
         </Link>
       </BoxContainer>
       <BoxContainer>
-        <AssetHeader isAsset={true} asset={asset} />
+        <AssetHeader asset={asset} />
       </BoxContainer>
 
       {asset?.isUnsupported ? (

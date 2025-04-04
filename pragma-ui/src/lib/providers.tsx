@@ -8,8 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { jsonRpcProvider, voyager, StarknetConfig } from "@starknet-react/core";
-import NavHeader from "@/components/Navigation/NavHeader";
-import dynamic from "next/dynamic";
+
 import { usePathname } from "next/navigation";
 
 function makeQueryClient() {
@@ -34,16 +33,7 @@ function getQueryClient() {
   }
 }
 
-const DynamicNavFooter = dynamic(
-  () => import("@/components/Navigation/NavFooter"),
-  { ssr: false }
-);
-
 export const Providers = ({ children }: { children: ReactNode }) => {
-  const isSpecialPage = usePathname()?.includes("/v2");
-
-  const backgroundColor = isSpecialPage ? "bg-black" : "bg-darkGreen";
-
   /**
    * Generates RPC configuration for the specified chain.
    * @param {Chain} chain - The blockchain chain for which to generate RPC configuration.
@@ -61,14 +51,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
-        <div
-          className={`text-sans flex min-h-screen flex-col items-center justify-start ${backgroundColor}`}
-        >
-          <NavHeader />
-
-          {children}
-          <DynamicNavFooter />
-        </div>
+        {children}
       </StarknetConfig>
     </QueryClientProvider>
   );

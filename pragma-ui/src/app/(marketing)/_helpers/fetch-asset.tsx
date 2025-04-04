@@ -1,11 +1,28 @@
 import moment from "moment-timezone";
 import { TIME_ZONE } from "@/lib/constants";
-import { removeDuplicateTimestamps } from "./remove-duplicate-timestamps";
 import { UTCTimestamp } from "lightweight-charts";
 import { AssetDataPointResponse } from "@/app/(marketing)/_types";
 
+const removeDuplicateTimestamps = (arr) => {
+  const seenTimestamps = new Set();
+  const result: any[] = [];
+  for (const obj of arr) {
+    const timestamp = moment.tz(obj.time, TIME_ZONE).valueOf();
+    if (!seenTimestamps.has(timestamp)) {
+      seenTimestamps.add(timestamp);
+      result.push(obj);
+    }
+  }
+  return result;
+};
+
 export const fetchAsset = async (pairId: string, decimals: number) => {
-  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/aggregation/candlestick?pair==${pairId}?interval=15min`;
+  const base = pairId.split("/")[0].toLowerCase();
+  const quote = pairId.split("/")[1].toLowerCase();
+
+  const encodedTicker = encodeURIComponent(`${base}/${quote}`);
+
+  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/aggregation/candlestick?pair=${encodedTicker}&interval=15min`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -26,6 +43,7 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
     time: (moment.tz(d.time, TIME_ZONE).valueOf() / 1000) as UTCTimestamp,
     value: parseInt(d.open) / 10 ** decimals,
   }));
+
   const lastIndex = data.length - 1;
   const dayIndex = lastIndex - 96;
   const variation24h = data[lastIndex].open - data[dayIndex].open;
