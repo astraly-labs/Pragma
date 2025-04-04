@@ -1,6 +1,5 @@
-import React from "react";
-import { ButtonLink } from "../../common/Button";
-import GreenUpperText from "../../common/GreenUpperText";
+import { ButtonLink } from "@/components/common/Button";
+import GreenUpperText from "@/components/common/GreenUpperText";
 import BlogCarousel from "./BlogCarousel";
 
 const Blog = () => (

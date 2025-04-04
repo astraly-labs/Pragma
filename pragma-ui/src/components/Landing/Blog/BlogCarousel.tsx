@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
-import BlogPostBox from "./BlogPostBox";
-import styles from "../styles.module.scss";
-import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
+import styles from "../styles.module.scss";
+import BlogPostBox from "./BlogPostBox";
 
 interface BlogPost {
   image: string;
@@ -21,35 +16,13 @@ interface BlogPost {
 }
 
 const BlogCarousel: React.FC = () => {
-  const [visibleSlides, setVisibleSlides] = useState(3);
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Update the number of visible slides based on screen width
-      if (window.innerWidth < 400) {
-        setVisibleSlides(1.1); // For smaller screens, show fewer slides
-      } else if (window.innerWidth < 640) {
-        setVisibleSlides(1.4); // For medium screens, show a moderate number
-      } else if (window.innerWidth < 768) {
-        setVisibleSlides(1.8); // For medium screens, show a moderate number
-      } else if (window.innerWidth < 1024) {
-        setVisibleSlides(2.1); // For medium screens, show a moderate number
-      } else {
-        setVisibleSlides(3.1); // For larger screens, show more slides
-      }
-    };
-
-    // Listen for window resize events
-    window.addEventListener("resize", handleResize);
-
-    // Call handleResize on initial load
-    handleResize();
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    dragFree: true,
+  });
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [slidesToShow, setSlidesToShow] = useState(3.1);
 
   const BlogPosts: BlogPost[] = [
     {
@@ -134,41 +107,57 @@ const BlogCarousel: React.FC = () => {
     },
   ];
 
-  const sizeOfBlogPosts = BlogPosts.length;
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const handleResize = () => {
+    if (window.innerWidth < 400) setSlidesToShow(1.1);
+    else if (window.innerWidth < 640) setSlidesToShow(1.4);
+    else if (window.innerWidth < 768) setSlidesToShow(1.8);
+    else if (window.innerWidth < 1024) setSlidesToShow(2.1);
+    else setSlidesToShow(3.1);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <div className={classNames("pb-30 overflow-visible ", styles.carouselWrap)}>
-      <CarouselProvider
-        naturalSlideWidth={150}
-        naturalSlideHeight={200}
-        visibleSlides={visibleSlides}
-        totalSlides={sizeOfBlogPosts}
-        step={1}
-        className={styles.carouselWrapper}
-      >
-        <Slider className=" sm:pl-8">
-          {BlogPosts.map((post, index) => (
-            <Slide index={index} key={index}>
-              <BlogPostBox
-                image={post.image}
-                date={post.date}
-                title={post.title}
-                description={post.description}
-                link={post.link}
+    <div className={classNames("pb-30 overflow-visible", styles.carouselWrap)}>
+      <div className={classNames(styles.carouselWrapper, "relative")}>
+        <div ref={emblaRef} className="overflow-hidden px-4">
+          <div className="flex gap-6">
+            {BlogPosts.map((post, index) => (
+              <div
                 key={index}
-              />
-            </Slide>
-          ))}
-        </Slider>
-        <div className="relative lg:h-20 xl:h-0">
-          <ButtonBack className="absolute bottom-0	left-10 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
-            <ArrowLeftIcon className="w-5" />
-          </ButtonBack>
-          <ButtonNext className="absolute left-24	bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28">
-            <ArrowRightIcon className="w-5" />
-          </ButtonNext>
+                className="flex-shrink-0 px-2"
+                style={{
+                  width: `${100 / slidesToShow}%`,
+                }}
+              >
+                <BlogPostBox {...post} />
+              </div>
+            ))}
+          </div>
         </div>
-      </CarouselProvider>
+
+        <div className="relative lg:h-20 xl:h-0 mt-24">
+          <button
+            onClick={scrollPrev}
+            className="absolute bottom-0 left-10 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28"
+          >
+            <ArrowLeftIcon className="w-5" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="absolute left-24 bottom-0 hidden cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen lg:block 2xl:bottom-28"
+          >
+            <ArrowRightIcon className="w-5" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

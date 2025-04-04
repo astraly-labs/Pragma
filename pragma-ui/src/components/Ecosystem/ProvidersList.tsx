@@ -1,7 +1,5 @@
-import React from "react";
-import styles from "./styles.module.scss";
-import classNames from "classnames";
 import Image from "next/image";
+import styles from "./styles.module.scss";
 
 const providersData = [
   {
@@ -22,11 +20,7 @@ const providersData = [
 ];
 
 const ProvidersList = () => (
-  <div
-    className={classNames(
-      "flex w-full flex-col gap-9 overflow-hidden lg:flex-row"
-    )}
-  >
+  <div className="flex w-full flex-col gap-9 overflow-hidden lg:flex-row">
     {providersData.map((tab, index) => (
       <div className={styles.dpBox} key={index}>
         <Image

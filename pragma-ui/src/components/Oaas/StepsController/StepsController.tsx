@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import StepsIndicator from "./StepsIndicator";
 import styles from "./StepsController.module.scss";
@@ -19,7 +21,9 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
           window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
         }
       } else {
-        setErrorMessage("Please complete all required fields before proceeding.");
+        setErrorMessage(
+          "Please complete all required fields before proceeding."
+        );
       }
     } catch (error) {
       setErrorMessage("An error occurred. Please try again.");
@@ -48,12 +52,11 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
             center={true}
             disabled={isValidating}
           >
-            {isValidating 
-              ? "Processing..." 
-              : step !== stepsAmount 
-                ? "Next" 
-                : "Send"
-            }
+            {isValidating
+              ? "Processing..."
+              : step !== stepsAmount
+              ? "Next"
+              : "Send"}
           </Button>
           {step !== 1 && (
             <Button

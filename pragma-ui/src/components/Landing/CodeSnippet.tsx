@@ -1,21 +1,20 @@
-import React from "react";
+"use client";
+
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 import CopyButtonComponent from "../common/CopyCode";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import cb from "./cb";
-import sharedStyles from "../../pages/styles.module.scss";
+import sharedStyles from "@/pages/styles.module.scss";
+import { useHasMounted } from "@/lib/has-mounted";
 
 interface Category {
   title: string;
 }
 
-/**
- * Renders a code snippet component with tabs.
- * @return {JSX.Element} JSX for the code snippet component.
- */
 export default function CodeSnippet() {
+  const hasMounted = useHasMounted();
   const [categories] = useState<Category[]>([
     {
       title: "Price Feed",
@@ -62,6 +61,10 @@ export default function CodeSnippet() {
       random_words: Span<felt252>
   );`;
 
+  if (!hasMounted) {
+    return null;
+  }
+
   return (
     <div
       className={classNames(
@@ -89,9 +92,9 @@ export default function CodeSnippet() {
               </Tab>
             ))}
           </Tab.List>
-          <Tab.Panels className={"h-full "}>
+          <Tab.Panels className="h-full">
             <Tab.Panel
-              className={"h-full pt-6 font-mono leading-7 text-codeColor"}
+              className="h-full pt-6 font-mono leading-7 text-codeColor"
               key={1}
             >
               <SyntaxHighlighter style={cb} language="rust">
@@ -108,7 +111,7 @@ export default function CodeSnippet() {
               </div>
             </Tab.Panel>
             <Tab.Panel
-              className={"h-full pt-6 font-mono leading-7 text-codeColor"}
+              className="h-full pt-6 font-mono leading-7 text-codeColor"
               key={2}
             >
               <SyntaxHighlighter style={cb} language="rust">
@@ -134,7 +137,7 @@ export default function CodeSnippet() {
               </div>
             </Tab.Panel>
             <Tab.Panel
-              className={"h-full pt-6 font-mono leading-7 text-codeColor"}
+              className="h-full pt-6 font-mono leading-7 text-codeColor"
               key={3}
             >
               <SyntaxHighlighter style={cb} language="rust">

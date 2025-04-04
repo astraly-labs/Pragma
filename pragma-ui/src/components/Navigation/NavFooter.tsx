@@ -1,17 +1,19 @@
-import React from "react";
+import { Fragment } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { StyledExternalLink, StyledInternalLink } from "../common/StyledLink";
+import classNames from "classnames";
+import { ChevronRightIcon } from "@heroicons/react/outline";
+import {
+  StyledExternalLink,
+  StyledInternalLink,
+} from "@/components/common/StyledLink";
 import {
   buildExplorerUrlForAddress,
   networkId,
 } from "../../services/wallet.service";
 import { getOracleProxyAddress } from "../../services/address.service";
-// import InputComponent from "./EmailInput";
-import LightGreenUpper from "../common/LightGreenUpperText";
-import classNames from "classnames";
+import LightGreenUpper from "@/components/common/LightGreenUpperText";
 import styles from "./styles.module.scss";
-import { ChevronRightIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 
 interface FooterLink {
   title: string;
@@ -70,11 +72,6 @@ const content: FooterColumn[] = [
   {
     heading: "Company",
     links: [
-      // {
-      //   title: "About Us",
-      //   href: "/about",
-      //   external: false,
-      // },
       {
         title: "Blog",
         href: "https://blog.pragma.build/",
@@ -109,29 +106,6 @@ export interface SocialMedia {
   src: string;
   href: string;
 }
-
-// const socials: SocialMedia[] = [
-//   {
-//     name: "GitHub",
-//     src: "/assets/social/github.svg",
-//     href: "https://github.com/Astraly-Labs/Pragma",
-//   },
-//   {
-//     name: "Twitter",
-//     src: "/assets/social/twitter.svg",
-//     href: "https://twitter.com/PragmaOracle",
-//   },
-//   {
-//     name: "Medium",
-//     src: "/assets/social/medium.svg",
-//     href: "https://blog.pragma.build/",
-//   },
-//   {
-//     name: "Discord",
-//     src: "/assets/social/discord.svg",
-//     href: "https://discord.gg/N7sM7VzfJB",
-//   },
-// ];
 
 const Footer = () => (
   <div className="mt-20 w-full overflow-hidden bg-greenFooter">
@@ -170,7 +144,7 @@ const Footer = () => (
             </p>
             <div className="mt-6 flex flex-col space-y-4">
               {column.links.map(({ external, title, href }) => (
-                <React.Fragment key={title}>
+                <Fragment key={title}>
                   {external ? (
                     <StyledExternalLink href={href} underline={false}>
                       {title}
@@ -180,20 +154,19 @@ const Footer = () => (
                       {title}
                     </StyledInternalLink>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             </div>
           </nav>
         ))}
         <div className="col-span-4 max-w-md">
           <Link
-            href="https://blog.pragma.build/#/portal"
+            href="https://blog.pragma.build/#portal"
             className="flex flex-row pb-3 text-sm tracking-wider text-lightGreen"
           >
             Subscribe to our mailing list{" "}
             <ChevronRightIcon className="my-auto h-6 w-6 pl-2" />
           </Link>
-          {/* <InputComponent placeholderText="Email address" /> */}
         </div>
       </div>
       <LightGreenUpper className="mt-4 pt-3 text-left md:mt-10 md:pt-10">

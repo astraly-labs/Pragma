@@ -17,6 +17,14 @@ export const DEFAULT_ASSETS = [
   { ticker: "XSTRK/USD", address: "0x9", decimals: 8 },
 ];
 
+export const INITIAL_ASSETS = [
+  { ticker: "BTC/USD", address: "0x0", decimals: 18 },
+  { ticker: "ETH/USD", address: "0x1", decimals: 18 },
+  { ticker: "STRK/USD", address: "0x1", decimals: 18 },
+  { ticker: "SUI/USD", address: "0x1", decimals: 18 },
+  { ticker: "AAVE/USD", address: "0x1", decimals: 18 },
+];
+
 export const SUPPORTED_SOURCES = ["api", "mainnet"];
 
 export const TIME_ZONE = "Europe/London";

@@ -1,14 +1,12 @@
-import React from "react";
 import styles from "./styles.module.scss";
-import GreenUpperText from "../common/GreenUpperText";
+import GreenUpperText from "@/components/common/GreenUpperText";
 
 interface StatsProps {
   tve: string;
   tvs: string;
-  className?: string;
 }
 
-const StatsBox: React.FC<StatsProps> = ({ tve, tvs, className, ...props }) => (
+const StatsBox = ({ tve, tvs }: StatsProps) => (
   <div className={styles.statsBox}>
     <h2 className="text-lightGreen">${tve}</h2>
     <GreenUpperText>TVE (Total value enabled)</GreenUpperText>
