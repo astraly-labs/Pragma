@@ -5,11 +5,11 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { getTokens } from "@/app/(dashboard)/assets/_helpers/getTokens";
 
 import { AssetT } from "@/app/(dashboard)/assets/_types";
-import AssetList from "./asset-list";
 import { useEffect, useMemo, useState } from "react";
 import { getAssets } from "../_helpers/getAssets";
 import { startStreaming } from "../_helpers/startStreaming";
 import { formatAssets } from "../_helpers";
+import AssetList from "./asset-list";
 
 type AssetsTableProps = {
   initialTokens: AssetT[];

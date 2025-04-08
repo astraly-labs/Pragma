@@ -8,7 +8,8 @@ import Image from "next/image";
 import { AssetInfo } from "@/app/(dashboard)/assets/_types";
 import { SearchBar } from "./searchbar";
 import { useRouter } from "next/navigation";
-import { AssetRow } from "./asset-row";
+import { columns } from "./assets-table/columns";
+import { DataTable } from "./assets-table/data-table";
 
 type AssetListProps = {
   options: string[];
@@ -24,62 +25,18 @@ const AssetList = ({
   loading,
 }: AssetListProps) => {
   const router = useRouter();
-  const elements = Array(5).fill({
-    image: `/assets/currencies/skynet_trading.svg`,
-    type: "Crypto",
-    ticker: "DAI%2FUSD",
-    lastUpdated: "2sAGO",
-    price: "1000",
-    sources: "10",
-    variations: {
-      past1h: "10",
-      past24h: "-3",
-      past7d: "8",
-    },
-    chart: `https://www.coingecko.com/coins/SOL/sparkline.svg`,
-    ema: "soon",
-    macd: "soon",
-  });
 
   const [filteredValue, setFilteredValue] = useState("");
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: "ascending",
-  });
 
-  const handleInputChange = (value: any) => {
+  const handleInputChange = (value: string) => {
     setFilteredValue(value);
   };
 
-  const filteredAssets = assets.filter((asset: any) => {
-    return asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase());
-  });
-
-  const requestSort = (key: any) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedAssets = useMemo(() => {
-    const sortableItems = [...filteredAssets];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (sortConfig.key) {
-          if (a[sortConfig.key] < b[sortConfig.key]) {
-            return sortConfig.direction === "ascending" ? -1 : 1;
-          }
-          if (a[sortConfig.key] > b[sortConfig.key]) {
-            return sortConfig.direction === "ascending" ? 1 : -1;
-          }
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [filteredAssets, sortConfig]);
+  const filteredAssets = useMemo(() => {
+    return assets.filter((asset) =>
+      asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase())
+    );
+  }, [assets, filteredValue]);
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -111,7 +68,7 @@ const AssetList = ({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none z-10">
                   {options.map((option, optionIdx) => (
                     <Listbox.Option
                       key={optionIdx}
@@ -146,132 +103,29 @@ const AssetList = ({
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-            Price Feeds: {assets!.length}
+            Price Feeds: {assets.length}
           </div>
         </div>
         <div className="sm:ml-auto">
           <SearchBar onInputChange={handleInputChange} />
-          <div className="hidden"> {filteredValue}</div>
         </div>
       </div>
-      <div className="w-full overflow-auto">
-        <div className={styles.assetBox}>
-          <div
-            onClick={() => requestSort("ticker")}
-            className="flex cursor-pointer flex-row gap-2	 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Pair
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("lastUpdated")}
-            className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Last updated
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("sources")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Nb sources
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("price")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Price
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          {selectedSource !== "api" && (
-            <>
-              <div
-                onClick={() => requestSort("variations.past1h")}
-                className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-              >
-                1H
-                <Image
-                  height={16}
-                  width={16}
-                  alt="ArrowDownSmall"
-                  src="/assets/vectors/arrowDownSmall.svg"
-                />
-              </div>
-              <div
-                onClick={() => requestSort("variations.past24h")}
-                className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-              >
-                24H
-                <Image
-                  height={16}
-                  width={16}
-                  alt="ArrowDownSmall"
-                  src="/assets/vectors/arrowDownSmall.svg"
-                />
-              </div>
-              <div
-                onClick={() => requestSort("variations.past7d")}
-                className="flex cursor-pointer  flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-              >
-                7D
-                <Image
-                  height={16}
-                  width={16}
-                  alt="ArrowDownSmall"
-                  src="/assets/vectors/arrowDownSmall.svg"
-                />
-              </div>
-              <div className="flex	 flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-                7D chart
-              </div>
-            </>
-          )}
+
+      {loading ? (
+        <div className="py-10 text-center font-mono text-sm text-lightGreen">
+          Loading price feeds...
         </div>
-        {loading &&
-          elements.map((element, index) => (
-            <AssetRow
-              asset={element}
-              key={index}
-              loading={true}
-              currentSource={selectedSource}
-            />
-          ))}
-        {!loading &&
-          sortedAssets.map((asset: any, assetIdx) => (
-            <AssetRow
-              asset={asset}
-              key={`asset-${assetIdx}`}
-              loading={loading}
-              currentSource={selectedSource}
-            />
-          ))}
-        {!loading && sortedAssets.length === 0 && (
-          <div className="py-2 font-mono text-xs text-lightGreen">
-            No results for your search
-          </div>
-        )}
-      </div>
+      ) : (
+        <div className="overflow-x-auto w-full">
+          <DataTable columns={columns(selectedSource)} data={filteredAssets} />
+        </div>
+      )}
+
+      {!loading && filteredAssets.length === 0 && (
+        <div className="py-2 font-mono text-xs text-lightGreen">
+          No results for your search
+        </div>
+      )}
     </div>
   );
 };

@@ -7,9 +7,9 @@ import { getPublishers } from "./_helpers/getPublishers";
 import { AssetsTable } from "./_components/assets-table";
 import PublishersTable from "./_components/publishers-table";
 import { PublisherList } from "./_components/publisher-list";
-import AssetList from "./_components/asset-list";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { CustomError } from "./_components/custom-error";
+import AssetList from "./_components/asset-list";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
