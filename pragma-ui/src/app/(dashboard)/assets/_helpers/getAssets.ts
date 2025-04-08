@@ -1,5 +1,6 @@
 import { dataSources } from "@/lib/endpoints";
 import { AssetInfo, AssetT } from "../_types";
+import { getEncodedTicker } from "../../asset/[ticker]/_helpers/getEncodedTicker";
 
 type GetAssets = {
   source: string;
@@ -55,11 +56,25 @@ export const getAssets = async ({
     const url = `${dataSources[source]}&pair=${encodeURIComponent(
       asset.ticker
     )}`;
+
+    // const base = asset.ticker.split("/")[0].toLowerCase();
+    // const quote = asset.ticker.split("/")[1].toLowerCase();
+
+    // const encodedTicker = encodeURIComponent(`${base}/${quote}`);
+
+    // const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
+
     console.log(`[${asset.ticker}] Fetching from:`, url);
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error(`Failed to fetch data for ${asset.ticker}`);
     }
-    return response.json();
+
+    const data = await response.json();
+
+    console.log({ data });
+
+    return data;
   }
 };

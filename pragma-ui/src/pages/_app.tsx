@@ -1,4 +1,3 @@
-import React from "react";
 import { useRouter } from "next/router";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
@@ -12,9 +11,8 @@ import NavHeader from "../components/Navigation/NavHeader";
 import { sepolia, Chain } from "@starknet-react/chains";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { DataProvider } from "../providers/data";
-import { GetServerSideProps } from "next";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { memo } from "react";
 
 // Dynamically import components with heavy computations or less critical UI elements
 const DynamicNavFooter = dynamic(
@@ -111,13 +109,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             className={`text-sans flex min-h-screen flex-col items-center justify-start ${backgroundColor}`}
           >
             <NavHeader />
-            <DataProvider
-              initialData={initialData}
-              initialPublishers={initialPublishers}
-              initialCheckpoints={initialCheckpoints}
-            >
-              <Component {...pageProps} key={router.asPath} />
-            </DataProvider>
+            <Component {...pageProps} key={router.asPath} />
             <DynamicNavFooter />
           </div>
         </StarknetConfig>
@@ -126,35 +118,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const source = "mainnet"; // Default source, you can change this based on some logic
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/fetchData?source=${source}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch data");
-    }
-
-    const { results, publishersData, checkpointsData } = await response.json();
-
-    return {
-      props: {
-        initialData: results,
-        initialPublishers: publishersData,
-        initialCheckpoints: checkpointsData,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: {
-        initialData: {},
-        initialPublishers: {},
-        initialCheckpoints: {},
-      },
-    };
-  }
-};
-export default React.memo(MyApp);
+export default memo(MyApp);

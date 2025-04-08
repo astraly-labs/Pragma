@@ -1,11 +1,15 @@
-import React from "react";
 import classNames from "classnames";
 import sharedStyles from "../../pages/styles.module.scss";
 import Image from "next/image";
 import DoubleText from "./DoubleText";
 import Link from "next/link";
 
-const AssetHeader = ({ isAsset, asset }) => {
+type AssetHeaderProps = {
+  asset: any;
+  isAsset?: boolean;
+};
+
+const AssetHeader = ({ isAsset, asset }: AssetHeaderProps) => {
   return (
     <div
       className={classNames(

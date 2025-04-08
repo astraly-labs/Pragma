@@ -22,7 +22,7 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
 
   const encodedTicker = encodeURIComponent(`${base}/${quote}`);
 
-  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/aggregation/candlestick?pair=${encodedTicker}&interval=15min`;
+  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/aggregation/candlestick?pair=${encodedTicker}&interval=15min`;
   const response = await fetch(url);
 
   if (!response.ok) {

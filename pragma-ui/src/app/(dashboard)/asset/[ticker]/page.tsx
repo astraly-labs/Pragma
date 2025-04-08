@@ -20,7 +20,7 @@ type AssetPageProps = {
   params: Params;
 };
 
-const DEFAULT_SOURCE = SUPPORTED_SOURCES[2];
+const DEFAULT_SOURCE = SUPPORTED_SOURCES[1];
 
 const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;
