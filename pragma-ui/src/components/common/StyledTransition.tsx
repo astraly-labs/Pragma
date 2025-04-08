@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode } from "react";
 import { Transition } from "@headlessui/react";
-import classNames from "classnames";
+import { cn } from "@/lib/utils";
 
 interface StyledTransitionProps {
   show?: boolean;
@@ -13,7 +13,7 @@ interface StyledTransitionProps {
   children: ReactNode;
 }
 
-const StyledTransition: React.FC<StyledTransitionProps> = ({
+const StyledTransition = ({
   show,
   enter,
   enterFrom,
@@ -22,16 +22,16 @@ const StyledTransition: React.FC<StyledTransitionProps> = ({
   leaveFrom,
   leaveTo,
   children,
-}) => (
+}: StyledTransitionProps) => (
   <Transition
     as={Fragment}
     show={show}
-    enter={classNames("transition duration-50 ease-out", enter)}
-    enterFrom={classNames("opacity-50", enterFrom)}
-    enterTo={classNames("opacity-100", enterTo)}
-    leave={classNames("transition duration-100 ease-in", leave)}
-    leaveFrom={classNames("opacity-100", leaveFrom)}
-    leaveTo={classNames("opacity-0", leaveTo)}
+    enter={cn("transition duration-50 ease-out", enter)}
+    enterFrom={cn("opacity-50", enterFrom)}
+    enterTo={cn("opacity-100", enterTo)}
+    leave={cn("transition duration-100 ease-in", leave)}
+    leaveFrom={cn("opacity-100", leaveFrom)}
+    leaveTo={cn("opacity-0", leaveTo)}
   >
     {children}
   </Transition>

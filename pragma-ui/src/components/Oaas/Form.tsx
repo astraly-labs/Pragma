@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import StepsController from "./StepsController/StepsController";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";

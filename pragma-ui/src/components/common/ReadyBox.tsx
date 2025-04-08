@@ -1,9 +1,11 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import styles from "./styles.module.scss";
-import GreenText from "../common/GreenText";
-import { ButtonLink } from "../common/Button";
-import GreenUpperText from "../common/GreenUpperText";
 import Image from "next/image";
+import styles from "./styles.module.scss";
+import GreenText from "@/components/common/GreenText";
+import { ButtonLink } from "@/components/common/Button";
+import GreenUpperText from "@/components/common/GreenUpperText";
 
 const ReadyBox = ({ version }) => {
   const [windowWidth, setWindowWidth] = useState<number | null>(null);

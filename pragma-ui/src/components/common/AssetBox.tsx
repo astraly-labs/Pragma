@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
@@ -25,7 +27,7 @@ interface AssetBoxProps {
   data: AssetPair[];
 }
 
-const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
+const AssetBox = ({ assets, onAssetSelect, data }: AssetBoxProps) => {
   const handleAssetSelect = (assetPair: AssetT) => {
     onAssetSelect(assetPair);
   };
@@ -80,7 +82,7 @@ const AssetBox: React.FC<AssetBoxProps> = ({ assets, onAssetSelect, data }) => {
             No assets for your search
           </div>
         ) : (
-          <div></div>
+          <div />
         )}
       </div>
     </div>

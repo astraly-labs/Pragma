@@ -1,17 +1,13 @@
-import React from "react";
-import GreenText from "../../common/GreenText";
-import GreenUpperText from "../../common/GreenUpperText";
-import styles from "../styles.module.scss";
-import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import Image from "next/image";
+import styles from "../styles.module.scss";
+import GreenText from "@/components/common/GreenText";
+import GreenUpperText from "@/components/common/GreenUpperText";
+import classNames from "classnames";
 
 interface Category {
   logo: string;
@@ -42,48 +38,82 @@ const categories: Category[] = [
   },
 ];
 
-const TestimonialCarousel: React.FC = () => {
+const TestimonialCarousel = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
   return (
-    <CarouselProvider
-      naturalSlideWidth={648}
-      naturalSlideHeight={460}
-      visibleSlides={1}
-      totalSlides={4}
-      step={1}
-      infinite={true}
-      dragEnabled={false}
-      isIntrinsicHeight={true}
-      className={styles.carouselWrapper}
-    >
-      <Slider className="w-full" classNameAnimation={styles.noTransition}>
-        {categories.map((category, index) => (
-          <Slide index={index} key={index}>
-            <div className={styles.testimonyBox} key={index}>
-              <div className="w-48">
+    <div className={classNames(styles.carouselWrapper, "relative h-[520px]")}>
+      <div ref={emblaRef} className="overflow-hidden">
+        <div className="flex w-full max-w-[648px] mx-auto">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className={`flex-shrink-0 w-full md:w-[648px] px-4 pt-2`}
+            >
+              <div
+                className={classNames(styles.testimonyBox, "relative h-4/5")}
+              >
                 <Image
+                  width={40}
                   height={40}
-                  width={150}
-                  alt="companyLogo"
-                  src={category.logo}
+                  alt="greenDot"
+                  src="/assets/vectors/lightDot.svg"
+                  className={styles.lightDot1}
                 />
+                <Image
+                  width={40}
+                  height={40}
+                  alt="greenDot"
+                  src="/assets/vectors/lightDot.svg"
+                  className={styles.lightDot2}
+                />
+                <div className="w-48">
+                  <Image
+                    height={40}
+                    width={150}
+                    alt="companyLogo"
+                    src={category.logo}
+                  />
+                </div>
+                <GreenText className="py-8 text-center md:text-left">
+                  {category.text}
+                </GreenText>
+                <GreenUpperText className="pb-20">
+                  {category.author}
+                </GreenUpperText>
               </div>
-              <GreenText className="py-8 text-center md:text-left">
-                {category.text}
-              </GreenText>
-              <GreenUpperText className="pb-20">
-                {category.author}
-              </GreenUpperText>
             </div>
-          </Slide>
-        ))}
-      </Slider>
-      <ButtonBack className="absolute right-1/2	bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0">
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={scrollPrev}
+        className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0"
+      >
         <ArrowLeftIcon className="w-5" />
-      </ButtonBack>
-      <ButtonNext className="absolute left-1/2	bottom-6 translate-x-1/4 cursor-pointer rounded-full	 border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0">
+      </button>
+      <button
+        onClick={scrollNext}
+        className="absolute left-1/2 bottom-6 translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0"
+      >
         <ArrowRightIcon className="w-5" />
-      </ButtonNext>
-    </CarouselProvider>
+      </button>
+    </div>
   );
 };
 
