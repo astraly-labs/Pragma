@@ -12,7 +12,7 @@ export const getAsset = async ({ source, ticker }: GetAsset) => {
   let url: string = "";
 
   if (source === "api") {
-    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/data/${encodedTicker}?network=${source}&aggregation=median&with_components=true`;
+    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/data/${encodedTicker}?network=${source}&aggregation=median&with_components=true&interval=1h`;
   } else {
     url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
   }

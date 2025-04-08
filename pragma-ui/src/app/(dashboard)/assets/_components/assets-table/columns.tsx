@@ -1,8 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
-import { AssetInfo } from "@/app/(dashboard)/assets/_types";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AssetInfo } from "@/app/(dashboard)/assets/_types";
 
 const SortableHeader = (label: string, column: any) => {
   const sortState = column.getIsSorted();
@@ -30,19 +31,20 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
       const asset = row.original;
       return (
         <Link
+          prefetch
           href={`/asset/${encodeURIComponent(asset.ticker).replace(
             "%2F",
             "-"
           )}?network=${currentSource}`}
           className="flex items-center gap-2"
         >
-          <Image
-            src={asset.image || "/fallback.png"}
-            alt="logo"
-            width={24}
-            height={24}
-            className="rounded-full"
-          />
+          <Avatar>
+            <AvatarImage width={30} height={30} src={asset.image} />
+            <AvatarFallback className="bg-lightBlur">
+              {asset.ticker[0]}
+            </AvatarFallback>
+          </Avatar>
+
           <span>{asset.ticker}</span>
         </Link>
       );
