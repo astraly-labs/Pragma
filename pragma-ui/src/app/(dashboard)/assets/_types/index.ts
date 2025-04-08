@@ -45,22 +45,47 @@ export type Token = {
   decimals: number;
 };
 
+export type Component = {
+  pair_id: string;
+  source: string;
+  last_updated_timestamp: number;
+  price: string;
+  decimals: number;
+  daily_updates: number;
+};
+
 export type Publisher = {
   publisher: string;
+  type: string | number;
   website_url: string;
   last_updated_timestamp: number;
-  type: number;
   nb_feeds: number;
   daily_updates: number;
   total_updates: number;
-  components: {
-    pair_id: string;
-    last_updated_timestamp: number;
-    price: string;
-    source: string;
-    decimals: number;
-    daily_updates: number;
-  }[];
+  components: Component[];
+};
+
+export type ProcessedComponent = {
+  image: string;
+  type: string;
+  ticker: string;
+  source: string;
+  lastUpdated: string;
+  price: number;
+  dailyUpdates: number;
+};
+
+export type ProcessedPublisher = {
+  image: string;
+  type: string;
+  link: string;
+  name: string;
+  lastUpdated: string;
+  reputationScore: string;
+  nbFeeds: number;
+  dailyUpdates: number;
+  totalUpdates: number;
+  pairs: ProcessedComponent[];
 };
 
 export type AssetT = {

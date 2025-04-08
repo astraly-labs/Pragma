@@ -409,59 +409,57 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
 
   return (
     <div className="w-full flex-col justify-between gap-8 md:flex-row md:gap-5">
-      {currentSource !== "api" && (
-        <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:gap-10">
-          <Listbox value={currentSource} onChange={handleSourceChange}>
-            <div className="relative md:w-auto">
-              <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none sm:w-fit">
-                <span className="block truncate">{currentSource}</span>
-                <Image
-                  className="my-auto pl-2"
-                  height={16}
-                  width={16}
-                  alt="arrowDown"
-                  src="/assets/vectors/arrowDown.svg"
-                />
-              </Listbox.Button>
-              <Transition
-                as={Fragment}
-                leave="transition ease-in duration-100"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
-                  {SUPPORTED_SOURCES.map((option, idx) => (
-                    <Listbox.Option
-                      key={idx}
-                      className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
-                          active ? "opacity-50" : ""
-                        }`
-                      }
-                      value={option}
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={`block truncate ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
-                          >
-                            {option}
-                          </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" />
-                          )}
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </div>
-          </Listbox>
-        </div>
-      )}
+      <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:gap-10">
+        <Listbox value={currentSource} onChange={handleSourceChange}>
+          <div className="relative md:w-auto">
+            <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none sm:w-fit">
+              <span className="block truncate">{currentSource}</span>
+              <Image
+                className="my-auto pl-2"
+                height={16}
+                width={16}
+                alt="arrowDown"
+                src="/assets/vectors/arrowDown.svg"
+              />
+            </Listbox.Button>
+            <Transition
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+                {SUPPORTED_SOURCES.map((option, idx) => (
+                  <Listbox.Option
+                    key={idx}
+                    className={({ active }) =>
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 text-lightGreen ${
+                        active ? "opacity-50" : ""
+                      }`
+                    }
+                    value={option}
+                  >
+                    {({ selected }) => (
+                      <>
+                        <span
+                          className={`block truncate ${
+                            selected ? "font-medium" : "font-normal"
+                          }`}
+                        >
+                          {option}
+                        </span>
+                        {selected && (
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3" />
+                        )}
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Transition>
+          </div>
+        </Listbox>
+      </div>
 
       <div
         ref={chartContainerRef}

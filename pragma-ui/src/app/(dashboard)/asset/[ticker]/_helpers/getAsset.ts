@@ -9,9 +9,15 @@ type GetAsset = {
 export const getAsset = async ({ source, ticker }: GetAsset) => {
   const encodedTicker = getEncodedTicker(ticker);
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`
-  );
+  let url: string = "";
+
+  if (source === "api") {
+    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/data/${encodedTicker}?network=${source}&aggregation=median&with_components=true`;
+  } else {
+    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
+  }
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch ${encodedTicker} asset`);

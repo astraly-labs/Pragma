@@ -58,7 +58,7 @@ export const AssetRow = ({
           ? `/asset/${encodeURIComponent(asset.ticker).replace(
               "%2F",
               "-"
-            )}?network=mainnet`
+            )}?network=${currentSource}`
           : hasError
           ? "#"
           : `/provider/${asset.ticker}`

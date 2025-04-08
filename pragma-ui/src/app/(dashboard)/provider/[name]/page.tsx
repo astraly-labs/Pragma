@@ -4,10 +4,10 @@ import Link from "next/link";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
 import BoxContainer from "@/components/common/BoxContainer";
 import styles from "@/pages/styles.module.scss";
-import AssetHeader from "@/components/Assets/AssetHeader";
 import PairReported from "@/components/Assets/PairReported";
 import { getPublisher } from "./_helpers/getPublisher";
 import Loading from "./loading";
+import { PublisherHeader } from "./_components/publisher-header";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,8 +32,6 @@ const ProviderPage = async (props: ProviderPageProps) => {
     return <Loading />;
   }
 
-  const { publisher, pairs } = data;
-
   return (
     <div
       className={classNames(
@@ -57,11 +55,11 @@ const ProviderPage = async (props: ProviderPageProps) => {
         </Link>
       </BoxContainer>
       <BoxContainer>
-        <AssetHeader asset={publisher} isAsset={false} />
+        <PublisherHeader publisher={data} />
       </BoxContainer>
-      {pairs && (
+      {data.pairs && (
         <BoxContainer>
-          <PairReported components={pairs} />
+          <PairReported components={data.pairs} />
         </BoxContainer>
       )}
     </div>

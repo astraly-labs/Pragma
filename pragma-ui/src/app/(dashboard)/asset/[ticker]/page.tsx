@@ -1,13 +1,13 @@
 import Image from "next/image";
 import classNames from "classnames";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import styles from "@/pages/styles.module.scss";
+import { getCheckpoints } from "./_helpers/getCheckpoints";
+import { getAsset } from "./_helpers/getAsset";
 import { AssetHeader } from "./_components/asset-header";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
 import BoxContainer from "@/components/common/BoxContainer";
-import Link from "next/link";
-import { getCheckpoints } from "./_helpers/getCheckpoints";
-import { notFound } from "next/navigation";
-import { getAsset } from "./_helpers/getAsset";
 import { AssetChart } from "./_components/asset-chart";
 import { Checkpoints } from "./_components/checkpoints";
 import { PriceTable } from "./_components/price-table";
@@ -54,6 +54,7 @@ const AssetPage = async (props: AssetPageProps) => {
     >
       <BoxContainer>
         <Link
+          prefetch
           href={`/assets?source=${network}`}
           className="flex w-full cursor-pointer items-center gap-2 text-left text-sm uppercase tracking-widest text-lightGreen"
         >

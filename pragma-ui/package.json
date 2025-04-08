@@ -11,7 +11,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.4",
+    "@headlessui/react": "^2.2.1",
     "@heroicons/react": "v1",
     "@mailerlite/mailerlite-nodejs": "^1.2.1",
     "@react-oauth/google": "^0.12.1",

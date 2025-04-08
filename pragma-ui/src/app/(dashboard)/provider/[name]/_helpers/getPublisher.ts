@@ -1,6 +1,6 @@
 import moment from "moment";
 import { getPublisherType } from "@/utils";
-import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
+import { ProcessedPublisher, Publisher } from "@/app/(dashboard)/assets/_types";
 
 interface PairsReported {
   image: string;
@@ -14,61 +14,53 @@ interface PairsReported {
 export const getPublisher = async (
   name: string,
   source?: string
-): Promise<
-  { publisher: DataProviderInfo; pairs: PairsReported | [] } | undefined
-> => {
+): Promise<ProcessedPublisher | undefined> => {
   if (!source || source === "api") {
     return undefined;
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publishers?network=${source}&data_type=spot_entry`
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=${source}&data_type=spot_entry`
   );
 
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");
   }
 
-  const publishers: DataProviderInfo[] = await response.json();
+  const publisher: Publisher = await response.json();
 
-  const foundPublisher = publishers?.find(
-    (publisher) => publisher.name.toLowerCase() === name.toLowerCase()
-  );
-
-  if (!foundPublisher) {
+  if (!publisher) {
     return undefined;
   }
 
   return {
-    publisher: {
-      image: `/assets/publishers/${foundPublisher.name.toLowerCase()}.svg`,
-      type: getPublisherType(Number(foundPublisher.type)),
-      link: foundPublisher.link,
-      name: foundPublisher.name,
-      lastUpdated: moment(Number(foundPublisher.lastUpdated) * 1000).fromNow(),
-      reputationScore: "soon",
-      nbFeeds: foundPublisher.nbFeeds,
-      dailyUpdates: foundPublisher.dailyUpdates,
-      totalUpdates: foundPublisher.totalUpdates,
-    },
-    pairs: [],
+    image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
+    type: getPublisherType(Number(publisher.type)),
+    link: publisher.website_url,
+    name: publisher.publisher,
+    lastUpdated: moment(
+      Number(publisher.last_updated_timestamp) * 1000
+    ).fromNow(),
+    reputationScore: "soon",
+    nbFeeds: publisher.nb_feeds,
+    dailyUpdates: publisher.daily_updates,
+    totalUpdates: publisher.total_updates,
+    pairs: publisher.components.map((component) => {
+      const lastUpdated = moment(
+        component.last_updated_timestamp * 1000
+      ).fromNow();
 
-    // foundPublisher.components.map((component) => {
-    //   const lastUpdated = moment(
-    //     component.last_updated_timestamp * 1000
-    //   ).fromNow();
-
-    //   return {
-    //     image: `/assets/currencies/${
-    //       component.pair_id.toLowerCase().split("/")[0]
-    //     }.svg`,
-    //     type: "Crypto",
-    //     ticker: component.pair_id.replace("/", ""),
-    //     source: component.source,
-    //     lastUpdated: lastUpdated,
-    //     price: parseInt(component.price, 16) / 10 ** component.decimals,
-    //     dailyUpdates: component.daily_updates,
-    //   };
-    // })
+      return {
+        image: `/assets/currencies/${
+          component.pair_id.toLowerCase().split("/")[0]
+        }.svg`,
+        type: "Crypto",
+        ticker: component.pair_id.replace("/", ""),
+        source: component.source,
+        lastUpdated: lastUpdated,
+        price: parseInt(component.price, 16) / 10 ** component.decimals,
+        dailyUpdates: component.daily_updates,
+      };
+    }),
   };
 };
