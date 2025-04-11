@@ -1,14 +1,15 @@
 "use client";
 
-import React, { Fragment, useMemo, useState } from "react";
-import styles from "@/components/Assets/styles.module.scss";
+import { Fragment, useState } from "react";
 import classNames from "classnames";
 import { Listbox, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
-import { SearchBar } from "./searchbar";
 import { useRouter } from "next/navigation";
-import { PublisherRow } from "./publisher-row";
+import { publisherColumns } from "@/app/(dashboard)/assets/_components/publishers-table/columns";
+import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
+import styles from "@/components/Assets/styles.module.scss";
+import { SearchBar } from "./searchbar";
+import { DataTable } from "./data-table";
 
 type PublisherListProps = {
   options: string[];
@@ -24,67 +25,11 @@ export const PublisherList = ({
   loading,
 }: PublisherListProps) => {
   const router = useRouter();
-  const elements = Array(5).fill({
-    image: `/assets/currencies/skynet_trading.svg`,
-    type: "Crypto",
-    ticker: "DAI%2FUSD",
-    lastUpdated: "2sAGO",
-    price: "1000",
-    sources: "10",
-    variations: {
-      past1h: "10",
-      past24h: "-3",
-      past7d: "8",
-    },
-    chart: `https://www.coingecko.com/coins/SOL/sparkline.svg`,
-    ema: "soon",
-    macd: "soon",
-  });
-
   const [filteredValue, setFilteredValue] = useState("");
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: "ascending",
-  });
 
-  const handleInputChange = (value: any) => {
-    setFilteredValue(value);
-  };
-
-  const filteredAssets =
-    publishers && publishers.length >= 0
-      ? publishers.filter((asset: any) => {
-          return asset?.name
-            ?.toLowerCase()
-            .includes(filteredValue.toLowerCase());
-        })
-      : [];
-
-  const requestSort = (key: any) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedAssets = useMemo(() => {
-    const sortableItems = [...filteredAssets];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (sortConfig.key) {
-          if (a[sortConfig.key] < b[sortConfig.key]) {
-            return sortConfig.direction === "ascending" ? -1 : 1;
-          }
-          if (a[sortConfig.key] > b[sortConfig.key]) {
-            return sortConfig.direction === "ascending" ? 1 : -1;
-          }
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [filteredAssets, sortConfig]);
+  const filteredPublishers = publishers.filter((publisher) =>
+    publisher.name.toLowerCase().includes(filteredValue.toLowerCase())
+  );
 
   return (
     <div className={classNames("w-full text-lightGreen", styles.darkGreenBox)}>
@@ -94,9 +39,7 @@ export const PublisherList = ({
           <Listbox
             value={selectedSource}
             onChange={(value) =>
-              router.push(`/assets?source=${value}`, {
-                scroll: false,
-              })
+              router.push(`/assets?source=${value}`, { scroll: false })
             }
           >
             <div className="relative w-full md:w-auto">
@@ -139,9 +82,6 @@ export const PublisherList = ({
                           >
                             {option}
                           </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" />
-                          )}
                         </>
                       )}
                     </Listbox.Option>
@@ -151,108 +91,29 @@ export const PublisherList = ({
             </div>
           </Listbox>
           <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-            Data Providers: {publishers!.length}
+            Data Providers: {publishers.length}
           </div>
         </div>
         <div className="sm:ml-auto">
-          <SearchBar onInputChange={handleInputChange} />
-          <div className="hidden"> {filteredValue}</div>
+          <SearchBar onInputChange={setFilteredValue} />
         </div>
       </div>
-      <div className="w-full overflow-auto">
-        <div className={styles.dpBox}>
-          <div
-            onClick={() => requestSort("name")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Identifier
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("lastUpdate")}
-            className="flex cursor-pointer flex-row gap-1 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Last update
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-            Type
-          </div>
-          <div
-            onClick={() => requestSort("reputation")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter"
-          >
-            Reputation
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("nbFeeds")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Nb feeds
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div
-            onClick={() => requestSort("dailyUpdates")}
-            className="flex cursor-pointer flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider"
-          >
-            Updates/day
-            <Image
-              height={16}
-              width={16}
-              alt="ArrowDownSmall"
-              src="/assets/vectors/arrowDownSmall.svg"
-            />
-          </div>
-          <div className="flex flex-row gap-2 font-mono text-sm text-LightGreenFooter md:tracking-wider">
-            Total updates
-          </div>
+
+      {loading ? (
+        <div className="py-10 text-center font-mono text-sm text-lightGreen">
+          Loading data providers...
         </div>
-        {loading &&
-          elements.map((element, index) => (
-            <PublisherRow
-              publisher={element}
-              key={index}
-              loading={true}
-              currentSource={selectedSource}
-            />
-          ))}
-        {!loading &&
-          sortedAssets.map((asset: any, assetIdx) => (
-            <Fragment key={`asset-${assetIdx}`}>
-              <PublisherRow
-                publisher={asset}
-                loading={loading}
-                currentSource={selectedSource}
-              />
-            </Fragment>
-          ))}
-        {!loading && sortedAssets.length === 0 && (
-          <div className="py-2 font-mono text-xs text-lightGreen">
-            No results for your search
-          </div>
-        )}
-      </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <DataTable columns={publisherColumns} data={filteredPublishers} />
+        </div>
+      )}
+
+      {!loading && filteredPublishers.length === 0 && (
+        <div className="py-2 font-mono text-xs text-lightGreen">
+          No results for your search
+        </div>
+      )}
     </div>
   );
 };
