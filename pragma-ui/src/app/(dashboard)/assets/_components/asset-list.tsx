@@ -9,7 +9,7 @@ import { AssetInfo } from "@/app/(dashboard)/assets/_types";
 import { SearchBar } from "./searchbar";
 import { useRouter } from "next/navigation";
 import { columns } from "./assets-table/columns";
-import { DataTable } from "./assets-table/data-table";
+import { DataTable } from "./data-table";
 
 type AssetListProps = {
   options: string[];
