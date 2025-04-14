@@ -2,7 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Popover } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+} from "@headlessui/react";
 import {
   // CursorClickIcon,
   HomeIcon,
@@ -111,48 +116,26 @@ const mobileResources = [
 ];
 
 const NavHeader = () => {
-  const [isHidden, setIsHidden] = useState(false);
   const [isCommunityPopoverOpen, setIsCommunityPopoverOpen] = useState(false);
   const [isProductsPopoverOpen, setIsProductsPopoverOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
 
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target as Node)
-      ) {
-        setIsHidden(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   return (
     <Popover
-      className={classNames(styles.bigScreen, "absolute w-full py-8 px-3")}
+      className={classNames(
+        styles.bigScreen,
+        "absolute w-full py-8 px-3 group"
+      )}
     >
       <div
         className={classNames(
           styles.container,
-          isHidden ? "border-0 px-0 py-0" : "block",
-          "md:mx-auto md:w-11/12"
+          "md:mx-auto md:w-11/12 group-data-[open]:border-0 group-data-[open]:p-0 block"
         )}
       >
-        <div
-          className={classNames(
-            " items-center justify-between md:space-x-5 lg:space-x-0",
-            isHidden ? "hidden" : "flex"
-          )}
-        >
-          <div className="flex justify-start lg:w-0 lg:flex-1">
+        <div className="items-center justify-between md:space-x-5 lg:space-x-0 flex group-data-[open]:opacity-0">
+          <div className="flex justify-start lg:w-0 lg:flex-1 ">
             <Link href="/">
               <div>
                 <span className="sr-only">Pragma</span>
@@ -168,15 +151,15 @@ const NavHeader = () => {
           </div>
           <div className="-my-2 -mr-2 md:hidden">
             {/* To open mobile menu */}
-            <Popover.Button
-              onClick={() => setIsHidden(true)}
+            <PopoverButton
+              type="button"
               className="hover:bg-dark inline-flex items-center justify-center rounded-md p-2 text-lightGreen"
             >
               <span className="sr-only">Open menu</span>
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
-            </Popover.Button>
+            </PopoverButton>
           </div>
-          <Popover.Group
+          <PopoverGroup
             as="nav"
             className="hidden md:flex md:space-x-4 lg:space-x-10"
           >
@@ -222,7 +205,7 @@ const NavHeader = () => {
                 description="Join the Pragma community on any of those channels"
               />
             </div>
-          </Popover.Group>
+          </PopoverGroup>
           <div className="hidden w-4 md:flex lg:hidden"></div>
           <div className="hidden items-center justify-end lg:flex lg:w-0 lg:flex-1">
             <ButtonLink
@@ -237,19 +220,14 @@ const NavHeader = () => {
         </div>
 
         {/* Mobile Version */}
-        <Popover.Panel
+        <PopoverPanel
           focus
-          ref={mobileMenuRef}
           className={classNames(
             styles.mobilePop,
-            "absolute inset-x-0 top-0 origin-top-right transform transition md:hidden"
+            "absolute inset-x-0 top-0 origin-top-right transform transition hidden group-data-[open]:block md:hidden"
           )}
         >
-          <div
-            className={classNames(
-              "relative m-auto flex h-full flex-col rounded-lg"
-            )}
-          >
+          <div className="relative m-auto flex h-full w-full flex-col rounded-lg">
             <div className="px-3 pb-6">
               <div className="flex w-full items-center justify-between">
                 <div>
@@ -262,13 +240,13 @@ const NavHeader = () => {
                   />
                 </div>
                 <div>
-                  <Popover.Button
-                    onClick={() => setIsHidden(false)}
+                  <PopoverButton
+                    type="button"
                     className="inline-flex items-center justify-center rounded-full p-1 text-lightGreen"
                   >
                     <span className="sr-only">Close menu</span>
                     <XIcon className="h-6 w-6" aria-hidden="true" />
-                  </Popover.Button>
+                  </PopoverButton>
                 </div>
               </div>
               <div className="mx-auto mt-6 items-center justify-center">
@@ -361,7 +339,7 @@ const NavHeader = () => {
               </ButtonLink>
             </div>
           </div>
-        </Popover.Panel>
+        </PopoverPanel>
       </div>
     </Popover>
   );
