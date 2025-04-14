@@ -133,13 +133,13 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       lineWidth: 2,
       crosshairMarkerVisible: true,
       lastValueVisible: true,
-      priceFormat: { type: "price", precision: 3, minMove: 0.001 },
+      priceFormat: { type: "price", precision: 6, minMove: 0.001 },
     });
 
     dataRef.current = [];
 
     const now = Math.floor(Date.now() / 1000);
-    const initialValue = lastValueRef.current ?? 100;
+    const initialValue = lastValueRef.current ?? asset.price;
     const initialPoint = {
       time: (now - 10) as UTCTimestamp,
       value: initialValue,
