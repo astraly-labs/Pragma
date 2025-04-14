@@ -20,8 +20,6 @@ export const startStreaming = async (
     ticker
   )}&interval=100ms&aggregation=median&historical_prices=10`;
 
-  console.log({ url });
-
   let retryCount = 0;
   const maxRetries = 5;
   const retryDelay = 3000;

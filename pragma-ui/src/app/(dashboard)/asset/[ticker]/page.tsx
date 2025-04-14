@@ -94,25 +94,23 @@ const AssetPage = async (props: AssetPageProps) => {
         </BoxContainer>
       ) : (
         <>
-          <BoxContainer>
-            <AssetChart asset={asset} currentSource={network} />
-          </BoxContainer>
-          <div className="w-full pb-5" />
-          {network !== "api" && (
-            <>
-              {asset.components && asset.decimals && (
-                <BoxContainer className="relative" modeOne={false}>
-                  <PriceTable
-                    components={asset.components}
-                    decimals={asset.decimals}
-                  />
-                </BoxContainer>
-              )}
-              <BoxContainer>
-                <Checkpoints components={checkpoints} />
-              </BoxContainer>
-            </>
+          {network === "api" && (
+            <BoxContainer>
+              <AssetChart asset={asset} currentSource={network} />
+            </BoxContainer>
           )}
+          <div className="w-full pb-5" />
+          {asset.components && asset.decimals && (
+            <BoxContainer className="relative" modeOne={false}>
+              <PriceTable
+                components={asset.components}
+                decimals={asset.decimals}
+              />
+            </BoxContainer>
+          )}
+          <BoxContainer>
+            <Checkpoints components={checkpoints} />
+          </BoxContainer>
         </>
       )}
     </div>
