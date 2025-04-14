@@ -1,10 +1,9 @@
-import React from "react";
+import Image from "next/image";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import GreenUpperText from "./GreenUpperText";
 import GreenText from "./GreenText";
 import { ButtonLink } from "./Button";
-import Image from "next/image";
 
 interface BlurBoxProps {
   firstText: string;
@@ -20,7 +19,7 @@ interface BlurBoxProps {
   >;
 }
 
-const BlurBox: React.FC<BlurBoxProps> = ({
+const BlurBox = ({
   firstText,
   title,
   generalText,
@@ -29,7 +28,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
   linkButton,
   className,
   ...props
-}) => (
+}: BlurBoxProps) => (
   <div className={classNames(className, styles.blurBox)} {...props}>
     <GreenUpperText className="pb-3">{firstText}</GreenUpperText>
     <h2 className="pb-5 text-lightGreen">{title}</h2>

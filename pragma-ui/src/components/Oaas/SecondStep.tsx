@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { Listbox, Transition } from "@headlessui/react";
