@@ -1,6 +1,4 @@
-import { dataSources } from "@/lib/endpoints";
-import { AssetInfo, AssetT } from "../_types";
-import { getEncodedTicker } from "../../asset/[ticker]/_helpers/getEncodedTicker";
+import { AssetT } from "../_types";
 
 type GetAssets = {
   source: string;
@@ -53,16 +51,12 @@ export const getAssets = async ({
       variations: streamData.variations || { "1h": 0, "1d": 0, "1w": 0 },
     };
   } else {
-    const url = `${dataSources[source]}&pair=${encodeURIComponent(
-      asset.ticker
-    )}`;
+    const base = asset.ticker.split("/")[0].toLowerCase();
+    const quote = asset.ticker.split("/")[1].toLowerCase();
 
-    // const base = asset.ticker.split("/")[0].toLowerCase();
-    // const quote = asset.ticker.split("/")[1].toLowerCase();
+    const encodedTicker = encodeURIComponent(`${base}/${quote}`);
 
-    // const encodedTicker = encodeURIComponent(`${base}/${quote}`);
-
-    // const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
+    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
 
     const response = await fetch(url);
 
