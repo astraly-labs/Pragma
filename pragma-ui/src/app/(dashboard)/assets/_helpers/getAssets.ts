@@ -58,8 +58,6 @@ export const getAssets = async ({
 
     const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
 
-    console.log({ url });
-
     const response = await fetch(url);
 
     if (!response.ok) {
