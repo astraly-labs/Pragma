@@ -184,7 +184,7 @@ export const AssetsTable = ({
 
   const formattedAssets = isTokensLoadingData
     ? []
-    : formatAssets(data).sort((a, b) => {
+    : formatAssets(data, source).sort((a, b) => {
         // Sort by ticker alphabetically
         return a.ticker.localeCompare(b.ticker);
       });
