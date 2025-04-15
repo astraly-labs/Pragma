@@ -105,12 +105,15 @@ const AssetPage = async (props: AssetPageProps) => {
               <PriceTable
                 components={asset.components}
                 decimals={asset.decimals}
+                network={network}
               />
             </BoxContainer>
           )}
-          <BoxContainer>
-            <Checkpoints components={checkpoints} />
-          </BoxContainer>
+          {network === "mainnet" && (
+            <BoxContainer>
+              <Checkpoints components={checkpoints} />
+            </BoxContainer>
+          )}
         </>
       )}
     </div>
