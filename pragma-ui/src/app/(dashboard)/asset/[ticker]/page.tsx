@@ -45,6 +45,9 @@ const AssetPage = async (props: AssetPageProps) => {
     source: network,
   });
 
+  const isApi = network === "api";
+  const isMainnet = network === "mainnet";
+
   return (
     <div
       className={classNames(
@@ -94,7 +97,7 @@ const AssetPage = async (props: AssetPageProps) => {
         </BoxContainer>
       ) : (
         <>
-          {network === "api" && (
+          {isApi && (
             <BoxContainer>
               <AssetChart asset={asset} currentSource={network} />
             </BoxContainer>
@@ -109,7 +112,7 @@ const AssetPage = async (props: AssetPageProps) => {
               />
             </BoxContainer>
           )}
-          {network === "mainnet" && (
+          {isMainnet && (
             <BoxContainer>
               <Checkpoints components={checkpoints} />
             </BoxContainer>
