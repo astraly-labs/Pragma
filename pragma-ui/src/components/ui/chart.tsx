@@ -230,9 +230,13 @@ function ChartTooltipContent({
                         {itemConfig?.label || item.name}
                       </span>
                     </div>
-                    {item.value && (
+                    {typeof item.value === "number" && (
                       <span className="text-foreground font-mono font-medium tabular-nums">
-                        {item.value.toLocaleString()}
+                        {item.value < 1
+                          ? item.value.toFixed(8)
+                          : item.value < 100
+                          ? item.value.toFixed(5)
+                          : item.value.toFixed(2)}
                       </span>
                     )}
                   </div>
