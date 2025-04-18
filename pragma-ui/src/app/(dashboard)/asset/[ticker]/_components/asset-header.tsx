@@ -3,6 +3,7 @@ import sharedStyles from "@/pages/styles.module.scss";
 import { cn } from "@/lib/utils";
 import { DoubleText } from "./double-text";
 import { AssetInfo } from "@/app/(dashboard)/assets/_types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type AssetHeaderProps = {
   asset: AssetInfo;
@@ -16,7 +17,12 @@ export const AssetHeader = ({ asset }: AssetHeaderProps) => (
     )}
   >
     <h2 className="my-auto flex flex-row items-center gap-4 text-lightGreen">
-      <Image height={60} width={60} alt="arrowDown" src={asset.image} />
+      <Avatar className="w-16 h-16">
+        <AvatarImage width={64} height={64} src={asset.image} />
+        <AvatarFallback className="bg-lightBlur">
+          {asset.ticker[0]}
+        </AvatarFallback>
+      </Avatar>
       <div className="flex flex-col">{asset.ticker}</div>
     </h2>
     <div className="flex flex-row gap-3 sm:gap-10 lg:gap-20">
