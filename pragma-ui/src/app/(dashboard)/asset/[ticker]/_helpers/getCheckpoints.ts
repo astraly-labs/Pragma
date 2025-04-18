@@ -15,7 +15,7 @@ export const getCheckpoints = async ({ source, ticker }: GetCheckpoints) => {
 
   const encodedTicker = encodeURIComponent(`${base}/${quote}`);
 
-  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/checkpoints?pair=${encodedTicker}&network=${source}`;
+  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/checkpoints?pair=${encodedTicker}&network=starknet-${source}`;
   const response = await fetch(url);
 
   if (!response.ok) {

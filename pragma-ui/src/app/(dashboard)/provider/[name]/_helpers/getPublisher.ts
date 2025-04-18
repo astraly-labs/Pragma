@@ -20,7 +20,7 @@ export const getPublisher = async (
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=${source}&data_type=spot_entry`
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=starknet-${source}&data_type=spot_entry`
   );
 
   if (!response.ok) {

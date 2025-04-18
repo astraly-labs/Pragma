@@ -14,7 +14,7 @@ export const getAsset = async ({ source, ticker }: GetAsset) => {
   if (source === "api") {
     url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/data/${encodedTicker}?network=${source}&aggregation=median&with_components=true&interval=1min`;
   } else {
-    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
+    url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=starknet-${source}&aggregation=median`;
   }
 
   const response = await fetch(url);

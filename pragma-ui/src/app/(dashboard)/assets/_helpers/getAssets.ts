@@ -56,7 +56,7 @@ export const getAssets = async ({
 
     const encodedTicker = encodeURIComponent(`${base}/${quote}`);
 
-    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=${source}&aggregation=median`;
+    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=starknet-${source}&aggregation=median`;
 
     const response = await fetch(url);
 
