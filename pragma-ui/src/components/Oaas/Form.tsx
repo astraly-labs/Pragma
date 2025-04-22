@@ -6,6 +6,7 @@ import StepsController from "./StepsController/StepsController";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
+import { PaymentStep } from "@/app/(dashboard)/oaas/_components/payment-step";
 import styles from "./Form.module.scss";
 
 const SpotForm = () => {
@@ -46,7 +47,7 @@ const SpotForm = () => {
       return false;
     }
 
-    if (currentStep === 2) {
+    if (currentStep === 3) {
       if (window.validateStep2 && window.submitStep2) {
         const isValid = window.validateStep2();
         if (!isValid) return false;
@@ -58,7 +59,7 @@ const SpotForm = () => {
       return false;
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       handleSubmit();
     }
 
@@ -67,6 +68,7 @@ const SpotForm = () => {
 
   const steps = [
     <FirstStep formData={formData} handleFieldChange={handleFieldChange} />,
+    <PaymentStep />,
     <SecondStep formData={formData} handleFieldChange={handleFieldChange} />,
     <ThirdStep formData={formData} handleFieldChange={handleFieldChange} />,
   ];
@@ -77,7 +79,7 @@ const SpotForm = () => {
         <StepsController
           manageNextStepValidation={manageNextStepValidation}
           steps={steps}
-          stepsAmount={3}
+          stepsAmount={4}
         />
       </div>
 

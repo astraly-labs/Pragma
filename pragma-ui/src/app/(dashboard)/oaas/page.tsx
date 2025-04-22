@@ -1,9 +1,19 @@
+// app/oaas/page.tsx or wherever your route is located
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { cn } from "@/lib/utils";
 import styles from "@/pages/styles.module.scss";
 import V2Hero from "@/components/v2/v2Hero";
 import GoogleOauth from "./_components/google-oauth";
+import { getUser } from "@/lib/getUser";
 
-const OaasPage = () => {
+const OaasPage = async () => {
+  const user = await getUser();
+
+  if (user) {
+    redirect("/oracle/new");
+  }
+
   return (
     <div className={cn("relative w-full overflow-x-hidden", styles.bigScreen)}>
       <V2Hero
@@ -18,7 +28,7 @@ const OaasPage = () => {
             <GoogleOauth />
           </div>
         }
-      ></V2Hero>
+      />
     </div>
   );
 };

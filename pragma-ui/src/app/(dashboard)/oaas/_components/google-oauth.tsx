@@ -1,7 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { APP_URL } from "@/lib/config";
+import { Button } from "@/components/ui/button";
 
 export default function GoogleOauth() {
   return (
@@ -10,13 +11,7 @@ export default function GoogleOauth() {
       className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 bg-white hover:bg-white rounded-full"
       asChild
     >
-      <Link
-        href={`/auth/google?redirect_url=${
-          process.env.NODE_ENV === "development"
-            ? "http://localhost:3000"
-            : "https://pragma.build"
-        }/oracle/new`}
-      >
+      <Link href={`/auth/auth/google?redirect_url=${APP_URL}/oracle/new`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

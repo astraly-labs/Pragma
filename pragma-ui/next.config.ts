@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/auth/:path*",
-        destination: `https://feed.devnet.pragma.build/v1/auth/:path*`,
+        destination: `https://feed.devnet.pragma.build/v1/:path*`,
       },
     ];
   },

@@ -17,8 +17,8 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
       if (isValid) {
         if (step !== stepsAmount) {
           setStep(step + 1);
-          setErrorMessage(""); // Clear error message on successful validation
-          window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
+          setErrorMessage("");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       } else {
         setErrorMessage(
