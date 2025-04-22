@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "next-sitemap",
     "start": "next start",
     "type-check": "tsc"
   },
@@ -34,7 +33,6 @@
     "moment-timezone": "^0.5.45",
     "next": "^15.2.2",
     "next-seo": "^5.14.1",
-    "next-sitemap": "^3.1.32",
     "postcss": "^8.4.19",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
