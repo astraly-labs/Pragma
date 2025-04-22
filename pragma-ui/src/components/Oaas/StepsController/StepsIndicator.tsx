@@ -6,7 +6,7 @@ import styles from "./StepsController.module.scss";
 import { CheckIcon } from "@heroicons/react/solid";
 
 const StepsIndicator = ({ step, stepsAmount }) => {
-  const stepLabels = ["Oracle type", "Assets", "Sources"];
+  const stepLabels = ["Oracle type", "Payment", "Assets", "Sources"];
 
   const getStepsIndicator = () => {
     const stepsAmountArray: any[] = [];
