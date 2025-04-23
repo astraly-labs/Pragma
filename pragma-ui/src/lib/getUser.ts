@@ -14,7 +14,7 @@ type User = {
 };
 
 export const getUser = async () => {
-  const token = (await cookies()).get("token")?.value;
+  const token = (await cookies()).get("pragma_auth_token")?.value;
   if (!token) return null;
 
   try {
