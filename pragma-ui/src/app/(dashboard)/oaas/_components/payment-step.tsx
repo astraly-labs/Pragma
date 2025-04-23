@@ -10,8 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { APP_URL } from "@/lib/config";
-import { redirect } from "next/navigation";
 
 const HOBBY_PLAN_ID = "price_1RGeWcRviOvHGCOCJP0LLZ9q";
 const PRO_PLAN_ID = "price_1RGeY5RviOvHGCOCZx0WOiKA";
@@ -37,7 +35,7 @@ export function PaymentStep() {
       }
 
       const data = await res.json();
-      redirect(data.session_url);
+      window.location.href = data.session_url;
     } catch (error) {
       console.error("Subscription error:", error);
     }
