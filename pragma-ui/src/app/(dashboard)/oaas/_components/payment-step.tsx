@@ -18,15 +18,18 @@ const PRO_PLAN_ID = "price_1RGeY5RviOvHGCOCZx0WOiKA";
 export function PaymentStep() {
   const subscribe = async (priceId: string) => {
     try {
-      const res = await fetch(`${APP_URL}/auth/subscriptions/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ price_id: priceId }),
-      });
+      const res = await fetch(
+        `https://feed.devnet.pragma.build/v1/subscriptions/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ price_id: priceId }),
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Subscription failed");
