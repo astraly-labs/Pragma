@@ -1,20 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import StepsController from "./StepsController/StepsController";
-import FirstStep from "./FirstStep";
-import SecondStep from "./SecondStep";
-import ThirdStep from "./ThirdStep";
-import { PaymentStep } from "@/app/(dashboard)/oaas/_components/payment-step";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import styles from "./Form.module.scss";
+import { Stepper } from "./stepper";
+import { FirstStep } from "./steps/first-step";
+import { SecondStep } from "./steps/second-step";
+import { ThirdStep } from "./steps/third-step";
+import { FourthStep } from "./steps/fourth-step";
+import { FormData } from "../_types";
 
-const SpotForm = () => {
-  const router = useRouter();
+export const OracleForm = ({
+  isSubscriptionActive,
+}: {
+  isSubscriptionActive: boolean;
+}) => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [validationError, setValidationError] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    type: "",
+  const [formData, setFormData] = useState<FormData>({
+    type: "api",
     assetAddress: "",
     tokenName: "",
     ticker: "",
@@ -23,11 +28,11 @@ const SpotForm = () => {
     sources: [],
   });
 
-  const handleClick = () => {
-    router.push("/assets?source=api");
-  };
-
-  const handleFieldChange = (name, value, isRequired) => {
+  const handleFieldChange = (
+    name: string,
+    value: string,
+    isRequired?: boolean
+  ) => {
     setFormData({ ...formData, [name]: value });
     isRequired &&
       setValidationError(
@@ -35,11 +40,9 @@ const SpotForm = () => {
       );
   };
 
-  const handleSubmit = () => {
-    setShowSuccess(true);
-  };
+  console.log({ currentStep });
 
-  const manageNextStepValidation = async (currentStep) => {
+  const manageNextStepValidation = async (currentStep: number) => {
     if (currentStep === 1 && !formData.type) {
       if (!validationError.includes("type")) {
         setValidationError([...validationError, "type"]);
@@ -47,43 +50,50 @@ const SpotForm = () => {
       return false;
     }
 
-    if (currentStep === 3) {
-      if (window.validateStep2 && window.submitStep2) {
-        const isValid = window.validateStep2();
-        if (!isValid) return false;
+    // if (currentStep === 3) {
+    //   if (window.validateStep3 && window.submitStep3) {
+    //     const isValid = window.validateStep3();
+    //     if (!isValid) return false;
 
-        // If validation passes, submit the token and wait for sources
-        const success = await window.submitStep2();
-        return success;
-      }
-      return false;
-    }
+    //     const success = await window.submitStep3();
+    //     return success;
+    //   }
+    //   return false;
+    // }
 
     if (currentStep === 4) {
-      handleSubmit();
+      setShowSuccess(true);
     }
 
     return true;
   };
 
+  useEffect(() => {
+    if (isSubscriptionActive) {
+      setCurrentStep(3);
+    }
+  }, [isSubscriptionActive]);
+
   const steps = [
     <FirstStep formData={formData} handleFieldChange={handleFieldChange} />,
-    <PaymentStep />,
-    <SecondStep formData={formData} handleFieldChange={handleFieldChange} />,
+    <SecondStep />,
     <ThirdStep formData={formData} handleFieldChange={handleFieldChange} />,
+    <FourthStep />,
+    // <FifthStep formData={formData} handleFieldChange={handleFieldChange} />,
   ];
 
   return (
     <div className="min-h-screen w-full pt-40">
       <div className={styles.container}>
-        <StepsController
+        <Stepper
           manageNextStepValidation={manageNextStepValidation}
           steps={steps}
           stepsAmount={4}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
         />
       </div>
 
-      {/* Success Popup */}
       {showSuccess && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-lightBlur bg-opacity-50">
           <div className="rounded-lg bg-darkGreen p-8 text-center">
@@ -91,17 +101,15 @@ const SpotForm = () => {
             <p className="mb-6 text-lightGreen">
               Your oracle has been successfully created.
             </p>
-            <button
-              onClick={handleClick}
+            <Link
+              href="/assets?source=api"
               className="rounded-full bg-mint px-6 py-2 text-darkGreen hover:bg-opacity-90"
             >
               Check dashboard
-            </button>
+            </Link>
           </div>
         </div>
       )}
     </div>
   );
 };
-
-export default SpotForm;

@@ -7,7 +7,7 @@ type Subscription = {
   status: string;
 };
 
-type User = {
+export type User = {
   id: string;
   email: string;
   subscription: Subscription;

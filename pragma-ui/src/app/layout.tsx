@@ -3,6 +3,7 @@ import "@/styles/index.css";
 import { Providers } from "@/lib/providers";
 import NavHeader from "@/components/Navigation/NavHeader";
 import NavFooter from "@/components/Navigation/NavFooter";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -61,6 +62,7 @@ export default function RootLayout({
             {children}
             <NavFooter />
           </div>
+          <Toaster />
         </Providers>
       </body>
     </html>

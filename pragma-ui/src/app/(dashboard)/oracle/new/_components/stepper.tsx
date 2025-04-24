@@ -1,22 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import StepsIndicator from "./StepsIndicator";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Button } from "@/components/common/Button";
+import { Steps } from "./steps";
 import styles from "./StepsController.module.scss";
-import { Button } from "../../common/Button";
 
-const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
-  const [step, setStep] = useState(1);
+type StepperProps = {
+  steps: JSX.Element[];
+  manageNextStepValidation: (currentStep: number) => Promise<boolean>;
+  stepsAmount: number;
+  currentStep: number;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
+};
+
+export const Stepper = ({
+  steps,
+  manageNextStepValidation,
+  stepsAmount,
+  currentStep,
+  setCurrentStep,
+}: StepperProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidating, setIsValidating] = useState(false);
 
   const onNextStep = async () => {
     setIsValidating(true);
     try {
-      const isValid = await manageNextStepValidation(step);
+      const isValid = await manageNextStepValidation(currentStep);
       if (isValid) {
-        if (step !== stepsAmount) {
-          setStep(step + 1);
+        if (currentStep !== stepsAmount) {
+          setCurrentStep(currentStep + 1);
           setErrorMessage("");
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -35,18 +48,18 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
   return (
     <div className={styles.container}>
       <div className={styles.indicatorContainer}>
-        <StepsIndicator step={step} stepsAmount={stepsAmount} />
+        <Steps step={currentStep} stepsAmount={stepsAmount} />
       </div>
       <div className={styles.formContainer}>
-        <div> {steps[step - 1]}</div>
+        <div> {steps[currentStep - 1]}</div>
         {errorMessage && (
           <div className="mt-4 text-sm text-red-500">{errorMessage}</div>
         )}
         <div className={styles.buttonsContainer}>
           <Button
             onClick={() => onNextStep()}
-            title={step !== stepsAmount ? "Next step" : "Send form"}
-            aria-label={step !== stepsAmount ? "Next step" : "Send form"}
+            title={currentStep !== stepsAmount ? "Next step" : "Send form"}
+            aria-label={currentStep !== stepsAmount ? "Next step" : "Send form"}
             variant="solid"
             color="mint"
             center={true}
@@ -54,15 +67,15 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
           >
             {isValidating
               ? "Processing..."
-              : step !== stepsAmount
+              : currentStep !== stepsAmount
               ? "Next"
               : "Send"}
           </Button>
-          {step !== 1 && (
+          {currentStep !== 1 && (
             <Button
               onClick={() => {
-                setStep(step - 1);
-                window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to the top
+                setCurrentStep(currentStep - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               title="Previous step"
               aria-label="Previous step"
@@ -79,5 +92,3 @@ const StepsController = ({ steps, manageNextStepValidation, stepsAmount }) => {
     </div>
   );
 };
-
-export default StepsController;
