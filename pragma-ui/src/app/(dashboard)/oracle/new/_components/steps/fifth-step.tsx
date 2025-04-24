@@ -1,29 +1,40 @@
+// @TODO: leave here until needed
+
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Form.module.scss";
-import classNames from "classnames";
-import axios from "axios";
+import {
+  FormData,
+  OracleContentType,
+} from "@/app/(dashboard)/oracle/new/_types";
+import { cn } from "@/lib/utils";
 
-const ThirdStep = ({ formData, handleFieldChange }) => {
+const POLLING_DURATION = 30;
+
+type FifthStepProps = {
+  formData: FormData;
+  handleFieldChange: (
+    name: string,
+    value: string | number | boolean | [] | Pick<FormData, "sources">[],
+    isRequired?: boolean
+  ) => void;
+};
+
+export const FifthStep = ({ formData, handleFieldChange }: FifthStepProps) => {
   const [pollingStartTime, setPollingStartTime] = useState(Date.now());
   const [timeElapsed, setTimeElapsed] = useState(0);
-  const POLLING_DURATION = 30; // 30 seconds polling duration
 
   const restartPolling = () => {
-    // Reset sources to trigger UI refresh
     handleFieldChange("sources", []);
-    // Reset time elapsed
     setTimeElapsed(0);
-    // Reset polling start time
     setPollingStartTime(Date.now());
-    // Start polling again
     pollForSources(formData.ticker.toUpperCase());
   };
 
   const pollForSources = async (ticker: string) => {
-    const maxAttempts = POLLING_DURATION; // 30 seconds
-    const interval = 1000; // 1 second
+    const maxAttempts = POLLING_DURATION;
+    const interval = 1000;
     const token = localStorage.getItem("apiToken");
     let allSources: any[] = [];
 
@@ -31,7 +42,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
       try {
         console.log(`Polling attempt ${attempt + 1} of ${maxAttempts}`);
 
-        const response = await axios.get(
+        const res = await fetch(
           `${
             process.env.NEXT_PUBLIC_TOKEN_API_URL || "http://localhost:8002"
           }/v1/sources/${ticker}`,
@@ -42,11 +53,11 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
           }
         );
 
-        if (response.data && Array.isArray(response.data.sources)) {
-          // Update allSources with any new sources
-          const newSources = response.data.sources;
+        const data = await res.json();
 
-          // Add any new sources that aren't already in allSources
+        if (data && Array.isArray(data.sources)) {
+          const newSources = data.sources;
+
           newSources.forEach((newSource) => {
             if (
               !allSources.some(
@@ -57,40 +68,34 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
             }
           });
 
-          // Update form data with all sources found so far
-          handleFieldChange("sources", allSources);
+          handleFieldChange("sources", allSources as []);
         }
       } catch (error) {
         console.error("Polling error:", error);
       }
 
-      // Wait for the interval before next attempt
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
   };
 
   useEffect(() => {
-    // Initialize selectedPairs if not already set
     if (!formData.selectedPairs) {
       handleFieldChange("selectedPairs", []);
     }
 
-    // When sources are available, select all of them by default if no selections have been made yet
     if (
       formData.sources?.length > 0 &&
       (!formData.selectedPairs || formData.selectedPairs.length === 0)
     ) {
-      const allSourceNames = formData.sources.map(
-        (sourceData) => sourceData.source.name
+      const allSourceNames: Pick<FormData, "sources">[] = formData.sources.map(
+        (sourceData: any) => sourceData.source.name
       );
       handleFieldChange("selectedPairs", allSourceNames);
     }
 
-    // Update time elapsed every second
     const timer = setInterval(() => {
       const elapsed = Math.floor((Date.now() - pollingStartTime) / 1000);
       if (elapsed <= POLLING_DURATION) {
-        // Only update for the first 30 seconds
         setTimeElapsed(elapsed);
       }
     }, 1000);
@@ -98,7 +103,6 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
     return () => clearInterval(timer);
   }, [pollingStartTime]);
 
-  // Log whenever sources change
   useEffect(() => {
     console.log(
       "[Debug] Sources updated:",
@@ -107,7 +111,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
     );
   }, [formData.sources]);
 
-  const getOracleContent = (type) => {
+  const getOracleContent = (type: OracleContentType) => {
     switch (type) {
       case "api":
         return (
@@ -186,7 +190,7 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
                     return (
                       <li key={source.id} className="animate-fadeIn">
                         <div
-                          className={classNames(
+                          className={cn(
                             "flex w-full max-w-xl flex-col justify-between rounded-lg border text-lightGreen",
                             styles.darkGreenBox,
                             sourceData.is_active && "border-mint bg-whiteTrans"
@@ -286,5 +290,3 @@ const ThirdStep = ({ formData, handleFieldChange }) => {
     <div className={styles.container}>{getOracleContent(formData.type)}</div>
   );
 };
-
-export default ThirdStep;

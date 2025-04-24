@@ -1,15 +1,14 @@
-import React from "react";
-import cx from "classnames";
-import Icon from "../Icon/Icon";
-import CheckedIcon from "./checked.svg";
-import styles from "./StepsController.module.scss";
+"use client";
+
+import { cn } from "@/lib/utils";
 import { CheckIcon } from "@heroicons/react/solid";
+import styles from "./StepsController.module.scss";
 
-const StepsIndicator = ({ step, stepsAmount }) => {
-  const stepLabels = ["Oracle type", "Payment", "Assets", "Sources"];
+const STEPS_LABELS = ["Oracle type", "Payment", "Assets", "Sources"];
 
+export const Steps = ({ step, stepsAmount }) => {
   const getStepsIndicator = () => {
-    const stepsAmountArray: any[] = [];
+    const stepsAmountArray: number[] = [];
     for (let i = 1; i <= stepsAmount; i++) {
       stepsAmountArray.push(i);
     }
@@ -21,7 +20,7 @@ const StepsIndicator = ({ step, stepsAmount }) => {
       {getStepsIndicator().map((item, index) => (
         <div className={styles.step} key={item}>
           <div
-            className={cx(styles.stepContent, {
+            className={cn(styles.stepContent, {
               [styles.activeStep]: item === step,
             })}
           >
@@ -32,12 +31,10 @@ const StepsIndicator = ({ step, stepsAmount }) => {
                 `${item}.`
               )}
             </span>
-            <span className={styles.stepLabel}>{stepLabels[index]}</span>
+            <span className={styles.stepLabel}>{STEPS_LABELS[index]}</span>
           </div>
         </div>
       ))}
     </div>
   );
 };
-
-export default StepsIndicator;

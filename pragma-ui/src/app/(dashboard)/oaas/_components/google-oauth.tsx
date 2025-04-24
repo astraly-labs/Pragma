@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { APP_URL } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 
 export default function GoogleOauth() {
@@ -12,7 +11,7 @@ export default function GoogleOauth() {
       asChild
     >
       <Link
-        href={`/auth/auth/google?redirect_url=https://staging.pragma.build/oracle/new`}
+        href={`/auth/auth/google?redirect_url=http://localhost:3000/oracle/new`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -1,3 +1,4 @@
 interface Window {
-  validateStep2?: () => boolean;
+  validateStep3?: () => boolean;
+  submitStep3?: () => Promise<boolean>;
 }

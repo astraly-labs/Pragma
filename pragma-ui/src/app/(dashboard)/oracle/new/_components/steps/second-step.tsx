@@ -14,7 +14,7 @@ import {
 const HOBBY_PLAN_ID = "price_1RGeWcRviOvHGCOCJP0LLZ9q";
 const PRO_PLAN_ID = "price_1RGeY5RviOvHGCOCZx0WOiKA";
 
-export function PaymentStep() {
+export const SecondStep = () => {
   const subscribe = async (priceId: string) => {
     try {
       const res = await fetch(
@@ -134,4 +134,4 @@ export function PaymentStep() {
       </div>
     </main>
   );
-}
+};
