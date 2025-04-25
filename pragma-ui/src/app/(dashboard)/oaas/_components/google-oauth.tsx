@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { APP_URL } from "@/lib/config";
 
 export default function GoogleOauth() {
   return (
@@ -10,9 +11,7 @@ export default function GoogleOauth() {
       className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 bg-white hover:bg-white rounded-full"
       asChild
     >
-      <Link
-        href={`/auth/auth/google?redirect_url=http://localhost:3000/oracle/new`}
-      >
+      <Link href={`/auth/auth/google?redirect_url=${APP_URL}/oracle/new`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
