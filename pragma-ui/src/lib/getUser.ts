@@ -10,7 +10,7 @@ type Subscription = {
 export type User = {
   id: string;
   email: string;
-  subscription: Subscription;
+  subscription: Subscription | null;
 };
 
 export const getUser = async () => {
