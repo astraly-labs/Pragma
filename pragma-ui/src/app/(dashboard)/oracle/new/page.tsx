@@ -16,7 +16,7 @@ const NewOraclePage = async () => {
     <div className={cn("relative w-full overflow-x-hidden", styles.bigScreen)}>
       <BoxContainer>
         <OracleForm
-          isSubscriptionActive={user.subscription.status === "active"}
+          isSubscriptionActive={user.subscription!.status === "active"}
         />
       </BoxContainer>
     </div>
