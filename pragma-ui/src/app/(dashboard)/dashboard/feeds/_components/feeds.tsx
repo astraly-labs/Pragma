@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { FeedsResponse } from "@/app/(dashboard)/dashboard/feeds/_types";
 
-const useFeeds = (initialData: FeedsResponse[]) =>
+const useFeeds = (initialData: FeedsResponse) =>
   useQuery({
     queryKey: ["FEEDS"],
     queryFn: async () => {
@@ -23,11 +23,7 @@ const useFeeds = (initialData: FeedsResponse[]) =>
     initialData,
   });
 
-export default function Feeds({
-  initialData,
-}: {
-  initialData: FeedsResponse[];
-}) {
+export default function Feeds({ initialData }: { initialData: FeedsResponse }) {
   const { data } = useFeeds(initialData);
 
   const usedFeeds = data.max_feeds - data.remaining_feeds;

@@ -77,7 +77,7 @@
     --purple: 262 100% 75%; /* rgba(162, 129, 255, 1) */
 
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 0 0% 100%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -126,7 +126,7 @@
     --purple: 262 100% 75%; /* rgba(162, 129, 255, 1) */
 
     --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --foreground: 0 0% 100%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
@@ -158,4 +158,8 @@
     --sidebar-border: 146 100% 55%;
     --sidebar-ring: 146 100% 55%;
   }
+}
+
+body {
+  color: #fff;
 }
