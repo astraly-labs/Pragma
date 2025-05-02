@@ -13,6 +13,7 @@ export type FormData = {
   network: string;
   selectedPairs: [] | Source[];
   sources: [] | Source[];
+  submitSuccess?: boolean;
 };
 
 export type OracleContentType =

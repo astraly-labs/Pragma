@@ -10,15 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 
-const HOBBY_PLAN_ID = "price_1RGeWcRviOvHGCOCJP0LLZ9q";
-const PRO_PLAN_ID = "price_1RGeY5RviOvHGCOCZx0WOiKA";
+const HOBBY_PLAN_ID = process.env.NEXT_PUBLIC_HOBBY_PLAN_ID!;
+const PRO_PLAN_ID = process.env.NEXT_PUBLIC_PRO_PLAN_ID!;
 
-export const SecondStep = () => {
+const PaymentPage = () => {
   const subscribe = async (priceId: string) => {
     try {
       const res = await fetch(
-        `https://feed.devnet.pragma.build/v1/subscriptions/create`,
+        `${process.env.NEXT_PUBLIC_OAAS_API}/subscriptions/create`,
         {
           method: "POST",
           headers: {
@@ -31,13 +32,13 @@ export const SecondStep = () => {
       );
 
       if (!res.ok) {
-        throw new Error("Subscription failed");
+        toast.error("Subscription failed");
       }
 
       const data = await res.json();
       window.location.href = data.session_url;
     } catch (error) {
-      console.error("Subscription error:", error);
+      toast.error("Subscription error");
     }
   };
 
@@ -54,17 +55,19 @@ export const SecondStep = () => {
         <div className="grid md:grid-cols-2 gap-8">
           <Card className="bg-[#00473880] border border-[#B5F0E580] rounded-2xl overflow-hidden">
             <CardHeader className="pb-4">
-              <CardTitle className="text-3xl font-bold">Hobby</CardTitle>
+              <CardTitle className="text-3xl font-bold text-white">
+                Hobby
+              </CardTitle>
               <CardDescription className="text-[#B5F0E5]">
                 For individual developers
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-6">
               <div className="mb-6">
-                <span className="text-4xl font-bold">$9.99</span>
+                <span className="text-4xl font-bold text-white">$9.99</span>
                 <span className="text-[#B5F0E5]">/month</span>
               </div>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-white">
                 <li className="flex items-start gap-3">
                   <Check className="h-5 w-5 text-[#15FF81] shrink-0 mt-0.5" />
                   <span>Access to the launching tool</span>
@@ -91,17 +94,19 @@ export const SecondStep = () => {
               Popular
             </div>
             <CardHeader className="pb-4">
-              <CardTitle className="text-3xl font-bold">Pro Plan</CardTitle>
+              <CardTitle className="text-3xl font-bold text-white">
+                Pro Plan
+              </CardTitle>
               <CardDescription className="text-[#B5F0E5]">
                 For professional developers
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-6">
               <div className="mb-6">
-                <span className="text-4xl font-bold">$99.99</span>
+                <span className="text-4xl font-bold text-white">$99.99</span>
                 <span className="text-[#B5F0E5]">/month</span>
               </div>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-white">
                 <li className="flex items-start gap-3">
                   <Check className="h-5 w-5 text-[#15FF81] shrink-0 mt-0.5" />
                   <span>Access to the launching tool</span>
@@ -135,3 +140,5 @@ export const SecondStep = () => {
     </main>
   );
 };
+
+export default PaymentPage;

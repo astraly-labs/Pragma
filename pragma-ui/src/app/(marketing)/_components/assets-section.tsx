@@ -12,8 +12,8 @@ import AssetBox from "@/components/common/AssetBox";
 type Assets = {
   ticker: string;
   lastPrice: any;
-  variation24h: number;
-  relativeVariation24h: number;
+  variation24h: number | null;
+  relativeVariation24h: number | null;
   priceData: {
     time: UTCTimestamp;
     value: number;

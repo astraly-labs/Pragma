@@ -10,8 +10,8 @@ type PriceDataPoint = { time: UTCTimestamp; value: number };
 export interface AssetPair {
   ticker: string;
   lastPrice: number;
-  variation24h: number;
-  relativeVariation24h: number;
+  variation24h: number | null;
+  relativeVariation24h: number | null;
   priceData: PriceDataPoint[];
 }
 
@@ -66,14 +66,17 @@ const AssetBox = ({ assets, onAssetSelect, data }: AssetBoxProps) => {
                   : 0}
               </div>
               <div className="text-left">
-                {data
+                {data && data[index]?.variation24h
                   ? (data[index]?.variation24h / 10 ** asset.decimals).toFixed(
                       5
                     )
                   : 0}
               </div>
               <div className="text-left">
-                {data ? data[index]?.relativeVariation24h.toFixed(3) : 0}%
+                {data && data[index]?.relativeVariation24h
+                  ? data[index]?.relativeVariation24h.toFixed(3)
+                  : 0}
+                %
               </div>
             </button>
           ))}

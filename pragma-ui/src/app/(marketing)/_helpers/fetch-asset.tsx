@@ -21,8 +21,8 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
   const quote = pairId.split("/")[1].toLowerCase();
 
   const encodedTicker = encodeURIComponent(`${base}/${quote}`);
-
   const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/offchain/aggregation/candlestick?pair=${encodedTicker}&interval=15min`;
+
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -43,6 +43,17 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
     time: (moment.tz(d.time, TIME_ZONE).valueOf() / 1000) as UTCTimestamp,
     value: parseInt(d.open) / 10 ** decimals,
   }));
+
+  // Not enough data for 24h variation
+  if (data.length < 97) {
+    return {
+      ticker: unorderedData.pair_id,
+      lastPrice: parseInt(data[data.length - 1].open) / 10 ** decimals,
+      variation24h: null,
+      relativeVariation24h: null,
+      priceData,
+    };
+  }
 
   const lastIndex = data.length - 1;
   const dayIndex = lastIndex - 96;

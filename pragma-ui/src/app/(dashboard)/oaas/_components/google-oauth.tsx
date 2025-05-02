@@ -8,10 +8,10 @@ export default function GoogleOauth() {
   return (
     <Button
       variant="default"
-      className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 bg-white hover:bg-white rounded-full"
+      className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 bg-white hover:bg-white rounded-full text-black"
       asChild
     >
-      <Link href={`/auth/auth/google?redirect_url=${APP_URL}/oracle/new`}>
+      <Link href={`/auth/auth/google?redirect_url=${APP_URL}/dashboard`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
