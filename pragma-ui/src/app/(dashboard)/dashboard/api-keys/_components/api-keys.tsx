@@ -14,28 +14,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CreateApiKeyDialog } from "../api-keys-dialog";
-
-type ApiKey = {
-  id: string;
-  name: string;
-  key_prefix: string;
-  active: boolean;
-  created_at: string;
-};
-
-type ApiKeyFormData = {
-  name: string;
-};
+import { CreateApiKeyDialog } from "./api-keys-dialog";
+import { ApiKey } from "../_types";
 
 const API_KEYS_QUERY_KEY = "API_KEYS";
 
-const useApiKeys = () => {
+const useApiKeys = (initialData: ApiKey[]) => {
   return useQuery<ApiKey[]>({
     queryKey: [API_KEYS_QUERY_KEY],
     queryFn: async () => {
       const res = await fetch(
-        "https://feed.devnet.pragma.build/v1/api-keys/list",
+        `${process.env.NEXT_PUBLIC_OAAS_API}/api-keys/list`,
         {
           credentials: "include",
         }
@@ -43,6 +32,7 @@ const useApiKeys = () => {
       if (!res.ok) throw new Error("Failed to fetch API keys");
       return res.json();
     },
+    initialData,
   });
 };
 
@@ -51,7 +41,7 @@ const useCreateApiKey = () => {
   return useMutation({
     mutationFn: async (data: { name: string }) => {
       const res = await fetch(
-        "https://feed.devnet.pragma.build/v1/api-keys/create",
+        `${process.env.NEXT_PUBLIC_OAAS_API}/api-keys/create`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -73,7 +63,7 @@ const useRevokeApiKey = () => {
   return useMutation({
     mutationFn: async (data: { id: string }) => {
       const res = await fetch(
-        "https://feed.devnet.pragma.build/v1/api-keys/delete",
+        `${process.env.NEXT_PUBLIC_OAAS_API}/api-keys/delete`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -89,8 +79,8 @@ const useRevokeApiKey = () => {
   });
 };
 
-export const FourthStep = () => {
-  const { data: apiKeys = [], isLoading } = useApiKeys();
+export const ApiKeys = ({ initialData }: { initialData: ApiKey[] }) => {
+  const { data: apiKeys = [] } = useApiKeys(initialData);
   const createMutation = useCreateApiKey();
   const revokeMutation = useRevokeApiKey();
 
@@ -100,11 +90,11 @@ export const FourthStep = () => {
   const handleCreateApiKey = async (formData: { name: string }) => {
     try {
       const result = await createMutation.mutateAsync(formData);
-      setNewApiKey(result?.key); // assuming API returns the full key here
+      setNewApiKey(result?.key);
       setShowNewKeyDialog(true);
     } catch (err) {
       console.error(err);
-      // optionally show toast here
+      toast.error("Couldn't create a new api key, try again");
     }
   };
 
@@ -132,9 +122,7 @@ export const FourthStep = () => {
         <CreateApiKeyDialog onCreateApiKey={handleCreateApiKey} />
       </div>
 
-      {isLoading ? (
-        <p className="text-white/60">Loading keys...</p>
-      ) : apiKeys.length > 0 ? (
+      {apiKeys.length > 0 ? (
         <div className="space-y-4">
           {apiKeys.map((apiKey) => (
             <Card

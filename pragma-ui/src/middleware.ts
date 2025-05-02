@@ -5,26 +5,26 @@ export function middleware(req: NextRequest) {
   const token = url.searchParams.get("token");
 
   if (token && process.env.NODE_ENV === "development") {
-    const response = NextResponse.next();
+    const cookieName = process.env.COOKIE_NAME!;
+    const cleanUrl = new URL(req.url);
+    cleanUrl.searchParams.delete("token");
 
+    const response = NextResponse.redirect(cleanUrl);
     response.cookies.set({
-      name: "pragma_auth_token",
+      name: cookieName,
       value: token,
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 24 hours
+      maxAge: 60 * 60 * 24,
     });
 
-    url.searchParams.delete("token");
-    response.headers.set("Location", url.toString());
-
-    return NextResponse.next();
+    return response;
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/oracle/new"],
+  matcher: ["/dashboard"],
 };

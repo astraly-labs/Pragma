@@ -7,46 +7,28 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { DialogTrigger } from "@/components/ui/dialog";
+import { FeedsResponse } from "@/app/(dashboard)/dashboard/feeds/_types";
 
-type Feed = {
-  id: string;
-  ticker: string;
-  created_at: string;
-};
-
-type FeedsResponse = {
-  feeds: Feed[];
-  total: number;
-  subscription_tier: string;
-  max_feeds: number;
-  remaining_feeds: number;
-};
-
-const useFeeds = () =>
-  useQuery<FeedsResponse>({
+const useFeeds = (initialData: FeedsResponse[]) =>
+  useQuery({
     queryKey: ["FEEDS"],
     queryFn: async () => {
       const res = await fetch(
-        "https://feed.devnet.pragma.build/v1/feeds/list",
-        {
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_OAAS_API}/feeds/list`,
+        { credentials: "include" }
       );
       if (!res.ok) throw new Error("Failed to fetch feeds");
       return res.json();
     },
+    initialData,
   });
 
-export function Feeds() {
-  const { data, isLoading, isError } = useFeeds();
-
-  if (isLoading) {
-    return <div className="p-8 text-white">Loading feeds...</div>;
-  }
-
-  if (isError || !data) {
-    return <div className="p-8 text-white">Failed to load feeds.</div>;
-  }
+export default function Feeds({
+  initialData,
+}: {
+  initialData: FeedsResponse[];
+}) {
+  const { data } = useFeeds(initialData);
 
   const usedFeeds = data.max_feeds - data.remaining_feeds;
   const percentUsed = (usedFeeds / data.max_feeds) * 100;

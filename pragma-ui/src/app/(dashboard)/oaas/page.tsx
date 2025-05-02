@@ -11,7 +11,7 @@ const OaasPage = async () => {
   const user = await getUser();
 
   if (user) {
-    redirect("/oracle/new");
+    redirect("/dashboard");
   }
 
   return (

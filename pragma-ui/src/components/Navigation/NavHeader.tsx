@@ -1,13 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-} from "@headlessui/react";
 import {
   // CursorClickIcon,
   HomeIcon,
@@ -26,6 +20,13 @@ import { ButtonLink } from "../common/Button";
 import classNames from "classnames";
 import NavPopover from "./NavPopover";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+} from "@headlessui/react";
 
 interface Resource {
   name: string;
@@ -116,10 +117,15 @@ const mobileResources = [
 ];
 
 const NavHeader = () => {
+  const pathname = usePathname();
   const [isCommunityPopoverOpen, setIsCommunityPopoverOpen] = useState(false);
   const [isProductsPopoverOpen, setIsProductsPopoverOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
+
+  if (pathname?.includes("/dashboard")) {
+    return null;
+  }
 
   return (
     <Popover

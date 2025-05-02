@@ -7,28 +7,120 @@ import {
 } from "@/components/ui/dialog";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { FormData } from "@/app/(dashboard)/oracle/new/_types";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FormData } from "../../_types";
 
-type NewFeedProps = {
-  formData: FormData;
-  handleFieldChange: (
+export function NewFeed() {
+  const [validationError, setValidationError] = useState<string[]>([]);
+  const [formData, setFormData] = useState<FormData>({
+    type: "api",
+    assetAddress: "",
+    tokenName: "",
+    ticker: "",
+    network: "",
+    selectedPairs: [],
+    sources: [],
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
+
+  const validateFields = () => {
+    if (formData.type === "api") {
+      if (!formData.network) {
+        setError("Please select a network");
+        return false;
+      }
+      if (formData.network !== "Unknown" && !formData.assetAddress) {
+        setError("Please enter an asset address");
+        return false;
+      }
+      if (!formData.tokenName) {
+        setError("Please enter a token name");
+        return false;
+      }
+      if (!formData.ticker) {
+        setError("Please enter a ticker");
+        return false;
+      }
+    }
+    setError("");
+    return true;
+  };
+
+  const handleFieldChange = (
     name: string,
-    value: string,
+    value: string | boolean | [],
     isRequired?: boolean
-  ) => void;
-  error: string | null;
-  isSubmitting: boolean;
-  onSubmit: () => void;
-};
+  ) => {
+    setFormData({ ...formData, [name]: value });
+    isRequired &&
+      setValidationError(
+        validationError.filter((errorItem) => errorItem !== name)
+      );
+  };
 
-export function NewFeed({
-  formData,
-  handleFieldChange,
-  error,
-  isSubmitting,
-  onSubmit,
-}: NewFeedProps) {
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const body: Record<string, any> = {
+        token_config: {
+          name: formData.tokenName,
+          ticker: formData.ticker.toUpperCase(),
+          decimals: 18,
+          addresses: {},
+        },
+      };
+
+      if (formData.network !== "Unknown" && formData.assetAddress) {
+        body.token_config.addresses[formData.network.toLowerCase()] =
+          formData.assetAddress;
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_OAAS_API}/feeds/add`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to add token");
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      handleFieldChange("sources", []);
+      handleFieldChange("selectedPairs", []);
+      handleFieldChange("submitSuccess", true);
+      queryClient.invalidateQueries({ queryKey: ["FEEDS"] });
+    },
+    onError: (err: any) => {
+      setError(err.message);
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
+  });
+
+  const handleSubmit = async () => {
+    if (!validateFields()) return false;
+
+    if (formData.sources?.length > 0) {
+      handleFieldChange("sources", []);
+      return true;
+    }
+
+    setIsSubmitting(true);
+    mutation.mutate();
+    return true;
+  };
+
   return (
     <DialogContent className="sm:max-w-[500px] bg-[#0a1a14] text-white border-gray-800 max-h-[85vh] overflow-y-auto">
       <DialogHeader>
@@ -235,7 +327,7 @@ export function NewFeed({
         <div className="pt-2">
           <Button
             className="w-full bg-emerald-600 hover:bg-emerald-700"
-            onClick={onSubmit}
+            onClick={handleSubmit}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Submit"}
