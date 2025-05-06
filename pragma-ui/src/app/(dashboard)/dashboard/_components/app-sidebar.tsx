@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
+import Image from "next/image";
 import {
   CreditCard,
   Database,
   Key,
   LayoutDashboard,
+  Loader2,
   Settings,
 } from "lucide-react";
 import {
@@ -19,13 +23,33 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import Image from "next/image";
+import { APP_URL } from "@/lib/config";
 
 export function AppSidebar() {
+  const [isLoadingPortal, setLoadingPortal] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => {
     return pathname === path || pathname?.startsWith(`/${path}`);
+  };
+
+  const handlePortal = async () => {
+    setLoadingPortal(true);
+    const res = await fetch(`${APP_URL}/auth/subscriptions/portal`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      setLoadingPortal(false);
+      toast.error("Something went wrong, try again");
+      return;
+    }
+
+    const data = await res.json();
+
+    redirect(data.session_url);
   };
 
   return (
@@ -77,13 +101,15 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
-              asChild
-              isActive={isActive("/dashboard/billing")}
+              disabled={isLoadingPortal}
+              onClick={handlePortal}
             >
-              <Link href="/dashboard/billing">
+              {isLoadingPortal ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
                 <CreditCard className="h-4 w-4" />
-                <span>Billing</span>
-              </Link>
+              )}
+              <span>Billing</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
