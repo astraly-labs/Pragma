@@ -13,7 +13,7 @@ import AssetList from "./_components/asset-list";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-const options = ["sepolia", "mainnet", "api"];
+const options = ["sepolia", "mainnet", "api", "api-prod"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const source = ((await searchParams).source as string) || options[1];

@@ -13,6 +13,7 @@ export default async function handler(
     interval = "1s",
     aggregation = "median",
     historical_prices = "10",
+    env = "dev",
   } = req.query;
 
   // Handle pairs parameter which could be string, string[] or undefined
@@ -35,7 +36,10 @@ export default async function handler(
   const pairsQuery = cleanPairs
     .map((pair) => `pairs[]=${encodeURIComponent(pair)}/USD`)
     .join("&");
-  const apiUrl = `https://api.devnet.pragma.build/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
+  const baseUrl = env === "production" 
+    ? process.env.INTERNAL_API_PROD
+    : process.env.INTERNAL_API_DEV;
+  const apiUrl = `${baseUrl}/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {

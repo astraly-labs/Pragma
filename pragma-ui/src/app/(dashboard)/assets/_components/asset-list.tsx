@@ -11,6 +11,17 @@ import { useRouter } from "next/navigation";
 import { columns } from "./assets-table/columns";
 import { DataTable } from "./data-table";
 
+const getDisplayLabel = (option: string): string => {
+  switch (option) {
+    case "api":
+      return "API (dev)";
+    case "api-prod":
+      return "API (prod)";
+    default:
+      return option;
+  }
+};
+
 type AssetListProps = {
   options: string[];
   assets: AssetInfo[];
@@ -53,7 +64,7 @@ const AssetList = ({
           >
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none">
-                <span className="block truncate">{selectedSource}</span>
+                <span className="block truncate">{getDisplayLabel(selectedSource || "")}</span>
                 <Image
                   className="my-auto pl-2"
                   height={16}
@@ -89,7 +100,7 @@ const AssetList = ({
                               }
                             )}
                           >
-                            {option}
+                            {getDisplayLabel(option)}
                           </span>
                           {selected && (
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3" />

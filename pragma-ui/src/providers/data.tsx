@@ -65,7 +65,9 @@ export const dataSources = {
   sepolia: "/api/onchain?network=sepolia",
   mainnet: "/api/onchain?network=mainnet",
   api: "/api/stream",
+  "api-prod": "/api/stream?env=production",
   tokensApi: "/api/tokens/all",
+  "tokensApi-prod": "/api/tokens/all?env=production",
   publishersSepolia: "/api/publishers?network=sepolia&dataType=spot_entry",
   publishersMainnet: "/api/publishers?network=mainnet&dataType=spot_entry",
   checkpointsSepolia: "/api/checkpoints?network=sepolia",
@@ -93,9 +95,12 @@ export const DataProvider = ({
   const { data: availableTokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["available-tokens", source],
     queryFn: async () => {
-      if (source === "api") {
-        console.log("Fetching tokens from API...");
-        const response = await fetch(dataSources.tokensApi);
+      if (source === "api" || source === "api-prod") {
+        console.log(`Fetching tokens from ${source === "api-prod" ? "production" : "dev"} API...`);
+        const apiUrl = source === "api-prod" 
+          ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+          : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+        const response = await fetch(`${apiUrl}/tokens/all`);
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -158,9 +163,13 @@ export const DataProvider = ({
   // Function to start streaming for all assets
   const startStreaming = async (assets: AssetT[]) => {
     const pairs = assets.map((asset) => asset.ticker);
-    const url = `/api/stream?${pairs
+    const apiUrl = source === "api-prod" 
+      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+      : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+    const pairsQuery = pairs
       .map((pair) => `pairs=${encodeURIComponent(pair)}`)
-      .join("&")}&interval=1s&aggregation=median&historical_prices=10`;
+      .join("&");
+    const url = `${apiUrl}/stream?${pairsQuery}&interval=1s&aggregation=median&historical_prices=10`;
     console.log(`Starting stream for ${pairs.length} pairs:`, pairs.join(", "));
     console.log("Stream URL:", url);
 
@@ -328,7 +337,7 @@ export const DataProvider = ({
 
   // Manage streams when source or assets change
   useEffect(() => {
-    if (source === "api" && assets.length > 0) {
+    if ((source === "api" || source === "api-prod") && assets.length > 0) {
       let mounted = true;
       let retryCount = 0;
       const maxRetries = 3;
@@ -400,7 +409,7 @@ export const DataProvider = ({
   }, [source, assets]);
 
   const fetchAssetData = async (asset: AssetT) => {
-    if (source === "api") {
+    if (source === "api" || source === "api-prod") {
       const streamData = streamingData[asset.ticker];
 
       if (!streamData) {
@@ -454,7 +463,7 @@ export const DataProvider = ({
   };
 
   const fetchCheckpoints = async (asset: AssetT) => {
-    if (source === "api") {
+    if (source === "api" || source === "api-prod") {
       return [];
     }
     const checkpointsUrl =
@@ -471,7 +480,7 @@ export const DataProvider = ({
   };
 
   const fetchPublishers = async () => {
-    if (source === "api") {
+    if (source === "api" || source === "api-prod") {
       return [];
     }
     const publisherUrl =
@@ -505,14 +514,14 @@ export const DataProvider = ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => fetchAssetData(asset),
       initialData: initialData?.[asset.ticker],
-      refetchInterval: source === "api" ? 1000 : undefined,
+      refetchInterval: source === "api" || source === "api-prod" ? 1000 : undefined,
       retry: false,
-      enabled: source !== "api",
+      enabled: source !== "api" && source !== "api-prod",
     })),
   });
 
   const data = useMemo(() => {
-    if (source === "api") {
+    if (source === "api" || source === "api-prod") {
       const result: { [ticker: string]: any } = { ...streamingData };
       assets.forEach((asset) => {
         if (!result[asset.ticker]) {
@@ -539,7 +548,7 @@ export const DataProvider = ({
       queryKey: ["checkpoints", asset.ticker, source],
       queryFn: () => fetchCheckpoints(asset),
       initialData: initialCheckpoints?.[asset.ticker],
-      enabled: source !== "api",
+      enabled: source !== "api" && source !== "api-prod",
     })),
   });
 
@@ -547,11 +556,11 @@ export const DataProvider = ({
     queryKey: ["publishers", source],
     queryFn: fetchPublishers,
     initialData: initialPublishers,
-    enabled: source !== "api",
+    enabled: source !== "api" && source !== "api-prod",
   });
 
   const loading =
-    (isLoadingTokens && source === "api") ||
+    (isLoadingTokens && (source === "api" || source === "api-prod")) ||
     assetQueries.some((query) => query.isLoading) ||
     checkpointQueries.some((query) => query.isLoading) ||
     publishersQuery.isLoading;
