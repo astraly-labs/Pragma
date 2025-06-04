@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Listbox,
@@ -44,7 +44,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   };
 
   useEffect(() => {
-    startStreaming(asset.ticker, setStreamingData);
+    startStreaming(asset.ticker, setStreamingData, currentSource);
   }, [asset.ticker, currentSource]);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ import { initialAssets } from "@/lib/endpoints";
 
 type Assets = {
   ticker: string;
-  lastPrice: any;
+  lastPrice: number;
   variation24h: number | null;
   relativeVariation24h: number | null;
   priceData: {
