@@ -26,6 +26,6 @@ export const INITIAL_ASSETS = [
   { ticker: "AAVE/USD", address: "0x1", decimals: 18 },
 ];
 
-export const SUPPORTED_SOURCES = ["api", "mainnet"];
+export const SUPPORTED_SOURCES = ["api", "api-prod", "mainnet"];
 
 export const TIME_ZONE = "Europe/London";

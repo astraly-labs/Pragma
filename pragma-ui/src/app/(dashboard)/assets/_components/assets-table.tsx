@@ -61,7 +61,7 @@ export const AssetsTable = ({
   }, [tokens, source]);
 
   useEffect(() => {
-    if (source === "api" && assets.length > 0) {
+    if ((source === "api" || source === "api-prod") && assets.length > 0) {
       let mounted = true;
       let retryCount = 0;
       const maxRetries = 3;
@@ -89,7 +89,7 @@ export const AssetsTable = ({
       // Function to start stream with retry logic
       const startStreamWithRetry = async () => {
         try {
-          await startStreaming(assets, setStreamingData);
+          await startStreaming(assets, setStreamingData, source);
         } catch (error) {
           if (mounted && retryCount < maxRetries) {
             retryCount++;
@@ -136,7 +136,7 @@ export const AssetsTable = ({
           assets: tokens,
           source,
           startStreaming: () =>
-            startStreaming([asset], setStreamingData).catch((error) => {
+            startStreaming([asset], setStreamingData, source).catch((error) => {
               console.error(
                 `Error starting stream for ${asset.ticker}:`,
                 error
@@ -145,21 +145,21 @@ export const AssetsTable = ({
           streamingData,
         }),
       initialData: initialTokens?.[asset.ticker],
-      refetchInterval: source === "api" ? 1000 : undefined,
+      refetchInterval: source === "api" || source === "api-prod" ? 1000 : undefined,
       retry: false,
-      enabled: source !== "api",
+      enabled: source !== "api" && source !== "api-prod",
     })),
   });
 
   const isTokensLoadingData =
-    (isLoadingTokens && source === "api") ||
+    (isLoadingTokens && (source === "api" || source === "api-prod")) ||
     assetQueries.some((query: any) => query.isLoading) ||
     isLoadingTokens ||
     isFetchingTokens ||
     isRefecthingTokens;
 
   const data = useMemo(() => {
-    if (source === "api") {
+    if (source === "api" || source === "api-prod") {
       const result = { ...streamingData };
       tokens.forEach((asset) => {
         if (!result[asset.ticker]) {

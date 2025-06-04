@@ -193,7 +193,7 @@ const AssetList = ({
                 src="/assets/vectors/arrowDownSmall.svg"
               />
             </div>
-            {selectedSource !== "api" && (
+            {selectedSource !== "api" && selectedSource !== "api-prod" && (
               <>
                 <div
                   onClick={() => requestSort("variations.past1h")}

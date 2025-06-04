@@ -11,6 +11,17 @@ import styles from "@/components/Assets/styles.module.scss";
 import { SearchBar } from "./searchbar";
 import { DataTable } from "./data-table";
 
+const getDisplayLabel = (option: string): string => {
+  switch (option) {
+    case "api":
+      return "API (dev)";
+    case "api-prod":
+      return "API (prod)";
+    default:
+      return option;
+  }
+};
+
 type PublisherListProps = {
   options: string[];
   publishers: DataProviderInfo[];
@@ -44,7 +55,7 @@ export const PublisherList = ({
           >
             <div className="relative w-full md:w-auto">
               <Listbox.Button className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none">
-                <span className="block truncate">{selectedSource}</span>
+                <span className="block truncate">{getDisplayLabel(selectedSource || "")}</span>
                 <Image
                   className="my-auto pl-2"
                   height={16}
@@ -80,7 +91,7 @@ export const PublisherList = ({
                               }
                             )}
                           >
-                            {option}
+                            {getDisplayLabel(option)}
                           </span>
                         </>
                       )}
