@@ -45,7 +45,7 @@ const AssetPage = async (props: AssetPageProps) => {
     source: network,
   });
 
-  const isApi = network === "api";
+  const isApi = network === "api" || network === "api-prod";
   const isMainnet = network === "mainnet";
 
   return (
