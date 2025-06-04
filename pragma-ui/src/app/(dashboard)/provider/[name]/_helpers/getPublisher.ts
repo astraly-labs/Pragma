@@ -15,7 +15,7 @@ export const getPublisher = async (
   name: string,
   source?: string
 ): Promise<ProcessedPublisher | undefined> => {
-  if (!source || source === "api") {
+  if (!source || source === "api" || source === "api-prod") {
     return undefined;
   }
 

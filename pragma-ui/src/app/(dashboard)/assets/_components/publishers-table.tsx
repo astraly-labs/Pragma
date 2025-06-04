@@ -28,7 +28,7 @@ const PublishersTable = ({
       return result;
     },
     initialData: initialPublishers,
-    enabled: source !== "api",
+    enabled: source !== "api" && source !== "api-prod",
     refetchOnWindowFocus: false,
   });
 

@@ -44,7 +44,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   };
 
   useEffect(() => {
-    startStreaming(asset.ticker, setStreamingData);
+    startStreaming(asset.ticker, setStreamingData, currentSource);
   }, [asset.ticker, currentSource]);
 
   useEffect(() => {

@@ -4,7 +4,8 @@ let activeStreamController: AbortController | null = null;
 
 export const startStreaming = async (
   ticker: string,
-  setStreamingData: (value: SetStateAction<{ [ticker: string]: any }>) => void
+  setStreamingData: (value: SetStateAction<{ [ticker: string]: any }>) => void,
+  currentSource: string
 ) => {
   if (activeStreamController) {
     console.log("Aborting previous stream...");
@@ -14,9 +15,11 @@ export const startStreaming = async (
   activeStreamController = new AbortController();
   const { signal } = activeStreamController;
 
-  const url = `${
-    process.env.NEXT_PUBLIC_INTERNAL_API
-  }/data/multi/stream?pairs=${encodeURIComponent(
+  const apiUrl = currentSource === "api-prod" 
+          ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+          : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+
+  const url = `${apiUrl}/data/multi/stream?pairs=${encodeURIComponent(
     ticker
   )}&interval=100ms&aggregation=median&historical_prices=10`;
 

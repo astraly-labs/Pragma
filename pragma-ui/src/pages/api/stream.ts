@@ -37,8 +37,8 @@ export default async function handler(
     .map((pair) => `pairs[]=${encodeURIComponent(pair)}/USD`)
     .join("&");
   const baseUrl = env === "production" 
-    ? process.env.INTERNAL_API_PROD
-    : process.env.INTERNAL_API_DEV;
+    ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+    : process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API;
   const apiUrl = `${baseUrl}/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
   console.log(`Fetching data from ${apiUrl}`);
 

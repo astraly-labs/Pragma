@@ -44,7 +44,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         </Suspense>
       </BoxContainer>
       <BoxContainer>
-        {source !== "api" && (
+        {source !== "api" && source !== "api-prod" && (
           <ErrorBoundary errorComponent={CustomError}>
             <Suspense
               fallback={
