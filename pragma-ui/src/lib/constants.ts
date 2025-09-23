@@ -7,6 +7,7 @@ export const DEFAULT_ASSETS = [
   { ticker: "LORDS/USD", address: "0x6", decimals: 8 },
   { ticker: "EKUBO/USD", address: "0x7", decimals: 8 },
   { ticker: "LBTC/USD", address: "0x7", decimals: 8 },
+  { ticker: "UNIBTC/USD", address: "0x7", decimals: 8 },
   { ticker: "MRE7YIELD/USD", address: "0x7", decimals: 8 },
   { ticker: "MRE7BTC/USD", address: "0x7", decimals: 8 },
   { ticker: "DOG/USD", address: "0x7", decimals: 8 },
