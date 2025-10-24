@@ -20,6 +20,8 @@ export const DEFAULT_ASSETS = [
   { ticker: "WBTC/BTC", address: "0x9", decimals: 8 },
   { ticker: "NSTR/USD", address: "0x9", decimals: 8 },
   { ticker: "XSTRK/USD", address: "0x9", decimals: 8 },
+  { ticker: "USN/USD", address: "0x9", decimals: 8 },
+  { ticker: "SUSN/USD", address: "0x9", decimals: 8 },
 ];
 
 export const INITIAL_ASSETS = [
