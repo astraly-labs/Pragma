@@ -1,45 +1,35 @@
-**/.secrets.env
-**.pem
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-**.DS_Store
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-**_compiled.json
+# testing
+/coverage
 
-.vscode/
+# next.js
+/.next/
+/out/
 
-# default python virtual environment name
-.venv/
+# production
+/build
 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-.pytest_cache/
+# misc
+.DS_Store
+*.pem
 
-# Distribution / packaging
-bin/
-build/
-develop-eggs/
-dist/
-eggs/
-!contracts/starknet/lib
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# cli
-cli-config.ini
-oracle_constructor_data.json
-!pragma-package/pragma/cli/sample_config/oracle_constructor_data.json
-
-# private files
-private/
-stagecoach/jobs/publishers/starkex/app.py
-
-# misc private files
-private/
-
+# local env files
 .env.local
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+/.vscode
+.vercel
+.env*.local
