@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { staggerContainer, staggerItem } from "@/lib/animations";
+import { motion, AnimatePresence } from "framer-motion";
+import { staggerContainer, staggerItem, fadeInUp } from "@/lib/animations";
 import styles from "@/components/Assets/styles.module.scss";
 import clsx from "clsx";
 import Image from "next/image";
@@ -35,7 +35,6 @@ const AssetList = ({
   loading,
 }: AssetListProps) => {
   const router = useRouter();
-
   const [filteredValue, setFilteredValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,10 +52,6 @@ const AssetList = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = (value: string) => {
-    setFilteredValue(value);
-  };
-
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) =>
       asset?.ticker?.toLowerCase().includes(filteredValue.toLowerCase())
@@ -72,12 +67,12 @@ const AssetList = ({
     >
       <motion.div variants={staggerItem}>
         <h3 className="pb-3 text-lightGreen">Price Feeds</h3>
-        <div className="flex w-full flex-col-reverse gap-3 py-3 sm:flex-row">
+        <div className="flex w-full flex-col-reverse gap-3 sm:flex-row">
           <div className="flex flex-col gap-3 smolScreen:flex-row">
             <div ref={dropdownRef} className="relative w-full md:w-auto">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none"
+                className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-2.5 text-center text-sm text-lightGreen transition-colors hover:border-lightGreen/40 focus:outline-none"
               >
                 <span className="block truncate">
                   {getDisplayLabel(selectedSource || "")}
@@ -90,65 +85,95 @@ const AssetList = ({
                   src="/assets/vectors/arrowDown.svg"
                 />
               </button>
-              {isOpen && (
-                <div className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none z-10">
-                  {options.map((option, optionIdx) => (
-                    <button
-                      key={optionIdx}
-                      className={`relative w-full cursor-pointer select-none py-2 pl-10 pr-4 text-left text-lightGreen hover:opacity-50`}
-                      onClick={() => {
-                        router.push(`/assets?source=${option}`, {
-                          scroll: false,
-                        });
-                        setIsOpen(false);
-                      }}
-                    >
-                      <span
-                        className={clsx(
-                          "block truncate font-normal text-lightGreen",
-                          {
-                            "font-medium": option === selectedSource,
-                          }
-                        )}
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute z-10 mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-lg border border-lightBlur bg-darkGreen/95 py-1 text-sm text-lightGreen backdrop-blur-xl"
+                  >
+                    {options.map((option) => (
+                      <button
+                        key={option}
+                        className="relative w-full cursor-pointer select-none px-4 py-2.5 text-left text-lightGreen transition-colors hover:bg-lightBlur hover:text-white"
+                        onClick={() => {
+                          router.push(`/assets?source=${option}`, {
+                            scroll: false,
+                          });
+                          setIsOpen(false);
+                        }}
                       >
-                        {getDisplayLabel(option)}
-                      </span>
-                      {option === selectedSource && (
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+                        <span
+                          className={clsx(
+                            "block truncate",
+                            option === selectedSource
+                              ? "font-medium text-mint"
+                              : "font-normal"
+                          )}
+                        >
+                          {getDisplayLabel(option)}
+                        </span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <div className="my-auto flex w-full flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen md:w-auto">
-              Price Feeds: {assets.length}
+            <div className="my-auto flex w-full flex-row items-center justify-center gap-2 rounded-full border border-lightBlur px-5 py-2.5 text-center text-sm text-lightGreen md:w-auto">
+              <span className="font-mono text-mint">{assets.length}</span>
+              <span className="opacity-60">feeds</span>
             </div>
           </div>
           <div className="sm:ml-auto">
-            <SearchBar onInputChange={handleInputChange} />
+            <SearchBar onInputChange={setFilteredValue} />
           </div>
         </div>
       </motion.div>
 
-      {loading ? (
-        <div className="py-10 text-center font-mono text-sm text-lightGreen">
-          Loading price feeds...
-        </div>
-      ) : (
-        <motion.div variants={staggerItem} className="overflow-x-auto w-full">
-          <DataTable columns={columns(selectedSource)} data={filteredAssets} />
-        </motion.div>
-      )}
-
-      {!loading && filteredAssets.length === 0 && (
-        <motion.div
-          variants={staggerItem}
-          className="py-2 font-mono text-xs text-lightGreen"
-        >
-          No results for your search
-        </motion.div>
-      )}
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center gap-3 py-16"
+          >
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
+            <span className="font-mono text-sm text-lightGreen/60">
+              Loading price feeds...
+            </span>
+          </motion.div>
+        ) : filteredAssets.length === 0 ? (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center gap-2 py-16"
+          >
+            <span className="text-2xl">&#8709;</span>
+            <span className="font-mono text-sm text-lightGreen/60">
+              No price feeds found
+            </span>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="table"
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            className="mt-2 w-full overflow-x-auto"
+          >
+            <DataTable
+              columns={columns(selectedSource)}
+              data={filteredAssets}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

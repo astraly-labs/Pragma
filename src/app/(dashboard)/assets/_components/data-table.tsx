@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full overflow-hidden">
-      <Table>
+      <Table className="min-w-full">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
@@ -52,6 +52,11 @@ export function DataTable<TData, TValue>({
                 <TableHead
                   key={header.id}
                   className="px-3 py-3 font-mono text-xs uppercase tracking-wider text-lightGreen/40"
+                  style={
+                    header.getSize() !== 150
+                      ? { width: header.getSize() }
+                      : undefined
+                  }
                 >
                   {header.isPlaceholder
                     ? null

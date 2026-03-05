@@ -25,120 +25,82 @@
 }
 
 .assetBox {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 16px;
   padding-top: 24px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(4, minmax(130px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(130px, 1fr);
 }
 
 .dpBox {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 16px;
   padding-top: 24px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(150px, 1fr);
 }
 
 .assetPerf {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 12px;
   padding-top: 12px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(4, minmax(130px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(130px, 1fr);
 }
 
 .dpPerf {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 12px;
   padding-top: 12px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(150px, 1fr);
 }
 
 .priceComp {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 16px;
   padding-top: 16px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(200px, 1fr);
 }
 
 .pairComp {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 16px;
   padding-top: 16px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-auto-flow: column;
   grid-auto-columns: minmax(200px, 1fr);
 }
 
 .assetPerfApi {
-  display: flex;
+  display: grid;
   width: 100%;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: left;
   grid-gap: 10px;
   padding-bottom: 12px;
   padding-top: 12px;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-  display: grid;
-  /* Only show 4 columns for API source (pair, last updated, sources, price) */
   grid-template-columns: repeat(4, minmax(130px, 1fr));
 }
 
-/* Style for unsupported assets */
 .assetPerf[class*="opacity-70"] {
   background-color: rgba(255, 70, 70, 0.05);
-  border-bottom: 1px solid rgba(255, 70, 70, 0.25);
 }
 
 @media (max-width: 1400px) {

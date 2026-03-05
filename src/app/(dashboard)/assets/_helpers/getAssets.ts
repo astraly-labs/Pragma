@@ -19,10 +19,8 @@ export const getAssets = async ({
     const streamData = streamingData[asset.ticker];
 
     if (!streamData) {
-      console.log(`No streaming data for ${asset.ticker}, returning default`);
       const isStreamStarted = assets.some((a) => a.ticker === asset.ticker);
       if (isStreamStarted && !streamingData[asset.ticker]) {
-        console.log(`Starting stream for ${asset.ticker} on demand`);
         try {
           startStreaming();
         } catch (error) {
@@ -31,20 +29,16 @@ export const getAssets = async ({
       }
       return {
         price: "0x0",
-        decimals: 0, // asset.decimals || 8,
+        decimals: asset.decimals || 8,
         last_updated_timestamp: Math.floor(Date.now() / 1000),
         nb_sources_aggregated: 1,
-        variations: {
-          "1h": 0,
-          "1d": 0,
-          "1w": 0,
-        },
+        variations: { "1h": 0, "1d": 0, "1w": 0 },
       };
     }
 
     return {
       price: streamData.price || "0x0",
-      decimals: streamData.decimals || 0, // asset.decimals || 8,
+      decimals: streamData.decimals || asset.decimals || 8,
       last_updated_timestamp:
         streamData.last_updated_timestamp || Math.floor(Date.now() / 1000),
       nb_sources_aggregated: streamData.nb_sources_aggregated || 1,
@@ -53,10 +47,9 @@ export const getAssets = async ({
   } else {
     const base = asset.ticker.split("/")[0].toLowerCase();
     const quote = asset.ticker.split("/")[1].toLowerCase();
+    const encodedPair = encodeURIComponent(`${base}/${quote}`);
 
-    const encodedTicker = encodeURIComponent(`${base}/${quote}`);
-
-    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${encodedTicker}?network=starknet-${source}&aggregation=median`;
+    const url = `/api/onchain?network=${source}&pair=${encodedPair}`;
 
     const response = await fetch(url);
 
@@ -64,8 +57,6 @@ export const getAssets = async ({
       throw new Error(`Failed to fetch data for ${asset.ticker}`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return response.json();
   }
 };

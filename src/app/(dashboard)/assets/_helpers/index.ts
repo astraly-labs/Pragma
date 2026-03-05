@@ -114,11 +114,11 @@ export const formatAssets = (
             past1h: assetData.variations?.["past1h"]
               ? (assetData.variations["past1h"] * 100).toFixed(2)
               : "0.00",
-            past24h: assetData.variations?.["past7d"]
-              ? (assetData.variations["past7d"] * 100).toFixed(2)
-              : "0.00",
-            past7d: assetData.variations?.["past24h"]
+            past24h: assetData.variations?.["past24h"]
               ? (assetData.variations["past24h"] * 100).toFixed(2)
+              : "0.00",
+            past7d: assetData.variations?.["past7d"]
+              ? (assetData.variations["past7d"] * 100).toFixed(2)
               : "0.00",
           },
           chart: `https://www.coingecko.com/coins/${

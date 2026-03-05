@@ -14,11 +14,11 @@ const SortableHeader = (label: string, column: any) => {
 
   return (
     <div
-      className="flex items-center gap-1 cursor-pointer select-none"
+      className="flex cursor-pointer select-none items-center gap-1.5 transition-colors hover:text-lightGreen"
       onClick={column.getToggleSortingHandler()}
     >
       {label}
-      <SortIcon className="w-3 h-3" />
+      <SortIcon className="h-3 w-3 opacity-50" />
     </div>
   );
 };
