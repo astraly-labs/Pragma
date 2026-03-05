@@ -1,21 +1,10 @@
 .container {
   border-radius: 85px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#082f28e6, #082f28e6) padding-box,
-    linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 30%,
-        rgba(255, 255, 255, 0) 050%,
-        rgba(255, 255, 255, 0.25) 070%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #082f28e6;
   box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12.5px);
   justify-content: space-between;
-  border-radius: 85px;
   padding: 15px 40px;
   position: relative;
   z-index: 10;
@@ -130,17 +119,7 @@
 }
 
 .popoverPanel {
-  background:
-    linear-gradient(#082f28e6, #082f28e6) padding-box,
-    linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 30%,
-        rgba(255, 255, 255, 0) 050%,
-        rgba(255, 255, 255, 0.25) 070%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  background: #082f28e6;
   box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12.5px);
 }

@@ -25,15 +25,11 @@ export default async function handler(
     return;
   }
 
-  const cleanPairs = pairs.map((pair) =>
-    typeof pair === "string" ? pair.split("/")[0] : pair
-  );
-
-  const pairsQuery = cleanPairs
-    .map((pair) => `pairs[]=${encodeURIComponent(pair)}/USD`)
+  const pairsQuery = pairs
+    .map((pair) => `pairs=${encodeURIComponent(pair)}`)
     .join("&");
   const baseUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
-  const apiUrl = `${baseUrl}/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
+  const apiUrl = `${baseUrl}/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
   console.log(`Fetching data from ${apiUrl}`);
 
   try {

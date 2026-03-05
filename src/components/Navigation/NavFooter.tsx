@@ -4,7 +4,7 @@ import { Fragment, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Activity } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import {
@@ -98,18 +98,12 @@ const content: FooterColumn[] = [
       },
       {
         title: "Privacy Policy",
-        href: "/privacyPolicy",
+        href: "/privacy-policy",
         external: false,
       },
     ],
   },
 ];
-
-export interface SocialMedia {
-  name: string;
-  src: string;
-  href: string;
-}
 
 const Footer = () => {
   const footerRef = useRef(null);
@@ -154,7 +148,7 @@ const Footer = () => {
               className="col-span-3 md:col-span-1 lg:col-span-2"
               variants={staggerItem}
             >
-              <p className="text-xs uppercase	 tracking-wider text-LightGreenFooter">
+              <p className="text-xs uppercase tracking-wider text-LightGreenFooter">
                 {column.heading}
               </p>
               <div className="mt-6 flex flex-col space-y-4">
@@ -174,13 +168,25 @@ const Footer = () => {
               </div>
             </motion.nav>
           ))}
-          <motion.div className="col-span-4 max-w-md" variants={staggerItem}>
+          <motion.div
+            className="col-span-4 flex max-w-md flex-col gap-4"
+            variants={staggerItem}
+          >
             <Link
               href="https://blog.pragma.build/#portal"
               className="flex flex-row pb-3 text-sm tracking-wider text-lightGreen"
             >
               Subscribe to our mailing list{" "}
               <ChevronRight className="my-auto h-6 w-6 pl-2" />
+            </Link>
+            <Link
+              href="https://status.production.pragma.build/status/mainnet"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm tracking-wider text-lightGreen transition-colors hover:text-mint"
+            >
+              <Activity className="h-4 w-4 text-mint" />
+              API Status
             </Link>
           </motion.div>
         </motion.div>

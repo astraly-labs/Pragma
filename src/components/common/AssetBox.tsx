@@ -61,16 +61,16 @@ const AssetBox = ({ assets, onAssetSelect, data }: AssetBoxProps) => {
             >
               <div className="text-left">{asset.ticker}</div>
               <div className="text-left">
-                {data
-                  ? (data[index]?.lastPrice / 10 ** asset.decimals).toFixed(3)
-                  : 0}
+                {data && data[index]?.lastPrice
+                  ? Number(data[index].lastPrice).toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })
+                  : "0.00"}
               </div>
               <div className="text-left">
                 {data && data[index]?.variation24h
-                  ? (data[index]?.variation24h / 10 ** asset.decimals).toFixed(
-                      5
-                    )
-                  : 0}
+                  ? Number(data[index].variation24h).toFixed(2)
+                  : "0"}
               </div>
               <div className="text-left">
                 {data && data[index]?.relativeVariation24h

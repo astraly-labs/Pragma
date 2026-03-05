@@ -60,12 +60,6 @@ const additional = [
     icon: "/assets/social/twitter.svg",
   },
   {
-    name: "Farcaster",
-    description: "",
-    href: "https://warpcast.com/pragmaoracle",
-    icon: "/assets/social/farcaster.svg",
-  },
-  {
     name: "Discord",
     description: "",
     href: "https://discord.gg/M9aRZtZHU7",
@@ -121,7 +115,7 @@ const NavHeader = () => {
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
 
   return (
-    <div className={clsx(styles.bigScreen, "absolute w-full py-8 px-3")}>
+    <div className={clsx(styles.bigScreen, "absolute z-40 w-full py-8 px-3")}>
       <motion.div
         className="pointer-events-none absolute inset-0 bg-darkGreen/80 backdrop-blur-md"
         style={{ opacity: headerBgOpacity }}
@@ -129,7 +123,7 @@ const NavHeader = () => {
       <div
         className={clsx(
           styles.container,
-          "md:mx-auto md:w-11/12 block",
+          "relative z-10 md:mx-auto md:w-11/12 block",
           mobileMenuOpen && "border-0 p-0"
         )}
       >

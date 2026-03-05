@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { publisherColumns } from "@/app/(dashboard)/assets/_components/publishers-table/columns";
 import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
-import type { DataType } from "@/app/(dashboard)/assets/_helpers/getPublishers";
 import styles from "@/components/Assets/styles.module.scss";
 import { SearchBar } from "./searchbar";
 import { DataTable } from "./data-table";
@@ -27,8 +26,6 @@ type PublisherListProps = {
   publishers: DataProviderInfo[];
   selectedSource?: string;
   loading: boolean;
-  dataType: DataType;
-  onDataTypeChange: (dt: DataType) => void;
 };
 
 export const PublisherList = ({
@@ -36,8 +33,6 @@ export const PublisherList = ({
   publishers,
   selectedSource,
   loading,
-  dataType,
-  onDataTypeChange,
 }: PublisherListProps) => {
   const router = useRouter();
   const [filteredValue, setFilteredValue] = useState("");
@@ -69,29 +64,8 @@ export const PublisherList = ({
       className={clsx("w-full text-lightGreen", styles.darkGreenBox)}
     >
       <motion.div variants={staggerItem}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h3 className="text-lightGreen">Data Providers</h3>
-
-          {/* Spot / Perp toggle */}
-          <div className="flex items-center rounded-full border border-lightBlur p-0.5">
-            {(["Spot", "Perp"] as DataType[]).map((dt) => (
-              <button
-                key={dt}
-                onClick={() => onDataTypeChange(dt)}
-                className={clsx(
-                  "relative rounded-full px-5 py-1.5 text-sm font-medium transition-all duration-200",
-                  dataType === dt
-                    ? "bg-mint text-darkGreen shadow-[0_0_12px_rgba(21,255,129,0.25)]"
-                    : "text-lightGreen hover:text-white"
-                )}
-              >
-                {dt}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-4 flex w-full flex-col-reverse gap-3 sm:flex-row">
+        <h3 className="pb-3 text-lightGreen">Data Providers</h3>
+        <div className="flex w-full flex-col-reverse gap-3 sm:flex-row">
           <div className="flex flex-col gap-3 smolScreen:flex-row">
             <div ref={dropdownRef} className="relative w-full md:w-auto">
               <button
@@ -167,7 +141,7 @@ export const PublisherList = ({
           >
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
             <span className="font-mono text-sm text-lightGreen/60">
-              Loading {dataType.toLowerCase()} providers...
+              Loading providers...
             </span>
           </motion.div>
         ) : filteredPublishers.length === 0 ? (
@@ -180,12 +154,12 @@ export const PublisherList = ({
           >
             <span className="text-2xl">&#8709;</span>
             <span className="font-mono text-sm text-lightGreen/60">
-              No {dataType.toLowerCase()} providers found
+              No providers found
             </span>
           </motion.div>
         ) : (
           <motion.div
-            key={`table-${dataType}`}
+            key="table"
             variants={fadeInUp}
             initial="hidden"
             animate="visible"

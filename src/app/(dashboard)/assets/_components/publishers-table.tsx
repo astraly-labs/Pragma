@@ -1,11 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
-import {
-  getPublishers,
-  type DataType,
-} from "@/app/(dashboard)/assets/_helpers/getPublishers";
+import { getPublishers } from "@/app/(dashboard)/assets/_helpers/getPublishers";
 import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
 import { PublisherList } from "./publisher-list";
 
@@ -20,19 +16,17 @@ const PublishersTable = ({
   source,
   options,
 }: PublishersTableProps) => {
-  const [dataType, setDataType] = useState<DataType>("Spot");
-
   const {
     data: publishers,
     isLoading: isLoadingPublishers,
     isFetching: isFetchingPublishers,
   } = useQuery({
-    queryKey: ["PUBLISHERS", source, dataType],
+    queryKey: ["PUBLISHERS", source, "Spot"],
     queryFn: async () => {
-      const result = await getPublishers(source, dataType);
+      const result = await getPublishers(source, "Spot");
       return result;
     },
-    initialData: dataType === "Spot" ? initialPublishers : undefined,
+    initialData: initialPublishers,
     enabled: source !== "api",
     refetchOnWindowFocus: false,
   });
@@ -45,8 +39,6 @@ const PublishersTable = ({
       publishers={publishers ?? []}
       selectedSource={source}
       loading={isPublishersLoadingData}
-      dataType={dataType}
-      onDataTypeChange={setDataType}
     />
   );
 };

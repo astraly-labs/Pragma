@@ -31,17 +31,8 @@
   align-items: center;
   gap: 50px;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#082f28, #082f28) padding-box,
-    linear-gradient(
-        150deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 055%,
-        rgba(255, 255, 255, 0.06%),
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #082f28;
   backdrop-filter: blur(12.5px);
   overflow: hidden;
   width: 100%;
@@ -56,8 +47,8 @@
   align-items: flex-start;
   align-self: stretch;
   border-radius: 20px;
-  border: 1px solid #fff;
-  background: var(--green-50, rgba(0, 71, 56, 0.5));
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: rgba(0, 71, 56, 0.5);
 }
 
 .greenCode {
@@ -76,18 +67,8 @@
   gap: 10px;
   align-self: stretch;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#02201e, #02201e) padding-box,
-    linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 020%,
-        rgba(255, 255, 255, 0.06%) 050%,
-        rgba(255, 255, 255, 0.25) 080%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #02201e;
   backdrop-filter: blur(12.5px);
 }
 

@@ -8,18 +8,15 @@ export const startStreaming = async (
   currentSource: string
 ) => {
   if (activeStreamController) {
-    console.log("Aborting previous stream...");
-    activeStreamController.abort();
+    try {
+      activeStreamController.abort();
+    } catch {}
   }
 
   activeStreamController = new AbortController();
   const { signal } = activeStreamController;
 
-  const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
-
-  const url = `${apiUrl}/data/multi/stream?pairs=${encodeURIComponent(
-    ticker
-  )}&interval=100ms&aggregation=median&historical_prices=10`;
+  const url = `/api/stream?pairs=${encodeURIComponent(ticker)}&env=production`;
 
   let retryCount = 0;
   const maxRetries = 5;

@@ -18,26 +18,13 @@
   letter-spacing: 0.7px;
 }
 
-/* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 0px;
   height: 0px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #042420;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #15ff81;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #b5f0e5;
+html {
+  scrollbar-width: none;
 }
 
 .carousel__slide-focus-ring {

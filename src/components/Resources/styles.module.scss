@@ -5,23 +5,12 @@
   position: relative;
   padding: 80px 60px;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#02201e, #02201e) padding-box,
-    linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 020%,
-        rgba(255, 255, 255, 0.06%) 050%,
-        rgba(255, 255, 255, 0.25) 080%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #02201e;
   backdrop-filter: blur(12.5px);
   width: 100%;
-  padding-bottom: 0px;
 }
 
 .darkGreenBoxBis {
@@ -31,20 +20,10 @@
   position: relative;
   padding: 80px 60px;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#02201e, #02201e) padding-box,
-    linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.25) 020%,
-        rgba(255, 255, 255, 0.06%) 050%,
-        rgba(255, 255, 255, 0.25) 080%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #02201e;
   backdrop-filter: blur(12.5px);
   width: 100%;
 }
@@ -67,34 +46,20 @@
 
 @media (max-width: 1024px) {
   .darkGreenBox {
-    padding: 70px 50px;
+    padding: 50px 40px;
     flex-direction: column;
-    padding-bottom: 0px;
   }
   .darkGreenBoxBis {
-    padding: 70px 50px;
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 768px) {
-  .darkGreenBox {
-    padding: 70px 50px;
-    flex-direction: column;
-    padding-bottom: 0px;
-  }
-  .darkGreenBoxBis {
-    padding: 70px 50px;
+    padding: 50px 40px;
     flex-direction: column;
   }
 }
 
 @media (max-width: 640px) {
   .darkGreenBox {
-    padding: 24px 32px;
-    padding-bottom: 0px;
+    padding: 32px 24px;
   }
   .darkGreenBoxBis {
-    padding: 24px 32px;
+    padding: 32px 24px;
   }
 }

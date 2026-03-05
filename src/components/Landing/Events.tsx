@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";
 import EventBox from "@/components/common/EventBox";
-import { staggerContainer, staggerItem, fadeInUp } from "@/lib/animations";
+import { fadeInUp } from "@/lib/animations";
 
 const events = [
   {
@@ -42,15 +42,18 @@ const Events = () => (
         Austrian economy, elliptic curves, Rust, Cairo and so much more.{" "}
       </GreenText>
     </motion.div>
-    <motion.div
-      className="flex w-full flex-col justify-start md:w-6/12"
-      variants={staggerContainer}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-    >
+    <div className="relative flex w-full flex-col justify-start md:w-6/12">
+      <div className="absolute left-0 top-0 bottom-0 hidden w-px bg-gradient-to-b from-transparent via-mint/20 to-transparent md:block" />
       {events.map((event, index: number) => (
-        <motion.div key={index} variants={staggerItem}>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.15 }}
+          className="relative pl-6 md:pl-8"
+        >
+          <div className="absolute left-0 top-1/2 hidden h-2 w-2 -translate-y-1/2 rounded-full bg-mint/40 md:block" />
           <EventBox
             name={event.name}
             location={event.location}
@@ -60,7 +63,7 @@ const Events = () => (
           />
         </motion.div>
       ))}
-    </motion.div>
+    </div>
   </div>
 );
 

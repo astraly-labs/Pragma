@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
 import AssetHero from "@/components/common/AssetHero";
-import BoxContainer from "@/components/common/BoxContainer";
 import { ScrollReveal } from "@/components/common/ScrollReveal";
 import { getTokens } from "./_helpers/getTokens";
 import { getPublishers } from "./_helpers/getPublishers";
@@ -19,7 +18,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const source = ((await searchParams).source as string) || options[0];
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
+    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-6 overflow-x-hidden p-4 sm:p-8">
       <ScrollReveal direction="down" className="w-full">
         <AssetHero
           title="Every asset"
@@ -32,40 +31,36 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         />
       </ScrollReveal>
       <ScrollReveal delay={0.1} className="w-full">
-        <BoxContainer>
-          <Suspense
-            fallback={
-              <AssetList
-                options={options}
-                assets={[]}
-                selectedSource={source}
-                loading
-              />
-            }
-          >
-            <Tokens source={source} />
-          </Suspense>
-        </BoxContainer>
+        <Suspense
+          fallback={
+            <AssetList
+              options={options}
+              assets={[]}
+              selectedSource={source}
+              loading
+            />
+          }
+        >
+          <Tokens source={source} />
+        </Suspense>
       </ScrollReveal>
       <ScrollReveal delay={0.2} className="w-full">
-        <BoxContainer>
-          {source !== "api" && (
-            <ErrorBoundary errorComponent={CustomError}>
-              <Suspense
-                fallback={
-                  <div className="w-full py-16 text-center">
-                    <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
-                    <p className="mt-3 font-mono text-sm text-lightGreen/50">
-                      Loading providers...
-                    </p>
-                  </div>
-                }
-              >
-                <Publishers source={source} />
-              </Suspense>
-            </ErrorBoundary>
-          )}
-        </BoxContainer>
+        {source !== "api" && (
+          <ErrorBoundary errorComponent={CustomError}>
+            <Suspense
+              fallback={
+                <div className="w-full py-16 text-center">
+                  <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
+                  <p className="mt-3 font-mono text-sm text-lightGreen/50">
+                    Loading providers...
+                  </p>
+                </div>
+              }
+            >
+              <Publishers source={source} />
+            </Suspense>
+          </ErrorBoundary>
+        )}
       </ScrollReveal>
     </div>
   );

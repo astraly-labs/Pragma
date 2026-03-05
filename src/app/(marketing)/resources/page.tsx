@@ -4,32 +4,11 @@ import ReadyBox from "@/components/common/ReadyBox";
 import CompFeedBox from "@/components/Resources/CompFeedBox";
 import VerifRandBox from "@/components/Resources/VerifRandBox";
 import Blog from "@/components/Landing/Blog/Blog";
-import { PriceFeed } from "./price-feed";
+import PriceFeedBox from "@/components/Resources/PriceFeedBox";
 import { cn } from "@/lib/utils";
-import { INITIAL_ASSETS } from "@/lib/constants";
-import { fetchAsset } from "../_helpers/fetch-asset";
 import { ScrollReveal } from "@/components/common/ScrollReveal";
 
-const getInitialAssets = async () => {
-  try {
-    const results = await Promise.all(
-      INITIAL_ASSETS.map((asset) => fetchAsset(asset.ticker, asset.decimals))
-    );
-    return results;
-  } catch {
-    return INITIAL_ASSETS.map((asset) => ({
-      ticker: asset.ticker,
-      lastPrice: 0,
-      variation24h: null,
-      relativeVariation24h: null,
-      priceData: [],
-    }));
-  }
-};
-
-const EcosystemPage = async () => {
-  const assets = await getInitialAssets();
-
+const ResourcesPage = () => {
   return (
     <div
       className={cn(
@@ -47,7 +26,7 @@ const EcosystemPage = async () => {
       />
       <ScrollReveal delay={0.1}>
         <BoxContainer>
-          <PriceFeed initialData={assets} />
+          <PriceFeedBox />
         </BoxContainer>
       </ScrollReveal>
       <ScrollReveal delay={0.15}>
@@ -73,4 +52,4 @@ const EcosystemPage = async () => {
   );
 };
 
-export default EcosystemPage;
+export default ResourcesPage;

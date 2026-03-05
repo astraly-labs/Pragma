@@ -34,7 +34,7 @@ const CompFeedBox = () => {
         <ButtonLink
           variant="outline"
           color="mint"
-          href="https://docs.pragma.build/Resources/Starknet/computational-feeds/what-are-computational-feeds"
+          href="https://docs.pragma.build/starknet/advanced/overview"
           center={false}
           className="mr-auto ml-auto w-fit lg:ml-0"
         >

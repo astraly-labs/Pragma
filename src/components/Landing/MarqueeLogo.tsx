@@ -113,6 +113,7 @@ const MarqueeLogo = () => {
   return (
     <motion.div
       className={clsx(styles.boxMarquee)}
+      style={{ boxShadow: "inset 0 0 60px rgba(21,255,129,0.03)" }}
       variants={fadeIn}
       initial="hidden"
       animate="visible"
@@ -133,7 +134,7 @@ const MarqueeLogo = () => {
             <Image
               width={200}
               height={40}
-              className="my-auto h-8 px-8"
+              className="my-auto h-8 px-8 grayscale opacity-50 transition-all duration-300 hover:grayscale-0 hover:opacity-100"
               src={src}
               alt={name}
             />

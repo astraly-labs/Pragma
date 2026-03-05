@@ -37,13 +37,44 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
   const encodedTicker = encodeURIComponent(`${base}/${quote}`);
   const url = `${apiBase}/offchain/aggregation/candlestick?pair=${encodedTicker}&interval=15min`;
 
-  const response = await fetch(url);
+  let response: Response;
+  try {
+    response = await fetch(url, { cache: "no-store" });
+  } catch (err) {
+    console.error(`Failed to fetch candlestick for ${pairId}:`, err);
+    return {
+      ticker: pairId,
+      lastPrice: 0,
+      variation24h: null,
+      relativeVariation24h: null,
+      priceData: [],
+    };
+  }
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    console.error(
+      `Candlestick API error for ${pairId}: ${response.status} ${response.statusText}`
+    );
+    return {
+      ticker: pairId,
+      lastPrice: 0,
+      variation24h: null,
+      relativeVariation24h: null,
+      priceData: [],
+    };
   }
 
   const unorderedData: AssetDataPointResponse = await response.json();
+
+  if (!unorderedData?.data?.length) {
+    return {
+      ticker: pairId,
+      lastPrice: 0,
+      variation24h: null,
+      relativeVariation24h: null,
+      priceData: [],
+    };
+  }
 
   const data = removeDuplicateTimestamps(
     unorderedData.data.sort((a, b) => toTimestamp(b.time) - toTimestamp(a.time))
@@ -66,12 +97,14 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
 
   const lastIndex = data.length - 1;
   const dayIndex = lastIndex - 96;
-  const variation24h = data[lastIndex].open - data[dayIndex].open;
-  const relativeVariation24h = (variation24h / data[dayIndex].open) * 100;
+  const lastPrice = parseInt(data[lastIndex].open) / 10 ** decimals;
+  const dayPrice = parseInt(data[dayIndex].open) / 10 ** decimals;
+  const variation24h = lastPrice - dayPrice;
+  const relativeVariation24h = (variation24h / dayPrice) * 100;
 
   return {
     ticker: unorderedData.pair_id,
-    lastPrice: data[lastIndex].open,
+    lastPrice,
     variation24h,
     relativeVariation24h,
     priceData,

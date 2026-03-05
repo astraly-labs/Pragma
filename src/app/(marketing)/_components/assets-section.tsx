@@ -1,58 +1,87 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { UTCTimestamp } from "lightweight-charts";
-import { AssetT } from "@/app/(dashboard)/assets/_types";
-import { INITIAL_ASSETS } from "@/lib/constants";
-import { fetchAsset } from "../_helpers/fetch-asset";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChartBox } from "@/components/common/ChartBox";
-import AssetBox from "@/components/common/AssetBox";
+import clsx from "clsx";
 
-type Assets = {
-  ticker: string;
-  lastPrice: any;
-  variation24h: number | null;
-  relativeVariation24h: number | null;
-  priceData: {
-    time: UTCTimestamp;
-    value: number;
-  }[];
-}[];
+const SHOWCASE_TICKERS = [
+  "BTC/USD",
+  "ETH/USD",
+  "STRK/USD",
+  "SUI/USD",
+  "AAVE/USD",
+  "SOL/USD",
+  "LINK/USD",
+  "DOGE/USD",
+  "UNI/USD",
+];
 
-export const AssetsSection = ({ initialData }: { initialData: Assets }) => {
-  const [selectedAssetPair, setSelectedAssetPair] = useState<AssetT>(
-    INITIAL_ASSETS[0]
-  );
+const ROTATION_INTERVAL = 5000;
 
-  const { data: allData } = useQuery({
-    queryKey: ["HOME_ASSETS"],
-    queryFn: async () => {
-      const results = await Promise.all(
-        INITIAL_ASSETS.map((asset) => fetchAsset(asset.ticker, asset.decimals))
-      );
+export const AssetsSection = () => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const selectedTicker = SHOWCASE_TICKERS[selectedIndex];
 
-      return results;
-    },
-    initialData: initialData,
-    retry: 0,
-    // staleTime: 60000, // Cache for 1 minute
-  });
+  const goToNext = useCallback(() => {
+    setSelectedIndex((prev) => (prev + 1) % SHOWCASE_TICKERS.length);
+  }, []);
 
-  const selectedAsset = useMemo(
-    () =>
-      allData?.find((asset) => asset.ticker === selectedAssetPair.ticker) ||
-      null,
-    [allData, selectedAssetPair]
-  );
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(goToNext, ROTATION_INTERVAL);
+    return () => clearInterval(timer);
+  }, [isPaused, goToNext]);
+
   return (
-    <div className="flex h-full w-full flex-col gap-3 sm:gap-8">
-      {selectedAsset && <ChartBox assetPair={selectedAsset} />}
-      <AssetBox
-        assets={INITIAL_ASSETS}
-        onAssetSelect={setSelectedAssetPair}
-        data={allData?.sort((a, b) => a.ticker.localeCompare(b.ticker)) || []}
-      />
+    <div
+      className="flex w-full flex-col gap-4 lg:min-h-[623px]"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Ticker selector */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        {SHOWCASE_TICKERS.map((ticker, i) => (
+          <button
+            key={ticker}
+            onClick={() => {
+              setSelectedIndex(i);
+              setIsPaused(true);
+            }}
+            className={clsx(
+              "relative rounded-full px-3 py-1.5 font-mono text-[11px] tracking-wide transition-all duration-200",
+              "focus:outline-none",
+              selectedIndex === i
+                ? "text-mint"
+                : "text-lightGreen/30 hover:text-lightGreen/60"
+            )}
+          >
+            {selectedIndex === i && (
+              <motion.div
+                layoutId="chartTab"
+                className="absolute inset-0 rounded-full bg-mint/10 ring-1 ring-mint/20"
+                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+              />
+            )}
+            <span className="relative z-10">{ticker.split("/")[0]}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Chart */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={selectedTicker}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex-1"
+        >
+          <ChartBox ticker={selectedTicker} height={560} />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

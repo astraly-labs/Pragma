@@ -8,16 +8,8 @@
   width: 100%;
   min-height: 100%;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#082f28, #082f28) padding-box,
-    linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.06%) 050%,
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #082f28;
   backdrop-filter: blur(12.5px);
 }
 
@@ -28,7 +20,7 @@
   align-items: flex-start;
   gap: 70px;
   border-radius: 20px;
-  border: 1px solid #ffffff40;
+  border: 1px solid rgba(181, 240, 229, 0.08);
   background: rgba(27, 99, 82, 0.12);
   width: full;
   height: 100%;
@@ -53,16 +45,8 @@
   gap: 40px;
   flex: 1 0 0;
   border-radius: 20px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(#042420f2, #042420f2) padding-box,
-    linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.03),
-        rgba(255, 255, 255, 0.205) 100%
-      )
-      border-box;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #042420f2;
 }
 
 .dpBox {
@@ -72,7 +56,7 @@
   align-items: flex-start;
   gap: 24px;
   border-radius: 20px;
-  border: 1px solid #ffffff40;
+  border: 1px solid rgba(181, 240, 229, 0.08);
   background: rgba(27, 99, 82, 0.12);
   width: 100%;
   color: #b5f0e580;

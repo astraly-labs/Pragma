@@ -34,7 +34,7 @@ const VerifRandBox = () => {
         <ButtonLink
           variant="outline"
           color="mint"
-          href="https://docs.pragma.build/Resources/Starknet/randomness/randomness"
+          href="https://docs.pragma.build/starknet/deprecated/vrf"
           center={false}
           className="mr-auto ml-auto w-fit lg:ml-0"
         >

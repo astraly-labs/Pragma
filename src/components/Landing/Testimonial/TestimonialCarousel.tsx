@@ -64,21 +64,16 @@ const TestimonialCarousel = () => {
               key={index}
               className={`flex-shrink-0 w-full md:w-[648px] px-4 pt-2`}
             >
-              <div className={clsx(styles.testimonyBox, "relative h-4/5")}>
-                <Image
-                  width={40}
-                  height={40}
-                  alt="greenDot"
-                  src="/assets/vectors/lightDot.svg"
-                  className={styles.lightDot1}
-                />
-                <Image
-                  width={40}
-                  height={40}
-                  alt="greenDot"
-                  src="/assets/vectors/lightDot.svg"
-                  className={styles.lightDot2}
-                />
+              <div
+                className={clsx(styles.testimonyBox, "relative h-4/5")}
+                style={{ boxShadow: "inset 0 0 0 1px rgba(21,255,129,0.08)" }}
+              >
+                <span
+                  className="pointer-events-none absolute right-6 top-4 font-sans text-[120px] font-bold leading-none text-mint/5 select-none"
+                  aria-hidden
+                >
+                  &ldquo;
+                </span>
                 <div className="w-48">
                   <Image
                     height={40}
@@ -101,13 +96,13 @@ const TestimonialCarousel = () => {
 
       <button
         onClick={scrollPrev}
-        className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-16 md:right-auto md:bottom-10 md:translate-x-0"
+        className="absolute right-1/2 bottom-6 -translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:scale-110 hover:bg-lightGreen hover:text-darkGreen active:scale-95 md:left-16 md:right-auto md:bottom-10 md:translate-x-0"
       >
         <ArrowLeft className="w-5" />
       </button>
       <button
         onClick={scrollNext}
-        className="absolute left-1/2 bottom-6 translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:bg-lightGreen hover:text-darkGreen md:left-32 md:bottom-10 md:translate-x-0"
+        className="absolute left-1/2 bottom-6 translate-x-1/4 cursor-pointer rounded-full border border-lightGreen bg-transparent p-3 text-lightGreen transition-colors duration-300 hover:scale-110 hover:bg-lightGreen hover:text-darkGreen active:scale-95 md:left-32 md:bottom-10 md:translate-x-0"
       >
         <ArrowRight className="w-5" />
       </button>

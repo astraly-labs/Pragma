@@ -21,6 +21,10 @@ const config: Config = {
       },
       animation: {
         blob: "blob 9s infinite",
+        float: "float 6s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "drift-slow": "drift-slow 20s ease-in-out infinite",
+        "drift-slower": "drift-slow 30s ease-in-out infinite reverse",
         marquee: "marquee 30s linear infinite",
         marquee2: "marquee2 30s linear infinite",
       },
@@ -40,18 +44,25 @@ const config: Config = {
           "100%": { transform: "translateX(0%)" },
         },
         blob: {
-          "0%": {
-            transform: "translate(0px, 0px) scale(1)",
-          },
-          "33%": {
-            transform: "translate(24px, -40px) scale(1.1)",
-          },
-          "66%": {
-            transform: "translate(-16px, 16px) scale(0.9)",
-          },
-          "100%": {
-            transform: "tranlate(0px, 0px) scale(1)",
-          },
+          "0%": { transform: "translate(0px, 0px) scale(1)" },
+          "33%": { transform: "translate(24px, -40px) scale(1.1)" },
+          "66%": { transform: "translate(-16px, 16px) scale(0.9)" },
+          "100%": { transform: "translate(0px, 0px) scale(1)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
+          "50%": { opacity: "0.8", transform: "scale(1.05)" },
+        },
+        "drift-slow": {
+          "0%": { transform: "translate(0, 0) rotate(0deg)" },
+          "25%": { transform: "translate(30px, -20px) rotate(2deg)" },
+          "50%": { transform: "translate(-20px, 15px) rotate(-1deg)" },
+          "75%": { transform: "translate(15px, 25px) rotate(1deg)" },
+          "100%": { transform: "translate(0, 0) rotate(0deg)" },
         },
       },
       colors: {

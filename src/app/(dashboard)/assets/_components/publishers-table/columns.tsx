@@ -27,7 +27,6 @@ const SortableHeader = (label: string, column: any) => {
 export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
   {
     accessorKey: "name",
-    size: 220,
     header: ({ column }) => SortableHeader("Identifier", column),
     cell: ({ row }) => {
       const publisher = row.original;
@@ -58,7 +57,6 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
   },
   {
     accessorKey: "lastUpdated",
-    size: 180,
     header: ({ column }) => SortableHeader("Last update", column),
     cell: ({ row }) => {
       const raw = row.original.lastUpdated;
@@ -120,7 +118,6 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
   },
   {
     accessorKey: "dailyUpdates",
-    size: 150,
     header: ({ column }) => SortableHeader("Updates / day", column),
     cell: ({ row }) => (
       <span className="font-mono text-lightGreen">
@@ -130,7 +127,6 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
   },
   {
     accessorKey: "totalUpdates",
-    size: 140,
     header: "Total updates",
     cell: ({ row }) => (
       <span className="font-mono text-lightGreen/70">

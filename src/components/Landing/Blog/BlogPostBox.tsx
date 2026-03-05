@@ -20,13 +20,20 @@ const BlogPostBox: React.FC<BlogPostBoxProps> = ({
   link,
 }) => {
   return (
-    <div className={styles.blogBox}>
-      <div className="w-full">
-        <Image width={500} height={200} src={image} alt="blogIllustration" />
+    <div className={clsx(styles.blogBox, "group")}>
+      <div className="w-full overflow-hidden">
+        <Image
+          width={500}
+          height={200}
+          src={image}
+          alt="blogIllustration"
+          className="transition-transform duration-500 group-hover:scale-105"
+        />
       </div>
       <div className="flex h-full w-full flex-col justify-between p-6 pb-2 text-left">
         <div className="flex flex-col">
-          <div className="pb-3 text-sm uppercase leading-4 text-lightGreen">
+          <div className="flex items-center gap-2 pb-3 text-sm uppercase leading-4 text-lightGreen">
+            <span className="inline-block h-3 w-0.5 rounded-full bg-mint/60" />
             {date}
           </div>
           <h5 className="leading-14 pb-3 text-lightGreen">{title}</h5>

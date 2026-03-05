@@ -14,11 +14,11 @@ interface GlassCardProps extends Omit<HTMLMotionProps<"div">, "children"> {
 
 const variantStyles = {
   default:
-    "bg-[linear-gradient(#082f28e6,#082f28e6)_padding-box,linear-gradient(180deg,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0.06)_50%,rgba(255,255,255,0.205)_100%)_border-box] border border-transparent backdrop-blur-[12.5px]",
-  dark: "bg-[linear-gradient(#02201ee6,#02201ee6)_padding-box,linear-gradient(180deg,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0.04)_50%,rgba(255,255,255,0.12)_100%)_border-box] border border-transparent backdrop-blur-[12.5px]",
+    "bg-[#082f28e6] border border-[rgba(181,240,229,0.08)] backdrop-blur-[12.5px]",
+  dark: "bg-[#02201ee6] border border-[rgba(181,240,229,0.08)] backdrop-blur-[12.5px]",
   light:
-    "bg-[linear-gradient(#082f28cc,#082f28cc)_padding-box,linear-gradient(180deg,rgba(255,255,255,0.3)_0%,rgba(255,255,255,0.08)_50%,rgba(255,255,255,0.25)_100%)_border-box] border border-transparent backdrop-blur-[12.5px]",
-  subtle: "border border-lightGreen/20 bg-darkGreen/40 backdrop-blur-sm",
+    "bg-[#082f28cc] border border-[rgba(181,240,229,0.1)] backdrop-blur-[12.5px]",
+  subtle: "border border-lightGreen/10 bg-darkGreen/40 backdrop-blur-sm",
 };
 
 const paddingStyles = {

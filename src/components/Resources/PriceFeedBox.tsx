@@ -1,34 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import clsx from "clsx";
 import styles from "./styles.module.scss";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
-import { AssetPair, AssetT } from "../common/AssetBox";
 import { ChartBox } from "@/components/common/ChartBox";
-import AssetBox from "@/components/common/AssetBox";
 import { fadeInUp } from "@/lib/animations";
 
-interface PriceFeedBoxProps {
-  selectedAsset: AssetPair;
-  initialAssets: AssetT[];
-  handleAssetSelect: (asset: AssetT) => void;
-  data: AssetPair[];
-}
+const SHOWCASE_TICKERS = [
+  "BTC/USD",
+  "ETH/USD",
+  "STRK/USD",
+  "SUI/USD",
+  "AAVE/USD",
+  "SOL/USD",
+  "LINK/USD",
+  "DOGE/USD",
+  "UNI/USD",
+];
 
-const PriceFeedBox = ({
-  selectedAsset,
-  initialAssets,
-  handleAssetSelect,
-  data,
-}: PriceFeedBoxProps) => {
-  const [isFront, setIsFront] = useState(false);
+const ROTATION_INTERVAL = 5000;
 
-  const handleClick = () => {
-    setIsFront(!isFront);
-  };
+const PriceFeedBox = () => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const selectedTicker = SHOWCASE_TICKERS[selectedIndex];
+
+  const goToNext = useCallback(() => {
+    setSelectedIndex((prev) => (prev + 1) % SHOWCASE_TICKERS.length);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(goToNext, ROTATION_INTERVAL);
+    return () => clearInterval(timer);
+  }, [isPaused, goToNext]);
 
   return (
     <motion.div
@@ -38,58 +46,80 @@ const PriceFeedBox = ({
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
     >
-      <div className="my-auto w-full items-center md:pb-20 lg:w-10/12">
-        <h2 className="mb-4 text-center text-lightGreen lg:text-left">
-          Data Feeds
-        </h2>
-        <GreenText
-          isAligned={false}
-          className="mb-10 text-center  lg:text-left"
-        >
-          Data feeds are the most secure means of obtaining price information on
-          Starknet, and soon, everywhere. Pragma harnesses its network of data
-          providers, including market makers, centralized and decentralized
-          exchanges, solvers, and aggregators, to deliver prices for any asset
-          you require. The aggregation process is validated by STARK proofs,
-          ensuring that security is never compromised.
-        </GreenText>
-        <ButtonLink
-          variant="outline"
-          color="mint"
-          href="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
-          center={false}
-          className="mr-auto ml-auto w-fit lg:ml-0"
-        >
-          Integrate Feeds
-        </ButtonLink>
-      </div>
-      <div className="relative flex w-full flex-col md:px-20 lg:px-0">
-        <div
-          className={cn(
-            "relative w-full overflow-hidden sm:w-96 xl:w-xlarge",
-            isFront ? styles.front : styles.back,
-            styles.transi
-          )}
-          onClick={handleClick}
-        >
-          <ChartBox assetPair={selectedAsset} />
+      <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+        <div className="flex flex-col lg:w-5/12">
+          <h2 className="mb-4 text-lightGreen">Data Feeds</h2>
+          <GreenText isAligned={false} className="mb-8">
+            Data feeds are the most secure means of obtaining price information
+            on Starknet, and soon, everywhere. Pragma harnesses its network of
+            data providers to deliver prices for any asset you require. The
+            aggregation process is validated by STARK proofs, ensuring that
+            security is never compromised.
+          </GreenText>
+          <ButtonLink
+            variant="outline"
+            color="mint"
+            href="https://docs.pragma.build/starknet"
+            center={false}
+            className="w-fit"
+          >
+            Integrate Feeds
+          </ButtonLink>
         </div>
         <div
-          className={cn(
-            "relative ml-auto w-full overflow-hidden py-8 sm:w-96  sm:-translate-y-20 sm:py-0 lg:backdrop-blur-md xl:w-xlarge",
-            isFront ? styles.back : styles.front,
-            styles.transi
-          )}
-          onClick={handleClick}
+          className="flex flex-col gap-4 lg:w-7/12"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
-          <AssetBox
-            assets={initialAssets}
-            onAssetSelect={handleAssetSelect}
-            data={data.sort((a, b) => a.ticker.localeCompare(b.ticker))}
-          />
+          {/* Ticker selector */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {SHOWCASE_TICKERS.map((ticker, i) => (
+              <button
+                key={ticker}
+                onClick={() => {
+                  setSelectedIndex(i);
+                  setIsPaused(true);
+                }}
+                className={clsx(
+                  "relative rounded-full px-3 py-1.5 font-mono text-[11px] tracking-wide transition-all duration-200",
+                  "focus:outline-none",
+                  selectedIndex === i
+                    ? "text-mint"
+                    : "text-lightGreen/30 hover:text-lightGreen/60"
+                )}
+              >
+                {selectedIndex === i && (
+                  <motion.div
+                    layoutId="resourcesChartTab"
+                    className="absolute inset-0 rounded-full bg-mint/10 ring-1 ring-mint/20"
+                    transition={{
+                      type: "spring",
+                      bounce: 0.15,
+                      duration: 0.5,
+                    }}
+                  />
+                )}
+                <span className="relative z-10">{ticker.split("/")[0]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Chart */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedTicker}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChartBox ticker={selectedTicker} height={420} />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
   );
 };
+
 export default PriceFeedBox;

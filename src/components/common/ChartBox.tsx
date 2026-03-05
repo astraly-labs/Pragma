@@ -1,113 +1,87 @@
 "use client";
 
-import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
-import styles from "./styles.module.scss";
-import { AssetPair } from "./AssetBox";
+import React, { useEffect, useRef, memo } from "react";
+
+const TICKER_TO_TV_SYMBOL: Record<string, string> = {
+  "BTC/USD": "BINANCE:BTCUSDC",
+  "ETH/USD": "BINANCE:ETHUSDC",
+  "STRK/USD": "BYBIT:STRKUSDC",
+  "SUI/USD": "BINANCE:SUIUSDC",
+  "AAVE/USD": "BINANCE:AAVEUSDC",
+  "SOL/USD": "BINANCE:SOLUSDC",
+  "DAI/USD": "BINANCE:DAIUSDC",
+  "LORDS/USD": "BYBIT:LORDSUSDC",
+  "EKUBO/USD": "BYBIT:EKUBOUSDC",
+  "NSTR/USD": "BYBIT:NSTRUSDC",
+};
 
 interface ChartBoxProps {
-  assetPair: AssetPair;
-  box?: boolean;
+  ticker: string;
+  height?: number;
   className?: string;
-  colors?: {
-    backgroundColor?: string;
-    lineColor?: string;
-    textColor?: string;
-    areaTopColor?: string;
-    areaBottomColor?: string;
-  };
 }
 
-export const ChartBox: React.FC<ChartBoxProps> = ({
-  assetPair,
-  box = true,
+const ChartBoxInner: React.FC<ChartBoxProps> = ({
+  ticker,
+  height = 480,
   className,
-  colors = {},
 }) => {
-  const {
-    backgroundColor = "#082F28",
-    lineColor = "#15FF81",
-    textColor = "black",
-    areaTopColor = "#3CF46742",
-    areaBottomColor = "#FFFFFF00",
-  } = colors;
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const tvSymbol =
+    TICKER_TO_TV_SYMBOL[ticker] ||
+    `BINANCE:${ticker.replace("/", "").replace("USD", "USDC")}`;
 
   useEffect(() => {
-    const handleResize = () => {
-      if (chartContainerRef.current) {
-        chart!.applyOptions({ width: chartContainerRef.current.clientWidth });
-      }
-    };
+    if (!containerRef.current) return;
+    const node = containerRef.current;
+    node.innerHTML = "";
 
-    const chart =
-      chartContainerRef.current &&
-      createChart(chartContainerRef.current, {
-        layout: {
-          background: { type: ColorType.Solid, color: backgroundColor },
-          textColor: "#B5F0E5",
-          fontFamily: "IBM Plex Mono",
-          fontSize: 12,
-        },
-        rightPriceScale: {
-          borderVisible: false,
-        },
-        timeScale: {
-          borderVisible: false,
-          secondsVisible: true,
-        },
-        grid: {
-          vertLines: {
-            visible: false,
-          },
-          horzLines: {
-            color: "#B5F0E51F",
-          },
-        },
-        width: chartContainerRef.current?.clientWidth ?? 300,
-        height: 300,
-      });
-    chart!.timeScale().fitContent();
+    const widgetContainer = document.createElement("div");
+    widgetContainer.className = "tradingview-widget-container__widget";
+    widgetContainer.style.height = "calc(100% + 4px)";
+    widgetContainer.style.width = "calc(100% + 4px)";
+    widgetContainer.style.margin = "-2px";
 
-    const newSeries = chart!.addAreaSeries({
-      lineColor: lineColor,
-      topColor: areaTopColor,
-      bottomColor: areaBottomColor,
+    const script = document.createElement("script");
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js";
+    script.type = "text/javascript";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      symbol: tvSymbol,
+      width: "100%",
+      height: "100%",
+      locale: "en",
+      dateRange: "1M",
+      colorTheme: "dark",
+      isTransparent: true,
+      autosize: true,
+      largeChartUrl: "",
+      chartOnly: false,
+      noTimeScale: false,
     });
 
-    if (assetPair == undefined) {
-      newSeries.setData([]);
-    } else {
-      newSeries.setData(assetPair.priceData);
-    }
-
-    window.addEventListener("resize", handleResize);
+    node.appendChild(widgetContainer);
+    node.appendChild(script);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-
-      if (chart) {
-        chart.remove();
-      }
+      node.innerHTML = "";
     };
-  }, [
-    assetPair,
-    backgroundColor,
-    lineColor,
-    textColor,
-    areaTopColor,
-    areaBottomColor,
-  ]);
+  }, [tvSymbol]);
 
   return (
-    <div className={box ? styles.chartBox : className}>
-      <div className="font-mono text-xs text-lightGreen">
-        {(box ? assetPair?.ticker : "") ?? (
-          <div className="absolute left-1/2 top-1/2 z-10 h-5/6 w-10/12 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-md bg-lightBlur"></div>
-        )}
-      </div>
-      <div className={styles.chartLayout} ref={chartContainerRef} />
+    <div
+      className={`overflow-hidden rounded-2xl bg-[#082F28] ${className || ""}`}
+      style={{ height: `${height}px` }}
+    >
+      <div
+        ref={containerRef}
+        className="tradingview-widget-container overflow-hidden"
+        style={{ height: "100%", width: "100%" }}
+      />
     </div>
   );
 };
+
+export const ChartBox = memo(ChartBoxInner);

@@ -8,176 +8,127 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import cb from "./cb";
 import { useHasMounted } from "@/lib/has-mounted";
 
-interface Category {
+import priceFeedCode from "./snippets/price_feed.cairo";
+import realizedVolCode from "./snippets/realized_vol.cairo";
+
+interface Snippet {
   title: string;
+  filename: string;
+  code: string;
 }
+
+const snippets: Snippet[] = [
+  {
+    title: "Price Feed",
+    filename: "price_feed.cairo",
+    code: priceFeedCode,
+  },
+  {
+    title: "Realized Vol",
+    filename: "realized_vol.cairo",
+    code: realizedVolCode,
+  },
+];
 
 export default function CodeSnippet() {
   const hasMounted = useHasMounted();
   const [activeTab, setActiveTab] = useState(0);
-  const [categories] = useState<Category[]>([
-    {
-      title: "Price Feed",
-    },
-    {
-      title: "Realized Vol",
-    },
-    {
-      title: "VRF",
-    },
-  ]);
-  const codeString = `fn get_asset_price_median(oracle_address: ContractAddress, asset : DataType) -> u128  { 
-    let oracle_dispatcher = IOracleABIDispatcher{contract_address : oracle_address};
-    let output : PragmaPricesResponse= oracle_dispatcher.get_data(asset, AggregationMode::Median(()));
-    return output.price;
-};`;
-  const codeString1 = `fn compute_volatility(data_type: DataType, aggregation_mode: AggregationMode) -> u128 {
-    let SUMMARY_STATS_ADDRESS: ContractAddress =
-        contract_address_const::<0x6421fdd068d0dc56b7f5edc956833ca0ba66b2d5f9a8fea40932f226668b5c4>();
-
-    let start_tick = starknet::get_block_timestamp() - 604800;
-    let end_tick = starknet::get_block_timestamp();
-
-    let num_samples = 200;
-    let summary_dispatcher = ISummaryStatsABIDispatcher { contract_address: SUMMARY_STATS_ADDRESS };
-    let (volatility, decimals) = summary_dispatcher
-        .calculate_volatility(data_type, start_tick, end_tick, num_samples, aggregation_mode);
-
-    return volatility; // will return the volatility multiplied by 10^decimals
-}`;
-  const codeString2 = `fn get_last_random(self: @TContractState) -> felt252;
-  fn request_my_randomness(
-      ref self: TContractState,
-      seed: u64,
-      callback_address: ContractAddress,
-      callback_fee_limit: u128,
-      publish_delay: u64,
-      num_words: u64
-  );
-  fn receive_random_words(
-      ref self: TContractState,
-      requestor_address: ContractAddress,
-      request_id: u64,
-      random_words: Span<felt252>
-  );`;
 
   if (!hasMounted) {
     return null;
   }
 
+  const active = snippets[activeTab];
+
   return (
-    <div className="relative h-auto w-full border border-lightGreen/20 rounded-2xl p-6 pb-40 lg:min-h-[650px] lg:w-5/12">
-      <div className="w-full">
-        <div className="flex rounded-full bg-lightBlur md:space-x-1">
-          {categories.map((category, index) => (
+    <div className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-lightGreen/20 lg:min-h-[650px] lg:w-5/12">
+      {/* Terminal header */}
+      <div className="flex items-center gap-2 border-b border-lightBlur/20 bg-darkGreen/60 px-4 py-3">
+        <div className="flex gap-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+        </div>
+        <span className="ml-2 font-mono text-xs text-lightGreen/40">
+          {active.filename}
+        </span>
+      </div>
+
+      {/* Tab bar */}
+      <div className="px-4 pt-4">
+        <div className="relative flex rounded-full bg-lightBlur/60">
+          {snippets.map((snippet, index) => (
             <button
-              key={index}
+              key={snippet.title}
               onClick={() => setActiveTab(index)}
               className={clsx(
-                "w-full rounded-full p-2 text-sm font-medium leading-5 tracking-wider sm:p-4 md:p-6",
+                "relative z-10 w-full rounded-full py-2.5 text-sm font-medium tracking-wider transition-colors duration-200",
                 "focus:outline-none",
                 activeTab === index
-                  ? "bg-mint text-darkGreen"
-                  : "text-lightGreen hover:text-white"
+                  ? "text-darkGreen"
+                  : "text-lightGreen/70 hover:text-white"
               )}
             >
-              {category.title}
+              {activeTab === index && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 rounded-full bg-mint"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                />
+              )}
+              <span className="relative z-10">{snippet.title}</span>
             </button>
           ))}
         </div>
-        <div className="h-full">
-          <AnimatePresence mode="wait">
-            {activeTab === 0 && (
-              <motion.div
-                key="tab-0"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="h-full pt-6 font-mono leading-7 text-codeColor"
-              >
-                <SyntaxHighlighter style={cb} language="rust">
-                  {codeString}
-                </SyntaxHighlighter>
-                <div className="absolute bottom-9">
-                  <CopyButtonComponent
-                    textToCopy={`fn get_asset_price_median(oracle_address: ContractAddress, asset : DataType) -> u128  { 
-                    let oracle_dispatcher = IOracleABIDispatcher{contract_address : oracle_address};
-                    let output : PragmaPricesResponse= oracle_dispatcher.get_data(asset, AggregationMode::Median(()));
-                    return output.price;
-                };`}
-                  />
-                </div>
-              </motion.div>
-            )}
-            {activeTab === 1 && (
-              <motion.div
-                key="tab-1"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="h-full pt-6 font-mono leading-7 text-codeColor"
-              >
-                <SyntaxHighlighter style={cb} language="rust">
-                  {codeString1}
-                </SyntaxHighlighter>
-                <div className="absolute bottom-9">
-                  <CopyButtonComponent
-                    textToCopy={`fn compute_volatility(data_type: DataType, aggregation_mode: AggregationMode) -> u128 {
-    let SUMMARY_STATS_ADDRESS: ContractAddress =
-        contract_address_const::<0x6421fdd068d0dc56b7f5edc956833ca0ba66b2d5f9a8fea40932f226668b5c4>();
-
-    let start_tick = starknet::get_block_timestamp() - 604800;
-    let end_tick = starknet::get_block_timestamp();
-
-    let num_samples = 200;
-    let summary_dispatcher = ISummaryStatsABIDispatcher { contract_address: SUMMARY_STATS_ADDRESS };
-    let (volatility, decimals) = summary_dispatcher
-        .calculate_volatility(data_type, start_tick, end_tick, num_samples, aggregation_mode);
-
-    return volatility; // will return the volatility multiplied by 10^decimals
-}`}
-                  />
-                </div>
-              </motion.div>
-            )}
-            {activeTab === 2 && (
-              <motion.div
-                key="tab-2"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="h-full pt-6 font-mono leading-7 text-codeColor"
-              >
-                <SyntaxHighlighter style={cb} language="rust">
-                  {codeString2}
-                </SyntaxHighlighter>
-                <div className="absolute bottom-9">
-                  <CopyButtonComponent
-                    textToCopy={`fn get_last_random(self: @TContractState) -> felt252;
-    fn request_my_randomness(
-        ref self: TContractState,
-        seed: u64,
-        callback_address: ContractAddress,
-        callback_fee_limit: u128,
-        publish_delay: u64,
-        num_words: u64
-    );
-    fn receive_random_words(
-        ref self: TContractState,
-        requestor_address: ContractAddress,
-        request_id: u64,
-        random_words: Span<felt252>
-    );`}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
       </div>
+
+      {/* Code panel */}
+      <div className="relative flex-1 overflow-auto px-4 pb-20 pt-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="font-mono text-sm leading-relaxed"
+          >
+            <SyntaxHighlighter
+              style={cb}
+              language="rust"
+              showLineNumbers
+              lineNumberStyle={{
+                color: "rgba(181,240,229,0.2)",
+                fontSize: "11px",
+                paddingRight: "16px",
+                minWidth: "2.5em",
+                textAlign: "right",
+              }}
+              customStyle={{
+                background: "transparent",
+                padding: 0,
+                margin: 0,
+              }}
+            >
+              {active.code.trim()}
+            </SyntaxHighlighter>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Copy button */}
+      <div className="absolute bottom-4 left-4 z-10">
+        <CopyButtonComponent textToCopy={active.code.trim()} />
+      </div>
+
+      {/* Scan-line overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-[0.015]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(181,240,229,0.03) 2px, rgba(181,240,229,0.03) 4px)",
+        }}
+      />
     </div>
   );
 }

@@ -11,8 +11,6 @@ export const DEFAULT_ASSETS = [
   { ticker: "MRE7YIELD/USD", address: "0x7", decimals: 8 },
   { ticker: "MRE7BTC/USD", address: "0x7", decimals: 8 },
   { ticker: "DOG/USD", address: "0x7", decimals: 8 },
-  { ticker: "BROTHER/USDPLUS", address: "0x8", decimals: 8 },
-  { ticker: "ZEND/USD", address: "0x9", decimals: 8 },
   { ticker: "DAI/USD", address: "0x9", decimals: 8 },
   { ticker: "USDC/USD", address: "0x9", decimals: 8 },
   { ticker: "USDT/USD", address: "0x9", decimals: 8 },

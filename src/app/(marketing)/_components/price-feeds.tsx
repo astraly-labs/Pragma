@@ -40,7 +40,7 @@ export const PriceFeeds = () => {
       generalText="Your smart contracts are decentralized, transparent and composable. The data you're using to feed them should have the same properties. Start integrating Pragma's price feed now and unlock the power of verifiable data."
       urlSvg={getImageSource[1]}
       textButton="Integrate Now"
-      linkButton="https://docs.pragma.build/Resources/Consuming%20Data%20Feed"
+      linkButton="https://docs.pragma.build/starknet"
     />
   );
 };

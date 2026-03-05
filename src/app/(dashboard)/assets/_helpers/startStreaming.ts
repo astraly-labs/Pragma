@@ -9,8 +9,9 @@ export const startStreaming = async (
   source: string
 ) => {
   if (activeStreamController) {
-    console.log("Aborting previous stream...");
-    activeStreamController.abort();
+    try {
+      activeStreamController.abort();
+    } catch {}
   }
 
   activeStreamController = new AbortController();
@@ -18,11 +19,10 @@ export const startStreaming = async (
 
   const pairs = assets.map((asset) => asset.ticker);
 
-  const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
-
-  const url = `${apiUrl}/data/multi/stream?${pairs
+  const pairsQuery = pairs
     .map((pair) => `pairs=${encodeURIComponent(pair)}`)
-    .join("&")}&interval=100ms&aggregation=median&historical_prices=10`;
+    .join("&");
+  const url = `/api/stream?${pairsQuery}&env=production`;
 
   console.log(`Starting stream for:`, pairs.join(", "));
 
