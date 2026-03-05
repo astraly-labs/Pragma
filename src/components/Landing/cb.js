@@ -1,4 +1,4 @@
-export default {
+const cbTheme = {
   'code[class*="language-"]': {
     color: "#98A2B3",
     textShadow: "unset",
@@ -159,3 +159,5 @@ export default {
     borderRight: "3px #32D583 solid",
   },
 };
+
+export default cbTheme;

@@ -26,5 +26,5 @@ export const useEventSourceQuery = ({
         });
       }
     });
-  }, []);
+  }, [queryKey, url, eventName, queryClient]);
 };

@@ -69,53 +69,48 @@ const NavPopover: React.FC<NavPopoverProps> = ({
       </span>
 
       <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={popoverRef}
-          initial={{ opacity: 0, y: 8, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 8, scale: 0.95 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="fixed left-1/2 mt-3 ml-0 flex min-w-fit -translate-x-1/2 transform flex-row gap-5 rounded-xl border border-lightBlur bg-whiteTrans backdrop-blur-lg"
-        >
-          <div className="min-w-md flex w-60 flex-col gap-3 p-5">
-            <h5 className="text-mint">{buttonName}</h5>
-            <div>{description}</div>
-          </div>
-          <div
-            className={clsx(
-              "rounded-xl shadow-lg",
-              styles.popoverPanel
-            )}
+        {isOpen && (
+          <motion.div
+            ref={popoverRef}
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="fixed left-1/2 mt-3 ml-0 flex min-w-fit -translate-x-1/2 transform flex-row gap-5 rounded-xl border border-lightBlur bg-whiteTrans backdrop-blur-lg"
           >
-            <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
-              {content.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="-m-3 flex items-start rounded-lg p-3 hover:bg-whiteTrans lg:w-72"
-                >
-                  <Image
-                    className="my-auto h-4 w-4 text-lightGreen"
-                    src={item.icon}
-                    alt={"logo"}
-                    height={20}
-                    width={20}
-                  />
-                  <div className="ml-4">
-                    <p className="text-base font-medium text-lightGreen">
-                      {item.name}
-                    </p>
-                    <p className="text-grey mt-1 text-sm">
-                      {item.description}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+            <div className="min-w-md flex w-60 flex-col gap-3 p-5">
+              <h5 className="text-mint">{buttonName}</h5>
+              <div>{description}</div>
             </div>
-          </div>
-        </motion.div>
-      )}
+            <div className={clsx("rounded-xl shadow-lg", styles.popoverPanel)}>
+              <div className="bg-dark relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8">
+                {content.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="-m-3 flex items-start rounded-lg p-3 hover:bg-whiteTrans lg:w-72"
+                  >
+                    <Image
+                      className="my-auto h-4 w-4 text-lightGreen"
+                      src={item.icon}
+                      alt={"logo"}
+                      height={20}
+                      width={20}
+                    />
+                    <div className="ml-4">
+                      <p className="text-base font-medium text-lightGreen">
+                        {item.name}
+                      </p>
+                      <p className="text-grey mt-1 text-sm">
+                        {item.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

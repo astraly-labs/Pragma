@@ -18,9 +18,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div
-      className="relative mx-auto w-full max-w-[1700px] overflow-x-hidden pt-24 md:pt-40"
-    >
+    <div className="relative mx-auto w-full max-w-[1700px] overflow-x-hidden pt-24 md:pt-40">
       <BoxContainer>
         <Link
           href="/assets"

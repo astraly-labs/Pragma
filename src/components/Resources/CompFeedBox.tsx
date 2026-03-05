@@ -26,9 +26,9 @@ const CompFeedBox = () => {
           isAligned={false}
           className="mb-10 text-center  lg:text-left"
         >
-          Leverage the highest-quality data available and apply any desired logic
-          on top. Everything is STARK-proven, guaranteeing the security of the
-          computation. Composability and modularity are now achievable for
+          Leverage the highest-quality data available and apply any desired
+          logic on top. Everything is STARK-proven, guaranteeing the security of
+          the computation. Composability and modularity are now achievable for
           oracles.
         </GreenText>
         <ButtonLink

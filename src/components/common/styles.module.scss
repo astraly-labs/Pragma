@@ -7,7 +7,8 @@
   align-self: stretch;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#082f28e6, #082f28e6) padding-box,
+  background:
+    linear-gradient(#082f28e6, #082f28e6) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -30,7 +31,8 @@
   align-self: stretch;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#082f28e6, #082f28e6) padding-box,
+  background:
+    linear-gradient(#082f28e6, #082f28e6) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -93,7 +95,8 @@
   align-items: flex-start;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#02201e, #02201e) padding-box,
+  background:
+    linear-gradient(#02201e, #02201e) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -116,7 +119,8 @@
   align-items: flex-start;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#02201e, #02201e) padding-box,
+  background:
+    linear-gradient(#02201e, #02201e) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -170,7 +174,8 @@
   position: relative;
   padding: 36px;
   border: 1px solid transparent;
-  background: linear-gradient(#082f28, #082f28) padding-box,
+  background:
+    linear-gradient(#082f28, #082f28) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -180,7 +185,9 @@
       border-box;
   backdrop-filter: blur(12.5px);
   width: 100%;
-  transition: z-index 0.5s, transform 0.5s ease-in-out;
+  transition:
+    z-index 0.5s,
+    transform 0.5s ease-in-out;
 }
 
 .assetBox {
@@ -192,7 +199,9 @@
   border-radius: 20px;
   border: 1px solid rgba(181, 240, 229, 0.12);
   background: rgba(27, 99, 82, 0.12);
-  transition: z-index 0.5s, transform 0.5s ease-in-out;
+  transition:
+    z-index 0.5s,
+    transform 0.5s ease-in-out;
 }
 
 .front {

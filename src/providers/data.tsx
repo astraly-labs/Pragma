@@ -96,10 +96,14 @@ export const DataProvider = ({
     queryKey: ["available-tokens", source],
     queryFn: async () => {
       if (source === "api" || source === "api-prod") {
-        console.log(`Fetching tokens from ${source === "api-prod" ? "production" : "dev"} API...`);
-        const apiUrl = source === "api-prod" 
-          ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-          : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+        console.log(
+          `Fetching tokens from ${source === "api-prod" ? "production" : "dev"} API...`
+        );
+        const apiUrl =
+          source === "api-prod"
+            ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+            : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
+              process.env.NEXT_PUBLIC_INTERNAL_API;
         const response = await fetch(`${apiUrl}/tokens/all`);
 
         if (!response.ok) {
@@ -163,9 +167,11 @@ export const DataProvider = ({
   // Function to start streaming for all assets
   const startStreaming = async (assets: AssetT[]) => {
     const pairs = assets.map((asset) => asset.ticker);
-    const apiUrl = source === "api-prod" 
-      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-      : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+    const apiUrl =
+      source === "api-prod"
+        ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+        : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
+          process.env.NEXT_PUBLIC_INTERNAL_API;
     const pairsQuery = pairs
       .map((pair) => `pairs=${encodeURIComponent(pair)}`)
       .join("&");
@@ -406,6 +412,7 @@ export const DataProvider = ({
     } else {
       setStreamingData({});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [source, assets]);
 
   const fetchAssetData = async (asset: AssetT) => {
@@ -514,7 +521,8 @@ export const DataProvider = ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => fetchAssetData(asset),
       initialData: initialData?.[asset.ticker],
-      refetchInterval: source === "api" || source === "api-prod" ? 1000 : undefined,
+      refetchInterval:
+        source === "api" || source === "api-prod" ? 1000 : undefined,
       retry: false,
       enabled: source !== "api" && source !== "api-prod",
     })),
@@ -537,10 +545,13 @@ export const DataProvider = ({
       });
       return result;
     }
-    return assets.reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index].data;
-      return acc;
-    }, {} as { [ticker: string]: any });
+    return assets.reduce(
+      (acc, asset, index) => {
+        acc[asset.ticker] = assetQueries[index].data;
+        return acc;
+      },
+      {} as { [ticker: string]: any }
+    );
   }, [source, assets, assetQueries, streamingData]);
 
   const checkpointQueries = useQueries({
@@ -593,10 +604,13 @@ export const DataProvider = ({
   }, [publishersQuery.data]);
 
   const checkpoints = useMemo(() => {
-    return assets.reduce((acc, asset, index) => {
-      acc[asset.ticker] = checkpointQueries[index].data;
-      return acc;
-    }, {} as { [ticker: string]: CheckpointT[] });
+    return assets.reduce(
+      (acc, asset, index) => {
+        acc[asset.ticker] = checkpointQueries[index].data;
+        return acc;
+      },
+      {} as { [ticker: string]: CheckpointT[] }
+    );
   }, [assets, checkpointQueries]);
 
   return (

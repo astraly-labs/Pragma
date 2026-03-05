@@ -8,7 +8,8 @@
   align-items: flex-start;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#02201e, #02201e) padding-box,
+  background:
+    linear-gradient(#02201e, #02201e) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -33,7 +34,8 @@
   align-items: flex-start;
   border-radius: 20px;
   border: 1px solid transparent;
-  background: linear-gradient(#02201e, #02201e) padding-box,
+  background:
+    linear-gradient(#02201e, #02201e) padding-box,
     linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.25) 0%,
@@ -58,7 +60,9 @@
 }
 
 .transi {
-  transition: z-index 0.5s, transform 0.5s ease-in-out;
+  transition:
+    z-index 0.5s,
+    transform 0.5s ease-in-out;
 }
 
 @media (max-width: 1024px) {

@@ -12,10 +12,7 @@ const LightGreenUpper: React.FC<GreenUpperProps> = ({
   ...props
 }) => (
   <div
-    className={clsx(
-      "text-xs uppercase text-lightGreen opacity-50",
-      className
-    )}
+    className={clsx("text-xs uppercase text-lightGreen opacity-50", className)}
     {...props}
   >
     {children}

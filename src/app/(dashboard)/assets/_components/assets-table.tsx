@@ -145,7 +145,8 @@ export const AssetsTable = ({
           streamingData,
         }),
       initialData: initialTokens?.[asset.ticker],
-      refetchInterval: source === "api" || source === "api-prod" ? 1000 : undefined,
+      refetchInterval:
+        source === "api" || source === "api-prod" ? 1000 : undefined,
       retry: false,
       enabled: source !== "api" && source !== "api-prod",
     })),

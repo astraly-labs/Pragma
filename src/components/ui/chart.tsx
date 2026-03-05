@@ -235,8 +235,8 @@ function ChartTooltipContent({
                         {item.value < 1
                           ? item.value.toFixed(8)
                           : item.value < 100
-                          ? item.value.toFixed(5)
-                          : item.value.toFixed(2)}
+                            ? item.value.toFixed(5)
+                            : item.value.toFixed(2)}
                       </span>
                     )}
                   </div>

@@ -15,9 +15,11 @@ export const startStreaming = async (
   activeStreamController = new AbortController();
   const { signal } = activeStreamController;
 
-  const apiUrl = currentSource === "api-prod" 
-          ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-          : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+  const apiUrl =
+    currentSource === "api-prod"
+      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+      : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
+        process.env.NEXT_PUBLIC_INTERNAL_API;
 
   const url = `${apiUrl}/data/multi/stream?pairs=${encodeURIComponent(
     ticker

@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   // Check if user is authenticated via the Authorization header
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized - Please login first" });
   }
 
@@ -26,7 +26,7 @@ export default async function handler(
     return res.status(400).json({ error: "Missing token configuration" });
   }
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_TOKEN_API_URL || 'http://localhost:8002'}/v1/tokens/add`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_TOKEN_API_URL || "http://localhost:8002"}/v1/tokens/add`;
 
   try {
     const apiResponse = await fetch(apiUrl, {
@@ -34,7 +34,7 @@ export default async function handler(
       headers: {
         "Content-Type": "application/json",
         // Forward the user's JWT token
-        "Authorization": authHeader
+        Authorization: authHeader,
       },
       body: JSON.stringify({ token_config }),
     });
@@ -50,4 +50,4 @@ export default async function handler(
     console.error("Error adding token:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
-} 
+}

@@ -42,7 +42,10 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -80,8 +83,8 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
       priceNumber < 1
         ? priceNumber.toFixed(8)
         : priceNumber < 100
-        ? priceNumber.toFixed(5)
-        : priceNumber.toFixed(2)
+          ? priceNumber.toFixed(5)
+          : priceNumber.toFixed(2)
     );
 
     const now = Date.now();
@@ -220,8 +223,8 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
                   val < 1
                     ? val.toFixed(8)
                     : val < 100
-                    ? val.toFixed(5)
-                    : val.toFixed(2)
+                      ? val.toFixed(5)
+                      : val.toFixed(2)
                 }
               />
 

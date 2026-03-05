@@ -26,9 +26,7 @@ const PairReported = ({ components }) => {
   }, [components, filteredValue]);
 
   return (
-    <div
-      className="z-1 w-full flex-col justify-between gap-0 rounded-2xl border border-lightGreen/20 p-6"
-    >
+    <div className="z-1 w-full flex-col justify-between gap-0 rounded-2xl border border-lightGreen/20 p-6">
       <div className="flex w-full flex-col gap-3 py-3 sm:flex-row">
         <h4 className="text-lightGreen">Price Components</h4>
         <div className="text-lightGreen sm:ml-auto">

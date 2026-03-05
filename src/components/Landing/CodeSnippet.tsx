@@ -66,9 +66,7 @@ export default function CodeSnippet() {
   }
 
   return (
-    <div
-      className="relative h-auto w-full border border-lightGreen/20 rounded-2xl p-6 pb-40 lg:min-h-[650px] lg:w-5/12"
-    >
+    <div className="relative h-auto w-full border border-lightGreen/20 rounded-2xl p-6 pb-40 lg:min-h-[650px] lg:w-5/12">
       <div className="w-full">
         <div className="flex rounded-full bg-lightBlur md:space-x-1">
           {categories.map((category, index) => (

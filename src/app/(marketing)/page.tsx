@@ -35,7 +35,12 @@ const IndexPage = async () => {
   const assets = await getInitialAssets();
 
   return (
-    <div className={cn("relative w-full overflow-x-hidden", "mx-auto max-w-[1700px]")}>
+    <div
+      className={cn(
+        "relative w-full overflow-x-hidden",
+        "mx-auto max-w-[1700px]"
+      )}
+    >
       <Hero />
       <ScrollReveal>
         <BoxContainer>

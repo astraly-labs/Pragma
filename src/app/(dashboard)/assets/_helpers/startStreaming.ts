@@ -18,9 +18,11 @@ export const startStreaming = async (
 
   const pairs = assets.map((asset) => asset.ticker);
 
-  const apiUrl = source === "api-prod" 
-          ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-          : (process.env.NEXT_PUBLIC_INTERNAL_API_DEV || process.env.NEXT_PUBLIC_INTERNAL_API);
+  const apiUrl =
+    source === "api-prod"
+      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
+      : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
+        process.env.NEXT_PUBLIC_INTERNAL_API;
 
   const url = `${apiUrl}/data/multi/stream?${pairs
     .map((pair) => `pairs=${encodeURIComponent(pair)}`)

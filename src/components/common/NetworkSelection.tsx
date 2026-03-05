@@ -9,7 +9,10 @@ const NetworkSelection = ({ setNetwork }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -49,7 +52,9 @@ const NetworkSelection = ({ setNetwork }) => {
             >
               <span
                 className={`block truncate text-lightGreen ${
-                  currentNetwork === definedNetwork ? "font-medium" : "font-normal"
+                  currentNetwork === definedNetwork
+                    ? "font-medium"
+                    : "font-normal"
                 }`}
               >
                 {currentNetwork}

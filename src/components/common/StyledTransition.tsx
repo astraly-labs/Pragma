@@ -12,10 +12,7 @@ interface StyledTransitionProps {
   children: ReactNode;
 }
 
-const StyledTransition = ({
-  show,
-  children,
-}: StyledTransitionProps) => {
+const StyledTransition = ({ show, children }: StyledTransitionProps) => {
   if (!show) return null;
   return <>{children}</>;
 };

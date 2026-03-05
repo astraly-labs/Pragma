@@ -3,7 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Home, Menu, X, ChevronDown, ChevronUp } from "lucide-react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 // import {
 //   buildExplorerUrlForAddress,
@@ -116,12 +121,7 @@ const NavHeader = () => {
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
 
   return (
-    <div
-      className={clsx(
-        styles.bigScreen,
-        "absolute w-full py-8 px-3"
-      )}
-    >
+    <div className={clsx(styles.bigScreen, "absolute w-full py-8 px-3")}>
       <motion.div
         className="pointer-events-none absolute inset-0 bg-darkGreen/80 backdrop-blur-md"
         style={{ opacity: headerBgOpacity }}
@@ -133,10 +133,12 @@ const NavHeader = () => {
           mobileMenuOpen && "border-0 p-0"
         )}
       >
-        <div className={clsx(
-          "items-center justify-between md:space-x-5 lg:space-x-0 flex",
-          mobileMenuOpen && "opacity-0"
-        )}>
+        <div
+          className={clsx(
+            "items-center justify-between md:space-x-5 lg:space-x-0 flex",
+            mobileMenuOpen && "opacity-0"
+          )}
+        >
           <div className="flex justify-start lg:w-0 lg:flex-1 ">
             <Link href="/">
               <div>
@@ -219,153 +221,165 @@ const NavHeader = () => {
 
         {/* Mobile Version */}
         <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className={clsx(
-              styles.mobilePop,
-              "absolute inset-x-0 top-0 origin-top-right transform md:hidden"
-            )}
-          >
-            <div className="relative m-auto flex h-full w-full flex-col rounded-lg">
-              <div className="px-3 pb-6">
-                <div className="flex w-full items-center justify-between">
-                  <div>
-                    <Image
-                      height={40}
-                      width={150}
-                      className="ml-1 h-6 w-auto sm:h-8 md:h-6 lg:h-8"
-                      src="/pragma-logo.png"
-                      alt="Logo"
-                    />
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className={clsx(
+                styles.mobilePop,
+                "absolute inset-x-0 top-0 origin-top-right transform md:hidden"
+              )}
+            >
+              <div className="relative m-auto flex h-full w-full flex-col rounded-lg">
+                <div className="px-3 pb-6">
+                  <div className="flex w-full items-center justify-between">
+                    <div>
+                      <Image
+                        height={40}
+                        width={150}
+                        className="ml-1 h-6 w-auto sm:h-8 md:h-6 lg:h-8"
+                        src="/pragma-logo.png"
+                        alt="Logo"
+                      />
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex items-center justify-center rounded-full p-1 text-lightGreen"
+                      >
+                        <span className="sr-only">Close menu</span>
+                        <X className="h-6 w-6" aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="inline-flex items-center justify-center rounded-full p-1 text-lightGreen"
+                  <div className="mx-auto mt-6 items-center justify-center">
+                    <motion.nav
+                      className="grid items-center justify-center gap-y-8"
+                      variants={staggerContainer}
+                      initial="hidden"
+                      animate="visible"
                     >
-                      <span className="sr-only">Close menu</span>
-                      <X className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                      {[...mobileResources, ...resources].map((resource) => (
+                        <motion.div
+                          className="relative"
+                          key={resource.name}
+                          variants={staggerItem}
+                        >
+                          <Link
+                            href={resource.href}
+                            className="-m-3 flex items-center justify-center rounded-md p-3 text-center"
+                          >
+                            <span className="font-medium text-lightGreen hover:text-white">
+                              {resource.name}
+                            </span>
+                          </Link>
+                          {resource.name === "v2" && (
+                            <span className="absolute top-0 right-2 mt-[-5px] rounded-full bg-purple px-2 py-0.5 text-xs text-white">
+                              New
+                            </span>
+                          )}
+                        </motion.div>
+                      ))}
+                      {/* Products Popover */}
+                      <motion.div
+                        className="flex flex-col items-center justify-center"
+                        variants={staggerItem}
+                      >
+                        <button
+                          className="flex items-center justify-center gap-2 rounded-md px-3 text-center text-lightGreen"
+                          onClick={() =>
+                            setMobileProductsOpen(!mobileProductsOpen)
+                          }
+                        >
+                          <span>Products</span>
+                          {mobileProductsOpen ? (
+                            <ChevronUp className="h-3 w-3" />
+                          ) : (
+                            <ChevronDown className="h-3 w-3" />
+                          )}
+                        </button>
+                        <AnimatePresence>
+                          {mobileProductsOpen && (
+                            <motion.div
+                              className="mt-2 space-y-2 overflow-hidden"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.15 }}
+                            >
+                              {products.map((product) => (
+                                <Link
+                                  key={product.name}
+                                  href={product.href}
+                                  className="block items-center justify-center rounded-md p-2 text-center text-sm text-lightGreen hover:text-white"
+                                >
+                                  {product.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+
+                      {/* Community Popover */}
+                      <motion.div
+                        className="flex flex-col items-center justify-center"
+                        variants={staggerItem}
+                      >
+                        <button
+                          className="flex items-center justify-center gap-2 rounded-md px-3 text-center font-medium text-lightGreen"
+                          onClick={() =>
+                            setMobileCommunityOpen(!mobileCommunityOpen)
+                          }
+                        >
+                          <span>Community</span>
+                          {mobileCommunityOpen ? (
+                            <ChevronUp className="h-3 w-3" />
+                          ) : (
+                            <ChevronDown className="h-3 w-3" />
+                          )}
+                        </button>
+                        <AnimatePresence>
+                          {mobileCommunityOpen && (
+                            <motion.div
+                              className="mt-2 space-y-2 overflow-hidden"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.15 }}
+                            >
+                              {additional.map((item) => (
+                                <Link
+                                  key={item.name}
+                                  href={item.href}
+                                  className="block rounded-md p-2 text-center text-sm text-lightGreen hover:text-white"
+                                >
+                                  {item.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    </motion.nav>
                   </div>
                 </div>
-                <div className="mx-auto mt-6 items-center justify-center">
-                  <motion.nav
-                    className="grid items-center justify-center gap-y-8"
-                    variants={staggerContainer}
-                    initial="hidden"
-                    animate="visible"
+                <div className="mx-auto space-y-2 py-6 px-5">
+                  <ButtonLink
+                    variant="solid"
+                    color="mint"
+                    center={true}
+                    href="https://docs.pragma.build"
                   >
-                    {[...mobileResources, ...resources].map((resource) => (
-                      <motion.div className="relative" key={resource.name} variants={staggerItem}>
-                        <Link
-                          href={resource.href}
-                          className="-m-3 flex items-center justify-center rounded-md p-3 text-center"
-                        >
-                          <span className="font-medium text-lightGreen hover:text-white">
-                            {resource.name}
-                          </span>
-                        </Link>
-                        {resource.name === "v2" && (
-                          <span className="absolute top-0 right-2 mt-[-5px] rounded-full bg-purple px-2 py-0.5 text-xs text-white">
-                            New
-                          </span>
-                        )}
-                      </motion.div>
-                    ))}
-                    {/* Products Popover */}
-                    <motion.div className="flex flex-col items-center justify-center" variants={staggerItem}>
-                      <button
-                        className="flex items-center justify-center gap-2 rounded-md px-3 text-center text-lightGreen"
-                        onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
-                      >
-                        <span>Products</span>
-                        {mobileProductsOpen ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        )}
-                      </button>
-                      <AnimatePresence>
-                        {mobileProductsOpen && (
-                          <motion.div
-                            className="mt-2 space-y-2 overflow-hidden"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.15 }}
-                          >
-                            {products.map((product) => (
-                              <Link
-                                key={product.name}
-                                href={product.href}
-                                className="block items-center justify-center rounded-md p-2 text-center text-sm text-lightGreen hover:text-white"
-                              >
-                                {product.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-
-                    {/* Community Popover */}
-                    <motion.div className="flex flex-col items-center justify-center" variants={staggerItem}>
-                      <button
-                        className="flex items-center justify-center gap-2 rounded-md px-3 text-center font-medium text-lightGreen"
-                        onClick={() =>
-                          setMobileCommunityOpen(!mobileCommunityOpen)
-                        }
-                      >
-                        <span>Community</span>
-                        {mobileCommunityOpen ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        )}
-                      </button>
-                      <AnimatePresence>
-                        {mobileCommunityOpen && (
-                          <motion.div
-                            className="mt-2 space-y-2 overflow-hidden"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.15 }}
-                          >
-                            {additional.map((item) => (
-                              <Link
-                                key={item.name}
-                                href={item.href}
-                                className="block rounded-md p-2 text-center text-sm text-lightGreen hover:text-white"
-                              >
-                                {item.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  </motion.nav>
+                    Start Building
+                  </ButtonLink>
                 </div>
               </div>
-              <div className="mx-auto space-y-2 py-6 px-5">
-                <ButtonLink
-                  variant="solid"
-                  color="mint"
-                  center={true}
-                  href="https://docs.pragma.build"
-                >
-                  Start Building
-                </ButtonLink>
-              </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>

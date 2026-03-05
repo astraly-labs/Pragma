@@ -162,9 +162,7 @@ export const Checkpoints = ({ components }) => {
   };
 
   return (
-    <div
-      className="z-1 w-full flex-col justify-between gap-0 rounded-2xl border border-lightGreen/20 p-6"
-    >
+    <div className="z-1 w-full flex-col justify-between gap-0 rounded-2xl border border-lightGreen/20 p-6">
       <h4 className="text-lightGreen">Checkpoints</h4>
       <div className="w-full overflow-x-scroll">
         <div className={styles.priceComp}>

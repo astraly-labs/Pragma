@@ -64,9 +64,7 @@ const TestimonialCarousel = () => {
               key={index}
               className={`flex-shrink-0 w-full md:w-[648px] px-4 pt-2`}
             >
-              <div
-                className={clsx(styles.testimonyBox, "relative h-4/5")}
-              >
+              <div className={clsx(styles.testimonyBox, "relative h-4/5")}>
                 <Image
                   width={40}
                   height={40}

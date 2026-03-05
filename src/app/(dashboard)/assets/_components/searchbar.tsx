@@ -45,10 +45,7 @@ export const SearchBar = ({ onInputChange }: SearchBarProps) => {
           onBlur={() => setIsFocused(false)}
           aria-label="Search"
         />
-        <Search
-          aria-hidden="true"
-          className=" h-5 w-5 pr-2 text-lightGreen"
-        />
+        <Search aria-hidden="true" className=" h-5 w-5 pr-2 text-lightGreen" />
         <span className=" pr-10">Search</span>
       </button>
     </motion.div>

@@ -45,8 +45,9 @@ const Hero = () => {
             </motion.div>
             <motion.div variants={fadeInUp}>
               <GreenText isAligned={true}>
-                Pragma is the open and permissionless infrastructure for oracles,
-                enabling anyone to deploy optimized oracles for any application.
+                Pragma is the open and permissionless infrastructure for
+                oracles, enabling anyone to deploy optimized oracles for any
+                application.
               </GreenText>
             </motion.div>
             <motion.div variants={fadeInUp}>

@@ -31,7 +31,12 @@ const EcosystemPage = async () => {
   const assets = await getInitialAssets();
 
   return (
-    <div className={cn("relative w-full overflow-x-hidden", "mx-auto max-w-[1700px]")}>
+    <div
+      className={cn(
+        "relative w-full overflow-x-hidden",
+        "mx-auto max-w-[1700px]"
+      )}
+    >
       <ResourcesHero
         title="Build, build, build"
         description="If you want to learn more about Pragma, start to build or work on new ideas, you're in the right place"

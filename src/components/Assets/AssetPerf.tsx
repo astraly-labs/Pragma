@@ -4,15 +4,19 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 
-const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
+const AssetPerf = ({ asset, isAsset, loading, currentSource = "" }) => {
   const [priceChangeClass, setPriceChangeClass] = useState(styles.priceNormal);
   const prevPriceRef = useRef(asset?.price);
 
   // Check if we're using the API source
-  const isApiSource = currentSource === 'api';
+  const isApiSource = currentSource === "api";
 
   useEffect(() => {
-    if (!loading && asset?.price !== undefined && prevPriceRef.current !== undefined) {
+    if (
+      !loading &&
+      asset?.price !== undefined &&
+      prevPriceRef.current !== undefined
+    ) {
       if (asset.price > prevPriceRef.current) {
         setPriceChangeClass(styles.priceUp);
       } else if (asset.price < prevPriceRef.current) {
@@ -40,8 +44,8 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
         isAsset && !hasError
           ? `/asset/${encodeURIComponent(asset.ticker)}`
           : isAsset && hasError
-          ? "#" // Disable link for unsupported assets
-          : `/provider/${asset.name}`
+            ? "#" // Disable link for unsupported assets
+            : `/provider/${asset.name}`
       }
       className={clsx(
         isAsset ? styles.assetPerf : styles.dpPerf,
@@ -70,8 +74,8 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
             {isAsset
               ? asset.ticker
               : asset.name === "SKYNET_TRADING"
-              ? "SKYNET"
-              : asset.name}{" "}
+                ? "SKYNET"
+                : asset.name}{" "}
             <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">
               {asset.type}
             </div>
@@ -146,16 +150,16 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 asset.variations.past1h > 0
                   ? "text-mint"
                   : asset.variations.past1h === 0
-                  ? "text-LightGreenFooter"
-                  : "text-redDown",
+                    ? "text-LightGreenFooter"
+                    : "text-redDown",
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
               {asset.variations.past1h > 0
                 ? "▲"
                 : asset.variations.past1h === 0
-                ? "-"
-                : "▼"}{" "}
+                  ? "-"
+                  : "▼"}{" "}
               {asset.variations.past1h}%
             </div>
           ) : isAsset && hasError ? (
@@ -173,16 +177,16 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 asset.variations.past24h > 0
                   ? "text-mint"
                   : asset.variations.past24h === 0
-                  ? "text-LightGreenFooter"
-                  : "text-redDown",
+                    ? "text-LightGreenFooter"
+                    : "text-redDown",
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
               {asset.variations.past24h > 0
                 ? "▲"
                 : asset.variations.past24h === 0
-                ? "-"
-                : "▼"}{" "}
+                  ? "-"
+                  : "▼"}{" "}
               {asset.variations.past24h}%
             </div>
           ) : isAsset && hasError ? (
@@ -201,16 +205,16 @@ const AssetPerf = ({ asset, isAsset, loading, currentSource = '' }) => {
                 asset.variations.past7d > 0
                   ? "text-mint"
                   : asset.variations.past7d === 0
-                  ? "text-LightGreenFooter"
-                  : "text-redDown",
+                    ? "text-LightGreenFooter"
+                    : "text-redDown",
                 "my-auto flex flex-row gap-2 font-mono text-sm md:tracking-wider"
               )}
             >
               {asset.variations.past7d > 0
                 ? "▲"
                 : asset.variations.past7d === 0
-                ? "-"
-                : "▼"}{" "}
+                  ? "-"
+                  : "▼"}{" "}
               {asset.variations.past7d}%
             </div>
           ) : isAsset && hasError ? (

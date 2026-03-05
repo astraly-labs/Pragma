@@ -13,7 +13,11 @@
 }
 
 .gradV2 {
-  background: radial-gradient(50% 57.44% at 50% 47.74%, rgba(8, 8, 8, 0) 38.5%, #080808 100%);
+  background: radial-gradient(
+    50% 57.44% at 50% 47.74%,
+    rgba(8, 8, 8, 0) 38.5%,
+    #080808 100%
+  );
   position: absolute;
   width: 100%;
   height: 100%;

@@ -46,9 +46,7 @@ export const fetchAsset = async (pairId: string, decimals: number) => {
   const unorderedData: AssetDataPointResponse = await response.json();
 
   const data = removeDuplicateTimestamps(
-    unorderedData.data.sort(
-      (a, b) => toTimestamp(b.time) - toTimestamp(a.time)
-    )
+    unorderedData.data.sort((a, b) => toTimestamp(b.time) - toTimestamp(a.time))
   );
 
   const priceData = data.reverse().map((d: any) => ({

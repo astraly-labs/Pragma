@@ -42,7 +42,10 @@ const AssetList = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -122,7 +125,9 @@ const AssetList = ({
                   >
                     <span
                       className={`block truncate text-lightGreen ${
-                        option === selectedSource ? "font-medium" : "font-normal"
+                        option === selectedSource
+                          ? "font-medium"
+                          : "font-normal"
                       }`}
                     >
                       {option}
