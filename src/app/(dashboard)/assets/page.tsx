@@ -18,7 +18,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const source = ((await searchParams).source as string) || options[0];
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-6 overflow-x-hidden p-4 sm:p-8">
+    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-4 overflow-x-hidden px-3 pt-20 pb-8 sm:gap-6 sm:px-6 sm:pt-28 md:px-8">
       <ScrollReveal direction="down" className="w-full">
         <AssetHero
           title="Every asset"

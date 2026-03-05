@@ -99,15 +99,6 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
     },
   },
   {
-    accessorKey: "reputationScore",
-    header: ({ column }) => SortableHeader("Reputation", column),
-    cell: ({ row }) => (
-      <span className="text-xs text-lightGreen/40 italic">
-        {row.original.reputationScore || "soon"}
-      </span>
-    ),
-  },
-  {
     accessorKey: "nbFeeds",
     header: ({ column }) => SortableHeader("Feeds", column),
     cell: ({ row }) => (

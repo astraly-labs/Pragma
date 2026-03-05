@@ -98,14 +98,14 @@ const BasicHero = ({
           </motion.div>
           <motion.div
             variants={fadeInUp}
-            className="m-auto flex flex-col gap-4 md:m-0 md:flex-row"
+            className="mx-auto flex w-full flex-col items-center gap-4 md:mx-0 md:w-auto md:flex-row md:items-start"
           >
             <ButtonLink
               center={false}
               color="mint"
               variant="solid"
               href={solidButtonLink}
-              className="w-fit shadow-[0_0_20px_rgba(21,255,129,0.15)] transition-shadow hover:shadow-[0_0_40px_rgba(21,255,129,0.25)]"
+              className="w-full text-center shadow-[0_0_20px_rgba(21,255,129,0.15)] transition-shadow hover:shadow-[0_0_40px_rgba(21,255,129,0.25)] sm:w-fit"
             >
               {solidButton}
             </ButtonLink>
@@ -114,7 +114,7 @@ const BasicHero = ({
               color="mint"
               variant="outline"
               href={outlineButtonLink}
-              className="w-fit"
+              className="w-full text-center sm:w-fit"
             >
               {outlineButton}
             </ButtonLink>

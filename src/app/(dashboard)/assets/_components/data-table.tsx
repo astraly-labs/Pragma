@@ -8,14 +8,6 @@ import {
   flexRender,
   SortingState,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -40,18 +32,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full overflow-hidden">
-      <Table className="w-full table-fixed">
-        <TableHeader>
+    <div className="-mx-3 overflow-x-auto px-3 sm:-mx-0 sm:px-0">
+      <table className="w-full min-w-[540px]">
+        <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="border-0 hover:bg-transparent"
-            >
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead
+                <th
                   key={header.id}
-                  className="px-3 py-3 font-mono text-xs uppercase tracking-wider text-lightGreen/40"
+                  className="whitespace-nowrap px-2 py-2 text-left font-mono text-[10px] font-normal uppercase tracking-wider text-lightGreen/40 sm:px-3 sm:py-3 sm:text-xs"
                 >
                   {header.isPlaceholder
                     ? null
@@ -59,43 +48,46 @@ export function DataTable<TData, TValue>({
                         header.column.columnDef.header,
                         header.getContext()
                       )}
-                </TableHead>
+                </th>
               ))}
-            </TableRow>
+            </tr>
           ))}
-        </TableHeader>
-        <TableBody>
+        </thead>
+        <tbody>
           {data.length ? (
             table.getRowModel().rows.map((row, index) => (
               <motion.tr
                 key={row.id}
-                initial={{ opacity: 0, y: 6 }}
+                initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.03, duration: 0.25 }}
-                className="group border-0 transition-colors hover:bg-lightBlur/10"
+                transition={{
+                  delay: Math.min(index * 0.02, 0.5),
+                  duration: 0.2,
+                }}
+                className="group transition-colors hover:bg-lightBlur/10"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
+                  <td
                     key={cell.id}
-                    className="px-3 py-4 text-sm text-lightGreen"
+                    className="whitespace-nowrap px-2 py-2.5 text-xs text-lightGreen sm:px-3 sm:py-4 sm:text-sm"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+                  </td>
                 ))}
               </motion.tr>
             ))
           ) : (
-            <TableRow>
-              <TableCell
+            <tr>
+              <td
                 colSpan={columns.length}
-                className="h-24 text-center text-lightGreen/40"
+                className="h-24 text-center text-sm text-lightGreen/40"
               >
                 No data found.
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

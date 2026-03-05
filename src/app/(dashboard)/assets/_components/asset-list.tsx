@@ -66,8 +66,10 @@ const AssetList = ({
       className={clsx("w-full text-lightGreen", styles.darkGreenBox)}
     >
       <motion.div variants={staggerItem}>
-        <h3 className="pb-3 text-lightGreen">Price Feeds</h3>
-        <div className="flex w-full flex-col-reverse gap-3 sm:flex-row">
+        <h3 className="pb-3 text-lg text-lightGreen sm:text-3xl">
+          Price Feeds
+        </h3>
+        <div className="flex w-full flex-col gap-3 sm:flex-row-reverse">
           <div className="flex flex-col gap-3 smolScreen:flex-row">
             <div ref={dropdownRef} className="relative w-full md:w-auto">
               <button
@@ -165,7 +167,7 @@ const AssetList = ({
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className="mt-2 w-full overflow-x-auto"
+            className="mt-2 w-full"
           >
             <DataTable
               columns={columns(selectedSource)}
