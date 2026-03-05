@@ -18,11 +18,7 @@ export const startStreaming = async (
 
   const pairs = assets.map((asset) => asset.ticker);
 
-  const apiUrl =
-    source === "api-prod"
-      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-      : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
-        process.env.NEXT_PUBLIC_INTERNAL_API;
+  const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
 
   const url = `${apiUrl}/data/multi/stream?${pairs
     .map((pair) => `pairs=${encodeURIComponent(pair)}`)
@@ -61,12 +57,11 @@ export const startStreaming = async (
       let jsonBuffer = "";
       let initialDataReceived = false;
 
-      const timeoutId = setTimeout(() => {
+      setTimeout(() => {
         if (!initialDataReceived) {
           console.warn("⏰ Timeout: No initial data received.");
-          // You can show fallback UI or silently skip
         }
-      }, 10000); // 10s timeout
+      }, 10000);
 
       const processStream = async () => {
         try {
@@ -84,7 +79,7 @@ export const startStreaming = async (
 
             jsonBuffer += value;
             const lines = jsonBuffer.split("\n");
-            jsonBuffer = lines.pop() || ""; // Save last incomplete line
+            jsonBuffer = lines.pop() || "";
 
             for (const line of lines) {
               const trimmed = line.trim();
@@ -135,7 +130,6 @@ export const startStreaming = async (
               } catch (e: any) {
                 console.error("❌ Failed to parse JSON:", e.message);
                 console.warn("Raw (truncated):", jsonStr.slice(0, 300));
-                // Don’t reject or crash — continue streaming
               }
             }
           }

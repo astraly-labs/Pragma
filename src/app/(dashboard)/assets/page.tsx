@@ -7,17 +7,16 @@ import { getTokens } from "./_helpers/getTokens";
 import { getPublishers } from "./_helpers/getPublishers";
 import { AssetsTable } from "./_components/assets-table";
 import PublishersTable from "./_components/publishers-table";
-import { PublisherList } from "./_components/publisher-list";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { CustomError } from "./_components/custom-error";
 import AssetList from "./_components/asset-list";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-const options = ["sepolia", "mainnet", "api", "api-prod"];
+const options = ["mainnet", "api"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
-  const source = ((await searchParams).source as string) || options[1];
+  const source = ((await searchParams).source as string) || options[0];
 
   return (
     <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
@@ -50,16 +49,16 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
       </ScrollReveal>
       <ScrollReveal delay={0.2} className="w-full">
         <BoxContainer>
-          {source !== "api" && source !== "api-prod" && (
+          {source !== "api" && (
             <ErrorBoundary errorComponent={CustomError}>
               <Suspense
                 fallback={
-                  <PublisherList
-                    options={options}
-                    publishers={[]}
-                    selectedSource={source}
-                    loading
-                  />
+                  <div className="w-full py-16 text-center">
+                    <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
+                    <p className="mt-3 font-mono text-sm text-lightGreen/50">
+                      Loading providers...
+                    </p>
+                  </div>
                 }
               >
                 <Publishers source={source} />
@@ -85,7 +84,7 @@ const Tokens = async ({ source }: { source: string }) => {
 };
 
 const Publishers = async ({ source }: { source: string }) => {
-  const initialPublishers = await getPublishers(source);
+  const initialPublishers = await getPublishers(source, "Spot");
 
   return (
     <PublishersTable

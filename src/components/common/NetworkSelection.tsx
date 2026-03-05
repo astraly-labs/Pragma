@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 const NetworkSelection = ({ setNetwork }) => {
-  const NETWORKS = ["sepolia", "mainnet"];
-  const [definedNetwork, setDefinedNetwork] = useState<string>("sepolia");
+  const NETWORKS = ["mainnet"];
+  const [definedNetwork, setDefinedNetwork] = useState<string>("mainnet");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +59,6 @@ const NetworkSelection = ({ setNetwork }) => {
               >
                 {currentNetwork}
               </span>
-              {currentNetwork === definedNetwork ? (
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              ) : null}
             </button>
           ))}
         </div>

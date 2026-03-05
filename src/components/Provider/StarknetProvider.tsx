@@ -3,24 +3,14 @@ import React from "react";
 import { InjectedConnector } from "starknetkit/injected";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { WebWalletConnector } from "starknetkit/webwallet";
-import { mainnet, sepolia } from "@starknet-react/chains";
+import { mainnet } from "@starknet-react/chains";
 import { StarknetConfig, publicProvider } from "@starknet-react/core";
 
 interface StarknetProviderProps {
   children: React.ReactNode;
-
-  /**
-   * An optional array of wallet connectors to be used for connecting to the Starknet network.
-   * Defaults to a set of common connectors including InjectedConnector, WebWalletConnector, and ArgentMobileConnector.
-   */
   connectors?: any[];
 }
 
-/**
- * A provider component for Starknet applications, wrapping child components with the necessary Starknet configuration.
- * It uses different wallet connectors to facilitate connections to Starknet.
- * @return {JSX.Element} The rendered provider.
- */
 export default function StarknetProvider({
   children,
   connectors = [
@@ -30,11 +20,9 @@ export default function StarknetProvider({
     new ArgentMobileConnector(),
   ],
 }: StarknetProviderProps) {
-  const chains = [sepolia, mainnet];
-
   return (
     <StarknetConfig
-      chains={chains}
+      chains={[mainnet]}
       provider={publicProvider()}
       connectors={connectors}
     >

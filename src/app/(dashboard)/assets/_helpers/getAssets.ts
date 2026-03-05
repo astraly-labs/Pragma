@@ -15,7 +15,7 @@ export const getAssets = async ({
   streamingData,
   startStreaming,
 }: GetAssets) => {
-  if (source === "api" || source === "api-prod") {
+  if (source === "api") {
     const streamData = streamingData[asset.ticker];
 
     if (!streamData) {

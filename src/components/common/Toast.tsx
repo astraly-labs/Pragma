@@ -8,7 +8,6 @@ interface ToastProps {
   title: string;
   text: string;
   txHash?: string;
-  networkType?: string;
   type?: ToastType;
 }
 
@@ -16,14 +15,12 @@ const Toast: React.FC<ToastProps> = ({
   title,
   text,
   txHash,
-  networkType,
   type = "success",
 }) => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const getExplorerUrl = (hash: string) => {
-    const network = networkType === "mainnet" ? "mainnet" : "sepolia";
-    return `https://${network}.starkscan.co/tx/${hash}`;
+    return `https://starkscan.co/tx/${hash}`;
   };
 
   useEffect(() => {

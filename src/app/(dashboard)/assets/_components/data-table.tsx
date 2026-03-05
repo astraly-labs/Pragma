@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   flexRender,
+  SortingState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -16,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -24,7 +26,7 @@ export function DataTable<TData, TValue>({
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }) {
-  const [sorting, setSorting] = useState([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -38,13 +40,19 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="border-none">
+    <div className="w-full overflow-hidden">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="border-0 hover:bg-transparent"
+            >
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  className="px-3 py-3 font-mono text-xs uppercase tracking-wider text-lightGreen/40"
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -58,19 +66,31 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {data.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+            table.getRowModel().rows.map((row, index) => (
+              <motion.tr
+                key={row.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.03, duration: 0.25 }}
+                className="group border-0 transition-colors hover:bg-lightBlur/10"
+              >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-6">
+                  <TableCell
+                    key={cell.id}
+                    className="px-3 py-4 text-sm text-lightGreen"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-              </TableRow>
+              </motion.tr>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No assets found.
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-lightGreen/40"
+              >
+                No data found.
               </TableCell>
             </TableRow>
           )}

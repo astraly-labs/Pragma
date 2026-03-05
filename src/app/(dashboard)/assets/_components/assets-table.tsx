@@ -61,7 +61,7 @@ export const AssetsTable = ({
   }, [tokens, source]);
 
   useEffect(() => {
-    if ((source === "api" || source === "api-prod") && assets.length > 0) {
+    if (source === "api" && assets.length > 0) {
       let mounted = true;
       let retryCount = 0;
       const maxRetries = 3;
@@ -145,22 +145,21 @@ export const AssetsTable = ({
           streamingData,
         }),
       initialData: initialTokens?.[asset.ticker],
-      refetchInterval:
-        source === "api" || source === "api-prod" ? 1000 : undefined,
+      refetchInterval: source === "api" ? 1000 : undefined,
       retry: false,
-      enabled: source !== "api" && source !== "api-prod",
+      enabled: source !== "api",
     })),
   });
 
   const isTokensLoadingData =
-    (isLoadingTokens && (source === "api" || source === "api-prod")) ||
+    (isLoadingTokens && source === "api") ||
     assetQueries.some((query: any) => query.isLoading) ||
     isLoadingTokens ||
     isFetchingTokens ||
     isRefecthingTokens;
 
   const data = useMemo(() => {
-    if (source === "api" || source === "api-prod") {
+    if (source === "api") {
       const result = { ...streamingData };
       tokens.forEach((asset) => {
         if (!result[asset.ticker]) {

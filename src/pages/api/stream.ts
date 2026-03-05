@@ -13,10 +13,8 @@ export default async function handler(
     interval = "1s",
     aggregation = "median",
     historical_prices = "10",
-    env = "dev",
   } = req.query;
 
-  // Handle pairs parameter which could be string, string[] or undefined
   let pairs: string[];
   if (typeof rawPairs === "string") {
     pairs = [rawPairs];
@@ -27,20 +25,14 @@ export default async function handler(
     return;
   }
 
-  // Clean pairs (remove /USD suffix if present)
   const cleanPairs = pairs.map((pair) =>
     typeof pair === "string" ? pair.split("/")[0] : pair
   );
 
-  // Construct URL with multiple pairs
   const pairsQuery = cleanPairs
     .map((pair) => `pairs[]=${encodeURIComponent(pair)}/USD`)
     .join("&");
-  const baseUrl =
-    env === "production"
-      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-      : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
-        process.env.NEXT_PUBLIC_INTERNAL_API;
+  const baseUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
   const apiUrl = `${baseUrl}/node/v1/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
   console.log(`Fetching data from ${apiUrl}`);
 
@@ -77,23 +69,18 @@ export default async function handler(
       return;
     }
 
-    // Set SSE headers
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
-      // Add CORS headers for local development
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET",
       "Access-Control-Allow-Headers": "Content-Type",
     });
-    console.log("Stream headers set");
 
-    // Use res.flush() if available; otherwise, use a no-op
     const flush =
       typeof res.flush === "function" ? res.flush.bind(res) : () => {};
 
-    // Send an initial connection message
     res.write(
       `data: ${JSON.stringify({ connected: true, timestamp: Date.now() })}\n\n`
     );
@@ -101,7 +88,6 @@ export default async function handler(
 
     const reader = apiResponse.body.getReader();
     const decoder = new TextDecoder();
-    console.log("Stream reader and decoder set up");
 
     let buffer = "";
     while (true) {
@@ -114,14 +100,11 @@ export default async function handler(
       const chunk = decoder.decode(value, { stream: true });
       buffer += chunk;
 
-      // Split on double newlines (SSE message boundary)
       const messages = buffer.split("\n\n");
-      buffer = messages.pop() || ""; // Keep the last incomplete message in the buffer
+      buffer = messages.pop() || "";
 
       for (const message of messages) {
         if (!message.trim()) continue;
-
-        // Pass through the SSE message as is
         res.write(message + "\n\n");
         flush();
       }

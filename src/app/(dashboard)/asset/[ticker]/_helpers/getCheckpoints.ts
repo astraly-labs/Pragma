@@ -6,7 +6,7 @@ type GetCheckpoints = {
 };
 
 export const getCheckpoints = async ({ source, ticker }: GetCheckpoints) => {
-  if (source === "api" || source === "api-prod") {
+  if (source === "api") {
     return [];
   }
 

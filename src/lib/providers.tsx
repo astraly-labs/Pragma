@@ -6,10 +6,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { sepolia, Chain } from "@starknet-react/chains";
+import { mainnet, Chain } from "@starknet-react/chains";
 import { jsonRpcProvider, voyager, StarknetConfig } from "@starknet-react/core";
-
-import { usePathname } from "next/navigation";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -34,14 +32,9 @@ function getQueryClient() {
 }
 
 export const Providers = ({ children }: { children: ReactNode }) => {
-  /**
-   * Generates RPC configuration for the specified chain.
-   * @param {Chain} chain - The blockchain chain for which to generate RPC configuration.
-   * @return {object} An object containing RPC configuration for the specified chain.
-   */
   function rpc(chain: Chain) {
     return {
-      nodeUrl: `https://starknet-sepolia.public.blastapi.io/rpc/v0_6`,
+      nodeUrl: `https://starknet-mainnet.public.blastapi.io/rpc/v0_7`,
     };
   }
 
@@ -50,7 +43,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StarknetConfig chains={[sepolia]} provider={provider} explorer={voyager}>
+      <StarknetConfig chains={[mainnet]} provider={provider} explorer={voyager}>
         {children}
       </StarknetConfig>
     </QueryClientProvider>

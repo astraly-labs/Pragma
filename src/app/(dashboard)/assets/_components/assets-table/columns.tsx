@@ -64,8 +64,7 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
     header: ({ column }) => SortableHeader("Price", column),
     cell: ({ row }) => <span>${Number(row.original.price).toFixed(5)}</span>,
   },
-  ...(!currentSource ||
-  (currentSource !== "api" && currentSource !== "api-prod")
+  ...(!currentSource || currentSource !== "api"
     ? [
         {
           accessorKey: "variations.past1h",

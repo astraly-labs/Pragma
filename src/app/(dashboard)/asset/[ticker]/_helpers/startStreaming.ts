@@ -15,11 +15,7 @@ export const startStreaming = async (
   activeStreamController = new AbortController();
   const { signal } = activeStreamController;
 
-  const apiUrl =
-    currentSource === "api-prod"
-      ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-      : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
-        process.env.NEXT_PUBLIC_INTERNAL_API;
+  const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
 
   const url = `${apiUrl}/data/multi/stream?pairs=${encodeURIComponent(
     ticker
@@ -68,8 +64,6 @@ export const startStreaming = async (
             break;
           }
 
-          // value is a raw string like:
-          // 'data: [{...}]\n\n'
           jsonBuffer += value;
 
           const lines = jsonBuffer.split("\n");
@@ -79,7 +73,7 @@ export const startStreaming = async (
             const trimmed = line.trim();
             if (!trimmed.startsWith("data:")) continue;
 
-            const jsonStr = trimmed.slice(5).trim(); // remove "data:"
+            const jsonStr = trimmed.slice(5).trim();
 
             if (!jsonStr) continue;
 

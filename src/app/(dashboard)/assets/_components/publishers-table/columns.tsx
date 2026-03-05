@@ -15,11 +15,11 @@ const SortableHeader = (label: string, column: any) => {
 
   return (
     <div
-      className="flex items-center gap-1 cursor-pointer select-none"
+      className="flex cursor-pointer select-none items-center gap-1.5 transition-colors hover:text-lightGreen"
       onClick={column.getToggleSortingHandler()}
     >
       {label}
-      <SortIcon className="w-3 h-3" />
+      <SortIcon className="h-3 w-3 opacity-50" />
     </div>
   );
 };
@@ -30,23 +30,25 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
     header: ({ column }) => SortableHeader("Identifier", column),
     cell: ({ row }) => {
       const publisher = row.original;
+      const displayName =
+        publisher.name === "SKYNET_TRADING" ? "SKYNET" : publisher.name;
       return (
         <Link
           href={`/provider/${publisher.name}`}
-          className="flex items-center gap-2"
+          className="group/link flex items-center gap-3"
         >
-          <Avatar>
-            <AvatarImage width={30} height={30} src={publisher.image} />
-            <AvatarFallback className="bg-lightBlur">
-              {publisher.name[0]}
+          <Avatar className="h-9 w-9 border border-lightBlur/50 transition-shadow group-hover/link:shadow-[0_0_10px_rgba(21,255,129,0.15)]">
+            <AvatarImage width={36} height={36} src={publisher.image} />
+            <AvatarFallback className="bg-lightBlur text-xs font-medium text-lightGreen">
+              {displayName.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col">
-            <span>
-              {publisher.name === "SKYNET_TRADING" ? "SKYNET" : publisher.name}
+          <div className="flex flex-col gap-0.5">
+            <span className="font-medium text-white transition-colors group-hover/link:text-mint">
+              {displayName}
             </span>
-            <span className="text-xs uppercase text-LightGreenFooter">
-              {publisher.type}
+            <span className="text-[11px] uppercase tracking-wider text-lightGreen/40">
+              {getPublisherType(Number(publisher.type))}
             </span>
           </div>
         </Link>
@@ -56,36 +58,80 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
   {
     accessorKey: "lastUpdated",
     header: ({ column }) => SortableHeader("Last update", column),
-    cell: ({ row }) => (
-      <span>
-        {formatDistanceToNow(
-          new Date(Number(row.original.lastUpdated) * 1000),
-          { addSuffix: true }
-        )}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const raw = row.original.lastUpdated;
+      if (!raw || raw === "null") {
+        return <span className="text-xs italic text-lightGreen/30">n/a</span>;
+      }
+      const ts = Number(raw) * 1000;
+      if (isNaN(ts) || ts <= 0) {
+        return <span className="text-xs italic text-lightGreen/30">n/a</span>;
+      }
+      const distance = formatDistanceToNow(new Date(ts), { addSuffix: true });
+      const isRecent = Date.now() - ts < 600_000;
+      return (
+        <span
+          className={
+            isRecent ? "text-mint/80" : "font-mono text-xs text-lightGreen/60"
+          }
+        >
+          {distance}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => (
-      <span>{getPublisherType(Number(row.original.type))}</span>
-    ),
+    cell: ({ row }) => {
+      const typeStr = getPublisherType(Number(row.original.type));
+      return (
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+            typeStr === "1st party"
+              ? "border border-mint/20 bg-mint/10 text-mint"
+              : "border border-purple/20 bg-purple/10 text-purple"
+          }`}
+        >
+          {typeStr}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "reputationScore",
     header: ({ column }) => SortableHeader("Reputation", column),
+    cell: ({ row }) => (
+      <span className="text-xs text-lightGreen/40 italic">
+        {row.original.reputationScore || "soon"}
+      </span>
+    ),
   },
   {
     accessorKey: "nbFeeds",
-    header: ({ column }) => SortableHeader("Nb feeds", column),
+    header: ({ column }) => SortableHeader("Feeds", column),
+    cell: ({ row }) => (
+      <span className="font-mono font-medium text-white">
+        {row.original.nbFeeds}
+      </span>
+    ),
   },
   {
     accessorKey: "dailyUpdates",
-    header: ({ column }) => SortableHeader("Updates/day", column),
+    header: ({ column }) => SortableHeader("Updates / day", column),
+    cell: ({ row }) => (
+      <span className="font-mono text-lightGreen">
+        {Number(row.original.dailyUpdates).toLocaleString()}
+      </span>
+    ),
   },
   {
     accessorKey: "totalUpdates",
     header: "Total updates",
+    cell: ({ row }) => (
+      <span className="font-mono text-lightGreen/70">
+        {Number(row.original.totalUpdates).toLocaleString()}
+      </span>
+    ),
   },
 ];

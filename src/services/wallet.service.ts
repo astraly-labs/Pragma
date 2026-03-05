@@ -1,14 +1,7 @@
-// TODO: Make this adaptive in the future
 export const networkId = (): Network => "mainnet-alpha";
 
-export const getExplorerBaseUrl = (): string | undefined => {
-  if (networkId() === "mainnet-alpha") {
-    return "https://voyager.online";
-  } else if (networkId() === "goerli-alpha") {
-    return "https://sepolia.voyager.online";
-  } else if (networkId() === "goerli2-alpha") {
-    return "https://goerli-2.voyager.online";
-  }
+export const getExplorerBaseUrl = (): string => {
+  return "https://voyager.online";
 };
 
 export const buildExplorerUrlForAddress = (address: string): string => {
@@ -23,8 +16,4 @@ export const buildExplorerUrlForTransaction = (transaction: string): string => {
   return baseUrl + path;
 };
 
-export type Network =
-  | "mainnet-alpha"
-  | "goerli2-alpha"
-  | "goerli-alpha"
-  | "localhost";
+export type Network = "mainnet-alpha";

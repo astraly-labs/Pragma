@@ -15,12 +15,12 @@ export const getPublisher = async (
   name: string,
   source?: string
 ): Promise<ProcessedPublisher | undefined> => {
-  if (!source || source === "api" || source === "api-prod") {
+  if (!source || source === "api") {
     return undefined;
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=starknet-${source}&data_type=spot_entry`
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=starknet-${source}&data_type=Spot`
   );
 
   if (!response.ok) {

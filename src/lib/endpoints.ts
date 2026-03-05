@@ -1,24 +1,16 @@
 export const dataSources: Record<Sources, string> = {
-  sepolia: "/api/onchain?network=sepolia",
   mainnet: "/api/onchain?network=mainnet",
-  api: "/api/stream",
-  "api-prod": "/api/stream?env=production",
-  tokensApi: "/api/tokens/all",
-  publishersSepolia: "/api/publishers?network=sepolia&dataType=spot_entry",
-  publishersMainnet: "/api/publishers?network=mainnet&dataType=spot_entry",
-  checkpointsSepolia: "/api/checkpoints?network=sepolia",
+  api: "/api/stream?env=production",
+  tokensApi: "/api/tokens/all?env=production",
+  publishersMainnet: "/api/publishers?network=mainnet&data_type=Spot",
   checkpointsMainnet: "/api/checkpoints?network=mainnet",
 };
 
 export type Sources =
-  | "sepolia"
   | "mainnet"
   | "api"
-  | "api-prod"
   | "tokensApi"
-  | "publishersSepolia"
   | "publishersMainnet"
-  | "checkpointsSepolia"
   | "checkpointsMainnet";
 
 export const initialAssets = [

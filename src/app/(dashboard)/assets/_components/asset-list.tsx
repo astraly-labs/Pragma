@@ -15,9 +15,7 @@ import { DataTable } from "./data-table";
 const getDisplayLabel = (option: string): string => {
   switch (option) {
     case "api":
-      return "API (dev)";
-    case "api-prod":
-      return "API (prod)";
+      return "API";
     default:
       return option;
   }

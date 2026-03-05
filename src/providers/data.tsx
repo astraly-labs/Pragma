@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { useQueries, useQuery } from "@tanstack/react-query";
 
-// Default assets to use when initialAssets is not available
 export const initialAssets = [
   { ticker: "BTC/USD", address: "0x0", decimals: 18 },
   { ticker: "ETH/USD", address: "0x1", decimals: 18 },
@@ -61,16 +60,11 @@ type DataContextType = {
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-export const dataSources = {
-  sepolia: "/api/onchain?network=sepolia",
+export const dataSources: Record<string, string> = {
   mainnet: "/api/onchain?network=mainnet",
-  api: "/api/stream",
-  "api-prod": "/api/stream?env=production",
-  tokensApi: "/api/tokens/all",
-  "tokensApi-prod": "/api/tokens/all?env=production",
-  publishersSepolia: "/api/publishers?network=sepolia&dataType=spot_entry",
-  publishersMainnet: "/api/publishers?network=mainnet&dataType=spot_entry",
-  checkpointsSepolia: "/api/checkpoints?network=sepolia",
+  api: "/api/stream?env=production",
+  tokensApi: "/api/tokens/all?env=production",
+  publishersMainnet: "/api/publishers?network=mainnet&data_type=Spot",
   checkpointsMainnet: "/api/checkpoints?network=mainnet",
 };
 
@@ -87,23 +81,15 @@ export const DataProvider = ({
 }) => {
   const [assets, setAssets] = useState<AssetT[]>([]);
   const [source, setSource] = useState("mainnet");
-  const [streamingData, setStreamingData] = useState<{ [ticker: string]: any }>(
-    {}
-  );
+  const [streamingData, setStreamingData] = useState<{
+    [ticker: string]: any;
+  }>({});
 
-  // Fetch available tokens when source changes
   const { data: availableTokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["available-tokens", source],
     queryFn: async () => {
-      if (source === "api" || source === "api-prod") {
-        console.log(
-          `Fetching tokens from ${source === "api-prod" ? "production" : "dev"} API...`
-        );
-        const apiUrl =
-          source === "api-prod"
-            ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-            : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
-              process.env.NEXT_PUBLIC_INTERNAL_API;
+      if (source === "api") {
+        const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
         const response = await fetch(`${apiUrl}/tokens/all`);
 
         if (!response.ok) {
@@ -113,14 +99,8 @@ export const DataProvider = ({
         }
 
         const data = await response.json();
-        console.log(
-          "Tokens fetched successfully:",
-          data.tokens?.length || 0,
-          "tokens"
-        );
         return data.tokens || [];
       }
-      // For non-API sources, return default tokens
       return [
         { ticker: "BTC/USD", address: "0x0", decimals: 8 },
         { ticker: "ETH/USD", address: "0x1", decimals: 8 },
@@ -131,15 +111,8 @@ export const DataProvider = ({
     retryDelay: 1000,
   });
 
-  // Update assets when availableTokens changes
   useEffect(() => {
     if (availableTokens) {
-      console.log("Updating assets with:", availableTokens.length, "tokens");
-      console.log(
-        "Available tokens:",
-        availableTokens.map((t) => t.ticker).join(", ")
-      );
-
       const newAssets = availableTokens.map((token) => {
         const ticker = token.ticker.includes("/USD")
           ? token.ticker
@@ -150,13 +123,10 @@ export const DataProvider = ({
           decimals: token.decimals || 8,
         };
       });
-      console.log("Setting assets:", newAssets.length, "assets");
-      console.log("Asset tickers:", newAssets.map((a) => a.ticker).join(", "));
       setAssets(newAssets);
     }
   }, [availableTokens, source]);
 
-  // Read initial source from localStorage
   useEffect(() => {
     const storedSource = localStorage.getItem("dataSource");
     if (storedSource && dataSources[storedSource]) {
@@ -164,20 +134,13 @@ export const DataProvider = ({
     }
   }, []);
 
-  // Function to start streaming for all assets
   const startStreaming = async (assets: AssetT[]) => {
     const pairs = assets.map((asset) => asset.ticker);
-    const apiUrl =
-      source === "api-prod"
-        ? process.env.NEXT_PUBLIC_INTERNAL_API_PROD
-        : process.env.NEXT_PUBLIC_INTERNAL_API_DEV ||
-          process.env.NEXT_PUBLIC_INTERNAL_API;
+    const apiUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
     const pairsQuery = pairs
       .map((pair) => `pairs=${encodeURIComponent(pair)}`)
       .join("&");
     const url = `${apiUrl}/stream?${pairsQuery}&interval=1s&aggregation=median&historical_prices=10`;
-    console.log(`Starting stream for ${pairs.length} pairs:`, pairs.join(", "));
-    console.log("Stream URL:", url);
 
     try {
       const response = await fetch(url, {
@@ -194,9 +157,6 @@ export const DataProvider = ({
         );
         try {
           const errorData = await response.json();
-          console.error(`Error details:`, errorData);
-
-          // Set error state for all assets
           setStreamingData((prev) => {
             const newState = { ...prev };
             assets.forEach((asset) => {
@@ -212,7 +172,7 @@ export const DataProvider = ({
             });
             return newState;
           });
-        } catch (parseError) {
+        } catch {
           setStreamingData((prev) => {
             const newState = { ...prev };
             assets.forEach((asset) => {
@@ -234,28 +194,24 @@ export const DataProvider = ({
         );
       }
 
-      console.log(`Stream connected successfully`);
-
       const reader = response.body
         .pipeThrough(new TextDecoderStream())
         .getReader();
 
       let initialDataReceived = false;
       let streamPromiseResolve: () => void;
-      let streamPromiseReject: (error: Error) => void;
+      let streamPromiseReject: (error: any) => void;
 
       const streamPromise = new Promise<void>((resolve, reject) => {
         streamPromiseResolve = resolve;
         streamPromiseReject = reject;
       });
 
-      // Set a timeout for initial data
       const timeoutId = setTimeout(() => {
         if (!initialDataReceived) {
           console.warn("⚠️ Timeout: No initial streaming data received.");
-          // streamPromiseReject(new Error("Timeout waiting for initial data"));
         }
-      }, 10000); // 10 second timeout
+      }, 10000);
 
       let buffer = "";
 
@@ -263,14 +219,9 @@ export const DataProvider = ({
         try {
           while (true) {
             const { value, done } = await reader.read();
-            if (done) {
-              console.log(`Stream done`);
-              break;
-            }
+            if (done) break;
 
-            const chunk = value; // ← no decoding needed
-            buffer += chunk;
-
+            buffer += value;
             const lines = buffer.split("\n");
             buffer = lines.pop() || "";
 
@@ -282,8 +233,7 @@ export const DataProvider = ({
               if (!jsonStr) continue;
 
               try {
-                const data = JSON.parse(jsonStr);
-                // ...handle data
+                JSON.parse(jsonStr);
               } catch (e) {
                 console.error("Parse error:", e, jsonStr.slice(0, 200));
                 if (!initialDataReceived) {
@@ -307,13 +257,11 @@ export const DataProvider = ({
         if (!initialDataReceived) {
           streamPromiseReject(error);
         }
-        // Re-throw to trigger stream restart
         throw error;
       });
 
       try {
         await streamPromise;
-        console.log(`Stream initialization complete`);
       } catch (error) {
         console.error(`Stream initialization failed:`, error);
         throw error;
@@ -341,18 +289,15 @@ export const DataProvider = ({
     }
   };
 
-  // Manage streams when source or assets change
   useEffect(() => {
-    if ((source === "api" || source === "api-prod") && assets.length > 0) {
+    if (source === "api" && assets.length > 0) {
       let mounted = true;
       let retryCount = 0;
       const maxRetries = 3;
-      const retryDelay = 5000; // 5 seconds
+      const retryDelay = 5000;
 
-      // Clear existing streams
       setStreamingData({});
 
-      // Initialize loading state for all assets
       setStreamingData((prev) => {
         const newState = { ...prev };
         assets.forEach((asset) => {
@@ -368,18 +313,16 @@ export const DataProvider = ({
         return newState;
       });
 
-      // Function to start stream with retry logic
       const startStreamWithRetry = async () => {
         try {
           await startStreaming(assets);
-        } catch (error) {
+        } catch (error: any) {
           console.error(
             `Stream error (attempt ${retryCount + 1}/${maxRetries}):`,
             error
           );
           if (mounted && retryCount < maxRetries) {
             retryCount++;
-            console.log(`Retrying in ${retryDelay}ms...`);
             await new Promise((resolve) => setTimeout(resolve, retryDelay));
             return startStreamWithRetry();
           } else {
@@ -401,7 +344,6 @@ export const DataProvider = ({
         }
       };
 
-      // Start the stream with retry logic
       startStreamWithRetry().catch((error) => {
         console.error("All retry attempts failed:", error);
       });
@@ -416,14 +358,12 @@ export const DataProvider = ({
   }, [source, assets]);
 
   const fetchAssetData = async (asset: AssetT) => {
-    if (source === "api" || source === "api-prod") {
+    if (source === "api") {
       const streamData = streamingData[asset.ticker];
 
       if (!streamData) {
-        console.log(`No streaming data for ${asset.ticker}, returning default`);
         const isStreamStarted = assets.some((a) => a.ticker === asset.ticker);
         if (isStreamStarted && !streamingData[asset.ticker]) {
-          console.log(`Starting stream for ${asset.ticker} on demand`);
           try {
             startStreaming([asset]).catch((error) => {
               console.error(
@@ -440,11 +380,7 @@ export const DataProvider = ({
           decimals: asset.decimals || 8,
           last_updated_timestamp: Math.floor(Date.now() / 1000),
           nb_sources_aggregated: 1,
-          variations: {
-            "1h": 0,
-            "1d": 0,
-            "1w": 0,
-          },
+          variations: { "1h": 0, "1d": 0, "1w": 0 },
         };
       }
 
@@ -460,7 +396,6 @@ export const DataProvider = ({
       const url = `${dataSources[source]}&pair=${encodeURIComponent(
         asset.ticker
       )}`;
-      console.log(`[${asset.ticker}] Fetching from:`, url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch data for ${asset.ticker}`);
@@ -470,15 +405,11 @@ export const DataProvider = ({
   };
 
   const fetchCheckpoints = async (asset: AssetT) => {
-    if (source === "api" || source === "api-prod") {
+    if (source === "api") {
       return [];
     }
-    const checkpointsUrl =
-      dataSources[
-        "checkpoints" + source.charAt(0).toUpperCase() + source.slice(1)
-      ];
+    const checkpointsUrl = dataSources["checkpointsMainnet"];
     const url = `${checkpointsUrl}&pair=${encodeURIComponent(asset.ticker)}`;
-    console.log(`[${asset.ticker}] Fetching checkpoints from:`, url);
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch checkpoints for ${asset.ticker}`);
@@ -487,14 +418,10 @@ export const DataProvider = ({
   };
 
   const fetchPublishers = async () => {
-    if (source === "api" || source === "api-prod") {
+    if (source === "api") {
       return [];
     }
-    const publisherUrl =
-      dataSources[
-        "publishers" + source.charAt(0).toUpperCase() + source.slice(1)
-      ];
-    console.log("Fetching publishers from:", publisherUrl);
+    const publisherUrl = dataSources["publishersMainnet"];
     const response = await fetch(publisherUrl);
     if (!response.ok) {
       throw new Error("Failed to fetch publishers data");
@@ -504,7 +431,6 @@ export const DataProvider = ({
 
   const switchSource = (newSource: string) => {
     if (dataSources[newSource]) {
-      console.log("Switching source to:", newSource);
       setSource(newSource);
       localStorage.setItem("dataSource", newSource);
     } else {
@@ -512,24 +438,19 @@ export const DataProvider = ({
     }
   };
 
-  useEffect(() => {
-    console.log("Current source:", source);
-  }, [source]);
-
   const assetQueries = useQueries({
     queries: assets.map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => fetchAssetData(asset),
       initialData: initialData?.[asset.ticker],
-      refetchInterval:
-        source === "api" || source === "api-prod" ? 1000 : undefined,
+      refetchInterval: source === "api" ? 1000 : undefined,
       retry: false,
-      enabled: source !== "api" && source !== "api-prod",
+      enabled: source !== "api",
     })),
   });
 
   const data = useMemo(() => {
-    if (source === "api" || source === "api-prod") {
+    if (source === "api") {
       const result: { [ticker: string]: any } = { ...streamingData };
       assets.forEach((asset) => {
         if (!result[asset.ticker]) {
@@ -559,7 +480,7 @@ export const DataProvider = ({
       queryKey: ["checkpoints", asset.ticker, source],
       queryFn: () => fetchCheckpoints(asset),
       initialData: initialCheckpoints?.[asset.ticker],
-      enabled: source !== "api" && source !== "api-prod",
+      enabled: source !== "api",
     })),
   });
 
@@ -567,37 +488,20 @@ export const DataProvider = ({
     queryKey: ["publishers", source],
     queryFn: fetchPublishers,
     initialData: initialPublishers,
-    enabled: source !== "api" && source !== "api-prod",
+    enabled: source !== "api",
   });
 
   const loading =
-    (isLoadingTokens && (source === "api" || source === "api-prod")) ||
+    (isLoadingTokens && source === "api") ||
     assetQueries.some((query) => query.isLoading) ||
     checkpointQueries.some((query) => query.isLoading) ||
     publishersQuery.isLoading;
-
-  useEffect(() => {
-    console.log(
-      "Loading state:",
-      loading,
-      "Assets:",
-      assets.length,
-      "Streaming data:",
-      Object.keys(streamingData).length
-    );
-  }, [loading, assets.length, streamingData]);
 
   const error =
     assetQueries.find((query) => query.error)?.error?.message ||
     checkpointQueries.find((query) => query.error)?.error?.message ||
     publishersQuery.error?.message ||
     null;
-
-  useEffect(() => {
-    if (error) {
-      console.error("Provider error:", error);
-    }
-  }, [error]);
 
   const publishers = useMemo(() => {
     return publishersQuery.data || [];
