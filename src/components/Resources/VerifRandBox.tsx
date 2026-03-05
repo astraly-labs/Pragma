@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { AlertTriangle } from "lucide-react";
 import styles from "./styles.module.scss";
 import { ButtonLink } from "../common/Button";
 import GreenText from "../common/GreenText";
@@ -19,13 +20,14 @@ const VerifRandBox = () => {
       whileHover={cardHover}
     >
       <div className="my-auto w-full items-center lg:w-10/12">
+        <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-yellow-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wider text-yellow-400">
+          <AlertTriangle className="h-3.5 w-3.5" />
+          Deprecated
+        </span>
         <h2 className="mb-4 text-center text-lightGreen lg:text-left">
           Verifiable random function
         </h2>
-        <GreenText
-          isAligned={false}
-          className="mb-10 text-center  lg:text-left"
-        >
+        <GreenText isAligned={false} className="mb-10 text-center lg:text-left">
           Pragma offers a verifiable randomness feed that allows protocols to
           request secure randomness on-chain. The randomness proof is posted as
           calldata, and enables games, betting platforms or any other app to
@@ -38,7 +40,7 @@ const VerifRandBox = () => {
           center={false}
           className="mr-auto ml-auto w-fit lg:ml-0"
         >
-          Integrate VRF
+          View docs
         </ButtonLink>
       </div>
       <Image
