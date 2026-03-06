@@ -45,7 +45,7 @@ export const AssetsTable = ({
   });
 
   useEffect(() => {
-    if (tokens) {
+    if (tokens && tokens.length > 0) {
       const newAssets = tokens.map((token) => {
         const ticker = token.ticker.includes("/USD")
           ? token.ticker
@@ -128,12 +128,12 @@ export const AssetsTable = ({
   }, [source, assets]);
 
   const assetQueries = useQueries({
-    queries: tokens.map((asset) => ({
+    queries: (tokens ?? []).map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () =>
         getAssets({
           asset,
-          assets: tokens,
+          assets: tokens ?? [],
           source,
           startStreaming: () =>
             startStreaming([asset], setStreamingData, source).catch((error) => {
@@ -151,17 +151,23 @@ export const AssetsTable = ({
     })),
   });
 
+  const isStreamLoading =
+    source === "api" &&
+    (isFetchingTokens ||
+      assets.length === 0 ||
+      Object.values(streamingData).every((d: any) => d?.loading));
+
   const isTokensLoadingData =
-    (isLoadingTokens && source === "api") ||
-    assetQueries.some((query: any) => query.isLoading) ||
     isLoadingTokens ||
     isFetchingTokens ||
-    isRefecthingTokens;
+    isRefecthingTokens ||
+    assetQueries.some((query: any) => query.isLoading) ||
+    isStreamLoading;
 
   const data = useMemo(() => {
     if (source === "api") {
       const result = { ...streamingData };
-      tokens.forEach((asset) => {
+      (tokens ?? []).forEach((asset) => {
         if (!result[asset.ticker]) {
           result[asset.ticker] = {
             price: "0x0",
@@ -176,7 +182,7 @@ export const AssetsTable = ({
       return result;
     }
 
-    return tokens.reduce((acc, asset, index) => {
+    return (tokens ?? []).reduce((acc, asset, index) => {
       acc[asset.ticker] = assetQueries[index]?.data ?? {};
       return acc;
     }, {});

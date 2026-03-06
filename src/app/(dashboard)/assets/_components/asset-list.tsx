@@ -145,7 +145,9 @@ const AssetList = ({
           >
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
             <span className="font-mono text-sm text-lightGreen/60">
-              Loading price feeds...
+              {selectedSource === "api"
+                ? "Connecting to API stream..."
+                : "Loading price feeds..."}
             </span>
           </motion.div>
         ) : filteredAssets.length === 0 ? (
