@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { fadeInUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { DoubleText } from "./double-text";

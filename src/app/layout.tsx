@@ -1,9 +1,24 @@
 import { Metadata } from "next";
+import localFont from "next/font/local";
 import "@/styles/index.css";
 import { Providers } from "@/lib/providers";
 import NavHeader from "@/components/Navigation/NavHeader";
 import NavFooter from "@/components/Navigation/NavFooter";
 import { Toaster } from "@/components/ui/sonner";
+
+const ibmPlexSans = localFont({
+  src: "../../public/fonts/IBMPlexSans-Light.ttf",
+  variable: "--font-ibm-plex-sans",
+  display: "swap",
+  preload: true,
+});
+
+const ibmPlexMono = localFont({
+  src: "../../public/fonts/IBMPlexMono-Regular.ttf",
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
+  preload: true,
+});
 
 export const metadata: Metadata = {
   title: {
@@ -55,7 +70,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body
+        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${ibmPlexSans.className}`}
+      >
         <Providers>
           <div className="text-sans flex min-h-screen flex-col items-center justify-start bg-darkGreen">
             <NavHeader />

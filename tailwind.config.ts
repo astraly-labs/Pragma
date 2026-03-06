@@ -8,8 +8,18 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui"],
-        mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular"],
+        sans: [
+          "var(--font-ibm-plex-sans)",
+          "IBM Plex Sans",
+          "ui-sans-serif",
+          "system-ui",
+        ],
+        mono: [
+          "var(--font-ibm-plex-mono)",
+          "IBM Plex Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+        ],
       },
       lineHeight: {
         loose: "3.75rem",

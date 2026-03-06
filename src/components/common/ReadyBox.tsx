@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import styles from "./styles.module.scss";
 import GreenText from "@/components/common/GreenText";
 import { ButtonLink } from "@/components/common/Button";

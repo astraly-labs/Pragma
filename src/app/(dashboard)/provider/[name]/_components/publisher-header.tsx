@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import clsx from "clsx";
 import Image from "next/image";

@@ -1,4 +1,4 @@
-import type { Variants } from "framer-motion";
+import type { Variants } from "motion/react";
 
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
@@ -71,7 +71,7 @@ export const staggerItem: Variants = {
 
 export const cardHover = {
   scale: 1.02,
-  transition: { duration: 0.2, ease: "easeOut" },
+  transition: { duration: 0.2, ease: "easeOut" as const },
 };
 
 export const cardTap = {

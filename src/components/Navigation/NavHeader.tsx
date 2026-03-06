@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Home, Menu, X, ChevronDown, ChevronUp } from "lucide-react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 // import {
 //   buildExplorerUrlForAddress,

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import styles from "./styles.module.scss";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import { staggerContainer, scaleIn } from "@/lib/animations";

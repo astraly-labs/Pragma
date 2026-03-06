@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { staggerContainer, staggerItem, fadeInUp } from "@/lib/animations";
 import styles from "@/components/Assets/styles.module.scss";
 import clsx from "clsx";

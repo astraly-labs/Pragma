@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import { debounce } from "lodash"; // or implement your own debounce function
+import debounce from "lodash/debounce";
 import BlurBox from "@/components/common/BlurBox";
 
 const StartBuilding = () => {

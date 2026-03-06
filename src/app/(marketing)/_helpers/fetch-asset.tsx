@@ -1,6 +1,6 @@
 import { toZonedTime } from "date-fns-tz";
 import { TIME_ZONE } from "@/lib/constants";
-import { UTCTimestamp } from "lightweight-charts";
+type UTCTimestamp = number;
 import { AssetDataPointResponse } from "@/app/(marketing)/_types";
 
 const toTimestamp = (time: string) =>

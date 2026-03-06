@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
 import Marquee from "react-fast-marquee";
