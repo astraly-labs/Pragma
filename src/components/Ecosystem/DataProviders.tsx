@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";

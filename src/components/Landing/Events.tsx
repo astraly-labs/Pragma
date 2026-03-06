@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";
 import EventBox from "@/components/common/EventBox";

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import styles from "../styles.module.scss";

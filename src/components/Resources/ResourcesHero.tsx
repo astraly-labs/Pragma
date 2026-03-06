@@ -2,7 +2,7 @@
 
 import React from "react";
 import clsx from "clsx";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import Image from "next/image";

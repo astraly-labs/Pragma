@@ -1,12 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import CopyButtonComponent from "../common/CopyCode";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import cb from "./cb";
 import { useHasMounted } from "@/lib/has-mounted";
+
+const SyntaxHighlighterWrapper = dynamic(
+  () => import("./SyntaxHighlighterWrapper"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-80 animate-pulse rounded bg-lightBlur/10" />
+    ),
+  }
+);
 
 import priceFeedCode from "./snippets/price_feed.cairo";
 import realizedVolCode from "./snippets/realized_vol.cairo";
@@ -93,25 +102,7 @@ export default function CodeSnippet() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="font-mono text-sm leading-relaxed"
           >
-            <SyntaxHighlighter
-              style={cb}
-              language="rust"
-              showLineNumbers
-              lineNumberStyle={{
-                color: "rgba(181,240,229,0.2)",
-                fontSize: "11px",
-                paddingRight: "16px",
-                minWidth: "2.5em",
-                textAlign: "right",
-              }}
-              customStyle={{
-                background: "transparent",
-                padding: 0,
-                margin: 0,
-              }}
-            >
-              {active.code.trim()}
-            </SyntaxHighlighter>
+            <SyntaxHighlighterWrapper code={active.code.trim()} />
           </motion.div>
         </AnimatePresence>
       </div>

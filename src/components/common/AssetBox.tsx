@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import SearchBar from "../Navigation/SearchBar";
-import { UTCTimestamp } from "lightweight-charts";
+type UTCTimestamp = number;
 
 type PriceDataPoint = { time: UTCTimestamp; value: number };
 
@@ -74,7 +74,7 @@ const AssetBox = ({ assets, onAssetSelect, data }: AssetBoxProps) => {
               </div>
               <div className="text-left">
                 {data && data[index]?.relativeVariation24h
-                  ? data[index]?.relativeVariation24h.toFixed(3)
+                  ? (data[index]?.relativeVariation24h ?? 0).toFixed(3)
                   : 0}
                 %
               </div>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { ChevronRight, Activity } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView } from "motion/react";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import {
   StyledExternalLink,

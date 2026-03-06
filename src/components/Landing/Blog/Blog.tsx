@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ButtonLink } from "@/components/common/Button";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import BlogCarousel from "./BlogCarousel";
