@@ -18,15 +18,6 @@
 Welcome to **Pragma**, a modular provable oracle 🧩 leveraging [Starknet](https://www.starknet.io/)
 to enable computational data feeds at scale!
 
-## 📣 Peripheral repositories
-
-- [Pragma X](https://github.com/Astraly-Labs/pragma-x): Pragma X chain configuration, built on top of [Madara](https://github.com/keep-starknet-strange/madara).
-- [Pragma SDK](https://github.com/Astraly-Labs/pragma-sdk): SDK to interact with Pragma on Starknet or Pragma X. Written in Python.
-- [Pragma Contracts](https://github.com/Astraly-Labs/pragma-oracle): Source code of the Pragma contracts, written in Cairo.
-- [Pragma Hack](https://github.com/Astraly-Labs/pragma-hack): Template to kickstart your new DeFi protocol using Pragma.
-- [Pragma Docs](https://github.com/Astraly-Labs/pragma-docs): Source code of the documentation deployed on `docs.pragma.build`.
-- [Pragma Indexer](https://github.com/Astraly-Labs/indexer-service): Indexer service written in rust to start/stop/manage indexers.
-
 ## 🌟 Features
 
 - Built on Starknet 🐺
@@ -37,9 +28,7 @@ to enable computational data feeds at scale!
 
 ## 🤝 Contribute
 
-We're always looking for passionate developers to join our community and
-contribute to Madara. Check out our [contributing guide](./docs/CONTRIBUTING.md)
-for more information on how to get started.
+We're always looking for passionate developers to join our community.
 
 ## 📖 License
 
