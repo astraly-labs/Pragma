@@ -9,7 +9,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export function DataTable<TData, TValue>({
   columns,

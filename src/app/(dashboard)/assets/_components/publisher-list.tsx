@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { staggerContainer, staggerItem, fadeInUp } from "@/lib/animations";
 import clsx from "clsx";
 import Image from "next/image";

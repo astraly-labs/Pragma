@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import clsx from "clsx";
 import { Search } from "lucide-react";
 

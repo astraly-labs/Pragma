@@ -4,7 +4,7 @@ import Image from "next/image";
 import tourist from "@/../public/assets/tourist.webp";
 import { ButtonLink } from "@/components/common/Button";
 import GreenText from "@/components/common/GreenText";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { staggerContainer, fadeInUp, scaleIn } from "@/lib/animations";
 
 const Custom404Page = () => (
