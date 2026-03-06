@@ -1,0 +1,152 @@
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-display: swap;
+  src: url(/fonts/IBMPlexSans-Light.ttf) format("woff2");
+  line-height: 16px;
+  /* 100% */
+  letter-spacing: 0.32px;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-display: swap;
+  src: url(/fonts/IBMPlexMono-Regular.ttf) format("woff2");
+  line-height: 20px;
+  /* 142.857% */
+  letter-spacing: 0.7px;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+.carousel__slide-focus-ring {
+  display: none !important;
+  outline-width: 0 !important;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.green-box {
+  display: flex;
+  padding: 36px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 20px;
+  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+  background: var(--green-12, rgba(27, 99, 82, 0.12));
+}
+
+@layer base {
+  :root {
+    --dark-green: 165 75% 7%; /* #042420 */
+    --green: 165 100% 14% / 50%; /* #00473880 */
+    --light-green: 163 67% 82%; /* #B5F0E5 */
+    --mint: 146 100% 55%; /* #15FF81 */
+    --light-blur: 163 67% 82% / 12%; /* #B5F0E51F */
+    --xlight-blur: 0 0% 100% / 5%; /* #FFFFFF0D */
+    --code-color: 216 14% 67%; /* #98A2B3 */
+    --green-footer: 160 56% 24% / 12%; /* #1B63521F */
+    --light-green-footer: 163 67% 82% / 50%; /* #B5F0E580 */
+    --white-trans: 0 0% 100% / 15%; /* #FFFFFF26 */
+    --red-down: 339 80% 52%; /* #E52258 */
+    --light-background: 0 0% 0% / 12%; /* #0000001F */
+    --purple: 262 100% 75%; /* rgba(162, 129, 255, 1) */
+
+    --background: 0 0% 100%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 146 100% 55%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 165 75% 7%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 146 100% 55%;
+    --sidebar-primary-foreground: 165 75% 7%;
+    --sidebar-accent: 146 100% 55%;
+    --sidebar-accent-foreground: 0 0% 3.9%;
+    --sidebar-border: 146 100% 55%;
+    --sidebar-ring: 146 100% 55%;
+  }
+  .dark {
+    --dark-green: 165 75% 7%; /* #042420 */
+    --green: 165 100% 14% / 50%; /* #00473880 */
+    --light-green: 163 67% 82%; /* #B5F0E5 */
+    --mint: 146 100% 55%; /* #15FF81 */
+    --light-blur: 163 67% 82% / 12%; /* #B5F0E51F */
+    --xlight-blur: 0 0% 100% / 5%; /* #FFFFFF0D */
+    --code-color: 216 14% 67%; /* #98A2B3 */
+    --green-footer: 160 56% 24% / 12%; /* #1B63521F */
+    --light-green-footer: 163 67% 82% / 50%; /* #B5F0E580 */
+    --white-trans: 0 0% 100% / 15%; /* #FFFFFF26 */
+    --red-down: 339 80% 52%; /* #E52258 */
+    --light-background: 0 0% 0% / 12%; /* #0000001F */
+    --purple: 262 100% 75%; /* rgba(162, 129, 255, 1) */
+
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 146 100% 55%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 165 75% 7%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 146 100% 55%;
+    --sidebar-primary-foreground: 165 75% 7%;
+    --sidebar-accent: 146 100% 55%;
+    --sidebar-accent-foreground: 0 0% 3.9%;
+    --sidebar-border: 146 100% 55%;
+    --sidebar-ring: 146 100% 55%;
+  }
+}
+
+body {
+  color: #fff;
+}

@@ -1,0 +1,65 @@
+.darkGreenBox {
+  display: flex;
+  gap: 30px;
+  overflow: hidden;
+  position: relative;
+  padding: 80px 60px;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #02201e;
+  backdrop-filter: blur(12.5px);
+  width: 100%;
+}
+
+.darkGreenBoxBis {
+  display: flex;
+  gap: 30px;
+  overflow: hidden;
+  position: relative;
+  padding: 80px 60px;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid rgba(181, 240, 229, 0.08);
+  background: #02201e;
+  backdrop-filter: blur(12.5px);
+  width: 100%;
+}
+
+.front {
+  z-index: 2;
+  transform: scale(1.1);
+}
+
+.back {
+  z-index: 1;
+  transform: scale(1);
+}
+
+.transi {
+  transition:
+    z-index 0.5s,
+    transform 0.5s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+  .darkGreenBox {
+    padding: 50px 40px;
+    flex-direction: column;
+  }
+  .darkGreenBoxBis {
+    padding: 50px 40px;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .darkGreenBox {
+    padding: 32px 24px;
+  }
+  .darkGreenBoxBis {
+    padding: 32px 24px;
+  }
+}
