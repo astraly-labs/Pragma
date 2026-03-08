@@ -121,7 +121,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
         <div ref={dropdownRef} className="relative md:w-auto">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none sm:w-fit"
+            className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-hidden sm:w-fit"
           >
             <span className="block truncate">{currentSource}</span>
             <Image
@@ -133,7 +133,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
             />
           </button>
           {isOpen && (
-            <div className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+            <div className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur-sm focus:outline-hidden">
               {SUPPORTED_SOURCES.map((option, idx) => (
                 <button
                   key={idx}

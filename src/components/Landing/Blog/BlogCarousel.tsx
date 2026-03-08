@@ -141,7 +141,7 @@ const BlogCarousel: React.FC = () => {
             {BlogPosts.map((post, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 px-2"
+                className="shrink-0 px-2"
                 style={{ width: `${100 / slidesToShow}%` }}
               >
                 <BlogPostBox {...post} />

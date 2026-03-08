@@ -28,7 +28,7 @@ const NetworkSelection = ({ setNetwork }) => {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-none"
+        className="relative flex cursor-pointer flex-row justify-center rounded-full border border-lightBlur py-3 px-6 text-center text-sm text-lightGreen focus:outline-hidden"
       >
         <span className="block truncate">{definedNetwork}</span>
         <Image
@@ -40,7 +40,7 @@ const NetworkSelection = ({ setNetwork }) => {
         />
       </button>
       {isOpen && (
-        <div className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+        <div className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur-sm focus:outline-hidden">
           {NETWORKS.map((currentNetwork, networkIdx) => (
             <button
               key={networkIdx}

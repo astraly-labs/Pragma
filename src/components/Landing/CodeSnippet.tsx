@@ -72,7 +72,7 @@ export default function CodeSnippet() {
               onClick={() => setActiveTab(index)}
               className={clsx(
                 "relative z-10 w-full rounded-full py-2.5 text-sm font-medium tracking-wider transition-colors duration-200",
-                "focus:outline-none",
+                "focus:outline-hidden",
                 activeTab === index
                   ? "text-darkGreen"
                   : "text-lightGreen/70 hover:text-white"
@@ -100,9 +100,19 @@ export default function CodeSnippet() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="font-mono text-sm leading-relaxed"
+            className="relative font-mono text-sm leading-relaxed"
           >
             <SyntaxHighlighterWrapper code={active.code.trim()} />
+            <motion.span
+              className="absolute bottom-6 right-6 inline-block h-4 w-[2px] bg-mint"
+              animate={{ opacity: [1, 1, 0, 0, 1] }}
+              transition={{
+                duration: 1.2,
+                repeat: Infinity,
+                times: [0, 0.45, 0.5, 0.95, 1],
+                ease: "linear" as const,
+              }}
+            />
           </motion.div>
         </AnimatePresence>
       </div>

@@ -32,7 +32,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="-mx-3 overflow-x-auto px-3 sm:-mx-0 sm:px-0">
+    <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
       <table className="w-full min-w-[540px]">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -1,30 +1,207 @@
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    var(--font-ibm-plex-sans), IBM Plex Sans, ui-sans-serif, system-ui;
+  --font-mono:
+    var(--font-ibm-plex-mono), IBM Plex Mono, ui-monospace, SFMono-Regular;
+
+  --leading-loose: 3.75rem;
+
+  --invert-25: 0.25;
+  --invert-60: 0.6;
+  --invert-75: 0.75;
+
+  --animate-blob: blob 9s infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+  --animate-drift-slow: drift-slow 20s ease-in-out infinite;
+  --animate-drift-slower: drift-slow 30s ease-in-out infinite reverse;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-marquee2: marquee2 30s linear infinite;
+
+  --width-xlarge: 450px;
+
+  --breakpoint-smolScreen: 380px;
+
+  --color-darkGreen: hsl(var(--dark-green));
+  --color-green: hsl(var(--green));
+  --color-lightGreen: hsl(var(--light-green));
+  --color-mint: hsl(var(--mint));
+  --color-lightBlur: hsl(var(--light-blur));
+  --color-xlightBlur: hsl(var(--xlight-blur));
+  --color-codeColor: hsl(var(--code-color));
+  --color-greenFooter: hsl(var(--green-footer));
+  --color-lightGreenFooter: hsl(var(--light-green-footer));
+  --color-whiteTrans: hsl(var(--white-trans));
+  --color-redDown: hsl(var(--red-down));
+  --color-lightBackground: hsl(var(--light-background));
+  --color-purple: hsl(var(--purple));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes marquee2 {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(24px, -40px) scale(1.1);
+    }
+    66% {
+      transform: translate(-16px, 16px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
+  @keyframes drift-slow {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate(30px, -20px) rotate(2deg);
+    }
+    50% {
+      transform: translate(-20px, 15px) rotate(-1deg);
+    }
+    75% {
+      transform: translate(15px, 25px) rotate(1deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
 }
 
-html {
-  scrollbar-width: none;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-.carousel__slide-focus-ring {
-  display: none !important;
-  outline-width: 0 !important;
+@layer base {
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+
+  html {
+    scrollbar-width: none;
+  }
+
+  .carousel__slide-focus-ring {
+    display: none !important;
+    outline-width: 0 !important;
+  }
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.green-box {
-  display: flex;
-  padding: 36px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 20px;
-  border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
-  background: var(--green-12, rgba(27, 99, 82, 0.12));
+@layer utilities {
+  .green-box {
+    display: flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 20px;
+    border: 1px solid var(--light-green-12, rgba(181, 240, 229, 0.12));
+    background: var(--green-12, rgba(27, 99, 82, 0.12));
+  }
 }
 
 @layer base {
@@ -124,6 +301,54 @@ html {
     --sidebar-accent-foreground: 0 0% 3.9%;
     --sidebar-border: 146 100% 55%;
     --sidebar-ring: 146 100% 55%;
+  }
+}
+
+@layer base {
+  h1 {
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 70px;
+    letter-spacing: -1.2px;
+  }
+  h2 {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 60px;
+    letter-spacing: -0.96px;
+  }
+  h3 {
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 46px;
+  }
+  h4 {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 38px;
+  }
+  h5 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+  }
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 36px;
+      line-height: 46px;
+    }
+    h2 {
+      font-size: 30px;
+      line-height: 38px;
+    }
+    h4 {
+      font-size: 24px;
+      line-height: 32px;
+    }
+    h5 {
+      font-size: 20px;
+      line-height: 25px;
+    }
   }
 }
 

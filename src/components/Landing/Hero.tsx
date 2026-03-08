@@ -4,6 +4,7 @@ import React from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "../common/Button";
+import { MagneticWrap } from "../common/MagneticWrap";
 import { HeroBackground } from "./HeroBackground";
 import { useRef } from "react";
 
@@ -20,10 +21,10 @@ const Hero = () => {
   const textOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
   return (
-    <div ref={containerRef} className="relative min-h-[100vh] w-full">
+    <div ref={containerRef} className="relative min-h-screen w-full">
       <HeroBackground />
 
-      <div className="relative z-10 flex min-h-[100vh] w-full items-center justify-center px-5">
+      <div className="relative z-10 flex min-h-screen w-full items-center justify-center px-5">
         <motion.header
           className="flex max-w-4xl flex-col items-center space-y-8 text-center"
           style={{ y: textY, opacity: textOpacity }}
@@ -80,23 +81,27 @@ const Hero = () => {
             transition={{ duration: 0.5, delay: 1.0 }}
             className="flex flex-col items-center gap-4 sm:flex-row"
           >
-            <ButtonLink
-              center={false}
-              color="mint"
-              variant="solid"
-              href="https://docs.pragma.build/starknet"
-              className="shadow-[0_0_30px_rgba(21,255,129,0.2)] transition-shadow hover:shadow-[0_0_50px_rgba(21,255,129,0.35)]"
-            >
-              Start Building
-            </ButtonLink>
-            <ButtonLink
-              center={false}
-              color="mint"
-              variant="outline"
-              href="/assets"
-            >
-              Explore Assets
-            </ButtonLink>
+            <MagneticWrap strength={0.12}>
+              <ButtonLink
+                center={false}
+                color="mint"
+                variant="solid"
+                href="https://docs.pragma.build/starknet"
+                className="shadow-[0_0_30px_rgba(21,255,129,0.2)] transition-shadow hover:shadow-[0_0_50px_rgba(21,255,129,0.35)]"
+              >
+                Start Building
+              </ButtonLink>
+            </MagneticWrap>
+            <MagneticWrap strength={0.12}>
+              <ButtonLink
+                center={false}
+                color="mint"
+                variant="outline"
+                href="/assets"
+              >
+                Explore Assets
+              </ButtonLink>
+            </MagneticWrap>
           </motion.div>
         </motion.header>
       </div>

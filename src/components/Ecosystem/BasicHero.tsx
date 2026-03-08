@@ -3,9 +3,16 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import GreenText from "@/components/common/GreenText";
 import { ButtonLink } from "@/components/common/Button";
+import { SceneLoader } from "@/components/3d/SceneLoader";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
+
+const MorphingGeometryBg = dynamic(
+  () => import("@/components/3d/MorphingGeometryBg"),
+  { ssr: false }
+);
 
 type BasicHeroProps = {
   title: string;
@@ -44,6 +51,11 @@ const BasicHero = ({
       ref={containerRef}
       className="relative min-h-[85vh] w-full overflow-hidden"
     >
+      {/* Three.js morphing geometry background */}
+      <SceneLoader>
+        <MorphingGeometryBg scrollProgress={0} opacity={0.6} />
+      </SceneLoader>
+
       {/* Full-bleed illustration background */}
       <motion.div
         className="absolute inset-0"
@@ -68,8 +80,8 @@ const BasicHero = ({
       </motion.div>
 
       {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-darkGreen via-darkGreen/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-darkGreen to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-darkGreen via-darkGreen/80 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-darkGreen to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 flex min-h-[85vh] w-full items-center">

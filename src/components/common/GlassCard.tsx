@@ -18,7 +18,7 @@ const variantStyles = {
   dark: "bg-[#02201ee6] border border-[rgba(181,240,229,0.08)] backdrop-blur-[12.5px]",
   light:
     "bg-[#082f28cc] border border-[rgba(181,240,229,0.1)] backdrop-blur-[12.5px]",
-  subtle: "border border-lightGreen/10 bg-darkGreen/40 backdrop-blur-sm",
+  subtle: "border border-lightGreen/10 bg-darkGreen/40 backdrop-blur-xs",
 };
 
 const paddingStyles = {

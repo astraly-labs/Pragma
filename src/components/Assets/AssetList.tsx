@@ -101,7 +101,7 @@ const AssetList = ({
           <div ref={dropdownRef} className="relative w-full md:w-auto">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-none"
+              className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-3 text-center text-sm text-lightGreen focus:outline-hidden"
             >
               <span className="block truncate">{selectedSource}</span>
               <Image
@@ -113,7 +113,7 @@ const AssetList = ({
               />
             </button>
             {isOpen && (
-              <div className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur focus:outline-none">
+              <div className="absolute mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-md bg-green py-1 text-sm text-lightGreen ring-1 backdrop-blur-sm focus:outline-hidden">
                 {options.map((option: any, optionIdx: number) => (
                   <button
                     key={optionIdx}

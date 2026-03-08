@@ -78,7 +78,7 @@ bun run type-check   # Run TypeScript type checking
 - **SCSS Modules** for component-specific styles (Navigation, Assets, Landing, Ecosystem, Resources, common, v2)
 - **shadcn/ui** configured via `components.json` (New York style)
 - **Custom fonts**: IBM Plex Sans (sans), IBM Plex Mono (mono) — loaded from `public/fonts/`
-- **Color scheme**: darkGreen primary, green/lightGreen/mint accents, glassmorphism with backdrop-blur
+- **Color scheme**: darkGreen primary, green/lightGreen/mint accents, glassmorphism with backdrop-blur-sm
 - **Animations**: Framer Motion with shared presets (`src/lib/animations.ts`), Lottie for hero, custom CSS keyframes (blob, float, pulse-glow, drift, marquee)
 - **Path alias**: `@/*` maps to `./src/*`
 
