@@ -2,20 +2,13 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
+import { SceneLoader } from "@/components/3d/SceneLoader";
 
-const nodes = Array.from({ length: 24 }, (_, i) => ({
-  id: i,
-  x: Math.random() * 100,
-  y: Math.random() * 100,
-  size: 2 + Math.random() * 3,
-  delay: Math.random() * 5,
-  duration: 15 + Math.random() * 20,
-}));
-
-const connections = nodes.slice(0, 16).map((node, i) => {
-  const target = nodes[(i + 3 + Math.floor(Math.random() * 5)) % nodes.length];
-  return { from: node, to: target, id: `conn-${i}` };
-});
+const OracleNetworkScene = dynamic(
+  () => import("@/components/3d/OracleNetworkScene"),
+  { ssr: false }
+);
 
 export const HeroBackground = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,13 +18,12 @@ export const HeroBackground = () => {
   });
 
   const meshY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const nodesY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const orbScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.3]);
   const orbOpacity = useTransform(scrollYProgress, [0, 0.6], [0.5, 0]);
 
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden">
-      {/* Gradient mesh blobs */}
+      {/* CSS gradient mesh -- renders instantly as base layer */}
       <motion.div className="absolute inset-0" style={{ y: meshY }}>
         <div className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] animate-drift-slow rounded-full bg-[radial-gradient(circle,rgba(21,255,129,0.08)_0%,transparent_70%)]" />
         <div className="absolute -right-1/4 top-1/3 h-[500px] w-[500px] animate-drift-slower rounded-full bg-[radial-gradient(circle,rgba(0,71,56,0.3)_0%,transparent_70%)]" />
@@ -46,52 +38,10 @@ export const HeroBackground = () => {
         <div className="h-[350px] w-[350px] animate-pulse-glow rounded-full bg-[radial-gradient(circle,rgba(21,255,129,0.15)_0%,rgba(21,255,129,0.03)_40%,transparent_70%)] blur-2xl md:h-[500px] md:w-[500px]" />
       </motion.div>
 
-      {/* Floating node network */}
-      <motion.div className="absolute inset-0" style={{ y: nodesY }}>
-        <svg
-          className="h-full w-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          {connections.map((conn) => (
-            <motion.line
-              key={conn.id}
-              x1={`${conn.from.x}`}
-              y1={`${conn.from.y}`}
-              x2={`${conn.to.x}`}
-              y2={`${conn.to.y}`}
-              stroke="rgba(21,255,129,0.06)"
-              strokeWidth="0.08"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2, delay: Math.random() * 2 }}
-            />
-          ))}
-        </svg>
-        {nodes.map((node) => (
-          <motion.div
-            key={node.id}
-            className="absolute rounded-full bg-mint/20"
-            style={{
-              left: `${node.x}%`,
-              top: `${node.y}%`,
-              width: node.size,
-              height: node.size,
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0.2, 0.6, 0.2],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: node.duration,
-              delay: node.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </motion.div>
+      {/* Three.js particle network -- loads async, layered above CSS gradients */}
+      <SceneLoader>
+        <OracleNetworkScene scrollProgress={0} />
+      </SceneLoader>
 
       {/* Noise texture overlay */}
       <div
