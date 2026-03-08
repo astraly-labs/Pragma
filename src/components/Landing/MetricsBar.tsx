@@ -71,18 +71,36 @@ const AnimatedCounter = ({
   );
 };
 
-export const MetricsBar = () => (
-  <div className="mx-auto w-full max-w-4xl px-4">
-    <div className="grid grid-cols-2 gap-4 rounded-2xl bg-darkGreen/60 px-4 py-4 backdrop-blur-md md:grid-cols-4 md:gap-0 md:px-0 md:py-2">
-      {metrics.map((metric, i) => (
-        <AnimatedCounter
-          key={metric.label}
-          target={metric.value}
-          suffix={metric.suffix}
-          label={metric.label}
-          delay={i * 150}
+export const MetricsBar = () => {
+  const barRef = useRef<HTMLDivElement>(null);
+  const barInView = useInView(barRef, { once: true, amount: 0.5 });
+
+  return (
+    <div className="mx-auto w-full max-w-4xl px-4">
+      <div
+        ref={barRef}
+        className="relative grid grid-cols-2 gap-4 overflow-hidden rounded-2xl bg-darkGreen/60 px-4 py-4 backdrop-blur-md md:grid-cols-4 md:gap-0 md:px-0 md:py-2"
+      >
+        <motion.div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(21,255,129,0.5) 50%, transparent 100%)",
+          }}
+          initial={{ x: "-100%" }}
+          animate={barInView ? { x: "100%" } : {}}
+          transition={{ duration: 1.2, delay: 0.3, ease: "easeInOut" }}
         />
-      ))}
+        {metrics.map((metric, i) => (
+          <AnimatedCounter
+            key={metric.label}
+            target={metric.value}
+            suffix={metric.suffix}
+            label={metric.label}
+            delay={i * 150}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};

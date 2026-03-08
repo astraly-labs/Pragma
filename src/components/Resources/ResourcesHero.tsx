@@ -3,10 +3,17 @@
 import React from "react";
 import clsx from "clsx";
 import { motion } from "motion/react";
+import dynamic from "next/dynamic";
 import GreenText from "../common/GreenText";
 import { ButtonLink } from "../common/Button";
 import Image from "next/image";
+import { SceneLoader } from "@/components/3d/SceneLoader";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
+
+const MorphingGeometryBg = dynamic(
+  () => import("@/components/3d/MorphingGeometryBg"),
+  { ssr: false }
+);
 
 const ResourcesHero = ({
   title,
@@ -18,6 +25,9 @@ const ResourcesHero = ({
 }) => {
   return (
     <div className="relative h-full w-full overflow-hidden py-10">
+      <SceneLoader>
+        <MorphingGeometryBg scrollProgress={0} opacity={0.4} />
+      </SceneLoader>
       <Image
         height={700}
         width={800}
