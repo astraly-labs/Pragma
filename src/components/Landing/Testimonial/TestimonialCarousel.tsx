@@ -62,7 +62,7 @@ const TestimonialCarousel = () => {
           {categories.map((category, index) => (
             <div
               key={index}
-              className={`flex-shrink-0 w-full md:w-[648px] px-4 pt-2`}
+              className={`shrink-0 w-full md:w-[648px] px-4 pt-2`}
             >
               <div
                 className={clsx(styles.testimonyBox, "relative h-4/5")}

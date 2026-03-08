@@ -68,8 +68,8 @@ const BasicHero = ({
       </motion.div>
 
       {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-darkGreen via-darkGreen/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-darkGreen to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-darkGreen via-darkGreen/80 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-darkGreen to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 flex min-h-[85vh] w-full items-center">

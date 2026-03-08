@@ -72,7 +72,7 @@ export const PublisherList = ({
             <div ref={dropdownRef} className="relative w-full md:w-auto">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-2.5 text-center text-sm text-lightGreen transition-colors hover:border-lightGreen/40 focus:outline-none"
+                className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-2.5 text-center text-sm text-lightGreen transition-colors hover:border-lightGreen/40 focus:outline-hidden"
               >
                 <span className="block truncate">
                   {getDisplayLabel(selectedSource || "")}

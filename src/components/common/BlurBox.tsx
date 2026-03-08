@@ -48,7 +48,7 @@ const BlurBox = ({
       src={urlSvg}
       alt="Illustration SVG"
     />
-    <div className="z-10 [&_div]:transition-shadow [&_div]:hover:shadow-[0_0_30px_rgba(21,255,129,0.3)]">
+    <div className="z-10 [&_div]:transition-shadow hover:[&_div]:shadow-[0_0_30px_rgba(21,255,129,0.3)]">
       <ButtonLink
         variant="outline"
         color="mint"

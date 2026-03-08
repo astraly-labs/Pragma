@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 const baseStyles = {
   solid:
-    "flex text-center transition-colors	duration-300  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-widest hover:bg-transparent focus:outline-none",
+    "flex text-center transition-colors	duration-300  cursor-pointer items-center justify-center  uppercase border text-sm lg:tracking-widest hover:bg-transparent focus:outline-hidden",
   outline:
-    "flex text-center  cursor-pointer transition-colors	duration-300 items-center justify-center rounded-full border uppercase text-sm lg:tracking-widest focus:outline-none",
+    "flex text-center  cursor-pointer transition-colors	duration-300 items-center justify-center rounded-full border uppercase text-sm lg:tracking-widest focus:outline-hidden",
 } as const;
 const variantStyles = {
   solid: {

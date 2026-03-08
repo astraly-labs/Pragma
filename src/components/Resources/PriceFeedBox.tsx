@@ -82,7 +82,7 @@ const PriceFeedBox = () => {
                 }}
                 className={clsx(
                   "relative rounded-full px-3 py-1.5 font-mono text-[11px] tracking-wide transition-all duration-200",
-                  "focus:outline-none",
+                  "focus:outline-hidden",
                   selectedIndex === i
                     ? "text-mint"
                     : "text-lightGreen/30 hover:text-lightGreen/60"

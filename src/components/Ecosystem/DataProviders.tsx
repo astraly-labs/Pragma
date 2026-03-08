@@ -33,9 +33,9 @@ const DataProviders = () => {
       </motion.div>
 
       {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-darkGreen via-darkGreen/70 to-transparent" />
-      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-darkGreen to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-darkGreen to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-darkGreen via-darkGreen/70 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-20 bg-linear-to-b from-darkGreen to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-darkGreen to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 flex w-full flex-col gap-14 lg:flex-row lg:px-10 xl:gap-28">

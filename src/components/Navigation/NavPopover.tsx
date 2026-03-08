@@ -62,7 +62,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
       <span
         className={clsx(
           isOpen ? "text-lightGreen hover:text-white" : "text-grey",
-          "group inline-flex items-center rounded-md text-base font-medium hover:text-white focus:outline-none"
+          "group inline-flex items-center rounded-md text-base font-medium hover:text-white focus:outline-hidden"
         )}
       >
         <span>{buttonName}</span>

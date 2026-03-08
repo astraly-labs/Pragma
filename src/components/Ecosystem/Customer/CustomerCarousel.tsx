@@ -78,7 +78,7 @@ const CustomerCarousel = () => {
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex">
           {categories.map((category, index) => (
-            <div key={index} className="flex-shrink-0 w-full px-4">
+            <div key={index} className="shrink-0 w-full px-4">
               <div className={clsx(styles.customerBox, "relative")}>
                 {/* Navigation Buttons */}
                 <button

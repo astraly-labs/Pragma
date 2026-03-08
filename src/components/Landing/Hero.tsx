@@ -20,10 +20,10 @@ const Hero = () => {
   const textOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
   return (
-    <div ref={containerRef} className="relative min-h-[100vh] w-full">
+    <div ref={containerRef} className="relative min-h-screen w-full">
       <HeroBackground />
 
-      <div className="relative z-10 flex min-h-[100vh] w-full items-center justify-center px-5">
+      <div className="relative z-10 flex min-h-screen w-full items-center justify-center px-5">
         <motion.header
           className="flex max-w-4xl flex-col items-center space-y-8 text-center"
           style={{ y: textY, opacity: textOpacity }}

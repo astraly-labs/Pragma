@@ -72,7 +72,7 @@ export default function CodeSnippet() {
               onClick={() => setActiveTab(index)}
               className={clsx(
                 "relative z-10 w-full rounded-full py-2.5 text-sm font-medium tracking-wider transition-colors duration-200",
-                "focus:outline-none",
+                "focus:outline-hidden",
                 activeTab === index
                   ? "text-darkGreen"
                   : "text-lightGreen/70 hover:text-white"

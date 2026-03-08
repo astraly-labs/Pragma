@@ -43,7 +43,7 @@ const Events = () => (
       </GreenText>
     </motion.div>
     <div className="relative flex w-full flex-col justify-start md:w-6/12">
-      <div className="absolute left-0 top-0 bottom-0 hidden w-px bg-gradient-to-b from-transparent via-mint/20 to-transparent md:block" />
+      <div className="absolute left-0 top-0 bottom-0 hidden w-px bg-linear-to-b from-transparent via-mint/20 to-transparent md:block" />
       {events.map((event, index: number) => (
         <motion.div
           key={index}

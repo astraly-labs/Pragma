@@ -77,7 +77,7 @@ const ReadyBox = ({ version }: { version: boolean }) => {
         className="absolute bottom-0 right-0 -z-10 mx-auto w-full lg:w-10/12 2xl:w-auto"
         style={{ y: imageY }}
       >
-        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-darkGreen/80" />
+        <div className="absolute inset-0 bg-linear-to-l from-transparent via-transparent to-darkGreen/80" />
         <Image
           width={900}
           height={400}
