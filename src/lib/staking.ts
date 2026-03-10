@@ -4,14 +4,16 @@ export const STAKING_CONTRACT_ADDRESS =
 export const PRAGMA_VALIDATOR_ADDRESS =
   "0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65";
 
-export const PRAGMA_RPC_URL = process.env.PRAGMA_RPC_URL;
+export const PRAGMA_RPC_URL =
+  process.env.NEXT_PUBLIC_PRAGMA_RPC_URL ||
+  "https://starknet-mainnet.g.alchemy.com/starknet/version/rpc/v0_9/demo";
 
 export const VOYAGER_DELEGATE_URL =
   "https://voyager.online/staking?validator=0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65&view=delegator";
 
 export const STRK_DECIMALS = 18;
 
-export const ALCHEMY_RPC_URL = process.env.PRAGMA_RPC_URL;
+export const ALCHEMY_RPC_URL = PRAGMA_RPC_URL;
 
 export const PRAGMA_FELT =
   "0x77d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65";
