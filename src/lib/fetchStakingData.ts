@@ -4,6 +4,7 @@ import {
   STAKING_CONTRACT_ADDRESS,
   PRAGMA_VALIDATOR_ADDRESS,
   PRAGMA_RPC_URL,
+  ENDUR_API_URL,
 } from "@/lib/staking";
 import type { StakingDataSerialized } from "@/lib/staking";
 
@@ -73,6 +74,46 @@ function parseEpochInfo(result: string[]) {
   };
 }
 
+interface EndurValidatorData {
+  liveliness: number;
+  apy: number;
+  delegators_count: number;
+  active_since: string | null;
+}
+
+let cachedEndurData: { data: EndurValidatorData; timestamp: number } | null =
+  null;
+
+async function fetchEndurData(): Promise<EndurValidatorData> {
+  if (cachedEndurData && Date.now() - cachedEndurData.timestamp < 300000) {
+    return cachedEndurData.data;
+  }
+
+  try {
+    const res = await fetch(ENDUR_API_URL);
+    if (!res.ok) throw new Error("Endur API error");
+    const json = await res.json();
+    const validators = json.validators || [];
+    const pragma = validators.find(
+      (v: { address: string }) =>
+        v.address.toLowerCase() === PRAGMA_VALIDATOR_ADDRESS.toLowerCase()
+    );
+
+    const data: EndurValidatorData = {
+      liveliness: pragma?.liveliness ?? 0,
+      apy: pragma?.apy ?? 0,
+      delegators_count: pragma?.delegators_count ?? 0,
+      active_since: pragma?.active_since ?? null,
+    };
+
+    cachedEndurData = { data, timestamp: Date.now() };
+    return data;
+  } catch {
+    if (cachedEndurData) return cachedEndurData.data;
+    return { liveliness: 0, apy: 0, delegators_count: 0, active_since: null };
+  }
+}
+
 export async function fetchStakingData(): Promise<StakingDataSerialized> {
   const [
     totalStakeRaw,
@@ -102,11 +143,17 @@ export async function fetchStakingData(): Promise<StakingDataSerialized> {
     ...parseEpochInfo(epochInfoRaw),
   };
 
+  const endurData = await fetchEndurData();
+
   return {
     validator: {
       name: "Pragma",
       address: PRAGMA_VALIDATOR_ADDRESS,
     },
+    liveliness: endurData.liveliness,
+    apy: endurData.apy,
+    delegatorsCount: endurData.delegators_count,
+    activeSince: endurData.active_since,
     stakerInfo,
     epochInfo,
     totalNetworkStake: BigInt(totalStakeRaw[0]).toString(),
