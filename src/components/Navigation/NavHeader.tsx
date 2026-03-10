@@ -46,6 +46,12 @@ const products = [
     href: "/assets",
     icon: "/assets/vectors/explorer.svg",
   },
+  {
+    name: "Staking",
+    description: "Stake STRK with Pragma's validator",
+    href: "/staking",
+    icon: "/assets/vectors/staking.svg",
+  },
 ];
 
 const additional = [
