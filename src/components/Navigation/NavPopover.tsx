@@ -76,7 +76,7 @@ const NavPopover: React.FC<NavPopoverProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="fixed left-1/2 z-50 mt-3 ml-0 flex min-w-fit -translate-x-1/2 transform flex-row gap-5 rounded-xl border border-lightBlur bg-whiteTrans backdrop-blur-lg"
+            className="fixed left-1/2 z-50 mt-3 ml-0 flex min-w-fit -translate-x-1/2 transform flex-row gap-5 rounded-xl border border-lightGreen/10 bg-[#082f28ee] shadow-2xl shadow-black/30 backdrop-blur-2xl"
           >
             <div className="min-w-md flex w-60 flex-col gap-3 p-5">
               <h5 className="text-mint">{buttonName}</h5>
