@@ -39,10 +39,10 @@ export const metadata: Metadata = {
     siteName: "Pragma",
     images: [
       {
-        url: "/pragma-og-img.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Pragma",
+        alt: "Pragma - The network of zk-truth machines",
         type: "image/png",
       },
     ],
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "Pragma - The network of zk-truth machines",
     description:
       "Pragma is the first network of zk-truth machines. Pragma provides data feeds for decentralized applications. Oracles are dead, long live truth machines.",
-    images: ["/pragma-og-img.png"],
+    images: ["/opengraph-image"],
   },
   icons: {
     icon: "/favicon-32x32.png",
