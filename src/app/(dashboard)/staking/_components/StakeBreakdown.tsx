@@ -89,7 +89,7 @@ export function StakeBreakdown({ data }: { data: StakingDataSerialized }) {
       <div className="flex flex-col gap-6">
         {/* Donut chart + legend */}
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-8">
-          <div className="relative flex-shrink-0">
+          <div className="relative shrink-0">
             <DonutChart
               segments={[
                 { pct: ownPct, color: "#15FF81", label: "Own" },
