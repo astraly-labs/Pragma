@@ -109,8 +109,15 @@ export interface StakingData {
   currentBlockNumber: number;
 }
 
+export const ENDUR_API_URL =
+  "https://api.dashboard.endur.fi/api/query/validators?page=1&per_page=400&sort_by=total_stake&sort_order=desc";
+
 export interface StakingDataSerialized {
   validator: { name: string; address: string };
+  liveliness: number;
+  apy: number;
+  delegatorsCount: number;
+  activeSince: string | null;
   stakerInfo: {
     rewardAddress: string;
     operationalAddress: string;

@@ -19,37 +19,87 @@ import type {
 const alchemyProvider = new RpcProvider({ nodeUrl: ALCHEMY_RPC_URL });
 const pragmaProvider = new RpcProvider({ nodeUrl: PRAGMA_RPC_URL });
 
-async function fetchDelegators(): Promise<DelegatorInfo[]> {
-  const block = await alchemyProvider.getBlockNumber();
+// --- In-memory cache ---
+interface CachedData {
+  data: StakingEventsData;
+  timestamp: number;
+  lastScannedBlock: number;
+  memberAddresses: string[];
+}
 
-  let memberAddresses: string[] = [];
+let cache: CachedData | null = null;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+let fetchInProgress: Promise<StakingEventsData> | null = null;
+
+function isCacheValid(): boolean {
+  return cache !== null && Date.now() - cache.timestamp < CACHE_TTL_MS;
+}
+
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function getEventsWithRetry(
+  provider: RpcProvider,
+  params: Parameters<typeof provider.getEvents>[0],
+  retries = 3
+): Promise<Awaited<ReturnType<typeof provider.getEvents>>> {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      return await provider.getEvents(params);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "";
+      if (msg.includes("429") && attempt < retries - 1) {
+        await sleep(1000 * (attempt + 1));
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error("Max retries exceeded");
+}
+
+async function scanMemberAddresses(
+  fromBlock: number,
+  toBlock: number
+): Promise<string[]> {
+  const addresses: string[] = [];
   let token: string | undefined;
 
   while (true) {
     const params: Record<string, unknown> = {
       address: POOL_CONTRACT,
-      from_block: { block_number: 0 },
-      to_block: { block_number: block },
+      from_block: { block_number: fromBlock },
+      to_block: { block_number: toBlock },
       keys: [[EVENT_SELECTORS.NewPoolMember]],
-      chunk_size: 500,
+      chunk_size: 200,
     };
     if (token) params.continuation_token = token;
 
-    const result = await alchemyProvider.getEvents(
+    const result = await getEventsWithRetry(
+      alchemyProvider,
       params as Parameters<typeof alchemyProvider.getEvents>[0]
     );
+
     for (const ev of result.events) {
-      if (ev.keys[1]) memberAddresses.push(ev.keys[1]);
+      if (ev.keys[1]) addresses.push(ev.keys[1]);
     }
+
     if (!result.continuation_token) break;
     token = result.continuation_token;
-    if (memberAddresses.length > 1000) break;
+
+    await sleep(200);
   }
 
-  const unique = Array.from(new Set(memberAddresses));
+  return addresses;
+}
 
-  const batchSize = 10;
+async function fetchDelegators(
+  knownAddresses: string[]
+): Promise<{ delegators: DelegatorInfo[]; addresses: string[] }> {
+  const unique = Array.from(new Set(knownAddresses));
   const delegators: DelegatorInfo[] = [];
+  const batchSize = 5;
 
   for (let i = 0; i < unique.length; i += batchSize) {
     const batch = unique.slice(i, i + batchSize);
@@ -99,13 +149,13 @@ async function fetchDelegators(): Promise<DelegatorInfo[]> {
         : 0;
   }
 
-  return delegators.slice(0, 50);
+  return { delegators: delegators.slice(0, 50), addresses: unique };
 }
 
 async function fetchActivity(): Promise<ActivityEvent[]> {
   const block = await alchemyProvider.getBlockNumber();
 
-  const result = await alchemyProvider.getEvents({
+  const result = await getEventsWithRetry(alchemyProvider, {
     address: POOL_CONTRACT,
     from_block: { block_number: Math.max(block - 100000, 0) },
     to_block: { block_number: block },
@@ -144,27 +194,13 @@ async function fetchActivity(): Promise<ActivityEvent[]> {
 async function fetchAttestations(): Promise<AttestationRecord[]> {
   const block = await alchemyProvider.getBlockNumber();
 
-  let allEvents: typeof result.events = [];
-  let token: string | undefined;
-  let result: Awaited<ReturnType<typeof alchemyProvider.getEvents>>;
-
-  while (true) {
-    const params: Record<string, unknown> = {
-      address: STAKING_CONTRACT_ADDRESS,
-      from_block: { block_number: Math.max(block - 50000, 0) },
-      to_block: { block_number: block },
-      keys: [[EVENT_SELECTORS.StakerRewardsUpdated], [PRAGMA_FELT]],
-      chunk_size: 100,
-    };
-    if (token) params.continuation_token = token;
-
-    result = await alchemyProvider.getEvents(
-      params as Parameters<typeof alchemyProvider.getEvents>[0]
-    );
-    allEvents.push(...result.events);
-    if (!result.continuation_token) break;
-    token = result.continuation_token;
-  }
+  const result = await getEventsWithRetry(alchemyProvider, {
+    address: STAKING_CONTRACT_ADDRESS,
+    from_block: { block_number: Math.max(block - 20000, 0) },
+    to_block: { block_number: block },
+    keys: [[EVENT_SELECTORS.StakerRewardsUpdated], [PRAGMA_FELT]],
+    chunk_size: 50,
+  } as Parameters<typeof alchemyProvider.getEvents>[0]);
 
   const epochInfo = await pragmaProvider.callContract(
     {
@@ -178,7 +214,7 @@ async function fetchAttestations(): Promise<AttestationRecord[]> {
   const startingBlock = parseInt(epochInfo[2], 16);
   const startingEpoch = parseInt(epochInfo[3], 16);
 
-  const attestations: AttestationRecord[] = allEvents
+  return result.events
     .reverse()
     .map((ev) => {
       const evBlock = ev.block_number;
@@ -191,8 +227,36 @@ async function fetchAttestations(): Promise<AttestationRecord[]> {
       };
     })
     .slice(0, 20);
+}
 
-  return attestations;
+async function fetchAllData(): Promise<StakingEventsData> {
+  const block = await alchemyProvider.getBlockNumber();
+
+  let memberAddresses: string[];
+  if (cache && cache.memberAddresses.length > 0) {
+    const newAddresses = await scanMemberAddresses(
+      cache.lastScannedBlock + 1,
+      block
+    );
+    memberAddresses = cache.memberAddresses.concat(newAddresses);
+  } else {
+    memberAddresses = await scanMemberAddresses(0, block);
+  }
+
+  const [{ delegators, addresses }, activity, attestations] = await Promise.all(
+    [fetchDelegators(memberAddresses), fetchActivity(), fetchAttestations()]
+  );
+
+  const data: StakingEventsData = { delegators, activity, attestations };
+
+  cache = {
+    data,
+    timestamp: Date.now(),
+    lastScannedBlock: block,
+    memberAddresses: addresses,
+  };
+
+  return data;
 }
 
 export default async function handler(
@@ -200,17 +264,42 @@ export default async function handler(
   res: NextApiResponse<StakingEventsData | { error: string }>
 ) {
   try {
-    const [delegators, activity, attestations] = await Promise.all([
-      fetchDelegators(),
-      fetchActivity(),
-      fetchAttestations(),
-    ]);
+    if (isCacheValid() && cache) {
+      res.setHeader(
+        "Cache-Control",
+        "s-maxage=120, stale-while-revalidate=300"
+      );
+      res.status(200).json(cache.data);
+      return;
+    }
 
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
-    res.status(200).json({ delegators, activity, attestations });
+    if (fetchInProgress) {
+      const data = await fetchInProgress;
+      res.setHeader(
+        "Cache-Control",
+        "s-maxage=120, stale-while-revalidate=300"
+      );
+      res.status(200).json(data);
+      return;
+    }
+
+    fetchInProgress = fetchAllData();
+    const data = await fetchInProgress;
+    fetchInProgress = null;
+
+    res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=300");
+    res.status(200).json(data);
   } catch (error: unknown) {
+    fetchInProgress = null;
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Staking events API error:", message);
+
+    if (cache) {
+      res.setHeader("Cache-Control", "s-maxage=60");
+      res.status(200).json(cache.data);
+      return;
+    }
+
     res.status(500).json({ error: message });
   }
 }

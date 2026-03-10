@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Copy, Check, Shield, ExternalLink } from "lucide-react";
+import { Copy, Check, Shield } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import type { StakingDataSerialized } from "@/lib/staking";
@@ -57,6 +57,33 @@ export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
                   Unstaking
                 </span>
               )}
+              {data && data.liveliness > 0 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-lightGreen/15 px-3 py-1 text-xs text-lightGreen/70">
+                  <svg
+                    className="h-3.5 w-3.5 text-mint"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <circle
+                      cx="8"
+                      cy="8"
+                      r="6"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeDasharray={`${(data.liveliness / 100) * 37.7} 37.7`}
+                      strokeLinecap="round"
+                      transform="rotate(-90 8 8)"
+                    />
+                    <circle cx="8" cy="8" r="2" fill="currentColor" />
+                  </svg>
+                  {data.liveliness.toFixed(2)}% liveliness
+                </span>
+              )}
+              {data && data.apy > 0 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-mint/20 bg-mint/5 px-3 py-1 text-xs font-medium text-mint">
+                  {data.apy.toFixed(2)}% APY
+                </span>
+              )}
             </div>
 
             {data && (
@@ -90,8 +117,14 @@ export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-mint px-6 py-3 text-sm font-semibold text-darkGreen shadow-[0_0_20px_rgba(21,255,129,0.15)] transition-all hover:shadow-[0_0_30px_rgba(21,255,129,0.3)]"
           >
+            <Image
+              src="/assets/ecosystem/voyager.png"
+              alt="Voyager"
+              width={20}
+              height={20}
+              className="h-5 w-5"
+            />
             Delegate STRK
-            <ExternalLink className="h-4 w-4" />
           </motion.a>
         )}
       </motion.div>
