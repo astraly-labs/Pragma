@@ -8,6 +8,7 @@ import { EpochProgress } from "./_components/EpochProgress";
 import { StrkChart } from "./_components/StrkChart";
 import { StakeBreakdown } from "./_components/StakeBreakdown";
 import { StakingTabs } from "./_components/StakingTabs";
+import { StakingFAQ } from "./_components/StakingFAQ";
 
 async function getStakingData(): Promise<StakingDataSerialized | null> {
   try {
@@ -55,6 +56,10 @@ export default async function StakingPage() {
 
           <ScrollReveal delay={0.35} className="w-full">
             <StakingTabs />
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.4} className="w-full">
+            <StakingFAQ />
           </ScrollReveal>
         </>
       )}
