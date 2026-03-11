@@ -11,6 +11,9 @@ export const PRAGMA_RPC_URL =
 export const VOYAGER_DELEGATE_URL =
   "https://voyager.online/staking?validator=0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65&view=delegator";
 
+export const ENDUR_DELEGATE_URL =
+  "https://dashboard.endur.fi/stake?validator=0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65";
+
 export const STRK_DECIMALS = 18;
 
 export const ALCHEMY_RPC_URL = PRAGMA_RPC_URL;
