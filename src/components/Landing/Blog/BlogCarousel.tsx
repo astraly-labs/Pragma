@@ -1,0 +1,157 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import clsx from "clsx";
+import styles from "../styles.module.scss";
+import BlogPostBox from "./BlogPostBox";
+import { fadeIn } from "@/lib/animations";
+
+interface BlogPost {
+  image: string;
+  date: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
+const BlogPosts: BlogPost[] = [
+  {
+    image: "/assets/posts/v2.webp",
+    date: "October 21st, 2024",
+    title: "Introducing Pragma v.2",
+    description:
+      "Today marks a major milestone for Pragma with the release of version 2 of our...",
+    link: "https://blog.pragma.build/introducing-pragma-v-2/",
+  },
+  {
+    image: "/assets/posts/LiqBot.webp",
+    date: "September 5th, 2024",
+    title: "Announcing the Open-Source Liquidation Bot for Vesu",
+    description:
+      "We're thrilled to announce that we've developed a fully open-source liquidation bot...",
+    link: "https://blog.pragma.build/announcing-the-open-source-liquidation-bot-for-vesu/",
+  },
+  {
+    image: "/assets/posts/merkle.webp",
+    date: "August 30th, 2024",
+    title: "I have a Merkle",
+    description:
+      "In collaboration with DOPP, Pragma is excited to introduce our new product:...",
+    link: "https://blog.pragma.build/i-have-a-merkle/",
+  },
+  {
+    image: "/assets/posts/pragmaxvesu.webp",
+    date: "August 26th, 2024",
+    title: "Vesu's vault - Pragma's shield",
+    description:
+      "Pragma Oracle is excited to announce its integration with Vesu, a key addition to our...",
+    link: "https://blog.pragma.build/vesus-vault-pragmas-shield/",
+  },
+  {
+    image: "/assets/posts/pragmapi.webp",
+    date: "February 22nd, 2024",
+    title: "Pragma Empowers Starknet Sequencer with the Launch of Pragma API",
+    description:
+      "We're thrilled to announce a new addition to our product suite – the Pragma API, with Starknet as its first user.",
+    link: "https://blog.pragma.build/pragma-empowers-starknet-sequencer-with-the-launch-of-the-api/",
+  },
+  {
+    image: "/assets/posts/vrf.webp",
+    date: "December 1st, 2023",
+    title: "Introducing the Verifiable Random Function in Cairo 1",
+    description:
+      "We are thrilled to announce the first phase of Pragma VRF, leveraging verifiable random functions to generate onchain verifiable randomness. Pragma VRF will greatly help...",
+    link: "https://blog.pragma.build/introducing-the-verifiable-random-function-vrf-in-cairo-1/",
+  },
+  {
+    image: "/assets/posts/security.webp",
+    date: "November 29th, 2023",
+    title: "Exploring Pragma's Security",
+    description:
+      "We're thrilled to (officially) announce our bounty program on Immunefi, offering up to $50,000 for discovering vulnerabilities in our smart contracts. If you're proficient in Cairo and keen on assisting us in securing our Oracle...",
+    link: "https://blog.pragma.build/exploring-pragmas-security/",
+  },
+  {
+    image: "/assets/posts/introducing.webp",
+    date: "September 7th, 2023",
+    title: "(RE)Introducing Pragma on Starknet",
+    description:
+      "Pragma is the leading Oracle on Starknet. It provides off-chain data to all DeFi happening on Starknet. Pragma is built from the ground up to remove any trust assumptions...",
+    link: "https://blog.pragma.build/re-introducing-pragma-on-starknet/",
+  },
+  {
+    image: "/assets/posts/longliveoracles.webp",
+    date: "August 21st, 2023",
+    title: "Oracles are dead, Long live Oracles",
+    description:
+      "For as long as blockchains have been programmable, developers have attempted to bring data on-chain. Blockchains offer amazing properties, especially in terms of transparency, immutability, and openness...",
+    link: "https://blog.pragma.build/oracles-are-dead-long-live-oracles/",
+  },
+];
+
+const BlogCarousel: React.FC = () => {
+  const autoplayPlugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
+
+  const [emblaRef] = useEmblaCarousel(
+    {
+      loop: true,
+      align: "start",
+      dragFree: true,
+    },
+    [autoplayPlugin.current]
+  );
+
+  const [slidesToShow, setSlidesToShow] = useState(3.1);
+
+  const handleResize = () => {
+    if (window.innerWidth < 400) setSlidesToShow(1.1);
+    else if (window.innerWidth < 640) setSlidesToShow(1.4);
+    else if (window.innerWidth < 768) setSlidesToShow(1.8);
+    else if (window.innerWidth < 1024) setSlidesToShow(2.1);
+    else setSlidesToShow(3.1);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <motion.div
+      className={clsx("overflow-visible", styles.carouselWrap)}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+    >
+      <div
+        className={clsx(
+          styles.carouselWrapper,
+          "relative cursor-grab active:cursor-grabbing"
+        )}
+      >
+        <div ref={emblaRef} className="overflow-hidden px-4">
+          <div className="flex gap-6">
+            {BlogPosts.map((post, index) => (
+              <div
+                key={index}
+                className="shrink-0 px-2"
+                style={{ width: `${100 / slidesToShow}%` }}
+              >
+                <BlogPostBox {...post} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default BlogCarousel;
