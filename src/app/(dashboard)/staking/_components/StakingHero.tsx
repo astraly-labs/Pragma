@@ -1,15 +1,34 @@
 "use client";
 
-import { motion } from "motion/react";
-import { Copy, Check, Shield } from "lucide-react";
-import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Copy, Check, Shield, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import type { StakingDataSerialized } from "@/lib/staking";
-import { truncateAddress, VOYAGER_DELEGATE_URL } from "@/lib/staking";
+import {
+  truncateAddress,
+  VOYAGER_DELEGATE_URL,
+  ENDUR_DELEGATE_URL,
+} from "@/lib/staking";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
   const [copied, setCopied] = useState(false);
+  const [stakeOpen, setStakeOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setStakeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   const handleCopy = () => {
     if (!data) return;
@@ -110,22 +129,80 @@ export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
         </div>
 
         {data && (
-          <motion.a
+          <motion.div
             variants={fadeInUp}
-            href={VOYAGER_DELEGATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-mint px-6 py-3 text-sm font-semibold text-darkGreen shadow-[0_0_20px_rgba(21,255,129,0.15)] transition-all hover:shadow-[0_0_30px_rgba(21,255,129,0.3)]"
+            ref={dropdownRef}
+            className="relative"
           >
-            <Image
-              src="/assets/ecosystem/voyager.png"
-              alt="Voyager"
-              width={20}
-              height={20}
-              className="h-5 w-5"
-            />
-            Delegate STRK
-          </motion.a>
+            <button
+              onClick={() => setStakeOpen(!stakeOpen)}
+              className="inline-flex items-center gap-2 rounded-full bg-mint px-6 py-3 text-sm font-semibold text-darkGreen shadow-[0_0_20px_rgba(21,255,129,0.15)] transition-all hover:shadow-[0_0_30px_rgba(21,255,129,0.3)]"
+            >
+              Delegate STRK
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${stakeOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            <AnimatePresence>
+              {stakeOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                  transition={{ duration: 0.12 }}
+                  className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-xl border border-lightGreen/10 bg-[#082f28ee] shadow-2xl shadow-black/30 backdrop-blur-2xl"
+                >
+                  <a
+                    href={VOYAGER_DELEGATE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setStakeOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-lightGreen/5"
+                  >
+                    <Image
+                      src="/assets/ecosystem/voyager.png"
+                      alt="Voyager"
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 rounded-md"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-lightGreen">
+                        Voyager
+                      </span>
+                      <span className="text-[11px] text-lightGreen/40">
+                        Native staking
+                      </span>
+                    </div>
+                  </a>
+                  <div className="h-px bg-lightGreen/10" />
+                  <a
+                    href={ENDUR_DELEGATE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setStakeOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-lightGreen/5"
+                  >
+                    <Image
+                      src="/assets/ecosystem/endur.svg"
+                      alt="Endur"
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 rounded-md"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-lightGreen">
+                        Endur
+                      </span>
+                      <span className="text-[11px] text-lightGreen/40">
+                        Native staking dashboard
+                      </span>
+                    </div>
+                  </a>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         )}
       </motion.div>
 
