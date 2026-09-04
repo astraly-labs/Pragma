@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { AssetInfo } from "@/app/(dashboard)/assets/_types";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
-import { startStreaming } from "@/app/(dashboard)/asset/[ticker]/_helpers/startStreaming";
+import { startPriceStream, PriceStreamData } from "@/lib/price-stream";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -26,9 +26,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [streamingData, setStreamingData] = useState<{ [ticker: string]: any }>(
-    {}
-  );
+  const [streamingData, setStreamingData] = useState<PriceStreamData>({});
   const [chartData, setChartData] = useState<
     Array<{ date: string; value: number }>
   >([]);
@@ -54,11 +52,13 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   }, []);
 
   useEffect(() => {
-    startStreaming(asset.ticker, setStreamingData, currentSource);
+    setStreamingData({});
+    setChartData([]);
+    return startPriceStream([asset.ticker], setStreamingData);
   }, [asset.ticker, currentSource]);
 
   useEffect(() => {
-    if (!latestData || latestData.loading) return;
+    if (!latestData || !("price" in latestData)) return;
 
     const timestamp =
       latestData.last_updated_timestamp ?? Math.floor(Date.now() / 1000);
@@ -70,11 +70,11 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
     ) {
       priceNumber =
         parseInt(latestData.price, 16) /
-        10 ** (latestData.decimals || asset.decimals || 18);
+        10 ** (latestData.decimals ?? asset.decimals ?? 18);
     } else if (!isNaN(parseFloat(latestData.price))) {
       priceNumber =
         parseFloat(latestData.price) /
-        10 ** (latestData.decimals || asset.decimals || 18);
+        10 ** (latestData.decimals ?? asset.decimals ?? 18);
     } else {
       return;
     }
@@ -87,11 +87,12 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
           : priceNumber.toFixed(2)
     );
 
-    const now = Date.now();
-    const nowISO = new Date(now).toISOString();
-    const oneSecondEarlier = new Date(now - 1000).toISOString();
+    const timestampMs = timestamp * 1000;
+    const nowISO = new Date(timestampMs).toISOString();
+    const oneSecondEarlier = new Date(timestampMs - 1000).toISOString();
 
     setChartData((prev) => {
+      if (prev.length && prev[prev.length - 1].date >= nowISO) return prev;
       let updated = [...prev];
 
       if (updated.length < 2) {

@@ -62,7 +62,11 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
   {
     accessorKey: "price",
     header: ({ column }) => SortableHeader("Price", column),
-    cell: ({ row }) => <span>${Number(row.original.price).toFixed(5)}</span>,
+    cell: ({ row }) => (
+      <span>
+        {row.original.error ? "—" : `$${Number(row.original.price).toFixed(5)}`}
+      </span>
+    ),
   },
   ...(!currentSource || currentSource !== "api"
     ? [

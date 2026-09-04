@@ -151,9 +151,7 @@ export const formatAssets = (
         let lastUpdated;
         if (hasError) {
           // For error cases, show the error instead of the timestamp
-          lastUpdated = isUnsupported
-            ? "Unsupported asset"
-            : "Error fetching data";
+          lastUpdated = isUnsupported ? "Unsupported asset" : assetData.error;
         } else if (diffMs < 10000) {
           // Less than 10 seconds, show ms
           lastUpdated = `${diffMs}ms ago`;
