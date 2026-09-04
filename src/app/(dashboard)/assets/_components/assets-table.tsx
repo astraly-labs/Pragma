@@ -7,7 +7,7 @@ import { getTokens } from "@/app/(dashboard)/assets/_helpers/getTokens";
 import { AssetT } from "@/app/(dashboard)/assets/_types";
 import { useEffect, useMemo, useState } from "react";
 import { getAssets } from "../_helpers/getAssets";
-import { startStreaming } from "../_helpers/startStreaming";
+import { startPriceStream, PriceStreamData } from "@/lib/price-stream";
 import { formatAssets } from "../_helpers";
 import AssetList from "./asset-list";
 
@@ -23,9 +23,7 @@ export const AssetsTable = ({
   options,
 }: AssetsTableProps) => {
   const [assets, setAssets] = useState<AssetT[]>([]);
-  const [streamingData, setStreamingData] = useState<{ [ticker: string]: any }>(
-    {}
-  );
+  const [streamingData, setStreamingData] = useState<PriceStreamData>({});
 
   const {
     data: tokens,
@@ -61,89 +59,21 @@ export const AssetsTable = ({
   }, [tokens, source]);
 
   useEffect(() => {
-    if (source === "api" && assets.length > 0) {
-      let mounted = true;
-      let retryCount = 0;
-      const maxRetries = 3;
-      const retryDelay = 5000; // 5 seconds
-
-      // Clear existing streams
+    if (source !== "api" || assets.length === 0) {
       setStreamingData({});
-
-      // Initialize loading state for all assets
-      setStreamingData((prev) => {
-        const newState = { ...prev };
-        assets.forEach((asset) => {
-          newState[asset.ticker] = {
-            price: "0x0",
-            decimals: asset.decimals,
-            last_updated_timestamp: Math.floor(Date.now() / 1000),
-            nb_sources_aggregated: 0,
-            variations: { "1h": 0, "1d": 0, "1w": 0 },
-            loading: true,
-          };
-        });
-        return newState;
-      });
-
-      // Function to start stream with retry logic
-      const startStreamWithRetry = async () => {
-        try {
-          await startStreaming(assets, setStreamingData, source);
-        } catch (error) {
-          if (mounted && retryCount < maxRetries) {
-            retryCount++;
-            await new Promise((resolve) => setTimeout(resolve, retryDelay));
-            return startStreamWithRetry();
-          } else {
-            if (mounted) {
-              setStreamingData((prev) => {
-                const newState = { ...prev };
-                assets.forEach((asset) => {
-                  newState[asset.ticker] = {
-                    ...(prev[asset.ticker] || {}),
-                    loading: false,
-                    error: `Failed after ${maxRetries} attempts: ${error.message}`,
-                  };
-                });
-                return newState;
-              });
-            }
-            throw error;
-          }
-        }
-      };
-
-      // Start the stream with retry logic
-      startStreamWithRetry().catch((error) => {
-        console.error("All retry attempts failed:", error);
-      });
-
-      return () => {
-        mounted = false;
-      };
-    } else {
-      setStreamingData({});
+      return;
     }
+    const pairs = assets.map((asset) => asset.ticker);
+    setStreamingData(
+      Object.fromEntries(pairs.map((pair) => [pair, { loading: true }]))
+    );
+    return startPriceStream(pairs, setStreamingData);
   }, [source, assets]);
 
   const assetQueries = useQueries({
     queries: (tokens ?? []).map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
-      queryFn: () =>
-        getAssets({
-          asset,
-          assets: tokens ?? [],
-          source,
-          startStreaming: () =>
-            startStreaming([asset], setStreamingData, source).catch((error) => {
-              console.error(
-                `Error starting stream for ${asset.ticker}:`,
-                error
-              );
-            }),
-          streamingData,
-        }),
+      queryFn: () => getAssets({ asset, source }),
       initialData: initialTokens?.[asset.ticker],
       refetchInterval: source === "api" ? 1000 : undefined,
       retry: false,
@@ -165,25 +95,12 @@ export const AssetsTable = ({
     isStreamLoading;
 
   const data = useMemo(() => {
-    if (source === "api") {
-      const result = { ...streamingData };
-      (tokens ?? []).forEach((asset) => {
-        if (!result[asset.ticker]) {
-          result[asset.ticker] = {
-            price: "0x0",
-            decimals: 0, // asset.decimals || 8,
-            last_updated_timestamp: Math.floor(Date.now() / 1000),
-            nb_sources_aggregated: 0,
-            variations: { "1h": 0, "1d": 0, "1w": 0 },
-            loading: true,
-          };
-        }
-      });
-      return result;
-    }
+    if (source === "api") return streamingData;
 
     return (tokens ?? []).reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index]?.data ?? {};
+      acc[asset.ticker] = assetQueries[index]?.data ?? {
+        error: "Price unavailable",
+      };
       return acc;
     }, {});
   }, [source, tokens, assetQueries, streamingData]);

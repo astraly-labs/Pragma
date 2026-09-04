@@ -1,12 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-interface ExtendedNextApiResponse extends NextApiResponse {
-  flush?: () => void;
-}
+export const config = { maxDuration: 300 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: ExtendedNextApiResponse
+  res: NextApiResponse
 ) {
   const {
     pairs: rawPairs,
@@ -14,13 +12,8 @@ export default async function handler(
     aggregation = "median",
     historical_prices = "10",
   } = req.query;
-
-  let pairs: string[];
-  if (typeof rawPairs === "string") {
-    pairs = [rawPairs];
-  } else if (Array.isArray(rawPairs)) {
-    pairs = rawPairs;
-  } else {
+  const pairs = typeof rawPairs === "string" ? [rawPairs] : rawPairs;
+  if (!pairs?.length) {
     res.status(400).json({ error: "pairs parameter is required" });
     return;
   }
@@ -28,90 +21,52 @@ export default async function handler(
   const pairsQuery = pairs
     .map((pair) => `pairs=${encodeURIComponent(pair)}`)
     .join("&");
-  const baseUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
-  const apiUrl = `${baseUrl}/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
-  console.log(`Fetching data from ${apiUrl}`);
+  const apiUrl = `${process.env.NEXT_PUBLIC_INTERNAL_API}/data/multi/stream?${pairsQuery}&interval=${interval}&aggregation=${aggregation}&historical_prices=${historical_prices}`;
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  res.on("close", abort);
 
   try {
-    const apiKey = process.env.API_KEY;
-    console.log(
-      `Using API key: ${apiKey ? apiKey.substring(0, 5) + "..." : "undefined"}`
-    );
-
-    const apiResponse = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        "x-api-key": apiKey || "",
-      },
+    const response = await fetch(apiUrl, {
+      headers: { "x-api-key": process.env.API_KEY || "" },
+      signal: controller.signal,
     });
-
-    if (!apiResponse.ok || !apiResponse.body) {
-      console.error(
-        `API response not OK: ${apiResponse.status} ${apiResponse.statusText}`
-      );
-      try {
-        const textResponse = await apiResponse.text();
-        console.error(`Error response: ${textResponse.substring(0, 200)}...`);
-        res.status(apiResponse.status || 500).json({
-          error: `Failed to fetch data for pairs: ${pairs.join(", ")}`,
-          status: apiResponse.status,
-          statusText: apiResponse.statusText,
-        });
-      } catch (parseError) {
-        res.status(500).json({
-          error: `Error parsing API response: ${parseError}`,
-        });
-      }
+    if (!response.ok || !response.body) {
+      res
+        .status(response.status || 502)
+        .json({ error: "Price stream unavailable" });
       return;
     }
 
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET",
       "Access-Control-Allow-Headers": "Content-Type",
     });
-
-    const flush =
-      typeof res.flush === "function" ? res.flush.bind(res) : () => {};
-
-    res.write(
-      `data: ${JSON.stringify({ connected: true, timestamp: Date.now() })}\n\n`
-    );
-    flush();
-
-    const reader = apiResponse.body.getReader();
-    const decoder = new TextDecoder();
-
-    let buffer = "";
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        console.log("Stream done");
-        break;
+    res.write(`data: ${JSON.stringify({ connected: true })}\n\n`);
+    const reader = response.body.getReader();
+    try {
+      while (!controller.signal.aborted) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        res.write(value);
       }
-
-      const chunk = decoder.decode(value, { stream: true });
-      buffer += chunk;
-
-      const messages = buffer.split("\n\n");
-      buffer = messages.pop() || "";
-
-      for (const message of messages) {
-        if (!message.trim()) continue;
-        res.write(message + "\n\n");
-        flush();
-      }
+    } finally {
+      await reader.cancel().catch(() => {});
+      reader.releaseLock();
     }
-
-    res.end();
   } catch (error) {
-    console.error("Error fetching external API:", error);
-    res.status(500).json({
-      error: "Internal server error",
-      details: `${error}`,
-    });
+    if (!controller.signal.aborted) {
+      console.error("[📡 Price stream] Upstream connection failed", error);
+      if (!res.headersSent)
+        res.status(502).json({ error: "Price stream unavailable" });
+    }
+  } finally {
+    controller.abort();
+    res.off("close", abort);
+    if (!res.writableEnded) res.end();
   }
 }
