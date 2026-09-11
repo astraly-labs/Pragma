@@ -23,6 +23,8 @@ export const getPublisher = async (
     `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=starknet-${source}&data_type=Spot`
   );
 
+  if (response.status === 404) return undefined;
+
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");
   }

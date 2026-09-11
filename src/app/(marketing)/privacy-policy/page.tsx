@@ -1,15 +1,14 @@
 import Link from "next/link";
-import clsx from "clsx";
 import BoxContainer from "@/components/common/BoxContainer";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";
 const privacyPolicy = () => {
   return (
-    <BoxContainer className={clsx("mx-auto max-w-[1700px]", "2xl:pl-20")}>
+    <BoxContainer className="legal-page">
       <div className="flex flex-col gap-7 ">
-        <h2 className="w-full pt-32 text-left text-lightGreen ">
+        <h1 className="w-full pt-32 text-left text-lightGreen">
           Pragma Privacy Policy
-        </h2>
+        </h1>
         <GreenUpperText>Version 1.0</GreenUpperText>
         <GreenText>Effective 15/02/2024</GreenText>
         <div className="font-mono tracking-wider text-lightGreen">

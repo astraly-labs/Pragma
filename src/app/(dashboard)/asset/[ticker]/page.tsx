@@ -26,13 +26,19 @@ const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const network = (searchParams.network as string) || DEFAULT_SOURCE;
+  const requestedNetwork = searchParams.network;
+  const network =
+    typeof requestedNetwork === "string" &&
+    SUPPORTED_SOURCES.includes(requestedNetwork)
+      ? requestedNetwork
+      : DEFAULT_SOURCE;
   const tickerParam = params.ticker;
 
   if (!tickerParam || typeof tickerParam !== "string") {
     return notFound();
   }
 
+  if (!/^[A-Za-z0-9]+-[A-Za-z0-9]+$/.test(tickerParam)) return notFound();
   const ticker = tickerParam.replace("-", "%2F");
 
   const asset = await getAsset({

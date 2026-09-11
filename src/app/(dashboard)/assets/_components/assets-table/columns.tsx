@@ -13,13 +13,14 @@ const SortableHeader = (label: string, column: any) => {
   else if (sortState === "desc") SortIcon = ArrowUp;
 
   return (
-    <div
+    <button
+      type="button"
       className="flex cursor-pointer select-none items-center gap-1.5 transition-colors hover:text-lightGreen"
       onClick={column.getToggleSortingHandler()}
     >
       {label}
       <SortIcon className="h-3 w-3 opacity-50" />
-    </div>
+    </button>
   );
 };
 
@@ -57,7 +58,8 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
   },
   {
     accessorKey: "sources",
-    header: ({ column }) => SortableHeader("Nb Sources", column),
+    header: ({ column }) => SortableHeader("Sources", column),
+    cell: ({ row }) => (row.original.error ? "—" : row.original.sources),
   },
   {
     accessorKey: "price",
@@ -74,7 +76,9 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
           accessorKey: "variations.past1h",
           header: ({ column }) => SortableHeader("1H", column),
           cell: ({ row }) => {
+            if (row.original.error) return <span>—</span>;
             const val = Number(row.original.variations.past1h);
+            if (!Number.isFinite(val)) return <span>—</span>;
             const color = val > 0 ? "text-mint" : val < 0 ? "text-redDown" : "";
             return (
               <span className={color}>
@@ -87,7 +91,9 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
           accessorKey: "variations.past24h",
           header: ({ column }) => SortableHeader("24H", column),
           cell: ({ row }) => {
+            if (row.original.error) return <span>—</span>;
             const val = Number(row.original.variations.past24h);
+            if (!Number.isFinite(val)) return <span>—</span>;
             const color = val > 0 ? "text-mint" : val < 0 ? "text-redDown" : "";
             return (
               <span className={color}>
@@ -100,7 +106,9 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
           accessorKey: "variations.past7d",
           header: ({ column }) => SortableHeader("7D", column),
           cell: ({ row }) => {
+            if (row.original.error) return <span>—</span>;
             const val = Number(row.original.variations.past7d);
+            if (!Number.isFinite(val)) return <span>—</span>;
             const color = val > 0 ? "text-mint" : val < 0 ? "text-redDown" : "";
             return (
               <span className={color}>

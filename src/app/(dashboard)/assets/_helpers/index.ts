@@ -51,7 +51,7 @@ export const formatAssets = (
         // Handle missing timestamp
         const timestamp = assetData.lastUpdated
           ? assetData.lastUpdated * 1000
-          : Date.now();
+          : NaN;
 
         const now = Date.now();
         const diffMs = now - timestamp;
@@ -62,6 +62,8 @@ export const formatAssets = (
           lastUpdated = isUnsupported
             ? "Unsupported asset"
             : "Error fetching data";
+        } else if (!Number.isFinite(timestamp)) {
+          lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {
           // Less than 10 seconds, show ms
           lastUpdated = `${diffMs}ms ago`;
@@ -76,7 +78,7 @@ export const formatAssets = (
           const seconds = Math.floor((diffMs % 60000) / 1000);
           lastUpdated = `${minutes}m ${seconds}s ago`;
         } else {
-          lastUpdated = format(new Date(timestamp), "HH:mm:ss.SSS");
+          lastUpdated = format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss");
         }
 
         const baseCurrency = ticker.split("/")[0].toLowerCase();
@@ -87,13 +89,13 @@ export const formatAssets = (
           String(assetData.price).startsWith("0x")
         ) {
           price =
-            parseInt(assetData.price, 16) / 10 ** (assetData.decimals || 8);
+            parseInt(assetData.price, 16) / 10 ** (assetData.decimals ?? 8);
         } else if (typeof assetData.price === "number") {
           price = assetData.price;
         } else if (typeof assetData.price === "string") {
           try {
             price =
-              parseFloat(assetData.price) / 10 ** (assetData.decimals || 8);
+              parseFloat(assetData.price) / 10 ** (assetData.decimals ?? 8);
           } catch (e) {
             console.error(
               `Failed to parse price for ${ticker}:`,
@@ -111,19 +113,23 @@ export const formatAssets = (
           price,
           sources: assetData.sources || 0,
           variations: {
-            past1h: assetData.variations?.["past1h"]
-              ? (assetData.variations["past1h"] * 100).toFixed(2)
-              : "0.00",
-            past24h: assetData.variations?.["past24h"]
-              ? (assetData.variations["past24h"] * 100).toFixed(2)
-              : "0.00",
-            past7d: assetData.variations?.["past7d"]
-              ? (assetData.variations["past7d"] * 100).toFixed(2)
-              : "0.00",
+            past1h:
+              typeof assetData.variations?.["past1h"] === "number"
+                ? (assetData.variations["past1h"] * 100).toFixed(2)
+                : "—",
+            past24h:
+              typeof assetData.variations?.["past24h"] === "number"
+                ? (assetData.variations["past24h"] * 100).toFixed(2)
+                : "—",
+            past7d:
+              typeof assetData.variations?.["past7d"] === "number"
+                ? (assetData.variations["past7d"] * 100).toFixed(2)
+                : "—",
           },
-          chart: `https://www.coingecko.com/coins/${
-            COINGECKO_MAPPING_IDS[baseCurrency] || "1"
-          }/sparkline.svg`,
+          chart:
+            !hasError && COINGECKO_MAPPING_IDS[baseCurrency]
+              ? `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[baseCurrency]}/sparkline.svg`
+              : "",
           ema: "soon",
           macd: "soon",
           error: assetData.error ?? undefined,
@@ -137,13 +143,13 @@ export const formatAssets = (
         const assetData = data[ticker];
 
         // Check if this asset has an error (like unsupported asset)
-        const hasError = assetData.error !== undefined;
+        const hasError = typeof assetData.error === "string";
         const isUnsupported = assetData.isUnsupported === true;
 
         // Handle missing timestamp
         const timestamp = assetData.last_updated_timestamp
           ? assetData.last_updated_timestamp * 1000
-          : Date.now();
+          : NaN;
 
         const now = Date.now();
         const diffMs = now - timestamp;
@@ -151,7 +157,11 @@ export const formatAssets = (
         let lastUpdated;
         if (hasError) {
           // For error cases, show the error instead of the timestamp
-          lastUpdated = isUnsupported ? "Unsupported asset" : assetData.error;
+          lastUpdated = isUnsupported
+            ? "Unsupported asset"
+            : "Error fetching data";
+        } else if (!Number.isFinite(timestamp)) {
+          lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {
           // Less than 10 seconds, show ms
           lastUpdated = `${diffMs}ms ago`;
@@ -166,7 +176,7 @@ export const formatAssets = (
           const seconds = Math.floor((diffMs % 60000) / 1000);
           lastUpdated = `${minutes}m ${seconds}s ago`;
         } else {
-          lastUpdated = format(new Date(timestamp), "HH:mm:ss.SSS");
+          lastUpdated = format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss");
         }
 
         const baseCurrency = ticker.split("/")[0].toLowerCase();
@@ -177,13 +187,13 @@ export const formatAssets = (
           assetData.price.startsWith("0x")
         ) {
           price =
-            parseInt(assetData.price, 16) / 10 ** (assetData.decimals || 8);
+            parseInt(assetData.price, 16) / 10 ** (assetData.decimals ?? 8);
         } else if (typeof assetData.price === "number") {
           price = assetData.price;
         } else if (typeof assetData.price === "string") {
           try {
             price =
-              parseFloat(assetData.price) / 10 ** (assetData.decimals || 8);
+              parseFloat(assetData.price) / 10 ** (assetData.decimals ?? 8);
           } catch (e) {
             console.error(
               `Failed to parse price for ${ticker}:`,
@@ -201,19 +211,23 @@ export const formatAssets = (
           price,
           sources: assetData.nb_sources_aggregated || 0,
           variations: {
-            past1h: assetData.variations?.["1h"]
-              ? (assetData.variations["1h"] * 100).toFixed(2)
-              : "0.00",
-            past24h: assetData.variations?.["1d"]
-              ? (assetData.variations["1d"] * 100).toFixed(2)
-              : "0.00",
-            past7d: assetData.variations?.["1w"]
-              ? (assetData.variations["1w"] * 100).toFixed(2)
-              : "0.00",
+            past1h:
+              typeof assetData.variations?.["1h"] === "number"
+                ? (assetData.variations["1h"] * 100).toFixed(2)
+                : "—",
+            past24h:
+              typeof assetData.variations?.["1d"] === "number"
+                ? (assetData.variations["1d"] * 100).toFixed(2)
+                : "—",
+            past7d:
+              typeof assetData.variations?.["1w"] === "number"
+                ? (assetData.variations["1w"] * 100).toFixed(2)
+                : "—",
           },
-          chart: `https://www.coingecko.com/coins/${
-            COINGECKO_MAPPING_IDS[baseCurrency] || "1"
-          }/sparkline.svg`,
+          chart:
+            !hasError && COINGECKO_MAPPING_IDS[baseCurrency]
+              ? `https://www.coingecko.com/coins/${COINGECKO_MAPPING_IDS[baseCurrency]}/sparkline.svg`
+              : "",
           ema: "soon",
           macd: "soon",
           error: assetData.error,
