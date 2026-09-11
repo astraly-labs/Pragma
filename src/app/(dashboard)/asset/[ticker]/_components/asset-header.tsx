@@ -33,14 +33,14 @@ export const AssetHeader = ({ asset }: AssetHeaderProps) => {
       variants={fadeInUp}
       className="w-full rounded-2xl border border-lightGreen/20 p-6"
     >
-      <h1 className="flex items-center gap-4 text-lightGreen">
+      <h1 className="flex items-center gap-4 text-2xl text-lightGreen sm:text-4xl">
         <Avatar className="h-16 w-16">
           <AvatarImage width={64} height={64} src={asset.image} alt="" />
           <AvatarFallback className="bg-lightBlur">
             {asset.ticker[0]}
           </AvatarFallback>
         </Avatar>
-        <span>{asset.ticker}</span>
+        <span className="min-w-0 break-words">{asset.ticker}</span>
       </h1>
       <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10">
         <DoubleText bigText={price} smallText="Price" />

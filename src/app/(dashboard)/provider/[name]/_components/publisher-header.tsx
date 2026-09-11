@@ -25,14 +25,14 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
     >
       <motion.h1
         variants={staggerItem}
-        className="my-auto flex flex-row items-center gap-4 text-lightGreen"
+        className="my-auto flex flex-row items-center gap-4 text-2xl text-lightGreen sm:text-4xl"
       >
         <Image height={60} width={60} alt="" src={publisher.image} />
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-col break-words">
           {publisher.name}
           <Link
             href={publisher.link}
-            className="pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
+            className="break-all pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
           >
             {publisher.link}
           </Link>
