@@ -34,6 +34,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
       </ScrollReveal>
       <ScrollReveal delay={0.1} className="w-full">
         <Suspense
+          key={source}
           fallback={
             <AssetList
               options={options}

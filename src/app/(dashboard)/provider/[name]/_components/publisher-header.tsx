@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProcessedPublisher } from "@/app/(dashboard)/assets/_types";
 import { DoubleText } from "@/app/(dashboard)/asset/[ticker]/_components/double-text";
-import { getPublisherType } from "@/utils";
 
 type PublisherHeaderProps = {
   publisher: ProcessedPublisher;
@@ -24,11 +23,11 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
         "rounded-2xl border border-lightGreen/20 p-6"
       )}
     >
-      <motion.h2
+      <motion.h1
         variants={staggerItem}
         className="my-auto flex flex-row items-center gap-4 text-lightGreen"
       >
-        <Image height={60} width={60} alt="arrowDown" src={publisher.image} />
+        <Image height={60} width={60} alt="" src={publisher.image} />
         <div className="flex flex-col">
           {publisher.name}
           <Link
@@ -38,13 +37,13 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
             {publisher.link}
           </Link>
           <div className="font-mono text-sm tracking-widest text-LightGreenFooter">
-            {getPublisherType(Number(publisher.type))}
+            {publisher.type}
           </div>
         </div>
-      </motion.h2>
+      </motion.h1>
       <motion.div
         variants={staggerItem}
-        className="flex flex-row gap-3 sm:gap-10 lg:gap-20"
+        className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10 lg:gap-20"
       >
         <div className="flex flex-col gap-4">
           <DoubleText
@@ -59,7 +58,7 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
             smallText="Reputation score"
           />
           <DoubleText
-            bigText={publisher.reputationScore}
+            bigText={String(publisher.dailyUpdates)}
             smallText="24h updates"
           />
         </div>

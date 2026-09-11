@@ -21,7 +21,7 @@ for (const source of ["mainnet", "api"]) {
     { "BTC/USD": { error: "Unavailable" } },
     source
   )[0];
-  assert.equal(error.lastUpdated, "Error fetching data");
+  assert.equal(error.lastUpdated, "Unavailable");
   assert.equal(error.chart, "");
   const stale = formatAssets(
     {

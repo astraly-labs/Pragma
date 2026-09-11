@@ -38,7 +38,7 @@ const AssetPage = async (props: AssetPageProps) => {
     return notFound();
   }
 
-  if (!/^[A-Za-z0-9]+-[A-Za-z0-9]+$/.test(tickerParam)) return notFound();
+  if (!/^[A-Za-z0-9_.]+-[A-Za-z0-9_.]+$/.test(tickerParam)) return notFound();
   const ticker = tickerParam.replace("-", "%2F");
 
   const asset = await getAsset({
@@ -119,7 +119,7 @@ const AssetPage = async (props: AssetPageProps) => {
             </ScrollReveal>
           )}
           <div className="w-full pb-5" />
-          {asset.components && asset.decimals && (
+          {asset.components && asset.decimals !== undefined && (
             <ScrollReveal delay={0.3}>
               <BoxContainer className="relative" modeOne={false}>
                 <PriceTable

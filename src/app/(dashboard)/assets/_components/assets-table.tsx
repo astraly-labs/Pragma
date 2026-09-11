@@ -24,12 +24,7 @@ export const AssetsTable = ({
 }: AssetsTableProps) => {
   const [streamingData, setStreamingData] = useState<PriceStreamData>({});
 
-  const {
-    data: tokens,
-    isLoading: isLoadingTokens,
-    isFetching: isFetchingTokens,
-    isRefetching: isRefecthingTokens,
-  } = useQuery({
+  const { data: tokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["AVAILABLE_TOKENS", source],
     queryFn: async () => {
       const result = await getTokens(source);
@@ -74,18 +69,17 @@ export const AssetsTable = ({
 
   const isStreamLoading =
     source === "api" &&
-    (isFetchingTokens ||
-      (assets.length > 0 &&
-        assets.every(
-          (asset) =>
-            !streamingData[asset.ticker] || streamingData[asset.ticker].loading
-        )));
+    assets.length > 0 &&
+    assets.every(
+      (asset) =>
+        !streamingData[asset.ticker] || streamingData[asset.ticker].loading
+    );
 
   const isTokensLoadingData =
     isLoadingTokens ||
-    isFetchingTokens ||
-    isRefecthingTokens ||
-    assetQueries.some((query: any) => query.isLoading) ||
+    (source === "mainnet" &&
+      assetQueries.length > 0 &&
+      assetQueries.every((query) => query.isLoading)) ||
     isStreamLoading;
 
   const data = useMemo(() => {
@@ -98,9 +92,10 @@ export const AssetsTable = ({
       );
 
     return (tokens ?? []).reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index]?.data ?? {
-        error: "Price unavailable",
-      };
+      const query = assetQueries[index];
+      acc[asset.ticker] = query?.isError
+        ? { error: "Price unavailable" }
+        : (query?.data ?? { error: "Waiting for price" });
       return acc;
     }, {});
   }, [source, tokens, assets, assetQueries, streamingData]);

@@ -16,11 +16,7 @@ const PublishersTable = ({
   source,
   options,
 }: PublishersTableProps) => {
-  const {
-    data: publishers,
-    isLoading: isLoadingPublishers,
-    isFetching: isFetchingPublishers,
-  } = useQuery({
+  const { data: publishers, isLoading: isLoadingPublishers } = useQuery({
     queryKey: ["PUBLISHERS", source, "Spot"],
     queryFn: async () => {
       const result = await getPublishers(source, "Spot");
@@ -28,17 +24,16 @@ const PublishersTable = ({
     },
     initialData: initialPublishers,
     enabled: source !== "api",
+    refetchInterval: 30000,
     refetchOnWindowFocus: false,
   });
-
-  const isPublishersLoadingData = isLoadingPublishers || isFetchingPublishers;
 
   return (
     <PublisherList
       options={options}
       publishers={publishers ?? []}
       selectedSource={source}
-      loading={isPublishersLoadingData}
+      loading={isLoadingPublishers}
     />
   );
 };

@@ -17,7 +17,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
+    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-6 px-6 pt-28 pb-16">
       <AssetHero
         title="The data behind"
         greenTitle="every decision."
