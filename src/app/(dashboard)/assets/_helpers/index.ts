@@ -59,11 +59,14 @@ export const formatAssets = (
         let lastUpdated: string;
         if (hasError) {
           // For error cases, show the error instead of the timestamp
-          lastUpdated = isUnsupported
-            ? "Unsupported asset"
-            : assetData.error === "No recent price"
-              ? "No recent observation"
-              : "Price unavailable";
+          lastUpdated =
+            assetData.error === "Waiting for price"
+              ? "Loading…"
+              : isUnsupported
+                ? "Unsupported asset"
+                : assetData.error === "No recent price"
+                  ? "No recent observation"
+                  : "Price unavailable";
         } else if (!Number.isFinite(timestamp)) {
           lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {
@@ -159,11 +162,14 @@ export const formatAssets = (
         let lastUpdated;
         if (hasError) {
           // For error cases, show the error instead of the timestamp
-          lastUpdated = isUnsupported
-            ? "Unsupported asset"
-            : assetData.error === "No recent price"
-              ? "No recent observation"
-              : "Price unavailable";
+          lastUpdated =
+            assetData.error === "Waiting for price"
+              ? "Loading…"
+              : isUnsupported
+                ? "Unsupported asset"
+                : assetData.error === "No recent price"
+                  ? "No recent observation"
+                  : "Price unavailable";
         } else if (!Number.isFinite(timestamp)) {
           lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {

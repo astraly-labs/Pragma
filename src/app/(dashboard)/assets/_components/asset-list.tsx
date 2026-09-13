@@ -32,6 +32,9 @@ export default function AssetList({
     [assets, search, isApi, showAll]
   );
   const unavailable = assets.filter((a) => a.error).length;
+  const failed = assets.filter(
+    (a) => a.error && a.error !== "Waiting for price"
+  ).length;
   return (
     <section className="explorer-panel" aria-labelledby="feeds-title">
       <div className="explorer-section-title">
@@ -89,10 +92,10 @@ export default function AssetList({
           </button>
         </div>
       )}
-      {!isApi && unavailable > 0 && (
+      {!isApi && failed > 0 && (
         <p className="explorer-notice" role="status">
-          {unavailable} {unavailable === 1 ? "feed is" : "feeds are"}{" "}
-          temporarily unavailable. Retrying automatically.
+          {failed} {failed === 1 ? "feed is" : "feeds are"} temporarily
+          unavailable. Retrying automatically.
         </p>
       )}
       {loading ? (
