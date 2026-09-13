@@ -20,8 +20,15 @@ export const getPublisher = async (
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${name}?network=starknet-${source}&data_type=Spot`
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${encodeURIComponent(name)}?network=starknet-${source}&data_type=Spot`,
+    {
+      headers: process.env.API_KEY ? { "x-api-key": process.env.API_KEY } : {},
+      signal: AbortSignal.timeout(25000),
+      cache: "no-store",
+    }
   );
+
+  if (response.status === 404) return undefined;
 
   if (!response.ok) {
     throw new Error("Failed to fetch publishers data");
@@ -57,7 +64,7 @@ export const getPublisher = async (
           component.pair_id.toLowerCase().split("/")[0]
         }.svg`,
         type: "Crypto",
-        ticker: component.pair_id.replace("/", ""),
+        ticker: component.pair_id,
         source: component.source,
         lastUpdated: lastUpdated,
         price: parseInt(component.price, 16) / 10 ** component.decimals,

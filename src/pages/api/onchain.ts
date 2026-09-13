@@ -1,27 +1,26 @@
-export default async function handler(req, res) {
+import type { NextApiRequest, NextApiResponse } from "next";
+import { fetchExplorer } from "@/lib/explorer-api";
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "GET") return res.status(405).end();
   const { network = "mainnet", pair = "btc/usd" } = req.query;
-
-  const apiUrl = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/${pair}?network=starknet-${network}&aggregation=median`;
-  console.log(`Fetching data from ${apiUrl}`);
-
+  if (
+    network !== "mainnet" ||
+    typeof pair !== "string" ||
+    !/^[A-Za-z0-9_.]+\/[A-Za-z0-9_.]+$/.test(pair)
+  )
+    return res.status(400).json({ error: "Invalid pair or network" });
   try {
-    const apiResponse = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        "x-api-key": process.env.API_KEY!,
-      },
-    });
-
-    if (apiResponse.ok) {
-      const data = await apiResponse.json();
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(apiResponse.status)
-        .json({ error: "Failed to fetch data from external API" });
-    }
-  } catch (error) {
-    console.error("Error fetching external API:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res
+      .status(200)
+      .json(
+        await fetchExplorer(
+          `/onchain/${encodeURIComponent(pair)}?network=starknet-mainnet&aggregation=median`
+        )
+      );
+  } catch {
+    return res.status(502).json({ error: "Price temporarily unavailable" });
   }
 }

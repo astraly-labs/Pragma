@@ -1,30 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
+import { fetchExplorer } from "@/lib/explorer-api";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_INTERNAL_API;
-  const apiUrl = `${baseUrl}/tokens/all`;
-
+  if (req.method !== "GET") return res.status(405).end();
   try {
-    const apiResponse = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        "x-api-key": process.env.API_KEY || "",
-      },
-    });
-
-    if (!apiResponse.ok) {
-      return res
-        .status(apiResponse.status)
-        .json({ error: "Failed to fetch tokens" });
-    }
-
-    const data = await apiResponse.json();
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching tokens:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(200).json(await fetchExplorer("/tokens/all"));
+  } catch {
+    return res
+      .status(502)
+      .json({ error: "Feed directory temporarily unavailable" });
   }
 }

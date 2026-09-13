@@ -22,15 +22,15 @@ export const AssetsTable = ({
   source = "mainnet",
   options,
 }: AssetsTableProps) => {
-  const [assets, setAssets] = useState<AssetT[]>([]);
   const [streamingData, setStreamingData] = useState<PriceStreamData>({});
+  // Re-render ages even when a feed stops sending data.
+  const [, refreshAges] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => refreshAges((value) => value + 1), 10000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const {
-    data: tokens,
-    isLoading: isLoadingTokens,
-    isFetching: isFetchingTokens,
-    isRefetching: isRefecthingTokens,
-  } = useQuery({
+  const { data: tokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["AVAILABLE_TOKENS", source],
     queryFn: async () => {
       const result = await getTokens(source);
@@ -42,68 +42,69 @@ export const AssetsTable = ({
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (tokens && tokens.length > 0) {
-      const newAssets = tokens.map((token) => {
-        const ticker = token.ticker.includes("/USD")
+  const assets = useMemo(
+    () =>
+      (tokens ?? []).map((token) => ({
+        ticker: token.ticker.includes("/")
           ? token.ticker
-          : token.ticker + "/USD";
-        return {
-          ticker,
-          address: token.address || "0x0",
-          decimals: token.decimals || 8,
-        };
-      });
-      setAssets(newAssets);
-    }
-  }, [tokens, source]);
+          : token.ticker + "/USD",
+        address: token.address || "0x0",
+        decimals: token.decimals ?? 8,
+      })),
+    [tokens]
+  );
 
   useEffect(() => {
-    if (source !== "api" || assets.length === 0) {
-      setStreamingData({});
-      return;
-    }
-    const pairs = assets.map((asset) => asset.ticker);
-    setStreamingData(
-      Object.fromEntries(pairs.map((pair) => [pair, { loading: true }]))
+    if (source !== "api" || assets.length === 0) return;
+    return startPriceStream(
+      assets.map((asset) => asset.ticker),
+      setStreamingData
     );
-    return startPriceStream(pairs, setStreamingData);
   }, [source, assets]);
 
   const assetQueries = useQueries({
     queries: (tokens ?? []).map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => getAssets({ asset, source }),
-      initialData: initialTokens?.[asset.ticker],
-      refetchInterval: source === "api" ? 1000 : undefined,
-      retry: false,
+      refetchInterval: source === "mainnet" ? 30000 : false,
+      retry: 1,
+      retryDelay: 2000,
       enabled: source !== "api",
     })),
   });
 
   const isStreamLoading =
     source === "api" &&
-    (isFetchingTokens ||
-      assets.length === 0 ||
-      Object.values(streamingData).every((d: any) => d?.loading));
+    assets.length > 0 &&
+    assets.every(
+      (asset) =>
+        !streamingData[asset.ticker] || streamingData[asset.ticker].loading
+    );
 
   const isTokensLoadingData =
     isLoadingTokens ||
-    isFetchingTokens ||
-    isRefecthingTokens ||
-    assetQueries.some((query: any) => query.isLoading) ||
+    (source === "mainnet" &&
+      assetQueries.length > 0 &&
+      assetQueries.every((query) => query.isLoading)) ||
     isStreamLoading;
 
   const data = useMemo(() => {
-    if (source === "api") return streamingData;
+    if (source === "api")
+      return Object.fromEntries(
+        assets.map((asset) => [
+          asset.ticker,
+          streamingData[asset.ticker] ?? { error: "Waiting for price" },
+        ])
+      );
 
     return (tokens ?? []).reduce((acc, asset, index) => {
-      acc[asset.ticker] = assetQueries[index]?.data ?? {
-        error: "Price unavailable",
-      };
+      const query = assetQueries[index];
+      acc[asset.ticker] = query?.isError
+        ? { error: "Price unavailable" }
+        : (query?.data ?? { error: "Waiting for price" });
       return acc;
     }, {});
-  }, [source, tokens, assetQueries, streamingData]);
+  }, [source, tokens, assets, assetQueries, streamingData]);
 
   const formattedAssets = isTokensLoadingData
     ? []

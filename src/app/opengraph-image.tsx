@@ -1,13 +1,13 @@
 import { generateOGImage, ogSize } from "@/lib/og";
 
 export const runtime = "edge";
-export const alt = "Pragma - The network of zk-truth machines";
+export const alt = "Pragma | Starknet & Miden";
 export const size = ogSize;
 export const contentType = "image/png";
 
 export default async function OGImage() {
   return generateOGImage(
-    "The network of zk-truth machines",
-    "Provable data feeds for decentralized applications"
+    "The oracle for Starknet and Miden",
+    "Market data. Transparent sources. Verifiable computation."
   );
 }

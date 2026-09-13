@@ -25,15 +25,17 @@ export default async function handler(
   const controller = new AbortController();
   const abort = () => controller.abort();
   res.on("close", abort);
+  const connectTimeout = setTimeout(abort, 20000);
 
   try {
     const response = await fetch(apiUrl, {
-      headers: { "x-api-key": process.env.API_KEY || "" },
+      headers: process.env.API_KEY ? { "x-api-key": process.env.API_KEY } : {},
       signal: controller.signal,
     });
+    clearTimeout(connectTimeout);
     if (!response.ok || !response.body) {
       res
-        .status(response.status || 502)
+        .status(response.ok ? 502 : response.status)
         .json({ error: "Price stream unavailable" });
       return;
     }
@@ -65,6 +67,7 @@ export default async function handler(
         res.status(502).json({ error: "Price stream unavailable" });
     }
   } finally {
+    clearTimeout(connectTimeout);
     controller.abort();
     res.off("close", abort);
     if (!res.writableEnded) res.end();

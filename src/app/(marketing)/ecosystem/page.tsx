@@ -1,70 +1,110 @@
-import BoxContainer from "@/components/common/BoxContainer";
-import clsx from "clsx";
-import BasicHero from "@/components/Ecosystem/BasicHero";
-import BlurBoxEcosystem from "@/components/common/BlurBoxEcosystem";
-import StatsBox from "@/components/Ecosystem/StatsBox";
-import CustomerCarousel from "@/components/Ecosystem/Customer/CustomerCarousel";
-import DataProviders from "@/components/Ecosystem/DataProviders";
-import ReadyBox from "@/components/common/ReadyBox";
-import ProvidersList from "@/components/Ecosystem/ProvidersList";
-import { ScrollReveal } from "@/components/common/ScrollReveal";
-
-const EcosystemPage = () => {
+import { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Ecosystem",
+  description:
+    "Build with Pragma on Starknet and Miden, contribute oracle data, and explore the open-source ecosystem.",
+  alternates: { canonical: "/ecosystem" },
+};
+export default function EcosystemPage() {
   return (
-    <div
-      className={clsx(
-        "relative w-full overflow-x-hidden",
-        "mx-auto max-w-[1700px]"
-      )}
-    >
-      <BasicHero
-        title="Meet and join our"
-        greenTitle="ecosystem"
-        description="World-class builders already work on Pragma. If you're an app builder, a data provider, an open-source contributor, or a smart person, join us in our mission "
-        solidButton="become a publisher"
-        solidButtonLink="mailto:support@pragma.build?body=Hi%Pragma-Team,%I%want%to%become%a%publisher"
-        outlineButton="integrate now"
-        outlineButtonLink="https://docs.pragma.build/starknet"
-        illustrationLink="/assets/vectors/ecosystem.svg"
-        illustrationSmallLink="/assets/vectors/ecosystemSmall.svg"
-      />
-      <ScrollReveal delay={0.1}>
-        <BoxContainer>
-          <BlurBoxEcosystem
-            greenText="10+"
-            firstText="Our users"
-            title="Projects already use verifiable data."
-            generalText="10+ projects already switched to verifiable data using Pragma. You're next?"
-            textButton="Integrate now"
-            linkButton="https://docs.pragma.build/starknet"
-            textButton2="Discover all ecosystem"
-            linkButton2="https://defillama.com/oracles/Pragma"
-          />
-          <StatsBox tve="+5,000,000,000" tvs="+320,000,000" />
-        </BoxContainer>
-      </ScrollReveal>
-      <ScrollReveal delay={0.15}>
-        <BoxContainer>
-          <CustomerCarousel />
-        </BoxContainer>
-      </ScrollReveal>
-      <ScrollReveal delay={0.2}>
-        <BoxContainer>
-          <DataProviders />
-        </BoxContainer>
-      </ScrollReveal>
-      <ScrollReveal delay={0.25}>
-        <BoxContainer>
-          <ProvidersList />
-        </BoxContainer>
-      </ScrollReveal>
-      <ScrollReveal delay={0.3}>
-        <BoxContainer>
-          <ReadyBox version={true} />
-        </BoxContainer>
-      </ScrollReveal>
+    <div className="marketing-page">
+      <section className="page-intro">
+        <span className="eyebrow">The Pragma ecosystem</span>
+        <h1>
+          Connected by data.
+          <br />
+          <span>Built together.</span>
+        </h1>
+        <p>
+          For application builders, data publishers, and open-source
+          contributors. Find your place in the network.
+        </p>
+      </section>
+      <section className="paper-section">
+        <div className="section-heading">
+          <span className="eyebrow">Our networks</span>
+          <h2>Native to possibility.</h2>
+        </div>
+        <div className="network-grid">
+          <article>
+            <span className="chain-symbol">✳</span>
+            <h3>Starknet</h3>
+            <p>
+              Raw data published onchain, with aggregation in Cairo. Explore
+              feeds and build with Pragma’s Starknet contracts.
+            </p>
+            <a
+              className="text-link"
+              href="https://docs.pragma.build/starknet/introduction"
+            >
+              Build on Starknet <ArrowUpRight size={18} />
+            </a>
+          </article>
+          <article>
+            <span className="miden-symbol">m</span>
+            <h3>Miden</h3>
+            <p>
+              Pragma is the Miden oracle. Find the integration code and setup
+              instructions for bringing external data to Miden.
+            </p>
+            <a
+              className="text-link"
+              href="https://docs.pragma.build/miden/introduction"
+            >
+              Build on Miden <ArrowUpRight size={18} />
+            </a>
+          </article>
+        </div>
+      </section>
+      <section className="resource-section">
+        <div className="section-heading">
+          <span className="eyebrow">Take part</span>
+          <h2>
+            More perspectives.
+            <br />
+            Better inputs.
+          </h2>
+        </div>
+        <div className="resource-list">
+          {[
+            [
+              "01",
+              "Integrate a feed",
+              "Explore available assets, publishers, and source observations before integrating a feed.",
+              "/assets",
+            ],
+            [
+              "02",
+              "Become a publisher",
+              "Run the open-source SDK and contact the team to coordinate registration and source configuration.",
+              "mailto:support@pragma.build?subject=Publisher%20onboarding",
+            ],
+            [
+              "03",
+              "Contribute code",
+              "Review the contracts, improve the SDK, or help develop the Miden integration.",
+              "https://github.com/astraly-labs",
+            ],
+            [
+              "04",
+              "Explore ecosystem adoption",
+              "See the protocols tracked by DefiLlama and their current oracle integrations.",
+              "https://defillama.com/oracles/Pragma",
+            ],
+          ].map(([n, title, text, href]) => (
+            <Link key={n} href={href}>
+              <span className="eyebrow">{n}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+              <ArrowUpRight />
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
-};
-
-export default EcosystemPage;
+}

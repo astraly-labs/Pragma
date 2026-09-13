@@ -1,176 +1,48 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { staggerContainer, staggerItem, fadeInUp } from "@/lib/animations";
-import clsx from "clsx";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { publisherColumns } from "@/app/(dashboard)/assets/_components/publishers-table/columns";
-import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
-import styles from "@/components/Assets/styles.module.scss";
+import { useState } from "react";
+import { publisherColumns } from "./publishers-table/columns";
+import { DataProviderInfo } from "../_types";
 import { SearchBar } from "./searchbar";
 import { DataTable } from "./data-table";
 
-const getDisplayLabel = (option: string): string => {
-  switch (option) {
-    case "api":
-      return "API";
-    default:
-      return option;
-  }
-};
-
-type PublisherListProps = {
+type Props = {
   options: string[];
   publishers: DataProviderInfo[];
   selectedSource?: string;
   loading: boolean;
 };
-
-export const PublisherList = ({
-  options,
-  publishers,
-  selectedSource,
-  loading,
-}: PublisherListProps) => {
-  const router = useRouter();
-  const [filteredValue, setFilteredValue] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const filteredPublishers = publishers.filter((publisher) =>
-    publisher.name.toLowerCase().includes(filteredValue.toLowerCase())
+export function PublisherList({ publishers, loading }: Props) {
+  const [search, setSearch] = useState("");
+  const filtered = publishers.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
   );
-
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={staggerContainer}
-      className={clsx("w-full text-lightGreen", styles.darkGreenBox)}
-    >
-      <motion.div variants={staggerItem}>
-        <h3 className="pb-3 text-lg text-lightGreen sm:text-3xl">
-          Data Providers
-        </h3>
-        <div className="flex w-full flex-col gap-3 sm:flex-row-reverse">
-          <div className="flex flex-col gap-3 smolScreen:flex-row">
-            <div ref={dropdownRef} className="relative w-full md:w-auto">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="relative flex w-full cursor-pointer flex-row justify-center rounded-full border border-lightBlur px-6 py-2.5 text-center text-sm text-lightGreen transition-colors hover:border-lightGreen/40 focus:outline-hidden"
-              >
-                <span className="block truncate">
-                  {getDisplayLabel(selectedSource || "")}
-                </span>
-                <Image
-                  className="my-auto pl-2"
-                  height={16}
-                  width={16}
-                  alt="arrowDown"
-                  src="/assets/vectors/arrowDown.svg"
-                />
-              </button>
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 4, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 4, scale: 0.97 }}
-                    transition={{ duration: 0.12 }}
-                    className="absolute z-10 mt-1 max-h-60 w-full min-w-[120px] overflow-auto rounded-lg border border-lightBlur bg-darkGreen/95 py-1 text-sm text-lightGreen backdrop-blur-xl"
-                  >
-                    {options.map((option) => (
-                      <button
-                        key={option}
-                        className="relative w-full cursor-pointer select-none px-4 py-2.5 text-left text-lightGreen transition-colors hover:bg-lightBlur hover:text-white"
-                        onClick={() => {
-                          router.push(`/assets?source=${option}`, {
-                            scroll: false,
-                          });
-                          setIsOpen(false);
-                        }}
-                      >
-                        <span
-                          className={clsx(
-                            "block truncate",
-                            option === selectedSource
-                              ? "font-medium text-mint"
-                              : "font-normal"
-                          )}
-                        >
-                          {getDisplayLabel(option)}
-                        </span>
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="my-auto flex w-full flex-row items-center justify-center gap-2 rounded-full border border-lightBlur px-5 py-2.5 text-center text-sm text-lightGreen md:w-auto">
-              <span className="font-mono text-mint">{publishers.length}</span>
-              <span className="opacity-60">providers</span>
-            </div>
-          </div>
-          <div className="sm:ml-auto">
-            <SearchBar onInputChange={setFilteredValue} />
-          </div>
+    <section className="explorer-panel" aria-labelledby="publishers-title">
+      <div className="explorer-section-title">
+        <div>
+          <span className="eyebrow">02 / Data provenance</span>
+          <h2 id="publishers-title">
+            Publishers
+            <span className="explorer-count">
+              {loading ? "—" : publishers.length}
+            </span>
+          </h2>
         </div>
-      </motion.div>
-
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center gap-3 py-16"
-          >
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
-            <span className="font-mono text-sm text-lightGreen/60">
-              Loading providers...
-            </span>
-          </motion.div>
-        ) : filteredPublishers.length === 0 ? (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center gap-2 py-16"
-          >
-            <span className="text-2xl">&#8709;</span>
-            <span className="font-mono text-sm text-lightGreen/60">
-              No providers found
-            </span>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="table"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            className="mt-2 w-full"
-          >
-            <DataTable columns={publisherColumns} data={filteredPublishers} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+        <SearchBar label="Search publishers" onInputChange={setSearch} />
+      </div>
+      <p className="explorer-caption">
+        Publishers returned by the mainnet indexer. Activity is measured by
+        their last recorded submission.
+      </p>
+      {loading ? (
+        <div className="explorer-empty" role="status">
+          Loading publishers…
+        </div>
+      ) : filtered.length ? (
+        <DataTable columns={publisherColumns} data={filtered} />
+      ) : (
+        <div className="explorer-empty">No publishers match your search.</div>
+      )}
+    </section>
   );
-};
+}

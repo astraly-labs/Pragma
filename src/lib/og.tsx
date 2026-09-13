@@ -16,7 +16,7 @@ export async function generateOGImage(title: string, subtitle: string) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "#042420",
+        background: "#111416",
         position: "relative",
         overflow: "hidden",
       }}
@@ -30,7 +30,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           height: "500px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(21,255,129,0.08) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,121,70,0.08) 0%, transparent 70%)",
         }}
       />
       <div
@@ -42,7 +42,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           height: "600px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(0,71,56,0.3) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,121,70,0.3) 0%, transparent 70%)",
         }}
       />
       <div
@@ -55,7 +55,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           height: "400px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(21,255,129,0.06) 0%, transparent 60%)",
+            "radial-gradient(circle, rgba(255,121,70,0.06) 0%, transparent 60%)",
         }}
       />
       <div
@@ -65,7 +65,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           display: "flex",
           opacity: 0.04,
           backgroundImage:
-            "linear-gradient(rgba(181,240,229,1) 1px, transparent 1px), linear-gradient(90deg, rgba(181,240,229,1) 1px, transparent 1px)",
+            "linear-gradient(rgba(242,240,233,1) 1px, transparent 1px), linear-gradient(90deg, rgba(242,240,233,1) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
@@ -73,7 +73,7 @@ export async function generateOGImage(title: string, subtitle: string) {
         style={{
           position: "absolute",
           inset: "24px",
-          border: "1px solid rgba(181,240,229,0.1)",
+          border: "1px solid rgba(242,240,233,0.1)",
           borderRadius: "24px",
           display: "flex",
         }}
@@ -101,7 +101,7 @@ export async function generateOGImage(title: string, subtitle: string) {
             width: "60px",
             height: "2px",
             background:
-              "linear-gradient(90deg, transparent, #15FF81, transparent)",
+              "linear-gradient(90deg, transparent, #ff7946, transparent)",
             display: "flex",
           }}
         />
@@ -110,7 +110,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           style={{
             fontSize: "36px",
             fontWeight: 300,
-            color: "#B5F0E5",
+            color: "#f2f0e9",
             letterSpacing: "-0.5px",
             display: "flex",
             textAlign: "center",
@@ -122,7 +122,7 @@ export async function generateOGImage(title: string, subtitle: string) {
         <div
           style={{
             fontSize: "18px",
-            color: "rgba(181,240,229,0.45)",
+            color: "rgba(242,240,233,0.45)",
             letterSpacing: "0.5px",
             display: "flex",
             textAlign: "center",
@@ -139,7 +139,7 @@ export async function generateOGImage(title: string, subtitle: string) {
           bottom: "40px",
           display: "flex",
           fontSize: "14px",
-          color: "rgba(181,240,229,0.3)",
+          color: "rgba(242,240,233,0.3)",
           letterSpacing: "2px",
           textTransform: "uppercase",
         }}

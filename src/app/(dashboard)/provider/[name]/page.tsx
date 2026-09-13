@@ -6,7 +6,7 @@ import { ScrollReveal } from "@/components/common/ScrollReveal";
 import BoxContainer from "@/components/common/BoxContainer";
 import PairReported from "@/components/Assets/PairReported";
 import { getPublisher } from "./_helpers/getPublisher";
-import Loading from "./loading";
+import { notFound } from "next/navigation";
 import { PublisherHeader } from "./_components/publisher-header";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -23,22 +23,18 @@ const ProviderPage = async (props: ProviderPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const network = (searchParams.network as string) || DEFAULT_SOURCE;
+  const network =
+    searchParams.network === "mainnet" ? searchParams.network : DEFAULT_SOURCE;
   const nameParam = params.name as string;
 
   const data = await getPublisher(nameParam, network);
 
   if (!data) {
-    return <Loading />;
+    return notFound();
   }
 
   return (
-    <div
-      className={clsx(
-        "relative w-full overflow-x-hidden pt-24 md:pt-40",
-        "mx-auto max-w-[1700px]"
-      )}
-    >
+    <div className={clsx("explorer-page explorer-detail", "mx-auto")}>
       <ScrollReveal direction="none">
         <BoxContainer>
           <Link

@@ -17,15 +17,13 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-[10px] overflow-x-hidden rounded-[20px] border border-[rgba(181,240,229,0.12)] bg-[rgba(27,99,82,0.12)] p-[36px]">
+    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-6 px-6 pt-28 pb-16">
       <AssetHero
-        title="Every asset"
-        greenTitle="priced the best way"
-        description="Explore the assets supported by Pragma, priced in the most efficient way. Best pricing, no fluff."
+        title="The data behind"
+        greenTitle="every decision."
+        description="Inspect prices, source observations, and publisher activity."
         solidButton="Read docs"
         solidButtonLink="https://docs.pragma.build"
-        illustrationLink="/assets/vectors/chart.svg"
-        illustrationSmallLink="/assets/vectors/chartSmall.svg"
       />
       <BoxContainer>
         <h2 className="text-white">Something went wrong!</h2>

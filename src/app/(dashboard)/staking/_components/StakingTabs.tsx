@@ -249,14 +249,17 @@ function AttestationsTable({ data }: { data: StakingEventsData }) {
 export function StakingTabs() {
   const [activeTab, setActiveTab] = useState<Tab>("Delegators");
 
-  const { data, isLoading } = useQuery<StakingEventsData>({
+  const { data, isLoading, isFetching, refetch } = useQuery<StakingEventsData>({
     queryKey: ["staking-events"],
     queryFn: async () => {
-      const res = await fetch("/api/staking/events");
+      const res = await fetch("/api/staking/events", {
+        signal: AbortSignal.timeout(30000),
+      });
       if (!res.ok) throw new Error("Failed to fetch staking events");
       return res.json();
     },
     staleTime: 60000,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 
@@ -312,9 +315,19 @@ export function StakingTabs() {
             </motion.div>
           </AnimatePresence>
         ) : (
-          <p className="py-8 text-center text-sm text-lightGreen/40">
-            Failed to load data. Please try again later.
-          </p>
+          <div
+            className="py-8 text-center text-sm text-lightGreen/60"
+            role="status"
+          >
+            <p>Staking history is temporarily unavailable.</p>
+            <button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="mt-4 rounded-full border border-lightGreen/30 px-5 py-2 disabled:opacity-50"
+            >
+              {isFetching ? "Loading…" : "Try again"}
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import clsx from "clsx";
 import styles from "./styles.module.scss";
 import PairReportedComp from "./PairReportedComp";
-import SearchBar from "../Navigation/SearchBar";
+import { SearchBar } from "@/app/(dashboard)/assets/_components/searchbar";
 
 const PairReported = ({ components }) => {
   const [filteredValue, setFilteredValue] = useState("");
@@ -26,11 +25,14 @@ const PairReported = ({ components }) => {
   }, [components, filteredValue]);
 
   return (
-    <div className="z-1 w-full flex-col justify-between gap-0 rounded-2xl border border-lightGreen/20 p-6">
+    <div className="explorer-panel">
       <div className="flex w-full flex-col gap-3 py-3 sm:flex-row">
-        <h4 className="text-lightGreen">Price Components</h4>
+        <h2 className="explorer-detail-heading">Published observations</h2>
         <div className="text-lightGreen sm:ml-auto">
-          <SearchBar onInputChange={handleInputChange} />
+          <SearchBar
+            label="Search observations"
+            onInputChange={handleInputChange}
+          />
         </div>
       </div>
       <div className="w-full overflow-x-scroll">

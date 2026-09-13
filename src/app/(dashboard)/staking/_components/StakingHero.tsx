@@ -61,9 +61,9 @@ export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
 
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-lightGreen">
+              <h1 className="text-lightGreen">
                 {data?.validator.name || "Pragma"} Validator
-              </h2>
+              </h1>
               {data && !data.stakerInfo.isUnstaking && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1 text-xs font-medium text-mint">
                   <span className="h-1.5 w-1.5 rounded-full bg-mint" />

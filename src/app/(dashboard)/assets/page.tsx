@@ -15,23 +15,26 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 const options = ["mainnet", "api"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
-  const source = ((await searchParams).source as string) || options[0];
+  const requestedSource = (await searchParams).source;
+  const source =
+    typeof requestedSource === "string" && options.includes(requestedSource)
+      ? requestedSource
+      : options[0];
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-4 overflow-x-hidden px-3 pt-20 pb-8 sm:gap-6 sm:px-6 sm:pt-28 md:px-8">
+    <div className="explorer-page explorer-directory">
       <ScrollReveal direction="down" className="w-full">
         <AssetHero
-          title="Every asset"
-          greenTitle="priced the best way"
-          description="Explore the assets supported by Pragma, priced in the most efficient way. Best pricing, no fluff."
+          title="The data behind"
+          greenTitle="every decision."
+          description="Inspect prices, source observations, and publisher activity. Switch between Starknet mainnet and the streaming API."
           solidButton="Read docs"
           solidButtonLink="https://docs.pragma.build"
-          illustrationLink="/assets/vectors/chart.svg"
-          illustrationSmallLink="/assets/vectors/chartSmall.svg"
         />
       </ScrollReveal>
       <ScrollReveal delay={0.1} className="w-full">
         <Suspense
+          key={source}
           fallback={
             <AssetList
               options={options}
@@ -41,7 +44,9 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
             />
           }
         >
-          <Tokens source={source} />
+          <ErrorBoundary errorComponent={CustomError}>
+            <Tokens source={source} />
+          </ErrorBoundary>
         </Suspense>
       </ScrollReveal>
       <ScrollReveal delay={0.2} className="w-full">
@@ -71,6 +76,7 @@ const Tokens = async ({ source }: { source: string }) => {
 
   return (
     <AssetsTable
+      key={source}
       options={options}
       source={source}
       initialTokens={initialtokens}
