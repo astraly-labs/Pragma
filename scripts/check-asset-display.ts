@@ -2,6 +2,12 @@
 import assert from "node:assert/strict";
 import { formatAssets } from "../src/app/(dashboard)/assets/_helpers";
 for (const source of ["mainnet", "api"]) {
+  assert.equal(
+    formatAssets({ "BTC/USD": { error: "Waiting for price" } }, source)[0]
+      .lastUpdated,
+    "Loading…",
+    "Pending requests must not be presented as failed prices"
+  );
   const missing = formatAssets(
     { "UNKNOWN/USD": { price: 1, decimals: 0 } },
     source
