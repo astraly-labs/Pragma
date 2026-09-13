@@ -20,12 +20,16 @@ export default function AssetList({
   loading,
 }: Props) {
   const [search, setSearch] = useState("");
+  const [showAll, setShowAll] = useState(false);
+  const isApi = selectedSource === "api";
   const filtered = useMemo(
     () =>
-      assets.filter((a) =>
-        a.ticker.toLowerCase().includes(search.toLowerCase())
+      assets.filter(
+        (a) =>
+          a.ticker.toLowerCase().includes(search.toLowerCase()) &&
+          (!isApi || showAll || Boolean(search.trim()) || !a.error)
       ),
-    [assets, search]
+    [assets, search, isApi, showAll]
   );
   const unavailable = assets.filter((a) => a.error).length;
   return (
@@ -68,7 +72,24 @@ export default function AssetList({
           : "Onchain observations · refreshes every 30 seconds"}
         . Timestamps show the age of each observation.
       </p>
-      {unavailable > 0 && (
+      {isApi && !loading && (
+        <div className="explorer-feed-filter">
+          <span>
+            {assets.length - unavailable} of {assets.length} registered feeds
+            have observations.
+          </span>
+          <button
+            type="button"
+            aria-pressed={showAll}
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll
+              ? "Show feeds with observations"
+              : "Show all registered feeds"}
+          </button>
+        </div>
+      )}
+      {!isApi && unavailable > 0 && (
         <p className="explorer-notice" role="status">
           {unavailable} {unavailable === 1 ? "feed is" : "feeds are"}{" "}
           temporarily unavailable. Retrying automatically.
@@ -84,7 +105,11 @@ export default function AssetList({
       ) : filtered.length ? (
         <DataTable columns={columns(selectedSource)} data={filtered} />
       ) : (
-        <div className="explorer-empty">No feeds match your search.</div>
+        <div className="explorer-empty">
+          {search
+            ? "No feeds match your search."
+            : "No price observations received yet. View the full directory above."}
+        </div>
       )}
     </section>
   );

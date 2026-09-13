@@ -1049,3 +1049,19 @@ button {
     padding-bottom: 17px;
   }
 }
+
+.explorer-feed-filter {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--site-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 18px 0;
+}
+.explorer-feed-filter button {
+  color: var(--site-paper);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

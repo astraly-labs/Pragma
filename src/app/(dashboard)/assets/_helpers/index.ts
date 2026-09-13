@@ -61,7 +61,9 @@ export const formatAssets = (
           // For error cases, show the error instead of the timestamp
           lastUpdated = isUnsupported
             ? "Unsupported asset"
-            : "Price unavailable";
+            : assetData.error === "No recent price"
+              ? "No recent observation"
+              : "Price unavailable";
         } else if (!Number.isFinite(timestamp)) {
           lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {
@@ -159,7 +161,9 @@ export const formatAssets = (
           // For error cases, show the error instead of the timestamp
           lastUpdated = isUnsupported
             ? "Unsupported asset"
-            : "Price unavailable";
+            : assetData.error === "No recent price"
+              ? "No recent observation"
+              : "Price unavailable";
         } else if (!Number.isFinite(timestamp)) {
           lastUpdated = "Unavailable";
         } else if (diffMs < 10000) {

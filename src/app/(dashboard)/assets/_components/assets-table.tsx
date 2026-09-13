@@ -23,6 +23,12 @@ export const AssetsTable = ({
   options,
 }: AssetsTableProps) => {
   const [streamingData, setStreamingData] = useState<PriceStreamData>({});
+  // Re-render ages even when a feed stops sending data.
+  const [, refreshAges] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => refreshAges((value) => value + 1), 10000);
+    return () => clearInterval(timer);
+  }, []);
 
   const { data: tokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["AVAILABLE_TOKENS", source],
