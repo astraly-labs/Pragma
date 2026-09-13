@@ -14,8 +14,8 @@ export const PriceTable = ({
   network: string;
 }) => {
   return (
-    <div className="z-1 w-full flex-col justify-between gap-0 green-box">
-      <h4 className="text-lightGreen">Price Components</h4>
+    <div className="explorer-panel">
+      <h2 className="explorer-detail-heading">Price Components</h2>
       <div className="w-full overflow-x-scroll">
         <div className={styles.priceComp}>
           <div className="flex flex-row gap-2	 font-mono text-xs text-LightGreenFooter md:tracking-wider">

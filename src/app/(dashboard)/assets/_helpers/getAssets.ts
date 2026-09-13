@@ -8,7 +8,11 @@ export const getAssets = async ({
   asset: AssetT;
 }) => {
   const pair = encodeURIComponent(asset.ticker.toLowerCase());
-  const response = await fetch(`/api/onchain?network=${source}&pair=${pair}`);
+  const response = await fetch(`/api/onchain?network=${source}&pair=${pair}`, {
+    signal: AbortSignal.timeout(30000),
+  });
   if (!response.ok) throw new Error(`Failed to fetch data for ${asset.ticker}`);
-  return response.json();
+  const data = await response.json();
+  if (data?.error) throw new Error("Price unavailable");
+  return data;
 };

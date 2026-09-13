@@ -31,7 +31,7 @@ export const AssetHeader = ({ asset }: AssetHeaderProps) => {
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
-      className="w-full rounded-2xl border border-lightGreen/20 p-6"
+      className="explorer-panel explorer-asset-header"
     >
       <h1 className="flex items-center gap-4 text-2xl text-lightGreen sm:text-4xl">
         <Avatar className="h-16 w-16">
@@ -52,8 +52,6 @@ export const AssetHeader = ({ asset }: AssetHeaderProps) => {
         />
         <DoubleText bigText={lastUpdated} smallText="Last updated" />
         <DoubleText bigText={asset.type} smallText="Asset type" />
-        <DoubleText bigText={asset.ema || "Unavailable"} smallText="1h EMA" />
-        <DoubleText bigText={asset.macd || "Unavailable"} smallText="1h MACD" />
       </div>
     </motion.div>
   );

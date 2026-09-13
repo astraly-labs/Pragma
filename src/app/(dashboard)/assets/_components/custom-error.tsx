@@ -1,24 +1,25 @@
 "use client";
-
-import BoxContainer from "@/components/common/BoxContainer";
-import { Button } from "@/components/common/Button";
-
-export const CustomError = (props: { error: Error; reset?: () => void }) => {
+import { useRouter } from "next/navigation";
+export const CustomError = ({
+  reset,
+}: {
+  error: Error;
+  reset?: () => void;
+}) => {
+  const router = useRouter();
   return (
-    <BoxContainer>
-      <h2 className="text-white">Something went wrong!</h2>
-      {process.env.NODE_ENV === "development" && (
-        <p className="text-white">{props.error.message}</p>
-      )}
-      <Button
-        center={false}
-        color="mint"
-        variant="outline"
-        type="button"
-        onClick={() => props.reset?.()}
+    <div className="explorer-panel explorer-notice" role="alert">
+      <h2>Data temporarily unavailable</h2>
+      <p>We couldn’t load this section. Please try again.</p>
+      <button
+        className="text-link"
+        onClick={() => {
+          reset?.();
+          router.refresh();
+        }}
       >
-        Try again
-      </Button>
-    </BoxContainer>
+        Try again ↗
+      </button>
+    </div>
   );
 };

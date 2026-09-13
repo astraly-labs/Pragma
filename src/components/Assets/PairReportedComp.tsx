@@ -1,12 +1,15 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const PairReportedComp = ({ component }) => {
   return (
     <div className={styles.pairComp}>
       <div className="my-auto flex flex-row gap-4 text-LightGreenFooter md:tracking-wider">
-        <Image height={30} width={30} alt="AssetImage" src={component.image} />
+        <Avatar className="h-8 w-8">
+          <AvatarImage alt="" src={component.image} />
+          <AvatarFallback>{component.ticker[0]}</AvatarFallback>
+        </Avatar>
         <div className="flex flex-col text-lg text-lightGreen">
           {component.ticker}
           <div className="font-mono text-xs uppercase text-LightGreenFooter md:tracking-wider">

@@ -41,26 +41,18 @@ const AssetPage = async (props: AssetPageProps) => {
   if (!/^[A-Za-z0-9_.]+-[A-Za-z0-9_.]+$/.test(tickerParam)) return notFound();
   const ticker = tickerParam.replace("-", "%2F");
 
-  const asset = await getAsset({
-    ticker,
-    source: network,
-  });
-
-  const checkpoints = await getCheckpoints({
-    ticker,
-    source: network,
-  });
+  const [asset, checkpointsResult] = await Promise.all([
+    getAsset({ ticker, source: network }),
+    getCheckpoints({ ticker, source: network })
+      .then((data) => ({ data, error: false }))
+      .catch(() => ({ data: [], error: true })),
+  ]);
 
   const isApi = network === "api";
   const isMainnet = network === "mainnet";
 
   return (
-    <div
-      className={clsx(
-        "relative w-full overflow-x-hidden pt-24 md:pt-40",
-        "mx-auto max-w-[1700px]"
-      )}
-    >
+    <div className={clsx("explorer-page explorer-detail", "mx-auto")}>
       <ScrollReveal direction="none">
         <BoxContainer>
           <Link
@@ -114,7 +106,11 @@ const AssetPage = async (props: AssetPageProps) => {
           {isApi && (
             <ScrollReveal delay={0.2}>
               <BoxContainer>
-                <AssetChart asset={asset} currentSource={network} />
+                <AssetChart
+                  key={`${ticker}-${network}`}
+                  asset={asset}
+                  currentSource={network}
+                />
               </BoxContainer>
             </ScrollReveal>
           )}
@@ -133,7 +129,14 @@ const AssetPage = async (props: AssetPageProps) => {
           {isMainnet && (
             <ScrollReveal delay={0.4}>
               <BoxContainer>
-                <Checkpoints components={checkpoints} />
+                {checkpointsResult.error ? (
+                  <div className="explorer-panel explorer-notice">
+                    Checkpoint history is temporarily unavailable. Price
+                    observations above are still available.
+                  </div>
+                ) : (
+                  <Checkpoints components={checkpointsResult.data} />
+                )}
               </BoxContainer>
             </ScrollReveal>
           )}

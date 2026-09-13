@@ -1,3 +1,4 @@
+import { fetchExplorer } from "@/lib/explorer-api";
 import { Checkpoint } from "@/app/(dashboard)/assets/_types";
 
 type GetCheckpoints = {
@@ -15,14 +16,6 @@ export const getCheckpoints = async ({ source, ticker }: GetCheckpoints) => {
 
   const encodedTicker = encodeURIComponent(`${base}/${quote}`);
 
-  const url = `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/checkpoints?pair=${encodedTicker}&network=starknet-${source}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch checkpoints for ${ticker}`);
-  }
-
-  const data: Checkpoint[] = await response.json();
-
-  return data;
+  const url = `/onchain/checkpoints?pair=${encodedTicker}&network=starknet-${source}`;
+  return fetchExplorer<Checkpoint[]>(url);
 };

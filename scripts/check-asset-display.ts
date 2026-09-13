@@ -21,7 +21,7 @@ for (const source of ["mainnet", "api"]) {
     { "BTC/USD": { error: "Unavailable" } },
     source
   )[0];
-  assert.equal(error.lastUpdated, "Unavailable");
+  assert.equal(error.lastUpdated, "Price unavailable");
   assert.equal(error.chart, "");
   const stale = formatAssets(
     {
@@ -42,3 +42,11 @@ for (const source of ["mainnet", "api"]) {
   );
 }
 console.log("Asset display checks passed");
+
+assert.equal(
+  formatAssets(
+    { "BTC/USD": { error: "500: internal host details" } },
+    "mainnet"
+  )[0].lastUpdated,
+  "Price unavailable"
+);

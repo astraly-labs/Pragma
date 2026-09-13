@@ -855,3 +855,197 @@ button {
   line-height: 1.85;
   overflow-wrap: anywhere;
 }
+
+/* Shared visual language across the feed directory, asset and publisher pages. */
+.explorer-page {
+  --dark-green: 204 13% 8%;
+  --light-green: 47 25% 93%;
+  --mint: 17 100% 64%;
+  --light-blur: 180 3% 18%;
+  --light-green-footer: 156 2% 67%;
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
+  padding: 130px 5% 90px;
+  color: var(--site-paper);
+}
+.explorer-directory {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.explorer-panel {
+  width: 100%;
+  min-width: 0;
+  border-top: 1px solid var(--site-line);
+  padding: 30px 0 0;
+}
+.explorer-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+.explorer-section-title .eyebrow {
+  color: var(--site-accent);
+  margin-bottom: 16px;
+}
+.explorer-section-title h2,
+.explorer-detail-heading {
+  font-size: 32px;
+  letter-spacing: -0.045em;
+  font-weight: 400;
+}
+.explorer-count {
+  display: inline-block;
+  vertical-align: top;
+  margin: 4px 0 0 12px;
+  color: var(--site-muted);
+  font:
+    12px var(--font-ibm-plex-mono),
+    monospace;
+  letter-spacing: 0;
+}
+.explorer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.explorer-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--site-line);
+  gap: 26px;
+}
+.explorer-tabs a {
+  padding: 15px 0;
+  font-size: 13px;
+  color: var(--site-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.explorer-tabs a[aria-current] {
+  color: var(--site-paper);
+  border-color: var(--site-accent);
+}
+.explorer-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--site-line);
+  padding: 12px 16px;
+  color: var(--site-muted);
+}
+.explorer-search input {
+  width: 190px;
+  min-width: 0;
+  background: transparent;
+  color: var(--site-paper);
+  font-size: 13px;
+  outline-offset: 8px;
+}
+.explorer-caption {
+  font-size: 12px;
+  color: var(--site-muted);
+  line-height: 1.7;
+  margin: 18px 0;
+}
+.explorer-notice {
+  padding: 16px;
+  border-left: 2px solid var(--site-accent);
+  background: #ff794609;
+  color: #e0b8a8;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 16px 0;
+}
+.explorer-empty {
+  padding: 70px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: var(--site-muted);
+  font-size: 13px;
+}
+.explorer-spinner {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--site-line);
+  border-top-color: var(--site-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.explorer-page table {
+  border-collapse: collapse;
+}
+.explorer-page thead {
+  border-top: 1px solid var(--site-line);
+  border-bottom: 1px solid var(--site-line);
+}
+.explorer-page th {
+  color: var(--site-muted);
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+.explorer-page tbody tr {
+  border-bottom: 1px solid #ffffff0e;
+}
+.explorer-page td {
+  padding-top: 21px;
+  padding-bottom: 21px;
+}
+.explorer-page tbody a:hover {
+  color: var(--site-accent);
+}
+.explorer-detail > div > div {
+  padding: 0;
+  width: 100%;
+  margin-bottom: 28px;
+}
+.explorer-detail .explorer-panel {
+  padding-top: 28px;
+}
+.explorer-asset-header {
+  padding-bottom: 25px;
+}
+.explorer-detail-heading {
+  font-size: 26px;
+  margin-bottom: 22px;
+}
+@media (max-width: 700px) {
+  .explorer-page {
+    padding: 105px 6% 60px;
+  }
+  .explorer-directory {
+    gap: 32px;
+  }
+  .explorer-section-title {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .explorer-section-title h2 {
+    font-size: 29px;
+  }
+  .explorer-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .explorer-search {
+    width: 100%;
+  }
+  .explorer-search input {
+    width: 100%;
+  }
+  .explorer-tabs {
+    gap: 23px;
+  }
+  .explorer-page td {
+    padding-top: 17px;
+    padding-bottom: 17px;
+  }
+}

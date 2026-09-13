@@ -26,11 +26,9 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [streamingData, setStreamingData] = useState<PriceStreamData>({});
   const [chartData, setChartData] = useState<
     Array<{ date: string; value: number }>
   >([]);
-  const latestData = streamingData[asset.ticker];
 
   const handleSourceChange = (newSource: string) => {
     router.push(
@@ -52,62 +50,21 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
   }, []);
 
   useEffect(() => {
-    setStreamingData({});
-    setChartData([]);
-    return startPriceStream([asset.ticker], setStreamingData);
-  }, [asset.ticker, currentSource]);
-
-  useEffect(() => {
-    if (!latestData || !("price" in latestData)) return;
-
-    const timestamp =
-      latestData.last_updated_timestamp ?? Math.floor(Date.now() / 1000);
-
-    let priceNumber = 0;
-    if (
-      typeof latestData.price === "string" &&
-      latestData.price.startsWith("0x")
-    ) {
-      priceNumber =
-        parseInt(latestData.price, 16) /
-        10 ** (latestData.decimals ?? asset.decimals ?? 18);
-    } else if (!isNaN(parseFloat(latestData.price))) {
-      priceNumber =
-        parseFloat(latestData.price) /
-        10 ** (latestData.decimals ?? asset.decimals ?? 18);
-    } else {
-      return;
-    }
-
-    const value = parseFloat(
-      priceNumber < 1
-        ? priceNumber.toFixed(8)
-        : priceNumber < 100
-          ? priceNumber.toFixed(5)
-          : priceNumber.toFixed(2)
-    );
-
-    const timestampMs = timestamp * 1000;
-    const nowISO = new Date(timestampMs).toISOString();
-    const oneSecondEarlier = new Date(timestampMs - 1000).toISOString();
-
-    setChartData((prev) => {
-      if (prev.length && prev[prev.length - 1].date >= nowISO) return prev;
-      let updated = [...prev];
-
-      if (updated.length < 2) {
-        updated.push({ date: oneSecondEarlier, value });
-      }
-
-      updated.push({ date: nowISO, value });
-
-      if (updated.length > 100) {
-        updated = updated.slice(-100);
-      }
-
-      return updated;
+    let snapshot: PriceStreamData = {};
+    return startPriceStream([asset.ticker], (update) => {
+      snapshot = typeof update === "function" ? update(snapshot) : update;
+      const quote = snapshot[asset.ticker];
+      if (!quote || !("price" in quote)) return;
+      const price = Number(quote.price) / 10 ** quote.decimals;
+      if (!Number.isFinite(price)) return;
+      const date = new Date(quote.last_updated_timestamp * 1000).toISOString();
+      setChartData((previous) => {
+        if (previous.length && previous[previous.length - 1].date >= date)
+          return previous;
+        return [...previous, { date, value: price }].slice(-100);
+      });
     });
-  }, [latestData, asset.decimals]);
+  }, [asset.ticker, currentSource]);
 
   if (asset?.error || asset?.isUnsupported) return null;
 
@@ -158,14 +115,14 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
         </div>
       </div>
 
-      <Card className="w-full border border-lightBlur bg-darkGreen p-2 text-white">
+      <Card className="w-full rounded-none border border-lightBlur bg-darkGreen p-2 text-white">
         <CardContent className="pt-4 sm:pt-6">
           <ChartContainer
             config={
               {
                 price: {
                   label: "Price",
-                  color: "#00ff9d",
+                  color: "#ff7946",
                 },
               } satisfies ChartConfig
             }
@@ -177,8 +134,8 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
             >
               <defs>
                 <linearGradient id="fillPrice" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00ff9d" stopOpacity={0.6} />
-                  <stop offset="95%" stopColor="#00ff9d" stopOpacity={0.05} />
+                  <stop offset="5%" stopColor="#ff7946" stopOpacity={0.6} />
+                  <stop offset="95%" stopColor="#ff7946" stopOpacity={0.05} />
                 </linearGradient>
               </defs>
 
@@ -242,7 +199,7 @@ export const AssetChart = ({ asset, currentSource }: AssetChartProps) => {
               <Area
                 type="natural"
                 dataKey="value"
-                stroke="#00ff9d"
+                stroke="#ff7946"
                 fill="url(#fillPrice)"
                 strokeWidth={2}
                 dot={false}

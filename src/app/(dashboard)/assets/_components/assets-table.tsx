@@ -60,9 +60,9 @@ export const AssetsTable = ({
     queries: (tokens ?? []).map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => getAssets({ asset, source }),
-      initialData: initialTokens?.[asset.ticker],
       refetchInterval: source === "mainnet" ? 30000 : false,
-      retry: false,
+      retry: 1,
+      retryDelay: 2000,
       enabled: source !== "api",
     })),
   });

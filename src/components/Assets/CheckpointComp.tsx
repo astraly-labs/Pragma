@@ -24,10 +24,11 @@ const CheckpointComp = ({ component }) => {
       </div>
 
       <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        {component.date}
+        {new Date(Number(component.date) * 1000).toISOString().slice(0, 10)}
       </div>
       <div className="flex flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider">
-        {component.hour}
+        {new Date(Number(component.hour) * 1000).toISOString().slice(11, 19)}{" "}
+        UTC
       </div>
       <Link
         className=" flex cursor-pointer flex-row gap-2 font-mono text-sm text-lightGreen md:tracking-wider"

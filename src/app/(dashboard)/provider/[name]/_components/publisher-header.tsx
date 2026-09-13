@@ -20,7 +20,7 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
       variants={staggerContainer}
       className={clsx(
         "w-full flex-col justify-between gap-8 self-stretch md:flex-row md:gap-5",
-        "rounded-2xl border border-lightGreen/20 p-6"
+        "explorer-panel explorer-asset-header"
       )}
     >
       <motion.h1
@@ -46,17 +46,10 @@ export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
         className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10 lg:gap-20"
       >
         <div className="flex flex-col gap-4">
-          <DoubleText
-            bigText={String(publisher.nbFeeds)}
-            smallText="Nb Feeds"
-          />
-          <DoubleText bigText={publisher.type} smallText="DP Type" />
+          <DoubleText bigText={String(publisher.nbFeeds)} smallText="Feeds" />
+          <DoubleText bigText={publisher.type} smallText="Publisher type" />
         </div>
         <div className="flex flex-col gap-4">
-          <DoubleText
-            bigText={publisher.reputationScore}
-            smallText="Reputation score"
-          />
           <DoubleText
             bigText={String(publisher.dailyUpdates)}
             smallText="24h updates"

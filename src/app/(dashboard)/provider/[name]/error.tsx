@@ -1,54 +1,21 @@
 "use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
-import BoxContainer from "@/components/common/BoxContainer";
-import { Button } from "@/components/common/Button";
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
-
+export default function ProviderError({ reset }: { reset: () => void }) {
   return (
-    <div className="relative mx-auto w-full max-w-[1700px] overflow-x-hidden pt-24 md:pt-40">
-      <BoxContainer>
-        <Link
-          href="/assets"
-          className="flex w-full cursor-pointer items-center gap-2 text-left text-sm uppercase tracking-widest text-lightGreen"
-        >
-          <Image
-            className="my-auto pl-2"
-            height={30}
-            width={30}
-            alt="arrowDown"
-            src="/assets/vectors/prev.svg"
-          />
+    <section className="explorer-page">
+      <span className="eyebrow">Data temporarily unavailable</span>
+      <h1 className="mt-6 text-4xl">We couldn’t load this publisher.</h1>
+      <p className="explorer-caption">
+        Please try again, or return to the feed directory.
+      </p>
+      <div className="button-row">
+        <button className="site-button" onClick={reset}>
+          Try again
+        </button>
+        <Link className="text-link" href="/assets">
           Back to feeds
         </Link>
-      </BoxContainer>
-      <BoxContainer>
-        <h2 className="text-white">Something went wrong!</h2>
-        {process.env.NODE_ENV === "development" && (
-          <p className="text-white">{error.message}</p>
-        )}
-        <Button
-          center={false}
-          color="mint"
-          variant="outline"
-          type="button"
-          onClick={() => reset()}
-        >
-          Try again
-        </Button>
-      </BoxContainer>
-    </div>
+      </div>
+    </section>
   );
 }

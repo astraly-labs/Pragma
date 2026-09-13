@@ -34,12 +34,7 @@ const ProviderPage = async (props: ProviderPageProps) => {
   }
 
   return (
-    <div
-      className={clsx(
-        "relative w-full overflow-x-hidden pt-24 md:pt-40",
-        "mx-auto max-w-[1700px]"
-      )}
-    >
+    <div className={clsx("explorer-page explorer-detail", "mx-auto")}>
       <ScrollReveal direction="none">
         <BoxContainer>
           <Link

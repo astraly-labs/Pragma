@@ -8,10 +8,9 @@
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
-  border-radius: 20px;
-  border: 1px solid rgba(181, 240, 229, 0.08);
-  background: #02201e;
-  backdrop-filter: blur(12.5px);
+  border-radius: 0;
+  border: 1px solid var(--site-line);
+  background: var(--site-ink);
 }
 
 .assetBox {
@@ -133,12 +132,12 @@
 @media (max-width: 640px) {
   .darkGreenBox {
     padding: 16px 12px;
-    border-radius: 16px;
+    border-radius: 0;
   }
 }
 
 .priceNormal {
-  color: #c4f8e2;
+  color: var(--site-paper);
   transition: color 0.05s ease-in;
 }
 

@@ -22,7 +22,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
       : options[0];
 
   return (
-    <div className="relative flex w-full max-w-[1700px] flex-col items-start gap-4 overflow-x-hidden px-3 pt-20 pb-8 sm:gap-6 sm:px-6 sm:pt-28 md:px-8">
+    <div className="explorer-page explorer-directory">
       <ScrollReveal direction="down" className="w-full">
         <AssetHero
           title="The data behind"
@@ -44,7 +44,9 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
             />
           }
         >
-          <Tokens source={source} />
+          <ErrorBoundary errorComponent={CustomError}>
+            <Tokens source={source} />
+          </ErrorBoundary>
         </Suspense>
       </ScrollReveal>
       <ScrollReveal delay={0.2} className="w-full">
