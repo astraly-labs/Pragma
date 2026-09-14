@@ -40,8 +40,8 @@ export default function NavFooter() {
         <div className="footer-brand">
           <Link href="/" aria-label="Pragma home">
             <Image
-              src="/pragma-logo.png"
-              width={150}
+              src="/brand/pragma-wordmark.svg"
+              width={180}
               height={40}
               className="site-logo"
               alt="Pragma"

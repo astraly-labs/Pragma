@@ -1,6 +1,6 @@
 import { generateOGImage, ogSize } from "@/lib/og";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const alt = "Pragma Asset";
 export const size = ogSize;
 export const contentType = "image/png";

@@ -12,7 +12,7 @@ import AssetList from "./_components/asset-list";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-const options = ["mainnet", "api"];
+const options = ["mainnet"];
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const requestedSource = (await searchParams).source;
@@ -27,7 +27,7 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         <AssetHero
           title="The data behind"
           greenTitle="every decision."
-          description="Inspect prices, source observations, and publisher activity. Switch between Starknet mainnet and the streaming API."
+          description="Inspect prices, source observations, and publisher activity on Starknet mainnet."
           solidButton="Read docs"
           solidButtonLink="https://docs.pragma.build"
         />

@@ -1,0 +1,44 @@
+[
+  {
+    "tokenAddress": "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+    "timestamp": "2026-09-14T02:56:15.000Z",
+    "name": "delegator_claimed_rewards",
+    "amount": "840088855793473418",
+    "delegatorAddress": "0x015c021161766dd2f6679b825f774646255d4605ea242407b39624cc0943c727",
+    "stakerAddress": "0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65",
+    "destinationName": "wallet",
+    "destinationIcon": null,
+    "source": "0x03199ff0f152426280502dad5d554448ad211c3b62d82c01114986c421e65388",
+    "destination": "0x015c021161766dd2f6679b825f774646255d4605ea242407b39624cc0943c727",
+    "txnHash": "0x131451bf7f824330a0e264955cc1036158f51dacef8438a99af74a64a07cd45",
+    "tokenInfo": {
+      "tokenAddress": "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+      "price": 0.02877803,
+      "decimals": 18,
+      "logoUrl": "https://assets.coingecko.com/coins/images/26433/small/starknet.png",
+      "name": "Starknet",
+      "symbol": "STRK"
+    }
+  },
+  {
+    "tokenAddress": "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+    "timestamp": "2026-09-14T02:56:15.000Z",
+    "name": "delegator_withdrawal_completed",
+    "amount": "100000000000000000000000",
+    "delegatorAddress": "0x015c021161766dd2f6679b825f774646255d4605ea242407b39624cc0943c727",
+    "stakerAddress": "0x077d4b4e7ae321aabd0a5a7322108635fcbd0cd746f9ae217b8ea00363494b65",
+    "destinationName": "wallet",
+    "destinationIcon": null,
+    "source": "0x03199ff0f152426280502dad5d554448ad211c3b62d82c01114986c421e65388",
+    "destination": "0x015c021161766dd2f6679b825f774646255d4605ea242407b39624cc0943c727",
+    "txnHash": "0x131451bf7f824330a0e264955cc1036158f51dacef8438a99af74a64a07cd45",
+    "tokenInfo": {
+      "tokenAddress": "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+      "price": 0.02877803,
+      "decimals": 18,
+      "logoUrl": "https://assets.coingecko.com/coins/images/26433/small/starknet.png",
+      "name": "Starknet",
+      "symbol": "STRK"
+    }
+  }
+]

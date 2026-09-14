@@ -15,6 +15,7 @@ function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
+      aria-label="Copy address or transaction hash"
       onClick={() => {
         navigator.clipboard.writeText(text);
         setCopied(true);
@@ -101,7 +102,7 @@ function DelegatorsTable({ data }: { data: StakingEventsData }) {
               </td>
               <td className="whitespace-nowrap px-3 py-3 text-sm">
                 <span className="inline-flex items-center gap-1.5 text-xs text-mint">
-                  ACTIVE
+                  {d.isActive ? "ACTIVE" : "INACTIVE"}
                   <span className="h-1.5 w-1.5 rounded-full bg-mint" />
                 </span>
               </td>
@@ -165,7 +166,11 @@ function ActivityTable({ data }: { data: StakingEventsData }) {
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-3 font-mono text-sm text-mint">
-                +{formatSTRK(ev.amount)}
+                {(Number(ev.amount) / 10 ** ev.decimals).toLocaleString(
+                  "en-US",
+                  { maximumFractionDigits: 4 }
+                )}{" "}
+                {ev.symbol}
               </td>
               <td className="whitespace-nowrap px-3 py-3 text-sm">
                 <div className="flex items-center gap-2">
@@ -248,13 +253,17 @@ function AttestationsTable({ data }: { data: StakingEventsData }) {
 
 export function StakingTabs() {
   const [activeTab, setActiveTab] = useState<Tab>("Delegators");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading, isFetching, refetch } = useQuery<StakingEventsData>({
-    queryKey: ["staking-events"],
+    queryKey: ["staking-events", activeTab, page],
     queryFn: async () => {
-      const res = await fetch("/api/staking/events", {
-        signal: AbortSignal.timeout(30000),
-      });
+      const res = await fetch(
+        `/api/staking/events?type=${activeTab.toLowerCase()}&page=${page}`,
+        {
+          signal: AbortSignal.timeout(15000),
+        }
+      );
       if (!res.ok) throw new Error("Failed to fetch staking events");
       return res.json();
     },
@@ -265,11 +274,22 @@ export function StakingTabs() {
 
   return (
     <div className="w-full rounded-2xl border border-lightGreen/10 bg-darkGreen/40 backdrop-blur-sm">
-      <div className="flex border-b border-lightGreen/10">
+      <div
+        role="tablist"
+        aria-label="Staking history"
+        className="flex border-b border-lightGreen/10"
+      >
         {TABS.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            role="tab"
+            id={`staking-tab-${tab}`}
+            aria-selected={activeTab === tab}
+            aria-controls="staking-history-panel"
+            onClick={() => {
+              setActiveTab(tab);
+              setPage(1);
+            }}
             className="relative px-5 py-4 text-sm font-medium transition-colors"
           >
             {activeTab === tab && (
@@ -290,12 +310,17 @@ export function StakingTabs() {
         ))}
       </div>
 
-      <div className="p-4 sm:p-6">
+      <div
+        id="staking-history-panel"
+        role="tabpanel"
+        aria-labelledby={`staking-tab-${activeTab}`}
+        className="p-4 sm:p-6"
+      >
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-3 py-12">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-lightGreen/20 border-t-mint" />
             <span className="font-mono text-sm text-lightGreen/50">
-              Loading on-chain data...
+              Loading {activeTab.toLowerCase()}…
             </span>
           </div>
         ) : data ? (
@@ -312,6 +337,39 @@ export function StakingTabs() {
               {activeTab === "Attestations" && (
                 <AttestationsTable data={data} />
               )}
+              <div className="staking-pagination">
+                <span>
+                  Page {data.page} of {data.totalPages}
+                </span>
+                <div>
+                  <button
+                    disabled={page <= 1 || isFetching}
+                    onClick={() => setPage(page - 1)}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    disabled={page >= data.totalPages || isFetching}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+              <p className="staking-history-source">
+                Indexed by{" "}
+                <a
+                  href="https://voyager.online/staking"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Voyager ↗
+                </a>{" "}
+                · Retrieved{" "}
+                {formatDistanceToNow(new Date(data.fetchedAt), {
+                  addSuffix: true,
+                })}
+              </p>
             </motion.div>
           </AnimatePresence>
         ) : (

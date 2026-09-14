@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -116,21 +115,6 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
               </span>
             );
           },
-        },
-        {
-          id: "chart",
-          header: "7D Chart",
-          cell: ({ row }) =>
-            row.original.chart ? (
-              <Image
-                src={row.original.chart}
-                alt="chart"
-                width={100}
-                height={40}
-              />
-            ) : (
-              <span>N/A</span>
-            ),
         },
       ]
     : []),

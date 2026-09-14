@@ -1,10 +1,13 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export const ogSize = { width: 1200, height: 630 };
 
 export async function generateOGImage(title: string, subtitle: string) {
-  const logoUrl = new URL("/pragma-logo.png", "https://www.pragma.build");
-  const logoData = await fetch(logoUrl).then((res) => res.arrayBuffer());
+  const logoData = await readFile(
+    path.join(process.cwd(), "public/brand/pragma-wordmark.png")
+  );
   const logoBase64 = `data:image/png;base64,${Buffer.from(logoData).toString("base64")}`;
 
   return new ImageResponse(

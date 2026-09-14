@@ -1,3 +1,4 @@
+import SignalGlobe from "@/components/Landing/SignalGlobe";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -10,6 +11,11 @@ import {
 export default function HomePage() {
   return (
     <div className="marketing-page">
+      <Link href="/updates/vesu-incident" className="incident-banner">
+        <span className="eyebrow">4 September incident</span>
+        <span>Our Vesu post-mortem and recovery updates</span>
+        <ArrowUpRight size={18} aria-hidden="true" />
+      </Link>
       <section className="home-hero">
         <div className="hero-copy">
           <span className="eyebrow">
@@ -36,87 +42,7 @@ export default function HomePage() {
             Explore the network <ArrowDown size={14} />
           </a>
         </div>
-        <div
-          className="signal-art"
-          role="img"
-          aria-label="A globe of data signals converging into an onchain oracle"
-        >
-          <div className="art-topline">
-            <span>PRAGMA / DATA NETWORK</span>
-            <span>01 → ∞</span>
-          </div>
-          <svg viewBox="0 0 560 520" aria-hidden="true">
-            <defs>
-              <clipPath id="globe-clip">
-                <circle cx="280" cy="250" r="185" />
-              </clipPath>
-              <radialGradient id="globe-fill">
-                <stop offset="0" stopColor="#ff9566" stopOpacity=".2" />
-                <stop offset="1" stopColor="#ff6b35" stopOpacity=".02" />
-              </radialGradient>
-            </defs>
-            <g stroke="#ff7946" fill="none" strokeWidth=".8">
-              <circle cx="280" cy="250" r="185" fill="url(#globe-fill)" />
-              <g clipPath="url(#globe-clip)">
-                {[40, 85, 130, 165, 185].map((rx) => (
-                  <ellipse key={rx} cx="280" cy="250" rx={rx} ry="185" />
-                ))}
-                {[-150, -100, -50, 0, 50, 100, 150].map((y) => (
-                  <ellipse
-                    key={y}
-                    cx="280"
-                    cy={250 + y}
-                    rx="185"
-                    ry={Math.max(12, 50 - Math.abs(y) / 5)}
-                  />
-                ))}
-              </g>
-              <ellipse
-                cx="280"
-                cy="250"
-                rx="246"
-                ry="65"
-                transform="rotate(-28 280 250)"
-                stroke="#e4dfd3"
-                strokeOpacity=".5"
-              />
-              <ellipse
-                cx="280"
-                cy="250"
-                rx="222"
-                ry="65"
-                transform="rotate(44 280 250)"
-                strokeOpacity=".5"
-              />
-              <path
-                d="M31 250H529M280 23V480"
-                strokeDasharray="2 7"
-                strokeOpacity=".3"
-              />
-            </g>
-            <g fill="#ff7946">
-              <circle cx="114" cy="157" r="5" />
-              <circle cx="417" cy="354" r="5" />
-              <circle cx="280" cy="65" r="4" />
-              <circle cx="95" cy="250" r="4" />
-            </g>
-            <g fill="#f3efe5" fontSize="10" fontFamily="monospace">
-              <text x="34" y="134">
-                SOURCES
-              </text>
-              <text x="400" y="395">
-                ONCHAIN
-              </text>
-              <text x="293" y="43">
-                DATA IN MOTION
-              </text>
-            </g>
-          </svg>
-          <div className="art-bottomline">
-            <span>REAL-WORLD INPUTS</span>
-            <span>VERIFIABLE OUTPUTS ↗</span>
-          </div>
-        </div>
+        <SignalGlobe />
       </section>
       <section id="network" className="network-strip">
         <span className="eyebrow">

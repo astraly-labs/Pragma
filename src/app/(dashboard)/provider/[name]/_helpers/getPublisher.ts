@@ -41,7 +41,10 @@ export const getPublisher = async (
   }
 
   return {
-    image: `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
+    image:
+      publisher.publisher.toLowerCase() === "pragma"
+        ? "/brand/pragma-mark.svg"
+        : `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
     type: getPublisherType(Number(publisher.type)),
     link: publisher.website_url,
     name: publisher.publisher,

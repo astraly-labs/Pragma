@@ -1,0 +1,14 @@
+[
+  {
+    "address": "0x07cd150a7a0b45b5f413e56e45964c7ecdd665dca029d1bc8bdae7d4b71470fd",
+    "delegatedStake": "5000000",
+    "share": 2774.4661563813997,
+    "startTime": 1762286155
+  },
+  {
+    "address": "0x0320abffbf71447d12835ed85799249c733c7cc94dfc01e5e695a5193e011a85",
+    "delegatedStake": "5000000",
+    "share": 2774.4661563813997,
+    "startTime": 1757697153
+  }
+]
