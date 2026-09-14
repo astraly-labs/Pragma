@@ -2,11 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
+const title = "4 September oracle incident: post-mortem and updates";
+const description =
+  "What failed in Pragma’s price publishing pipeline, the impact on Vesu, the recovery process, and the work completed and still outstanding.";
+
 export const metadata: Metadata = {
-  title: "4 September oracle incident: post-mortem and updates",
-  description:
-    "What failed in Pragma’s price publishing pipeline, the impact on Vesu, the recovery process, and the work completed and still outstanding.",
+  title,
+  description,
   alternates: { canonical: "/updates/vesu-incident" },
+  openGraph: {
+    title,
+    description,
+    url: "/updates/vesu-incident",
+    type: "article",
+    publishedTime: "2026-09-14",
+    modifiedTime: "2026-09-14",
+    authors: ["Pragma"],
+  },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 const sections = [
