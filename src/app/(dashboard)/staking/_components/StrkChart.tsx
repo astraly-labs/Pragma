@@ -37,6 +37,18 @@ export function StrkChart() {
     data?.points.filter(
       (point) => point.timestamp >= (latest?.timestamp ?? 0) - period * 86400000
     ) ?? [];
+  const chartPoints = points.flatMap((point, index) => {
+    const previous = points[index - 1];
+    return previous && point.timestamp - previous.timestamp > 3 * 3600000
+      ? [
+          {
+            timestamp: (point.timestamp + previous.timestamp) / 2,
+            price: null,
+          },
+          point,
+        ]
+      : [point];
+  });
   const change =
     latest && points.length > 1
       ? (latest.price / points[0].price - 1) * 100
@@ -70,8 +82,7 @@ export function StrkChart() {
           {change !== null && (
             <span>
               {change > 0 ? "+" : ""}
-              {change.toFixed(2)}%{" "}
-              <small> / {period === 1 ? "24H" : "7D"}</small>
+              {change.toFixed(2)}% <small> / visible range</small>
             </span>
           )}
         </div>
@@ -84,7 +95,7 @@ export function StrkChart() {
         ) : points.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <AreaChart
-              data={points}
+              data={chartPoints}
               margin={{ top: 12, right: 10, bottom: 0, left: 0 }}
               accessibilityLayer
             >
@@ -128,11 +139,11 @@ export function StrkChart() {
                   (min: number) => min * 0.995,
                   (max: number) => max * 1.005,
                 ]}
-                tickFormatter={(value) => `$${value.toFixed(3)}`}
+                tickFormatter={(value) => `$${value.toFixed(4)}`}
                 tick={{ fill: "#aaaead", fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
-                width={54}
+                width={60}
               />
               <Tooltip
                 formatter={(value: number) => [priceLabel(value), "STRK / USD"]}

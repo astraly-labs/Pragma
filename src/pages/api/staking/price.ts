@@ -9,7 +9,8 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
   try {
-    const start = Math.floor(Date.now() / 1000) - 7 * 24 * 3600;
+    // Align to the provider’s hourly samples and reuse the same cache key.
+    const start = Math.floor(Date.now() / 3600000) * 3600 - 7 * 24 * 3600;
     const response = await fetch(
       `https://coins.llama.fi/chart/coingecko:starknet?start=${start}&span=168&period=1h`,
       { signal: AbortSignal.timeout(10000) }
@@ -34,6 +35,7 @@ export default async function handler(
     res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=300");
     return res.status(200).json({ points });
   } catch {
+    res.setHeader("Cache-Control", "no-store");
     return res
       .status(502)
       .json({ error: "STRK price history is temporarily unavailable." });

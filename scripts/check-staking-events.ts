@@ -6,6 +6,7 @@ import {
   parseDelegator,
 } from "../src/lib/staking-events";
 import handler from "../src/pages/api/staking/events";
+import priceHandler from "../src/pages/api/staking/price";
 const fixture = (name: string) =>
   JSON.parse(
     readFileSync(
@@ -114,6 +115,40 @@ async function main() {
       invalid as any
     );
     assert.equal(invalid.code, 400);
+    globalThis.fetch = (async (url) => {
+      assert.equal(
+        Number(new URL(String(url)).searchParams.get("start")) % 3600,
+        0,
+        "History requests must align to hourly observations"
+      );
+      return Response.json({
+        coins: {
+          "coingecko:starknet": {
+            prices: [
+              { timestamp: 7200, price: 0.03 },
+              { timestamp: 3600, price: 0.029 },
+              { timestamp: 10800, price: 0 },
+            ],
+          },
+        },
+      });
+    }) as typeof fetch;
+    const price = response();
+    await priceHandler({ method: "GET" } as any, price as any);
+    assert.equal(price.code, 200);
+    assert.deepEqual(price.body.points, [
+      { timestamp: 3600000, price: 0.029 },
+      { timestamp: 7200000, price: 0.03 },
+    ]);
+    globalThis.fetch = (async () =>
+      Response.json({ coins: {} })) as typeof fetch;
+    const emptyPrice = response();
+    await priceHandler({ method: "GET" } as any, emptyPrice as any);
+    assert.equal(
+      emptyPrice.code,
+      502,
+      "Missing history must not become a zero-price chart"
+    );
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.VOYAGER_API_KEY;
