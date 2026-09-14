@@ -10,8 +10,13 @@ export const getPublishers = async (
     network: `starknet-${source}`,
     data_type: dataType,
   });
-  return fetchExplorer(
+  const publishers = await fetchExplorer<DataProviderInfo[]>(
     `/onchain/publishers?${query}`,
     `/api/publishers?${query}`
+  );
+  return publishers.map((publisher) =>
+    publisher.name.toLowerCase() === "pragma"
+      ? { ...publisher, image: "/brand/pragma-mark.svg" }
+      : publisher
   );
 };

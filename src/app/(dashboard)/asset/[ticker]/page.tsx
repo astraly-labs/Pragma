@@ -8,7 +8,6 @@ import { getAsset } from "./_helpers/getAsset";
 import { AssetHeader } from "./_components/asset-header";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
 import BoxContainer from "@/components/common/BoxContainer";
-import { AssetChart } from "./_components/asset-chart";
 import { Checkpoints } from "./_components/checkpoints";
 import { PriceTable } from "./_components/price-table";
 
@@ -20,7 +19,7 @@ type AssetPageProps = {
   params: Params;
 };
 
-const DEFAULT_SOURCE = SUPPORTED_SOURCES[1];
+const DEFAULT_SOURCE = SUPPORTED_SOURCES[0];
 
 const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;
@@ -48,7 +47,6 @@ const AssetPage = async (props: AssetPageProps) => {
       .catch(() => ({ data: [], error: true })),
   ]);
 
-  const isApi = network === "api";
   const isMainnet = network === "mainnet";
 
   return (
@@ -103,17 +101,6 @@ const AssetPage = async (props: AssetPageProps) => {
         </ScrollReveal>
       ) : (
         <>
-          {isApi && (
-            <ScrollReveal delay={0.2}>
-              <BoxContainer>
-                <AssetChart
-                  key={`${ticker}-${network}`}
-                  asset={asset}
-                  currentSource={network}
-                />
-              </BoxContainer>
-            </ScrollReveal>
-          )}
           <div className="w-full pb-5" />
           {asset.components && asset.decimals !== undefined && (
             <ScrollReveal delay={0.3}>

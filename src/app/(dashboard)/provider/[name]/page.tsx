@@ -17,7 +17,7 @@ type ProviderPageProps = {
   params: Params;
 };
 
-const DEFAULT_SOURCE = SUPPORTED_SOURCES[1];
+const DEFAULT_SOURCE = SUPPORTED_SOURCES[0];
 
 const ProviderPage = async (props: ProviderPageProps) => {
   const searchParams = await props.searchParams;

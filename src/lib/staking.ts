@@ -63,8 +63,9 @@ export interface ActivityEvent {
   origin: string;
   amount: string;
   transactionHash: string;
-  blockNumber: number;
   timestamp: number;
+  decimals: number;
+  symbol: string;
 }
 
 export interface AttestationRecord {
@@ -77,6 +78,9 @@ export interface StakingEventsData {
   delegators: DelegatorInfo[];
   activity: ActivityEvent[];
   attestations: AttestationRecord[];
+  page: number;
+  totalPages: number;
+  fetchedAt: string;
 }
 
 export interface StakerInfoParsed {

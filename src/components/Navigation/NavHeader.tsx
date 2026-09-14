@@ -26,8 +26,8 @@ export default function NavHeader() {
       <div className="site-header-inner">
         <Link href="/" aria-label="Pragma home" onClick={() => setOpen(false)}>
           <Image
-            src="/pragma-logo.png"
-            width={150}
+            src="/brand/pragma-wordmark.svg"
+            width={180}
             height={40}
             className="site-logo"
             alt="Pragma"

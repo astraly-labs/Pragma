@@ -18,8 +18,6 @@ function DonutChart({
   const innerR = r - strokeWidth / 2;
   const circumference = 2 * Math.PI * innerR;
 
-  let offset = 0;
-
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <circle
@@ -27,13 +25,17 @@ function DonutChart({
         cy={r}
         r={innerR}
         fill="none"
-        stroke="rgba(181,240,229,0.08)"
+        stroke="rgba(242,240,233,0.08)"
         strokeWidth={strokeWidth}
       />
       {segments.map((seg, i) => {
         const dashLen = (seg.pct / 100) * circumference;
-        const dashOffset = -offset;
-        offset += dashLen;
+        const dashOffset =
+          (-segments
+            .slice(0, i)
+            .reduce((sum, previous) => sum + previous.pct, 0) /
+            100) *
+          circumference;
         return (
           <circle
             key={i}
@@ -92,10 +94,10 @@ export function StakeBreakdown({ data }: { data: StakingDataSerialized }) {
           <div className="relative shrink-0">
             <DonutChart
               segments={[
-                { pct: ownPct, color: "#15FF81", label: "Own" },
+                { pct: ownPct, color: "#ff7946", label: "Own" },
                 {
                   pct: delPct,
-                  color: "rgba(21,255,129,0.35)",
+                  color: "rgba(255,121,70,0.35)",
                   label: "Delegated",
                 },
               ]}

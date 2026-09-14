@@ -51,7 +51,7 @@ export function StakingHero({ data }: { data: StakingDataSerialized | null }) {
         <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-mint/20 bg-mint/5 sm:h-20 sm:w-20">
             <Image
-              src="/favicon-32x32.png"
+              src="/brand/pragma-mark.svg"
               alt="Pragma"
               width={40}
               height={40}
