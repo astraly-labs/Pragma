@@ -37,8 +37,17 @@ export const publisherColumns: ColumnDef<DataProviderInfo>[] = [
           href={`/provider/${publisher.name}`}
           className="group/link flex items-center gap-3"
         >
-          <Avatar className="h-9 w-9 border border-lightBlur/50 transition-shadow group-hover/link:shadow-[0_0_10px_rgba(21,255,129,0.15)]">
-            <AvatarImage width={36} height={36} src={publisher.image} />
+          <Avatar className="h-9 w-9 border border-lightBlur/50 transition-shadow group-hover/link:shadow-[0_0_10px_rgba(255,121,70,0.15)]">
+            <AvatarImage
+              width={36}
+              height={36}
+              src={publisher.image}
+              className={
+                publisher.name.toLowerCase() === "pragma"
+                  ? "object-contain p-1.5"
+                  : "object-contain grayscale"
+              }
+            />
             <AvatarFallback className="bg-lightBlur text-xs font-medium text-lightGreen">
               {displayName.slice(0, 2)}
             </AvatarFallback>
