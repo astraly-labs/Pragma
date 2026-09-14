@@ -93,6 +93,13 @@ export default function IncidentPage() {
               availability and independent-reference discrepancies still need
               operational follow-up.
             </p>
+            <p>
+              Accurate source-count reporting for composed prices is also an
+              immediate remediation priority. Vesu already checks minimum source
+              counts. Our reporting did not expose the weak conversion input
+              behind otherwise populated feeds. The reporting fix remains open.{" "}
+              <a href="#remediation">See the remediation tracker ↓</a>
+            </p>
           </section>
           <section id="summary">
             <h2>What happened</h2>
@@ -155,9 +162,10 @@ export default function IncidentPage() {
               have lost about half their value.
             </p>
             <p>
-              Many affected feeds still contained numerous source observations.
-              A source-count check alone could not detect that those sources had
-              all been transformed by the same faulty input.
+              Many affected feeds still contained numerous source observations,
+              but those observations shared a conversion input supported by only
+              two sources. Pragma’s reported counts described the final feed’s
+              sources without exposing that shared dependency.
             </p>
             <h3>4. Derived assets updated at different times</h3>
             <p>
@@ -169,9 +177,12 @@ export default function IncidentPage() {
             </p>
             <p>
               Vesu’s minimum-source check rejected the two-source USDT feed. It
-              did not reject the populated BTC and ETH feeds carrying the
-              correlated error. The reconstruction points to incorrect oracle
-              inputs, rather than a defect in Vesu’s liquidation arithmetic.
+              received larger source counts for affected BTC and ETH feeds,
+              without the information needed to apply that safeguard to their
+              weak conversion input. Accurate reporting of the sources behind
+              the composed price is Pragma’s responsibility. The remediation
+              must verify that Vesu’s existing check rejects those prices when
+              their supporting source count falls below its configured minimum.
             </p>
           </section>
           <section id="timeline">
@@ -448,9 +459,10 @@ export default function IncidentPage() {
           <section id="remediation">
             <h2>Remediation tracker</h2>
             <p>
-              These statuses describe verified work as of 13 September at 21:21
-              UTC. Deployment does not by itself close the wider operating and
-              data-quality issues.
+              Deployment statuses below were verified on 13 September at 21:21
+              UTC. The source-count reporting item was added on 14 September and
+              remains open. Deployment does not by itself close the wider
+              operating and data-quality issues.
             </p>
             <div className="remediation-list">
               <div>
@@ -460,6 +472,20 @@ export default function IncidentPage() {
                   SDK 2.13.1 stops reuse of the onchain USDT/USD median when
                   constructing other feeds. The permanent handling of real
                   stablecoin deviations remains a separate design task.
+                </p>
+              </div>
+              <div>
+                <span className="remediation-status pending">
+                  Immediate priority / open
+                </span>
+                <h3>Report accurate source counts for composed prices</h3>
+                <p>
+                  Carry source-count information through conversion and derived
+                  price calculations so a weak shared input cannot be hidden by
+                  the number of final observations. Validate the corrected
+                  reporting against Vesu’s existing minimum-source check with an
+                  incident regression test before marking this item complete.
+                  Implementation and deployment are pending.
                 </p>
               </div>
               <div>
@@ -537,13 +563,13 @@ export default function IncidentPage() {
             </p>
             <p>
               <strong>
-                A timestamp and a source count are not sufficient quality
-                checks.
+                Source counts must describe the inputs behind the price.
               </strong>{" "}
-              Fresh observations can depend on a stale route. Numerous
-              observations can share one incorrect conversion factor.
-              Independent price comparisons and route-liquidity checks must
-              accompany freshness and count checks.
+              Vesu’s minimum-source safeguard depends on accurate counts from
+              Pragma, including the inputs used for conversions and derived
+              prices. We must supply that information so the safeguard can work
+              as intended. Freshness checks, independent price comparisons and
+              route-liquidity checks remain additional protections.
             </p>
             <p>
               <strong>Derived assets need consistency checks.</strong> A
