@@ -69,7 +69,18 @@ export default function IncidentPage() {
         <article className="incident-body">
           <section id="latest" className="incident-update">
             <span className="eyebrow">Latest update / 14 September</span>
-            <h2>The feedback path is removed. Hardening continues.</h2>
+            <h2>Asset recovery is complete. Curators handle refunds.</h2>
+            <p>
+              In its{" "}
+              <a href="https://x.com/vesuxyz/status/2099125070304076013">
+                13 September recovery update <ArrowUpRight size={14} />
+              </a>
+              , Vesu reported 95% recovery at 11 September prices, or 93% at
+              prices on the morning of the incident. Each pool curator holds its
+              recovered funds and arranges refunds. This is an asset recovery
+              milestone, not confirmation that all refunds are complete.{" "}
+              <a href="#response">Recovery figures and next steps ↓</a>
+            </p>
             <p>
               The 4 September publisher hotfix removed the use of the oracle’s
               USDT/USD median as a conversion input for other feeds. On 13
@@ -81,11 +92,6 @@ export default function IncidentPage() {
               coordinated. The ownership transfer has not happened. Publisher
               availability and independent-reference discrepancies still need
               operational follow-up.
-            </p>
-            <p>
-              Recovery and user distributions are coordinated with Vesu and the
-              affected pool curators. We do not yet have a reconciled, final
-              distribution total to publish here.
             </p>
           </section>
           <section id="summary">
@@ -238,6 +244,16 @@ export default function IncidentPage() {
               <li>
                 <time>13 September</time>
                 <div>
+                  <strong>Vesu announces completion of asset recovery</strong>
+                  <p>
+                    Vesu publishes the recovery figures and recommended refund
+                    approach. Pool curators are responsible for distributions.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <time>13 September</time>
+                <div>
                   <strong>Monitoring corrections deployed</strong>
                   <p>
                     Decimal normalization, reference collection,
@@ -331,17 +347,101 @@ export default function IncidentPage() {
               and lending pools is handled with the curators.
             </p>
             <p>
-              We will add a reconciled recovery total when the received funds
-              and completed distributions can be accounted for together. We are
-              not claiming that every affected user has been made whole.
+              Vesu confirmed completion of asset recovery on 13 September. The
+              Vesu and Starknet Security Councils, curators and partners worked
+              with liquidators who voluntarily returned funds; some liquidators
+              could not be identified or reached. Vesu’s published accounting
+              uses 11 September prices:
+            </p>
+            <div className="incident-table-wrap">
+              <table>
+                <caption>
+                  Vesu recovery accounting / 11 September prices
+                </caption>
+                <thead>
+                  <tr>
+                    <th>Measure</th>
+                    <th>Reported value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Assets recovered, before conversion costs</td>
+                    <td>$1,330,278.93</td>
+                  </tr>
+                  <tr>
+                    <td>Available for distribution after swaps</td>
+                    <td>$1,324,085.08</td>
+                  </tr>
+                  <tr>
+                    <td>Lender claims from bad debt</td>
+                    <td>$657,386.80</td>
+                  </tr>
+                  <tr>
+                    <td>Borrower claims</td>
+                    <td>$737,913.96</td>
+                  </tr>
+                  <tr>
+                    <td>Total claims</td>
+                    <td>$1,395,300.76</td>
+                  </tr>
+                  <tr>
+                    <td>Reported recovery rate</td>
+                    <td>95%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              At prices on the morning of 4 September, Vesu values the same
+              recovery at 93%. The difference reflects market movements between
+              valuation dates. These figures use a different price basis from
+              our initial incident estimates above; they do not mean 95% of
+              every original position has been restored.
+            </p>
+            <h3>How refunds work</h3>
+            <p>
+              Vesu, Re7 Labs and Clearstar hold recovered assets for their
+              respective pools. Vesu recommends applying the same recovery rate
+              to lenders’ bad-debt losses and borrowers’ net losses, but each
+              curator decides its pool’s refund process. Under the recommended
+              approach:
+            </p>
+            <ul>
+              <li>
+                Lenders still holding an affected position receive value through
+                a top-up of the pool reserve; no action is needed.
+              </li>
+              <li>
+                Lenders who withdrew after absorbing bad debt should contact
+                their curator for a direct refund.
+              </li>
+              <li>
+                Liquidated borrowers should contact their curator. Their claim
+                is the collateral lost minus the debt repaid, with a direct
+                refund in the collateral asset. The liquidation is not reversed.
+              </li>
+            </ul>
+            <p>
+              Vesu also reports separate compensation for missed BTCfi rewards
+              while liquidated positions were closed. This is outside the
+              recovery pot and is available through the regular BTCfi rewards
+              process.
             </p>
             <p>
-              For an affected Vesu position, use{" "}
-              <a href="https://vesu.xyz">
-                Vesu’s official support channels <ArrowUpRight size={14} />
+              See{" "}
+              <a href="https://docs.vesu.xyz/blog/2026-09-13-incident-refunds">
+                Vesu’s refund guide <ArrowUpRight size={14} />
               </a>{" "}
-              and your pool curator for position-specific distribution
-              information. Questions about Pragma’s feeds can be sent to{" "}
+              for the full methodology and open a ticket in{" "}
+              <a href="https://discord.gg/G9Gxgujj8T">
+                Vesu’s official Discord
+              </a>{" "}
+              to reach your curator about a specific position. Refunds go to the
+              addresses that held those positions. Vesu warns that neither it
+              nor a curator will contact you asking you to connect a wallet or
+              sign a message to claim an incident refund. Questions about
+              Pragma’s feeds can be sent to{" "}
               <a href="mailto:support@pragma.build">support@pragma.build</a>.
             </p>
           </section>
@@ -460,20 +560,31 @@ export default function IncidentPage() {
             </p>
             <p>
               The remaining work is to turn these lessons into sustained
-              operating controls, complete the governance transition and publish
-              reconciled recovery information. This page provides the dated
-              record of that work.
+              operating controls, complete the governance transition and track
+              curator distribution updates. This page provides the dated record
+              of that work.
             </p>
           </section>
           <section id="sources">
-            <h2>Technical references</h2>
+            <h2>Sources and technical references</h2>
             <p>
               This report draws on Pragma’s 4 September technical reconstruction
               shared with incident participants, transaction receipts and
               block-level oracle reads, and the verified 13 September deployment
-              record.
+              record. Recovery and refund information comes from Vesu’s public
+              13 September update and refund guide.
             </p>
             <ul className="incident-references">
+              <li>
+                <a href="https://x.com/vesuxyz/status/2099125070304076013">
+                  Vesu recovery update, 13 September ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://docs.vesu.xyz/blog/2026-09-13-incident-refunds">
+                  Vesu recovery accounting and refund guide ↗
+                </a>
+              </li>
               <li>
                 <a href="https://voyager.online/tx/0x2dfe997bf4552a23cff7a70d373b2a0df2baf56eb66c4298d49fb68f386c142">
                   Triggering oracle update, block 14,333,752 ↗
