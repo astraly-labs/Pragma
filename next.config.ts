@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
       ],
     },
     {
-      source: "/assets/:path*",
+      source: "/assets/:path*.:extension(svg|png|jpg|jpeg|webp|gif|ico|json)",
       headers: [
         {
           key: "Cache-Control",

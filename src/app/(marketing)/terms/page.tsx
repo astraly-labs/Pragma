@@ -1,7 +1,16 @@
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import BoxContainer from "@/components/common/BoxContainer";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";
+
+export const metadata = pageMetadata(
+  "Terms and conditions",
+  "Read the terms and conditions governing the Pragma website and services.",
+  "/terms",
+  "/opengraph-image?v=20260915"
+);
+
 const terms = () => {
   return (
     <BoxContainer className="legal-page">

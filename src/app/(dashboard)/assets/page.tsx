@@ -15,10 +15,28 @@ import {
   explorerSource,
 } from "@/lib/explorer-networks";
 import MidenDeployment from "@/components/Assets/MidenDeployment";
+import { pageMetadata } from "@/lib/metadata";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 const options = SUPPORTED_SOURCES;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const source = explorerSource((await searchParams).source);
+  const network = EXPLORER_NETWORKS[source];
+  return pageMetadata(
+    `${network} oracle price feeds`,
+    source === "miden"
+      ? `Explore Pragma oracle price feeds on ${network}. Browse supported assets, view oracle medians, and inspect the current deployment.`
+      : "Explore Pragma oracle price feeds on Starknet mainnet. Browse supported assets, data publishers, and onchain source observations.",
+    source === "miden" ? "/assets?source=miden" : "/assets",
+    `/assets/opengraph-image?source=${source}&v=20260915&deployment=${encodeURIComponent(network)}`
+  );
+}
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const requestedSource = (await searchParams).source;

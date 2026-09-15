@@ -29,33 +29,16 @@ export const metadata: Metadata = {
   description:
     "Market data and verifiable oracle computation for applications on Starknet and Miden. Explore the feeds, inspect the sources, and start building.",
   metadataBase: new URL("https://www.pragma.build"),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
-    url: "https://www.pragma.build",
     title: "Pragma | The oracle for Starknet and Miden",
     description:
       "Market data and verifiable oracle computation for applications on Starknet and Miden. Explore the feeds, inspect the sources, and start building.",
     siteName: "Pragma",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Pragma | The oracle for Starknet and Miden",
-        type: "image/png",
-      },
-    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    site: "@pragmaoracle",
-    title: "Pragma | The oracle for Starknet and Miden",
-    description:
-      "Market data and verifiable oracle computation for applications on Starknet and Miden. Explore the feeds, inspect the sources, and start building.",
-    images: ["/opengraph-image"],
+    site: "@PragmaOracle",
   },
   icons: {
     icon: "/brand/pragma-mark.svg",

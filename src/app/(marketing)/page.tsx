@@ -1,4 +1,5 @@
 import SignalGlobe from "@/components/Landing/SignalGlobe";
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -8,9 +9,47 @@ import {
   Braces,
   Radio,
 } from "lucide-react";
+
+export const metadata = pageMetadata(
+  "The oracle for Starknet and Miden",
+  "Explore Pragma oracle price feeds, inspect onchain data, and integrate market prices into applications on Starknet and Miden.",
+  "/",
+  "/opengraph-image?v=20260915"
+);
+
 export default function HomePage() {
   return (
     <div className="marketing-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://www.pragma.build/#organization",
+                name: "Pragma",
+                url: "https://www.pragma.build",
+                logo: "https://www.pragma.build/brand/apple-touch-icon.png",
+                sameAs: [
+                  "https://x.com/PragmaOracle",
+                  "https://github.com/astraly-labs",
+                ],
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://www.pragma.build/#website",
+                name: "Pragma",
+                url: "https://www.pragma.build",
+                publisher: {
+                  "@id": "https://www.pragma.build/#organization",
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <Link href="/updates/vesu-incident" className="incident-banner">
         <span className="eyebrow">4 September incident</span>
         <span>Our Vesu post-mortem and recovery updates</span>

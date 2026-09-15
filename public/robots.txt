@@ -1,9 +1,5 @@
-# *
 User-agent: *
 Allow: /
+Disallow: /api/
 
-# Host
-Host: https://pragma.build
-
-# Sitemaps
-Sitemap: https://pragma.build/sitemap.xml
+Sitemap: https://www.pragma.build/sitemap.xml

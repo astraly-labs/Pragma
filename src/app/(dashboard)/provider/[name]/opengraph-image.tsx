@@ -7,7 +7,8 @@ export const contentType = "image/png";
 
 export default async function OGImage() {
   return generateOGImage(
-    "Data Provider",
-    "Explore data publisher details and their contributions to Pragma's oracle network"
+    "Oracle data publishers.",
+    "Inspect reported pairs and onchain observations.",
+    "STARKNET MAINNET"
   );
 }
