@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { getLogoPath } from "../../../../../../utils/mappings";
-import { getPublisherType } from "@/utils";
+import { getPublisherName, getPublisherType } from "@/utils";
 import { ProcessedPublisher, Publisher } from "@/app/(dashboard)/assets/_types";
 
 interface PairsReported {
@@ -20,8 +20,9 @@ export const getPublisher = async (
     return undefined;
   }
 
+  const publisherId = name.toUpperCase() === "READY" ? "ARGENT" : name;
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${encodeURIComponent(name)}?network=starknet-${source}&data_type=Spot`,
+    `${process.env.NEXT_PUBLIC_INTERNAL_API}/onchain/publisher/${encodeURIComponent(publisherId)}?network=starknet-${source}&data_type=Spot`,
     {
       headers: process.env.API_KEY ? { "x-api-key": process.env.API_KEY } : {},
       signal: AbortSignal.timeout(25000),
@@ -48,7 +49,7 @@ export const getPublisher = async (
         : `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
     type: getPublisherType(Number(publisher.type)),
     link: publisher.website_url,
-    name: publisher.publisher,
+    name: getPublisherName(publisher.publisher),
     lastUpdated: formatDistanceToNow(
       new Date(Number(publisher.last_updated_timestamp) * 1000),
       { addSuffix: true }

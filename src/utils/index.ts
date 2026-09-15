@@ -26,6 +26,10 @@ export const getPublisherType = (type: number): string => {
   }
 };
 
+// The oracle still registers Ready under its original ARGENT identifier.
+export const getPublisherName = (name: string): string =>
+  name.toUpperCase() === "ARGENT" ? "READY" : name;
+
 /**
  * Converts a hexadecimal string to a UTF-8 encoded string.
  * @param {string} hex - The hexadecimal string to convert.

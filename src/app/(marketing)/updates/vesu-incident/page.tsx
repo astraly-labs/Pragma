@@ -542,11 +542,10 @@ export default function IncidentPage() {
                   discrepancies
                 </h3>
                 <p>
-                  Registered Ready/ARGENT and StarkWare publishers still had
-                  stale observations in the last operating check. Foundation
-                  publisher onboarding is in progress. Independent-reference
-                  disagreements and upstream RPC capacity also require
-                  follow-up.
+                  Registered Ready and StarkWare publishers still had stale
+                  observations in the last operating check. Foundation publisher
+                  onboarding is in progress. Independent-reference disagreements
+                  and upstream RPC capacity also require follow-up.
                 </p>
               </div>
             </div>

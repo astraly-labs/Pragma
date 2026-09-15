@@ -2,16 +2,17 @@ import React from "react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import Link from "next/link";
-import { truncateTxHash } from "../../utils";
+import { getPublisherName, truncateTxHash } from "../../utils";
 
 const PriceComponentComp = ({ component }) => {
+  const publisherName = getPublisherName(component.publisher);
   return (
     <div className={styles.priceComp}>
       <Link
-        href={`/provider/${component.publisher}`}
+        href={`/provider/${publisherName}`}
         className="flex cursor-pointer flex-row gap-2 	 font-mono text-sm text-lightGreen md:tracking-wider"
       >
-        {component.publisher}
+        {publisherName}
         <Image
           height={16}
           width={16}
