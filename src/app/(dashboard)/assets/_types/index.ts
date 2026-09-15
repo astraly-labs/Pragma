@@ -4,7 +4,7 @@ export type AssetInfo = {
   ticker: string;
   lastUpdated: string;
   price: number;
-  sources: number;
+  sources: number | null;
   variations: {
     past1h: string | number;
     past24h: string | number;

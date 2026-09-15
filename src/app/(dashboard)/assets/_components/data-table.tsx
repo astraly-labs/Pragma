@@ -33,7 +33,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
-      <table className="w-full min-w-[540px]">
+      <table className={columns.length > 2 ? "w-full min-w-[540px]" : "w-full"}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

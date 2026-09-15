@@ -9,17 +9,20 @@ import PublishersTable from "./_components/publishers-table";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { CustomError } from "./_components/custom-error";
 import AssetList from "./_components/asset-list";
+import {
+  EXPLORER_NETWORKS,
+  SUPPORTED_SOURCES,
+  explorerSource,
+} from "@/lib/explorer-networks";
+import MidenDeployment from "@/components/Assets/MidenDeployment";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-const options = ["mainnet"];
+const options = SUPPORTED_SOURCES;
 
 const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   const requestedSource = (await searchParams).source;
-  const source =
-    typeof requestedSource === "string" && options.includes(requestedSource)
-      ? requestedSource
-      : options[0];
+  const source = explorerSource(requestedSource);
 
   return (
     <div className="explorer-page explorer-directory">
@@ -27,9 +30,14 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         <AssetHero
           title="The data behind"
           greenTitle="every decision."
-          description="Inspect prices, source observations, and publisher activity on Starknet mainnet."
+          description={`Inspect oracle prices on ${EXPLORER_NETWORKS[source]}.`}
+          eyebrow={`${EXPLORER_NETWORKS[source]} / Data explorer`}
           solidButton="Read docs"
-          solidButtonLink="https://docs.pragma.build"
+          solidButtonLink={
+            source === "miden"
+              ? "https://docs.pragma.build/miden/introduction"
+              : "https://docs.pragma.build"
+          }
         />
       </ScrollReveal>
       <ScrollReveal delay={0.1} className="w-full">
@@ -50,7 +58,9 @@ const AssetsPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         </Suspense>
       </ScrollReveal>
       <ScrollReveal delay={0.2} className="w-full">
-        {source !== "api" && (
+        {source === "miden" ? (
+          <MidenDeployment />
+        ) : (
           <ErrorBoundary errorComponent={CustomError}>
             <Suspense
               fallback={

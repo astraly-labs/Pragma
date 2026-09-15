@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getAssets } from "../_helpers/getAssets";
 import { formatAssets } from "../_helpers";
 import AssetList from "./asset-list";
+import { getMidenPrices } from "@/lib/miden-api";
 
 type AssetsTableProps = {
   initialTokens: AssetT[];
@@ -21,6 +22,14 @@ export const AssetsTable = ({
   source = "mainnet",
   options,
 }: AssetsTableProps) => {
+  const isMiden = source === "miden";
+  const midenQuery = useQuery({
+    queryKey: ["MIDEN_PRICES", source],
+    queryFn: getMidenPrices,
+    enabled: isMiden,
+    refetchInterval: 30000,
+    retry: 1,
+  });
   // Re-render ages even when a feed stops sending data.
   const [, refreshAges] = useState(0);
   useEffect(() => {
@@ -35,6 +44,7 @@ export const AssetsTable = ({
       return result;
     },
     initialData: initialTokens,
+    enabled: !isMiden,
     retry: 1,
     retryDelay: 1000,
     refetchOnWindowFocus: false,
@@ -44,6 +54,7 @@ export const AssetsTable = ({
     queries: (tokens ?? []).map((asset) => ({
       queryKey: ["asset", asset.ticker, source],
       queryFn: () => getAssets({ asset, source }),
+      enabled: !isMiden,
       refetchInterval: 30000,
       retry: 1,
       retryDelay: 2000,
@@ -70,6 +81,22 @@ export const AssetsTable = ({
         // Sort by ticker alphabetically
         return a.ticker.localeCompare(b.ticker);
       });
+
+  if (isMiden) {
+    return (
+      <AssetList
+        options={options}
+        assets={midenQuery.data ?? []}
+        selectedSource={source}
+        loading={midenQuery.isLoading}
+        error={
+          midenQuery.isError
+            ? "Miden prices are temporarily unavailable. Retrying automatically; any prices shown are from the last successful request."
+            : undefined
+        }
+      />
+    );
+  }
 
   return (
     <AssetList

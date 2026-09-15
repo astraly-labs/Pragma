@@ -5,10 +5,11 @@ export default function AssetHero({
   description,
   solidButton,
   solidButtonLink,
+  eyebrow = "Starknet / Data explorer",
 }) {
   return (
     <header className="explorer-intro">
-      <span className="eyebrow">Starknet / Data explorer</span>
+      <span className="eyebrow">{eyebrow}</span>
       <div>
         <h1>
           {title}

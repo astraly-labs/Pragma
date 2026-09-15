@@ -50,16 +50,21 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
       );
     },
   },
-  {
-    accessorKey: "lastUpdated",
-    header: ({ column }) => SortableHeader("Last Updated", column),
-    cell: ({ row }) => <span>{row.original.lastUpdated}</span>,
-  },
-  {
-    accessorKey: "sources",
-    header: ({ column }) => SortableHeader("Sources", column),
-    cell: ({ row }) => (row.original.error ? "—" : row.original.sources),
-  },
+  ...(currentSource === "miden"
+    ? []
+    : [
+        {
+          accessorKey: "lastUpdated",
+          header: ({ column }) => SortableHeader("Last Updated", column),
+          cell: ({ row }) => <span>{row.original.lastUpdated}</span>,
+        },
+        {
+          accessorKey: "sources",
+          header: ({ column }) => SortableHeader("Sources", column),
+          cell: ({ row }) =>
+            row.original.error ? "—" : (row.original.sources ?? "—"),
+        },
+      ]),
   {
     accessorKey: "price",
     header: ({ column }) => SortableHeader("Price", column),
@@ -69,7 +74,7 @@ export const columns = (currentSource?: string): ColumnDef<AssetInfo>[] => [
       </span>
     ),
   },
-  ...(!currentSource || currentSource !== "api"
+  ...(currentSource !== "api" && currentSource !== "miden"
     ? [
         {
           accessorKey: "variations.past1h",

@@ -6,18 +6,21 @@ import { AssetInfo } from "../_types";
 import { SearchBar } from "./searchbar";
 import { columns } from "./assets-table/columns";
 import { DataTable } from "./data-table";
+import { EXPLORER_NETWORKS } from "@/lib/explorer-networks";
 
 type Props = {
   options: string[];
   assets: AssetInfo[];
   selectedSource?: string;
   loading: boolean;
+  error?: string;
 };
 export default function AssetList({
   options,
   assets,
   selectedSource,
   loading,
+  error,
 }: Props) {
   const [search, setSearch] = useState("");
   const filtered = useMemo(
@@ -42,12 +45,14 @@ export default function AssetList({
             </span>
           </h2>
         </div>
-        <a
-          href="https://status.production.pragma.build/status/mainnet"
-          className="text-link"
-        >
-          Service status ↗
-        </a>
+        {selectedSource !== "miden" && (
+          <a
+            href="https://status.production.pragma.build/status/mainnet"
+            className="text-link"
+          >
+            Service status ↗
+          </a>
+        )}
       </div>
       <div className="explorer-toolbar">
         <nav className="explorer-tabs" aria-label="Data source">
@@ -58,16 +63,22 @@ export default function AssetList({
               scroll={false}
               aria-current={option === selectedSource ? "page" : undefined}
             >
-              Starknet mainnet
+              {EXPLORER_NETWORKS[option]}
             </Link>
           ))}
         </nav>
         <SearchBar label="Search price feeds" onInputChange={setSearch} />
       </div>
       <p className="explorer-caption">
-        Onchain observations · refreshes every 30 seconds. Timestamps show the
-        age of each observation.
+        {selectedSource === "miden"
+          ? `${EXPLORER_NETWORKS.miden} oracle medians · refreshes every 30 seconds. Observation times and source counts are not reported.`
+          : "Onchain observations · refreshes every 30 seconds. Timestamps show the age of each observation."}
       </p>
+      {error && (
+        <p className="explorer-notice" role="status">
+          {error}
+        </p>
+      )}
       {failed > 0 && (
         <p className="explorer-notice" role="status">
           {failed} {failed === 1 ? "feed is" : "feeds are"} temporarily
@@ -83,9 +94,11 @@ export default function AssetList({
         <DataTable columns={columns(selectedSource)} data={filtered} />
       ) : (
         <div className="explorer-empty">
-          {search
-            ? "No feeds match your search."
-            : "No price observations received yet."}
+          {error
+            ? "Waiting for Miden price data."
+            : search
+              ? "No feeds match your search."
+              : "No price observations received yet."}
         </div>
       )}
     </section>
