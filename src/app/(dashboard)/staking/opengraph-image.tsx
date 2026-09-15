@@ -8,6 +8,7 @@ export const contentType = "image/png";
 export default async function OGImage() {
   return generateOGImage(
     "Stake STRK with Pragma",
-    "Delegate your STRK to earn staking rewards while supporting decentralized oracle infrastructure"
+    "Explore delegation, validator performance, and staking activity.",
+    "STARKNET STAKING"
   );
 }

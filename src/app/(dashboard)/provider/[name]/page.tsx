@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/metadata";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,6 +17,16 @@ type ProviderPageProps = {
   searchParams: SearchParams;
   params: Params;
 };
+
+export async function generateMetadata({ params }: ProviderPageProps) {
+  const { name } = await params;
+  if (typeof name !== "string" || !name) return notFound();
+  return pageMetadata(
+    `${name} oracle data publisher`,
+    `Explore ${name} on Pragma’s Starknet oracle. Inspect reported pairs and available publisher observations.`,
+    `/provider/${encodeURIComponent(name)}`
+  );
+}
 
 const DEFAULT_SOURCE = SUPPORTED_SOURCES[0];
 

@@ -11,6 +11,7 @@ import { Checkpoints } from "./_components/checkpoints";
 import { PriceTable } from "./_components/price-table";
 import { EXPLORER_NETWORKS, explorerSource } from "@/lib/explorer-networks";
 import MidenDeployment from "@/components/Assets/MidenDeployment";
+import { pageMetadata } from "@/lib/metadata";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,6 +20,28 @@ type AssetPageProps = {
   searchParams: SearchParams;
   params: Params;
 };
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: AssetPageProps) {
+  const { ticker } = await params;
+  if (
+    typeof ticker !== "string" ||
+    !/^[A-Za-z0-9_.]+-[A-Za-z0-9_.]+$/.test(ticker)
+  ) {
+    return notFound();
+  }
+  const network = explorerSource((await searchParams).network);
+  const pair = ticker.replace("-", "/");
+  const label = EXPLORER_NETWORKS[network];
+  return pageMetadata(
+    `${pair} oracle price on ${label}`,
+    `Inspect the ${pair} Pragma oracle feed on ${label}. View the current price and available onchain data before integrating the feed.`,
+    `/asset/${encodeURIComponent(ticker)}${network === "miden" ? "?network=miden" : ""}`,
+    `/asset/${encodeURIComponent(ticker)}/opengraph-image?network=${network}&v=20260915&deployment=${encodeURIComponent(label)}`
+  );
+}
 
 const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;

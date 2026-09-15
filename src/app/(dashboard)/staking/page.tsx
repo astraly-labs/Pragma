@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/metadata";
 import { ScrollReveal } from "@/components/common/ScrollReveal";
 import { fetchStakingData } from "@/lib/fetchStakingData";
 import type { StakingDataSerialized } from "@/lib/staking";
@@ -9,6 +10,12 @@ import { StrkChart } from "./_components/StrkChart";
 import { StakeBreakdown } from "./_components/StakeBreakdown";
 import { StakingTabs } from "./_components/StakingTabs";
 import { StakingFAQ } from "./_components/StakingFAQ";
+
+export const metadata = pageMetadata(
+  "Stake STRK with Pragma",
+  "Explore Pragma’s Starknet staking pool, delegation activity, validator performance, and staking statistics before delegating STRK.",
+  "/staking"
+);
 
 async function getStakingData(): Promise<StakingDataSerialized | null> {
   try {

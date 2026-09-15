@@ -1,11 +1,10 @@
-import { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { ArrowUpRight } from "lucide-react";
-export const metadata: Metadata = {
-  title: "Resources",
-  description:
-    "Documentation, SDKs, contracts, audits, and integration resources for Pragma on Starknet and Miden.",
-  alternates: { canonical: "/resources" },
-};
+export const metadata = pageMetadata(
+  "Oracle documentation and developer resources",
+  "Documentation, SDKs, contracts, audits, and integration resources for Pragma on Starknet and Miden.",
+  "/resources"
+);
 const resources = [
   [
     "01",

@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 export default async function OGImage() {
   return generateOGImage(
-    "Meet and join our ecosystem",
-    "World-class builders already work on Pragma. Become a publisher or integrate now."
+    "Connected by data.",
+    "Build with Pragma on Starknet and Miden."
   );
 }

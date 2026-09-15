@@ -46,6 +46,18 @@ API is verified to return the same already-scaled `{ symbol, price }[]` contract
 Run `bun scripts/check-miden-explorer.ts`, `bun run type-check`, `bun run build`,
 and check network switching and a feed detail against the new deployment.
 
+## Sharing and search metadata
+
+Page titles, descriptions, canonical URLs and social text use `src/lib/metadata.ts`.
+Sharing cards use the current brand assets and the shared `src/lib/og.tsx` renderer.
+Explorer cards include the selected network; Miden labels and image URLs follow
+the deployment configuration when mainnet becomes available.
+
+After changing card artwork, bump the `v` value in explicitly configured image
+URLs so sharing services fetch a new image. Existing messages may retain cached
+previews. Verify a running production build with
+`bun scripts/check-metadata.ts http://localhost:3000`.
+
 ## 📖 License
 
 This project is licensed under the **MIT license**.

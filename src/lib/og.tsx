@@ -4,11 +4,16 @@ import path from "node:path";
 
 export const ogSize = { width: 1200, height: 630 };
 
-export async function generateOGImage(title: string, subtitle: string) {
-  const logoData = await readFile(
-    path.join(process.cwd(), "public/brand/pragma-wordmark.png")
-  );
-  const logoBase64 = `data:image/png;base64,${Buffer.from(logoData).toString("base64")}`;
+export async function generateOGImage(
+  title: string,
+  subtitle: string,
+  label = "STARKNET + MIDEN"
+) {
+  const [logo, sans, mono] = await Promise.all([
+    readFile(path.join(process.cwd(), "public/brand/pragma-wordmark.png")),
+    readFile(path.join(process.cwd(), "public/fonts/IBMPlexSans-Light.ttf")),
+    readFile(path.join(process.cwd(), "public/fonts/IBMPlexMono-Regular.ttf")),
+  ]);
 
   return new ImageResponse(
     <div
@@ -17,139 +22,136 @@ export async function generateOGImage(title: string, subtitle: string) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
         background: "#111416",
+        color: "#f2f0e9",
+        fontFamily: "IBM Plex Sans",
+        fontWeight: 300,
+        padding: "48px 64px",
         position: "relative",
         overflow: "hidden",
       }}
     >
+      <svg
+        width="520"
+        height="520"
+        viewBox="0 0 520 520"
+        style={{ position: "absolute", right: -230, top: 120, opacity: 0.5 }}
+      >
+        <circle
+          cx="260"
+          cy="260"
+          r="248"
+          fill="none"
+          stroke="#ff7946"
+          strokeWidth="2"
+        />
+        {[70, 140, 205].map((radius) => (
+          <ellipse
+            key={radius}
+            cx="260"
+            cy="260"
+            rx={radius}
+            ry="248"
+            fill="none"
+            stroke="#ff7946"
+            strokeWidth="1"
+          />
+        ))}
+        {[70, 140, 205].map((radius) => (
+          <ellipse
+            key={radius}
+            cx="260"
+            cy="260"
+            rx="248"
+            ry={radius}
+            fill="none"
+            stroke="#ff7946"
+            strokeWidth="1"
+          />
+        ))}
+      </svg>
       <div
         style={{
-          position: "absolute",
-          top: "-120px",
-          left: "-100px",
-          width: "500px",
-          height: "500px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(255,121,70,0.08) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-150px",
-          right: "-80px",
-          width: "600px",
-          height: "600px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(255,121,70,0.3) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(255,121,70,0.06) 0%, transparent 60%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
           display: "flex",
-          opacity: 0.04,
-          backgroundImage:
-            "linear-gradient(rgba(242,240,233,1) 1px, transparent 1px), linear-gradient(90deg, rgba(242,240,233,1) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: "24px",
-          border: "1px solid rgba(242,240,233,0.1)",
-          borderRadius: "24px",
-          display: "flex",
-        }}
-      />
-
+      >
+        <img
+          src={`data:image/png;base64,${logo.toString("base64")}`}
+          alt="Pragma"
+          width={240}
+          height={53}
+        />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            fontFamily: "IBM Plex Mono",
+            fontSize: 17,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          <div style={{ width: 10, height: 10, background: "#ff7946" }} />
+          {label}
+        </div>
+      </div>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: "28px",
-          position: "relative",
+          justifyContent: "center",
+          flex: 1,
+          gap: 22,
+          maxWidth: 860,
         }}
       >
-        <img
-          src={logoBase64}
-          alt="Pragma"
-          width={300}
-          height={67}
-          style={{ objectFit: "contain" }}
-        />
-
         <div
           style={{
-            width: "60px",
-            height: "2px",
-            background:
-              "linear-gradient(90deg, transparent, #ff7946, transparent)",
             display: "flex",
-          }}
-        />
-
-        <div
-          style={{
-            fontSize: "36px",
-            fontWeight: 300,
-            color: "#f2f0e9",
-            letterSpacing: "-0.5px",
-            display: "flex",
-            textAlign: "center",
+            fontSize: title.length > 50 ? 58 : 76,
+            lineHeight: 1.08,
+            letterSpacing: -2,
+            whiteSpace: "pre-wrap",
           }}
         >
           {title}
         </div>
-
         <div
           style={{
-            fontSize: "18px",
-            color: "rgba(242,240,233,0.45)",
-            letterSpacing: "0.5px",
             display: "flex",
-            textAlign: "center",
-            maxWidth: "700px",
+            fontSize: 27,
+            lineHeight: 1.4,
+            color: "#aaaead",
+            maxWidth: 760,
           }}
         >
           {subtitle}
         </div>
       </div>
-
       <div
         style={{
-          position: "absolute",
-          bottom: "40px",
           display: "flex",
-          fontSize: "14px",
-          color: "rgba(242,240,233,0.3)",
-          letterSpacing: "2px",
-          textTransform: "uppercase",
+          justifyContent: "space-between",
+          borderTop: "1px solid #ffffff24",
+          paddingTop: 24,
+          fontFamily: "IBM Plex Mono",
+          fontSize: 15,
+          letterSpacing: 1,
         }}
       >
-        pragma.build
+        <span>OPEN DATA. ONCHAIN COMPUTATION.</span>
+        <span style={{ color: "#ff7946" }}>PRAGMA.BUILD</span>
       </div>
     </div>,
-    { ...ogSize }
+    {
+      ...ogSize,
+      fonts: [
+        { name: "IBM Plex Sans", data: sans, weight: 300, style: "normal" },
+        { name: "IBM Plex Mono", data: mono, weight: 400, style: "normal" },
+      ],
+    }
   );
 }

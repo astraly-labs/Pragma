@@ -1,12 +1,11 @@
-import { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-export const metadata: Metadata = {
-  title: "Ecosystem",
-  description:
-    "Build with Pragma on Starknet and Miden, contribute oracle data, and explore the open-source ecosystem.",
-  alternates: { canonical: "/ecosystem" },
-};
+export const metadata = pageMetadata(
+  "Starknet and Miden oracle ecosystem",
+  "Build with Pragma on Starknet and Miden, contribute oracle data, and explore the open-source ecosystem.",
+  "/ecosystem"
+);
 export default function EcosystemPage() {
   return (
     <div className="marketing-page">

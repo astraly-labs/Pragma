@@ -1,7 +1,16 @@
+import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import BoxContainer from "@/components/common/BoxContainer";
 import GreenUpperText from "@/components/common/GreenUpperText";
 import GreenText from "@/components/common/GreenText";
+
+export const metadata = pageMetadata(
+  "Privacy policy",
+  "Learn how Pragma collects, uses, and shares personal information when you use its website and services.",
+  "/privacy-policy",
+  "/opengraph-image?v=20260915"
+);
+
 const privacyPolicy = () => {
   return (
     <BoxContainer className="legal-page">
