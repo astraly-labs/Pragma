@@ -46,15 +46,20 @@ export default function EcosystemPage() {
             <span className="miden-symbol">m</span>
             <h3>Miden</h3>
             <p>
-              Pragma is the Miden oracle. Find the integration code and setup
-              instructions for bringing external data to Miden.
+              Pragma is the Miden oracle. Browse its price feeds, then use the
+              integration guide to bring external data to Miden.
             </p>
-            <a
-              className="text-link"
-              href="https://docs.pragma.build/miden/introduction"
-            >
-              Build on Miden <ArrowUpRight size={18} />
-            </a>
+            <div className="button-row">
+              <Link className="text-link" href="/assets?source=miden">
+                Explore Miden feeds <ArrowUpRight size={18} />
+              </Link>
+              <a
+                className="text-link"
+                href="https://docs.pragma.build/miden/introduction"
+              >
+                Build on Miden <ArrowUpRight size={18} />
+              </a>
+            </div>
           </article>
         </div>
       </section>
