@@ -8,9 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type AssetHeaderProps = {
   asset: AssetInfo;
+  networkLabel: string;
 };
 
-export const AssetHeader = ({ asset }: AssetHeaderProps) => {
+export const AssetHeader = ({ asset, networkLabel }: AssetHeaderProps) => {
   const timestamp = Number(asset.lastUpdated);
   const updatedAt = new Date(timestamp * 1000);
   const lastUpdated =
@@ -33,6 +34,7 @@ export const AssetHeader = ({ asset }: AssetHeaderProps) => {
       variants={fadeInUp}
       className="explorer-panel explorer-asset-header"
     >
+      <span className="eyebrow">{networkLabel}</span>
       <h1 className="flex items-center gap-4 text-2xl text-lightGreen sm:text-4xl">
         <Avatar className="h-16 w-16">
           <AvatarImage width={64} height={64} src={asset.image} alt="" />

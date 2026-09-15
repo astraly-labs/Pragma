@@ -6,10 +6,11 @@ import { ScrollReveal } from "@/components/common/ScrollReveal";
 import { getCheckpoints } from "./_helpers/getCheckpoints";
 import { getAsset } from "./_helpers/getAsset";
 import { AssetHeader } from "./_components/asset-header";
-import { SUPPORTED_SOURCES } from "@/lib/constants";
 import BoxContainer from "@/components/common/BoxContainer";
 import { Checkpoints } from "./_components/checkpoints";
 import { PriceTable } from "./_components/price-table";
+import { EXPLORER_NETWORKS, explorerSource } from "@/lib/explorer-networks";
+import MidenDeployment from "@/components/Assets/MidenDeployment";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,18 +20,11 @@ type AssetPageProps = {
   params: Params;
 };
 
-const DEFAULT_SOURCE = SUPPORTED_SOURCES[0];
-
 const AssetPage = async (props: AssetPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const requestedNetwork = searchParams.network;
-  const network =
-    typeof requestedNetwork === "string" &&
-    SUPPORTED_SOURCES.includes(requestedNetwork)
-      ? requestedNetwork
-      : DEFAULT_SOURCE;
+  const network = explorerSource(searchParams.network);
   const tickerParam = params.ticker;
 
   if (!tickerParam || typeof tickerParam !== "string") {
@@ -46,6 +40,8 @@ const AssetPage = async (props: AssetPageProps) => {
       .then((data) => ({ data, error: false }))
       .catch(() => ({ data: [], error: true })),
   ]);
+
+  if (!asset) return notFound();
 
   const isMainnet = network === "mainnet";
 
@@ -71,10 +67,14 @@ const AssetPage = async (props: AssetPageProps) => {
       </ScrollReveal>
       <ScrollReveal delay={0.1}>
         <BoxContainer>
-          <AssetHeader asset={asset} />
+          <AssetHeader
+            asset={asset}
+            networkLabel={EXPLORER_NETWORKS[network]}
+          />
         </BoxContainer>
       </ScrollReveal>
 
+      {network === "miden" && <MidenDeployment />}
       {asset?.isUnsupported ? (
         <ScrollReveal delay={0.2}>
           <BoxContainer>

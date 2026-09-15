@@ -30,6 +30,22 @@ to enable computational data feeds at scale!
 
 We're always looking for passionate developers to join our community.
 
+## Explorer networks
+
+`/assets` defaults to Starknet mainnet. `/assets?source=miden` shows Miden
+testnet medians from `miden.pragma.build`; feed links retain `network=miden`.
+The same-origin `/api/miden` proxy polls the existing batch prices endpoint.
+Observation times, source counts and publisher activity are unavailable from
+that endpoint, so the explorer does not infer them or substitute exchange stats.
+
+When Miden mainnet is ready, update **all** fields of `MIDEN_DEPLOYMENT` in
+`src/lib/explorer-networks.ts` with the verified network, API base, block explorer
+and oracle/publisher accounts. The labels and account links follow that config;
+the existing Miden feed URLs stay valid. Keep testnet configured until the mainnet
+API is verified to return the same already-scaled `{ symbol, price }[]` contract.
+Run `bun scripts/check-miden-explorer.ts`, `bun run type-check`, `bun run build`,
+and check network switching and a feed detail against the new deployment.
+
 ## 📖 License
 
 This project is licensed under the **MIT license**.
