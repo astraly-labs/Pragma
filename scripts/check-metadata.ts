@@ -16,6 +16,10 @@ async function metadata(path: string, userAgent = "TelegramBot") {
     signal: AbortSignal.timeout(30000),
   });
   assert.equal(response.status, 200, path);
+  assert.ok(
+    !response.headers.get("cache-control")?.includes("immutable"),
+    `${path}: HTML must not inherit the static asset cache policy`
+  );
   const html = await response.text();
   const head = html.split("</head>")[0];
   const tags = new Map<string, string>();
@@ -104,7 +108,10 @@ async function main() {
     assert.ok(result.tags.get("description"), `${path}: description missing`);
     const image = result.tags.get("og:image");
     assert.ok(image, `${path}: sharing image missing`);
-    assert.ok(image.startsWith(`${canonicalOrigin}/`), path);
+    assert.ok(
+      [canonicalOrigin, new URL(origin).origin].includes(new URL(image).origin),
+      `${path}: image must use the site or preview origin`
+    );
     assert.ok(
       new URL(image).search,
       `${path}: image URL must change when branding changes`
@@ -166,6 +173,13 @@ async function main() {
     imageContents.size,
     4,
     "The home, network and asset cards must render different content"
+  );
+
+  const icon = await fetch(`${origin}/assets/currencies/btc.svg`);
+  assert.equal(icon.status, 200);
+  assert.ok(
+    icon.headers.get("cache-control")?.includes("immutable"),
+    "Static icons retain long-lived caching"
   );
 
   const robots = await (await fetch(`${origin}/robots.txt`)).text();
