@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { getLogoPath } from "../../../../../utils/mappings";
 
 import { AssetInfo } from "../_types";
 import { COINGECKO_MAPPING_IDS } from "@/utils/types";
@@ -111,7 +112,7 @@ export const formatAssets = (
         }
 
         return {
-          image: `/assets/currencies/${baseCurrency}.svg`,
+          image: getLogoPath(ticker),
           type: "Crypto",
           ticker,
           lastUpdated,
@@ -214,7 +215,7 @@ export const formatAssets = (
         }
 
         return {
-          image: `/assets/currencies/${baseCurrency}.svg`,
+          image: getLogoPath(ticker),
           type: "Crypto",
           ticker,
           lastUpdated,

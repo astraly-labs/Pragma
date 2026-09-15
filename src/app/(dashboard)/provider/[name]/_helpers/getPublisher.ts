@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import { getLogoPath } from "../../../../../../utils/mappings";
 import { getPublisherType } from "@/utils";
 import { ProcessedPublisher, Publisher } from "@/app/(dashboard)/assets/_types";
 
@@ -63,9 +64,7 @@ export const getPublisher = async (
       );
 
       return {
-        image: `/assets/currencies/${
-          component.pair_id.toLowerCase().split("/")[0]
-        }.svg`,
+        image: getLogoPath(component.pair_id),
         type: "Crypto",
         ticker: component.pair_id,
         source: component.source,

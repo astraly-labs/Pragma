@@ -1,16 +1,6 @@
 import type { AssetInfo } from "@/app/(dashboard)/assets/_types";
 import { MIDEN_DEPLOYMENT } from "./explorer-networks";
-
-const ICONS = new Set([
-  "btc",
-  "eth",
-  "wbtc",
-  "usdt",
-  "dai",
-  "link",
-  "uni",
-  "aave",
-]);
+import { getLogoPath } from "../../utils/mappings";
 
 export function midenAssets(data: unknown): AssetInfo[] {
   if (!Array.isArray(data)) throw new Error("Invalid Miden price response");
@@ -33,7 +23,7 @@ export function midenAssets(data: unknown): AssetInfo[] {
     // /api/prices has already scaled the median. Its 24h fields are exchange
     // statistics; it supplies no oracle observation time or source count.
     return {
-      image: ICONS.has(base) ? `/assets/currencies/${base}.svg` : "",
+      image: getLogoPath(row.symbol),
       type: ["xaut", "paxg"].includes(base) ? "Gold-backed token" : "Crypto",
       ticker: row.symbol,
       price: validPrice ? row.price : 0,
