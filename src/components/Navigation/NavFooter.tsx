@@ -16,7 +16,7 @@ const columns = [
     links: [
       ["Ecosystem", "/ecosystem"],
       ["Staking", "/staking"],
-      ["Miden integration", "https://github.com/astraly-labs/pragma-miden"],
+      ["Miden explorer", "/assets?source=miden"],
       [
         "Service status",
         "https://status.production.pragma.build/status/mainnet",

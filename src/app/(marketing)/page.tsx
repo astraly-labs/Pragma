@@ -53,10 +53,10 @@ export default function HomePage() {
           <span className="chain-symbol">✳</span> Starknet{" "}
           <ArrowUpRight size={20} />
         </a>
-        <a href="https://docs.pragma.build/miden/introduction">
+        <Link href="/assets?source=miden">
           <span className="miden-symbol">m</span> Miden{" "}
           <ArrowUpRight size={20} />
-        </a>
+        </Link>
         <p>
           Two ecosystems.
           <br />
@@ -165,15 +165,20 @@ export default function HomePage() {
             on Miden.
           </h2>
           <p>
-            Pragma is also the Miden oracle. Explore the integration and bring
-            external data into your Miden application.
+            Pragma is also the Miden oracle. Browse its price feeds in the
+            explorer and bring external data into your Miden application.
           </p>
-          <a
-            className="site-button"
-            href="https://docs.pragma.build/miden/introduction"
-          >
-            Build on Miden <ArrowUpRight size={18} />
-          </a>
+          <div className="button-row">
+            <Link className="site-button" href="/assets?source=miden">
+              Explore Miden feeds <ArrowRight size={18} />
+            </Link>
+            <a
+              className="text-link"
+              href="https://docs.pragma.build/miden/introduction"
+            >
+              Build on Miden <ArrowUpRight size={18} />
+            </a>
+          </div>
         </div>
         <span className="miden-word" aria-hidden="true">
           m.
