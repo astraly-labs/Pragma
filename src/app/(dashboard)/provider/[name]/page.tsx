@@ -9,6 +9,7 @@ import PairReported from "@/components/Assets/PairReported";
 import { getPublisher } from "./_helpers/getPublisher";
 import { notFound } from "next/navigation";
 import { PublisherHeader } from "./_components/publisher-header";
+import { getPublisherName } from "@/utils";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,10 +22,11 @@ type ProviderPageProps = {
 export async function generateMetadata({ params }: ProviderPageProps) {
   const { name } = await params;
   if (typeof name !== "string" || !name) return notFound();
+  const displayName = getPublisherName(name);
   return pageMetadata(
-    `${name} oracle data publisher`,
-    `Explore ${name} on Pragma’s Starknet oracle. Inspect reported pairs and available publisher observations.`,
-    `/provider/${encodeURIComponent(name)}`
+    `${displayName} oracle data publisher`,
+    `Explore ${displayName} on Pragma’s Starknet oracle. Inspect reported pairs and available publisher observations.`,
+    `/provider/${encodeURIComponent(displayName)}`
   );
 }
 

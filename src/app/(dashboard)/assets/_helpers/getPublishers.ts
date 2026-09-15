@@ -1,5 +1,6 @@
 import { DataProviderInfo } from "@/app/(dashboard)/assets/_types";
 import { fetchExplorer } from "@/lib/explorer-api";
+import { getPublisherName } from "@/utils";
 export type DataType = "Spot" | "Perp";
 export const getPublishers = async (
   source?: string,
@@ -14,9 +15,12 @@ export const getPublishers = async (
     `/onchain/publishers?${query}`,
     `/api/publishers?${query}`
   );
-  return publishers.map((publisher) =>
-    publisher.name.toLowerCase() === "pragma"
-      ? { ...publisher, image: "/brand/pragma-mark.svg" }
-      : publisher
-  );
+  return publishers.map((publisher) => ({
+    ...publisher,
+    name: getPublisherName(publisher.name),
+    image:
+      publisher.name.toLowerCase() === "pragma"
+        ? "/brand/pragma-mark.svg"
+        : publisher.image,
+  }));
 };

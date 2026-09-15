@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "@/components/Assets/styles.module.scss";
 import { Price } from "@/app/(dashboard)/assets/_types";
-import { truncateTxHash } from "@/utils";
+import { getPublisherName, truncateTxHash } from "@/utils";
 
 export const PriceTable = ({
   components,
@@ -60,13 +60,14 @@ const PriceItem = ({
   decimals: number;
   network: string;
 }) => {
+  const publisherName = getPublisherName(component.publisher);
   return (
     <div className={styles.priceComp}>
       <Link
-        href={`/provider/${component.publisher}`}
+        href={`/provider/${publisherName}`}
         className="flex cursor-pointer flex-row gap-2 	 font-mono text-sm text-lightGreen md:tracking-wider"
       >
-        {component.publisher}
+        {publisherName}
         <Image
           height={16}
           width={16}
