@@ -1,21 +1,9 @@
-import { formatDistanceToNow } from "date-fns";
-import { getLogoPath } from "../../../../../../utils/mappings";
-import { getPublisherName, getPublisherType } from "@/utils";
-import { ProcessedPublisher, Publisher } from "@/app/(dashboard)/assets/_types";
-
-interface PairsReported {
-  image: string;
-  type: string;
-  ticker: string;
-  lastUpdated: string;
-  price: number;
-  dailyUpdates: number;
-}
+import { Publisher } from "@/app/(dashboard)/assets/_types";
 
 export const getPublisher = async (
   name: string,
   source?: string
-): Promise<ProcessedPublisher | undefined> => {
+): Promise<Publisher | undefined> => {
   if (!source || source === "api") {
     return undefined;
   }
@@ -42,37 +30,5 @@ export const getPublisher = async (
     return undefined;
   }
 
-  return {
-    image:
-      publisher.publisher.toLowerCase() === "pragma"
-        ? "/brand/pragma-mark.svg"
-        : `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`,
-    type: getPublisherType(Number(publisher.type)),
-    link: publisher.website_url,
-    name: getPublisherName(publisher.publisher),
-    lastUpdated: formatDistanceToNow(
-      new Date(Number(publisher.last_updated_timestamp) * 1000),
-      { addSuffix: true }
-    ),
-    reputationScore: "soon",
-    nbFeeds: publisher.nb_feeds,
-    dailyUpdates: publisher.daily_updates,
-    totalUpdates: publisher.total_updates,
-    pairs: publisher.components.map((component) => {
-      const lastUpdated = formatDistanceToNow(
-        new Date(component.last_updated_timestamp * 1000),
-        { addSuffix: true }
-      );
-
-      return {
-        image: getLogoPath(component.pair_id),
-        type: "Crypto",
-        ticker: component.pair_id,
-        source: component.source,
-        lastUpdated: lastUpdated,
-        price: parseInt(component.price, 16) / 10 ** component.decimals,
-        dailyUpdates: component.daily_updates,
-      };
-    }),
-  };
+  return publisher;
 };

@@ -5,10 +5,9 @@ import Link from "next/link";
 import { SUPPORTED_SOURCES } from "@/lib/constants";
 import { ScrollReveal } from "@/components/common/ScrollReveal";
 import BoxContainer from "@/components/common/BoxContainer";
-import PairReported from "@/components/Assets/PairReported";
 import { getPublisher } from "./_helpers/getPublisher";
 import { notFound } from "next/navigation";
-import { PublisherHeader } from "./_components/publisher-header";
+import { PublisherDetail } from "./_components/publisher-detail";
 import { getPublisherName } from "@/utils";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -65,18 +64,10 @@ const ProviderPage = async (props: ProviderPageProps) => {
           </Link>
         </BoxContainer>
       </ScrollReveal>
-      <ScrollReveal delay={0.1}>
-        <BoxContainer>
-          <PublisherHeader publisher={data} />
-        </BoxContainer>
-      </ScrollReveal>
-      {data.pairs && (
-        <ScrollReveal delay={0.2}>
-          <BoxContainer>
-            <PairReported components={data.pairs} />
-          </BoxContainer>
-        </ScrollReveal>
-      )}
+      <PublisherDetail
+        initialData={data}
+        asOf={Math.floor(Date.now() / 1000)}
+      />
     </div>
   );
 };

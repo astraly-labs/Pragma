@@ -1,71 +1,72 @@
 "use client";
 
-import { motion } from "motion/react";
-import { staggerContainer, staggerItem } from "@/lib/animations";
-import clsx from "clsx";
-import Image from "next/image";
-import Link from "next/link";
-import { ProcessedPublisher } from "@/app/(dashboard)/assets/_types";
-import { DoubleText } from "@/app/(dashboard)/asset/[ticker]/_components/double-text";
+import type { Publisher } from "@/app/(dashboard)/assets/_types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getPublisherName, getPublisherType } from "@/utils";
+import { ageLabel } from "@/lib/explorer-metrics";
 
-type PublisherHeaderProps = {
-  publisher: ProcessedPublisher;
-};
-
-export const PublisherHeader = ({ publisher }: PublisherHeaderProps) => {
+export function PublisherHeader({
+  publisher,
+  now,
+}: {
+  publisher: Publisher;
+  now: number;
+}) {
+  const name = getPublisherName(publisher.publisher).replaceAll("_", " ");
+  const image =
+    publisher.publisher === "PRAGMA"
+      ? "/brand/pragma-mark.svg"
+      : `/assets/publishers/${publisher.publisher.toLowerCase()}.svg`;
+  const sourceCount = new Set(
+    publisher.components.map((component) => component.source)
+  ).size;
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={staggerContainer}
-      className={clsx(
-        "w-full flex-col justify-between gap-8 self-stretch md:flex-row md:gap-5",
-        "explorer-panel explorer-asset-header"
-      )}
-    >
-      <motion.h1
-        variants={staggerItem}
-        className="my-auto flex flex-row items-center gap-4 text-2xl text-lightGreen sm:text-4xl"
-      >
-        <Image height={60} width={60} alt="" src={publisher.image} />
-        <div className="flex min-w-0 flex-col break-words">
-          {publisher.name}
-          <Link
-            href={publisher.link}
-            className="break-all pt-1 font-mono text-sm tracking-widest text-LightGreenFooter"
+    <header className="explorer-panel explorer-asset-header">
+      <span className="eyebrow">Starknet mainnet / Publisher</span>
+      <div className="publisher-identity">
+        <Avatar className="h-14 w-14 rounded-none">
+          <AvatarImage src={image} alt="" />
+          <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+        </Avatar>
+        <div>
+          <h1>{name}</h1>
+          <a
+            className="explorer-caption"
+            href={publisher.website_url}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {publisher.link}
-          </Link>
-          <div className="font-mono text-sm tracking-widest text-LightGreenFooter">
-            {publisher.type}
-          </div>
+            {publisher.website_url} ↗
+          </a>
         </div>
-      </motion.h1>
-      <motion.div
-        variants={staggerItem}
-        className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-10 lg:gap-20"
-      >
-        <div className="flex flex-col gap-4">
-          <DoubleText bigText={String(publisher.nbFeeds)} smallText="Feeds" />
-          <DoubleText bigText={publisher.type} smallText="Publisher type" />
+        <span className="publisher-kind">
+          {getPublisherType(Number(publisher.type))}
+        </span>
+      </div>
+      <dl className="publisher-metrics">
+        <div>
+          <dt>Published markets</dt>
+          <dd>{publisher.nb_feeds}</dd>
         </div>
-        <div className="flex flex-col gap-4">
-          <DoubleText
-            bigText={String(publisher.dailyUpdates)}
-            smallText="24h updates"
-          />
+        <div>
+          <dt>Underlying sources</dt>
+          <dd>{sourceCount}</dd>
         </div>
-        <div className="flex flex-col gap-4">
-          <DoubleText
-            bigText={publisher.lastUpdated}
-            smallText="Last Updated"
-          />
-          <DoubleText
-            bigText={String(publisher.totalUpdates)}
-            smallText="Total updates"
-          />
+        <div>
+          <dt>Observations / 24h</dt>
+          <dd>{publisher.daily_updates.toLocaleString("en-US")}</dd>
         </div>
-      </motion.div>
-    </motion.div>
+        <div>
+          <dt>Latest observation</dt>
+          <dd
+            title={new Date(
+              publisher.last_updated_timestamp * 1000
+            ).toISOString()}
+          >
+            {ageLabel(publisher.last_updated_timestamp, now)}
+          </dd>
+        </div>
+      </dl>
+    </header>
   );
-};
+}
