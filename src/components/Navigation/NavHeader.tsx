@@ -8,6 +8,7 @@ const links = [
   ["Explorer", "/assets"],
   ["Ecosystem", "/ecosystem"],
   ["Resources", "/resources"],
+  ["Updates", "/updates"],
   ["Staking", "/staking"],
 ];
 export default function NavHeader() {
@@ -39,7 +40,11 @@ export default function NavHeader() {
             <Link
               href={href}
               key={href}
-              aria-current={pathname === href ? "page" : undefined}
+              aria-current={
+                pathname === href || pathname?.startsWith(`${href}/`)
+                  ? "page"
+                  : undefined
+              }
             >
               {label}
             </Link>
@@ -76,7 +81,11 @@ export default function NavHeader() {
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              aria-current={pathname === href ? "page" : undefined}
+              aria-current={
+                pathname === href || pathname?.startsWith(`${href}/`)
+                  ? "page"
+                  : undefined
+              }
             >
               {label}
               <ArrowUpRight size={18} />
