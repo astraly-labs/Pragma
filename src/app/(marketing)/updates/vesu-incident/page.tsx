@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: "/updates/vesu-incident",
     type: "article",
     publishedTime: "2026-09-14",
-    modifiedTime: "2026-09-14",
+    modifiedTime: "2026-09-17",
     authors: ["Pragma"],
   },
   twitter: { card: "summary_large_image", title, description },
@@ -54,7 +54,7 @@ export default function IncidentPage() {
         <div className="incident-byline">
           <span>Pragma</span>
           <time dateTime="2026-09-14">Published 14 September 2026</time>
-          <span>Remediation verified through 13 September, 21:21 UTC</span>
+          <time dateTime="2026-09-17">Updated 17 September 2026</time>
         </div>
       </header>
       <div className="incident-layout">
@@ -68,8 +68,10 @@ export default function IncidentPage() {
         </nav>
         <article className="incident-body">
           <section id="latest" className="incident-update">
-            <span className="eyebrow">Latest update / 14 September</span>
-            <h2>Asset recovery is complete. Curators handle refunds.</h2>
+            <span className="eyebrow">Latest update / 17 September</span>
+            <h2>
+              Recovery complete. Refunds and remediation remain in follow-up.
+            </h2>
             <p>
               In its{" "}
               <a href="https://x.com/vesuxyz/status/2099125070304076013">
@@ -77,8 +79,9 @@ export default function IncidentPage() {
               </a>
               , Vesu reported 95% recovery at 11 September prices, or 93% at
               prices on the morning of the incident. Each pool curator holds its
-              recovered funds and arranges refunds. This is an asset recovery
-              milestone, not confirmation that all refunds are complete.{" "}
+              recovered funds and arranges refunds. The asset recovery phase is
+              closed. As of 17 September, Vesu has not announced completion of
+              all curator refunds.{" "}
               <a href="#response">Recovery figures and next steps ↓</a>
             </p>
             <p>
@@ -88,10 +91,22 @@ export default function IncidentPage() {
               verified fresh deviation calculations in production.
             </p>
             <p>
-              A 3-of-4 multisig for contract administration is being
-              coordinated. The ownership transfer has not happened. Publisher
-              availability and independent-reference discrepancies still need
-              operational follow-up.
+              The Starknet Foundation is now publishing on mainnet and listed in
+              the explorer. Successful submissions from all five publishers were
+              verified on 17 September. Publisher pages now expose market
+              coverage, source freshness and update frequency, and asset charts
+              let users inspect price history by publisher and source.{" "}
+              <Link href="/provider/STARKNET_FOUNDATION">
+                View the Foundation publisher ↓
+              </Link>
+            </p>
+            <p>
+              The SDK now includes measured USDT conversion and stronger
+              reference-source requirements; its production image update was
+              merged on 15 September. Runtime rollout verification across
+              publishers remains open. Contract administration is being moved to
+              a 3-of-5 multisig, with Foundation and AVNU signer keys received.
+              The ownership transfer has not happened.
             </p>
             <p>
               Accurate source-count reporting for composed prices is also an
@@ -273,6 +288,41 @@ export default function IncidentPage() {
                   </p>
                 </div>
               </li>
+              <li>
+                <time>15 September</time>
+                <div>
+                  <strong>Reference conversion improvements released</strong>
+                  <p>
+                    The SDK adds measured USDT conversion before reference
+                    aggregation and a four-source default for USDT and USDC.
+                    Production configuration is updated to v2.16.1; this records
+                    the configuration change, not verified rollout to every
+                    publisher.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <time>16 September</time>
+                <div>
+                  <strong>Foundation publisher listed and verified</strong>
+                  <p>
+                    The funded Foundation address is publishing on mainnet and
+                    visible in the explorer with 14 markets.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <time>17 September</time>
+                <div>
+                  <strong>Publisher and source history goes live</strong>
+                  <p>
+                    The explorer adds full indexed market coverage, freshness,
+                    update frequency and price history with publisher and source
+                    filters. Successful submissions from all five publishers are
+                    verified.
+                  </p>
+                </div>
+              </li>
             </ol>
           </section>
           <section id="impact">
@@ -344,11 +394,12 @@ export default function IncidentPage() {
               aggregated.
             </p>
             <p>
-              The 1.00 factor is a containment measure. It prevents this
-              particular feedback mechanism, but it does not model a real
-              stablecoin depeg. A durable conversion design must explicitly
-              handle quote currencies, liquidity, independent references and
-              abnormal market conditions.
+              The initial 1.00 factor was a containment measure, not a model of
+              a real stablecoin depeg. Subsequent SDK releases use measured
+              references. The 15 September release also normalizes USDT-quoted
+              reference prices before aggregation and strengthens the USDT and
+              USDC source quorum. Rollout verification and composed-price
+              source-count reporting remain in the remediation tracker below.
             </p>
             <p>
               Recovery coordination involved Vesu, pool curators, StarkWare, the
@@ -459,19 +510,38 @@ export default function IncidentPage() {
           <section id="remediation">
             <h2>Remediation tracker</h2>
             <p>
-              Deployment statuses below were verified on 13 September at 21:21
-              UTC. The source-count reporting item was added on 14 September and
-              remains open. Deployment does not by itself close the wider
-              operating and data-quality issues.
+              Updated 17 September. Monitoring deployment and fresh calculations
+              were verified on 13 September at 21:21 UTC; publisher submissions
+              and the explorer release were verified on 17 September. The SDK
+              entry distinguishes a merged deployment configuration from runtime
+              verification. Recovery completion does not close the outstanding
+              engineering and operational work.
             </p>
             <div className="remediation-list">
               <div>
                 <span className="remediation-status">Deployed</span>
                 <h3>Remove the conversion feedback path</h3>
                 <p>
-                  SDK 2.13.1 stops reuse of the onchain USDT/USD median when
-                  constructing other feeds. The permanent handling of real
-                  stablecoin deviations remains a separate design task.
+                  The 4 September SDK 2.13.1 hotfix removed reuse of the onchain
+                  USDT/USD median when constructing other feeds.
+                </p>
+              </div>
+              <div>
+                <span className="remediation-status pending">
+                  Released / rollout verification open
+                </span>
+                <h3>
+                  Normalize reference prices and strengthen source quorums
+                </h3>
+                <p>
+                  SDK v2.16.1 includes measured USDT-to-USD conversion before
+                  reference aggregation, a default minimum of four accepted
+                  sources for USDT and USDC, and omission of USDT quotes when
+                  their conversion cannot be verified. Converted references
+                  inherit the conversion’s verification time. The mainnet image
+                  configuration was merged on 15 September; runtime rollout
+                  across publishers still needs verification. This does not
+                  implement composed-price source-count reporting.
                 </p>
               </div>
               <div>
@@ -526,26 +596,51 @@ export default function IncidentPage() {
                 <span className="remediation-status pending">
                   In coordination
                 </span>
-                <h3>Move contract administration to a 3-of-4 multisig</h3>
+                <h3>Move contract administration to a 3-of-5 multisig</h3>
                 <p>
-                  The intended participants are Pragma’s two founders, a
-                  Foundation nominee and a StarkWare nominee. Signer nominations
-                  and keys are still being collected. No contract ownership
-                  transfer has been submitted. This protects administration; it
-                  is separate from the pricing bug that caused the incident.
+                  The intended participants are Pragma’s two founders and
+                  nominees from the Foundation, StarkWare and AVNU. The target
+                  changed to 3-of-5 on 15 September. Foundation and AVNU signer
+                  keys have been received; remaining setup and signing checks
+                  are pending. Oracle and publisher-registry administration
+                  remain unchanged in the 17 September onchain check. This
+                  protects administration; it is separate from the pricing bug
+                  that caused the incident.
                 </p>
               </div>
               <div>
-                <span className="remediation-status pending">Open</span>
+                <span className="remediation-status">
+                  Participation verified / follow-up open
+                </span>
                 <h3>
                   Restore publisher participation and review remaining
                   discrepancies
                 </h3>
                 <p>
-                  Registered Ready and StarkWare publishers still had stale
-                  observations in the last operating check. Foundation publisher
-                  onboarding is in progress. Independent-reference disagreements
-                  and upstream RPC capacity also require follow-up.
+                  Ready and StarkWare have resumed publishing. The Foundation
+                  publisher is funded, publishing and listed with 14 markets.
+                  Successful mainnet submissions from Pragma, StarkWare, Ready,
+                  AVNU and the Foundation were verified on 17 September. These
+                  checks establish participation, not continuous availability or
+                  price accuracy. Freshness, independent-reference disagreements
+                  and upstream capacity remain operational follow-ups.
+                </p>
+              </div>
+              <div>
+                <span className="remediation-status">Live / 17 September</span>
+                <h3>Expose publisher coverage, freshness and price history</h3>
+                <p>
+                  Publisher pages list all indexed markets and sources,
+                  including inactive observations, with last-update times,
+                  24-hour update counts and average observations per hour. Asset
+                  charts support up to seven days of history, publisher and
+                  source selection, median comparison, transaction links and CSV
+                  export. Views beyond 24 hours use 30-minute samples. These are
+                  read-only visibility improvements; they do not change oracle
+                  aggregation or fix source-count reporting.{" "}
+                  <Link href="/asset/BTC-USD#price-history">
+                    Inspect a price history ↓
+                  </Link>
                 </p>
               </div>
             </div>
@@ -595,9 +690,10 @@ export default function IncidentPage() {
             <p>
               This report draws on Pragma’s 4 September technical reconstruction
               shared with incident participants, transaction receipts and
-              block-level oracle reads, and the verified 13 September deployment
-              record. Recovery and refund information comes from Vesu’s public
-              13 September update and refund guide.
+              block-level oracle reads, the verified 13 September monitoring
+              deployment, and the 17 September publisher and explorer checks.
+              Recovery and refund information comes from Vesu’s public 13
+              September update and refund guide, rechecked on 17 September.
             </p>
             <ul className="incident-references">
               <li>
@@ -638,6 +734,21 @@ export default function IncidentPage() {
               <li>
                 <a href="https://github.com/astraly-labs/pragma-monitoring/pull/83">
                   Reorg recovery correction ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/astraly-labs/pragma-sdk/pull/335">
+                  Measured reference conversion and source quorums ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/astraly-labs/devops/pull/218">
+                  Publisher v2.16.1 deployment configuration ↗
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/astraly-labs/Pragma/pull/498">
+                  Publisher coverage and source-history release ↗
                 </a>
               </li>
             </ul>
