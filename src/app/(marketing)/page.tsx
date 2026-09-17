@@ -51,8 +51,8 @@ export default function HomePage() {
         }}
       />
       <Link href="/updates/vesu-incident" className="incident-banner">
-        <span className="eyebrow">4 September incident</span>
-        <span>Our Vesu post-mortem and recovery updates</span>
+        <span className="eyebrow">Vesu recovery complete</span>
+        <span>Refund guidance and remediation updates</span>
         <ArrowUpRight size={18} aria-hidden="true" />
       </Link>
       <section className="home-hero">
