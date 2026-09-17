@@ -28,6 +28,7 @@ const columns = [
     links: [
       ["Contact", "mailto:support@pragma.build"],
       ["Blog", "https://blog.pragma.build"],
+      ["Updates & reports", "/updates"],
       ["X / Twitter", "https://x.com/PragmaOracle"],
       ["Telegram", "https://t.me/+Xri-uUMpWXI3ZmRk"],
     ],

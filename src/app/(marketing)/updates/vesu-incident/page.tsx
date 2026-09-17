@@ -38,8 +38,8 @@ export default function IncidentPage() {
   return (
     <div className="marketing-page incident-page">
       <header className="incident-hero">
-        <Link href="/" className="text-link">
-          <ArrowLeft size={16} /> Back to Pragma
+        <Link href="/updates" className="text-link">
+          <ArrowLeft size={16} /> All updates
         </Link>
         <div className="eyebrow">Incident report / Starknet mainnet</div>
         <h1>

@@ -50,9 +50,9 @@ export default function HomePage() {
           }),
         }}
       />
-      <Link href="/updates/vesu-incident" className="incident-banner">
-        <span className="eyebrow">Vesu recovery complete</span>
-        <span>Refund guidance and remediation updates</span>
+      <Link href="/updates" className="incident-banner">
+        <span className="eyebrow">Updates &amp; reports</span>
+        <span>Incident updates, recovery progress and liquidity reports</span>
         <ArrowUpRight size={18} aria-hidden="true" />
       </Link>
       <section className="home-hero">
