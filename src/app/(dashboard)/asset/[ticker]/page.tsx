@@ -9,6 +9,7 @@ import { AssetHeader } from "./_components/asset-header";
 import BoxContainer from "@/components/common/BoxContainer";
 import { Checkpoints } from "./_components/checkpoints";
 import { PriceTable } from "./_components/price-table";
+import { AssetExplorer } from "./_components/asset-explorer";
 import { EXPLORER_NETWORKS, explorerSource } from "@/lib/explorer-networks";
 import MidenDeployment from "@/components/Assets/MidenDeployment";
 import { pageMetadata } from "@/lib/metadata";
@@ -125,7 +126,24 @@ const AssetPage = async (props: AssetPageProps) => {
       ) : (
         <>
           <div className="w-full pb-5" />
-          {asset.components && asset.decimals !== undefined && (
+          {isMainnet && (
+            <AssetExplorer
+              key={asset.ticker}
+              asset={asset}
+              initialPublisher={
+                typeof searchParams.publisher === "string"
+                  ? searchParams.publisher
+                  : undefined
+              }
+              initialSource={
+                typeof searchParams.source === "string"
+                  ? searchParams.source
+                  : undefined
+              }
+              asOf={Math.floor(Date.now() / 1000)}
+            />
+          )}
+          {!isMainnet && asset.components && asset.decimals !== undefined && (
             <ScrollReveal delay={0.3}>
               <BoxContainer className="relative" modeOne={false}>
                 <PriceTable

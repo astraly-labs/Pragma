@@ -65,29 +65,6 @@ export type Publisher = {
   components: Component[];
 };
 
-export type ProcessedComponent = {
-  image: string;
-  type: string;
-  ticker: string;
-  source: string;
-  lastUpdated: string;
-  price: number;
-  dailyUpdates: number;
-};
-
-export type ProcessedPublisher = {
-  image: string;
-  type: string;
-  link: string;
-  name: string;
-  lastUpdated: string;
-  reputationScore: string;
-  nbFeeds: number;
-  dailyUpdates: number;
-  totalUpdates: number;
-  pairs: ProcessedComponent[];
-};
-
 export type AssetT = {
   ticker: string;
   address: string;
