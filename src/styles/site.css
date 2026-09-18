@@ -1565,7 +1565,6 @@ img[src*="%2Fassets%2Fcurrencies%2F"] {
   padding-left: 20px;
   font-size: 13px;
   line-height: 1.9;
-  overflow-wrap: anywhere;
 }
 .liquidity-pools code {
   display: block;
