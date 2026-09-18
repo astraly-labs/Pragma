@@ -525,14 +525,6 @@ button {
 .updates-list .updates-modified {
   font-size: 12px;
 }
-.updates-liquidity h2 {
-  margin-top: 20px;
-}
-.updates-liquidity p {
-  max-width: 560px;
-  margin-top: 24px;
-  line-height: 1.7;
-}
 .compact-cta {
   padding-top: 60px;
   padding-bottom: 60px;
@@ -1425,6 +1417,188 @@ img[src*="%2Fassets%2Fcurrencies%2F"] {
   padding-left: 20px;
   font-size: 14px;
   line-height: 2.2;
+}
+.liquidity-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 45px;
+  background: var(--site-line);
+  border: 1px solid var(--site-line);
+}
+.liquidity-stats > div {
+  background: var(--site-ink);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.liquidity-stats strong {
+  font-size: 34px;
+  letter-spacing: -0.04em;
+}
+.liquidity-stats span {
+  font-size: 11px;
+  color: var(--site-muted);
+}
+.liquidity-grade {
+  display: inline-block;
+  padding: 6px 9px;
+  font:
+    9px var(--font-ibm-plex-mono),
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #dcdad0;
+  color: #444a47;
+  white-space: nowrap;
+}
+.liquidity-grade-critical {
+  background: #8f2413;
+  color: #fff;
+}
+.liquidity-grade-high {
+  background: #ead6c5;
+  color: #823910;
+}
+.liquidity-grade-moderate {
+  background: #ece3b8;
+  color: #5c4a06;
+}
+.liquidity-grade-lower {
+  background: #d8e1d8;
+  color: #29452f;
+}
+.liquidity-rubric > div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #11141622;
+}
+.liquidity-rubric dd {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444a47;
+}
+.liquidity-detail {
+  border-top: 1px solid #11141622;
+}
+.liquidity-detail:last-of-type {
+  border-bottom: 1px solid #11141622;
+}
+.liquidity-detail > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 0;
+  cursor: pointer;
+  font-size: 16px;
+}
+.liquidity-detail > summary strong {
+  min-width: 150px;
+}
+.liquidity-detail > summary span:last-child:not(.liquidity-grade) {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6a6e6b;
+}
+.liquidity-detail[open] {
+  padding-bottom: 24px;
+}
+.liquidity-sources {
+  min-width: 680px;
+}
+.incident-body .liquidity-sources th,
+.incident-body .liquidity-sources td {
+  vertical-align: top;
+}
+.incident-body .liquidity-sources th:last-child,
+.incident-body .liquidity-sources td:last-child {
+  text-align: left;
+}
+.liquidity-report .incident-body table small {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #6a6e6b;
+  overflow-wrap: anywhere;
+}
+.liquidity-number {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.liquidity-curve {
+  margin-top: 28px;
+}
+.liquidity-curve h4 {
+  font-size: 15px;
+}
+.incident-body .liquidity-address,
+.liquidity-address {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  color: #6a6e6b;
+}
+.liquidity-report code {
+  white-space: normal;
+  word-break: break-all;
+}
+.incident-body .liquidity-warning {
+  border-left: 3px solid #8f2413;
+  padding: 12px 16px;
+  background: #e9e5da;
+  font-size: 14px;
+}
+.incident-body .liquidity-small {
+  font-size: 12px;
+}
+.liquidity-pools summary {
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 18px;
+}
+.liquidity-pools ul {
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.liquidity-pools code {
+  display: block;
+}
+.liquidity-downloads {
+  display: grid;
+  gap: 1px;
+  margin: 24px 0;
+  border: 1px solid #11141622;
+}
+.incident-body .liquidity-downloads a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px solid #11141622;
+}
+.liquidity-downloads a:last-child {
+  border-bottom: 0;
+}
+.liquidity-downloads a:hover {
+  background: #e7e4da;
+}
+@media (max-width: 600px) {
+  .liquidity-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .liquidity-rubric > div {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 @media (max-width: 950px) {
   .incident-layout {

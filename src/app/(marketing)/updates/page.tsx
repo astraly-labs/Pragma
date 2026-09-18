@@ -8,7 +8,7 @@ export const metadata = pageMetadata(
   "/updates"
 );
 
-const reports = [
+const incidentReports = [
   {
     href: "/updates/nostra-nstr-incident",
     title: "Nostra / NSTR incident",
@@ -29,12 +29,53 @@ const reports = [
   },
 ];
 
+const liquidityReports = [
+  {
+    href: "/updates/liquidity-september-2026",
+    title: "September 2026 liquidity and source-risk report",
+    published: "2026-09-18",
+    updated: "2026-09-18",
+    status: "6 critical / 9 high risk of 22 feeds",
+    description:
+      "Order-book depth, Starknet swap quotes and source dependencies behind every supported feed, with a risk rating for each and the raw evidence to download.",
+  },
+];
+
 const dateFormat = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "long",
   year: "numeric",
   timeZone: "UTC",
 });
+
+function ReportList({ reports }: { reports: typeof incidentReports }) {
+  return (
+    <div className="resource-list updates-list">
+      {reports.map((report) => (
+        <Link key={report.href} href={report.href}>
+          <div className="updates-date">
+            <span className="eyebrow">Published</span>
+            <time dateTime={report.published}>
+              {dateFormat.format(new Date(report.published))}
+            </time>
+          </div>
+          <div>
+            <span className="eyebrow resource-tag">{report.status}</span>
+            <h3>{report.title}</h3>
+            <p>{report.description}</p>
+            <p className="updates-modified">
+              Updated{" "}
+              <time dateTime={report.updated}>
+                {dateFormat.format(new Date(report.updated))}
+              </time>
+            </p>
+          </div>
+          <ArrowUpRight aria-hidden="true" />
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export default function UpdatesPage() {
   return (
@@ -70,43 +111,17 @@ export default function UpdatesPage() {
         <h2 id="incidents-heading" className="updates-heading">
           Incident reports
         </h2>
-        <div className="resource-list updates-list">
-          {reports.map((report) => (
-            <Link key={report.href} href={report.href}>
-              <div className="updates-date">
-                <span className="eyebrow">Published</span>
-                <time dateTime={report.published}>
-                  {dateFormat.format(new Date(report.published))}
-                </time>
-              </div>
-              <div>
-                <span className="eyebrow resource-tag">{report.status}</span>
-                <h3>{report.title}</h3>
-                <p>{report.description}</p>
-                <p className="updates-modified">
-                  Updated{" "}
-                  <time dateTime={report.updated}>
-                    {dateFormat.format(new Date(report.updated))}
-                  </time>
-                </p>
-              </div>
-              <ArrowUpRight aria-hidden="true" />
-            </Link>
-          ))}
-        </div>
+        <ReportList reports={incidentReports} />
       </section>
       <section
         id="liquidity"
-        className="paper-section updates-liquidity"
+        className="resource-section"
         aria-labelledby="liquidity-heading"
       >
-        <span className="eyebrow">Monthly reporting</span>
-        <h2 id="liquidity-heading">Liquidity reports</h2>
-        <p>
-          Monthly reviews of market liquidity and source coverage will be
-          collected here, with the reporting period and publication date.
-        </p>
-        <p className="eyebrow">No monthly reports published yet.</p>
+        <h2 id="liquidity-heading" className="updates-heading">
+          Monthly liquidity reports
+        </h2>
+        <ReportList reports={liquidityReports} />
       </section>
     </div>
   );
