@@ -513,8 +513,8 @@ export default function IncidentPage() {
               Updated 23 September. Monitoring deployment and fresh calculations
               were verified on 13 September at 21:21 UTC; publisher submissions
               and the explorer release were verified on 17 September, and the
-              administration migration onchain on 22 September. The SDK
-              entry distinguishes a merged deployment configuration from runtime
+              administration migration onchain on 22 September. The SDK entry
+              distinguishes a merged deployment configuration from runtime
               verification. Recovery completion does not close the outstanding
               engineering and operational work.
             </p>
@@ -599,11 +599,8 @@ export default function IncidentPage() {
                 </span>
                 <h3>Move contract administration to a 3-of-5 multisig</h3>
                 <p>
-                  The signers are Pragma’s two founders and nominees from the
-                  Starknet Foundation, StarkWare and AVNU, with three approvals
-                  required. The signers approved a test transaction first. The
-                  publisher registry moved at 19:55:30 UTC on 22 September and
-                  the oracle at 19:55:40 UTC; both contracts now return{" "}
+                  The publisher registry moved at 19:55:30 UTC on 22 September
+                  and the oracle at 19:55:40 UTC; both contracts now return{" "}
                   <code>
                     0x04960b27dbc0bf6e66045baabbffe9875e8cc4ec81367630e0cbc5dfd1e249a9
                   </code>{" "}
