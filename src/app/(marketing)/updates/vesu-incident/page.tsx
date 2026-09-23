@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: "/updates/vesu-incident",
     type: "article",
     publishedTime: "2026-09-14",
-    modifiedTime: "2026-09-17",
+    modifiedTime: "2026-09-23",
     authors: ["Pragma"],
   },
   twitter: { card: "summary_large_image", title, description },
