@@ -22,10 +22,10 @@ const incidentReports = [
     href: "/updates/vesu-incident",
     title: "Vesu / 4 September oracle incident",
     published: "2026-09-14",
-    updated: "2026-09-17",
+    updated: "2026-09-23",
     status: "Recovery complete / follow-up ongoing",
     description:
-      "The pricing failure, asset recovery and remediation progress. Curators handle refunds, and outstanding engineering work remains tracked in the report.",
+      "The pricing failure, asset recovery and remediation progress. Contract administration moved to a 3-of-5 multisig on 22 September, and outstanding engineering work remains tracked in the report.",
   },
 ];
 

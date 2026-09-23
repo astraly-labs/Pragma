@@ -54,7 +54,7 @@ export default function IncidentPage() {
         <div className="incident-byline">
           <span>Pragma</span>
           <time dateTime="2026-09-14">Published 14 September 2026</time>
-          <time dateTime="2026-09-17">Updated 17 September 2026</time>
+          <time dateTime="2026-09-23">Updated 23 September 2026</time>
         </div>
       </header>
       <div className="incident-layout">
@@ -104,9 +104,9 @@ export default function IncidentPage() {
               The SDK now includes measured USDT conversion and stronger
               reference-source requirements; its production image update was
               merged on 15 September. Runtime rollout verification across
-              publishers remains open. Contract administration is being moved to
-              a 3-of-5 multisig, with Foundation and AVNU signer keys received.
-              The ownership transfer has not happened.
+              publishers remains open. Oracle and publisher-registry
+              administration moved to a 3-of-5 multisig on 22 September,
+              replacing the single administrator key.
             </p>
             <p>
               Accurate source-count reporting for composed prices is also an
@@ -510,9 +510,10 @@ export default function IncidentPage() {
           <section id="remediation">
             <h2>Remediation tracker</h2>
             <p>
-              Updated 17 September. Monitoring deployment and fresh calculations
+              Updated 23 September. Monitoring deployment and fresh calculations
               were verified on 13 September at 21:21 UTC; publisher submissions
-              and the explorer release were verified on 17 September. The SDK
+              and the explorer release were verified on 17 September, and the
+              administration migration onchain on 22 September. The SDK
               entry distinguishes a merged deployment configuration from runtime
               verification. Recovery completion does not close the outstanding
               engineering and operational work.
@@ -593,19 +594,23 @@ export default function IncidentPage() {
                 </p>
               </div>
               <div>
-                <span className="remediation-status pending">
-                  In coordination
+                <span className="remediation-status">
+                  Migrated / 22 September
                 </span>
                 <h3>Move contract administration to a 3-of-5 multisig</h3>
                 <p>
-                  The intended participants are Pragma’s two founders and
-                  nominees from the Foundation, StarkWare and AVNU. The target
-                  changed to 3-of-5 on 15 September. Foundation and AVNU signer
-                  keys have been received; remaining setup and signing checks
-                  are pending. Oracle and publisher-registry administration
-                  remain unchanged in the 17 September onchain check. This
+                  The signers are Pragma’s two founders and nominees from the
+                  Starknet Foundation, StarkWare and AVNU, with three approvals
+                  required. The signers approved a test transaction first. The
+                  publisher registry moved at 19:55:30 UTC on 22 September and
+                  the oracle at 19:55:40 UTC; both contracts now return{" "}
+                  <code>
+                    0x04960b27dbc0bf6e66045baabbffe9875e8cc4ec81367630e0cbc5dfd1e249a9
+                  </code>{" "}
+                  as their administrator, replacing the single key. This
                   protects administration; it is separate from the pricing bug
-                  that caused the incident.
+                  that caused the incident. The randomness contract has a
+                  separate administrator and is not covered by this change.
                 </p>
               </div>
               <div>

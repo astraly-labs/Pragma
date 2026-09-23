@@ -1398,6 +1398,9 @@ img[src*="%2Fassets%2Fcurrencies%2F"] {
 .remediation-list h3 {
   margin-top: 15px;
 }
+.remediation-list code {
+  word-break: break-all;
+}
 .remediation-status {
   display: inline-block;
   padding: 6px 9px;
