@@ -4,8 +4,8 @@ export const MIDEN_DEPLOYMENT = {
   network: "testnet",
   apiUrl: "https://miden.pragma.build",
   explorerUrl: "https://testnet.midenscan.com",
-  oracle: "mtst1aqanqmvpngvmdyfq2jqwzcvmtsvexd5u",
-  publisher: "mtst1aq32gfucapgeey2zznc6vvqfeqh5h4rt",
+  oracle: "mtst1aqxnneud7y34z5gwc5z8vu95pcsdmcxm",
+  publisher: "mtst1apk7pswf5s744ygr5v4wxjxt4g0tmmsy",
 };
 
 export const EXPLORER_NETWORKS = {
