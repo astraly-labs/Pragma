@@ -268,7 +268,13 @@ export function PublisherDetail({
                     <tr key={source.source}>
                       <td>{source.source}</td>
                       <td>
-                        {priceLabel(priceNumber(source.price, source.decimals))}
+                        {priceLabel(
+                          priceNumber(
+                            source.price,
+                            source.decimals,
+                            source.pair_id
+                          )
+                        )}
                       </td>
                       <td>
                         {new Date(source.last_updated_timestamp * 1000)

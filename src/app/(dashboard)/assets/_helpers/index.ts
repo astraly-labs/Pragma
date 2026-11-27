@@ -3,6 +3,7 @@ import { getLogoPath } from "../../../../../utils/mappings";
 
 import { AssetInfo } from "../_types";
 import { COINGECKO_MAPPING_IDS } from "@/utils/types";
+import { priceNumber } from "@/lib/explorer-metrics";
 
 type Component = {
   publisher: string;
@@ -89,27 +90,11 @@ export const formatAssets = (
 
         const baseCurrency = ticker.split("/")[0].toLowerCase();
 
-        let price = 0;
-        if (
-          typeof assetData.price === "string" &&
-          String(assetData.price).startsWith("0x")
-        ) {
-          price =
-            parseInt(assetData.price, 16) / 10 ** (assetData.decimals ?? 8);
-        } else if (typeof assetData.price === "number") {
-          price = assetData.price;
-        } else if (typeof assetData.price === "string") {
-          try {
-            price =
-              parseFloat(assetData.price) / 10 ** (assetData.decimals ?? 8);
-          } catch (e) {
-            console.error(
-              `Failed to parse price for ${ticker}:`,
-              assetData.price
-            );
-            price = 0;
-          }
-        }
+        const price =
+          typeof assetData.price === "number" ||
+          typeof assetData.price === "string"
+            ? priceNumber(assetData.price, assetData.decimals ?? 8, ticker)
+            : 0;
 
         return {
           image: getLogoPath(ticker),

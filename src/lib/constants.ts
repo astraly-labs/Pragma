@@ -1,3 +1,4 @@
+// Starknet oracle get_decimals values verified on 2026-11-27.
 export const DEFAULT_ASSETS = [
   { ticker: "BTC/USD", address: "0x2", decimals: 8 },
   { ticker: "ETH/USD", address: "0x1", decimals: 8 },
@@ -10,10 +11,10 @@ export const DEFAULT_ASSETS = [
   { ticker: "UNIBTC/USD", address: "0x7", decimals: 8 },
   { ticker: "MRE7YIELD/USD", address: "0x7", decimals: 8 },
   { ticker: "MRE7BTC/USD", address: "0x7", decimals: 8 },
-  { ticker: "DOG/USD", address: "0x7", decimals: 8 },
+  { ticker: "DOG/USD", address: "0x7", decimals: 5 },
   { ticker: "DAI/USD", address: "0x9", decimals: 8 },
-  { ticker: "USDC/USD", address: "0x9", decimals: 8 },
-  { ticker: "USDT/USD", address: "0x9", decimals: 8 },
+  { ticker: "USDC/USD", address: "0x9", decimals: 6 },
+  { ticker: "USDT/USD", address: "0x9", decimals: 6 },
   { ticker: "BTC/EUR", address: "0x9", decimals: 8 },
   { ticker: "WBTC/BTC", address: "0x9", decimals: 8 },
   { ticker: "NSTR/USD", address: "0x9", decimals: 8 },

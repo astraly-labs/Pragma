@@ -31,7 +31,7 @@ for (const source of ["mainnet", "api"]) {
   assert.equal(error.chart, "");
   const stale = formatAssets(
     {
-      "BTC/USD": {
+      "ZERO/USD": {
         price: "0x64",
         decimals: 0,
         lastUpdated: 1,
@@ -47,6 +47,35 @@ for (const source of ["mainnet", "api"]) {
     "Old observations must include their date"
   );
 }
+
+for (const [pair, rawPrice, expected] of [
+  ["BTC/USD", 6081765131486, 60817.65131486],
+  ["USDC/USD", 999854, 0.999854],
+  ["USDT/USD", 1000123, 1.000123],
+  ["DOG/USD", 123, 0.00123],
+] as const) {
+  for (const price of [
+    rawPrice,
+    String(rawPrice),
+    `0x${rawPrice.toString(16)}`,
+  ]) {
+    const data = { [pair]: { price, decimals: 0, lastUpdated: 1 } };
+    const original = structuredClone(data);
+    assert.equal(formatAssets(data, "mainnet")[0].price, expected);
+    assert.deepEqual(data, original, "Formatting must not mutate API data");
+  }
+}
+assert.equal(
+  formatAssets({ "USDC/USD": { price: 0.999854, decimals: 6 } }, "mainnet")[0]
+    .price,
+  0.999854,
+  "An already normalized API price must not be divided again"
+);
+assert.equal(
+  formatAssets({ "BTC/USD": { price: 100, decimals: 0 } }, "api")[0].price,
+  100,
+  "The Starknet display correction must not affect other data sources"
+);
 console.log("Asset display checks passed");
 
 assert.equal(

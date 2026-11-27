@@ -41,6 +41,19 @@ assert.equal(
 assert.equal(markets[0].sources.length, 2);
 assert.equal(markets[0].timestamp, 1100);
 assert.equal(priceNumber("0x64", 0), 100, "Preserve zero decimals");
+assert.equal(priceNumber("0x64", 0, "UNKNOWN/USD"), 100);
+assert.equal(priceNumber("6081765131486", 0, "BTC/USD"), 60817.65131486);
+assert.equal(priceNumber("999854", 0, "USDC/USD"), 0.999854);
+assert.equal(priceNumber("1000123", 0, "USDT/USD"), 1.000123);
+assert.equal(priceNumber("123", 0, "DOG/USD"), 0.00123);
+assert.equal(priceNumber("999854", 6, "USDC/USD"), 0.999854);
+assert.equal(
+  priceNumber("123456789", 9, "USDC/USD"),
+  0.123456789,
+  "Preserve valid precision supplied by the API"
+);
+assert.equal(priceNumber(0.999854, 6, "USDC/USD"), 0.999854);
+assert.equal(priceNumber(999854, 0, "usdc/usd"), 0.999854);
 assert.equal(ageLabel(1000, 1901), "15m ago");
 assert.equal(ageLabel(0, 1901), "Not reported");
 
