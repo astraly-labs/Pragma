@@ -31,6 +31,15 @@ const incidentReports = [
 
 const liquidityReports = [
   {
+    href: "/updates/liquidity-november-2026",
+    title: "November 2026 liquidity and source-risk report",
+    published: "2026-11-27",
+    updated: "2026-11-27",
+    status: "27 November snapshot / 5 critical, 10 high",
+    description:
+      "Fresh order-book depth, Starknet quotes and source coverage for 22 mainnet feeds, with downloadable evidence. A dated snapshot, not a full-month average.",
+  },
+  {
     href: "/updates/liquidity-september-2026",
     title: "September 2026 liquidity and source-risk report",
     published: "2026-09-18",
