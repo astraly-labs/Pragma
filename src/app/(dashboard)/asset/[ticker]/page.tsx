@@ -13,6 +13,7 @@ import { AssetExplorer } from "./_components/asset-explorer";
 import { EXPLORER_NETWORKS, explorerSource } from "@/lib/explorer-networks";
 import MidenDeployment from "@/components/Assets/MidenDeployment";
 import { pageMetadata } from "@/lib/metadata";
+import { priceNumber } from "@/lib/explorer-metrics";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type Params = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -92,7 +93,18 @@ const AssetPage = async (props: AssetPageProps) => {
       <ScrollReveal delay={0.1}>
         <BoxContainer>
           <AssetHeader
-            asset={asset}
+            asset={
+              isMainnet
+                ? {
+                    ...asset,
+                    price: priceNumber(
+                      asset.price,
+                      asset.decimals ?? 0,
+                      asset.ticker
+                    ),
+                  }
+                : asset
+            }
             networkLabel={EXPLORER_NETWORKS[network]}
           />
         </BoxContainer>

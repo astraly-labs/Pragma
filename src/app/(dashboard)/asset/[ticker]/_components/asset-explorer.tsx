@@ -183,7 +183,7 @@ export function AssetExplorer({
       const points = groups.get(name) ?? [];
       points.push({
         timestamp: point.timestamp,
-        price: priceNumber(point.price, history!.decimals),
+        price: priceNumber(point.price, history!.decimals, asset.ticker),
       });
       groups.set(name, points);
     }
@@ -202,11 +202,19 @@ export function AssetExplorer({
         gap: range === "7d" ? 2700 : 1800,
         points: (aggregate.data?.data ?? []).map((point) => ({
           timestamp: point.timestamp,
-          price: priceNumber(point.median_price, point.decimals),
+          price: priceNumber(point.median_price, point.decimals, asset.ticker),
         })),
       });
     return series;
-  }, [history, publisher, sources, showMedian, range, aggregate.data]);
+  }, [
+    history,
+    publisher,
+    sources,
+    showMedian,
+    range,
+    aggregate.data,
+    asset.ticker,
+  ]);
   const chart = useMemo(() => chartData(groupedSeries), [groupedSeries]);
   const window = aggregate.data ?? observations.data;
   const pending = aggregate.isLoading || observations.isLoading;
@@ -217,7 +225,7 @@ export function AssetExplorer({
         point.publisher,
         point.source,
         exactTime(point.timestamp),
-        String(priceNumber(point.price, history!.decimals)),
+        String(priceNumber(point.price, history!.decimals, asset.ticker)),
         point.tx_hash,
       ]),
     ];
@@ -513,7 +521,8 @@ export function AssetExplorer({
                     {priceLabel(
                       priceNumber(
                         point.price,
-                        latest.data.decimals ?? asset.decimals ?? 0
+                        latest.data.decimals ?? asset.decimals ?? 0,
+                        asset.ticker
                       )
                     )}
                   </td>

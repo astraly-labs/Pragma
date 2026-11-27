@@ -1,4 +1,5 @@
 import type { Component, Price } from "@/app/(dashboard)/assets/_types";
+import { DEFAULT_ASSETS } from "./constants";
 
 export const HISTORY_RANGES = {
   "1h": 3600,
@@ -20,8 +21,23 @@ export type ObservationHistory = {
   observations: Price[];
 };
 
-export function priceNumber(price: string, decimals: number) {
-  const value = Number(BigInt(price)) / 10 ** decimals;
+export function priceNumber(
+  price: string | number,
+  decimals: number,
+  pair?: string
+) {
+  // The indexer reports zero when its precision lookup fails. Use the known
+  // Starknet feed precision only for display; leave the response untouched.
+  const displayDecimals =
+    decimals === 0 && pair
+      ? (DEFAULT_ASSETS.find((asset) => asset.ticker === pair.toUpperCase())
+          ?.decimals ?? decimals)
+      : decimals;
+  // Numeric API prices are already scaled by the reported precision; strings
+  // contain raw oracle units (including hexadecimal observations).
+  const exponent =
+    typeof price === "number" ? displayDecimals - decimals : displayDecimals;
+  const value = Number(price) / 10 ** exponent;
   return Number.isFinite(value) ? value : NaN;
 }
 
